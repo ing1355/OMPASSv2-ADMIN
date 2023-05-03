@@ -1,0 +1,24 @@
+.create_account_container {
+
+}
+
+.create_account_content {
+  background-color: white;
+  border: none;
+  width: 550px;
+  height: 800px;
+  padding: 50px;
+}
+
+.create_account_text_box {
+  padding: 10px;
+  height: 160px;
+}
+
+.create_account_button {
+  width: 100%;
+  height: 55px;
+  border-radius: 12px;
+  font-size: 1.12rem;
+  font-weight: 900;
+}

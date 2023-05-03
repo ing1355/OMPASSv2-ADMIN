@@ -1,4 +1,4 @@
-import './Login.css'
+import './Login.css';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 
@@ -15,19 +15,17 @@ const Login = () => {
 
   return (
     <div
-      className='login_container App-Center'
+      className='login_container content-center'
     >
       <div
         className='login_header'
       >
         <img 
           src={ompass_logo_image} 
-          style={{}}
           width="38px"
         />
         <span 
-          className='main-color1 login_logo_title'
-          style={{fontSize: '3rem', fontWeight: "700", marginLeft: "15px", }}
+          className='main-color1 login_logo_title logo-title'
         >OMPASS</span>
       </div>
 
@@ -54,44 +52,49 @@ const Login = () => {
           <h1 className='mb40 login_form_title'><FormattedMessage id='LOGIN' /></h1>
           <form>
             <div
-              className='login_input_container mb30'
+              className='login_input_container'
             >
               <label htmlFor='userId'>아이디</label>
               <input 
-                className='input-st1 login_input'
+                className='input-st1 login_input mt5'
                 type='text'
                 id='userId'
               />
               <img src={login_id} width='30px' style={{position: 'relative', top: '-41px', left: '20px'}}/>
             </div>
             <div
-              className='mb30'
+              className='mb10'
             >
               <label htmlFor='userPassword'>비밀번호</label>
               <input 
-                className='input-st1 login_input'
+                className='input-st1 login_input mt5'
                 type='text'
                 id='userPassword'
               />
+              <img src={login_password} width='30px' style={{position: 'relative', top: '-41px', left: '20px'}}/>
             </div>
             <div
-              className='dis_flex'
+              className='dis_flex mb10'
             >
               <div>
                 <input type='checkbox'/>
                 <span>아이디 저장</span>
               </div>
-              <div>
+              <div
+                className='main-color1'
+              >
                 비밀번호를 잊으셨나요?
               </div>
             </div>
             <button
-              className='button-st1 login-button'
+              className='button-st1 login-button mb50'
               type='submit'
             >
               <FormattedMessage id='LOGIN' />
             </button>
-            <div>회원이 아니신가요?</div>
+            <div
+              className='mb20 content-center'
+            >회원이 아니신가요?</div>
             <Link to='/CreateAccount'>
               <button
                 className='button-st2 login-button'
@@ -102,7 +105,7 @@ const Login = () => {
       </div>
 
       <div
-        className='login_footer App-Center'
+        className='login_footer content-center'
       >
         <div>
           <img src={locale_image} />

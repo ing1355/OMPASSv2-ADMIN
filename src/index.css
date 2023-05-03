@@ -6,11 +6,20 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #E4EBEF;
+  /* font-family: 'Noto Sans KR' !important; */
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* center */
+.content-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 /* color */
@@ -37,21 +46,72 @@ code {
   background-color: #7FC8FC;
   border: none;
   color: white;
+  cursor: pointer;
+}
+
+.button-st1:hover {
+  background-color: #0092FA;
 }
 
 .button-st2 {
-  border: #0092FA 1px solid;
+  border: #0092FA 2px solid;
   background-color: white;
   color: #0092FA;
+  cursor: pointer;
+}
+
+.button-st2:hover {
+  background-color: #0092FA;
+  border: none;
+  color: white;
 }
 
 .button-st3 {
   background-color: black;
   color: white;
   border: none;
+  cursor: pointer;
+}
+
+.button-st3:hover {
+  background-color: rgb(17, 16, 16);
+}
+
+/* text box style */
+.text-box-st1 {
+  border: 1.5px solid black;
+  overflow-y: scroll;
+}
+
+.text-box-st1::-webkit-scrollbar{
+  width: 26px;
+  padding-right: 10px;
+}
+
+.text-box-st1::-webkit-scrollbar-thumb {
+  background: #0092FA;
+  border-radius: 10px;
+  border: 5px solid white;
+}
+
+.text-box-st1::-webkit-scrollbar-track{
+}
+
+/* logo title */
+.logo-title {
+  font-size: 3rem;
+  font-weight: 700;
 }
 
 /* margin bottom */
+.mb10 {
+  margin-bottom: 10px;
+}
+
+.mb20 {
+  margin-bottom: 20px;
+}
+
 .mb30 {
   margin-bottom: 30px;
 }
@@ -59,3 +119,20 @@ code {
 .mb40 {
   margin-bottom: 40px;
 }
+
+.mb50 {
+  margin-bottom: 50px;
+}
+
+/* margin top */
+.mt5 {
+  margin-top: 5px;
+}
+
+.mt8 {
+  margin-top: 8px;
+}
+
+/* .mt10 {
+  margin-top: 10px;
+} */
