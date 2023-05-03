@@ -9,17 +9,18 @@ const CreateAccount = () => {
   return (
     <>
     <div
-      className='create_account_container'
+      className='create_account_container absolute-center'
     >
       <div
-        className='create_account_header'
+        className='create_account_header mb30 content-center'
       >
         <img 
           src={ompass_logo_image} 
           width="38px"
+          style={{position: 'relative', top: '2px', right: '5px'}}
         />
         <span 
-          className='main-color1 logo-title'
+          className='main-color1 logo-title mlr5'
         >OMPASS</span>
       </div>
 
@@ -106,24 +107,54 @@ const CreateAccount = () => {
         className='create_account_content'
         >
           <div>
+            <label>아이디</label>
+            <div
+              className='mb20'
+              style={{display: 'flex'}}
+            >
+              <input 
+                type='text'
+                className='input-st1 create_account_input'
+              />
+              <button
+                className='button-st1 create_account_id_check'
+              >중복 확인</button>
+            </div>
+          </div>
+          <div>
             <label>이름</label>
-            <input />
+            <input 
+              type='text'
+              className='input-st1 create_account_input mb20'
+            />
           </div>
           <div>
             <label>이메일</label>
-            <input />
+            <input 
+              type='text'
+              className='input-st1 create_account_input mb20'
+            />
           </div>
           <div>
             <label>비밀번호</label>
-            <input />
+            <input 
+              type='text'
+              className='input-st1 create_account_input mb20'
+            />
           </div>
           <div>
             <label>비밀번호 재확인</label>
-            <input />
+            <input 
+              type='text'
+              className='input-st1 create_account_input mb20'
+            />
           </div>
           <div>
             <label>전화번호</label>
-            <input />
+            <input 
+              type='text'
+              className='input-st1 create_account_input mb20'
+            />
           </div>
           <button
             className='button-st1 create_account_button'

@@ -107,12 +107,26 @@ const Login = () => {
       <div
         className='login_footer content-center'
       >
-        <div>
-          <img src={locale_image} />
-          <span>KO</span>|
-          <span>EN</span>
+        <div
+          style={{fontSize: "1.2rem"}}
+        >
+          <img src={locale_image} width='20px' style={{position: 'relative', top: '3px', marginRight: '2px'}}/>
+          <span 
+            className='mlr5 login_locale'
+            onClick={() => {
+              console.log('ko')
+            }}
+          >KO</span>|
+          <span 
+            className='mlr5 login_locale'
+            onClick={() => {
+              console.log('en')
+            }}
+          >EN</span>
         </div>
-        <div>
+        <div
+          className='copyRight-style'
+        >
           {CopyRightText}
         </div>
       </div>
