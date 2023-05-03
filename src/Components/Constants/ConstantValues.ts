@@ -1,0 +1,1 @@
+export const CopyRightText = `OMPASS v${process.env.REACT_APP_VERSION} © 2020. OneMoreSecurity Inc. All Rights Reserved.`

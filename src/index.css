@@ -5,9 +5,57 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #E4EBEF;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* color */
+.main-bg1 {
+  background-color: #E4EBEF;  
+}
+
+.main-color1 {
+  color: #008DED;
+}
+
+/* input style */
+.input-st1 {
+  border: #CCC 0.5px solid;
+}
+
+.input-st1:focus {
+  border: #0092FA 0.8px solid;
+  outline: none;
+}
+
+/* button style */
+.button-st1 {
+  background-color: #7FC8FC;
+  border: none;
+  color: white;
+}
+
+.button-st2 {
+  border: #0092FA 1px solid;
+  background-color: white;
+  color: #0092FA;
+}
+
+.button-st3 {
+  background-color: black;
+  color: white;
+  border: none;
+}
+
+/* margin bottom */
+.mb30 {
+  margin-bottom: 30px;
+}
+
+.mb40 {
+  margin-bottom: 40px;
 }
