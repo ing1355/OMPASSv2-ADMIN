@@ -43,7 +43,7 @@ const Login = () => {
             className='button-st3 login_window_download_button'
           >
             <img src={download_icon} width='40px'/>
-            <span style={{position: 'relative', top: '-7px', marginLeft: '7px'}}>Windows용 다운로드</span>  
+            <span style={{position: 'relative', top: '-7px', marginLeft: '7px'}}><FormattedMessage id='DOWNLOAD_FOR_WINDOWS' /></span>  
           </button>
         </div>
         <div
@@ -54,7 +54,7 @@ const Login = () => {
             <div
               className='login_input_container'
             >
-              <label htmlFor='userId'>아이디</label>
+              <label htmlFor='userId'><FormattedMessage id='ID' /></label>
               <input 
                 className='input-st1 login_input mt5'
                 type='text'
@@ -65,7 +65,7 @@ const Login = () => {
             <div
               className='mb10'
             >
-              <label htmlFor='userPassword'>비밀번호</label>
+              <label htmlFor='userPassword'><FormattedMessage id='PASSWORD' /></label>
               <input 
                 className='input-st1 login_input mt5'
                 type='text'
@@ -78,12 +78,12 @@ const Login = () => {
             >
               <div>
                 <input type='checkbox'/>
-                <span>아이디 저장</span>
+                <span><FormattedMessage id='SAVE_ID' /></span>
               </div>
               <div
                 className='main-color1'
               >
-                비밀번호를 잊으셨나요?
+                <FormattedMessage id='FORGOT_YOUR_PASSWORD' />
               </div>
             </div>
             <button
@@ -94,11 +94,11 @@ const Login = () => {
             </button>
             <div
               className='mb20 content-center'
-            >회원이 아니신가요?</div>
+            ><FormattedMessage id='NOT_A_MEMBER' /></div>
             <Link to='/CreateAccount'>
               <button
                 className='button-st2 login-button'
-              >회원가입</button>
+              ><FormattedMessage id='CREATE_ACCOUNT' /></button>
             </Link>
           </form>
         </div>
@@ -108,6 +108,7 @@ const Login = () => {
         className='login_footer content-center'
       >
         <div
+          className='mb10'
           style={{fontSize: "1.2rem"}}
         >
           <img src={locale_image} width='20px' style={{position: 'relative', top: '3px', marginRight: '2px'}}/>

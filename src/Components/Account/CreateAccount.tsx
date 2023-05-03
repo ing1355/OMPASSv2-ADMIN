@@ -107,9 +107,9 @@ const CreateAccount = () => {
         className='create_account_content'
         >
           <div>
-            <label>아이디</label>
+            <label><FormattedMessage id='ID' /></label>
             <div
-              className='mb20'
+              className='mb20 mt5'
               style={{display: 'flex'}}
             >
               <input 
@@ -118,42 +118,42 @@ const CreateAccount = () => {
               />
               <button
                 className='button-st1 create_account_id_check'
-              >중복 확인</button>
+              ><FormattedMessage id='ID_CHECK' /></button>
             </div>
           </div>
           <div>
-            <label>이름</label>
+            <label><FormattedMessage id='NAME' /></label>
             <input 
               type='text'
-              className='input-st1 create_account_input mb20'
+              className='input-st1 create_account_input mb20 mt5'
             />
           </div>
           <div>
-            <label>이메일</label>
+            <label><FormattedMessage id='EMAIL' /></label>
             <input 
               type='text'
-              className='input-st1 create_account_input mb20'
+              className='input-st1 create_account_input mb20 mt5'
             />
           </div>
           <div>
-            <label>비밀번호</label>
+            <label><FormattedMessage id='PASSWORD' /></label>
             <input 
               type='text'
-              className='input-st1 create_account_input mb20'
+              className='input-st1 create_account_input mb20 mt5'
             />
           </div>
           <div>
-            <label>비밀번호 재확인</label>
+            <label><FormattedMessage id='RECONFIRM_PASSWORD' /></label>
             <input 
               type='text'
-              className='input-st1 create_account_input mb20'
+              className='input-st1 create_account_input mb20 mt5'
             />
           </div>
           <div>
-            <label>전화번호</label>
+            <label><FormattedMessage id='PHONE_NUMBER' /></label>
             <input 
               type='text'
-              className='input-st1 create_account_input mb20'
+              className='input-st1 create_account_input mb20 mt5'
             />
           </div>
           <button
@@ -161,7 +161,7 @@ const CreateAccount = () => {
             onClick={() => {
               setIsStepOne(true);
             }}
-          >가입하기</button>
+          ><FormattedMessage id='SIGN_UP' /></button>
         </div>
       }
 
