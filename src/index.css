@@ -96,6 +96,7 @@ code {
 .text-box-st1::-webkit-scrollbar-thumb {
   background: #0092FA;
   border-radius: 6px;
+  height: 20%;
   /* border: 5px solid white; */
 }
 

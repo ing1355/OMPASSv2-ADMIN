@@ -13,6 +13,7 @@
 .create_account_text_box {
   padding: 10px;
   height: 165px;
+  font-size: 0.8rem;
 }
 
 .create_account_button {

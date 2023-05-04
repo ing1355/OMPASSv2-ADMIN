@@ -2,9 +2,74 @@ import './CreateAccount.css';
 import ompass_logo_image from '../../assets/ompass_logo_image.png';
 import { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
+import RefundImg from '../../assets/refunded_img.png';
 
 const CreateAccount = () => {
   const [isStepOne, setIsStepOne] = useState<boolean>(true);
+
+  const AgreePolicyList = (isService:boolean, number:number, count:number, innerNumber?: number[], innerCount?: number[]) => {
+    const subList = Array.from(Array(count), (_, index) => index + 1);
+    let innerNumberList:number[] = [];
+    
+    if(innerNumber !== undefined && innerNumber.length > 0) {
+      innerNumberList = Array.from(Array(innerNumber?.length), (_, index) => index + 1);
+    }
+
+    let innerList:number[][] = [];
+    if(innerNumber !== undefined && innerCount !== undefined && innerNumber.length > 0) {
+      for(let i = 0; i < innerNumber.length; i++ ) {
+        innerList.push([innerNumber[i], innerCount[i]]);
+      }
+    }
+
+    return (
+      <div>
+        {subList.map((item) => (
+
+          <ul key={isService ? 'Service' + item : '' + item}>
+            <li>{item}</li>
+            <li>
+              {isService ? 
+                <FormattedMessage id={`AGREE_SERVICE_CONTENT_SUB_${number}_${item}`} />
+              :
+                <FormattedMessage id={`AGREE_PRIVACY_POLICY_CONTENT_SUB_${number}_${item}`} />
+              }
+            </li>
+            {innerNumberList.length > 0 && 
+              innerNumberList.map((num) => {
+                if(innerList[num-1][0] === item) {
+                  return (
+                    <>
+                      {AgreeSubList(isService, number,innerList[num-1][0], innerList[num-1][1])}
+                    </>
+                  )
+                }
+              })
+            }
+          </ul>
+        ))}
+      </div>
+    );
+  }
+
+  const AgreeSubList = (isService:boolean, number:number, innerNumber:number, innerCount:number) => {
+    const subList = Array.from(Array(innerCount), (_, index) => index + 1);
+    return (
+      <>
+        {subList.map((innerItem) => {
+          return (
+          <ul key={isService ? 'Service inner' + innerItem : 'inner' + innerItem} style={{listStyle: 'none'}}>
+            {isService ?
+              <li>- <FormattedMessage id={`AGREE_SERVICE_CONTENT_SUB_INNER_${number}_${innerNumber}_${innerItem}`} /></li>
+            :
+              <li>- <FormattedMessage id={`AGREE_PRIVACY_POLICY_CONTENT_SUB_INNER_${number}_${innerNumber}_${innerItem}`} /></li>
+            }
+          </ul>
+          )
+        })}
+      </>
+    )
+  }
 
   return (
     <>
@@ -46,40 +111,56 @@ const CreateAccount = () => {
             <div
               className='create_account_text_box mt8 text-box-st1'
             >
-              <p>
-                <h5><FormattedMessage id='AGREE_SERVICE_CONTENT_1_title' /></h5>
-                <FormattedMessage id='AGREE_SERVICE_CONTENT_1_content' />
-              </p>
-              <p>
-                <h5>제2조 용어의 정의</h5>
-                <ul>
-                  <li>본 약관에서 사용되는 주요한 용어의 정의는 다음과 같습니다.</li>
-                </ul>
-                <ul>
-                  <li>❶</li>
+              <div>
+                <h3><FormattedMessage id='AGREE_SERVICE_TITLE_1' /></h3>
+                <FormattedMessage id='AGREE_SERVICE_CONTENT_1' />
+              </div>
+              <div>
+                <h3><FormattedMessage id='AGREE_SERVICE_TITLE_2' /></h3>
+                <FormattedMessage id='AGREE_SERVICE_CONTENT_2' />
+                {AgreePolicyList(true,2,9)}
+              </div>
+              <div>
+                <h3><FormattedMessage id='AGREE_SERVICE_TITLE_3' /></h3>
+                <FormattedMessage id='AGREE_SERVICE_CONTENT_3' />
+              </div>
+              <div>
+                <h3><FormattedMessage id='AGREE_SERVICE_TITLE_4' /></h3>
+                {AgreePolicyList(true,4,9)}
+              </div>
+              <div>
+                <h3><FormattedMessage id='AGREE_SERVICE_TITLE_5' /></h3>
+                {AgreePolicyList(true,5,3)}
+                
+                {/* 영문 버전에만 추가되는 문구 */}
+                {/* <ul>
+                  <li>4</li>
                   <li>
-                    관리자(이하 “회원”)：이 약관의 내용에 동의하고 가입한 고객으로서 이용계약을 체결하고 서브관리자와 사용자를 관리하고 서비스를 이용하는 이용자를 말합니다.
+                    Refund fee will be affected among the paypal policy below.
                   </li>
                 </ul>
-                <ul>
-                  <li>❷</li>
-                  <li>
-                    서브관리자：관리자에 의해 등록되어 이메일 본인 인증을 완료한 자로서, 서비스 및 사이트를 관리하고 이용하는 이용자를 말합니다.
-                  </li>
-                </ul>
-                <ul>
-                  <li>❸</li>
-                  <li>
-                    사용자：적용된 어플리케이션에 로그인을 위해 서비스를 이용하는 이용자를 말합니다.
-                  </li>
-                </ul>
-                <ul>
-                  <li>❹</li>
-                  <li>
-                    사용자 아이디(이하 “ID”)：회원의 식별과 회원의 서비스 이용을 위하여 회원별로 부여하는 고유한 문자와 숫자의 조합을 말합니다.
-                  </li>
-                </ul>
-              </p>
+                <img src={RefundImg} width='500px'/> */}
+              </div>
+              <div>
+                <h3><FormattedMessage id='AGREE_SERVICE_TITLE_6' /></h3>
+                {AgreePolicyList(true,6,2)}
+              </div>
+              <div>
+                <h3><FormattedMessage id='AGREE_SERVICE_TITLE_7' /></h3>
+                {AgreePolicyList(true,7,5)}
+              </div>
+              <div>
+                <h3><FormattedMessage id='AGREE_SERVICE_TITLE_8' /></h3>
+                {AgreePolicyList(true,8,2)}
+              </div>
+              <div>
+                <h3><FormattedMessage id='AGREE_SERVICE_TITLE_9' /></h3>
+                {AgreePolicyList(true,9,4)}
+              </div>
+              <div>
+                <h3><FormattedMessage id='AGREE_SERVICE_TITLE_10' /></h3>
+                {AgreePolicyList(true,10,3,[2],[4])}
+              </div>
             </div>
           </div>
           <div
@@ -92,7 +173,52 @@ const CreateAccount = () => {
             <div
               className='create_account_text_box mt8 text-box-st1'
             >
-              dsfsdfds
+              <div>
+                <h3><FormattedMessage id='AGREE_PRIVACY_POLICY_TITLE_1' /></h3>
+                <FormattedMessage id='AGREE_PRIVACY_POLICY_CONTENT_1' />
+              </div>
+              <div>
+                <h3><FormattedMessage id='AGREE_PRIVACY_POLICY_TITLE_2' /></h3>
+                {AgreePolicyList(false,2,5,[1,2,3,4,5],[1,1,1,1,1])}
+              </div>
+              <div>
+                <h3><FormattedMessage id='AGREE_PRIVACY_POLICY_TITLE_3' /></h3>
+                <FormattedMessage id='AGREE_PRIVACY_POLICY_CONTENT_3' />
+              </div>
+              <div>
+                <h3><FormattedMessage id='AGREE_PRIVACY_POLICY_TITLE_4' /></h3>
+                <FormattedMessage id='AGREE_PRIVACY_POLICY_CONTENT_4' />
+              </div>
+              <div>
+                <h3><FormattedMessage id='AGREE_PRIVACY_POLICY_TITLE_5' /></h3>
+                {AgreePolicyList(false,5,2,[1,2],[2,3])}
+              </div>
+              <div>
+                <h3><FormattedMessage id='AGREE_PRIVACY_POLICY_TITLE_6' /></h3>
+                <FormattedMessage id='AGREE_PRIVACY_POLICY_CONTENT_6' />
+                {AgreePolicyList(false,6,2,[2],[2])}
+              </div>
+              <div>
+                <h3><FormattedMessage id='AGREE_PRIVACY_POLICY_TITLE_7' /></h3>
+                <FormattedMessage id='AGREE_PRIVACY_POLICY_CONTENT_7' />
+              </div>
+              <div>
+                <h3><FormattedMessage id='AGREE_PRIVACY_POLICY_TITLE_8' /></h3>
+                <FormattedMessage id='AGREE_PRIVACY_POLICY_CONTENT_8' />
+                {AgreeSubList(false,8,1,3)}
+              </div>
+              <div>
+                <h3><FormattedMessage id='AGREE_PRIVACY_POLICY_TITLE_9' /></h3>
+                <FormattedMessage id='AGREE_PRIVACY_POLICY_CONTENT_9' />
+              </div>
+              <div>
+                <h3><FormattedMessage id='AGREE_PRIVACY_POLICY_TITLE_10' /></h3>
+                <FormattedMessage id='AGREE_PRIVACY_POLICY_CONTENT_10_1' /><br />
+                <FormattedMessage id='AGREE_PRIVACY_POLICY_CONTENT_10_2' /><br />
+                <FormattedMessage id='AGREE_PRIVACY_POLICY_CONTENT_10_3' /><br />
+                <FormattedMessage id='AGREE_PRIVACY_POLICY_CONTENT_10_4' /><br />
+                {AgreeSubList(false,10,1,4)}
+              </div>
             </div>
           </div>
           <button
