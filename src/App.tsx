@@ -14,8 +14,8 @@ const App: React.FC = () => {
     <IntlProvider locale={lang} messages={LocaleTexts[lang]}>
       {/* <div className="App"> */}
         <Routes>
-          <Route path='/' element={<Main />}/>
-          <Route path='/login' element={<Login />}/>
+          {/* <Route path='/' element={<Main />}/> */}
+          <Route path='/' element={<Login />}/>
           <Route path='/CreateAccount' element={<CreateAccount />}/>
         </Routes>
       {/* </div> */}

@@ -115,6 +115,17 @@ code {
   font-weight: 400;
 }
 
+/* circle number */
+.circleNumber {
+  background-color: rgb(69, 69, 69);
+  border-radius: 50%;
+  width: 13px;
+  height: 13px;
+  color: white;
+  text-align: center;
+  font-size: 0.05rem;
+}
+
 /* margin bottom */
 .mb10 {
   margin-bottom: 10px;
@@ -145,11 +156,19 @@ code {
   margin-top: 8px;
 }
 
-/* .mt10 {
-  margin-top: 10px;
-} */
+.mt20 {
+  margin-top: 20px;
+}
 
 /* margin left right */
 .mlr5 {
   margin: 0px 5px;
+}
+
+.ml10 {
+  margin-left: 10px;
+}
+
+.ml30 {
+  margin-left: 30px;
 }

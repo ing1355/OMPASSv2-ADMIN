@@ -26,15 +26,18 @@ const CreateAccount = () => {
       <div>
         {subList.map((item) => (
 
-          <ul key={isService ? 'Service' + item : '' + item}>
-            <li>{item}</li>
-            <li>
-              {isService ? 
-                <FormattedMessage id={`AGREE_SERVICE_CONTENT_SUB_${number}_${item}`} />
-              :
-                <FormattedMessage id={`AGREE_PRIVACY_POLICY_CONTENT_SUB_${number}_${item}`} />
-              }
-            </li>
+          <div key={isService ? 'Service' + item : '' + item}>
+            <div style={{display: 'flex'}}>
+              <div className='circleNumber mlr5' style={{flexBasis: '13px', position: 'relative', top: '3px'}}>{item}</div>
+              <div style={{flexBasis: '480px'}}>
+                {isService ? 
+                  <FormattedMessage id={`AGREE_SERVICE_CONTENT_SUB_${number}_${item}`} />
+                :
+                  <FormattedMessage id={`AGREE_PRIVACY_POLICY_CONTENT_SUB_${number}_${item}`} />
+                }
+              </div>
+            </div>
+
             {innerNumberList.length > 0 && 
               innerNumberList.map((num) => {
                 if(innerList[num-1][0] === item) {
@@ -46,7 +49,7 @@ const CreateAccount = () => {
                 }
               })
             }
-          </ul>
+          </div>
         ))}
       </div>
     );
@@ -58,13 +61,13 @@ const CreateAccount = () => {
       <>
         {subList.map((innerItem) => {
           return (
-          <ul key={isService ? 'Service inner' + innerItem : 'inner' + innerItem} style={{listStyle: 'none'}}>
+          <div className={isService?'ml30':'ml10'} key={isService ? 'Service inner' + innerItem : 'inner' + innerItem} style={{listStyle: 'none'}}>
             {isService ?
               <li>- <FormattedMessage id={`AGREE_SERVICE_CONTENT_SUB_INNER_${number}_${innerNumber}_${innerItem}`} /></li>
             :
               <li>- <FormattedMessage id={`AGREE_PRIVACY_POLICY_CONTENT_SUB_INNER_${number}_${innerNumber}_${innerItem}`} /></li>
             }
-          </ul>
+          </div>
           )
         })}
       </>
@@ -94,7 +97,7 @@ const CreateAccount = () => {
           className='create_account_content'
         >
           <div
-            className='mb40'
+            className='mb20'
           >
             <input 
               type='checkbox'
@@ -226,7 +229,7 @@ const CreateAccount = () => {
             onClick={() => {
               setIsStepOne(false);
             }}
-          >확인</button>
+          ><FormattedMessage id='CONFIRM' /></button>
         </div>
       :
         <div
@@ -255,13 +258,6 @@ const CreateAccount = () => {
             />
           </div>
           <div>
-            <label><FormattedMessage id='EMAIL' /></label>
-            <input 
-              type='text'
-              className='input-st1 create_account_input mb20 mt5'
-            />
-          </div>
-          <div>
             <label><FormattedMessage id='PASSWORD' /></label>
             <input 
               type='text'
@@ -284,6 +280,7 @@ const CreateAccount = () => {
           </div>
           <button
             className='button-st1 create_account_button'
+            style={{marginTop: '70.5px'}}
             onClick={() => {
               setIsStepOne(true);
             }}

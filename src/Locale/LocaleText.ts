@@ -14,6 +14,8 @@ const LocaleTexts = {
     DOWNLOAD_FOR_WINDOWS: 'Download for Windows',
     FORGOT_YOUR_PASSWORD: 'Forgot your password?',
     NOT_A_MEMBER: 'Not a member?',
+    CONFIRM: 'Confirm',
+
     AGREE_POLICY_ALL: 'I have read and agree to both OMPASS Terms of Service and Privacy Policy below.',
     AGREE_SERVICE: 'I have read and agree to Terms of Service.',
     AGREE_PRIVACY_POLICY: 'I have read and agree to Privacy Policy.',
@@ -162,6 +164,8 @@ const LocaleTexts = {
     DOWNLOAD_FOR_WINDOWS: 'Windows용 다운로드',
     FORGOT_YOUR_PASSWORD: '비밀번호를 잊으셨나요?',
     NOT_A_MEMBER: '회원이 아니신가요?',
+    CONFIRM: '확인',
+
     AGREE_POLICY_ALL: '원모어패스의 이용약관, 개인정보 수집 및 이용(선택)에 모두 동의합니다.',
     AGREE_SERVICE: '이용약관 동의 (필수)',
     AGREE_PRIVACY_POLICY: '개인 정보 수집 및 이용 동의 (선택)',
