@@ -5,8 +5,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #E4EBEF;
-  /* font-family: 'Noto Sans KR' !important; */
+  /* background-color: #E4EBEF; */
+  font-family: 'IBM Plex Sans KR', sans-serif;
 }
 
 code {
@@ -107,6 +107,14 @@ code {
 .logo-title {
   font-size: 3rem;
   font-weight: 700;
+}
+
+.locale-toggle, .locale-toggle:hover {
+  cursor: pointer;
+}
+
+.locale-toggle.active {
+  font-weight: 600;
 }
 
 /* copyright style */

@@ -65,15 +65,6 @@
   border-radius: 12px;
 }
 
-.login_locale {
-  cursor: pointer;
-}
-
-.login_locale:hover {
-  cursor: pointer;
-  font-weight: 500;
-}
-
 .login_footer {
   flex-direction: column;
 }

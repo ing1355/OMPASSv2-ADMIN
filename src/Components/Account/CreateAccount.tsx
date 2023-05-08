@@ -4,8 +4,17 @@ import { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import RefundImg from '../../assets/refunded_img.png';
 
+type AgreePolicyType = 'agreeService' | 'agreePrivacyPolicy';
+
 const CreateAccount = () => {
   const [isStepOne, setIsStepOne] = useState<boolean>(true);
+  const [selectAll, setSelectAll] = useState(false);
+  const [checkBoxes, setCheckBoxes] = useState<{
+    id: number, name: AgreePolicyType, isChecked: boolean
+  }[]>([
+    { id: 1, name: "agreeService", isChecked: false },
+    { id: 2, name: "agreePrivacyPolicy", isChecked: false },
+  ]);
 
   const AgreePolicyList = (isService:boolean, number:number, count:number, innerNumber?: number[], innerCount?: number[]) => {
     const subList = Array.from(Array(count), (_, index) => index + 1);
@@ -74,6 +83,24 @@ const CreateAccount = () => {
     )
   }
 
+  const handleAllChecked = (event: any) => {
+    let checkBoxesCopy = [...checkBoxes];
+    checkBoxesCopy.forEach((checkBox) => (checkBox.isChecked = event.target.checked));
+    setCheckBoxes(checkBoxesCopy);
+    setSelectAll(event.target.checked);
+  };
+
+  const handleSingleChecked = (event: any) => {
+    let checkBoxesCopy = [...checkBoxes];
+    checkBoxesCopy.forEach((checkBox) => {
+      if (checkBox.name === event.target.name) {
+        checkBox.isChecked = event.target.checked;
+      }
+    });
+    setCheckBoxes(checkBoxesCopy);
+    setSelectAll(checkBoxesCopy.every((checkBox) => checkBox.isChecked));
+  };
+
   return (
     <>
     <div
@@ -101,6 +128,10 @@ const CreateAccount = () => {
           >
             <input 
               type='checkbox'
+              name="allSelect"
+              id="allSelect"
+              onChange={handleAllChecked}
+              checked={selectAll}              
             />
             <span><FormattedMessage id='AGREE_POLICY_ALL' /></span>
           </div>
@@ -109,6 +140,10 @@ const CreateAccount = () => {
           >
             <input 
               type='checkbox'
+              name='agreeService'
+              id='agreeService'
+              onChange={handleSingleChecked}
+              checked={checkBoxes.find(cb => cb.name === 'agreeService')?.isChecked || false}
             />
             <span><FormattedMessage id='AGREE_SERVICE' /></span>
             <div
@@ -171,6 +206,10 @@ const CreateAccount = () => {
           >
             <input 
               type='checkbox'
+              name='agreePrivacyPolicy'
+              id='agreePrivacyPolicy'
+              onChange={handleSingleChecked}
+              checked={checkBoxes.find(cb => cb.name === 'agreePrivacyPolicy')?.isChecked || false}
             />
             <span><FormattedMessage id='AGREE_PRIVACY_POLICY' /></span>
             <div
@@ -225,10 +264,11 @@ const CreateAccount = () => {
             </div>
           </div>
           <button
-            className='button-st1 create_account_button'
+            className={'button-st1 create_account_button' + (!checkBoxes.find(cb => cb.name === 'agreeService')?.isChecked? ' noActive' : '')}
             onClick={() => {
               setIsStepOne(false);
             }}
+            disabled={!checkBoxes.find(cb => cb.name === 'agreeService')?.isChecked}
           ><FormattedMessage id='CONFIRM' /></button>
         </div>
       :

@@ -148,6 +148,8 @@ const LocaleTexts = {
     AGREE_PRIVACY_POLICY_CONTENT_SUB_INNER_10_1_2: 'Cybercrime Investigation Division, Supreme Prosecutors’ Office https://www.spo.go.kr/ Call +82-1301',
     AGREE_PRIVACY_POLICY_CONTENT_SUB_INNER_10_1_3: 'Privacy Infringement Report Center (operated by KISA) https://privacy.kisa.or.kr/ Call +82-118',
     AGREE_PRIVACY_POLICY_CONTENT_SUB_INNER_10_1_4: 'Personal Information Dispute Mediation Committee (operated by KISA) https://www.kopico.go.kr/ Call +82-1833-6972',
+
+    PERSONAL_WEBSITE_MANAGEMENT_PAGE: 'Personal Website Management Page',
   },
   'ko': {
     LOGIN: '로그인',
@@ -298,6 +300,8 @@ const LocaleTexts = {
     AGREE_PRIVACY_POLICY_CONTENT_SUB_INNER_10_1_2: '대검찰청사이버수사과 https://www.spo.go.kr/ / 국번없이 1301',
     AGREE_PRIVACY_POLICY_CONTENT_SUB_INNER_10_1_3: '개인정보침해신고센터 (한국인터넷진흥원 운영) https://privacy.kisa.or.kr/ / 국번없이 118',
     AGREE_PRIVACY_POLICY_CONTENT_SUB_INNER_10_1_4: '개인정보분쟁조정위원회 (한국인터넷진흥원 운영) https://www.kopico.go.kr/ / 1833-6972',
+
+    PERSONAL_WEBSITE_MANAGEMENT_PAGE: '개인용 웹사이트 관리 페이지',
   }
 }
 

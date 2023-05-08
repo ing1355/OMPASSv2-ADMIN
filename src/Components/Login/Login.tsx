@@ -2,16 +2,23 @@ import './Login.css';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 
-import { CopyRightText } from '../Constants/ConstantValues';
+import { CopyRightText } from '../../Constants/ConstantValues';
 import ompass_logo_image from '../../assets/ompass_logo_image.png';
 import login_main_image from '../../assets/login_main_image.png';
 import locale_image from '../../assets/locale_image.png';
 import download_icon from '../../assets/download_icon.png';
 import login_id from '../../assets/login_id.png';
 import login_password from '../../assets/login_password.png';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { langChange } from 'Redux/actions/langChange';
+import { ReduxStateType } from 'Types/ReduxStateTypes';
 
 const Login = () => {
+  document.body.style.backgroundColor = '#E4EBEF';
+  const { lang } = useSelector((state: ReduxStateType) => ({
+    lang: state.lang,
+  }));
+  const dispatch = useDispatch();
 
   return (
     <div
@@ -113,15 +120,19 @@ const Login = () => {
         >
           <img src={locale_image} width='20px' style={{position: 'relative', top: '3px', marginRight: '2px'}}/>
           <span 
-            className='mlr5 login_locale'
+            className={'mlr5 locale-toggle' + (lang === 'ko' ? ' active' : '')}
             onClick={() => {
               console.log('ko')
+              dispatch(langChange('ko'));
+              localStorage.setItem('locale','ko');
             }}
           >KO</span>|
           <span 
-            className='mlr5 login_locale'
+            className={'mlr5 locale-toggle' + (lang === 'en' ? ' active' : '')}
             onClick={() => {
               console.log('en')
+              dispatch(langChange('en'));
+              localStorage.setItem('locale','en');
             }}
           >EN</span>
         </div>
