@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import { IntlProvider } from 'react-intl';
-import LocaleTexts from 'Locale/LocaleText';
+import LocaleTexts from 'Locale/LocaleTexts';
 import { Routes, Route } from 'react-router-dom';
 import Login from 'Components/Login/Login';
 import CreateAccount from 'Components/Account/CreateAccount';

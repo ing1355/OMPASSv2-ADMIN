@@ -5,6 +5,7 @@ import device_image2_android from '../../assets/device_image2_android.png';
 import device_image2_ios from '../../assets/device_image2_ios.png';
 import device_image3 from '../../assets/device_image3.png';
 import { Switch } from 'antd';
+import { FormattedMessage } from 'react-intl';
 
 const InformationDetail = () => {
   return (
@@ -13,20 +14,20 @@ const InformationDetail = () => {
       <div
         className='absolute-center'
       >
-        <h4>등록 정보 조회 / 등록 정보</h4>
+        <div style={{fontWeight: '800'}}><FormattedMessage id='REGISTRATION_INFORMATION_LIST' /> / <FormattedMessage id='REGISTRATION_INFORMATION' /></div>
         <div
           className='mb40'
           style={{display: 'flex'}}
         >
-          <h1>등록 정보</h1>
+          <h1><FormattedMessage id='REGISTRATION_INFORMATION' /></h1>
           <div
-            style={{position: 'relative', top: '35px', marginLeft: '25px', color:'#0092FA', fontWeight: '800'}}
-          >사용법 보기</div>
+            className='App-view-manual-font'
+          ><FormattedMessage id='VIEW_MANUAL' /></div>
         </div>
         <div
           className="information_detail_section mb30"
         >
-          <h3>사용자 아이디</h3>
+          <h3><FormattedMessage id='USER_ID' /></h3>
           abcd2324
         </div>
         <div
@@ -64,7 +65,7 @@ const InformationDetail = () => {
         <div
           className='information_detail_section mb60'
         >
-          <h3>바이패스</h3>
+          <h3><FormattedMessage id='BYPASS' /></h3>
           <div
             style={{display: 'flex'}}
           >

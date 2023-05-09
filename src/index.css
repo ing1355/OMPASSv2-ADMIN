@@ -121,6 +121,26 @@ ul {
 .text-box-st1::-webkit-scrollbar-track{
 }
 
+/* table style */
+.table-st1 table {
+  width: 100%;
+  border-top : 1px solid #b7b7b7;
+  border-collapse: collapse;
+}
+
+.table-st1 th {
+  border-bottom: 1px solid #b7b7b7;
+  padding: 10px;
+  background-color: #e8e8e8;
+  color : rgba(0,0,0,.44);
+}
+
+.table-st1 td {
+  border-bottom : 1px solid #b7b7b7;
+  padding: 10px;
+  text-align: center;
+}
+
 /* logo title */
 .logo-title {
   font-size: 3rem;

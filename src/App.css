@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+.App-view-manual-font {
+  position: relative;
+  top: 35px;
+  margin-left: 25px;
+  color: #0092FA;
+  font-weight: 800;
+}
