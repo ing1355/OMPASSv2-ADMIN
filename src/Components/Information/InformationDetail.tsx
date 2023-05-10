@@ -6,9 +6,13 @@ import device_image2_ios from '../../assets/device_image2_ios.png';
 import device_image3 from '../../assets/device_image3.png';
 import { Switch } from 'antd';
 import { FormattedMessage } from 'react-intl';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const InformationDetail = () => {
   document.body.style.backgroundColor = 'white';
+  const [ isBypass, setIsBypass ] = useState<boolean>(false);
+
   return (
     <>
       <Header />
@@ -41,7 +45,7 @@ const InformationDetail = () => {
         <div
           className='information_detail_section mb30'
         >
-          <h3>인증 장치</h3>
+          <h3><FormattedMessage id='AUTHENTICATION_DEVICE' /></h3>
           <div
             className='information_detail_device_container'
           >
@@ -80,26 +84,41 @@ const InformationDetail = () => {
             <div
               style={{position: 'relative', top: '23px', left: '10px'}}
             >
-              <Switch />
+              <Switch
+                checked={isBypass}
+                onChange={(checked: boolean) => {
+                  setIsBypass(checked);
+                }}
+              />
             </div>
-            
+            {isBypass ?
             <ul>
-              <li>비활성화</li>
-              <li>OMPASS 인증 후 로그인 가능</li>
+              <li><FormattedMessage id='ACTIVE' /></li>
+              <li><FormattedMessage id='BYPASS_ACTIVE_INFO' /> </li>
+            </ul>            
+            :
+            <ul>
+              <li><FormattedMessage id='INACTIVE' /></li>
+              <li><FormattedMessage id='BYPASS_INACTIVE_INFO' /> </li>
             </ul>
+            }
+
           </div>
 
-          <div>* 바이패스는 OMPASS 인증제어 정책이 OMPASS 인증 필수, 모두 거부로 설정되어 있는 경우에만 작동합니다.</div>
+          <div><FormattedMessage id='BYPASS_NOTIFICATION' /></div>
         </div>
         <div
           className='content-center'
         >
-          <button
-            className='button-st4 information_detail_button'
-          >저장</button>
+          <Link to='/InformationList'>
+            <button
+              className='button-st4 information_detail_button'
+            ><FormattedMessage id='SAVE' /></button>
+          </Link>
+
           <button
             className='button-st5 information_detail_button'
-          >삭제</button>
+          ><FormattedMessage id='DELETE' /></button>
         </div>
       </div>
     </>

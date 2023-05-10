@@ -32,6 +32,10 @@ input[type="checkbox"] {
   margin-left: 20px;
 }
 
+.tab_search_button.en {
+  width: 90px;
+}
+
 .tab_search_button_img {
   position: relative;
   top: 2px;

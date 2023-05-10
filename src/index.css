@@ -149,12 +149,7 @@ ul {
   text-align: center;
 }
 
-/* logo title */
-.logo-title {
-  font-size: 3rem;
-  font-weight: 700;
-}
-
+/* locale */
 .locale-toggle, .locale-toggle:hover {
   cursor: pointer;
 }
@@ -212,6 +207,10 @@ ul {
 
 .mt8 {
   margin-top: 8px;
+}
+
+.mt10 {
+  margin-top: 10px;
 }
 
 .mt20 {

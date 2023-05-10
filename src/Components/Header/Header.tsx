@@ -30,9 +30,10 @@ const Header = () => {
             <img 
               src={ompass_logo_image} 
               width="27px"
+              className='header_title_img'
             />
             <span 
-              className='main-color1 header_logo_title logo-title'
+              className='main-color1 header_logo_title'
             >OMPASS</span>
             </li>
           </ul>

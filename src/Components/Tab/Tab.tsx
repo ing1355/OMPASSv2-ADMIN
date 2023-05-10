@@ -8,6 +8,8 @@ import search_icon from '../../assets/search_icon.png';
 import list_download from '../../assets/list_download.png';
 import list_upload from '../../assets/list_upload.png';
 import sorting_icon from '../../assets/sorting_icon.png';
+import { useSelector } from 'react-redux';
+import { ReduxStateType } from 'Types/ReduxStateTypes';
 
 const TabMenu = styled.ul`
   // background-color: #dcdcdc;
@@ -72,12 +74,17 @@ const Desc = styled.div`
 export const Tab = () => {
   // Tab Menu 중 현재 어떤 Tab이 선택되어 있는지 확인하기 위한 currentTab 상태와 currentTab을 갱신하는 함수가 존재해야 하고, 초기값은 0.
   const [currentTab, clickTab] = useState(0);
+  const { lang } = useSelector((state: ReduxStateType) => ({
+    lang: state.lang,
+  }));
+
+  console.log('lang',lang);
 
   const menuArr = [
-    { id: 0, name: '전체 사용자 수', content: 'Tab menu ONE', count: 3 },
-    { id: 1, name: '등록된 사용자 수', content: 'Tab menu TWO', count: 2 },
-    { id: 2, name: '등록되지 않은 사용자 수', content: 'Tab menu THREE', count: 1 },
-    { id: 3, name: 'OMPASS 인증 바이패스 사용자 수', content: 'Tab menu FOUR', count: 1 },
+    { id: 0, name: 'TOTAL_USERS', content: 'Tab menu ONE', count: 3 },
+    { id: 1, name: 'REGISTERED_USERS', content: 'Tab menu TWO', count: 2 },
+    { id: 2, name: 'UNREGISTERED_USERS', content: 'Tab menu THREE', count: 1 },
+    { id: 3, name: 'BYPASS_USERS', content: 'Tab menu FOUR', count: 1 },
   ];
 
   const selectMenuHandler = (index: number) => {
@@ -99,7 +106,7 @@ export const Tab = () => {
                 className={index === currentTab ? "submenu focused" : "submenu" }
                 onClick={() => selectMenuHandler(index)}>
                 <div className='submenu_content_count'>{el.count}</div>
-                <div>{el.name}</div>
+                <div><FormattedMessage id={el.name} /></div>
               </li>
             ))}
         </TabMenu>
@@ -127,7 +134,7 @@ export const Tab = () => {
             >
               <label>
                 <input type="checkbox" name="option2" className='mr10' />
-                어플리케이션명
+                <FormattedMessage id='APPLICATION_NAME' />
               </label>
             </li>
             <li
@@ -135,7 +142,7 @@ export const Tab = () => {
             >
               <label>
                 <input type="checkbox" name="option3" className='mr10' />
-                인증 유형
+                <FormattedMessage id='AUTHENTICATION_METHOD' />
               </label>
             </li>
             <li
@@ -152,7 +159,7 @@ export const Tab = () => {
               >
               </input>
               <button
-                className='button-st4 tab_search_button'
+                className={'button-st4 tab_search_button ' + (lang === 'en' ? 'en' : '')}
               >
                 <img src={search_icon} width='18px' className='tab_search_button_img'/>
                 <FormattedMessage id='SEARCH' />
@@ -176,21 +183,21 @@ export const Tab = () => {
                       <div style={{display: 'none'}}>
                         <ul>
                           <li>
-                            없음
+                            <FormattedMessage id='UNSORTED' />
                           </li>
                           <li>
-                            오름차순
+                            <FormattedMessage id='ASCENDING' />
                           </li>
                           <li>
-                            내림차순
+                            <FormattedMessage id='DESCENDING' />
                           </li>
                         </ul>
                       </div>
                     </div>
                   </th>
-                  <th>어플리케이션명</th>
-                  <th>인증 유형</th>
-                  <th>마지막 로그인</th>
+                  <th><FormattedMessage id='APPLICATION_NAME' /></th>
+                  <th><FormattedMessage id='AUTHENTICATION_METHOD' /></th>
+                  <th><FormattedMessage id='LAST_LOGIN' /></th>
                   <th><FormattedMessage id='BYPASS' /></th>
                 </tr>
               </thead>
@@ -275,11 +282,11 @@ export const Tab = () => {
           >
             <button className='tab_download_upload_button'>
               <img src={list_download} width='20px' className='tab_download_upload_button_img' />
-              <span className='tab_download_upload_button_title'>사용자 목록 다운로드</span>
+              <span className='tab_download_upload_button_title'><FormattedMessage id='DOWNLOAD_USER_LIST' /></span>
             </button>
             <button className='tab_download_upload_button'>
               <img src={list_upload} width='20px' className='tab_download_upload_button_img' />
-              <span className='tab_download_upload_button_title'>사용자 목록 업로드</span>
+              <span className='tab_download_upload_button_title'><FormattedMessage id='UPLOAD_USER_LIST' /></span>
             </button>
           </div>
         </div>

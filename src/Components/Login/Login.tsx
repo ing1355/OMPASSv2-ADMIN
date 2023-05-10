@@ -30,10 +30,10 @@ const Login = () => {
       >
         <img 
           src={ompass_logo_image} 
-          width="38px"
+          width="41px"
         />
         <span 
-          className='main-color1 login_logo_title logo-title'
+          className='main-color1 login_logo_title'
         >OMPASS</span>
       </div>
 
@@ -85,7 +85,7 @@ const Login = () => {
               className='dis_flex mb10'
             >
               <div>
-                <input type='checkbox'/>
+                <input type='checkbox' className='mr10'/>
                 <span><FormattedMessage id='SAVE_ID' /></span>
               </div>
               <div

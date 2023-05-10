@@ -2,7 +2,10 @@ import './CreateAccount.css';
 import ompass_logo_image from '../../assets/ompass_logo_image.png';
 import { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
+
 import RefundImg from '../../assets/refunded_img.png';
+import view_password from '../../assets/view_password.png';
+import dont_look_password from '../../assets/dont_look_password.png';
 
 type AgreePolicyType = 'agreeService' | 'agreePrivacyPolicy';
 
@@ -113,10 +116,10 @@ const CreateAccount = () => {
         <img 
           src={ompass_logo_image} 
           width="38px"
-          style={{position: 'relative', top: '2px', right: '5px'}}
+          style={{position: 'relative', top: '-3px', right: '5px'}}
         />
         <span 
-          className='main-color1 logo-title mlr5'
+          className='main-color1 create-account-logo-title mlr5'
         >OMPASS</span>
       </div>
 
@@ -125,9 +128,10 @@ const CreateAccount = () => {
           className='create_account_content'
         >
           <div
-            className='mb20'
+            className='mb40'
           >
             <input 
+              className='mr10'
               type='checkbox'
               name="allSelect"
               id="allSelect"
@@ -137,9 +141,10 @@ const CreateAccount = () => {
             <span><FormattedMessage id='AGREE_POLICY_ALL' /></span>
           </div>
           <div
-            className='mb20'
+            className='mb40'
           >
             <input 
+              className='mr10 mb10'
               type='checkbox'
               name='agreeService'
               id='agreeService'
@@ -203,9 +208,10 @@ const CreateAccount = () => {
             </div>
           </div>
           <div
-            className='mb30'
+            className='mb50'
           >
             <input 
+              className='mr10 mb10'
               type='checkbox'
               name='agreePrivacyPolicy'
               id='agreePrivacyPolicy'
@@ -279,7 +285,7 @@ const CreateAccount = () => {
           <div>
             <label><FormattedMessage id='ID' /></label>
             <div
-              className='mb20 mt5'
+              className='mb30 mt8'
               style={{display: 'flex'}}
             >
               <input 
@@ -295,33 +301,35 @@ const CreateAccount = () => {
             <label><FormattedMessage id='NAME' /></label>
             <input 
               type='text'
-              className='input-st1 create_account_input mb20 mt5'
+              className='input-st1 create_account_input mb30 mt8'
             />
           </div>
           <div>
             <label><FormattedMessage id='PASSWORD' /></label>
             <input 
               type='text'
-              className='input-st1 create_account_input mb20 mt5'
+              className='input-st1 create_account_input mt8'
             />
+            <img src={view_password} width='30px' style={{position: 'relative', top: '-40px', left: '470px'}}/>
           </div>
           <div>
             <label><FormattedMessage id='RECONFIRM_PASSWORD' /></label>
             <input 
               type='text'
-              className='input-st1 create_account_input mb20 mt5'
+              className='input-st1 create_account_input mt8'
             />
+            <img src={dont_look_password} width='30px' style={{position: 'relative', top: '-40px', left: '470px'}}/>
           </div>
           <div>
             <label><FormattedMessage id='PHONE_NUMBER' /></label>
             <input 
               type='text'
-              className='input-st1 create_account_input mb20 mt5'
+              className='input-st1 create_account_input mb30 mt8'
             />
           </div>
           <button
             className='button-st1 create_account_button'
-            style={{marginTop: '70.5px'}}
+            style={{marginTop: '40.5px'}}
             onClick={() => {
               setIsStepOne(true);
             }}
