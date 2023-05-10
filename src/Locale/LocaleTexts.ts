@@ -175,11 +175,12 @@ const LocaleTexts = {
     UNSORTED: 'Unsorted',
     ASCENDING: 'Ascending',
     DESCENDING: 'Descending',
+    ERROR_CHECK_POLICY: 'Please agree both OMPASS Terms of Service and Privacy Policy',
   },
   'ko': {
-    AGREE_POLICY_ALL: '원모어패스의 이용약관, 개인정보 수집 및 이용(선택)에 모두 동의합니다.',
+    AGREE_POLICY_ALL: '원모어패스의 이용약관, 개인정보 수집 및 이용에 모두 동의합니다.',
     AGREE_SERVICE: '이용약관 동의 (필수)',
-    AGREE_PRIVACY_POLICY: '개인 정보 수집 및 이용 동의 (선택)',
+    AGREE_PRIVACY_POLICY: '개인 정보 수집 및 이용 동의 (필수)',
     AGREE_SERVICE_TITLE_1: '제1조 목적',
     AGREE_SERVICE_CONTENT_1: '본 이용약관은 ㈜원모어시큐리티(이하 “회사”)가 운영하는 원모어패스(OMPASS) 어플리케이션(이하 “서비스”), 원모어패스 클라우드 관리자(관리자 페이지)(이하 “사이트”)의 이용조건과 운영에 관한 제반 사항 규정을 목적으로 합니다.',
     AGREE_SERVICE_TITLE_2: '제2조 용어의 정의',
@@ -352,6 +353,7 @@ const LocaleTexts = {
     UNSORTED: '정렬안함',
     ASCENDING: '오름차순',
     DESCENDING: '내림차순',
+    ERROR_CHECK_POLICY: '모든 약관에 동의해주세요',
   }
 }
 

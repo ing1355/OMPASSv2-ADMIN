@@ -1,11 +1,15 @@
 import './CreateAccount.css';
 import ompass_logo_image from '../../assets/ompass_logo_image.png';
 import { useState } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import RefundImg from '../../assets/refunded_img.png';
 import view_password from '../../assets/view_password.png';
 import dont_look_password from '../../assets/dont_look_password.png';
+import { useSelector } from 'react-redux';
+import { ReduxStateType } from 'Types/ReduxStateTypes';
+import { message } from 'antd';
+import { Link } from 'react-router-dom';
 
 type AgreePolicyType = 'agreeService' | 'agreePrivacyPolicy';
 
@@ -19,6 +23,11 @@ const CreateAccount = () => {
     { id: 1, name: "agreeService", isChecked: false },
     { id: 2, name: "agreePrivacyPolicy", isChecked: false },
   ]);
+
+  const { formatMessage } = useIntl();
+  const { lang } = useSelector((state: ReduxStateType) => ({
+    lang: state.lang,
+  }));
 
   const AgreePolicyList = (isService:boolean, number:number, count:number, innerNumber?: number[], innerCount?: number[]) => {
     const subList = Array.from(Array(count), (_, index) => index + 1);
@@ -172,19 +181,27 @@ const CreateAccount = () => {
                 <h3><FormattedMessage id='AGREE_SERVICE_TITLE_4' /></h3>
                 {AgreePolicyList(true,4,9)}
               </div>
-              <div>
-                <h3><FormattedMessage id='AGREE_SERVICE_TITLE_5' /></h3>
-                {AgreePolicyList(true,5,3)}
-                
-                {/* 영문 버전에만 추가되는 문구 */}
-                {/* <ul>
-                  <li>4</li>
-                  <li>
-                    Refund fee will be affected among the paypal policy below.
-                  </li>
-                </ul>
-                <img src={RefundImg} width='500px'/> */}
-              </div>
+              {lang === 'en' ?
+                <div>
+                  <h3><FormattedMessage id='AGREE_SERVICE_TITLE_5' /></h3>
+                  {AgreePolicyList(true,5,3)}
+                  
+                  {/* 영문 버전에만 추가되는 문구 */}
+                  <div style={{display: 'flex'}}>
+                    <div className='circleNumber mlr5' style={{flexBasis: '13px', position: 'relative', top: '3px'}}>4</div>
+                    <div style={{flexBasis: '480px'}}>
+                      Refund fee will be affected among the paypal policy below.
+                    </div>
+                  </div>
+                  <img src={RefundImg} width='485px'/>
+                </div>
+              :
+                <div>
+                  <h3><FormattedMessage id='AGREE_SERVICE_TITLE_5' /></h3>
+                  {AgreePolicyList(true,5,3)}
+                </div>
+              }
+
               <div>
                 <h3><FormattedMessage id='AGREE_SERVICE_TITLE_6' /></h3>
                 {AgreePolicyList(true,6,2)}
@@ -271,11 +288,15 @@ const CreateAccount = () => {
             </div>
           </div>
           <button
-            className={'button-st1 create_account_button' + (!checkBoxes.find(cb => cb.name === 'agreeService')?.isChecked? ' noActive' : '')}
+            className={'button-st1 create_account_button' + (!selectAll ? ' noActive' : '')}
             onClick={() => {
-              setIsStepOne(false);
+              if(selectAll) {
+                setIsStepOne(false);
+              } else {
+                message.error(formatMessage({ id: 'ERROR_CHECK_POLICY' }));
+              }
             }}
-            disabled={!checkBoxes.find(cb => cb.name === 'agreeService')?.isChecked}
+            // disabled={!selectAll}
           ><FormattedMessage id='CONFIRM' /></button>
         </div>
       :
@@ -327,13 +348,15 @@ const CreateAccount = () => {
               className='input-st1 create_account_input mb30 mt8'
             />
           </div>
-          <button
-            className='button-st1 create_account_button'
-            style={{marginTop: '40.5px'}}
-            onClick={() => {
-              setIsStepOne(true);
-            }}
-          ><FormattedMessage id='SIGN_UP' /></button>
+          <Link to='/'>
+            <button
+              className='button-st1 create_account_button'
+              style={{marginTop: '32.5px'}}
+              onClick={() => {
+                setIsStepOne(true);
+              }}
+            ><FormattedMessage id='SIGN_UP' /></button>
+          </Link>
         </div>
       }
 

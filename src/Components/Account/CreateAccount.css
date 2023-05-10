@@ -29,8 +29,12 @@
   font-weight: 900;
 }
 
+.create_account_button.noActive:hover {
+  background-color: #7FC8FC;
+}
+
 .create_account_input {
-  width: 100%;
+  width: 514px;
   height: 50px;
   border-radius: 8px;
   font-size: 1rem;
@@ -44,6 +48,3 @@
   font-weight: 600;
 }
 
-.noActive:hover {
-  background-color: #7FC8FC;
-}
