@@ -1,7 +1,9 @@
 import './Tab.css';
 import { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+
 import search_icon from '../../assets/search_icon.png';
 import list_download from '../../assets/list_download.png';
 import list_upload from '../../assets/list_upload.png';
@@ -19,6 +21,8 @@ const TabMenu = styled.ul`
   margin-bottom: 7rem;
   margin-top: 10px;
   padding-inline-start: 0px;
+  border-left: 0.5px solid rgb(232, 234, 237,0.9);
+  border-right: 0.5px solid rgb(232, 234, 237,0.9);
 
   // 기본 Tabmenu
   .submenu {
@@ -90,8 +94,10 @@ export const Tab = () => {
           <li className="submenu">{menuArr[1].name}</li>
           <li className="submenu">{menuArr[2].name}</li> */}
           {menuArr.map((el,index) => (
-              <li className={index === currentTab ? "submenu focused" : "submenu" }
-              onClick={() => selectMenuHandler(index)}>
+              <li
+                key={'tab' + index} 
+                className={index === currentTab ? "submenu focused" : "submenu" }
+                onClick={() => selectMenuHandler(index)}>
                 <div className='submenu_content_count'>{el.count}</div>
                 <div>{el.name}</div>
               </li>
@@ -100,98 +106,186 @@ export const Tab = () => {
         <Desc>
           <p>{menuArr[currentTab].content}</p>
         </Desc>
-
-        {/* 검색 */}
-        <ul
-          className='mb30 tab_search_ul'
-          style={{display: 'flex'}}
+        
+        <div
+          style={{width: '95%', margin: '0 auto'}}
         >
-          <li>
-            <label>
-              <input type="checkbox" name="option1" />
-              <FormattedMessage id='USER_ID' />
-            </label>
-          </li>
-          <li>
-            <label>
-              <input type="checkbox" name="option2" />
-              어플리케이션명
-            </label>
-          </li>
-          <li>
-            <label>
-              <input type="checkbox" name="option3" />
-              인증 유형
-            </label>
-          </li>
-          <li>
-            <label>
-              <input type="checkbox" name="option4" />
-              <FormattedMessage id='BYPASS' />
-            </label>
-          </li>
-          <li>
-            <input
-              className='input-st1 tab_seartch_input'
+          {/* 검색 */}
+          <ul
+            className='mb20 tab_search_ul'
+          >
+            <li
+              className='tab_search_checkbox'
             >
-            </input>
-            <button
-              className='button-st4 tab_seartch_button'
+              <label>
+                <input type="checkbox" name="option1" className='mr10' />
+                <FormattedMessage id='USER_ID' />
+              </label>
+            </li>
+            <li
+              className='tab_search_checkbox'
             >
-              <img src={search_icon} width='18px' className='tab_seartch_button_img'/>
-              <FormattedMessage id='SEARCH' />
+              <label>
+                <input type="checkbox" name="option2" className='mr10' />
+                어플리케이션명
+              </label>
+            </li>
+            <li
+              className='tab_search_checkbox'
+            >
+              <label>
+                <input type="checkbox" name="option3" className='mr10' />
+                인증 유형
+              </label>
+            </li>
+            <li
+              className='tab_search_checkbox'
+            >
+              <label>
+                <input type="checkbox" name="option4" className='mr10' />
+                <FormattedMessage id='BYPASS' />
+              </label>
+            </li>
+            <li>
+              <input
+                className='input-st1 tab_search_input'
+              >
+              </input>
+              <button
+                className='button-st4 tab_search_button'
+              >
+                <img src={search_icon} width='18px' className='tab_search_button_img'/>
+                <FormattedMessage id='SEARCH' />
+              </button>
+            </li>
+          </ul>
+
+          {/* 테이블 */}
+          <div className='table-st1'>
+            <table>
+              <thead>
+                <tr>
+                  <th>
+                    <div
+                      onClick={()=>{
+                        
+                      }}
+                    >
+                      <FormattedMessage id='USER_ID' />
+                      <img src={sorting_icon} width='18px' className='tab_table_sorting_image' />
+                      <div style={{display: 'none'}}>
+                        <ul>
+                          <li>
+                            없음
+                          </li>
+                          <li>
+                            오름차순
+                          </li>
+                          <li>
+                            내림차순
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </th>
+                  <th>어플리케이션명</th>
+                  <th>인증 유형</th>
+                  <th>마지막 로그인</th>
+                  <th><FormattedMessage id='BYPASS' /></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><Link to='/InformationDetail'>adgfd123</Link></td>
+                  <td>ios</td>
+                  <td>인증유형</td>
+                  <td>2023.05.09</td>
+                  <td>yes</td>
+                </tr>
+                <tr>
+                  <td>adgfd123</td>
+                  <td>ios</td>
+                  <td>인증유형</td>
+                  <td>2023.05.09</td>
+                  <td>yes</td>
+                </tr>
+                <tr>
+                  <td>adgfd123</td>
+                  <td>ios</td>
+                  <td>인증유형</td>
+                  <td>2023.05.09</td>
+                  <td>yes</td>
+                </tr>
+                <tr>
+                  <td>adgfd123</td>
+                  <td>ios</td>
+                  <td>인증유형</td>
+                  <td>2023.05.09</td>
+                  <td>yes</td>
+                </tr>
+                <tr>
+                  <td>adgfd123</td>
+                  <td>ios</td>
+                  <td>인증유형</td>
+                  <td>2023.05.09</td>
+                  <td>yes</td>
+                </tr>
+                <tr>
+                  <td>adgfd123</td>
+                  <td>ios</td>
+                  <td>인증유형</td>
+                  <td>2023.05.09</td>
+                  <td>yes</td>
+                </tr>
+                <tr>
+                  <td>adgfd123</td>
+                  <td>ios</td>
+                  <td>인증유형</td>
+                  <td>2023.05.09</td>
+                  <td>yes</td>
+                </tr>
+                <tr>
+                  <td>adgfd123</td>
+                  <td>ios</td>
+                  <td>인증유형</td>
+                  <td>2023.05.09</td>
+                  <td>yes</td>
+                </tr>
+                <tr>
+                  <td>adgfd123</td>
+                  <td>ios</td>
+                  <td>인증유형</td>
+                  <td>2023.05.09</td>
+                  <td>yes</td>
+                </tr>
+                <tr>
+                  <td>adgfd123</td>
+                  <td>ios</td>
+                  <td>인증유형</td>
+                  <td>2023.05.09</td>
+                  <td>yes</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div
+            style={{float: 'right'}}
+            className='mt20'
+          >
+            <button className='tab_download_upload_button'>
+              <img src={list_download} width='20px' className='tab_download_upload_button_img' />
+              <span className='tab_download_upload_button_title'>사용자 목록 다운로드</span>
             </button>
-          </li>
-        </ul>
+            <button className='tab_download_upload_button'>
+              <img src={list_upload} width='20px' className='tab_download_upload_button_img' />
+              <span className='tab_download_upload_button_title'>사용자 목록 업로드</span>
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* 테이블 */}
-      <div className='table-st1'>
-        <table>
-          <th>
-            <FormattedMessage id='USER_ID' />
-            <img src={sorting_icon} style={{opacity: 0.44}} width='20px' />
-          </th>
-          <th>어플리케이션명</th>
-          <th>인증 유형</th>
-          <th>마지막 로그인</th>
-          <th><FormattedMessage id='BYPASS' /></th>
-          <tr>
-            <td>adgfd123</td>
-            <td>ios</td>
-            <td>인증유형</td>
-            <td>2023.05.09</td>
-            <td>yes</td>
-          </tr>
-          <tr>
-            <td>adgfd123</td>
-            <td>ios</td>
-            <td>인증유형</td>
-            <td>2023.05.09</td>
-            <td>yes</td>
-          </tr>
-          <tr>
-            <td>adgfd123</td>
-            <td>ios</td>
-            <td>인증유형</td>
-            <td>2023.05.09</td>
-            <td>yes</td>
-          </tr>
-        </table>
-      </div>
-
-      <div
-        style={{float: 'right'}}
-      >
-        <button className='tab_download_upload_button'>
-          <img src={list_download} width='20px' className='tab_download_upload_button_img' />
-          <span className='tab_download_upload_button_title'>사용자 목록 다운로드</span>
-        </button>
-        <button className='tab_download_upload_button'>
-          <img src={list_upload} width='20px' className='tab_download_upload_button_img' />
-          <span className='tab_download_upload_button_title'>사용자 목록 업로드</span>
-        </button>
-      </div>
+      
     </>
   );
 };

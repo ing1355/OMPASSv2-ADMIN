@@ -18,6 +18,7 @@ const Login = () => {
   const { lang } = useSelector((state: ReduxStateType) => ({
     lang: state.lang,
   }));
+
   const dispatch = useDispatch();
 
   return (
@@ -93,12 +94,16 @@ const Login = () => {
                 <FormattedMessage id='FORGOT_YOUR_PASSWORD' />
               </div>
             </div>
-            <button
-              className='button-st1 login-button mb50'
-              type='submit'
-            >
-              <FormattedMessage id='LOGIN' />
-            </button>
+            <Link to='/InformationList'>
+              <button
+                className='button-st1 login-button mb50'
+                // type='submit'
+                onClick={() => {
+                }}
+              >
+                <FormattedMessage id='LOGIN' />
+              </button>
+            </Link>
             <div
               className='mb20 content-center'
             ><FormattedMessage id='NOT_A_MEMBER' /></div>

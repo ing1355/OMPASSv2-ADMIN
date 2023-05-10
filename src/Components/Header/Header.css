@@ -1,18 +1,18 @@
 .header_container {
   height: 80px;
   border-bottom: 1px solid #ccc;
-  /* display: flex; */
-  padding-left: 32px;
-  padding-right: 32px;
+  display: flex;
+  box-shadow: 10px 0px 20px #ccc;
+  justify-content: center;
+}
+
+.header_nav_container {
   display: flex;
   justify-content: space-between;
   align-items: center;
   min-width: 872px;
-  box-shadow: 10px 0px 20px #ccc;
-}
-
-.header_container div {
-  flex: 1 1;  
+  padding-left: 32px;
+  padding-right: 32px;
 }
 
 .header_title {
@@ -29,7 +29,6 @@
 }
 
 nav ul {
-  list-style-type: none;
   padding: 0;
 }
 nav ul li {

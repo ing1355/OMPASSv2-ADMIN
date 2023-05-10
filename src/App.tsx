@@ -7,9 +7,13 @@ import Login from 'Components/Login/Login';
 import CreateAccount from 'Components/Account/CreateAccount';
 import InformationList from 'Components/Information/InformationList';
 import InformationDetail from 'Components/Information/InformationDetail';
+import { useSelector } from 'react-redux';
+import { ReduxStateType } from 'Types/ReduxStateTypes';
 
 const App: React.FC = () => {
-  const lang = 'ko';
+  const { lang } = useSelector((state: ReduxStateType) => ({
+    lang: state.lang!,
+  }));
 
   return (
     <IntlProvider locale={lang} messages={LocaleTexts[lang]}>

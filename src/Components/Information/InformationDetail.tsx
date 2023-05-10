@@ -8,22 +8,30 @@ import { Switch } from 'antd';
 import { FormattedMessage } from 'react-intl';
 
 const InformationDetail = () => {
+  document.body.style.backgroundColor = 'white';
   return (
     <>
       <Header />
       <div
-        className='absolute-center'
+        // className='absolute-center'
+        className='content-center'
+        style={{flexDirection: 'column', marginTop: '100px'}}
       >
-        <div style={{fontWeight: '800'}}><FormattedMessage id='REGISTRATION_INFORMATION_LIST' /> / <FormattedMessage id='REGISTRATION_INFORMATION' /></div>
         <div
-          className='mb40'
-          style={{display: 'flex'}}
+          className='information_detail_header'
         >
-          <h1><FormattedMessage id='REGISTRATION_INFORMATION' /></h1>
+          <div style={{fontWeight: '800c'}}><FormattedMessage id='REGISTRATION_INFORMATION_LIST' /> / <FormattedMessage id='REGISTRATION_INFORMATION' /></div>
           <div
-            className='App-view-manual-font'
-          ><FormattedMessage id='VIEW_MANUAL' /></div>
+            className='mb40'
+            style={{display: 'flex'}}
+          >
+            <h1><FormattedMessage id='REGISTRATION_INFORMATION' /></h1>
+            <div
+              className='App-view-manual-font'
+            ><FormattedMessage id='VIEW_MANUAL' /></div>
+          </div>
         </div>
+        
         <div
           className="information_detail_section mb30"
         >

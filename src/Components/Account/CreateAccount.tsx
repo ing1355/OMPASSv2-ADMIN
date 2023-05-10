@@ -7,6 +7,7 @@ import RefundImg from '../../assets/refunded_img.png';
 type AgreePolicyType = 'agreeService' | 'agreePrivacyPolicy';
 
 const CreateAccount = () => {
+  document.body.style.backgroundColor = '#E4EBEF';
   const [isStepOne, setIsStepOne] = useState<boolean>(true);
   const [selectAll, setSelectAll] = useState(false);
   const [checkBoxes, setCheckBoxes] = useState<{

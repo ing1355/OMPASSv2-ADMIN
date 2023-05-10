@@ -16,58 +16,55 @@ const Header = () => {
     <div
       className='header_container'
     >
-      <nav>
-        <ul>
-          <li className='header_title'><FormattedMessage id='PERSONAL_WEBSITE_MANAGEMENT_PAGE' /></li>
-          <li>
-          <img 
-            src={ompass_logo_image} 
-            width="27px"
-          />
-          <span 
-            className='main-color1 header_logo_title logo-title'
-          >OMPASS</span>
-          </li>
-        </ul>
-      </nav>
-      {/* <div>
-        <span
-          className='header_title'
+      <div
+        className='header_nav_container'
+        style={{width: '90rem'}}
+      >
+        <nav
+          // className='ml30'
+          // style={{marginLeft: '10%'}}
         >
-          <FormattedMessage id='PERSONAL_WEBSITE_MANAGEMENT_PAGE' />
-        </span>
-        <img 
-          src={ompass_logo_image} 
-          width="30px"
-        />
-        <span 
-          className='main-color1 header_logo_title logo-title'
-        >OMPASS</span>
-      </div> */}
-
-      <nav>
-        <ul>
-          <li>아이디어쩌고ㅓ</li>
-          <li>
-            <img src={locale_image} width='20px' style={{position: 'relative', top: '3px', marginRight: '2px'}}/>
+          <ul>
+            <li className='header_title'><FormattedMessage id='PERSONAL_WEBSITE_MANAGEMENT_PAGE' /></li>
+            <li>
+            <img 
+              src={ompass_logo_image} 
+              width="27px"
+            />
             <span 
-              className={'mlr5 locale-toggle' + (lang === 'ko' ? ' active' : '')}
-              onClick={() => {
-                console.log('ko')
-                dispatch(langChange('ko'));
-              }}
-            >KO</span>|
-            <span 
-              className={'mlr5 locale-toggle' + (lang === 'en' ? ' active' : '')}
-              onClick={() => {
-                console.log('en')
-                dispatch(langChange('en'));
-              }}
-            >EN</span>
+              className='main-color1 header_logo_title logo-title'
+            >OMPASS</span>
+            </li>
+          </ul>
+        </nav>
+        <nav
+          // className='mr30'
+          // style={{marginRight: '10%'}}
+        >
+          <ul>
+            <li>아이디어쩌고ㅓ</li>
+            <li>
+              <img src={locale_image} width='20px' style={{position: 'relative', top: '3px', marginRight: '2px'}}/>
+              <span 
+                className={'mlr5 locale-toggle' + (lang === 'ko' ? ' active' : '')}
+                onClick={() => {
+                  console.log('ko')
+                  dispatch(langChange('ko'));
+                }}
+              >KO</span>|
+              <span 
+                className={'mlr5 locale-toggle' + (lang === 'en' ? ' active' : '')}
+                onClick={() => {
+                  console.log('en')
+                  dispatch(langChange('en'));
+                }}
+              >EN</span>
 
-          </li>
-        </ul>
-      </nav>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      
     </div>
   )
 }
