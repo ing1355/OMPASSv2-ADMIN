@@ -7,8 +7,6 @@ input[type="checkbox"] {
   display: flex;
   justify-content: space-between;
   font-weight: 600;
-  padding-inline-start: 0px;
-  /* font-size: 1rem; */
 }
 
 .tab_search_checkbox {
@@ -43,10 +41,34 @@ input[type="checkbox"] {
 }
 
 .tab_table_sorting_image {
-  opacity: 0.44;
   position: relative;
   top: 2px;
   margin-left: 6px;
+}
+
+.tab_table_sorting_image.opac {
+  opacity: 0.44;
+}
+
+.tab_table_sorting_dropdown {
+  position: absolute;
+  margin-top: 10.5px;
+}
+
+.tab_table_sorting_dropdown.id {
+  margin-left: 194px;
+}
+
+.tab_table_sorting_dropdown.env {
+  margin-left: 233px;
+}
+
+.tab_table_sorting_dropdown.last {
+  margin-left: 196px;
+}
+
+.tab_table_sorting_dropdown.pass {
+  margin-left: 180px;
 }
 
 .tab_download_upload_button {

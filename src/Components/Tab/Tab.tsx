@@ -3,13 +3,30 @@ import { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
+import { ReduxStateType } from 'Types/ReduxStateTypes';
+import { Switch } from 'antd';
 
 import search_icon from '../../assets/search_icon.png';
 import list_download from '../../assets/list_download.png';
 import list_upload from '../../assets/list_upload.png';
 import sorting_icon from '../../assets/sorting_icon.png';
-import { useSelector } from 'react-redux';
-import { ReduxStateType } from 'Types/ReduxStateTypes';
+import sorting_bottom_arrow from '../../assets/sorting_bottom_arrow.png';
+import sorting_top_arrow from '../../assets/sorting_top_arrow.png';
+
+type listType = 'id' | 'env' | 'last' | 'pass';
+type sortingType = 'none' | 'asc' | 'des';
+
+type sortingInfoType = {
+  list: listType,
+  sorting: sortingType,
+  isToggle: boolean,
+};
+
+type sortingNowType = {
+  list: listType,
+  sorting: sortingType,
+}
 
 const TabMenu = styled.ul`
   // background-color: #dcdcdc;
@@ -78,19 +95,103 @@ export const Tab = () => {
     lang: state.lang,
   }));
 
-  console.log('lang',lang);
-
   const menuArr = [
     { id: 0, name: 'TOTAL_USERS', content: 'Tab menu ONE', count: 3 },
     { id: 1, name: 'REGISTERED_USERS', content: 'Tab menu TWO', count: 2 },
     { id: 2, name: 'UNREGISTERED_USERS', content: 'Tab menu THREE', count: 1 },
-    { id: 3, name: 'BYPASS_USERS', content: 'Tab menu FOUR', count: 1 },
+    { id: 3, name: 'PASSCODE_USERS', content: 'Tab menu FOUR', count: 1 },
   ];
 
+  const [sortingInfo, setSortingInfo] = useState<sortingInfoType | null>(null);
+  const [sortingNow, setSortingNow] = useState<sortingNowType | null>(null);
+console.log('sortingInfo',sortingInfo)
+console.log('sortingNow',sortingNow)
   const selectMenuHandler = (index: number) => {
     // parameter로 현재 선택한 인덱스 값을 전달해야 하며, 이벤트 객체(event)는 쓰지 않는다
     // 해당 함수가 실행되면 현재 선택된 Tab Menu 가 갱신.
     clickTab(index);
+  };
+
+  const sortingUlFun = (listType: listType, index: number) => {
+    return (
+      <ul
+        className={'dropdown-ul-' + index + ' tab_table_sorting_dropdown ' + listType}
+      >
+        <li>
+          <div
+            onClick={() => {
+              setSortingInfo({
+                list: listType,
+                sorting: 'none',
+                isToggle: false,
+              });
+              setSortingNow({
+                list: listType,
+                sorting: 'none',
+              });
+            }}
+          >
+            <FormattedMessage id='UNSORTED' />
+          </div>
+        </li>
+        <li>
+          <div
+            onClick={() => {
+              setSortingInfo({
+                list: listType,
+                sorting: 'asc',
+                isToggle: false,
+              });
+              setSortingNow({
+                list: listType,
+                sorting: 'asc',
+              });
+            }}
+          >
+            <FormattedMessage id='ASCENDING' />
+          </div>
+        </li>
+        <li>
+          <div
+            onClick={() => {
+              setSortingInfo({
+                list: listType,
+                sorting: 'des',
+                isToggle: false,
+              });
+              setSortingNow({
+                list: listType,
+                sorting: 'des',
+              });
+            }}
+          >
+            <FormattedMessage id='DESCENDING' />
+          </div>
+        </li>
+      </ul>
+    )
+  };
+
+  const sortingImgFun = (isSorting: boolean, sortingType: sortingType) => {
+    if(isSorting) {
+      if(sortingType === 'asc') {
+        return (
+          <img src={sorting_top_arrow} width='18px' className='tab_table_sorting_image' />
+        )
+      } else if (sortingType === 'des') {
+        return (
+          <img src={sorting_bottom_arrow} width='18px' className='tab_table_sorting_image' />
+        )
+      } else {
+        return (
+          <img src={sorting_icon} width='18px' className='tab_table_sorting_image opac' />
+        )      
+      }
+    } else {
+      return (
+        <img src={sorting_icon} width='18px' className='tab_table_sorting_image opac' />
+      )
+    }
   };
 
   return (
@@ -101,14 +202,14 @@ export const Tab = () => {
           <li className="submenu">{menuArr[1].name}</li>
           <li className="submenu">{menuArr[2].name}</li> */}
           {menuArr.map((el,index) => (
-              <li
-                key={'tab' + index} 
-                className={index === currentTab ? "submenu focused" : "submenu" }
-                onClick={() => selectMenuHandler(index)}>
-                <div className='submenu_content_count'>{el.count}</div>
-                <div><FormattedMessage id={el.name} /></div>
-              </li>
-            ))}
+            <li
+              key={'tab' + index} 
+              className={index === currentTab ? "submenu focused" : "submenu" }
+              onClick={() => selectMenuHandler(index)}>
+              <div className='submenu_content_count'>{el.count}</div>
+              <div><FormattedMessage id={el.name} /></div>
+            </li>
+          ))}
         </TabMenu>
         <Desc>
           <p>{menuArr[currentTab].content}</p>
@@ -134,7 +235,7 @@ export const Tab = () => {
             >
               <label>
                 <input type="checkbox" name="option2" className='mr10' />
-                <FormattedMessage id='APPLICATION_NAME' />
+                <FormattedMessage id='AGENT_INSTALL_ENV' />
               </label>
             </li>
             <li
@@ -142,7 +243,7 @@ export const Tab = () => {
             >
               <label>
                 <input type="checkbox" name="option3" className='mr10' />
-                <FormattedMessage id='AUTHENTICATION_METHOD' />
+                <FormattedMessage id='LAST_LOGIN' />
               </label>
             </li>
             <li
@@ -150,7 +251,8 @@ export const Tab = () => {
             >
               <label>
                 <input type="checkbox" name="option4" className='mr10' />
-                <FormattedMessage id='BYPASS' />
+                PASSCODE
+                {/* <FormattedMessage id='BYPASS' /> */}
               </label>
             </li>
             <li>
@@ -173,104 +275,207 @@ export const Tab = () => {
               <thead>
                 <tr>
                   <th>
+                    <input id='dropdown-0' type='checkbox' checked={sortingInfo?.list === 'id' && sortingInfo.isToggle} readOnly></input>
+                    <label htmlFor='dropdown-0' className={'dropdown-label-0 ' + (sortingNow?.list === 'id' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
+                      onClick={()=>{
+                        if(sortingInfo === null || sortingInfo?.list !== 'id') {
+                          setSortingInfo({
+                            list: 'id',
+                            sorting: 'none',
+                            isToggle: true,
+                          })
+                        } else {
+                          if(sortingInfo?.list === 'id') {
+                            setSortingInfo({
+                              list: 'id',
+                              sorting: 'none',
+                              isToggle: !sortingInfo.isToggle,
+                            })
+                          }
+                        }
+                      }}
+                    >
+                      <FormattedMessage id='USER_ID' />
+                      {sortingNow === null ?
+                        sortingImgFun(false, 'none')
+                      :
+                        sortingImgFun((sortingNow?.list === 'id' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'des')), sortingNow!.sorting)
+                      }
+                    </label>
+                    {sortingUlFun("id", 0)}
+                  </th>
+                  <th>
+                    <input id='dropdown-1' type='checkbox' checked={sortingInfo?.list === 'env' && sortingInfo.isToggle} readOnly></input>
+                    <label htmlFor='dropdown-1' className={'dropdown-label-1 ' + (sortingNow?.list === 'env' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
+                      onClick={()=>{
+                        if(sortingInfo === null || sortingInfo?.list !== 'env') {
+                          setSortingInfo({
+                            list: 'env',
+                            sorting: 'none',
+                            isToggle: true,
+                          })
+                        } else {
+                          if(sortingInfo?.list === 'env') {
+                            setSortingInfo({
+                              list: 'env',
+                              sorting: 'none',
+                              isToggle: !sortingInfo.isToggle,
+                            })
+                          }
+                        }
+                      }}
+                    >
+                      <FormattedMessage id='AGENT_INSTALL_ENV' />
+                      {sortingNow === null ?
+                        sortingImgFun(false, 'none')
+                      :
+                        sortingImgFun((sortingNow?.list === 'env' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'des')), sortingNow!.sorting)
+                      }
+                    </label>
+                    {sortingUlFun('env', 1)}
+                  </th>
+                  <th>
+                    <input id='dropdown-2' type='checkbox' checked={sortingInfo?.list === 'last' && sortingInfo.isToggle} readOnly></input>
+                    <label htmlFor='dropdown-2' className={'dropdown-label-2 ' + (sortingNow?.list === 'last' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
+                      onClick={()=>{
+                        if(sortingInfo === null || sortingInfo?.list !== 'last') {
+                          setSortingInfo({
+                            list: 'last',
+                            sorting: 'none',
+                            isToggle: true,
+                          })
+                        } else {
+                          if(sortingInfo?.list === 'last') {
+                            setSortingInfo({
+                              list: 'last',
+                              sorting: 'none',
+                              isToggle: !sortingInfo.isToggle,
+                            })
+                          }
+                        }
+                      }}
+                    >
+                      <FormattedMessage id='LAST_LOGIN' />
+                      {sortingNow === null ?
+                        sortingImgFun(false, 'none')
+                      :
+                        sortingImgFun((sortingNow?.list === 'last' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'des')), sortingNow!.sorting)
+                      }
+                    </label>
+                    {sortingUlFun('last', 2)}
+                  </th>
+                  <th>
+                    <input id='dropdown-3' type='checkbox' checked={sortingInfo?.list === 'pass' && sortingInfo.isToggle} readOnly></input>
+                    <label htmlFor='dropdown-3' className={'dropdown-label-3 ' + (sortingNow?.list === 'pass' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
+                      onClick={()=>{
+                        if(sortingInfo === null || sortingInfo?.list !== 'pass') {
+                          setSortingInfo({
+                            list: 'pass',
+                            sorting: 'none',
+                            isToggle: true,
+                          })
+                        } else {
+                          if(sortingInfo?.list === 'pass') {
+                            setSortingInfo({
+                              list: 'pass',
+                              sorting: 'none',
+                              isToggle: !sortingInfo.isToggle,
+                            })
+                          }
+                        }
+                      }}
+                    >
+                      {/* <FormattedMessage id='LAST_LOGIN' /> */}
+                      PASSCODE
+                      {sortingNow === null ?
+                        sortingImgFun(false, 'none')
+                      :
+                        sortingImgFun((sortingNow?.list === 'pass' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'des')), sortingNow!.sorting)
+                      }
+                    </label>
+                    {sortingUlFun('pass', 3)}
+                  </th>
+                  {/* <th>
                     <div
                       onClick={()=>{
                         
                       }}
                     >
-                      <FormattedMessage id='USER_ID' />
-                      <img src={sorting_icon} width='18px' className='tab_table_sorting_image' />
-                      <div style={{display: 'none'}}>
-                        <ul>
-                          <li>
-                            <FormattedMessage id='UNSORTED' />
-                          </li>
-                          <li>
-                            <FormattedMessage id='ASCENDING' />
-                          </li>
-                          <li>
-                            <FormattedMessage id='DESCENDING' />
-                          </li>
-                        </ul>
-                      </div>
+                      <FormattedMessage id='BYPASS' />
                     </div>
-                  </th>
-                  <th><FormattedMessage id='APPLICATION_NAME' /></th>
-                  <th><FormattedMessage id='AUTHENTICATION_METHOD' /></th>
-                  <th><FormattedMessage id='LAST_LOGIN' /></th>
-                  <th><FormattedMessage id='BYPASS' /></th>
+                  </th> */}
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td><Link to='/InformationDetail'>adgfd123</Link></td>
-                  <td>ios</td>
-                  <td>인증유형</td>
+                  <td>MAC</td>
                   <td>2023.05.09</td>
-                  <td>yes</td>
+                  <td>Y</td>
+                  {/* <td><Switch checkedChildren="ON" unCheckedChildren="OFF"/></td> */}
                 </tr>
                 <tr>
-                  <td>adgfd123</td>
-                  <td>ios</td>
-                  <td>인증유형</td>
+                  <td><Link to='/InformationDetail'>adgfd123</Link></td>
+                  <td>MAC</td>
                   <td>2023.05.09</td>
-                  <td>yes</td>
+                  <td>Y</td>
+                  {/* <td><Switch checkedChildren="ON" unCheckedChildren="OFF"/></td> */}
                 </tr>
                 <tr>
-                  <td>adgfd123</td>
-                  <td>ios</td>
-                  <td>인증유형</td>
+                  <td><Link to='/InformationDetail'>adgfd123</Link></td>
+                  <td>MAC</td>
                   <td>2023.05.09</td>
-                  <td>yes</td>
+                  <td>Y</td>
+                  {/* <td><Switch checkedChildren="ON" unCheckedChildren="OFF"/></td> */}
                 </tr>
                 <tr>
-                  <td>adgfd123</td>
-                  <td>ios</td>
-                  <td>인증유형</td>
+                  <td><Link to='/InformationDetail'>adgfd123</Link></td>
+                  <td>MAC</td>
                   <td>2023.05.09</td>
-                  <td>yes</td>
+                  <td>Y</td>
+                  {/* <td><Switch checkedChildren="ON" unCheckedChildren="OFF"/></td> */}
                 </tr>
                 <tr>
-                  <td>adgfd123</td>
-                  <td>ios</td>
-                  <td>인증유형</td>
+                  <td><Link to='/InformationDetail'>adgfd123</Link></td>
+                  <td>MAC</td>
                   <td>2023.05.09</td>
-                  <td>yes</td>
+                  <td>Y</td>
+                  {/* <td><Switch checkedChildren="ON" unCheckedChildren="OFF"/></td> */}
                 </tr>
                 <tr>
-                  <td>adgfd123</td>
-                  <td>ios</td>
-                  <td>인증유형</td>
+                  <td><Link to='/InformationDetail'>adgfd123</Link></td>
+                  <td>MAC</td>
                   <td>2023.05.09</td>
-                  <td>yes</td>
+                  <td>Y</td>
+                  {/* <td><Switch checkedChildren="ON" unCheckedChildren="OFF"/></td> */}
                 </tr>
                 <tr>
-                  <td>adgfd123</td>
-                  <td>ios</td>
-                  <td>인증유형</td>
+                  <td><Link to='/InformationDetail'>adgfd123</Link></td>
+                  <td>MAC</td>
                   <td>2023.05.09</td>
-                  <td>yes</td>
+                  <td>Y</td>
+                  {/* <td><Switch checkedChildren="ON" unCheckedChildren="OFF"/></td> */}
                 </tr>
                 <tr>
-                  <td>adgfd123</td>
-                  <td>ios</td>
-                  <td>인증유형</td>
+                  <td><Link to='/InformationDetail'>adgfd123</Link></td>
+                  <td>MAC</td>
                   <td>2023.05.09</td>
-                  <td>yes</td>
+                  <td>Y</td>
+                  {/* <td><Switch checkedChildren="ON" unCheckedChildren="OFF"/></td> */}
                 </tr>
                 <tr>
-                  <td>adgfd123</td>
-                  <td>ios</td>
-                  <td>인증유형</td>
+                  <td><Link to='/InformationDetail'>adgfd123</Link></td>
+                  <td>MAC</td>
                   <td>2023.05.09</td>
-                  <td>yes</td>
+                  <td>Y</td>
+                  {/* <td><Switch checkedChildren="ON" unCheckedChildren="OFF"/></td> */}
                 </tr>
                 <tr>
-                  <td>adgfd123</td>
-                  <td>ios</td>
-                  <td>인증유형</td>
+                  <td><Link to='/InformationDetail'>adgfd123</Link></td>
+                  <td>MAC</td>
                   <td>2023.05.09</td>
-                  <td>yes</td>
+                  <td>Y</td>
+                  {/* <td><Switch checkedChildren="ON" unCheckedChildren="OFF"/></td> */}
                 </tr>
               </tbody>
             </table>

@@ -45,7 +45,7 @@ const Login = () => {
         >
           <img 
             src={login_main_image}
-            style={{maxWidth: '100%', height: 'auto', minWidth: '350px'}}
+            style={{maxWidth: '100%', height: 'auto', minWidth: '1000px'}}
           />
           <button
             className='button-st3 login_window_download_button'
