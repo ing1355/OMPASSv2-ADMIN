@@ -9,6 +9,7 @@ import InformationList from 'Components/Information/InformationList';
 import InformationDetail from 'Components/Information/InformationDetail';
 import { useSelector } from 'react-redux';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
+import AgentManagement from 'Components/Agent/AgentManagement';
 
 const App: React.FC = () => {
   const { lang } = useSelector((state: ReduxStateType) => ({
@@ -23,6 +24,7 @@ const App: React.FC = () => {
           <Route path='/CreateAccount' element={<CreateAccount />}/>
           <Route path='/InformationList' element={<InformationList />}/>
           <Route path='/InformationDetail' element={<InformationDetail />}/>
+          <Route path='/AgentManagement' element={<AgentManagement />}/>
         </Routes>
       {/* </div> */}
     </IntlProvider>

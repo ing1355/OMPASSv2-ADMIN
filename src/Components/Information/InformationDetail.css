@@ -2,6 +2,14 @@
   width: 1100px;
 }
 
+.information_detail_user_btn {
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin: 0 5px;
+  position: relative;
+  top: 15px;
+}
+
 .information_detail_section {
   border: 1px solid #b7b7b7;
   border-radius: 10px;
@@ -16,6 +24,10 @@
   margin: 0 50px 0 20px;
 }
 
+.information_detail_update_date {
+  font-size: 0.9rem;
+}
+
 .information_detail_button {
   font-weight: 600;
   font-size: 1rem;
@@ -23,4 +35,8 @@
   width: 95px;
   height: 40px;
   margin: 0px 10px;
+}
+
+td {
+  padding: 5px;
 }

@@ -1,16 +1,10 @@
 import './InformationList.css';
 import Header from "Components/Header/Header";
 import { Tab } from "Components/Tab/Tab";
-import { ReduxStateType } from "Types/ReduxStateTypes";
 import { FormattedMessage } from "react-intl";
-import { useSelector } from "react-redux";
-import { useEffect } from 'react';
 
 const InformationList = () => {
   document.body.style.backgroundColor = 'white';
-  const { lang } = useSelector((state: ReduxStateType) => ({
-    lang: state.lang,
-  }));
 
   return (
     <>

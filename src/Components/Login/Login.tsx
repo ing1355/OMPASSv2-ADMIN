@@ -47,12 +47,26 @@ const Login = () => {
             src={login_main_image}
             style={{maxWidth: '100%', height: 'auto', minWidth: '1000px'}}
           />
-          <button
-            className='button-st3 login_window_download_button'
+          {/* <button
+            className='button-st3 login_agent_download_button'
           >
             <img src={download_icon} width='40px'/>
             <span style={{position: 'relative', top: '-7px', marginLeft: '7px'}}><FormattedMessage id='DOWNLOAD_FOR_WINDOWS' /></span>  
-          </button>
+          </button> */}
+          <div>
+            <button
+              className='button-st3 login_agent_download_button mlr10'
+            >
+              <img src={download_icon} width='40px'/>
+              <span style={{position: 'relative', top: '-8px', marginLeft: '7px'}}><FormattedMessage id='DOWNLOAD_FOR_WINDOWS' /></span>  
+            </button>
+            <button
+              className='button-st3 login_agent_download_button mlr10'
+            >
+              <img src={download_icon} width='40px'/>
+              <span style={{position: 'relative', top: '-8px', marginLeft: '7px'}}><FormattedMessage id='DOWNLOAD_FOR_MAC' /></span>  
+            </button>
+          </div>
         </div>
         <div
           className='login_form_container'

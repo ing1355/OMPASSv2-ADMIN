@@ -119,18 +119,21 @@ const CreateAccount = () => {
     <div
       className='create_account_container absolute-center'
     >
-      <div
-        className='create_account_header mb30 content-center'
-      >
-        <img 
-          src={ompass_logo_image} 
-          width="38px"
-          style={{position: 'relative', top: '-3px', right: '5px'}}
-        />
-        <span 
-          className='main-color1 create-account-logo-title mlr5'
-        >OMPASS</span>
-      </div>
+      <Link to='/'>
+        <div
+          className='create_account_header mb30 content-center'
+        >
+          <img 
+            src={ompass_logo_image} 
+            width="38px"
+            style={{position: 'relative', top: '-3px', right: '5px'}}
+          />
+          <span 
+            className='main-color1 create-account-logo-title mlr5'
+          >OMPASS</span>
+        </div>
+      </Link>
+
 
       {isStepOne ?
         <div
