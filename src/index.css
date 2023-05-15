@@ -15,6 +15,7 @@ body {
   /* background-color: #E4EBEF; */
   /* font-family: 'IBM Plex Sans KR', sans-serif; */
   font-family: 'NEXON Lv1 Gothic OTF';
+  overflow: hidden;
 }
 
 code {

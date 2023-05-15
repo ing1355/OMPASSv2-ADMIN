@@ -12,16 +12,20 @@ import login_password from '../../assets/login_password.png';
 import { useDispatch, useSelector } from 'react-redux';
 import { langChange } from 'Redux/actions/langChange';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
+import { useWindowHeight } from 'Components/CustomHook/useWindowHeight';
 
 const Login = () => {
   document.body.style.backgroundColor = '#E4EBEF';
   const { lang } = useSelector((state: ReduxStateType) => ({
     lang: state.lang,
   }));
-
+  const height = useWindowHeight();
   const dispatch = useDispatch();
 
   return (
+    <div
+      style={{overflowY: 'auto', height: height}}
+    >
     <div
       className='login_container content-center'
     >
@@ -47,13 +51,15 @@ const Login = () => {
             src={login_main_image}
             style={{maxWidth: '100%', height: 'auto', minWidth: '1000px'}}
           />
-          {/* <button
+          <button
             className='button-st3 login_agent_download_button'
           >
             <img src={download_icon} width='40px'/>
             <span style={{position: 'relative', top: '-7px', marginLeft: '7px'}}><FormattedMessage id='DOWNLOAD_FOR_WINDOWS' /></span>  
-          </button> */}
-          <div>
+          </button>
+
+          {/* macOS 추가 */}
+          {/* <div>
             <button
               className='button-st3 login_agent_download_button mlr10'
             >
@@ -66,7 +72,7 @@ const Login = () => {
               <img src={download_icon} width='40px'/>
               <span style={{position: 'relative', top: '-8px', marginLeft: '7px'}}><FormattedMessage id='DOWNLOAD_FOR_MAC' /></span>  
             </button>
-          </div>
+          </div> */}
         </div>
         <div
           className='login_form_container'
@@ -161,6 +167,7 @@ const Login = () => {
           {CopyRightText}
         </div>
       </div>
+    </div>
     </div>
   )
 }

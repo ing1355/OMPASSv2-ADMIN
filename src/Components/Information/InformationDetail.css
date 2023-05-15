@@ -10,6 +10,29 @@
   top: 15px;
 }
 
+.user_info_table tbody tr td {
+  padding: 5px;
+}
+
+.user_info_table tbody tr td:first-child {
+  width: 100px;
+}
+
+.user_info_table.title_color tbody tr td:first-child {
+  color: #b7b7b7;
+  width: 100px;
+}
+
+.user_info_table tbody tr td{
+  height: 30px;
+}
+
+.user_info_table tbody tr td input{
+  height: 25px;
+  border-radius: 3px;
+  font-size: 0.95rem;
+}
+
 .information_detail_section {
   border: 1px solid #b7b7b7;
   border-radius: 10px;
@@ -26,6 +49,7 @@
 
 .information_detail_update_date {
   font-size: 0.9rem;
+  margin-top: 10px;
 }
 
 .information_detail_button {
@@ -35,8 +59,4 @@
   width: 95px;
   height: 40px;
   margin: 0px 10px;
-}
-
-td {
-  padding: 5px;
 }
