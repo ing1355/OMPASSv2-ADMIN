@@ -175,7 +175,7 @@ const LocaleTexts = {
     UPLOAD_FOR_WINDOWS: 'Upload for Windows',
     UPLOAD_FOR_MAC: 'Upload for MacOS',
     AGENT_MANAGEMENT: 'Agent Management',
-    AGENT_MANAGEMENT_LIST: 'Agent Management List',
+    AGENT_LIST: 'Agent List',
     USER_INFORMATION: 'User Information',
     MANAGER: 'Manager',
   },
@@ -355,7 +355,7 @@ const LocaleTexts = {
     UPLOAD_FOR_WINDOWS: 'Windows용 업로드',
     UPLOAD_FOR_MAC: 'MacOS용 업로드',
     AGENT_MANAGEMENT: 'Agent 관리',
-    AGENT_MANAGEMENT_LIST: 'Agent 관리 목록',
+    AGENT_LIST: 'Agent 목록',
     USER_INFORMATION: '사용자 정보',
     MANAGER: '관리자',
   }

@@ -36,7 +36,8 @@ const Header = () => {
                 <img src={menu_icon} width='32px' style={{opacity: 0.7, position: 'relative', top: '3px'}}/>
               </label>
               <ul className='dropdown_menu_ul'>
-                <li><Link to='/InformationList'><div onClick={()=>{setIsMenuOpen(false)}}>등록 정보 조회</div></Link></li>
+                <li><Link to='/InformationList'><div onClick={()=>{setIsMenuOpen(false)}}>사용자 관리</div></Link></li>
+                <li><Link to='/AdminsManagement'><div onClick={()=>{setIsMenuOpen(false)}}>관리자 관리</div></Link></li>
                 <li><Link to='/AgentManagement'><div onClick={()=>{setIsMenuOpen(false)}}>Agent 관리</div></Link></li>
               </ul>
             </li>

@@ -35,12 +35,20 @@ const InformationDetail = () => {
           <div
             className='information_detail_header'
           >
-            <div><Link to='/InformationList'><FormattedMessage id='REGISTRATION_INFORMATION_LIST' /></Link> / <FormattedMessage id='REGISTRATION_INFORMATION' /></div>
+            <div><Link to='/InformationList'>
+              {/* <FormattedMessage id='REGISTRATION_INFORMATION_LIST' /> */}
+              사용자 관리
+              </Link> / 사용자 목록
+              {/* <FormattedMessage id='REGISTRATION_INFORMATION' /> */}
+            </div>
             <div
               className='mb40'
               style={{display: 'flex'}}
             >
-              <h1><FormattedMessage id='REGISTRATION_INFORMATION' /></h1>
+              <h1>
+                {/* <FormattedMessage id='REGISTRATION_INFORMATION' /> */}
+                샤용자 등록 정보
+              </h1>
               <div
                 className='App-view-manual-font'
               ><FormattedMessage id='VIEW_MANUAL' /></div>

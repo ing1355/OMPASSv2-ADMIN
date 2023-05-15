@@ -393,23 +393,14 @@ export const Tab = () => {
                     </label>
                     {sortingUlFun('pass', 3)}
                   </th>
-                  {/* <th>
-                    <div
-                      onClick={()=>{
-                        
-                      }}
-                    >
-                      <FormattedMessage id='BYPASS' />
-                    </div>
-                  </th> */}
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td><Link to='/InformationDetail'>adgfd123</Link></td>
-                  <td>MAC</td>
-                  <td>2023.05.09</td>
-                  <td>Y</td>
+                  <td><Link to='/InformationDetail'>windows</Link></td>
+                  <td><Link to='/InformationDetail'>2023.05.15</Link></td>
+                  <td><Link to='/InformationDetail'>Y</Link></td>
                   {/* <td><Switch checkedChildren="ON" unCheckedChildren="OFF"/></td> */}
                 </tr>
                 <tr>

@@ -1,11 +1,10 @@
 import { useWindowHeightHeader } from 'Components/CustomHook/useWindowHeight';
-import './InformationList.css';
-import Header from "Components/Header/Header";
-import { Tab } from "Components/Tab/Tab";
-import { FormattedMessage } from "react-intl";
+import './AdminsManagement.css';
+import Header from 'Components/Header/Header';
+import { FormattedMessage } from 'react-intl';
+import ListTable from 'Components/Table/ListTable';
 
-const InformationList = () => {
-  document.body.style.backgroundColor = 'white';
+const AdminsManagement = () => {
   const height = useWindowHeightHeader();
 
   return (
@@ -13,23 +12,23 @@ const InformationList = () => {
       <Header />
       <div style={{overflowY: 'auto', height: height}}>
         <div
-          // className='absolute-center'
           className='content-center'
           style={{flexDirection: 'column', marginTop: '70px'}}
         >
           <div
-            className='information_list_header'
+            className='agent_management_header'
           >
             <div>
-              {/* <FormattedMessage id='REGISTRATION_INFORMATION_LIST' /> */}
-            사용자 관리</div>
+              {/* <FormattedMessage id='AGENT_MANAGEMENT' /> */}
+              관리자 관리
+            </div>
             <div
               className='mb40'
               style={{display: 'flex'}}
             >
               <h1>
-                {/* <FormattedMessage id='REGISTRATION_INFORMATION_LIST' /> */}
-                사용자 목록
+                {/* <FormattedMessage id='AGENT_MANAGEMENT_LIST' /> */}
+                관리자 목록
               </h1>
               <div
                 className="App-view-manual-font"
@@ -37,12 +36,13 @@ const InformationList = () => {
             </div>
           </div>
 
-          {/* 탭 tab */}
-          <Tab />
+          <ListTable 
+            type='admins'
+          />
         </div>
       </div>
     </>
   )
 }
 
-export default InformationList;
+export default AdminsManagement;

@@ -1,15 +1,16 @@
-import React from 'react';
 import './App.css';
+import React from 'react';
 import { IntlProvider } from 'react-intl';
 import LocaleTexts from 'Locale/LocaleTexts';
 import { Routes, Route } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { ReduxStateType } from 'Types/ReduxStateTypes';
 import Login from 'Components/Login/Login';
 import CreateAccount from 'Components/Account/CreateAccount';
 import InformationList from 'Components/Information/InformationList';
 import InformationDetail from 'Components/Information/InformationDetail';
-import { useSelector } from 'react-redux';
-import { ReduxStateType } from 'Types/ReduxStateTypes';
 import AgentManagement from 'Components/Agent/AgentManagement';
+import AdminsManagement from 'Components/Admins/AdminsManagement';
 
 const App: React.FC = () => {
   const { lang } = useSelector((state: ReduxStateType) => ({
@@ -25,6 +26,7 @@ const App: React.FC = () => {
           <Route path='/InformationList' element={<InformationList />}/>
           <Route path='/InformationDetail' element={<InformationDetail />}/>
           <Route path='/AgentManagement' element={<AgentManagement />}/>
+          <Route path='/AdminsManagement' element={<AdminsManagement />}/>
         </Routes>
       {/* </div> */}
     </IntlProvider>

@@ -156,6 +156,20 @@ a {
   text-align: center;
 }
 
+.table-st1 a th {
+  border-bottom: 1px solid #b7b7b7;
+  padding: 10px;
+  background-color: #e8e8e8;
+  color : rgba(0,0,0,.44);
+}
+
+.table-st1 a td {
+  border-bottom : 1px solid #b7b7b7;
+  padding: 10px;
+  text-align: center;
+}
+
+
 /* dropdown */
 #dropdown-0 {
   left: 0;

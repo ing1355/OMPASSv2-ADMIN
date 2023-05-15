@@ -30,7 +30,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "testDeploy": "scp -r ./build/* oms@192.168.182.140:/usr/local/ompass_agent_rp/",
+    "deploy": "cross-env scp -r ./build oms@192.168.182.140:/usr/local/tmp&&ssh -t oms@192.168.182.140 /usr/local/ompass_agent_rp/server_update.sh"
   },
   "eslintConfig": {
     "extends": [
