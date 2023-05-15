@@ -31,14 +31,13 @@ const AgentManagement = () => {
           </div>
 
           <div 
-            style={{width: '1000px', marginTop: '2%'}}
+            style={{width: '1200px', marginTop: '2%'}}
           >
             {/* 테이블 */}
             <div className='table-st1'>
               <table>
                 <thead>
                   <tr>
-                    <th>OS</th>
                     <th>버전</th>
                     <th>일시</th>
                     <th>업로드 관리자 아이디</th>
@@ -46,61 +45,51 @@ const AgentManagement = () => {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Windows</td>
                     <td>v1.1.0</td>
                     <td>2023.05.11</td>
                     <td>dkskek123</td>
                   </tr>
                   <tr>
-                    <td>Windows</td>
                     <td>v1.1.0</td>
                     <td>2023.05.11</td>
                     <td>dkskek123</td>
                   </tr>
                   <tr>
-                    <td>Windows</td>
                     <td>v1.1.0</td>
                     <td>2023.05.11</td>
                     <td>dkskek123</td>
                   </tr>
                   <tr>
-                    <td>Windows</td>
                     <td>v1.1.0</td>
                     <td>2023.05.11</td>
                     <td>dkskek123</td>
                   </tr>
                   <tr>
-                    <td>MacOS</td>
                     <td>v1.1.0</td>
                     <td>2023.05.11</td>
                     <td>dkskek123</td>
                   </tr>
                   <tr>
-                    <td>MacOS</td>
                     <td>v1.1.0</td>
                     <td>2023.05.11</td>
                     <td>dkskek123</td>
                   </tr>
                   <tr>
-                    <td>MacOS</td>
                     <td>v1.1.0</td>
                     <td>2023.05.11</td>
                     <td>dkskek123</td>
                   </tr>
                   <tr>
-                    <td>MacOS</td>
                     <td>v1.1.0</td>
                     <td>2023.05.11</td>
                     <td>dkskek123</td>
                   </tr>
                   <tr>
-                    <td>MacOS</td>
                     <td>v1.1.0</td>
                     <td>2023.05.11</td>
                     <td>dkskek123</td>
                   </tr>
                   <tr>
-                    <td>MacOS</td>
                     <td>v1.1.0</td>
                     <td>2023.05.11</td>
                     <td>dkskek123</td>
@@ -111,16 +100,16 @@ const AgentManagement = () => {
 
             <div
                 style={{float: 'right'}}
-                className='mt20'
+                className='mt30'
               >
                 <button className='tab_download_upload_button'>
                   <img src={list_upload} width='20px' className='tab_download_upload_button_img' />
                   <span className='tab_download_upload_button_title'><FormattedMessage id='UPLOAD_FOR_WINDOWS' /></span>
                 </button>
-                <button className='tab_download_upload_button'>
+                {/* <button className='tab_download_upload_button'>
                   <img src={list_upload} width='20px' className='tab_download_upload_button_img' />
                   <span className='tab_download_upload_button_title'><FormattedMessage id='UPLOAD_FOR_MAC' /></span>
-                </button>
+                </button> */}
               </div>
           </div>
 

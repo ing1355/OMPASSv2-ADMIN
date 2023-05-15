@@ -1,8 +1,10 @@
 import './InformationDetail.css';
-import Header from 'Components/Header/Header';
 import { FormattedMessage } from 'react-intl';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+
+import Header from 'Components/Header/Header';
+import { useWindowHeightHeader }from 'Components/CustomHook/useWindowHeight';
 
 import device_image1 from '../../assets/device_image1.png';
 import device_image2_android from '../../assets/device_image2_android.png';
@@ -11,7 +13,9 @@ import device_image3 from '../../assets/device_image3.png';
 import delete_icon from '../../assets/delete_icon.png';
 import view_password from '../../assets/view_password.png';
 import dont_look_password from '../../assets/dont_look_password.png';
-import { useWindowHeightHeader }from 'Components/CustomHook/useWindowHeight';
+import os_windows from '../../assets/os_windows.png';
+import os_mac from '../../assets/os_mac.png';
+import mac_address from '../../assets/mac_address.png';
 
 
 const InformationDetail = () => {
@@ -170,14 +174,14 @@ const InformationDetail = () => {
                   className='information_detail_device_container'
                 >
                   <div>
-                    <img src={device_image1}/>
+                    <img src={os_windows}/>
                     <ul>
                       <li>OS</li>
                       <li>Windows 10</li>
                     </ul>
                   </div>
                   <div>
-                    <img src={device_image3}/>
+                    <img src={mac_address}/>
                     <ul>
                       <li>MAC Address</li>
                       <li>어쩌구</li>

@@ -1,5 +1,5 @@
 import './Header.css';
-import { FormattedMessage } from 'react-intl';
+import { useState } from 'react';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
 import { useDispatch, useSelector } from 'react-redux';
 import { langChange } from 'Redux/actions/langChange';
@@ -14,6 +14,7 @@ const Header = () => {
   const { lang } = useSelector((state: ReduxStateType) => ({
     lang: state.lang,
   }));
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const dispatch = useDispatch();
 
   return (
@@ -30,24 +31,29 @@ const Header = () => {
         >
           <ul>
             <li>
-              <img src={menu_icon} width='30px' style={{opacity: 0.9, position: 'relative', top: '3px'}}/>
+              <input id='dropdown_menu' type='checkbox' readOnly checked={isMenuOpen}/>
+              <label htmlFor='dropdown_menu' className='dropdown_menu_label' onClick={()=>{setIsMenuOpen(!isMenuOpen)}}>
+                <img src={menu_icon} width='32px' style={{opacity: 0.7, position: 'relative', top: '3px'}}/>
+              </label>
+              <ul className='dropdown_menu_ul'>
+                <li><Link to='/InformationList'><div onClick={()=>{setIsMenuOpen(false)}}>등록 정보 조회</div></Link></li>
+                <li><Link to='/AgentManagement'><div onClick={()=>{setIsMenuOpen(false)}}>Agent 관리</div></Link></li>
+              </ul>
             </li>
-            <Link to='/'>
-              <li className='header_title'>
-                {/* <FormattedMessage id='PERSONAL_WEBSITE_MANAGEMENT_PAGE' /> */}
-                Windows Agent RP
-              </li>
-              <li>
-              <img 
-                src={ompass_logo_image} 
-                width="27px"
-                className='header_title_img'
-              />
-              <span 
-                className='main-color1 header_logo_title'
-              >OMPASS</span>
-              </li>
-            </Link>
+            <li className='header_title'>
+              {/* <FormattedMessage id='PERSONAL_WEBSITE_MANAGEMENT_PAGE' /> */}
+              <Link to='/'>Windows Agent RP</Link>
+            </li>
+            <li>
+            <img 
+              src={ompass_logo_image} 
+              width="27px"
+              className='header_title_img'
+            />
+            <span 
+              className='main-color1 header_logo_title'
+            ><Link to='/'>OMPASS</Link></span>
+            </li>
           </ul>
         </nav>
         
@@ -75,12 +81,11 @@ const Header = () => {
               >EN</span>
             </li>
             <li>
-              <img src={logout} width='25px' style={{opacity: 0.9, position: 'relative', top: '5.5px'}}/>
+              <img src={logout} width='25px' style={{opacity: 0.7, position: 'relative', top: '5.5px'}}/>
             </li>
           </ul>
         </nav>
       </div>
-      
     </div>
   )
 }
