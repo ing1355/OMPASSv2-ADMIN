@@ -41,10 +41,9 @@ const Header = () => {
                 <li><Link to='/AgentManagement'><div onClick={()=>{setIsMenuOpen(false)}}>Agent 관리</div></Link></li>
               </ul>
             </li>
-            <li className='header_title'>
-              {/* <FormattedMessage id='PERSONAL_WEBSITE_MANAGEMENT_PAGE' /> */}
+            {/* <li className='header_title'>
               <Link to='/'>Windows Agent RP</Link>
-            </li>
+            </li> */}
             <li>
             <img 
               src={ompass_logo_image} 
@@ -53,7 +52,10 @@ const Header = () => {
             />
             <span 
               className='main-color1 header_logo_title'
-            ><Link to='/'>OMPASS</Link></span>
+            >OMPASS</span>
+            <span
+              className='header_logo_title_agent'
+            >Agent</span>
             </li>
           </ul>
         </nav>
