@@ -62,9 +62,9 @@ nav ul li {
 }
 
 .dropdown_menu_ul li div:hover {
-  /* background-color: #0092FA; */
+  background-color: #0092FA;
   color: white;
-  background-color: rgba(0,0,0,0.64);
+  /* background-color: rgba(0,0,0,0.64); */
 }
 
 #dropdown_menu:checked + label + .dropdown_menu_ul {

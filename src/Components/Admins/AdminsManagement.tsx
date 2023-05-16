@@ -3,6 +3,7 @@ import './AdminsManagement.css';
 import Header from 'Components/Header/Header';
 import { FormattedMessage } from 'react-intl';
 import ListTable from 'Components/Table/ListTable';
+import { Link } from 'react-router-dom';
 
 const AdminsManagement = () => {
   const height = useWindowHeightHeader();
@@ -32,7 +33,7 @@ const AdminsManagement = () => {
               </h1>
               <div
                 className="App-view-manual-font"
-              ><FormattedMessage id='VIEW_MANUAL' /></div>
+              ><Link to='/Manual'><FormattedMessage id='VIEW_MANUAL' /></Link></div>
             </div>
           </div>
 

@@ -3,6 +3,7 @@ import './InformationList.css';
 import Header from "Components/Header/Header";
 import { Tab } from "Components/Tab/Tab";
 import { FormattedMessage } from "react-intl";
+import { Link } from 'react-router-dom';
 
 const InformationList = () => {
   document.body.style.backgroundColor = 'white';
@@ -33,7 +34,7 @@ const InformationList = () => {
               </h1>
               <div
                 className="App-view-manual-font"
-              ><FormattedMessage id='VIEW_MANUAL' /></div>
+              ><Link to='/Manual'><FormattedMessage id='VIEW_MANUAL' /></Link></div>
             </div>
           </div>
 

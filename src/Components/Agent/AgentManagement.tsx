@@ -3,6 +3,7 @@ import { FormattedMessage } from "react-intl";
 import Header from "Components/Header/Header";
 import { useWindowHeightHeader } from 'Components/CustomHook/useWindowHeight';
 import ListTable from 'Components/Table/ListTable';
+import { Link } from 'react-router-dom';
 
 const AgentManagement = () => {
   const height = useWindowHeightHeader();
@@ -26,7 +27,7 @@ const AgentManagement = () => {
               <h1><FormattedMessage id='AGENT_LIST' /></h1>
               <div
                 className="App-view-manual-font"
-              ><FormattedMessage id='VIEW_MANUAL' /></div>
+              ><Link to='/Manual'><FormattedMessage id='VIEW_MANUAL' /></Link></div>
             </div>
           </div>
 

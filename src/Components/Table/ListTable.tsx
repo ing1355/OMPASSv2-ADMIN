@@ -1,11 +1,22 @@
 import { FormattedMessage } from "react-intl";
 import list_upload from '../../assets/list_upload.png';
+import { Pagination } from "antd";
+import type { PaginationProps } from 'antd';
+import { useState } from "react";
 
 interface ListTableProps {
   type: string;
 }
 
 const ListTable = ({ type }: ListTableProps) => {
+  const [totalCount, setTotalCount] = useState<number>(0);
+  const [tableCellSize, setTableCellSize] = useState<number>(0);
+  const [pageNum, setPageNum] = useState<number>(1);
+
+  const onChangePage: PaginationProps['onChange'] = (pageNumber) => {
+    console.log('Page: ', pageNumber);
+  };
+
   return (
     <div 
       style={{width: '1200px', marginTop: '1.8%'}}
@@ -29,8 +40,8 @@ const ListTable = ({ type }: ListTableProps) => {
         </button> */}
       </div>
       {/* 테이블 */}
-      <div className='table-st1'>
-        {type === 'admins' &&
+      {type === 'admins' &&
+        <div className='table-st1'>
           <table>
             <thead>
               <tr>
@@ -92,13 +103,21 @@ const ListTable = ({ type }: ListTableProps) => {
               </tr>
             </tbody>
           </table> 
-        }
-        {type === 'agent' &&
+          <div
+            className="mt50"
+            style={{textAlign: 'center'}}
+          >
+            <Pagination showQuickJumper total={200} onChange={onChangePage}/>
+          </div>
+        </div>
+      }
+      {type === 'agent' &&
+        <div className='table-st1'>
           <table>
             <thead>
               <tr>
                 <th>버전</th>
-                <th>일시</th>
+                <th>업로드 일시</th>
                 <th>업로드 관리자 아이디</th>
               </tr>
             </thead>
@@ -155,8 +174,14 @@ const ListTable = ({ type }: ListTableProps) => {
               </tr>
             </tbody>
           </table> 
-        }
-      </div>
+          <div
+            className="mt50"
+            style={{textAlign: 'center'}}
+          >
+            <Pagination showQuickJumper total={200} onChange={onChangePage}/>
+          </div>
+        </div>
+      }
     </div>
   )
 }

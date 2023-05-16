@@ -12,6 +12,8 @@ import list_upload from '../../assets/list_upload.png';
 import sorting_icon from '../../assets/sorting_icon.png';
 import sorting_bottom_arrow from '../../assets/sorting_bottom_arrow.png';
 import sorting_top_arrow from '../../assets/sorting_top_arrow.png';
+import { Pagination } from 'antd';
+import type { PaginationProps } from 'antd';
 
 type listType = 'id' | 'env' | 'last' | 'pass';
 type sortingType = 'none' | 'asc' | 'des';
@@ -36,7 +38,7 @@ const TabMenu = styled.ul`
   flex-direction: row;
   align-items: center;
   list-style: none;
-  margin-bottom: 7rem;
+  margin-bottom: 5rem;
   margin-top: 10px;
   padding-inline-start: 0px;
   border-left: 0.5px solid rgb(232, 234, 237,0.9);
@@ -192,6 +194,10 @@ export const Tab = () => {
     }
   };
 
+  const onChangePage: PaginationProps['onChange'] = (pageNumber) => {
+    console.log('Page: ', pageNumber);
+  };
+
   return (
     <>
       <div>
@@ -209,9 +215,9 @@ export const Tab = () => {
             </li>
           ))}
         </TabMenu>
-        <Desc>
+        {/* <Desc>
           <p>{menuArr[currentTab].content}</p>
-        </Desc>
+        </Desc> */}
         
         <div
           style={{width: '95%', margin: '0 auto'}}
@@ -468,6 +474,13 @@ export const Tab = () => {
                 </tr>
               </tbody>
             </table>
+          </div>
+
+          <div
+            className="mt50"
+            style={{textAlign: 'center'}}
+          >
+            <Pagination showQuickJumper total={200} onChange={onChangePage}/>
           </div>
 
           <div
