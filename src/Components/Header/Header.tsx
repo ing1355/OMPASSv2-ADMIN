@@ -33,7 +33,7 @@ const Header = () => {
             <li>
               <input id='dropdown_menu' type='checkbox' readOnly checked={isMenuOpen}/>
               <label htmlFor='dropdown_menu' className='dropdown_menu_label' onClick={()=>{setIsMenuOpen(!isMenuOpen)}}>
-                <img src={menu_icon} width='32px' style={{opacity: 0.7, position: 'relative', top: '3px'}}/>
+                <img src={menu_icon} width='30px' style={{opacity: 0.7, position: 'relative', top: '2px'}}/>
               </label>
               <ul className='dropdown_menu_ul'>
                 <li><Link to='/InformationList'><div onClick={()=>{setIsMenuOpen(false)}}>사용자 관리</div></Link></li>
@@ -85,7 +85,7 @@ const Header = () => {
             </li>
             <li>
               <Link to='/'>
-                <img src={logout} width='25px' style={{opacity: 0.7, position: 'relative', top: '5.5px'}}/>
+                <img src={logout} width='25px' style={{opacity: 0.7, position: 'relative', top: '5.5px', left: '-5px'}}/>
               </Link>
             </li>
           </ul>

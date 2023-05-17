@@ -15,7 +15,8 @@ import { ReduxStateType } from 'Types/ReduxStateTypes';
 import { useWindowHeight } from 'Components/CustomHook/useWindowHeight';
 import { CustomAxiosPost } from 'Components/CustomHook/CustomAxios';
 import { PostLoginApi } from 'Constants/ApiRoute';
-// import OMPASS from 'ompass'
+import { OMPASS } from 'ompass';
+import { message } from 'antd';
 
 const Login = () => {
   document.body.style.backgroundColor = '#E4EBEF';
@@ -38,20 +39,17 @@ const Login = () => {
       (data:any) => {
         const { ompassUri } = data;
         console.log('ompassUri', ompassUri);
-        // console.log(OMPASS);
-        // OMPASS(ompassUri);
-        
+        console.log(OMPASS);
+        OMPASS(ompassUri);
       },
       {
         username: username,
-        password: password
+        password: password,
+        language: lang,
       },
-      () => {console.log('실패')},
-      // {
-      //   headers: {
-      //     "Content-Type": "application/json;charset=utf-8",
-      //   },
-      // }
+      () => {
+        message.error('로그인 실패')
+      },
     );
   }
 
@@ -132,7 +130,7 @@ const Login = () => {
               <label htmlFor='userPassword'><FormattedMessage id='PASSWORD' /></label>
               <input 
                 className='input-st1 login_input mt5'
-                type='text'
+                type='password'
                 id='userPassword'
                 maxLength={16}
               />

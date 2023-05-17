@@ -24,15 +24,22 @@ export function CustomAxiosGet(url: string, callback?: Function, params?: any, e
 }
 
 export function CustomAxiosPost(url: string, callback?: Function, params?: any, errCallback?: (err?: AxiosError) => void, config?: any) {
-    const headers = config ? {
-        authorization: config.authorization ? config.authorization : localStorage.getItem('Authorization'),
-        ...config.headers
-    } : {
-        authorization: localStorage.getItem('Authorization'),
-    }
+    // const headers = config ? {
+    //     authorization: config.authorization ? config.authorization : localStorage.getItem('Authorization'),
+    //     ...config.headers
+    // } : {
+    //     authorization: localStorage.getItem('Authorization'),
+    // }
 
-    return axios.post(url, params, { headers }).then(res => {
-        if (callback) callback(res.data.rows, res.headers.authorization);
+    // return axios.post(url, params, { headers }).then(res => {
+    //     if (callback) callback(res.data.rows, res.headers.authorization);
+    // }).catch(err => {
+    //     if (errCallback && err.response && err.response.data) errCallback(err);
+    //     else if(errCallback) errCallback();
+    // })
+
+    return axios.post(url, params).then(res => {
+        if (callback) callback(res.data.rows);
     }).catch(err => {
         if (errCallback && err.response && err.response.data) errCallback(err);
         else if(errCallback) errCallback();

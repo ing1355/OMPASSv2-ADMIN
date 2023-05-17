@@ -71,11 +71,15 @@ a {
   background-color: #7FC8FC;
   border: none;
   color: white;
-  cursor: pointer;
 }
 
-.button-st1:hover {
+/* .button-st1:hover {
   background-color: #0092FA;
+} */
+
+.button-st1.active {
+  background-color: #0092FA;
+  cursor: pointer;
 }
 
 .button-st2 {
@@ -384,6 +388,10 @@ a {
 }
 
 /* margin bottom */
+.mb5 {
+  margin-bottom: 5px;
+}
+
 .mb10 {
   margin-bottom: 10px;
 }

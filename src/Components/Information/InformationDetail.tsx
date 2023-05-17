@@ -275,14 +275,13 @@ const InformationDetail = () => {
                       <td>2023.05.10 14:31</td>
                       <td>2023.05.12 14:31</td>
                       <td>1</td>
-                      <td><img src={delete_icon} width='25px' style={{opacity: 0.44}}/></td>
+                      <td><img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px'}}/></td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </div>
-          </div>
-          
+          </div>         
           {/* <div
             className='content-center'
           >

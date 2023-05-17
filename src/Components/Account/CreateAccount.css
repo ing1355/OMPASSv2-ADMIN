@@ -34,10 +34,15 @@
 }
 
 .create_account_input {
-  width: 514px;
+  width: 496px;
   height: 50px;
   border-radius: 8px;
   font-size: 1rem;
+  padding-left: 20px;
+}
+
+.create_account_input.red {
+  border-color: red;
 }
 
 .create_account_id_check {
@@ -46,5 +51,14 @@
   border-radius: 12px;
   font-size: 0.9rem;
   font-weight: 600;
+}
+
+.create_account_alert {
+  visibility: hidden;
+  color: red;
+}
+
+.create_account_alert.visible {
+  visibility: visible;
 }
 

@@ -1,6 +1,6 @@
 import './CreateAccount.css';
 import ompass_logo_image from '../../assets/ompass_logo_image.png';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import RefundImg from '../../assets/refunded_img.png';
@@ -9,8 +9,10 @@ import dont_look_password from '../../assets/dont_look_password.png';
 import { useSelector } from 'react-redux';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
 import { message } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useWindowHeight } from 'Components/CustomHook/useWindowHeight';
+import { CustomAxiosGet, CustomAxiosPost } from 'Components/CustomHook/CustomAxios';
+import { GetUsernameCheckApi, PostSignUpApi } from 'Constants/ApiRoute';
 
 type AgreePolicyType = 'agreeService' | 'agreePrivacyPolicy';
 
@@ -30,6 +32,41 @@ const CreateAccount = () => {
   const { lang } = useSelector((state: ReduxStateType) => ({
     lang: state.lang,
   }));
+
+  const [isIdAlert, setIsIdAlert] = useState<boolean>(false);
+  const [isNameAlert, setIsNameAlert] = useState<boolean>(false);
+  const [isPasswordAlert, setIsPasswordAlert] = useState<boolean>(false);
+  const [isPasswordConfirmAlert, setIsPasswordConfirmAlert] = useState<boolean>(false);
+  const [isPhoneAlert, setIsPhoneAlert] = useState<boolean>(false);
+  const [isPasswordLook, setIsPasswordLook] = useState<boolean>(false);
+  const [isPasswordConfirmLook, setIsPasswordConfirmLook] = useState<boolean>(false);
+  const [idExist, setIdExist] = useState<boolean>(true);
+
+  const userIdRef = useRef<HTMLInputElement>(null);
+  const userNameRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const passwordConfirmRef = useRef<HTMLInputElement>(null);
+  const userPhoneRef = useRef<HTMLInputElement>(null);
+
+  const [isActive, setIsActive] = useState<boolean>(false);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if(!isIdAlert && !isNameAlert && !isPasswordAlert && !isPasswordConfirmAlert && !isPhoneAlert 
+      && userIdRef.current?.value
+      && userNameRef.current?.value
+      && passwordRef.current?.value
+      && passwordConfirmRef.current?.value
+      && userPhoneRef.current?.value
+      && !idExist
+      ) {
+      setIsActive(true);
+    } else {
+      setIsActive(false);
+    }
+
+  }, [idExist, isIdAlert, isNameAlert, isPasswordAlert, isPasswordConfirmAlert, isPhoneAlert, userIdRef, userNameRef, passwordRef, passwordConfirmRef, userPhoneRef])
 
   const AgreePolicyList = (isService:boolean, number:number, count:number, innerNumber?: number[], innerCount?: number[]) => {
     const subList = Array.from(Array(count), (_, index) => index + 1);
@@ -114,6 +151,33 @@ const CreateAccount = () => {
     });
     setCheckBoxes(checkBoxesCopy);
     setSelectAll(checkBoxesCopy.every((checkBox) => checkBox.isChecked));
+  };
+
+  const autoHypenPhoneFun = (phone: string) => {
+    let str = phone.replace(/[^0-9]/g, '');
+    var tmp = '';
+    if( str.length < 4){
+        return str;
+    }else if(str.length < 7){
+        tmp += str.substr(0, 3);
+        tmp += '-';
+        tmp += str.substr(3);
+        return tmp;
+    }else if(str.length < 11){
+        tmp += str.substr(0, 3);
+        tmp += '-';
+        tmp += str.substr(3, 3);
+        tmp += '-';
+        tmp += str.substr(6);
+        return tmp;
+    }else{              
+        tmp += str.substr(0, 3);
+        tmp += '-';
+        tmp += str.substr(3, 4);
+        tmp += '-';
+        tmp += str.substr(7);
+        return tmp;
+    }
   };
 
   return (
@@ -295,7 +359,7 @@ const CreateAccount = () => {
               </div>
             </div>
             <button
-              className={'button-st1 create_account_button' + (!selectAll ? ' noActive' : '')}
+              className={'button-st1 create_account_button ' + (!selectAll ? 'noActive' : 'active')}
               onClick={() => {
                 if(selectAll) {
                   setIsStepOne(false);
@@ -310,60 +374,223 @@ const CreateAccount = () => {
           <div
           className='create_account_content'
           >
-            <div>
-              <label><FormattedMessage id='ID' /></label>
+            <form
+              onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+                console.log('회원가입')
+                e.preventDefault();
+                const { userId, userName, userPassword, userPasswordConfirm, userPhoneNumber } = (e.currentTarget.elements as any);
+                const username = userId.value;
+                const name = userName.value;
+                const user_password = userPassword.value;
+                const password = userPasswordConfirm.value;
+                const phoneNumber = userPhoneNumber.value;
+
+                if(username && name && password && user_password && password && phoneNumber && !isIdAlert && !isNameAlert && !isPasswordAlert && !isPasswordConfirmAlert && !isPhoneAlert) {
+                  console.log('가입하기api');
+                  CustomAxiosPost(
+                    PostSignUpApi,
+                    (data: any) => {
+                      console.log('data', data);
+                      navigate('/');
+                    },
+                    {
+                      name: name,
+                      password: password,
+                      phoneNumber: phoneNumber,
+                      role: 'USER',
+                      username: username
+                    },
+                    () => {
+                      console.log('회원가입 실패');
+                      message.error('회원가입 실패');
+                    }
+                  );
+                } else {
+                  console.log('에러');
+                }
+              }}
+            >
               <div
-                className='mb30 mt8'
-                style={{display: 'flex'}}
+                style={{marginBottom: '13px'}}
               >
-                <input 
-                  type='text'
-                  className='input-st1 create_account_input'
-                />
-                <button
-                  className='button-st1 create_account_id_check'
-                ><FormattedMessage id='ID_CHECK' /></button>
+                <label><FormattedMessage id='ID' /></label>
+                <div
+                  className='mt8 mb5'
+                  style={{display: 'flex'}}
+                >
+                  <input 
+                    ref={userIdRef}
+                    id='userId'
+                    type='text'
+                    className={'input-st1 create_account_input ' + (isIdAlert ? 'red' : '')}
+                    maxLength={16}
+                    autoComplete='off'
+                    onChange={(e) => {
+                      const value = e.currentTarget.value;
+                      const idRegex = /^[a-z0-9]{4,16}$/;
+                      if(idRegex.test(value)) {
+                        setIsIdAlert(false);
+                      } else {
+                        setIsIdAlert(true);
+                      }
+                    }}
+                  />
+                  <button
+                    type='button'
+                    className={'button-st1 create_account_id_check ' + (!isIdAlert && userIdRef.current?.value ? 'active' : '')}
+                    onClick={() => {
+                      const username = userIdRef.current?.value;
+
+                      if(username && !isIdAlert) {
+                        console.log('중복확인');
+                        CustomAxiosGet(
+                          GetUsernameCheckApi(username),
+                          (data: any) => {
+                            console.log('아이디 중복 확인 data', data);
+                            setIdExist(data.exist);
+                          },
+                          {
+
+                          },
+                          () => {console.log('아이디 중복 확인 에러')}
+                        )
+                      }
+                    }}
+                  ><FormattedMessage id='ID_CHECK' /></button>
+                </div>
+                <div
+                  className={'create_account_alert ' + (isIdAlert ? 'visible' : '')}
+                >
+                  4~16자의 영소문자 및 숫자만 사용 가능합니다.
+                </div>
               </div>
-            </div>
-            <div>
-              <label><FormattedMessage id='NAME' /></label>
-              <input 
-                type='text'
-                className='input-st1 create_account_input mb30 mt8'
-              />
-            </div>
-            <div>
-              <label><FormattedMessage id='PASSWORD' /></label>
-              <input 
-                type='text'
-                className='input-st1 create_account_input mt8'
-              />
-              <img src={view_password} width='30px' style={{position: 'relative', top: '-40px', left: '470px'}}/>
-            </div>
-            <div>
-              <label><FormattedMessage id='RECONFIRM_PASSWORD' /></label>
-              <input 
-                type='text'
-                className='input-st1 create_account_input mt8'
-              />
-              <img src={dont_look_password} width='30px' style={{position: 'relative', top: '-40px', left: '470px'}}/>
-            </div>
-            <div>
-              <label><FormattedMessage id='PHONE_NUMBER' /></label>
-              <input 
-                type='text'
-                className='input-st1 create_account_input mb30 mt8'
-              />
-            </div>
-            <Link to='/'>
+              <div>
+                <label><FormattedMessage id='NAME' /></label>
+                <input 
+                  ref={userNameRef}
+                  id='userName'
+                  type='text'
+                  className={'input-st1 create_account_input mt8 mb5 ' + (isNameAlert ? 'red' : '')}
+                  maxLength={16}
+                  autoComplete='off'
+                  onChange={(e) => {
+                    const value = e.currentTarget.value;
+                    const nameRegex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z]{1,16}$/
+                    if(nameRegex.test(value)) {
+                      setIsNameAlert(false);
+                    } else {
+                      setIsNameAlert(true);
+                    }
+                  }}
+                />
+                <div
+                  className={'create_account_alert ' + (isNameAlert ? 'visible' : '')}
+                >
+                  한글, 영문으로 입력해주세요.
+                </div>
+              </div>
+              <div>
+                <label><FormattedMessage id='PASSWORD' /></label>
+                <img 
+                  src={isPasswordLook ? view_password : dont_look_password} width='30px' style={{position: 'relative', top: '55px', left: '410px'}}
+                  onClick={() => {
+                    setIsPasswordLook(!isPasswordLook);
+                  }}
+                />
+                <input 
+                  id='userPassword'
+                  ref={passwordRef}
+                  type={isPasswordLook ? 'text' : 'password'}
+                  className={'input-st1 create_account_input mt8 ' + (isPasswordAlert ? 'red' : '')}
+                  maxLength={16}
+                  autoComplete='off'
+                  onChange={(e) => {
+                    const value = e.currentTarget.value;
+                    const passwordRegex = /(?=.*[a-zA-Z])(?=.*[\d])(?=.*[\W]).{8,16}|(?=.*[a-zA-Z])(?=.*[\d]).{10,16}|(?=.*[a-zA-Z])(?=.*[\W]).{10,16}|(?=.*[\d])(?=.*[\W]).{10,16}/
+                    if(passwordRegex.test(value)) {
+                      setIsPasswordAlert(false);
+                    } else {
+                      setIsPasswordAlert(true);
+                    }
+                  }}
+                />
+                <div
+                  className={'create_account_alert mt5 ' + (isPasswordAlert ? 'visible' : '')}
+                >
+                  비밀번호는 8자 이상 3가지 조합 혹은 10자 이상 2가지 조합이어야 합니다.
+                </div>
+              </div>
+              <div
+                style={{marginBottom: '15px'}}
+              >
+                <label><FormattedMessage id='RECONFIRM_PASSWORD' /></label>
+                <img 
+                  src={isPasswordConfirmLook ? view_password : dont_look_password} width='30px' style={{position: 'relative', top: '55px', left: '360px'}}
+                  onClick={() => {
+                    setIsPasswordConfirmLook(!isPasswordConfirmLook);
+                  }}
+                />
+                <input 
+                  ref={passwordConfirmRef}
+                  id='userPasswordConfirm'
+                  type={isPasswordConfirmLook ? 'text' : 'password'}
+                  className={'input-st1 create_account_input mt8 ' + (isPasswordConfirmAlert ? 'red' : '')}
+                  maxLength={16}
+                  autoComplete='off'
+                  onChange={(e) => {
+                    const value = e.currentTarget.value;
+                    if(value===passwordRef.current?.value) {
+                      setIsPasswordConfirmAlert(false);
+                    } else {
+                      setIsPasswordConfirmAlert(true);
+                    }
+                  }}
+                />
+                <div
+                  className={'create_account_alert mt5 ' + (isPasswordConfirmAlert ? 'visible' : '')}
+                >
+                  비밀번호가 일치하지 않습니다.
+                </div>
+              </div>
+              <div>
+                <label><FormattedMessage id='PHONE_NUMBER' /></label>
+                <input 
+                  ref={userPhoneRef}
+                  id='userPhoneNumber'
+                  type='text'
+                  className={'input-st1 create_account_input mt8 ' + (isPhoneAlert ? 'red' : '')}
+                  maxLength={13}
+                  autoComplete='off'
+                  onChange={(e) => {
+                    const value = e.currentTarget.value;
+                    e.currentTarget.value = autoHypenPhoneFun(value);
+                    if(e.currentTarget.value.length < 12) {
+                      setIsPhoneAlert(true);
+                    } else {
+                      setIsPhoneAlert(false);
+                    }
+                  }}
+                />
+                <div
+                  className={'create_account_alert mt5 ' + (isPhoneAlert ? 'visible' : '')}
+                >
+                  10~11자리 숫자만 입력해주세요.
+                </div>
+              </div>
               <button
-                className='button-st1 create_account_button'
-                style={{marginTop: '32.5px'}}
+                type='submit'
+                className={'button-st1 create_account_button ' 
+                  + (isActive ? 'active' : '') }
+                style={{marginTop: '14.5px'}}
+                disabled={!isActive}
                 onClick={() => {
-                  setIsStepOne(true);
+                  // setIsStepOne(true);
                 }}
               ><FormattedMessage id='SIGN_UP' /></button>
-            </Link>
+              {/* <Link to='/'>
+
+              </Link> */}
+            </form>
           </div>
         }
       </div>
