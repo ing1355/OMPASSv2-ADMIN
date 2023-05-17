@@ -84,7 +84,9 @@ const Header = () => {
               >EN</span>
             </li>
             <li>
-              <img src={logout} width='25px' style={{opacity: 0.7, position: 'relative', top: '5.5px'}}/>
+              <Link to='/'>
+                <img src={logout} width='25px' style={{opacity: 0.7, position: 'relative', top: '5.5px'}}/>
+              </Link>
             </li>
           </ul>
         </nav>

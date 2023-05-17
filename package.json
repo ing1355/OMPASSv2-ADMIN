@@ -1,11 +1,13 @@
 {
   "name": "ompass_rp_admin",
   "version": "0.1.0",
+  "proxy": "https://192.168.182.140:8085",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@types/axios": "^0.14.0",
     "@types/jest": "^29.4.0",
     "@types/jspdf": "^2.0.0",
     "@types/node": "^18.13.0",
@@ -13,7 +15,9 @@
     "@types/react-dom": "^18.0.10",
     "@types/styled-components": "^5.1.26",
     "antd": "^5.4.7",
+    "axios": "^1.4.0",
     "install": "^0.13.0",
+    "ompass": "^0.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-intl": "^6.4.2",

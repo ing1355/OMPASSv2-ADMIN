@@ -13,6 +13,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { langChange } from 'Redux/actions/langChange';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
 import { useWindowHeight } from 'Components/CustomHook/useWindowHeight';
+import { CustomAxiosPost } from 'Components/CustomHook/CustomAxios';
+import { PostLoginApi } from 'Constants/ApiRoute';
+// import OMPASS from 'ompass'
 
 const Login = () => {
   document.body.style.backgroundColor = '#E4EBEF';
@@ -21,6 +24,36 @@ const Login = () => {
   }));
   const height = useWindowHeight();
   const dispatch = useDispatch();
+
+  const loginRequest = (e: React.FormEvent<HTMLFormElement>) => {
+    console.log('login')
+    e.preventDefault();
+    const { userId, userPassword } = (e.currentTarget.elements as any);
+    const username = userId.value;
+    const password = userPassword.value;
+
+    console.log(username, password)
+    CustomAxiosPost(
+      PostLoginApi,
+      (data:any) => {
+        const { ompassUri } = data;
+        console.log('ompassUri', ompassUri);
+        // console.log(OMPASS);
+        // OMPASS(ompassUri);
+        
+      },
+      {
+        username: username,
+        password: password
+      },
+      () => {console.log('실패')},
+      // {
+      //   headers: {
+      //     "Content-Type": "application/json;charset=utf-8",
+      //   },
+      // }
+    );
+  }
 
   return (
     <div
@@ -78,7 +111,9 @@ const Login = () => {
           className='login_form_container'
         >
           <h1 className='mb40 login_form_title'><FormattedMessage id='LOGIN' /></h1>
-          <form>
+          <form
+            onSubmit={loginRequest}
+          >
             <div
               className='login_input_container'
             >
@@ -87,6 +122,7 @@ const Login = () => {
                 className='input-st1 login_input mt5'
                 type='text'
                 id='userId'
+                maxLength={16}
               />
               <img src={login_id} width='30px' style={{position: 'relative', top: '-41px', left: '20px'}}/>
             </div>
@@ -98,6 +134,7 @@ const Login = () => {
                 className='input-st1 login_input mt5'
                 type='text'
                 id='userPassword'
+                maxLength={16}
               />
               <img src={login_password} width='30px' style={{position: 'relative', top: '-41px', left: '20px'}}/>
             </div>
@@ -114,16 +151,17 @@ const Login = () => {
                 <FormattedMessage id='FORGOT_YOUR_PASSWORD' />
               </div>
             </div>
-            <Link to='/InformationList'>
-              <button
-                className='button-st1 login-button mb50'
-                // type='submit'
-                onClick={() => {
-                }}
-              >
-                <FormattedMessage id='LOGIN' />
-              </button>
-            </Link>
+            <button
+              className='button-st1 login-button mb50'
+              type='submit'
+              // onClick={() => {
+              // }}
+            >
+              <FormattedMessage id='LOGIN' />
+            </button>
+            {/* <Link to='/InformationList'>
+
+            </Link> */}
             <div
               className='mb20 content-center'
             ><FormattedMessage id='NOT_A_MEMBER' /></div>

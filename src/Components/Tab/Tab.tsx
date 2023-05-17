@@ -1,5 +1,5 @@
 import './Tab.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -14,6 +14,9 @@ import sorting_bottom_arrow from '../../assets/sorting_bottom_arrow.png';
 import sorting_top_arrow from '../../assets/sorting_top_arrow.png';
 import { Pagination } from 'antd';
 import type { PaginationProps } from 'antd';
+import { CustomAxiosGet } from 'Components/CustomHook/CustomAxios';
+import { GetPutUsersApi } from 'Constants/ApiRoute';
+import { GetPutUsersApiArrayType, GetPutUsersApiType } from 'Types/ServerResponseDataTypes';
 
 type listType = 'id' | 'env' | 'last' | 'pass';
 type sortingType = 'none' | 'asc' | 'des';
@@ -105,6 +108,20 @@ export const Tab = () => {
 
   const [sortingInfo, setSortingInfo] = useState<sortingInfoType | null>(null);
   const [sortingNow, setSortingNow] = useState<sortingNowType | null>(null);
+  const [userData, setUserData] = useState<GetPutUsersApiArrayType>([]);
+  const [pageSize, setPageSize] = useState<number>(10);
+  console.log('userData', userData)
+  useEffect(()=>{
+    CustomAxiosGet(
+      GetPutUsersApi,
+      (data:GetPutUsersApiArrayType)=>{
+        setUserData(data);
+        console.log('data', data)
+      }, {
+        page_size: 10
+      }
+    );
+  },[])
 
   const selectMenuHandler = (index: number) => {
     // parameter로 현재 선택한 인덱스 값을 전달해야 하며, 이벤트 객체(event)는 쓰지 않는다
@@ -402,76 +419,16 @@ export const Tab = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td><Link to='/InformationDetail'>adgfd123</Link></td>
-                  <td><Link to='/InformationDetail'>windows</Link></td>
-                  <td><Link to='/InformationDetail'>2023.05.15</Link></td>
-                  <td><Link to='/InformationDetail'>Y</Link></td>
-                  {/* <td><Switch checkedChildren="ON" unCheckedChildren="OFF"/></td> */}
-                </tr>
-                <tr>
-                  <td><Link to='/InformationDetail'>adgfd123</Link></td>
-                  <td>MAC</td>
-                  <td>2023.05.09</td>
-                  <td>Y</td>
-                  {/* <td><Switch checkedChildren="ON" unCheckedChildren="OFF"/></td> */}
-                </tr>
-                <tr>
-                  <td><Link to='/InformationDetail'>adgfd123</Link></td>
-                  <td>MAC</td>
-                  <td>2023.05.09</td>
-                  <td>Y</td>
-                  {/* <td><Switch checkedChildren="ON" unCheckedChildren="OFF"/></td> */}
-                </tr>
-                <tr>
-                  <td><Link to='/InformationDetail'>adgfd123</Link></td>
-                  <td>MAC</td>
-                  <td>2023.05.09</td>
-                  <td>Y</td>
-                  {/* <td><Switch checkedChildren="ON" unCheckedChildren="OFF"/></td> */}
-                </tr>
-                <tr>
-                  <td><Link to='/InformationDetail'>adgfd123</Link></td>
-                  <td>MAC</td>
-                  <td>2023.05.09</td>
-                  <td>Y</td>
-                  {/* <td><Switch checkedChildren="ON" unCheckedChildren="OFF"/></td> */}
-                </tr>
-                <tr>
-                  <td><Link to='/InformationDetail'>adgfd123</Link></td>
-                  <td>MAC</td>
-                  <td>2023.05.09</td>
-                  <td>Y</td>
-                  {/* <td><Switch checkedChildren="ON" unCheckedChildren="OFF"/></td> */}
-                </tr>
-                <tr>
-                  <td><Link to='/InformationDetail'>adgfd123</Link></td>
-                  <td>MAC</td>
-                  <td>2023.05.09</td>
-                  <td>Y</td>
-                  {/* <td><Switch checkedChildren="ON" unCheckedChildren="OFF"/></td> */}
-                </tr>
-                <tr>
-                  <td><Link to='/InformationDetail'>adgfd123</Link></td>
-                  <td>MAC</td>
-                  <td>2023.05.09</td>
-                  <td>Y</td>
-                  {/* <td><Switch checkedChildren="ON" unCheckedChildren="OFF"/></td> */}
-                </tr>
-                <tr>
-                  <td><Link to='/InformationDetail'>adgfd123</Link></td>
-                  <td>MAC</td>
-                  <td>2023.05.09</td>
-                  <td>Y</td>
-                  {/* <td><Switch checkedChildren="ON" unCheckedChildren="OFF"/></td> */}
-                </tr>
-                <tr>
-                  <td><Link to='/InformationDetail'>adgfd123</Link></td>
-                  <td>MAC</td>
-                  <td>2023.05.09</td>
-                  <td>Y</td>
-                  {/* <td><Switch checkedChildren="ON" unCheckedChildren="OFF"/></td> */}
-                </tr>
+                {userData.map((data:GetPutUsersApiType)=>(
+                  <tr>
+                    <td><Link to='/InformationDetail'>{data.username}</Link></td>
+                    <td><Link to='/InformationDetail'>{data.osNames}</Link></td>
+                    <td><Link to='/InformationDetail'>{data.lastLoginDate}</Link></td>
+                    <td><Link to='/InformationDetail'>{data.enablePasscodeCount}</Link></td>
+                    {/* <td><Switch checkedChildren="ON" unCheckedChildren="OFF"/></td> */}
+                  </tr>
+                ))}
+
               </tbody>
             </table>
           </div>

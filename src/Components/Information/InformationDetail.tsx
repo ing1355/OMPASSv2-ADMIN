@@ -35,10 +35,11 @@ const InformationDetail = () => {
           <div
             className='information_detail_header'
           >
-            <div><Link to='/InformationList'>
+            <div>
+              <Link to='/InformationList'>
               {/* <FormattedMessage id='REGISTRATION_INFORMATION_LIST' /> */}
-              사용자 관리
-              </Link> / 사용자 목록
+              사용자 관리 / 사용자 목록
+              </Link>
               {/* <FormattedMessage id='REGISTRATION_INFORMATION' /> */}
             </div>
             <div
@@ -51,7 +52,11 @@ const InformationDetail = () => {
               </h1>
               <div
                 className='App-view-manual-font'
-              ><FormattedMessage id='VIEW_MANUAL' /></div>
+              >
+                <Link to='/Manual'>
+                  <FormattedMessage id='VIEW_MANUAL' />
+                </Link>
+              </div>
             </div>
           </div>
           
@@ -175,6 +180,7 @@ const InformationDetail = () => {
             <hr></hr>
             <div
               style={{display: 'flex', justifyContent: 'space-between'}}
+              className='mb30'
             >
               <div style={{display: 'flex', flexDirection: 'column', width: '35%'}}>
                 <h3>Agent 설치 환경</h3>
@@ -231,40 +237,52 @@ const InformationDetail = () => {
                 <div className='information_detail_update_date'>마지막 업데이트: 2023-05-12</div> 
               </div>  
             </div>
-            
-          </div>
-          <div
-            className='information_detail_section mb60'
-          >
-            <h3>PASSCODE 발급 여부 조회</h3>
-            <div className='table-st1'>
-              <table>
-                <thead>
-                  <tr>
-                    <th>PASSCODE</th>
-                    <th>발급 관리자 id</th>
-                    <th>발급 일시</th>
-                    <th>유효 시간</th>
-                    <th>남은 사용 횟수</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <span>ooooooo</span>
-                      <img src={view_password} width='20px' style={{opacity: 0.5, marginLeft: '17px', position: 'relative', top: '5px'}}/>
-                    </td>
-                    <td>sfs@gmail.com</td>
-                    <td>2023.05.10 14:31</td>
-                    <td>2023.05.12 14:31</td>
-                    <td>1</td>
-                    <td><img src={delete_icon} width='25px' style={{opacity: 0.44}}/></td>
-                  </tr>
-                </tbody>
-              </table>
+            <hr></hr>
+            <div
+              className='mt30 mb10'
+            >
+              <div
+                style={{display: 'flex', justifyContent: 'space-between'}}
+              >
+                <h3>PASSCODE</h3>
+                <div>
+                  {/* <img />
+                  <img /> */}
+                  <button>+</button>
+                  <button>설정</button>
+                </div>
+              </div>
+              
+              <div className='table-st1'>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>PASSCODE</th>
+                      <th>발급 관리자 id</th>
+                      <th>발급 일시</th>
+                      <th>유효 시간</th>
+                      <th>남은 사용 횟수</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <span>ooooooo</span>
+                        <img src={view_password} width='20px' style={{opacity: 0.5, marginLeft: '17px', position: 'relative', top: '5px'}}/>
+                      </td>
+                      <td>sfs@gmail.com</td>
+                      <td>2023.05.10 14:31</td>
+                      <td>2023.05.12 14:31</td>
+                      <td>1</td>
+                      <td><img src={delete_icon} width='25px' style={{opacity: 0.44}}/></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
+          
           {/* <div
             className='content-center'
           >
