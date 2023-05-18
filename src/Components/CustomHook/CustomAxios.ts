@@ -16,7 +16,8 @@ export function CustomAxiosGet(url: string, callback?: Function, params?: any, e
         if (res.headers.authorization) {
             localStorage.setItem('Authorization', res.headers.authorization);
         }
-        if (callback) callback(res.data.rows);
+        // if (callback) callback(res.data.rows);
+        if (callback) callback(res.data.data);
     }).catch((err) => {
         if (errCallback && err.response && err.response.data) errCallback(err);
         else if(errCallback) errCallback();
@@ -39,7 +40,8 @@ export function CustomAxiosPost(url: string, callback?: Function, params?: any, 
     // })
 
     return axios.post(url, params).then(res => {
-        if (callback) callback(res.data.rows);
+        // if (callback) callback(res.data.rows);
+        if (callback) callback(res.data.data);
     }).catch(err => {
         if (errCallback && err.response && err.response.data) errCallback(err);
         else if(errCallback) errCallback();

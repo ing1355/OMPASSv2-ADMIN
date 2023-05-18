@@ -33,13 +33,12 @@ const Login = () => {
     const username = userId.value;
     const password = userPassword.value;
 
-    console.log(username, password)
     CustomAxiosPost(
       PostLoginApi,
       (data:any) => {
+        console.log('data',data)
         const { ompassUri } = data;
         console.log('ompassUri', ompassUri);
-        console.log(OMPASS);
         OMPASS(ompassUri);
       },
       {
@@ -183,7 +182,6 @@ const Login = () => {
           <span 
             className={'mlr5 locale-toggle' + (lang === 'ko' ? ' active' : '')}
             onClick={() => {
-              console.log('ko')
               dispatch(langChange('ko'));
               localStorage.setItem('locale','ko');
             }}
@@ -191,7 +189,6 @@ const Login = () => {
           <span 
             className={'mlr5 locale-toggle' + (lang === 'en' ? ' active' : '')}
             onClick={() => {
-              console.log('en')
               dispatch(langChange('en'));
               localStorage.setItem('locale','en');
             }}

@@ -13,15 +13,29 @@ const OMPASSVerify = () => {
   useEffect(() => {
     CustomAxiosPost(
       PostTokenVerifyApi,
-      () => {
-        navigate('/InformationList');
+      (data:any) => {
+        console.log('data', data);
+        const role = data.user.role;
+        const userInfo = {
+          userId: data.user.username,
+          userRole: role,
+          uuid: data.user.id,
+        }
+        sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
+        if(role === 'USER') {
+          navigate('/InformationDetail');
+        } else if(role === 'ADMIN') {
+          navigate('/InformationList');
+        } else {
+          navigate('/InformationList');
+        }
       },
       {
         username: username,
         accessToken: access_token,
       },
       () => {
-        console.log('실패');
+        console.log('ompass 인증 실패');
       }
     );
   })

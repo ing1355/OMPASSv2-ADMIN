@@ -2,7 +2,7 @@ import { FormattedMessage } from "react-intl";
 import list_upload from '../../assets/list_upload.png';
 import { Pagination } from "antd";
 import type { PaginationProps } from 'antd';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface ListTableProps {
   type: string;
@@ -16,6 +16,10 @@ const ListTable = ({ type }: ListTableProps) => {
   const onChangePage: PaginationProps['onChange'] = (pageNumber) => {
     console.log('Page: ', pageNumber);
   };
+
+  useEffect(() => {
+    
+  },[]);
 
   return (
     <div 

@@ -66,6 +66,10 @@ a {
   outline: none;
 }
 
+.input-st1.red {
+  border-color: red;
+}
+
 /* button style */
 .button-st1 {
   background-color: #7FC8FC;
@@ -385,6 +389,16 @@ a {
   border-radius: 15px;
   padding: 7px;
   font-size: 0.7rem;
+}
+
+/* regex alert */
+.regex-alert {
+  visibility: hidden;
+  color: red;
+}
+
+.regex-alert.visible {
+  visibility: visible;  
 }
 
 /* margin bottom */

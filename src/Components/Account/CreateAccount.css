@@ -41,24 +41,11 @@
   padding-left: 20px;
 }
 
-.create_account_input.red {
-  border-color: red;
-}
-
 .create_account_id_check {
   width: 20%;
   margin-left: 22px;
   border-radius: 12px;
   font-size: 0.9rem;
   font-weight: 600;
-}
-
-.create_account_alert {
-  visibility: hidden;
-  color: red;
-}
-
-.create_account_alert.visible {
-  visibility: visible;
 }
 

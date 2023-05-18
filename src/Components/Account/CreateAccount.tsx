@@ -13,6 +13,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useWindowHeight } from 'Components/CustomHook/useWindowHeight';
 import { CustomAxiosGet, CustomAxiosPost } from 'Components/CustomHook/CustomAxios';
 import { GetUsernameCheckApi, PostSignUpApi } from 'Constants/ApiRoute';
+import { autoHypenPhoneFun } from 'Constants/ConstantValues';
 
 type AgreePolicyType = 'agreeService' | 'agreePrivacyPolicy';
 
@@ -151,33 +152,6 @@ const CreateAccount = () => {
     });
     setCheckBoxes(checkBoxesCopy);
     setSelectAll(checkBoxesCopy.every((checkBox) => checkBox.isChecked));
-  };
-
-  const autoHypenPhoneFun = (phone: string) => {
-    let str = phone.replace(/[^0-9]/g, '');
-    var tmp = '';
-    if( str.length < 4){
-        return str;
-    }else if(str.length < 7){
-        tmp += str.substr(0, 3);
-        tmp += '-';
-        tmp += str.substr(3);
-        return tmp;
-    }else if(str.length < 11){
-        tmp += str.substr(0, 3);
-        tmp += '-';
-        tmp += str.substr(3, 3);
-        tmp += '-';
-        tmp += str.substr(6);
-        return tmp;
-    }else{              
-        tmp += str.substr(0, 3);
-        tmp += '-';
-        tmp += str.substr(3, 4);
-        tmp += '-';
-        tmp += str.substr(7);
-        return tmp;
-    }
   };
 
   return (
@@ -459,7 +433,7 @@ const CreateAccount = () => {
                   ><FormattedMessage id='ID_CHECK' /></button>
                 </div>
                 <div
-                  className={'create_account_alert ' + (isIdAlert ? 'visible' : '')}
+                  className={'regex-alert ' + (isIdAlert ? 'visible' : '')}
                 >
                   4~16자의 영소문자 및 숫자만 사용 가능합니다.
                 </div>
@@ -484,7 +458,7 @@ const CreateAccount = () => {
                   }}
                 />
                 <div
-                  className={'create_account_alert ' + (isNameAlert ? 'visible' : '')}
+                  className={'regex-alert ' + (isNameAlert ? 'visible' : '')}
                 >
                   한글, 영문으로 입력해주세요.
                 </div>
@@ -515,7 +489,7 @@ const CreateAccount = () => {
                   }}
                 />
                 <div
-                  className={'create_account_alert mt5 ' + (isPasswordAlert ? 'visible' : '')}
+                  className={'regex-alert mt5 ' + (isPasswordAlert ? 'visible' : '')}
                 >
                   비밀번호는 8자 이상 3가지 조합 혹은 10자 이상 2가지 조합이어야 합니다.
                 </div>
@@ -547,7 +521,7 @@ const CreateAccount = () => {
                   }}
                 />
                 <div
-                  className={'create_account_alert mt5 ' + (isPasswordConfirmAlert ? 'visible' : '')}
+                  className={'regex-alert mt5 ' + (isPasswordConfirmAlert ? 'visible' : '')}
                 >
                   비밀번호가 일치하지 않습니다.
                 </div>
@@ -572,7 +546,7 @@ const CreateAccount = () => {
                   }}
                 />
                 <div
-                  className={'create_account_alert mt5 ' + (isPhoneAlert ? 'visible' : '')}
+                  className={'regex-alert mt5 ' + (isPhoneAlert ? 'visible' : '')}
                 >
                   10~11자리 숫자만 입력해주세요.
                 </div>
