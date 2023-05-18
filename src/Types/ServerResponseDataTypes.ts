@@ -9,6 +9,7 @@ export type GetPutUsersApiType = {
   registeredOmpass: boolean,
   role: string,
   username: string,
+  phoneNumber: string,
 }
 
 export type UserInfoType = {

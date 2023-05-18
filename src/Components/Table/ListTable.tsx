@@ -3,6 +3,9 @@ import list_upload from '../../assets/list_upload.png';
 import { Pagination } from "antd";
 import type { PaginationProps } from 'antd';
 import { useEffect, useState } from "react";
+import { CustomAxiosGet } from "Components/CustomHook/CustomAxios";
+import { GetPutUsersApi } from "Constants/ApiRoute";
+import { GetPutUsersApiArrayType, GetPutUsersApiType } from "Types/ServerResponseDataTypes";
 
 interface ListTableProps {
   type: string;
@@ -10,16 +13,37 @@ interface ListTableProps {
 
 const ListTable = ({ type }: ListTableProps) => {
   const [totalCount, setTotalCount] = useState<number>(0);
-  const [tableCellSize, setTableCellSize] = useState<number>(0);
-  const [pageNum, setPageNum] = useState<number>(1);
+  const [tableCellSize, setTableCellSize] = useState<number>(10);
+  const [pageNum, setPageNum] = useState<number>(0);
+  const [adminData, setAdminData] = useState<GetPutUsersApiArrayType>([]);
 
-  const onChangePage: PaginationProps['onChange'] = (pageNumber) => {
-    console.log('Page: ', pageNumber);
+  console.log('pageNum: ', pageNum);
+  console.log('adminData',adminData);
+  const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
+    setPageNum(pageNumber-1);
+    setTableCellSize(pageSizeOptions);
+    console.log('pageSizeOptions',pageSizeOptions)
   };
 
   useEffect(() => {
-    
-  },[]);
+    if(type === 'admins') {
+      CustomAxiosGet(
+        GetPutUsersApi,
+        (data:GetPutUsersApiArrayType) => {
+          
+          setAdminData(data);
+        },
+        {
+          page_size: tableCellSize,
+          role: "ADMIN",
+          page: pageNum,
+        },
+        () => {
+          console.log('admin 유저 가져오기')
+        }
+      )
+    }
+  },[tableCellSize, pageNum]);
 
   return (
     <div 
@@ -55,56 +79,13 @@ const ListTable = ({ type }: ListTableProps) => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>admin1</td>
-                <td>박00</td>
-                <td>010-1111-1111</td>
-              </tr>
-              <tr>
-                <td>admin1</td>
-                <td>박00</td>
-                <td>010-1111-1111</td>
-              </tr>
-              <tr>
-                <td>admin1</td>
-                <td>박00</td>
-                <td>010-1111-1111</td>
-              </tr>
-              <tr>
-                <td>admin1</td>
-                <td>박00</td>
-                <td>010-1111-1111</td>
-              </tr>
-              <tr>
-                <td>admin1</td>
-                <td>박00</td>
-                <td>010-1111-1111</td>
-              </tr>
-              <tr>
-                <td>admin1</td>
-                <td>박00</td>
-                <td>010-1111-1111</td>
-              </tr>
-              <tr>
-                <td>admin1</td>
-                <td>박00</td>
-                <td>010-1111-1111</td>
-              </tr>
-              <tr>
-                <td>admin1</td>
-                <td>박00</td>
-                <td>010-1111-1111</td>
-              </tr>
-              <tr>
-                <td>admin1</td>
-                <td>박00</td>
-                <td>010-1111-1111</td>
-              </tr>
-              <tr>
-                <td>admin1</td>
-                <td>박00</td>
-                <td>010-1111-1111</td>
-              </tr>
+              {adminData.map((data:GetPutUsersApiType) => (
+                <tr>
+                  <td>{data.username}</td>
+                  <td>{data.name}</td>
+                  <td>{data.phoneNumber}</td>
+                </tr>
+              ))}
             </tbody>
           </table> 
           <div

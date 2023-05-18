@@ -346,7 +346,7 @@ const CreateAccount = () => {
           </div>
         :
           <div
-          className='create_account_content'
+            className='create_account_content'
           >
             <form
               onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
@@ -359,7 +359,7 @@ const CreateAccount = () => {
                 const password = userPasswordConfirm.value;
                 const phoneNumber = userPhoneNumber.value;
 
-                if(username && name && password && user_password && password && phoneNumber && !isIdAlert && !isNameAlert && !isPasswordAlert && !isPasswordConfirmAlert && !isPhoneAlert) {
+                if(username && name && password && user_password && phoneNumber && !isIdAlert && !isNameAlert && !isPasswordAlert && !isPasswordConfirmAlert && !isPhoneAlert) {
                   console.log('가입하기api');
                   CustomAxiosPost(
                     PostSignUpApi,
@@ -422,6 +422,7 @@ const CreateAccount = () => {
                           (data: any) => {
                             console.log('아이디 중복 확인 data', data);
                             setIdExist(data.exist);
+                            message.success('사용 가능한 아이디입니다.');
                           },
                           {
 

@@ -8,3 +8,6 @@ export const GetPutUsersApi = '/v1/users';
 export const DeleteUsersApi = (id: string) => `/v1/users/${id}`;
 export const GetUsersDetailsApi = (id: string) => `/v1/users/${id}/details`;
 export const GetUsernameCheckApi = (username: string) => `/v1/users/username/${username}`;
+
+// Windows agent 파일
+export const GetAgentInstallerApi = `/v1/agent-installer`;
