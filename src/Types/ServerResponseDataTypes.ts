@@ -1,3 +1,8 @@
+export type GetPutUsersApiDataType = {
+  queryTotalCount: number,
+  users: GetPutUsersApiArrayType
+}
+
 export type GetPutUsersApiArrayType = Array<GetPutUsersApiType>
 
 export type GetPutUsersApiType = {
@@ -10,6 +15,22 @@ export type GetPutUsersApiType = {
   role: string,
   username: string,
   phoneNumber: string,
+}
+
+export type GetAgentApiDataType = {
+  queryTotalCount: number,
+  agentProgramHistories: GetAgentApiArrayType
+}
+
+export type GetAgentApiArrayType = Array<GetAgentApiType>
+
+export type GetAgentApiType = {
+  filedId: number,
+  uploader: string,
+  version: string,
+  os: string,
+  uploadDate: string,
+  downloadTarget: boolean,
 }
 
 export type UserInfoType = {
@@ -40,3 +61,7 @@ type DevicesType = {
 }
 
 type OsNamesType = "WINDOWS" | "MACOS";
+
+export type GetPutSecretKeyApiType = {
+  secretKey: string,
+}

@@ -3,7 +3,7 @@ import './AdminsManagement.css';
 import Header from 'Components/Header/Header';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
-import { GetPutUsersApiArrayType, GetPutUsersApiType } from 'Types/ServerResponseDataTypes';
+import { GetPutUsersApiArrayType, GetPutUsersApiDataType, GetPutUsersApiType } from 'Types/ServerResponseDataTypes';
 import { useEffect, useState, useRef } from 'react';
 
 import { message, Pagination, PaginationProps } from 'antd';
@@ -11,13 +11,11 @@ import { CustomAxiosGet, CustomAxiosPost } from 'Components/CustomHook/CustomAxi
 import { GetPutUsersApi, GetUsernameCheckApi, PostSignUpApi } from 'Constants/ApiRoute';
 import { autoHypenPhoneFun } from 'Constants/ConstantValues';
 
-import add_icon from '../../assets/add_icon.png';
-
 const AdminsManagement = () => {
   const height = useWindowHeightHeader();
   const [totalCount, setTotalCount] = useState<number>(0);
   const [tableCellSize, setTableCellSize] = useState<number>(10);
-  const [pageNum, setPageNum] = useState<number>(0);
+  const [pageNum, setPageNum] = useState<number>(1);
   const [adminData, setAdminData] = useState<GetPutUsersApiArrayType>([]);
   const [isAddAdmin, setIsAddAdmin] = useState<boolean>(false);
   const [isIdAlert, setIsIdAlert] = useState<boolean>(false);
@@ -32,21 +30,21 @@ const AdminsManagement = () => {
   const [isActive, setIsActive] = useState<boolean>(false);
 
   const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
-    setPageNum(pageNumber-1);
+    setPageNum(pageNumber);
     setTableCellSize(pageSizeOptions);
-    console.log('pageSizeOptions',pageSizeOptions)
   };
 
   useEffect(() => {
     CustomAxiosGet(
       GetPutUsersApi,
-      (data:GetPutUsersApiArrayType) => {
-        setAdminData(data);
+      (data:GetPutUsersApiDataType) => {
+        setAdminData(data.users);
+        setTotalCount(data.queryTotalCount);
       },
       {
         page_size: tableCellSize,
         role: "ADMIN",
-        page: pageNum,
+        page: pageNum -1,
       },
       () => {
         console.log('admin 유저 가져오기 실패')
@@ -100,7 +98,8 @@ const AdminsManagement = () => {
               :
               <button className='tab_download_upload_button admins_management_button'
                 type='button'
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
                   setIsAddAdmin(true);
                 }}
               >
@@ -119,7 +118,7 @@ const AdminsManagement = () => {
                 onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
                   console.log('회원가입')
                   e.preventDefault();
-                  const { userId, userName, userPassword, userPasswordConfirm, userPhoneNumber } = (e.currentTarget.elements as any);
+                  const { userId, userName, userPhoneNumber } = (e.currentTarget.elements as any);
                   const username = userId.value;
                   const name = userName.value;
                   const phoneNumber = userPhoneNumber.value;
@@ -266,8 +265,10 @@ const AdminsManagement = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {adminData.map((data:GetPutUsersApiType) => (
-                    <tr>
+                  {adminData.map((data:GetPutUsersApiType, index: number) => (
+                    <tr
+                      key={'admin_data_' + index}
+                    >
                       <td>{data.username}</td>
                       <td>{data.name}</td>
                       <td>{data.phoneNumber}</td>
@@ -279,7 +280,7 @@ const AdminsManagement = () => {
                 className="mt50 mb40"
                 style={{textAlign: 'center'}}
               >
-                <Pagination showQuickJumper total={200} onChange={onChangePage}/>
+                <Pagination showQuickJumper showSizeChanger current={pageNum} total={totalCount} onChange={onChangePage}/>
               </div>
             </div>
             }

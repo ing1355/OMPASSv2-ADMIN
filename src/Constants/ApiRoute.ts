@@ -1,3 +1,6 @@
+// OMPASS API
+export const GetPutSecretKeyApi = '/v1/ompass/secretkey';
+
 // 로그인
 export const PostLoginApi = '/v1/login';
 export const PostTokenVerifyApi = '/v1/ompass/token-verification';
@@ -11,3 +14,4 @@ export const GetUsernameCheckApi = (username: string) => `/v1/users/username/${u
 
 // Windows agent 파일
 export const GetAgentInstallerApi = `/v1/agent-installer`;
+export const PostAgentInstallerUploadApi = `/v1/agent-installer/upload`;

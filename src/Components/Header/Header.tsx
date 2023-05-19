@@ -47,7 +47,8 @@ const Header = () => {
                 <ul className='dropdown_menu_ul'>
                   <li><Link to='/InformationList'><div onClick={()=>{setIsMenuOpen(false)}}>사용자 관리</div></Link></li>
                   <li><Link to='/AdminsManagement'><div onClick={()=>{setIsMenuOpen(false)}}>관리자 관리</div></Link></li>
-                  <li><Link to='/AgentManagement'><div onClick={()=>{setIsMenuOpen(false)}}>Agent 관리</div></Link></li>
+                  <li><Link to='/AgentManagement'><div onClick={()=>{setIsMenuOpen(false)}}>버전 관리</div></Link></li>
+                  <li><Link to='/SecretKey'><div onClick={()=>{setIsMenuOpen(false)}}>시크릿키 관리</div></Link></li>
                 </ul>
               </li>
             }
@@ -66,7 +67,7 @@ const Header = () => {
             >OMPASS</span>
             <span
               className='header_logo_title_agent'
-            >Agent</span>
+            >Portal</span>
             </li>
           </ul>
         </nav>

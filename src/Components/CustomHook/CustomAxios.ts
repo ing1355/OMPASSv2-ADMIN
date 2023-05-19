@@ -32,20 +32,26 @@ export function CustomAxiosPost(url: string, callback?: Function, params?: any, 
     //     authorization: localStorage.getItem('Authorization'),
     // }
 
-    // return axios.post(url, params, { headers }).then(res => {
-    //     if (callback) callback(res.data.rows, res.headers.authorization);
-    // }).catch(err => {
-    //     if (errCallback && err.response && err.response.data) errCallback(err);
-    //     else if(errCallback) errCallback();
-    // })
+    const headers = config ? {
+        ...config.headers
+    } : {
+    }
 
-    return axios.post(url, params).then(res => {
-        // if (callback) callback(res.data.rows);
+    return axios.post(url, params, { headers }).then(res => {
+        // if (callback) callback(res.data.data, res.headers.authorization);
         if (callback) callback(res.data.data);
     }).catch(err => {
         if (errCallback && err.response && err.response.data) errCallback(err);
         else if(errCallback) errCallback();
     })
+
+    // return axios.post(url, params).then(res => {
+    //     // if (callback) callback(res.data.rows);
+    //     if (callback) callback(res.data.data);
+    // }).catch(err => {
+    //     if (errCallback && err.response && err.response.data) errCallback(err);
+    //     else if(errCallback) errCallback();
+    // })
 }
 
 export function CustomAxiosDelete(url: string, callback?: Function, params?: any, errCallback?: (err?: AxiosError) => void) {

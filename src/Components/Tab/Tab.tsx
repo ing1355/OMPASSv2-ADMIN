@@ -1,7 +1,7 @@
 import './Tab.css';
 import { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
@@ -16,7 +16,7 @@ import { Pagination } from 'antd';
 import type { PaginationProps } from 'antd';
 import { CustomAxiosGet } from 'Components/CustomHook/CustomAxios';
 import { GetPutUsersApi } from 'Constants/ApiRoute';
-import { GetPutUsersApiArrayType, GetPutUsersApiType } from 'Types/ServerResponseDataTypes';
+import { GetPutUsersApiArrayType, GetPutUsersApiDataType, GetPutUsersApiType } from 'Types/ServerResponseDataTypes';
 
 type listType = 'id' | 'env' | 'last' | 'pass';
 type sortingType = 'none' | 'asc' | 'des';
@@ -109,24 +109,34 @@ export const Tab = () => {
   const [sortingInfo, setSortingInfo] = useState<sortingInfoType | null>(null);
   const [sortingNow, setSortingNow] = useState<sortingNowType | null>(null);
   const [userData, setUserData] = useState<GetPutUsersApiArrayType>([]);
-  const [pageSize, setPageSize] = useState<number>(10);
-  console.log('userData', userData)
+  const [totalCount, setTotalCount] = useState<number>(0);
+  const [tableCellSize, setTableCellSize] = useState<number>(10);
+  const [pageNum, setPageNum] = useState<number>(1);
+  const [hoveredRow, setHoveredRow] = useState<number>(-1);
+
+  const navigate = useNavigate();
+
+console.log('sortingInfo',sortingInfo)
   useEffect(()=>{
     CustomAxiosGet(
       GetPutUsersApi,
-      (data:GetPutUsersApiArrayType)=>{
-        setUserData(data);
-        console.log('data', data)
+      (data:GetPutUsersApiDataType)=>{
+        setUserData(data.users);
+        setTotalCount(data.queryTotalCount);
       }, {
-        page_size: 10
+        page_size: tableCellSize,
+        page: pageNum -1
       }
     );
-  },[])
+  },[tableCellSize, pageNum])
 
-  const selectMenuHandler = (index: number) => {
-    // parameter로 현재 선택한 인덱스 값을 전달해야 하며, 이벤트 객체(event)는 쓰지 않는다
-    // 해당 함수가 실행되면 현재 선택된 Tab Menu 가 갱신.
+  const selectMenuHandler = (name: string, index: number) => {
     clickTab(index);
+  };
+
+  // 행 호버 이벤트 핸들러
+  const handleRowHover = (index: number) => {
+    setHoveredRow(index);
   };
 
   const sortingUlFun = (listType: listType, index: number) => {
@@ -211,8 +221,9 @@ export const Tab = () => {
     }
   };
 
-  const onChangePage: PaginationProps['onChange'] = (pageNumber) => {
-    console.log('Page: ', pageNumber);
+  const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
+    setPageNum(pageNumber);
+    setTableCellSize(pageSizeOptions);
   };
 
   return (
@@ -226,7 +237,7 @@ export const Tab = () => {
             <li
               key={'tab' + index} 
               className={index === currentTab ? "submenu focused" : "submenu" }
-              onClick={() => selectMenuHandler(index)}>
+              onClick={() => selectMenuHandler(el.name, index)}>
               <div className='submenu_content_count'>{el.count}</div>
               <div><FormattedMessage id={el.name} /></div>
             </li>
@@ -419,13 +430,19 @@ export const Tab = () => {
                 </tr>
               </thead>
               <tbody>
-                {userData.map((data:GetPutUsersApiType)=>(
-                  <tr>
-                    <td><Link to='/InformationDetail'>{data.username}</Link></td>
-                    <td><Link to='/InformationDetail'>{data.osNames}</Link></td>
-                    <td><Link to='/InformationDetail'>{data.lastLoginDate}</Link></td>
-                    <td><Link to='/InformationDetail'>{data.enablePasscodeCount}</Link></td>
-                    {/* <td><Switch checkedChildren="ON" unCheckedChildren="OFF"/></td> */}
+                {userData.map((data:GetPutUsersApiType, index:number)=>(
+                  <tr
+                    onMouseEnter={() => handleRowHover(index)}
+                    onMouseLeave={() => handleRowHover(-1)}
+                    onClick={() => {
+                      navigate('/InformationDetail');
+                    }}
+                    style={{ background: hoveredRow === index ? '#D6EAF5' : 'transparent' }}
+                  >
+                    <td>{data.username}</td>
+                    <td>{data.osNames}</td>
+                    <td>{data.lastLoginDate}</td>
+                    <td>{data.enablePasscodeCount}</td>
                   </tr>
                 ))}
 
@@ -434,10 +451,10 @@ export const Tab = () => {
           </div>
 
           <div
-            className="mt50"
+            className="mt50 mb40"
             style={{textAlign: 'center'}}
           >
-            <Pagination showQuickJumper total={200} onChange={onChangePage}/>
+            <Pagination showQuickJumper showSizeChanger current={pageNum} total={totalCount} onChange={onChangePage}/>
           </div>
 
           <div
