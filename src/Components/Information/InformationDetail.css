@@ -41,6 +41,14 @@
   width: 1100px;
 }
 
+.information_detail_device_delete_btn {
+  padding: 5px 10px;
+  border-radius: 5px;
+  height: 28px;  
+  position: relative;
+  top: 18px;
+}
+
 .information_detail_device_container {
   display: flex;
   justify-content: space-between;

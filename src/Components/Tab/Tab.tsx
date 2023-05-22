@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
 
 import search_icon from '../../assets/search_icon.png';
@@ -17,6 +17,7 @@ import type { PaginationProps } from 'antd';
 import { CustomAxiosGet } from 'Components/CustomHook/CustomAxios';
 import { GetPutUsersApi } from 'Constants/ApiRoute';
 import { GetPutUsersApiArrayType, GetPutUsersApiDataType, GetPutUsersApiType } from 'Types/ServerResponseDataTypes';
+import { userUuidChange } from 'Redux/actions/userChange';
 
 type listType = 'id' | 'env' | 'last' | 'pass';
 type sortingType = 'none' | 'asc' | 'des';
@@ -95,8 +96,9 @@ const Desc = styled.div`
 export const Tab = () => {
   // Tab Menu 중 현재 어떤 Tab이 선택되어 있는지 확인하기 위한 currentTab 상태와 currentTab을 갱신하는 함수가 존재해야 하고, 초기값은 0.
   const [currentTab, clickTab] = useState(0);
-  const { lang } = useSelector((state: ReduxStateType) => ({
+  const { lang, UserInfoDetailType } = useSelector((state: ReduxStateType) => ({
     lang: state.lang,
+    UserInfoDetailType: state.UserInfoDetailType,
   }));
 
   const menuArr = [
@@ -115,6 +117,7 @@ export const Tab = () => {
   const [hoveredRow, setHoveredRow] = useState<number>(-1);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
 console.log('sortingInfo',sortingInfo)
   useEffect(()=>{
@@ -225,6 +228,25 @@ console.log('sortingInfo',sortingInfo)
     setPageNum(pageNumber);
     setTableCellSize(pageSizeOptions);
   };
+
+  function OSNamesComponent({ osNames }: any) {
+    const windowsCount = osNames.filter((name: any) => name === 'Windows').length;
+    const macosCount = osNames.filter((name: any) => name === 'MacOs').length;
+  
+    let result = '';
+  
+    if (windowsCount > 0 && macosCount > 0) {
+      result = 'Windows, MacOs';
+    } else if (windowsCount > 0) {
+      result = 'Windows';
+    } else if (macosCount > 0) {
+      result = 'MacOs';
+    } else {
+      result = '-';
+    }
+  
+    return <span>{result}</span>;
+  }
 
   return (
     <>
@@ -436,11 +458,13 @@ console.log('sortingInfo',sortingInfo)
                     onMouseLeave={() => handleRowHover(-1)}
                     onClick={() => {
                       navigate('/InformationDetail');
+                      dispatch(userUuidChange(data.id));
+                      sessionStorage.setItem('userUuid', data.id);
                     }}
                     style={{ background: hoveredRow === index ? '#D6EAF5' : 'transparent' }}
                   >
                     <td>{data.username}</td>
-                    <td>{data.osNames}</td>
+                    <td><OSNamesComponent osNames={data.osNames} /></td>
                     <td>{data.lastLoginDate}</td>
                     <td>{data.enablePasscodeCount}</td>
                   </tr>

@@ -5,11 +5,11 @@ export type DefaultReduxActionType<T> = {
 
 type LanguageStateType = "ko" | "en";
 
-export type CommonDataType = {
-  bodyBackgroundColor: boolean;
+export type UserInfoDetailType = {
+  uuid: string,
 }
 
 export type ReduxStateType = {
   lang?: LanguageStateType;
-  commonData?: CommonDataType;
+  UserInfoDetailType?: UserInfoDetailType;
 }

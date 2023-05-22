@@ -1,5 +1,5 @@
 const types = {
   langChange: 'LANGCHANGE',
-  bodyBackgroundColorChange: 'BODYBACKGROUNDCOLORCHANGE',
+  userUuidChange: 'USERUUIDCHANGE',
 };
 export default types;

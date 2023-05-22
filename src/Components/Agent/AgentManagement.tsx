@@ -183,7 +183,7 @@ const AgentManagement = () => {
                 <table>
                   <thead>
                     <tr>
-                      <th></th>
+                      <th><input type='checkbox' /></th>
                       <th>버전</th>
                       <th>OS</th>
                       <th>업로드 일시</th>

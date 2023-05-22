@@ -42,8 +42,8 @@ export type UserInfoType = {
 export type GetUsersDetailsApiType = {
   user: UserType;
   // devices: DevicesType;
-  devices: any;
-  ompassInfo: string;
+  devices: DevicesType[];
+  ompassInfo: OmpassInfoType;
 }
 
 export type UserType = {
@@ -56,11 +56,32 @@ export type UserType = {
   osNames: OsNamesType[];
 }
 
-type DevicesType = {
-
+export type DevicesType = {
+  id: number,
+  os: OsNamesType,
+  osVersion: string,
+  macAddress: string,
+  passcode: PasscodeType,
+  updatedAt: string
 }
 
-type OsNamesType = "WINDOWS" | "MACOS";
+export type OmpassInfoType = {
+  appVersion: string,
+  model: string,
+  os: string,
+  osVersion: string,
+  updateAt: string
+}
+
+type PasscodeType = {
+  id: number,
+  number: number,
+  validTime: number,
+  recycleCount: number,
+  createdAt: string,
+}
+
+type OsNamesType = "Windows" | "MacOs";
 
 export type GetPutSecretKeyApiType = {
   secretKey: string,
