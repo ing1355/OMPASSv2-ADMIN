@@ -14,6 +14,7 @@ export const GetUsernameCheckApi = (username: string) => `/v1/users/username/${u
 
 // Windows agent 파일
 export const GetAgentInstallerApi = `/v1/agent-installer`;
+export const DeleteAgentInstallerApi = (fileIds: string) => `/v1/agent-installer/${fileIds}`;
 export const PostAgentInstallerUploadApi = `/v1/agent-installer/upload`;
 export const GetAgentInstallerDownloadApi = '/v1/agent-installer/download';
 

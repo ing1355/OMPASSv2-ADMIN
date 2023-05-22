@@ -413,7 +413,9 @@ console.log('userRole',userRole)
                       DeleteDeviceApi(data.id),
                       () => {
                         message.success('장치 삭제 완료');
-                        setRendering([...rendering, true])
+                        const render = rendering;
+                        const renderTemp = render.concat(true);
+                        setRendering(renderTemp);
                       }
                     )
                   }}
@@ -514,8 +516,7 @@ console.log('userRole',userRole)
                         onClick={() => {
                           CustomAxiosPost(
                             PostPutPasscodeApi,
-                            (data:any) => {
-                              console.log('sfdfsfs',data)
+                            () => {
                               const render = rendering;
                               const renderTemp = render.concat(true);
                               setRendering(renderTemp);

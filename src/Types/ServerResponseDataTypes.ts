@@ -25,7 +25,7 @@ export type GetAgentApiDataType = {
 export type GetAgentApiArrayType = Array<GetAgentApiType>
 
 export type GetAgentApiType = {
-  filedId: number,
+  fileId: number,
   uploader: string,
   version: string,
   os: string,

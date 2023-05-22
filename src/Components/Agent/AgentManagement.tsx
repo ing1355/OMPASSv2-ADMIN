@@ -6,8 +6,16 @@ import { Link } from 'react-router-dom';
 import { Pagination, PaginationProps, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { GetAgentApiArrayType, GetAgentApiDataType, GetAgentApiType } from 'Types/ServerResponseDataTypes';
-import { CustomAxiosGet, CustomAxiosPost } from 'Components/CustomHook/CustomAxios';
-import { GetAgentInstallerApi, PostAgentInstallerUploadApi } from 'Constants/ApiRoute';
+import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPost } from 'Components/CustomHook/CustomAxios';
+import { DeleteAgentInstallerApi, GetAgentInstallerApi, PostAgentInstallerUploadApi } from 'Constants/ApiRoute';
+
+import delete_icon from '../../assets/delete_icon.png';
+
+interface Checkbox {
+  id: number;
+  userId: number;
+  checked: boolean;
+}
 
 const AgentManagement = () => {
   const height = useWindowHeightHeader();
@@ -17,13 +25,48 @@ const AgentManagement = () => {
   const [agentData, setAgentData] = useState<GetAgentApiArrayType>([]);
   const [isAddVersion, setIsAddVersion] = useState<boolean>(false);
   const [isVersionAlert, setIsVersionAlert] = useState<boolean>(false);
-
+  const [checkAll, setCheckAll] = useState(false);
+  const [checkboxes, setCheckboxes] = useState<Checkbox[]>([]);
+  const [hoveredRow, setHoveredRow] = useState<number>(-1);
+  const [rendering, setRendering] = useState<boolean[]>([]);
+console.log('agentData',agentData)
+console.log('checkboxes',checkboxes)
   const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
     setPageNum(pageNumber);
     setTableCellSize(pageSizeOptions);
     console.log('pageNumber',pageNumber)
     console.log('pageSizeOptions',pageSizeOptions)
     console.log('tableCellSize',tableCellSize)
+  };
+
+  // 전체 선택/해제 핸들러
+  const handleCheckAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = event.target.checked;
+    setCheckAll(checked);
+    const updatedCheckboxes = checkboxes.map((checkbox) => ({
+      ...checkbox,
+      checked,
+    }));
+    setCheckboxes(updatedCheckboxes);
+  };
+
+  // 개별 체크박스 선택 핸들러
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const checkboxId = parseInt(event.target.id);
+    const checked = event.target.checked;
+    const updatedCheckboxes = checkboxes.map((checkbox) => {
+      if (checkbox.id === checkboxId) {
+        return { ...checkbox, checked };
+      }
+      return checkbox;
+    });
+    setCheckboxes(updatedCheckboxes);
+    setCheckAll(updatedCheckboxes.every((checkbox) => checkbox.checked));
+  };
+
+  // 행 호버 이벤트 핸들러
+  const handleRowHover = (index: number) => {
+    setHoveredRow(index);
   };
 
   useEffect(() => {
@@ -41,7 +84,17 @@ const AgentManagement = () => {
 
       }
     )
-  },[tableCellSize, pageNum])
+  },[tableCellSize, pageNum, rendering]);
+
+  // adminData가 변경되면 checkboxes 초기화
+  useEffect(() => {
+    const updatedCheckboxes = agentData.map((data, index) => ({
+      id: index,
+      userId: data.fileId,
+      checked: false,
+    }));
+    setCheckboxes(updatedCheckboxes);
+  }, [agentData]);
 
   return (
     <>
@@ -183,12 +236,35 @@ const AgentManagement = () => {
                 <table>
                   <thead>
                     <tr>
-                      <th><input type='checkbox' /></th>
+                      <th>
+                        <input 
+                          type='checkbox'
+                          checked={checkAll}
+                          onChange={handleCheckAll}
+                        />
+                      </th>
                       <th>버전</th>
                       <th>OS</th>
                       <th>업로드 일시</th>
                       <th>업로드 관리자 아이디</th>
-                      <th></th>
+                      <th>다운로드</th>
+                      <th>현재 버전 설정</th>
+                      <th>
+                        <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                          onClick={() => {
+                            const versionIds = checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.userId).join(',');
+                            CustomAxiosDelete(
+                              DeleteAgentInstallerApi(versionIds),
+                              () => {
+                                message.success('선택한 버전 삭제 완료');
+                                const render = rendering;
+                                const renderTemp = render.concat(true);
+                                setRendering(renderTemp);
+                              }
+                            )
+                          }}
+                        />
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -196,14 +272,43 @@ const AgentManagement = () => {
                       <tr
                         key={'agent_data_' + index}
                       >
-                        <td><input type='checkbox' /></td>
-                        <td>{data.version}</td>
+                        <td>
+                          <input 
+                            type='checkbox' 
+                            value={data.fileId}
+                            id={index.toString()}
+                            checked={checkboxes[index]?.checked || false}
+                            onChange={handleCheckboxChange}
+                          />
+                        </td>
+                        <td><span className='manager-mark ml10'>현재</span>{data.version}</td>
                         <td>{data.os}</td>
                         <td>{data.uploadDate}</td>
                         <td>{data.uploader}</td>
                         <td>
-                          <button>다운로드</button>
+                          <button
+                            onClick={() => {
+                              console.log(data.fileId)
+                            }}
+                          >다운로드</button>
+                        </td>
+                        <td>
                           <button>확인</button>
+                        </td>
+                        <td>
+                          <img src={delete_icon} width='20px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                            onClick={() => {
+                              CustomAxiosDelete(
+                                DeleteAgentInstallerApi(data.fileId.toString()),
+                                () => {
+                                  message.success('버전 삭제 완료');
+                                  const render = rendering;
+                                  const renderTemp = render.concat(true);
+                                  setRendering(renderTemp);
+                                }
+                              )
+                            }}
+                          />                          
                         </td>
                       </tr>
                     ))}

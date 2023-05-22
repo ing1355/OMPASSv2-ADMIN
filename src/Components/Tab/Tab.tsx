@@ -454,6 +454,7 @@ console.log('sortingInfo',sortingInfo)
               <tbody>
                 {userData.map((data:GetPutUsersApiType, index:number)=>(
                   <tr
+                    key={'user_data_' + index}
                     onMouseEnter={() => handleRowHover(index)}
                     onMouseLeave={() => handleRowHover(-1)}
                     onClick={() => {
@@ -461,7 +462,7 @@ console.log('sortingInfo',sortingInfo)
                       dispatch(userUuidChange(data.id));
                       sessionStorage.setItem('userUuid', data.id);
                     }}
-                    style={{ background: hoveredRow === index ? '#D6EAF5' : 'transparent' }}
+                    style={{ background: hoveredRow === index ? '#D6EAF5' : 'transparent', cursor: 'pointer' }}
                   >
                     <td>{data.username}</td>
                     <td><OSNamesComponent osNames={data.osNames} /></td>

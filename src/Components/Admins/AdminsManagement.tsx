@@ -2,14 +2,22 @@ import { useWindowHeightHeader } from 'Components/CustomHook/useWindowHeight';
 import './AdminsManagement.css';
 import Header from 'Components/Header/Header';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { GetPutUsersApiArrayType, GetPutUsersApiDataType, GetPutUsersApiType } from 'Types/ServerResponseDataTypes';
 import { useEffect, useState, useRef } from 'react';
 
 import { message, Pagination, PaginationProps } from 'antd';
-import { CustomAxiosGet, CustomAxiosPost } from 'Components/CustomHook/CustomAxios';
-import { GetPutUsersApi, GetUsernameCheckApi, PostSignUpApi } from 'Constants/ApiRoute';
+import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPost } from 'Components/CustomHook/CustomAxios';
+import { DeleteUsersApi, GetPutUsersApi, GetUsernameCheckApi, PostSignUpApi } from 'Constants/ApiRoute';
 import { autoHypenPhoneFun } from 'Constants/ConstantValues';
+
+import delete_icon from '../../assets/delete_icon.png';
+
+interface Checkbox {
+  id: number;
+  userId: string;
+  checked: boolean;
+}
 
 const AdminsManagement = () => {
   const height = useWindowHeightHeader();
@@ -22,17 +30,64 @@ const AdminsManagement = () => {
   const [isNameAlert, setIsNameAlert] = useState<boolean>(false);
   const [isPhoneAlert, setIsPhoneAlert] = useState<boolean>(false);
   const [idExist, setIdExist] = useState<boolean>(true);
-
+  const [rendering, setRendering] = useState<boolean[]>([]);
+  const [checkAll, setCheckAll] = useState(false);
+  const [checkboxes, setCheckboxes] = useState<Checkbox[]>([]);
+  const [hoveredRow, setHoveredRow] = useState<number>(-1);
+console.log('checkboxes',checkboxes)
   const userIdRef = useRef<HTMLInputElement>(null);
   const userNameRef = useRef<HTMLInputElement>(null);
   const userPhoneRef = useRef<HTMLInputElement>(null);
 
   const [isActive, setIsActive] = useState<boolean>(false);
 
+  const navigate = useNavigate();
+
   const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
     setPageNum(pageNumber);
     setTableCellSize(pageSizeOptions);
   };
+
+  // 전체 선택/해제 핸들러
+  const handleCheckAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = event.target.checked;
+    setCheckAll(checked);
+    const updatedCheckboxes = checkboxes.map((checkbox) => ({
+      ...checkbox,
+      checked,
+    }));
+    setCheckboxes(updatedCheckboxes);
+  };
+
+  // 개별 체크박스 선택 핸들러
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const checkboxId = parseInt(event.target.id);
+    const checked = event.target.checked;
+    const updatedCheckboxes = checkboxes.map((checkbox) => {
+      if (checkbox.id === checkboxId) {
+        return { ...checkbox, checked };
+      }
+      return checkbox;
+    });
+    setCheckboxes(updatedCheckboxes);
+    setCheckAll(updatedCheckboxes.every((checkbox) => checkbox.checked));
+  };
+
+  // 행 호버 이벤트 핸들러
+  const handleRowHover = (index: number) => {
+    setHoveredRow(index);
+  };
+
+  // adminData가 변경되면 checkboxes 초기화
+  useEffect(() => {
+    const updatedCheckboxes = adminData.map((data, index) => ({
+      id: index,
+      userId: data.id,
+      checked: false,
+    }));
+    setCheckboxes(updatedCheckboxes);
+  }, [adminData]);
+  
 
   useEffect(() => {
     CustomAxiosGet(
@@ -50,7 +105,7 @@ const AdminsManagement = () => {
         console.log('admin 유저 가져오기 실패')
       }
     )
-  },[tableCellSize, pageNum]);
+  },[tableCellSize, pageNum, rendering]);
 
   return (
     <>
@@ -130,6 +185,9 @@ const AdminsManagement = () => {
                       (data: any) => {
                         console.log('data', data);
                         setIsAddAdmin(false);
+                        const render = rendering;
+                        const renderTemp = render.concat(true);
+                        setRendering(renderTemp);
                       },
                       {
                         name: name,
@@ -259,19 +317,73 @@ const AdminsManagement = () => {
               <table>
                 <thead>
                   <tr>
+                    <th>
+                      <input 
+                        type='checkbox'
+                        checked={checkAll}
+                        onChange={handleCheckAll}
+                      />
+                    </th>
                     <th>관리자 아이디</th>
                     <th>이름</th>
                     <th>전화번호</th>
+                    <th>
+                      <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                        onClick={() => {
+                          const userIds = checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.userId).join(',');
+                          CustomAxiosDelete(
+                            DeleteUsersApi(userIds),
+                            () => {
+                              message.success('선택한 관리자 삭제 완료');
+                              const render = rendering;
+                              const renderTemp = render.concat(true);
+                              setRendering(renderTemp);
+                            }
+                          )
+                        }}
+                      />
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {adminData.map((data:GetPutUsersApiType, index: number) => (
                     <tr
                       key={'admin_data_' + index}
+                      onMouseEnter={() => handleRowHover(index)}
+                      onMouseLeave={() => handleRowHover(-1)}
+                      onClick={() => {
+                        navigate('/InformationDetail');
+                        sessionStorage.setItem('userUuid', data.id);
+                      }}
+                      style={{ background: hoveredRow === index ? '#D6EAF5' : 'transparent', cursor: 'pointer' }}
                     >
+                      <td>
+                        <input 
+                          type='checkbox' 
+                          value={data.id}
+                          id={index.toString()}
+                          checked={checkboxes[index]?.checked || false}
+                          onChange={handleCheckboxChange}
+                        />
+                      </td>
                       <td>{data.username}</td>
                       <td>{data.name}</td>
                       <td>{data.phoneNumber}</td>
+                      <td>
+                        <img src={delete_icon} width='20px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                          onClick={() => {
+                            CustomAxiosDelete(
+                              DeleteUsersApi(data.id),
+                              () => {
+                                message.success('관리자 삭제 완료');
+                                const render = rendering;
+                                const renderTemp = render.concat(true);
+                                setRendering(renderTemp);
+                              }
+                            )
+                          }}
+                        />
+                      </td>
                     </tr>
                   ))}
                 </tbody>
