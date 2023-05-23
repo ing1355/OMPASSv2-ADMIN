@@ -81,3 +81,18 @@ export function CustomAxiosPut(url: string, callback?: Function, params?: any, e
         else if(errCallback) errCallback();
     })
 }
+
+export function CustomAxiosPatch(url: string, callback?: Function, params?: any, errCallback?: (err?: AxiosError) => void, config?: any) {
+    const headers = config ? {
+        authorization: config.authorization ? config.authorization : localStorage.getItem('Authorization'),
+        ...config.headers
+    } : {
+        authorization: localStorage.getItem('Authorization'),
+    }
+    return axios.patch(url, params, { headers }).then(res => {
+        if (callback) callback(res.data.rows);
+    }).catch(err => {
+        if (errCallback && err.response && err.response.data) errCallback(err);
+        else if(errCallback) errCallback();
+    })
+}

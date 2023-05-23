@@ -46,9 +46,9 @@ const InformationDetail = () => {
   const [ompassInfoData, setOmpassInfoData] = useState<OmpassInfoType | null>(null);
   const [viewPasscode, setViewPasscode] = useState<boolean>(false);
   const [rendering, setRendering] = useState<boolean[]>([]);
-console.log('rendering',rendering)
+
   const height = useWindowHeightHeader();
-console.log('deviceData',deviceData)
+
   const userInfoString = sessionStorage.getItem('userInfo');
   const userUuid = sessionStorage.getItem('userUuid');
   const userInfo:UserInfoType | null = userInfoString ? JSON.parse(userInfoString) : null;
@@ -61,7 +61,7 @@ console.log('deviceData',deviceData)
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-console.log('userRole',userRole)
+
   useEffect(() => {
     if(uuid) {
       if(userRole === 'USER') {
@@ -504,7 +504,7 @@ console.log('userRole',userRole)
                     <img src={setting_icon} width='30px' height='30px'
                       style={{opacity: 0.7, cursor: 'pointer', margin: '15px 5px 10px'}}
                       onClick={() => {
-                        console.log('dsfds')
+
                       }}
                     />
                   </div>
@@ -603,7 +603,6 @@ console.log('userRole',userRole)
                                   CustomAxiosDelete(
                                     DeletePasscodeApi(data.passcode.id),
                                     (data: any) => {
-                                      console.log('datasfdsfsdf',data)
                                       message.success('passcode 삭제 완료');
                                       const render = rendering;
                                       const renderTemp = render.concat(true);

@@ -6,8 +6,8 @@ import { Link } from 'react-router-dom';
 import { Pagination, PaginationProps, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { GetAgentApiArrayType, GetAgentApiDataType, GetAgentApiType } from 'Types/ServerResponseDataTypes';
-import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPost } from 'Components/CustomHook/CustomAxios';
-import { DeleteAgentInstallerApi, GetAgentInstallerApi, PostAgentInstallerUploadApi } from 'Constants/ApiRoute';
+import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from 'Components/CustomHook/CustomAxios';
+import { DeleteAgentInstallerApi, GetAgentInstallerApi, GetAgentInstallerDownloadApi, PatchAgentInstallerApi, PostAgentInstallerUploadApi } from 'Constants/ApiRoute';
 
 import delete_icon from '../../assets/delete_icon.png';
 
@@ -29,14 +29,10 @@ const AgentManagement = () => {
   const [checkboxes, setCheckboxes] = useState<Checkbox[]>([]);
   const [hoveredRow, setHoveredRow] = useState<number>(-1);
   const [rendering, setRendering] = useState<boolean[]>([]);
-console.log('agentData',agentData)
-console.log('checkboxes',checkboxes)
+
   const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
     setPageNum(pageNumber);
     setTableCellSize(pageSizeOptions);
-    console.log('pageNumber',pageNumber)
-    console.log('pageSizeOptions',pageSizeOptions)
-    console.log('tableCellSize',tableCellSize)
   };
 
   // 전체 선택/해제 핸들러
@@ -172,7 +168,6 @@ console.log('checkboxes',checkboxes)
                       CustomAxiosPost(
                         PostAgentInstallerUploadApi,
                         (data: any) => {
-                          console.log('data', data);
                           setIsAddVersion(false);
                         },
                         {
@@ -253,15 +248,26 @@ console.log('checkboxes',checkboxes)
                         <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
                           onClick={() => {
                             const versionIds = checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.userId).join(',');
-                            CustomAxiosDelete(
-                              DeleteAgentInstallerApi(versionIds),
-                              () => {
-                                message.success('선택한 버전 삭제 완료');
-                                const render = rendering;
-                                const renderTemp = render.concat(true);
-                                setRendering(renderTemp);
+                            const target = agentData.find((data) => data.downloadTarget === true);
+                            const targetVersion = checkboxes.filter((checkbox) => checkbox.userId ===  target?.fileId);
+
+                            if(targetVersion[0]?.checked) {
+                              message.error('현재 버전은 삭제할 수 없습니다.');
+                            } else {
+                              if(versionIds) {
+                                CustomAxiosDelete(
+                                  DeleteAgentInstallerApi(versionIds),
+                                  () => {
+                                    message.success('선택한 버전 삭제 완료');
+                                    const render = rendering;
+                                    const renderTemp = render.concat(true);
+                                    setRendering(renderTemp);
+                                  }
+                                )
+                              } else {
+                                message.error('선택한 항목이 없습니다.');
                               }
-                            )
+                            }
                           }}
                         />
                       </th>
@@ -271,6 +277,9 @@ console.log('checkboxes',checkboxes)
                     {agentData.map((data: GetAgentApiType, index: number) => (
                       <tr
                         key={'agent_data_' + index}
+                        onMouseEnter={() => handleRowHover(index)}
+                        onMouseLeave={() => handleRowHover(-1)}
+                        style={{ background: hoveredRow === index ? '#D6EAF5' : 'transparent', cursor: 'default' }}
                       >
                         <td>
                           <input 
@@ -281,32 +290,67 @@ console.log('checkboxes',checkboxes)
                             onChange={handleCheckboxChange}
                           />
                         </td>
-                        <td><span className='manager-mark ml10'>현재</span>{data.version}</td>
+                        <td>{data.downloadTarget && <span className='manager-mark ml10'>현재</span>}{data.version}</td>
                         <td>{data.os}</td>
                         <td>{data.uploadDate}</td>
                         <td>{data.uploader}</td>
                         <td>
                           <button
+                            style={{cursor: 'pointer'}}
                             onClick={() => {
-                              console.log(data.fileId)
+                              CustomAxiosGet(
+                                GetAgentInstallerDownloadApi,
+                                () => {
+                                  message.success('다운로드 성공');
+                                },
+                                {
+                                  file_id: data.fileId
+                                },
+                                () => {
+                                  message.error('다운로드 실패');
+                                }, 
+                                {
+                                  headers: {
+                                    'Content-Type': 'multipart/form-data',
+                                  },
+                                }
+                              )
                             }}
                           >다운로드</button>
                         </td>
                         <td>
-                          <button>확인</button>
-                        </td>
-                        <td>
-                          <img src={delete_icon} width='20px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                          <button
+                            style={{cursor: 'pointer'}}
+                            disabled={data.downloadTarget ? true : false}
                             onClick={() => {
-                              CustomAxiosDelete(
-                                DeleteAgentInstallerApi(data.fileId.toString()),
+                              CustomAxiosPatch(
+                                PatchAgentInstallerApi(data.fileId),
                                 () => {
-                                  message.success('버전 삭제 완료');
+                                  message.success('현재 버전 변경 완료');
                                   const render = rendering;
                                   const renderTemp = render.concat(true);
                                   setRendering(renderTemp);
                                 }
                               )
+                            }}
+                          >변경</button>
+                        </td>
+                        <td>
+                          <img src={delete_icon} width='20px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                            onClick={() => {
+                              if(data.downloadTarget) {
+                                message.error('현재 버전은 삭제할 수 없습니다.');
+                              } else {
+                                CustomAxiosDelete(
+                                  DeleteAgentInstallerApi(data.fileId.toString()),
+                                  () => {
+                                    message.success('버전 삭제 완료');
+                                    const render = rendering;
+                                    const renderTemp = render.concat(true);
+                                    setRendering(renderTemp);
+                                  }
+                                )
+                              }
                             }}
                           />                          
                         </td>

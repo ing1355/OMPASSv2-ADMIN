@@ -13,8 +13,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { langChange } from 'Redux/actions/langChange';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
 import { useWindowHeight } from 'Components/CustomHook/useWindowHeight';
-import { CustomAxiosPost } from 'Components/CustomHook/CustomAxios';
-import { PostLoginApi } from 'Constants/ApiRoute';
+import { CustomAxiosGet, CustomAxiosPost } from 'Components/CustomHook/CustomAxios';
+import { GetAgentInstallerDownloadApi, PostLoginApi } from 'Constants/ApiRoute';
 import { OMPASS } from 'ompass';
 import { message } from 'antd';
 
@@ -36,9 +36,7 @@ const Login = () => {
     CustomAxiosPost(
       PostLoginApi,
       (data:any) => {
-        console.log('data',data)
         const { ompassUri } = data;
-        console.log('ompassUri', ompassUri);
         OMPASS(ompassUri);
       },
       {
@@ -83,6 +81,25 @@ const Login = () => {
           />
           <button
             className='button-st3 login_agent_download_button'
+            onClick={() => {
+              CustomAxiosGet(
+                GetAgentInstallerDownloadApi,
+                () => {
+                  message.success('다운로드 성공');
+                },
+                {
+                  // file_id: 8
+                },
+                () => {
+                  message.error('다운로드 실패');
+                }, 
+                {
+                  headers: {
+                    'Content-Type': 'multipart/form-data',
+                  },
+                }
+              )
+            }}
           >
             <img src={download_icon} width='40px'/>
             <span style={{position: 'relative', top: '-7px', marginLeft: '7px'}}><FormattedMessage id='DOWNLOAD_FOR_WINDOWS' /></span>  

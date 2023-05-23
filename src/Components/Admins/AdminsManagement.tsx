@@ -34,7 +34,7 @@ const AdminsManagement = () => {
   const [checkAll, setCheckAll] = useState(false);
   const [checkboxes, setCheckboxes] = useState<Checkbox[]>([]);
   const [hoveredRow, setHoveredRow] = useState<number>(-1);
-console.log('checkboxes',checkboxes)
+
   const userIdRef = useRef<HTMLInputElement>(null);
   const userNameRef = useRef<HTMLInputElement>(null);
   const userPhoneRef = useRef<HTMLInputElement>(null);
@@ -61,6 +61,7 @@ console.log('checkboxes',checkboxes)
 
   // 개별 체크박스 선택 핸들러
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.stopPropagation();
     const checkboxId = parseInt(event.target.id);
     const checked = event.target.checked;
     const updatedCheckboxes = checkboxes.map((checkbox) => {
@@ -171,7 +172,7 @@ console.log('checkboxes',checkboxes)
               <form
                 id='addAdminForm'
                 onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-                  console.log('회원가입')
+                  console.log('관리자 등록')
                   e.preventDefault();
                   const { userId, userName, userPhoneNumber } = (e.currentTarget.elements as any);
                   const username = userId.value;
@@ -183,7 +184,6 @@ console.log('checkboxes',checkboxes)
                     CustomAxiosPost(
                       PostSignUpApi,
                       (data: any) => {
-                        console.log('data', data);
                         setIsAddAdmin(false);
                         const render = rendering;
                         const renderTemp = render.concat(true);
@@ -197,8 +197,8 @@ console.log('checkboxes',checkboxes)
                         username: username
                       },
                       () => {
-                        console.log('회원가입 실패');
-                        message.error('회원가입 실패');
+                        console.log('관리자 등록 실패');
+                        message.error('관리자 등록 실패');
                       }
                     );
                   } else {
@@ -351,9 +351,12 @@ console.log('checkboxes',checkboxes)
                       key={'admin_data_' + index}
                       onMouseEnter={() => handleRowHover(index)}
                       onMouseLeave={() => handleRowHover(-1)}
-                      onClick={() => {
-                        navigate('/InformationDetail');
-                        sessionStorage.setItem('userUuid', data.id);
+                      onClick={(e) => { 
+                        if (e.currentTarget.tagName !== 'INPUT') {
+                          e.stopPropagation();
+                          navigate('/InformationDetail');
+                          sessionStorage.setItem('userUuid', data.id);
+                        }                       
                       }}
                       style={{ background: hoveredRow === index ? '#D6EAF5' : 'transparent', cursor: 'pointer' }}
                     >
@@ -364,6 +367,7 @@ console.log('checkboxes',checkboxes)
                           id={index.toString()}
                           checked={checkboxes[index]?.checked || false}
                           onChange={handleCheckboxChange}
+                          onClick={(e) => e.stopPropagation()}
                         />
                       </td>
                       <td>{data.username}</td>
