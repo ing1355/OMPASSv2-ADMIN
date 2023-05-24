@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { Pagination, PaginationProps, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { GetAgentApiArrayType, GetAgentApiDataType, GetAgentApiType } from 'Types/ServerResponseDataTypes';
-import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from 'Components/CustomHook/CustomAxios';
+import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosGetFile, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from 'Components/CustomHook/CustomAxios';
 import { DeleteAgentInstallerApi, GetAgentInstallerApi, GetAgentInstallerDownloadApi, PatchAgentInstallerApi, PostAgentInstallerUploadApi } from 'Constants/ApiRoute';
 
 import delete_icon from '../../assets/delete_icon.png';
@@ -156,7 +156,8 @@ const AgentManagement = () => {
                     const { version, uploadFile } = (e.currentTarget.elements as any);
                     const metaDataVersion = version.value;
                     const multipartFile = uploadFile.files[0];
-
+                    console.log('multipartFile',multipartFile)
+                    
                     if(metaDataVersion) {
                       setIsVersionAlert(false);
                     } else {
@@ -298,9 +299,32 @@ const AgentManagement = () => {
                           <button
                             style={{cursor: 'pointer'}}
                             onClick={() => {
-                              CustomAxiosGet(
+                              CustomAxiosGetFile(
                                 GetAgentInstallerDownloadApi,
-                                () => {
+                                (data:any) => {
+                                  console.log(data);
+                                  let output = JSON.stringify(data, null, 4);
+                                  // console.log('output',output)
+                                  // const blob = new Blob([output]);
+                                  // console.log('blob',blob)
+                                  const uint8Array = new Uint8Array(data);
+                                  // console.log('uint8Array',uint8Array)
+                                  // const blob = new Blob([uint8Array], { type: 'application/octet-stream' });
+                                  // const blob = new Blob([uint8Array], { type: 'image/png' });
+                                  const blob = new Blob([uint8Array], { type: 'multipart/form-data' });
+                                  // let hello = new Uint8Array([72, 101, 108, 108, 111]);
+                                  // let blob = new Blob([hello, ' ', 'world'], { type: 'text/plain' });
+                                  const reader = new FileReader();
+
+                                  const fileDownlaoadUrl = URL.createObjectURL(blob);
+
+                                  const downloadLink = document.createElement('a');
+                                  downloadLink.href = fileDownlaoadUrl;
+                                  downloadLink.download = 'download.png';
+                                  document.body.appendChild(downloadLink);
+                                  downloadLink.click();
+                                  document.body.removeChild(downloadLink);
+                                  URL.revokeObjectURL(fileDownlaoadUrl);
                                   message.success('다운로드 성공');
                                 },
                                 {

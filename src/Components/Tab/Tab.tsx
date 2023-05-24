@@ -1,5 +1,5 @@
 import './Tab.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -12,14 +12,14 @@ import list_upload from '../../assets/list_upload.png';
 import sorting_icon from '../../assets/sorting_icon.png';
 import sorting_bottom_arrow from '../../assets/sorting_bottom_arrow.png';
 import sorting_top_arrow from '../../assets/sorting_top_arrow.png';
-import { Pagination } from 'antd';
+import { Pagination, message } from 'antd';
 import type { PaginationProps } from 'antd';
 import { CustomAxiosGet } from 'Components/CustomHook/CustomAxios';
-import { GetPutUsersApi } from 'Constants/ApiRoute';
-import { GetPutUsersApiArrayType, GetPutUsersApiDataType, GetPutUsersApiType } from 'Types/ServerResponseDataTypes';
+import { GetPutUsersApi, GetUsersCountApi } from 'Constants/ApiRoute';
+import { GetPutUsersApiArrayType, GetPutUsersApiDataType, GetPutUsersApiType, GetUsersCountApiType } from 'Types/ServerResponseDataTypes';
 import { userUuidChange } from 'Redux/actions/userChange';
 
-type listType = 'id' | 'env' | 'last' | 'pass';
+type listType = 'username' | 'env' | 'lastLoginDate' | 'pass';
 type sortingType = 'none' | 'asc' | 'des';
 
 type sortingInfoType = {
@@ -35,7 +35,8 @@ type sortingNowType = {
 
 const TabMenu = styled.ul`
   // background-color: #dcdcdc;
-  color: rgb(232, 234, 237);
+  // color: rgb(232, 234, 237);
+  color: #cdcdcd;
   
   font-weight: bold;
   display: flex;
@@ -101,13 +102,6 @@ export const Tab = () => {
     UserInfoDetailType: state.UserInfoDetailType,
   }));
 
-  const menuArr = [
-    { id: 0, name: 'TOTAL_USERS', content: 'Tab menu ONE', count: 3 },
-    { id: 1, name: 'REGISTERED_USERS', content: 'Tab menu TWO', count: 2 },
-    { id: 2, name: 'UNREGISTERED_USERS', content: 'Tab menu THREE', count: 1 },
-    { id: 3, name: 'PASSCODE_USERS', content: 'Tab menu FOUR', count: 1 },
-  ];
-
   const [sortingInfo, setSortingInfo] = useState<sortingInfoType | null>(null);
   const [sortingNow, setSortingNow] = useState<sortingNowType | null>(null);
   const [userData, setUserData] = useState<GetPutUsersApiArrayType>([]);
@@ -115,26 +109,60 @@ export const Tab = () => {
   const [tableCellSize, setTableCellSize] = useState<number>(10);
   const [pageNum, setPageNum] = useState<number>(1);
   const [hoveredRow, setHoveredRow] = useState<number>(-1);
+  const [countData, setCountData] = useState<GetUsersCountApiType | null>(null);
+  const [tabNow, setTabNow] = useState<string>('TOTAL_USERS');
+  const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState<boolean>(false);
+  const [searchType, setSearchType] = useState<listType | null>(null);
+  const [searchContent, setSearchContent] = useState<string>('');
+  const [rendering, setRendering] = useState<boolean[]>([]);
+
+  const searchContentRef = useRef<HTMLInputElement>(null);
+
+console.log('searchType',searchType, searchContent)
+  const menuArr = [
+    { id: 0, name: 'TOTAL_USERS', content: 'Tab menu ONE', count: countData?.totalUserCount },
+    { id: 1, name: 'REGISTERED_USERS', content: 'Tab menu TWO', count: countData?.registeredOmpassUserCount },
+    { id: 2, name: 'UNREGISTERED_USERS', content: 'Tab menu THREE', count: countData?.ubRegisteredOmpassUserCount },
+    { id: 3, name: 'PASSCODE_USERS', content: 'Tab menu FOUR', count: countData?.passcodeUserCount },
+  ];
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-console.log('sortingInfo',sortingInfo)
+// console.log('sortingInfo',sortingInfo)
+// console.log('sortingNow',sortingNow)
+// console.log('userData',userData)
+// console.log('tabNow',tabNow)
   useEffect(()=>{
     CustomAxiosGet(
       GetPutUsersApi,
       (data:GetPutUsersApiDataType)=>{
         setUserData(data.users);
         setTotalCount(data.queryTotalCount);
+        console.log('사용자 목록 불러오기')
       }, {
         page_size: tableCellSize,
-        page: pageNum -1
+        page: pageNum -1,
+        ompass: tabNow === 'REGISTERED_USERS' ? true : tabNow === 'UNREGISTERED_USERS' ? false : null,
+        sortBy: sortingNow ? sortingNow.list : null,
+        sortDirection: sortingNow ? sortingNow.sorting === 'none' ? null : sortingNow.sorting : null,
+        username: searchType === 'username' ? searchContent : null,
+        last_login_time: searchType === 'lastLoginDate' ? searchContent : null,
       }
     );
-  },[tableCellSize, pageNum])
+
+    CustomAxiosGet(
+      GetUsersCountApi,
+      (data:GetUsersCountApiType) => {
+        setCountData(data);
+      }
+    )
+    console.log('countData',countData)
+  },[tableCellSize, pageNum, sortingNow, tabNow, rendering]);
 
   const selectMenuHandler = (name: string, index: number) => {
     clickTab(index);
+    setTabNow(name);
   };
 
   // 행 호버 이벤트 핸들러
@@ -276,7 +304,7 @@ console.log('sortingInfo',sortingInfo)
           <ul
             className='mb20 tab_search_ul'
           >
-            <li
+            {/* <li
               className='tab_search_checkbox'
             >
               <label>
@@ -306,16 +334,81 @@ console.log('sortingInfo',sortingInfo)
               <label>
                 <input type="checkbox" name="option4" className='mr10' />
                 PASSCODE
-                {/* <FormattedMessage id='BYPASS' /> */}
               </label>
+            </li> */}
+            <li>
+              <input id='dropdown-4' type='checkbox' readOnly checked={isSearchDropdownOpen}/>
+              <label htmlFor='dropdown-4' className='dropdown-label-4' onClick={()=>{setIsSearchDropdownOpen(!isSearchDropdownOpen)}}>
+                드롭다운
+              </label>
+              <ul
+                className='dropdown-ul-4'
+              >
+                <li>
+                  <div
+                    onClick={() => {
+                      setSearchType('username');
+                      setIsSearchDropdownOpen(false);
+                    }}
+                  >
+                    <FormattedMessage id='USER_ID' />
+                  </div>
+                </li>
+                <li>
+                  <div
+                    onClick={() => {
+                      setSearchType('env');
+                      setIsSearchDropdownOpen(false);
+                    }}
+                  >
+                    <FormattedMessage id='AGENT_INSTALL_ENV' />
+                  </div>
+                </li>
+                <li>
+                  <div
+                    onClick={() => {
+                      setSearchType('lastLoginDate');
+                      setIsSearchDropdownOpen(false);
+                    }}
+                  >
+                    <FormattedMessage id='LAST_LOGIN' />
+                  </div>
+                </li>
+                <li>
+                  <div
+                    onClick={() => {
+                      setSearchType('pass');
+                      setIsSearchDropdownOpen(false);
+                    }}
+                  >
+                    PASSCODE
+                  </div>
+                </li>
+              </ul>
             </li>
             <li>
               <input
+                ref={searchContentRef}
                 className='input-st1 tab_search_input'
+                onChange={(e) => {
+
+                }}
               >
               </input>
               <button
                 className={'button-st4 tab_search_button ' + (lang === 'en' ? 'en' : '')}
+                onClick={(e) => {
+                  if(searchType === null) {
+                    message.error('검색 항목을 선택해주세요.')
+                  } else {
+                    const render = rendering;
+                    const renderTemp = render.concat(true);
+                    setRendering(renderTemp);
+                    if(searchContentRef.current) {
+                      setSearchContent(searchContentRef.current.value);
+                    }
+                  }
+                }}
               >
                 <img src={search_icon} width='18px' className='tab_search_button_img'/>
                 <FormattedMessage id='SEARCH' />
@@ -329,19 +422,19 @@ console.log('sortingInfo',sortingInfo)
               <thead>
                 <tr>
                   <th>
-                    <input id='dropdown-0' type='checkbox' checked={sortingInfo?.list === 'id' && sortingInfo.isToggle} readOnly></input>
-                    <label htmlFor='dropdown-0' className={'dropdown-label-0 ' + (sortingNow?.list === 'id' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
+                    <input id='dropdown-0' type='checkbox' checked={sortingInfo?.list === 'username' && sortingInfo.isToggle} readOnly></input>
+                    <label htmlFor='dropdown-0' className={'dropdown-label-0 ' + (sortingNow?.list === 'username' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
                       onClick={()=>{
-                        if(sortingInfo === null || sortingInfo?.list !== 'id') {
+                        if(sortingInfo === null || sortingInfo?.list !== 'username') {
                           setSortingInfo({
-                            list: 'id',
+                            list: 'username',
                             sorting: 'none',
                             isToggle: true,
                           })
                         } else {
-                          if(sortingInfo?.list === 'id') {
+                          if(sortingInfo?.list === 'username') {
                             setSortingInfo({
-                              list: 'id',
+                              list: 'username',
                               sorting: 'none',
                               isToggle: !sortingInfo.isToggle,
                             })
@@ -353,10 +446,10 @@ console.log('sortingInfo',sortingInfo)
                       {sortingNow === null ?
                         sortingImgFun(false, 'none')
                       :
-                        sortingImgFun((sortingNow?.list === 'id' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'des')), sortingNow!.sorting)
+                        sortingImgFun((sortingNow?.list === 'username' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'des')), sortingNow!.sorting)
                       }
                     </label>
-                    {sortingUlFun("id", 0)}
+                    {sortingUlFun("username", 0)}
                   </th>
                   <th>
                     <input id='dropdown-1' type='checkbox' checked={sortingInfo?.list === 'env' && sortingInfo.isToggle} readOnly></input>
@@ -389,19 +482,19 @@ console.log('sortingInfo',sortingInfo)
                     {sortingUlFun('env', 1)}
                   </th>
                   <th>
-                    <input id='dropdown-2' type='checkbox' checked={sortingInfo?.list === 'last' && sortingInfo.isToggle} readOnly></input>
-                    <label htmlFor='dropdown-2' className={'dropdown-label-2 ' + (sortingNow?.list === 'last' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
+                    <input id='dropdown-2' type='checkbox' checked={sortingInfo?.list === 'lastLoginDate' && sortingInfo.isToggle} readOnly></input>
+                    <label htmlFor='dropdown-2' className={'dropdown-label-2 ' + (sortingNow?.list === 'lastLoginDate' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
                       onClick={()=>{
-                        if(sortingInfo === null || sortingInfo?.list !== 'last') {
+                        if(sortingInfo === null || sortingInfo?.list !== 'lastLoginDate') {
                           setSortingInfo({
-                            list: 'last',
+                            list: 'lastLoginDate',
                             sorting: 'none',
                             isToggle: true,
                           })
                         } else {
-                          if(sortingInfo?.list === 'last') {
+                          if(sortingInfo?.list === 'lastLoginDate') {
                             setSortingInfo({
-                              list: 'last',
+                              list: 'lastLoginDate',
                               sorting: 'none',
                               isToggle: !sortingInfo.isToggle,
                             })
@@ -413,10 +506,10 @@ console.log('sortingInfo',sortingInfo)
                       {sortingNow === null ?
                         sortingImgFun(false, 'none')
                       :
-                        sortingImgFun((sortingNow?.list === 'last' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'des')), sortingNow!.sorting)
+                        sortingImgFun((sortingNow?.list === 'lastLoginDate' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'des')), sortingNow!.sorting)
                       }
                     </label>
-                    {sortingUlFun('last', 2)}
+                    {sortingUlFun('lastLoginDate', 2)}
                   </th>
                   <th>
                     <input id='dropdown-3' type='checkbox' checked={sortingInfo?.list === 'pass' && sortingInfo.isToggle} readOnly></input>

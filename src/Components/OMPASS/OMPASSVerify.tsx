@@ -25,9 +25,9 @@ const OMPASSVerify = () => {
         if(role === 'USER') {
           navigate('/InformationDetail');
         } else if(role === 'ADMIN') {
-          navigate('/InformationList');
+          navigate('/Main');
         } else {
-          navigate('/InformationList');
+          navigate('/Main');
         }
       },
       {

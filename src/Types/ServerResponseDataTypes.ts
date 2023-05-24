@@ -86,3 +86,10 @@ type OsNamesType = "Windows" | "MacOs";
 export type GetPutSecretKeyApiType = {
   secretKey: string,
 }
+
+export type GetUsersCountApiType = {
+  passcodeUserCount: number,
+  registeredOmpassUserCount: number,
+  totalUserCount: number,
+  ubRegisteredOmpassUserCount: number,
+}

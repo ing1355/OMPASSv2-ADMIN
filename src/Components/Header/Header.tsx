@@ -3,20 +3,23 @@ import { useState } from 'react';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
 import { useDispatch, useSelector } from 'react-redux';
 import { langChange } from 'Redux/actions/langChange';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import ompass_logo_image from '../../assets/ompass_logo_image.png';
 import locale_image from '../../assets/locale_image.png';
 import menu_icon from '../../assets/menu_icon.png';
 import logout from '../../assets/logout.png';
 import { UserInfoType } from 'Types/ServerResponseDataTypes';
+import { FormattedMessage } from 'react-intl';
 
 const Header = () => {
   const { lang } = useSelector((state: ReduxStateType) => ({
     lang: state.lang,
   }));
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const userInfoString = sessionStorage.getItem('userInfo');
   const userInfo:UserInfoType | null = userInfoString ? JSON.parse(userInfoString) : null;
@@ -45,10 +48,10 @@ const Header = () => {
                   <img src={menu_icon} width='30px' style={{opacity: 0.7, position: 'relative', top: '2px'}}/>
                 </label>
                 <ul className='dropdown_menu_ul'>
-                  <li><Link to='/InformationList'><div onClick={()=>{setIsMenuOpen(false)}}>사용자 관리</div></Link></li>
-                  <li><Link to='/AdminsManagement'><div onClick={()=>{setIsMenuOpen(false)}}>관리자 관리</div></Link></li>
-                  <li><Link to='/AgentManagement'><div onClick={()=>{setIsMenuOpen(false)}}>버전 관리</div></Link></li>
-                  <li><Link to='/SecretKey'><div onClick={()=>{setIsMenuOpen(false)}}>시크릿키 관리</div></Link></li>
+                  <li><Link to='/InformationList'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='USER_MANAGEMENT' /></div></Link></li>
+                  <li><Link to='/AdminsManagement'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='ADMIN_MANAGEMENT' /></div></Link></li>
+                  <li><Link to='/AgentManagement'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='VERSION_MANAGEMENT' /></div></Link></li>
+                  <li><Link to='/SecretKey'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='SECRET_KEY_MANAGEMENT' /></div></Link></li>
                 </ul>
               </li>
             }
@@ -56,18 +59,23 @@ const Header = () => {
             {/* <li className='header_title'>
               <Link to='/'>Windows Agent RP</Link>
             </li> */}
-            <li>
-            <img 
-              src={ompass_logo_image} 
-              width="27px"
-              className='header_title_img'
-            />
-            <span 
-              className='main-color1 header_logo_title'
-            >OMPASS</span>
-            <span
-              className='header_logo_title_agent'
-            >Portal</span>
+            <li
+              style={{cursor: 'pointer'}}
+              onClick={() => {
+                navigate('/Main');
+              }}
+            >
+              <img 
+                src={ompass_logo_image} 
+                width="27px"
+                className='header_title_img'
+              />
+              <span 
+                className='main-color1 header_logo_title'
+              >OMPASS</span>
+              <span
+                className='header_logo_title_agent'
+              >Portal</span>
             </li>
           </ul>
         </nav>

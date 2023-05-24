@@ -178,6 +178,9 @@ const LocaleTexts = {
     VERSION_LIST: 'OMPASS S/W Version Management',
     USER_INFORMATION: 'User Information',
     MANAGER: 'Manager',
+    USER_MANAGEMENT : 'User Management',
+    ADMIN_MANAGEMENT: 'Admin Management',
+    SECRET_KEY_MANAGEMENT:'Secret Key Management',
   },
   'ko': {
     AGREE_POLICY_ALL: '원모어패스의 이용약관, 개인정보 수집 및 이용에 모두 동의합니다.',
@@ -358,6 +361,9 @@ const LocaleTexts = {
     VERSION_LIST: 'OMPASS S/W 버전 관리',
     USER_INFORMATION: '사용자 정보',
     MANAGER: '관리자',
+    USER_MANAGEMENT : '사용자 관리',
+    ADMIN_MANAGEMENT: '관리자 관리',
+    SECRET_KEY_MANAGEMENT:'비밀키 관리',
   }
 }
 

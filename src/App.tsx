@@ -14,6 +14,7 @@ import AdminsManagement from 'Components/Admins/AdminsManagement';
 import Manual from 'Components/Manual/Manual';
 import OMPASSVerify from 'Components/OMPASS/OMPASSVerify';
 import SecretKey from 'Components/SecretKey/SecretKey';
+import Main from 'Components/Information/Main';
 
 const App: React.FC = () => {
   const { lang } = useSelector((state: ReduxStateType) => ({
@@ -33,6 +34,7 @@ const App: React.FC = () => {
           <Route path='/Manual' element={<Manual />}/>
           <Route path='/ompass/*' element={<OMPASSVerify />} />
           <Route path='/SecretKey' element={<SecretKey />} />
+          <Route path='/Main' element={<Main />}/>
         </Routes>
       {/* </div> */}
     </IntlProvider>
