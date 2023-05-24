@@ -80,7 +80,7 @@ const AgentManagement = () => {
 
       }
     )
-  },[tableCellSize, pageNum, rendering]);
+  },[tableCellSize, pageNum, rendering, isAddVersion]);
 
   // adminData가 변경되면 checkboxes 초기화
   useEffect(() => {

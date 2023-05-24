@@ -11,6 +11,7 @@ export const GetPutUsersApi = '/v1/users';
 export const GetUsersDetailsApi = (id: string) => `/v1/users/${id}/details`;
 export const DeleteUsersApi = (id: string) => `/v1/users/${id}`;
 export const GetUsersCountApi = '/v1/users/count';
+export const PatchUsersResetPasswordApi = '/v1/users/reset-password';
 export const GetUsernameCheckApi = (username: string) => `/v1/users/username/${username}`;
 
 // Windows agent 파일

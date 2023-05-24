@@ -19,8 +19,8 @@ import { GetPutUsersApi, GetUsersCountApi } from 'Constants/ApiRoute';
 import { GetPutUsersApiArrayType, GetPutUsersApiDataType, GetPutUsersApiType, GetUsersCountApiType } from 'Types/ServerResponseDataTypes';
 import { userUuidChange } from 'Redux/actions/userChange';
 
-type listType = 'username' | 'env' | 'lastLoginDate' | 'pass';
-type sortingType = 'none' | 'asc' | 'des';
+type listType = 'username' | 'os' | 'lastLoginDate' | 'pass';
+type sortingType = 'none' | 'asc' | 'desc';
 
 type sortingInfoType = {
   list: listType,
@@ -129,8 +129,8 @@ console.log('searchType',searchType, searchContent)
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-// console.log('sortingInfo',sortingInfo)
-// console.log('sortingNow',sortingNow)
+console.log('sortingInfo',sortingInfo)
+console.log('sortingNow',sortingNow)
 // console.log('userData',userData)
 // console.log('tabNow',tabNow)
   useEffect(()=>{
@@ -144,10 +144,11 @@ console.log('searchType',searchType, searchContent)
         page_size: tableCellSize,
         page: pageNum -1,
         ompass: tabNow === 'REGISTERED_USERS' ? true : tabNow === 'UNREGISTERED_USERS' ? false : null,
-        sortBy: sortingNow ? sortingNow.list : null,
+        sortBy: sortingNow ? sortingNow.sorting === 'none' ? null : sortingNow.list : null,
         sortDirection: sortingNow ? sortingNow.sorting === 'none' ? null : sortingNow.sorting : null,
         username: searchType === 'username' ? searchContent : null,
         last_login_time: searchType === 'lastLoginDate' ? searchContent : null,
+        os: searchType === 'os' ? searchContent : null,
       }
     );
 
@@ -214,12 +215,12 @@ console.log('searchType',searchType, searchContent)
             onClick={() => {
               setSortingInfo({
                 list: listType,
-                sorting: 'des',
+                sorting: 'desc',
                 isToggle: false,
               });
               setSortingNow({
                 list: listType,
-                sorting: 'des',
+                sorting: 'desc',
               });
             }}
           >
@@ -236,7 +237,7 @@ console.log('searchType',searchType, searchContent)
         return (
           <img src={sorting_top_arrow} width='18px' className='tab_table_sorting_image' />
         )
-      } else if (sortingType === 'des') {
+      } else if (sortingType === 'desc') {
         return (
           <img src={sorting_bottom_arrow} width='18px' className='tab_table_sorting_image' />
         )
@@ -339,7 +340,7 @@ console.log('searchType',searchType, searchContent)
             <li>
               <input id='dropdown-4' type='checkbox' readOnly checked={isSearchDropdownOpen}/>
               <label htmlFor='dropdown-4' className='dropdown-label-4' onClick={()=>{setIsSearchDropdownOpen(!isSearchDropdownOpen)}}>
-                드롭다운
+                {searchType ? <div>{searchType}</div> : <div>검색 타입</div>}
               </label>
               <ul
                 className='dropdown-ul-4'
@@ -357,7 +358,7 @@ console.log('searchType',searchType, searchContent)
                 <li>
                   <div
                     onClick={() => {
-                      setSearchType('env');
+                      setSearchType('os');
                       setIsSearchDropdownOpen(false);
                     }}
                   >
@@ -446,25 +447,25 @@ console.log('searchType',searchType, searchContent)
                       {sortingNow === null ?
                         sortingImgFun(false, 'none')
                       :
-                        sortingImgFun((sortingNow?.list === 'username' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'des')), sortingNow!.sorting)
+                        sortingImgFun((sortingNow?.list === 'username' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'desc')), sortingNow!.sorting)
                       }
                     </label>
                     {sortingUlFun("username", 0)}
                   </th>
                   <th>
-                    <input id='dropdown-1' type='checkbox' checked={sortingInfo?.list === 'env' && sortingInfo.isToggle} readOnly></input>
-                    <label htmlFor='dropdown-1' className={'dropdown-label-1 ' + (sortingNow?.list === 'env' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
+                    <input id='dropdown-1' type='checkbox' checked={sortingInfo?.list === 'os' && sortingInfo.isToggle} readOnly></input>
+                    <label htmlFor='dropdown-1' className={'dropdown-label-1 ' + (sortingNow?.list === 'os' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
                       onClick={()=>{
-                        if(sortingInfo === null || sortingInfo?.list !== 'env') {
+                        if(sortingInfo === null || sortingInfo?.list !== 'os') {
                           setSortingInfo({
-                            list: 'env',
+                            list: 'os',
                             sorting: 'none',
                             isToggle: true,
                           })
                         } else {
-                          if(sortingInfo?.list === 'env') {
+                          if(sortingInfo?.list === 'os') {
                             setSortingInfo({
-                              list: 'env',
+                              list: 'os',
                               sorting: 'none',
                               isToggle: !sortingInfo.isToggle,
                             })
@@ -476,10 +477,10 @@ console.log('searchType',searchType, searchContent)
                       {sortingNow === null ?
                         sortingImgFun(false, 'none')
                       :
-                        sortingImgFun((sortingNow?.list === 'env' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'des')), sortingNow!.sorting)
+                        sortingImgFun((sortingNow?.list === 'os' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'desc')), sortingNow!.sorting)
                       }
                     </label>
-                    {sortingUlFun('env', 1)}
+                    {sortingUlFun('os', 1)}
                   </th>
                   <th>
                     <input id='dropdown-2' type='checkbox' checked={sortingInfo?.list === 'lastLoginDate' && sortingInfo.isToggle} readOnly></input>
@@ -506,7 +507,7 @@ console.log('searchType',searchType, searchContent)
                       {sortingNow === null ?
                         sortingImgFun(false, 'none')
                       :
-                        sortingImgFun((sortingNow?.list === 'lastLoginDate' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'des')), sortingNow!.sorting)
+                        sortingImgFun((sortingNow?.list === 'lastLoginDate' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'desc')), sortingNow!.sorting)
                       }
                     </label>
                     {sortingUlFun('lastLoginDate', 2)}
@@ -537,7 +538,7 @@ console.log('searchType',searchType, searchContent)
                       {sortingNow === null ?
                         sortingImgFun(false, 'none')
                       :
-                        sortingImgFun((sortingNow?.list === 'pass' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'des')), sortingNow!.sorting)
+                        sortingImgFun((sortingNow?.list === 'pass' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'desc')), sortingNow!.sorting)
                       }
                     </label>
                     {sortingUlFun('pass', 3)}

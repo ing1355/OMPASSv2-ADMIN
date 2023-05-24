@@ -33,9 +33,11 @@ export type GetAgentApiType = {
   downloadTarget: boolean,
 }
 
+type userRoleType = "USER" | "ADMIN" | "SUPER_ADMIN";
+
 export type UserInfoType = {
   userId: string;
-  userRole: "USER" | "ADMIN" | "SUPER ADMIN";
+  userRole: userRoleType;
   uuid: string;
 }
 
@@ -49,7 +51,7 @@ export type GetUsersDetailsApiType = {
 export type UserType = {
   id: string;
   username: string;
-  role: "USER" | "ADMIN" | "SUPER ADMIN";
+  role: userRoleType;
   name: string;
   phoneNumber: string;
   enablePasscodeCount: number;

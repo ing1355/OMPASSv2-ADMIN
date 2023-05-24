@@ -255,7 +255,7 @@ const InformationDetail = () => {
                       <td>
                         {userData?.username}
                         {userRole === 'ADMIN' && <span className='manager-mark ml10'><FormattedMessage id='MANAGER' /></span>}
-                        {userRole === 'SUPER ADMIN' && <span className='manager-mark ml10'>최고 관리자</span>}
+                        {userRole === 'SUPER_ADMIN' && <span className='manager-mark ml10'>최고 관리자</span>}
                       </td>
                     </tr>            
                     <tr>
@@ -367,7 +367,7 @@ const InformationDetail = () => {
                     <td>
                       {userData?.username}
                       {userRole === 'ADMIN' && <span className='manager-mark ml10'><FormattedMessage id='MANAGER' /></span>}
-                      {userRole === 'SUPER ADMIN' && <span className='manager-mark ml10'>최고 관리자</span>}
+                      {userRole === 'SUPER_ADMIN' && <span className='manager-mark ml10'>최고 관리자</span>}
                     </td>
                   </tr>             
                   <tr>
