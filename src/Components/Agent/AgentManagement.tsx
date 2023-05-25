@@ -147,7 +147,7 @@ const AgentManagement = () => {
               <div
                 className='create_account_content'
               >
-                <form
+                <form 
                   id='addVersionForm'
                   onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
                     console.log('버전관리')
@@ -156,6 +156,7 @@ const AgentManagement = () => {
                     const { version, uploadFile } = (e.currentTarget.elements as any);
                     const metaDataVersion = version.value;
                     const multipartFile = uploadFile.files[0];
+                    
                     console.log('multipartFile',multipartFile)
                     
                     if(metaDataVersion) {
@@ -289,7 +290,7 @@ const AgentManagement = () => {
                             id={index.toString()}
                             checked={checkboxes[index]?.checked || false}
                             onChange={handleCheckboxChange}
-                          />
+                          />{data.fileId}
                         </td>
                         <td>{data.downloadTarget && <span className='manager-mark ml10'>현재</span>}{data.version}</td>
                         <td>{data.os}</td>
@@ -303,28 +304,23 @@ const AgentManagement = () => {
                                 GetAgentInstallerDownloadApi,
                                 (data:any) => {
                                   console.log(data);
+
                                   let output = JSON.stringify(data, null, 4);
                                   // console.log('output',output)
-                                  // const blob = new Blob([output]);
-                                  // console.log('blob',blob)
-                                  const uint8Array = new Uint8Array(data);
-                                  // console.log('uint8Array',uint8Array)
-                                  // const blob = new Blob([uint8Array], { type: 'application/octet-stream' });
-                                  // const blob = new Blob([uint8Array], { type: 'image/png' });
-                                  const blob = new Blob([uint8Array], { type: 'multipart/form-data' });
-                                  // let hello = new Uint8Array([72, 101, 108, 108, 111]);
-                                  // let blob = new Blob([hello, ' ', 'world'], { type: 'text/plain' });
-                                  const reader = new FileReader();
+                                  const blob = new Blob([output], { type: 'image/jpeg' });
+                                  // const fileDownlaoadUrl = URL.createObjectURL(blob);
 
-                                  const fileDownlaoadUrl = URL.createObjectURL(blob);
-
+                                  const fileData = new Blob([data]);
+                                  const fileDownlaoadUrl = URL.createObjectURL(fileData);
+                                  console.log(fileDownlaoadUrl)
                                   const downloadLink = document.createElement('a');
                                   downloadLink.href = fileDownlaoadUrl;
-                                  downloadLink.download = 'download.png';
+                                  downloadLink.download = 'download.jpg';
                                   document.body.appendChild(downloadLink);
                                   downloadLink.click();
                                   document.body.removeChild(downloadLink);
                                   URL.revokeObjectURL(fileDownlaoadUrl);
+
                                   message.success('다운로드 성공');
                                 },
                                 {

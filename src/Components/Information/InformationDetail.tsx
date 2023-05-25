@@ -54,7 +54,7 @@ const InformationDetail = () => {
     isAdmin: false,
     adminId: '',
   });
-console.log('adminIdInfo',adminIdInfo)
+
   const height = useWindowHeightHeader();
 
   const userInfoString = sessionStorage.getItem('userInfo');
@@ -68,10 +68,7 @@ console.log('adminIdInfo',adminIdInfo)
 
   const navigate = useNavigate();
   const { params } = useParams();
-  // console.log((userRole === 'ADMIN' || userRole === 'USER'));
-  console.log(userId === userData?.name);
-  console.log(userId, userData?.name)
-// console.log((userRole === 'ADMIN' || userRole === 'USER') && userId === userData?.name);
+
   useEffect(() => {
     if(uuid) {
       if(userRole === 'USER') {
@@ -98,7 +95,6 @@ console.log('adminIdInfo',adminIdInfo)
             GetUsersDetailsApi(userUuid),
             (data: GetUsersDetailsApiType) => {
               console.log('사용자 정보 불러오기 성공');
-              console.log('data',data)
               setUserData(data.user);
               setUserPhone(data.user.phoneNumber);
               setUserName(data.user.name);
@@ -443,20 +439,38 @@ console.log('adminIdInfo',adminIdInfo)
             >
               <div style={{display: 'flex', justifyContent: 'space-between'}}>
                 <h3><FormattedMessage id='DEVICE_INFORMATION' /></h3>
-                <button
-                  className='button-st5 information_detail_device_delete_btn'
-                  onClick={() => {
-                    CustomAxiosDelete(
-                      DeleteDeviceApi(data.id),
-                      () => {
-                        message.success('장치 삭제 완료');
-                        const render = rendering;
-                        const renderTemp = render.concat(true);
-                        setRendering(renderTemp);
-                      }
-                    )
-                  }}
-                >삭제</button>
+                {userRole === 'SUPER_ADMIN' &&
+                  <button
+                    className='button-st5 information_detail_device_delete_btn'
+                    onClick={() => {
+                      CustomAxiosDelete(
+                        DeleteDeviceApi(data.id),
+                        () => {
+                          message.success('장치 삭제 완료');
+                          const render = rendering;
+                          const renderTemp = render.concat(true);
+                          setRendering(renderTemp);
+                        }
+                      )
+                    }}
+                  >삭제</button>
+                }
+                {userRole === 'ADMIN' && adminIdInfo.isAdmin && adminIdInfo.adminId === userId &&
+                  <button
+                    className='button-st5 information_detail_device_delete_btn'
+                    onClick={() => {
+                      CustomAxiosDelete(
+                        DeleteDeviceApi(data.id),
+                        () => {
+                          message.success('장치 삭제 완료');
+                          const render = rendering;
+                          const renderTemp = render.concat(true);
+                          setRendering(renderTemp);
+                        }
+                      )
+                    }}
+                  >삭제</button>
+                }
               </div>
 
               <hr></hr>
@@ -546,7 +560,33 @@ console.log('adminIdInfo',adminIdInfo)
                     />
                   </div>
 
-                  {userRole !== 'USER' && !data.passcode &&
+                  {userRole === 'SUPER_ADMIN' && !data.passcode &&
+                    <div>
+                      <img src={add_icon} width='30px'
+                        style={{opacity: 0.7, cursor: 'pointer', margin: '15px 5px 10px'}}
+                        onClick={() => {
+                          CustomAxiosPost(
+                            PostPutPasscodeApi,
+                            () => {
+                              const render = rendering;
+                              const renderTemp = render.concat(true);
+                              setRendering(renderTemp);
+                            },
+                            {
+                              deviceId: data.id,
+                              recycleCount: 1,
+                              userId: userData?.id,
+                              validTime: 60,
+                            },
+                            () => {
+
+                            }
+                          )
+                        }}
+                      />
+                    </div>
+                  }
+                  {userRole === 'ADMIN' && !data.passcode && adminIdInfo.isAdmin && adminIdInfo.adminId === userId &&
                     <div>
                       <img src={add_icon} width='30px'
                         style={{opacity: 0.7, cursor: 'pointer', margin: '15px 5px 10px'}}

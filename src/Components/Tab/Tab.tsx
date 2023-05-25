@@ -1,10 +1,11 @@
 import './Tab.css';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
+import * as XLSX from 'xlsx';
 
 import search_icon from '../../assets/search_icon.png';
 import list_download from '../../assets/list_download.png';
@@ -14,9 +15,9 @@ import sorting_bottom_arrow from '../../assets/sorting_bottom_arrow.png';
 import sorting_top_arrow from '../../assets/sorting_top_arrow.png';
 import { Pagination, message } from 'antd';
 import type { PaginationProps } from 'antd';
-import { CustomAxiosGet } from 'Components/CustomHook/CustomAxios';
-import { GetPutUsersApi, GetUsersCountApi } from 'Constants/ApiRoute';
-import { GetPutUsersApiArrayType, GetPutUsersApiDataType, GetPutUsersApiType, GetUsersCountApiType } from 'Types/ServerResponseDataTypes';
+import { CustomAxiosGet, CustomAxiosPost } from 'Components/CustomHook/CustomAxios';
+import { GetPutUsersApi, GetUsersCountApi, PostExcelUploadApi } from 'Constants/ApiRoute';
+import { GetPutUsersApiArrayType, GetPutUsersApiDataType, GetPutUsersApiType, GetUsersCountApiType, userRoleType } from 'Types/ServerResponseDataTypes';
 import { userUuidChange } from 'Redux/actions/userChange';
 
 type listType = 'username' | 'os' | 'lastLoginDate' | 'pass';
@@ -31,6 +32,14 @@ type sortingInfoType = {
 type sortingNowType = {
   list: listType,
   sorting: sortingType,
+}
+
+type excelDataType = {
+  name: string,
+  password: string,
+  phoneNumber: string,
+  role: userRoleType,
+  username: string,
 }
 
 const TabMenu = styled.ul`
@@ -111,11 +120,11 @@ export const Tab = () => {
   const [searchType, setSearchType] = useState<listType | null>(null);
   const [searchContent, setSearchContent] = useState<string>('');
   const [rendering, setRendering] = useState<boolean[]>([]);
-
+  const [file, setFile] = useState<File | null>(null);
+  const [excelData, setExcelData] = useState<any>(null);
+  const [excelDownloadAllData, setExcelDownloadAllData] = useState<any>(null);
   const searchContentRef = useRef<HTMLInputElement>(null);
 
-console.log('searchType',searchType, searchContent)
-console.log('userData',userData)
   const menuArr = [
     { id: 0, name: 'TOTAL_USERS', content: 'Tab menu ONE', count: countData?.totalUserCount },
     { id: 1, name: 'REGISTERED_USERS', content: 'Tab menu TWO', count: countData?.registeredOmpassUserCount },
@@ -126,10 +135,6 @@ console.log('userData',userData)
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-console.log('sortingInfo',sortingInfo)
-console.log('sortingNow',sortingNow)
-// console.log('userData',userData)
-// console.log('tabNow',tabNow)
   useEffect(()=>{
     CustomAxiosGet(
       GetPutUsersApi,
@@ -155,8 +160,27 @@ console.log('sortingNow',sortingNow)
         setCountData(data);
       }
     )
-    console.log('countData',countData)
   },[tableCellSize, pageNum, sortingNow, tabNow, rendering]);
+
+  useEffect(() => {
+    if(excelData) {
+      CustomAxiosPost(
+        PostExcelUploadApi,
+        () => {
+          message.success('엑셀 파일 업로드 성공');
+          const render = rendering;
+          const renderTemp = render.concat(true);
+          setRendering(renderTemp);
+        }, 
+        {
+          signupRequests: excelData
+        },
+        () => {
+          message.error('엑셀 파일 업로드 실패');
+        }
+      )
+    }
+  },[excelData])
 
   const selectMenuHandler = (name: string, index: number) => {
     clickTab(index);
@@ -273,6 +297,71 @@ console.log('sortingNow',sortingNow)
   
     return <span>{result}</span>;
   }
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const uploadedFile = e.target.files?.[0];
+    if (uploadedFile) {
+      setFile(uploadedFile);
+      parseExcel(uploadedFile);
+    }
+  };
+
+  const parseExcel = (uploadedFile: File) => {
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const data = new Uint8Array(e.target?.result as ArrayBuffer);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 0});
+      setExcelData(jsonData);
+    };
+
+    reader.readAsArrayBuffer(uploadedFile);
+  };
+
+  const downloadExcel = () => {
+    CustomAxiosGet(
+      GetPutUsersApi,
+      (data: GetPutUsersApiDataType) => {
+        const rawData = data.users;
+        const filtedData = rawData.map((data: GetPutUsersApiType) => {
+          return {
+            name: data.name,
+            phoneNumber: data.phoneNumber,
+            role: data.role,
+            username: data.username,
+          }
+        })
+
+        const worksheet = XLSX.utils.json_to_sheet(filtedData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+        const excelBuffer = XLSX.write(workbook, { type: 'array', bookType: 'xlsx' });
+
+        saveAsExcel(excelBuffer, 'user_list.xlsx');
+      },
+      {
+        page: 0,
+        page_size: 999999,
+      },
+      () => {
+        message.error('엑셀 다운로드 실패')
+      }
+    )
+  };
+
+  const saveAsExcel = (buffer: any, fileName: string) => {
+    const data = new Blob([buffer], { type: 'application/octet-stream' });
+    const url = window.URL.createObjectURL(data);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    link.click();
+    setTimeout(() => {
+      window.URL.revokeObjectURL(url);
+    }, 100);
+  };
 
   return (
     <>
@@ -419,7 +508,6 @@ console.log('sortingNow',sortingNow)
             <table>
               <thead>
                 <tr>
-                  {/* <th>구분</th> */}
                   <th>
                     <input id='dropdown-0' type='checkbox' checked={sortingInfo?.list === 'username' && sortingInfo.isToggle} readOnly></input>
                     <label htmlFor='dropdown-0' className={'dropdown-label-0 ' + (sortingNow?.list === 'username' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
@@ -556,15 +644,10 @@ console.log('sortingNow',sortingNow)
                     }}
                     style={{ background: hoveredRow === index ? '#D6EAF5' : 'transparent', cursor: 'pointer' }}
                   >
-                    {/* <td>
-                      {data.role === 'USER' && <span>사용자</span>}
-                      {data.role === 'ADMIN' && <span>관리자</span>}
-                      {data.role === 'SUPER_ADMIN' && <span>최고관리자</span>}
-                    </td> */}
                     <td>
                       {data.username}
-                      {data.role === 'ADMIN' && <span className='manager-mark ml10'><FormattedMessage id='MANAGER' /></span>}
-                      {data.role === 'SUPER_ADMIN' && <span className='manager-mark ml10 red'>최고 관리자</span>}
+                      {/* {data.role === 'ADMIN' && <span className='manager-mark ml10'><FormattedMessage id='MANAGER' /></span>}
+                      {data.role === 'SUPER_ADMIN' && <span className='manager-mark ml10 red'>최고 관리자</span>} */}
                     </td>
                     <td><OSNamesComponent osNames={data.osNames} /></td>
                     <td>{data.lastLoginDate}</td>
@@ -587,14 +670,47 @@ console.log('sortingNow',sortingNow)
             style={{float: 'right'}}
             className='mt20'
           >
-            <button className='tab_download_upload_button'>
+            {/* <button className='tab_download_upload_button'>
               <img src={list_download} width='20px' className='tab_download_upload_button_img' />
               <span className='tab_download_upload_button_title'><FormattedMessage id='DOWNLOAD_USER_LIST' /></span>
             </button>
             <button className='tab_download_upload_button'>
               <img src={list_upload} width='20px' className='tab_download_upload_button_img' />
               <span className='tab_download_upload_button_title'><FormattedMessage id='UPLOAD_USER_LIST' /></span>
-            </button>
+            </button> */}
+            <div
+              style={{display: 'flex'}}
+            >
+              <div
+                className='tab_download_upload_button'
+              >
+                <label
+                  htmlFor="excel-upload"
+                  style={{cursor: 'pointer'}}
+                >
+                  <img src={list_upload} width='20px' className='tab_download_upload_button_img' />
+                  <span className='tab_download_upload_button_title'><FormattedMessage id='UPLOAD_USER_LIST' /></span>
+                </label>
+                <input
+                  id="excel-upload"
+                  type="file"
+                  accept=".xlsx"
+                  style={{ display: "none" }}
+                  onChange={handleFileUpload}
+                />
+              </div>
+              <div
+                className='tab_download_upload_button'
+                onClick={downloadExcel}
+              >
+                <label
+                  style={{cursor: 'pointer'}}
+                >
+                  <img src={list_download} width='20px' className='tab_download_upload_button_img' />
+                  <span className='tab_download_upload_button_title'><FormattedMessage id='DOWNLOAD_USER_LIST' /></span>
+                </label>
+              </div>
+            </div>
           </div>
         </div>
       </div>

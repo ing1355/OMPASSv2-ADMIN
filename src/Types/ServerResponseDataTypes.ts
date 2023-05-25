@@ -33,7 +33,7 @@ export type GetAgentApiType = {
   downloadTarget: boolean,
 }
 
-type userRoleType = "USER" | "ADMIN" | "SUPER_ADMIN";
+export type userRoleType = "USER" | "ADMIN" | "SUPER_ADMIN";
 
 export type UserInfoType = {
   userId: string;

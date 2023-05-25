@@ -233,8 +233,8 @@ const Login = () => {
               className='dis_flex mb10'
             >
               <div>
-                <input type='checkbox' className='mr10'/>
-                <span><FormattedMessage id='SAVE_ID' /></span>
+                {/* <input type='checkbox' className='mr10'/>
+                <span><FormattedMessage id='SAVE_ID' /></span> */}
               </div>
               <div
                 className='main-color1'

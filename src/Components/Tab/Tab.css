@@ -87,6 +87,7 @@ input[type="checkbox"] {
   background-color: white;
   color: #0092FA;
   cursor: pointer;
+  text-align: center;
 }
 
 .tab_download_upload_button:hover {
@@ -95,12 +96,12 @@ input[type="checkbox"] {
 
 .tab_download_upload_button_img {
   position: relative;
-  top: 2px;
+  top: 17px;
 }
 
 .tab_download_upload_button_title {
   position: relative;
-  top: -2px;
+  top: 13px;
   margin-left: 9px;
 }
 

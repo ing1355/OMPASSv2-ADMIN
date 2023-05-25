@@ -7,6 +7,7 @@ export const PostTokenVerifyApi = '/v1/ompass/token-verification';
 
 // 사용자
 export const PostSignUpApi = '/v1/signup';
+export const PostExcelUploadApi = '/v1/signup/excel-upload';
 export const GetPutUsersApi = '/v1/users';
 export const GetUsersDetailsApi = (id: string) => `/v1/users/${id}/details`;
 export const DeleteUsersApi = (id: string) => `/v1/users/${id}`;
