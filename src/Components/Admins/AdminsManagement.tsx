@@ -354,7 +354,7 @@ const AdminsManagement = () => {
                       onClick={(e) => { 
                         if (e.currentTarget.tagName !== 'INPUT') {
                           e.stopPropagation();
-                          navigate('/InformationDetail');
+                          navigate('/InformationDetail/Admin');
                           sessionStorage.setItem('userUuid', data.id);
                         }                       
                       }}

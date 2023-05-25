@@ -71,6 +71,10 @@ input[type="checkbox"] {
   margin-left: 180px;
 }
 
+.manager-mark.red {
+  background-color: #e02828;
+}
+
 .tab_download_upload_button {
   margin: 10px;
   width: 230px;

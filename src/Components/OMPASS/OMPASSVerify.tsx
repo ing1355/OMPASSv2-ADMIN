@@ -23,7 +23,7 @@ const OMPASSVerify = () => {
         }
         sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
         if(role === 'USER') {
-          navigate('/InformationDetail');
+          navigate('/InformationDetail/User');
         } else if(role === 'ADMIN') {
           navigate('/Main');
         } else {

@@ -90,10 +90,6 @@ const TabMenu = styled.ul`
   // }
 `;
 
-const Desc = styled.div`
-  text-align: center;
-`;
-
 export const Tab = () => {
   // Tab Menu 중 현재 어떤 Tab이 선택되어 있는지 확인하기 위한 currentTab 상태와 currentTab을 갱신하는 함수가 존재해야 하고, 초기값은 0.
   const [currentTab, clickTab] = useState(0);
@@ -119,6 +115,7 @@ export const Tab = () => {
   const searchContentRef = useRef<HTMLInputElement>(null);
 
 console.log('searchType',searchType, searchContent)
+console.log('userData',userData)
   const menuArr = [
     { id: 0, name: 'TOTAL_USERS', content: 'Tab menu ONE', count: countData?.totalUserCount },
     { id: 1, name: 'REGISTERED_USERS', content: 'Tab menu TWO', count: countData?.registeredOmpassUserCount },
@@ -259,7 +256,7 @@ console.log('sortingNow',sortingNow)
   };
 
   function OSNamesComponent({ osNames }: any) {
-    const windowsCount = osNames.filter((name: any) => name === 'Windows').length;
+    const windowsCount = osNames.filter((name: any) => (name === 'Windows' || name === 'windows')).length;
     const macosCount = osNames.filter((name: any) => name === 'MacOs').length;
   
     let result = '';
@@ -422,6 +419,7 @@ console.log('sortingNow',sortingNow)
             <table>
               <thead>
                 <tr>
+                  {/* <th>구분</th> */}
                   <th>
                     <input id='dropdown-0' type='checkbox' checked={sortingInfo?.list === 'username' && sortingInfo.isToggle} readOnly></input>
                     <label htmlFor='dropdown-0' className={'dropdown-label-0 ' + (sortingNow?.list === 'username' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
@@ -552,13 +550,22 @@ console.log('sortingNow',sortingNow)
                     onMouseEnter={() => handleRowHover(index)}
                     onMouseLeave={() => handleRowHover(-1)}
                     onClick={() => {
-                      navigate('/InformationDetail');
+                      navigate('/InformationDetail/User');
                       dispatch(userUuidChange(data.id));
                       sessionStorage.setItem('userUuid', data.id);
                     }}
                     style={{ background: hoveredRow === index ? '#D6EAF5' : 'transparent', cursor: 'pointer' }}
                   >
-                    <td>{data.username}</td>
+                    {/* <td>
+                      {data.role === 'USER' && <span>사용자</span>}
+                      {data.role === 'ADMIN' && <span>관리자</span>}
+                      {data.role === 'SUPER_ADMIN' && <span>최고관리자</span>}
+                    </td> */}
+                    <td>
+                      {data.username}
+                      {data.role === 'ADMIN' && <span className='manager-mark ml10'><FormattedMessage id='MANAGER' /></span>}
+                      {data.role === 'SUPER_ADMIN' && <span className='manager-mark ml10 red'>최고 관리자</span>}
+                    </td>
                     <td><OSNamesComponent osNames={data.osNames} /></td>
                     <td>{data.lastLoginDate}</td>
                     <td>{data.enablePasscodeCount}</td>

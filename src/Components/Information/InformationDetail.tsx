@@ -1,7 +1,7 @@
 import './InformationDetail.css';
 import { FormattedMessage } from 'react-intl';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import Header from 'Components/Header/Header';
 import { useWindowHeightHeader }from 'Components/CustomHook/useWindowHeight';
@@ -28,6 +28,10 @@ import { userUuidChange } from 'Redux/actions/userChange';
 import add_icon from '../../assets/add_icon.png';
 import setting_icon from '../../assets/setting_icon.png';
 
+type adminIdType = {
+  isAdmin: boolean,
+  adminId: string,
+}
 
 const InformationDetail = () => {
   document.body.style.backgroundColor = 'white';
@@ -46,7 +50,11 @@ const InformationDetail = () => {
   const [ompassInfoData, setOmpassInfoData] = useState<OmpassInfoType | null>(null);
   const [viewPasscode, setViewPasscode] = useState<boolean>(false);
   const [rendering, setRendering] = useState<boolean[]>([]);
-
+  const [adminIdInfo, setAdminIdInfo] = useState<adminIdType>({
+    isAdmin: false,
+    adminId: '',
+  });
+console.log('adminIdInfo',adminIdInfo)
   const height = useWindowHeightHeader();
 
   const userInfoString = sessionStorage.getItem('userInfo');
@@ -59,9 +67,11 @@ const InformationDetail = () => {
   const uuid = userInfo?.uuid;
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-
+  const { params } = useParams();
+  // console.log((userRole === 'ADMIN' || userRole === 'USER'));
+  console.log(userId === userData?.name);
+  console.log(userId, userData?.name)
+// console.log((userRole === 'ADMIN' || userRole === 'USER') && userId === userData?.name);
   useEffect(() => {
     if(uuid) {
       if(userRole === 'USER') {
@@ -94,6 +104,12 @@ const InformationDetail = () => {
               setUserName(data.user.name);
               setDeviceData(data.devices);
               setOmpassInfoData(data.ompassInfo);
+              if(data.user.role === 'ADMIN') {
+                setAdminIdInfo({
+                  isAdmin: true,
+                  adminId: data.user.username
+                });
+              }
             },
             {
     
@@ -109,6 +125,68 @@ const InformationDetail = () => {
     }
   },[isModify, rendering])
 
+  const modifyFun = () => {
+    return (
+      <>
+        {isModify ?
+          <div style={{float: 'right'}}>
+            <button 
+              className='button-st4 information_detail_user_btn'
+              type='submit'
+              form='userInfoModifyForm'
+            >저장</button>
+          </div>
+          :
+          <div style={{float: 'right'}}>
+            <button 
+              className='button-st4 information_detail_user_btn'
+              type='button'
+              onClick={(e) => {
+                e.preventDefault();
+                setIsModify(true);
+              }}
+            >수정</button>
+            <button 
+              className='button-st5 information_detail_user_btn'
+              type='button'
+              onClick={() => {
+                if(uuid && userRole === 'USER') {
+                  CustomAxiosDelete(
+                    DeleteUsersApi(uuid),
+                    () => {
+                      message.success('회원 정보 삭제 완료');
+                      sessionStorage.removeItem('userInfo');
+                      navigate('/');
+                    },
+                    {},
+                    () => {
+                      console.log('회원정보 삭제 에러');
+                    }
+                  );
+                } else {
+                  if(userUuid) {
+                    CustomAxiosDelete(
+                      DeleteUsersApi(userUuid),
+                      () => {
+                        message.success('회원 정보 삭제 완료');
+                        sessionStorage.removeItem('userUuid');
+                        navigate('/InformationList');
+                      },
+                      {},
+                      () => {
+                        console.log('회원정보 삭제 에러');
+                      }
+                    );
+                  }
+                }
+              }}
+            >탈퇴</button>
+          </div>
+        }
+      </>
+    )
+  }
+
   return (
     <>
       <Header />
@@ -121,13 +199,19 @@ const InformationDetail = () => {
           <div
             className='information_detail_header'
           >
-            {userRole !== 'USER' &&
+            {(userRole !== 'USER' && params === 'Admin') &&
+              <div>
+                <Link to='/AdminsManagement'>
+                  관리자 관리
+                </Link>
+              </div>
+            }
+
+            {(userRole !== 'USER' && params === 'User') &&
               <div>
                 <Link to='/InformationList'>
-                {/* <FormattedMessage id='REGISTRATION_INFORMATION_LIST' /> */}
                 사용자 관리 / 사용자 목록
                 </Link>
-                {/* <FormattedMessage id='REGISTRATION_INFORMATION' /> */}
               </div>
             }
             
@@ -154,62 +238,15 @@ const InformationDetail = () => {
           >
             <div style={{display: 'flex', justifyContent: 'space-between'}}>
               <h3><FormattedMessage id='USER_INFORMATION' /></h3>
-              {isModify ?
-                <div style={{float: 'right'}}>
-                  <button 
-                    className='button-st4 information_detail_user_btn'
-                    type='submit'
-                    form='userInfoModifyForm'
-                  >저장</button>
-                </div>            
+              {/* user, admin 계정의 경우 본인만 수정, 탈퇴할 수 있음 */}
+              {(userRole === 'SUPER_ADMIN' || userRole === 'USER') ?
+                modifyFun()
               :
-                <div style={{float: 'right'}}>
-                  <button 
-                    className='button-st4 information_detail_user_btn'
-                    type='button'
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setIsModify(true);
-                    }}
-                  >수정</button>
-                  <button 
-                    className='button-st5 information_detail_user_btn'
-                    type='button'
-                    onClick={() => {
-                      if(uuid && userRole === 'USER') {
-                        CustomAxiosDelete(
-                          DeleteUsersApi(uuid),
-                          () => {
-                            message.success('회원 정보 삭제 완료');
-                            sessionStorage.removeItem('userInfo');
-                            navigate('/');
-                          },
-                          {},
-                          () => {
-                            console.log('회원정보 삭제 에러');
-                          }
-                        );
-                      } else {
-                        if(userUuid) {
-                          CustomAxiosDelete(
-                            DeleteUsersApi(userUuid),
-                            () => {
-                              message.success('회원 정보 삭제 완료');
-                              sessionStorage.removeItem('userUuid');
-                              navigate('/InformationList');
-                            },
-                            {},
-                            () => {
-                              console.log('회원정보 삭제 에러');
-                            }
-                          );
-                        }
-                      }
-                    }}
-                  >탈퇴</button>
-                </div>
+                (userRole === 'ADMIN' && (adminIdInfo.isAdmin && adminIdInfo.adminId === userId || userData?.role === 'USER')) ?
+                  modifyFun()
+                :
+                  <></>
               }
-
             </div>
 
             {isModify ? 
@@ -254,8 +291,8 @@ const InformationDetail = () => {
                       </td>
                       <td>
                         {userData?.username}
-                        {userRole === 'ADMIN' && <span className='manager-mark ml10'><FormattedMessage id='MANAGER' /></span>}
-                        {userRole === 'SUPER_ADMIN' && <span className='manager-mark ml10'>최고 관리자</span>}
+                        {userData?.role === 'ADMIN' && <span className='manager-mark ml10'><FormattedMessage id='MANAGER' /></span>}
+                        {userData?.role === 'SUPER_ADMIN' && <span className='manager-mark ml10'>최고 관리자</span>}
                       </td>
                     </tr>            
                     <tr>
@@ -366,8 +403,8 @@ const InformationDetail = () => {
                     </td>
                     <td>
                       {userData?.username}
-                      {userRole === 'ADMIN' && <span className='manager-mark ml10'><FormattedMessage id='MANAGER' /></span>}
-                      {userRole === 'SUPER_ADMIN' && <span className='manager-mark ml10'>최고 관리자</span>}
+                      {userData?.role === 'ADMIN' && <span className='manager-mark ml10'><FormattedMessage id='MANAGER' /></span>}
+                      {userData?.role === 'SUPER_ADMIN' && <span className='manager-mark ml10'>최고 관리자</span>}
                     </td>
                   </tr>             
                   <tr>

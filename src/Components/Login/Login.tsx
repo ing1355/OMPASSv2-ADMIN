@@ -34,16 +34,18 @@ const Login = () => {
   const [isPasswordConfirmLook, setIsPasswordConfirmLook] = useState<boolean>(false);
   const [userId, setUserId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [isPasscodeModalOpen, setIsPasscodeModalOpen] = useState<boolean>(false);
+  const [isPasscodeAlert, setIsPasscodeAlert] = useState<boolean>(false);
+  const [isPasscodeLook, setIsPasscodeLook] = useState<boolean>(false);
+  const [isIdAlert, setIsIdAlert] = useState<boolean>(false);
 
   const height = useWindowHeight();
   const dispatch = useDispatch();
 
+  const userIdRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-  console.log(passwordRef.current)
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
+  const passcodeRef = useRef<HTMLInputElement>(null);
+  console.log(passcodeRef.current?.value)
 
   const handleOk = () => {
     if(!isPasswordAlert && !isPasswordConfirmAlert) {
@@ -67,6 +69,28 @@ const Login = () => {
 
   const handleCancel = () => {
     setIsModalOpen(false);
+  };
+
+  const passcodeHandleOk = () => {
+    if(passcodeRef.current && userIdRef.current && !isPasscodeAlert) {
+      CustomAxiosPost(
+        PostLoginApi,
+        () => {
+          message.success('로그인 완료')
+        }, {
+          username: userIdRef.current.value,
+          passcodeNumber: passcodeRef.current.value,
+        },
+        () => {
+          message.error('로그인 실패')
+        }
+      )
+    }
+
+  };
+
+  const passcodeHandleCancel = () => {
+    setIsPasscodeModalOpen(false);
   };
 
   const loginRequest = (e: React.FormEvent<HTMLFormElement>) => {
@@ -214,8 +238,12 @@ const Login = () => {
               </div>
               <div
                 className='main-color1'
+                style={{cursor: 'pointer'}}
+                onClick={() => {
+                  setIsPasscodeModalOpen(true);
+                }}
               >
-                <FormattedMessage id='FORGOT_YOUR_PASSWORD' />
+                passcode로 로그인
               </div>
             </div>
             <button
@@ -226,9 +254,6 @@ const Login = () => {
             >
               <FormattedMessage id='LOGIN' />
             </button>
-            {/* <Link to='/InformationList'>
-
-            </Link> */}
             <div
               className='mb20 content-center'
             ><FormattedMessage id='NOT_A_MEMBER' /></div>
@@ -337,6 +362,57 @@ const Login = () => {
           </div>
         </div>
       </form>
+    </Modal>
+    <Modal  title='Passcode 입력' open={isPasscodeModalOpen} onOk={passcodeHandleOk} onCancel={passcodeHandleCancel} cancelText='취소' okText='확인' width='570px' centered>
+      <div
+        style={{marginBottom: '13px', marginTop: '20px'}}
+      >
+        <label><FormattedMessage id='ID' /></label>
+        <div
+          className='mt8 mb5'
+          style={{display: 'flex'}}
+        >
+          <input 
+            ref={userIdRef}
+            id='userId'
+            type='text'
+            className={'input-st1 create_account_input '}
+            maxLength={16}
+            autoComplete='off'
+          />
+        </div>
+      </div>
+      <div>
+        <label>passcode</label>
+        <img 
+          src={isPasscodeLook ? view_password : dont_look_password} width='30px' style={{position: 'relative', top: '55px', left: '410px'}}
+          onClick={() => {
+            setIsPasscodeLook(!isPasscodeLook);
+          }}
+        />
+        <input 
+          ref={passcodeRef}
+          id='userPasscode'
+          type={isPasscodeLook ? 'text' : 'password'}
+          className={'input-st1 create_account_input mt8 ' + (isPasscodeAlert ? 'red' : '')}
+          maxLength={6}
+          autoComplete='off'
+          onChange={(e) => {
+            const value = e.currentTarget.value;
+            const passcodeRegex = /^\d{6}$/;
+            if(passcodeRegex.test(value)) {
+              setIsPasscodeAlert(false);
+            } else {
+              setIsPasscodeAlert(true);
+            }
+          }}
+        />
+        <div
+          className={'regex-alert mt5 ' + (isPasscodeAlert ? 'visible' : '')}
+        >
+          6자리 숫자를 입력해주세요.
+        </div>
+      </div>
     </Modal>
     </div>
   )

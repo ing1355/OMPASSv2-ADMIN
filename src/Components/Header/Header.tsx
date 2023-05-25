@@ -62,7 +62,9 @@ const Header = () => {
             <li
               style={{cursor: 'pointer'}}
               onClick={() => {
-                navigate('/Main');
+                if(userRole !== 'USER') {
+                  navigate('/Main');
+                }
               }}
             >
               <img 
