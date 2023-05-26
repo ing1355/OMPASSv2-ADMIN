@@ -10,6 +10,13 @@
   top: 15px;
 }
 
+.information_detail_btn {
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin: 0 5px;
+  width: 47px;
+}
+
 .user_info_table tbody tr td {
   padding: 5px;
 }
@@ -67,6 +74,29 @@
   width: 95px;
   height: 40px;
   margin: 0px 10px;
+}
+
+.information_detail_add_allow_account_table tr th:nth-child(4) {
+  width: 10%;
+}
+
+.information_detail_add_allow_account_table tr th:not(:nth-child(4)) {
+  width: 30%;
+}
+
+.information_detail_add_allow_account_input {
+  height: 30px;
+  border-radius: 5px;
+}
+
+.information_detail_save_btn {
+  padding: 5px 10px;
+  border-radius: 5px;
+  height: 28px;  
+  position: relative;
+  top: 18px;
+  height: 20px;
+  font-size: 0.85rem;
 }
 
 .information_detail_passcode_setting {

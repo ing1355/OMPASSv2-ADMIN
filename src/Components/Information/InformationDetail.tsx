@@ -16,9 +16,11 @@ import dont_look_password from '../../assets/dont_look_password.png';
 import os_windows from '../../assets/os_windows.png';
 import os_mac from '../../assets/os_mac.png';
 import mac_address from '../../assets/mac_address.png';
-import { DevicesType, GetUsersDetailsApiType, OmpassInfoType, UserInfoType, UserType } from 'Types/ServerResponseDataTypes';
+import modify_icon from '../../assets/modify_icon.png';
+import browser_icon from '../../assets/browser_icon.png';
+import { AllowedAccessUsersType, DevicesType, GetUsersDetailsApiType, OmpassInfoType, UserInfoType, UserType } from 'Types/ServerResponseDataTypes';
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPost, CustomAxiosPut } from 'Components/CustomHook/CustomAxios';
-import { DeleteDeviceApi, DeletePasscodeApi, DeleteUsersApi, GetPutUsersApi, GetUsersDetailsApi, PostPutPasscodeApi, PutPasscodeApi } from 'Constants/ApiRoute';
+import { DeleteAccessUserApi, DeleteDeviceApi, DeletePasscodeApi, DeleteUsersApi, GetPutUsersApi, GetUsernameCheckApi, GetUsersDetailsApi, PostAccessUserApi, PostPutPasscodeApi, PutPasscodeApi } from 'Constants/ApiRoute';
 import { autoHypenPhoneFun } from 'Constants/ConstantValues';
 import { useRef } from 'react';
 import { message } from 'antd';
@@ -47,23 +49,24 @@ const InformationDetail = () => {
   const [isPasswordConfirmAlert, setIsPasswordConfirmAlert] = useState<boolean>(false);
   const [isPhoneAlert, setIsPhoneAlert] = useState<boolean>(false);
   const [deviceData, setDeviceData] = useState<DevicesType[]>([]);
+  const [accessUserData, setAccessUserData] = useState<AllowedAccessUsersType[]>([]);
   const [ompassInfoData, setOmpassInfoData] = useState<OmpassInfoType | null>(null);
   const [rendering, setRendering] = useState<boolean[]>([]);
   const [adminIdInfo, setAdminIdInfo] = useState<adminIdType>({
     isAdmin: false,
     adminId: '',
   });
-  const [isAddPasscode, setIsAddPasscode] = useState<boolean>(false);
   const [viewPasscodes, setViewPasscodes] = useState<boolean[]>(new Array(deviceData.length).fill(false));
   const [viewPasscodeSettings, setViewPasscodeSettings] = useState<boolean[]>(new Array(deviceData.length).fill(false));
   const [modifyPasscodes, setModifyPasscodes] = useState<boolean[]>(new Array(deviceData.length).fill(false));
+  const [allowAccounts, setAllowAccounts] = useState<boolean[]>(new Array(deviceData.length).fill(false));
   const height = useWindowHeightHeader();
 console.log('deviceData', deviceData)
   const userInfoString = sessionStorage.getItem('userInfo');
   const userUuid = sessionStorage.getItem('userUuid');
   const userInfo:UserInfoType | null = userInfoString ? JSON.parse(userInfoString) : null;
   const passwordRef = useRef<HTMLInputElement>(null);
-
+// console.log('allowAccounts',allowAccounts)
   const userId = userInfo?.userId;
   const userRole = userInfo?.userRole;
   const uuid = userInfo?.uuid;
@@ -86,6 +89,7 @@ console.log('deviceData', deviceData)
             setViewPasscodes(new Array(data.devices.length).fill(false));
             setViewPasscodeSettings(new Array(data.devices.length).fill(false));
             setModifyPasscodes(new Array(data.devices.length).fill(false));
+            setAllowAccounts(new Array(data.devices.length).fill(false));
           },
           {
   
@@ -108,6 +112,7 @@ console.log('deviceData', deviceData)
               setViewPasscodes(new Array(data.devices.length).fill(false));
               setViewPasscodeSettings(new Array(data.devices.length).fill(false));
               setModifyPasscodes(new Array(data.devices.length).fill(false));
+              setAllowAccounts(new Array(data.devices.length).fill(false));
               if(data.user.role === 'ADMIN') {
                 setAdminIdInfo({
                   isAdmin: true,
@@ -493,7 +498,7 @@ console.log('deviceData', deviceData)
                       className='information_detail_device_container'
                     >
                       <div>
-                        이미지
+                        <img src={browser_icon}/>
                         
                         <ul>
                           <li>타입</li>
@@ -571,68 +576,184 @@ console.log('deviceData', deviceData)
                 <div
                   style={{display: 'flex', flexDirection: 'column'}}
                 >
-                  <h3>접속 허용 계정</h3>
-                  <div className='table-st1'>
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>허용 계정</th>
-                          <th>발급 관리자 id</th>
-                          <th>발급 일시</th>
-                          <th></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>dsfds</td>
-                          <td>dsfs</td>
-                          <td>sfd</td>
-                          <td>
-                            {userRole === 'SUPER_ADMIN' &&
-                              <>
-                                <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
-                                  onClick={() => {
-                                    // CustomAxiosDelete(
-                                    //   DeletePasscodeApi(data.passcode.id),
-                                    //   (data: any) => {
-                                    //     message.success('passcode 삭제 완료');
-                                    //     const render = rendering;
-                                    //     const renderTemp = render.concat(true);
-                                    //     setRendering(renderTemp);
-                                    //   },
-                                    //   {
-
-                                    //   }
-                                    // )
-                                  }}
-                                />
-                              </>
-                            }
-                            {userRole === 'ADMIN' && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
-                              <>
-                                <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
-                                  onClick={() => {
-                                    // CustomAxiosDelete(
-                                    //   DeletePasscodeApi(data.passcode.id),
-                                    //   (data: any) => {
-                                    //     message.success('passcode 삭제 완료');
-                                    //     const render = rendering;
-                                    //     const renderTemp = render.concat(true);
-                                    //     setRendering(renderTemp);
-                                    //   },
-                                    //   {
-
-                                    //   }
-                                    // )
-                                  }}
-                                />
-                              </>
-                            }
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+                  <div
+                    style={{display: 'flex', justifyContent: 'space-between'}}
+                  >
+                    <h3>접속 허용 계정</h3>
+                    {userRole === 'SUPER_ADMIN' &&
+                      <>
+                        {!allowAccounts[index] && 
+                          <div>
+                            <img src={add_icon} width='30px'
+                              style={{opacity: 0.7, cursor: 'pointer', margin: '15px 5px 10px'}}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                const updatedAllowAccounts = [...allowAccounts];
+                                updatedAllowAccounts[index] = !updatedAllowAccounts[index];
+                                setAllowAccounts(updatedAllowAccounts);
+                              }}
+                            />
+                          </div>
+                        }
+                      </>
+                    }
+                    {userRole === 'ADMIN' && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
+                      !allowAccounts[index] &&
+                      <div>
+                        <img src={add_icon} width='30px'
+                          style={{opacity: 0.7, cursor: 'pointer', margin: '15px 5px 10px'}}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            const updatedAllowAccounts = [...allowAccounts];
+                            updatedAllowAccounts[index] = !updatedAllowAccounts[index];
+                            setAllowAccounts(updatedAllowAccounts);
+                          }}
+                        />
+                      </div>
+                    }
                   </div>
+                  
+                  <form
+                    id={'addAllowAccountForm_' + index}
+                    onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+                      e.preventDefault();
+                      const { allowUser } = (e.currentTarget.elements as any);
+                      const allowUserValue = allowUser.value;
+
+                      if(allowUserValue) {
+                        CustomAxiosGet(
+                          GetUsernameCheckApi(allowUserValue),
+                          (exist:any) => {
+                            if(exist.exist) {
+                              CustomAxiosPost(
+                                PostAccessUserApi,
+                                () => {
+                                  message.success('접속 허용 계정 등록 성공');
+                                  const updatedAllowAccounts = [...allowAccounts];
+                                  updatedAllowAccounts[index] = !updatedAllowAccounts[index];
+                                  setAllowAccounts(updatedAllowAccounts);
+                                  const render = rendering;
+                                  const renderTemp = render.concat(true);
+                                  setRendering(renderTemp);
+                                },
+                                {
+                                  allowedAccessUsername: allowUserValue,
+                                  deviceId: data.id,
+                                },
+                                () => {
+                                  message.success('접속 허용 계정 등록 실패');
+                                }
+                              )
+                            } else {
+                              message.error('해당 아이디는 존재하지 않는 아이디입니다.');
+                            }
+                          },
+                          {
+
+                          },
+                          () => {
+
+                          }
+                        )
+
+                      } else {
+                        message.error('계정을 입력해주세요');
+                      }
+                    }}
+                  >
+                    <div className='table-st1'>
+                      <table
+                        className='information_detail_add_allow_account_table'
+                      >
+                        <thead>
+                          <tr>
+                            <th>허용 계정</th>
+                            <th>발급 관리자 id</th>
+                            <th>발급 일시</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {data.allowedAccessUsers.map((item: AllowedAccessUsersType, ind: number) => (
+                            <tr>
+                              <td>{item.username}</td>
+                              <td>{item.adminUsername}</td>
+                              <td>{item.createdAt}</td>
+                              <td>
+                                {userRole === 'SUPER_ADMIN' &&
+                                  <>
+                                    <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                                      onClick={() => {
+                                        CustomAxiosDelete(
+                                          DeleteAccessUserApi(data.id, data.allowedAccessUsers[ind].id),
+                                          (data: any) => {
+                                            message.success('계정 삭제 완료');
+                                            const render = rendering;
+                                            const renderTemp = render.concat(true);
+                                            setRendering(renderTemp);
+                                          },
+                                          {
+
+                                          }
+                                        )
+                                      }}
+                                    />
+                                  </>
+                                }
+                                {userRole === 'ADMIN' && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
+                                  <>
+                                    <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                                      onClick={() => {
+                                        CustomAxiosDelete(
+                                          DeleteAccessUserApi(data.id, data.allowedAccessUsers[ind].id),
+                                          (data: any) => {
+                                            message.success('계정 삭제 완료');
+                                            const render = rendering;
+                                            const renderTemp = render.concat(true);
+                                            setRendering(renderTemp);
+                                          },
+                                          {
+
+                                          }
+                                        )
+                                      }}
+                                    />
+                                  </>
+                                }
+                              </td>
+                            </tr>
+                          ))}
+                          
+                          {allowAccounts[index] &&
+                            <tr>
+                              <td><input className='input-st1 information_detail_add_allow_account_input' id='allowUser'/></td>
+                              <td>-</td>
+                              <td>-</td>
+                              <td
+                                style={{display: 'flex', flexDirection: 'row'}}
+                              >
+                                <button
+                                  type='submit'
+                                  className='button-st4 information_detail_btn'
+                                >저장</button>
+                                <button
+                                  type='button'
+                                  className='button-st5 information_detail_btn'
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    const updatedAllowAccounts = [...allowAccounts];
+                                    updatedAllowAccounts[index] = !updatedAllowAccounts[index];
+                                    setAllowAccounts(updatedAllowAccounts);
+                                  }}
+                                >취소</button>
+                              </td>
+                            </tr>
+                          }
+                        </tbody>
+                      </table>
+                    </div>
+                  </form>
+                  
                 </div>
               </div>
               <div
@@ -645,18 +766,21 @@ console.log('deviceData', deviceData)
 
                   {userRole === 'SUPER_ADMIN' && !data.passcode &&
                     viewPasscodeSettings[index] &&
-                    <div>
-                      <img src={setting_icon} width='30px'
+                    <div
+                      onClick={(e) => {
+                        e.preventDefault();
+                        console.log('저장')
+                        const submitButton = document.getElementById(`submitButton_${index}`);
+                        if (submitButton) {
+                          submitButton.click();
+                        }
+                      }}
+                    >
+                      저장
+                      {/* <img src={setting_icon} width='30px'
                         style={{opacity: 0.7, cursor: 'pointer', margin: '15px 5px 10px'}}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          console.log('저장')
-                          const submitButton = document.getElementById(`submitButton_${index}`);
-                          if (submitButton) {
-                            submitButton.click();
-                          }
-                        }}
-                      />
+
+                      /> */}
                     </div>
                   }
 
@@ -678,19 +802,25 @@ console.log('deviceData', deviceData)
 
                   {userRole === 'ADMIN' && !data.passcode && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
                     viewPasscodeSettings[index] &&
-                    <div>
-                      <img src={setting_icon} width='30px'
+                    <div
+                      className='button-st4 information_detail_save_btn'
+                      onClick={(e) => {
+                        e.preventDefault();
+                        console.log('저장')
+                        const submitButton = document.getElementById(`submitButton_${index}`);
+                        if (submitButton) {
+                          submitButton.click();
+                        }
+                      }}
+                    >
+                      <span
+                        style={{position: 'relative', top: '3px'}}
+                      >저장</span>
+                      {/* <img src={setting_icon} width='30px'
                         style={{opacity: 0.7, cursor: 'pointer', margin: '15px 5px 10px'}}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          console.log('저장')
-                          const submitButton = document.getElementById(`submitButton_${index}`);
-                          if (submitButton) {
-                            submitButton.click();
-                          }
-                        }}
-                      />
-                    </div>                  
+
+                      /> */}
+                    </div>                 
                   }
 
                   {userRole === 'ADMIN' && !data.passcode && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
@@ -717,7 +847,6 @@ console.log('deviceData', deviceData)
                     id={'addPasscodeForm_' + index}
                     onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
                       e.preventDefault();
-                      console.log('form')
                       const { random, code, code_number, time_write, time_minute, forever, only_one, more_than_one, recycle_number, unlimited } = (e.currentTarget.elements as any);
                       const randomChecked = random.checked;
                       const codeChecked = code.checked;
@@ -766,7 +895,6 @@ console.log('deviceData', deviceData)
                             }
                           )
                         } else {
-                          console.log('뷰코드')
                           CustomAxiosPost(
                             PostPutPasscodeApi,
                             () => {
@@ -931,7 +1059,7 @@ console.log('deviceData', deviceData)
                                     }}
                                   />
                                 :
-                                  <img src={setting_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                                  <img src={modify_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
                                     onClick={() => {
                                       const updatedModifyPasscodes = [...modifyPasscodes];
                                       updatedModifyPasscodes[index] = !updatedModifyPasscodes[index];
@@ -974,7 +1102,7 @@ console.log('deviceData', deviceData)
                                     }}
                                   />
                                 :
-                                  <img src={setting_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                                  <img src={modify_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
                                     onClick={() => {
                                       const updatedModifyPasscodes = [...modifyPasscodes];
                                       updatedModifyPasscodes[index] = !updatedModifyPasscodes[index];
@@ -987,6 +1115,7 @@ console.log('deviceData', deviceData)
                                 }
 
                                 <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                                  className='ml10'
                                   onClick={() => {
                                     CustomAxiosDelete(
                                       DeletePasscodeApi(data.passcode.id),

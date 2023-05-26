@@ -110,6 +110,7 @@ const Header = () => {
                 <img src={logout} width='25px' style={{opacity: 0.7, position: 'relative', top: '5.5px', left: '-5px'}}
                   onClick={() => {
                     sessionStorage.removeItem('userInfo');
+                    localStorage.removeItem('authorization');
                   }}
                 />
               </Link>

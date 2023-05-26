@@ -65,7 +65,15 @@ export type DevicesType = {
   osVersion: string,
   macAddress: string,
   passcode: PasscodeType,
-  updatedAt: string
+  updatedAt: string,
+  allowedAccessUsers: AllowedAccessUsersType[],
+}
+
+export type AllowedAccessUsersType = {
+  id: number,
+  username: string,
+  adminUsername: string,
+  createdAt: string,
 }
 
 export type OmpassInfoType = {

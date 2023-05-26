@@ -394,46 +394,40 @@ export const Tab = () => {
           <ul
             className='mb20 tab_search_ul'
           >
-            {/* <li
-              className='tab_search_checkbox'
-            >
-              <label>
-                <input type="checkbox" name="option1" className='mr10' />
-                <FormattedMessage id='USER_ID' />
-              </label>
-            </li>
-            <li
-              className='tab_search_checkbox'
-            >
-              <label>
-                <input type="checkbox" name="option2" className='mr10' />
-                <FormattedMessage id='AGENT_INSTALL_ENV' />
-              </label>
-            </li>
-            <li
-              className='tab_search_checkbox'
-            >
-              <label>
-                <input type="checkbox" name="option3" className='mr10' />
-                <FormattedMessage id='LAST_LOGIN' />
-              </label>
-            </li>
-            <li
-              className='tab_search_checkbox'
-            >
-              <label>
-                <input type="checkbox" name="option4" className='mr10' />
-                PASSCODE
-              </label>
-            </li> */}
             <li>
               <input id='dropdown-4' type='checkbox' readOnly checked={isSearchDropdownOpen}/>
               <label htmlFor='dropdown-4' className='dropdown-label-4' onClick={()=>{setIsSearchDropdownOpen(!isSearchDropdownOpen)}}>
-                {searchType ? <div>{searchType}</div> : <div>검색 타입</div>}
+                {searchType ? 
+                  <div
+                    className='dropdown-4-header'
+                  >
+                    <span>
+                      {searchType}
+                    </span>
+                  </div> 
+                : 
+                  <div
+                    className='dropdown-4-header'
+                  >
+                    <span>
+                      검색 타입
+                    </span>
+                  </div>
+                }
               </label>
               <ul
                 className='dropdown-ul-4'
               >
+                <li>
+                  <div
+                    onClick={() => {
+                      setSearchType(null);
+                      setIsSearchDropdownOpen(false);
+                    }}
+                  >
+                    선택안함
+                  </div>
+                </li>
                 <li>
                   <div
                     onClick={() => {
@@ -454,7 +448,7 @@ export const Tab = () => {
                     <FormattedMessage id='AGENT_INSTALL_ENV' />
                   </div>
                 </li>
-                <li>
+                {/* <li>
                   <div
                     onClick={() => {
                       setSearchType('lastLoginDate');
@@ -463,7 +457,7 @@ export const Tab = () => {
                   >
                     <FormattedMessage id='LAST_LOGIN' />
                   </div>
-                </li>
+                </li> */}
                 <li>
                   <div
                     onClick={() => {
@@ -480,9 +474,6 @@ export const Tab = () => {
               <input
                 ref={searchContentRef}
                 className='input-st1 tab_search_input'
-                onChange={(e) => {
-
-                }}
               >
               </input>
               <button

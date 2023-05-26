@@ -13,8 +13,10 @@ const OMPASSVerify = () => {
   useEffect(() => {
     CustomAxiosPost(
       PostTokenVerifyApi,
-      (data:any) => {
+      (data:any, header:any) => {
         console.log('data', data);
+        console.log('header',header)
+
         const role = data.user.role;
         const userInfo = {
           userId: data.user.username,
@@ -22,6 +24,7 @@ const OMPASSVerify = () => {
           uuid: data.user.id,
         }
         sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
+        localStorage.setItem('authorization', header);
         if(role === 'USER') {
           navigate('/InformationDetail/User');
         } else if(role === 'ADMIN') {

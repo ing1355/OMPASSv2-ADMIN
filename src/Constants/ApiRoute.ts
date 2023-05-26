@@ -24,6 +24,8 @@ export const PostAgentInstallerUploadApi = `/v1/agent-installer/upload`;
 
 // 장치(pc)
 export const DeleteDeviceApi = (deviceId: number) => `/v1/device/${deviceId}`;
+export const DeleteAccessUserApi = (deviceId: number, accessUserId: number) => `/v1/device/${deviceId}/access-user/${accessUserId}`;
+export const PostAccessUserApi = '/v1/device/access-user';
 
 // 패스코드
 export const PutPasscodeApi = '/v1/passcode';

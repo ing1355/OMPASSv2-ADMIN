@@ -48,22 +48,23 @@ export function CustomAxiosGetFile(url: string, callback?: Function, params?: an
 }
 
 export function CustomAxiosPost(url: string, callback?: Function, params?: any, errCallback?: (err?: AxiosError) => void, config?: any) {
-    // const headers = config ? {
-    //     authorization: config.authorization ? config.authorization : localStorage.getItem('Authorization'),
-    //     ...config.headers
-    // } : {
-    //     authorization: localStorage.getItem('Authorization'),
-    // }
-
     const headers = config ? {
+        authorization: config.authorization ? config.authorization : localStorage.getItem('Authorization'),
         ...config.headers
     } : {
+        authorization: localStorage.getItem('Authorization'),
     }
+
+    // const headers = config ? {
+    //     ...config.headers
+    // } : {
+    // }
 
     return axios.post(url, params, { headers }).then(res => {
         // if (callback) callback(res.data.data, res.headers.authorization);
-        if (callback) callback(res.data.data);
+        if (callback) callback(res.data.data, res.headers.authorization);
     }).catch(err => {
+        console.log('err',err)
         if (errCallback && err.response && err.response.data) errCallback(err);
         else if(errCallback) errCallback();
     })
