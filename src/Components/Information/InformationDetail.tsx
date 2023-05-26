@@ -18,7 +18,7 @@ import os_mac from '../../assets/os_mac.png';
 import mac_address from '../../assets/mac_address.png';
 import { DevicesType, GetUsersDetailsApiType, OmpassInfoType, UserInfoType, UserType } from 'Types/ServerResponseDataTypes';
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPost, CustomAxiosPut } from 'Components/CustomHook/CustomAxios';
-import { DeleteDeviceApi, DeletePasscodeApi, DeleteUsersApi, GetPutUsersApi, GetUsersDetailsApi, PostPutPasscodeApi } from 'Constants/ApiRoute';
+import { DeleteDeviceApi, DeletePasscodeApi, DeleteUsersApi, GetPutUsersApi, GetUsersDetailsApi, PostPutPasscodeApi, PutPasscodeApi } from 'Constants/ApiRoute';
 import { autoHypenPhoneFun } from 'Constants/ConstantValues';
 import { useRef } from 'react';
 import { message } from 'antd';
@@ -48,15 +48,17 @@ const InformationDetail = () => {
   const [isPhoneAlert, setIsPhoneAlert] = useState<boolean>(false);
   const [deviceData, setDeviceData] = useState<DevicesType[]>([]);
   const [ompassInfoData, setOmpassInfoData] = useState<OmpassInfoType | null>(null);
-  const [viewPasscode, setViewPasscode] = useState<boolean>(false);
   const [rendering, setRendering] = useState<boolean[]>([]);
   const [adminIdInfo, setAdminIdInfo] = useState<adminIdType>({
     isAdmin: false,
     adminId: '',
   });
-
+  const [isAddPasscode, setIsAddPasscode] = useState<boolean>(false);
+  const [viewPasscodes, setViewPasscodes] = useState<boolean[]>(new Array(deviceData.length).fill(false));
+  const [viewPasscodeSettings, setViewPasscodeSettings] = useState<boolean[]>(new Array(deviceData.length).fill(false));
+  const [modifyPasscodes, setModifyPasscodes] = useState<boolean[]>(new Array(deviceData.length).fill(false));
   const height = useWindowHeightHeader();
-
+console.log('deviceData', deviceData)
   const userInfoString = sessionStorage.getItem('userInfo');
   const userUuid = sessionStorage.getItem('userUuid');
   const userInfo:UserInfoType | null = userInfoString ? JSON.parse(userInfoString) : null;
@@ -81,6 +83,9 @@ const InformationDetail = () => {
             setUserName(data.user.name);
             setDeviceData(data.devices);
             setOmpassInfoData(data.ompassInfo);
+            setViewPasscodes(new Array(data.devices.length).fill(false));
+            setViewPasscodeSettings(new Array(data.devices.length).fill(false));
+            setModifyPasscodes(new Array(data.devices.length).fill(false));
           },
           {
   
@@ -100,6 +105,9 @@ const InformationDetail = () => {
               setUserName(data.user.name);
               setDeviceData(data.devices);
               setOmpassInfoData(data.ompassInfo);
+              setViewPasscodes(new Array(data.devices.length).fill(false));
+              setViewPasscodeSettings(new Array(data.devices.length).fill(false));
+              setModifyPasscodes(new Array(data.devices.length).fill(false));
               if(data.user.role === 'ADMIN') {
                 setAdminIdInfo({
                   isAdmin: true,
@@ -433,7 +441,7 @@ const InformationDetail = () => {
             
           </div>
 
-          {deviceData.map((data:DevicesType) => (
+          {deviceData.map((data:DevicesType, index: number) => (
             <div
               className='information_detail_section mb30'
             >
@@ -455,7 +463,7 @@ const InformationDetail = () => {
                     }}
                   >삭제</button>
                 }
-                {userRole === 'ADMIN' && adminIdInfo.isAdmin && adminIdInfo.adminId === userId &&
+                {userRole === 'ADMIN' && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
                   <button
                     className='button-st5 information_detail_device_delete_btn'
                     onClick={() => {
@@ -480,6 +488,20 @@ const InformationDetail = () => {
               >
                 <div style={{display: 'flex', flexDirection: 'column', width: '35%'}}>
                   <h3>Agent 설치 환경</h3>
+                  {data.deviceType === 'BROWSER' ? 
+                    <div
+                      className='information_detail_device_container'
+                    >
+                      <div>
+                        이미지
+                        
+                        <ul>
+                          <li>타입</li>
+                          <li>BROWSER</li>
+                        </ul>
+                      </div>
+                    </div>
+                  :
                   <div
                     className='information_detail_device_container'
                   >
@@ -502,7 +524,8 @@ const InformationDetail = () => {
                         <li>{data.macAddress}</li>
                       </ul>
                     </div>
-                  </div> 
+                  </div>
+                  }
                   <div className='information_detail_update_date'>마지막 업데이트: {data.updatedAt}</div> 
                 </div>
                 
@@ -546,92 +569,314 @@ const InformationDetail = () => {
                 className='mt30 mb10'
               >
                 <div
+                  style={{display: 'flex', flexDirection: 'column'}}
+                >
+                  <h3>접속 허용 계정</h3>
+                  <div className='table-st1'>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>허용 계정</th>
+                          <th>발급 관리자 id</th>
+                          <th>발급 일시</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>dsfds</td>
+                          <td>dsfs</td>
+                          <td>sfd</td>
+                          <td>
+                            {userRole === 'SUPER_ADMIN' &&
+                              <>
+                                <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                                  onClick={() => {
+                                    // CustomAxiosDelete(
+                                    //   DeletePasscodeApi(data.passcode.id),
+                                    //   (data: any) => {
+                                    //     message.success('passcode 삭제 완료');
+                                    //     const render = rendering;
+                                    //     const renderTemp = render.concat(true);
+                                    //     setRendering(renderTemp);
+                                    //   },
+                                    //   {
+
+                                    //   }
+                                    // )
+                                  }}
+                                />
+                              </>
+                            }
+                            {userRole === 'ADMIN' && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
+                              <>
+                                <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                                  onClick={() => {
+                                    // CustomAxiosDelete(
+                                    //   DeletePasscodeApi(data.passcode.id),
+                                    //   (data: any) => {
+                                    //     message.success('passcode 삭제 완료');
+                                    //     const render = rendering;
+                                    //     const renderTemp = render.concat(true);
+                                    //     setRendering(renderTemp);
+                                    //   },
+                                    //   {
+
+                                    //   }
+                                    // )
+                                  }}
+                                />
+                              </>
+                            }
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div
+                className='mt30 mb10'
+              >
+                <div
                   style={{display: 'flex', justifyContent: 'space-between'}}
                 >
-                  <div
-                    style={{display: 'flex'}}
-                  >
-                    <h3>PASSCODE</h3>
-                    <img src={setting_icon} width='30px' height='30px'
-                      style={{opacity: 0.7, cursor: 'pointer', margin: '15px 5px 10px'}}
-                      onClick={() => {
-
-                      }}
-                    />
-                  </div>
+                  <h3>PASSCODE</h3>
 
                   {userRole === 'SUPER_ADMIN' && !data.passcode &&
+                    viewPasscodeSettings[index] &&
                     <div>
-                      <img src={add_icon} width='30px'
+                      <img src={setting_icon} width='30px'
                         style={{opacity: 0.7, cursor: 'pointer', margin: '15px 5px 10px'}}
-                        onClick={() => {
-                          CustomAxiosPost(
-                            PostPutPasscodeApi,
-                            () => {
-                              const render = rendering;
-                              const renderTemp = render.concat(true);
-                              setRendering(renderTemp);
-                            },
-                            {
-                              deviceId: data.id,
-                              recycleCount: 1,
-                              userId: userData?.id,
-                              validTime: 60,
-                            },
-                            () => {
-
-                            }
-                          )
+                        onClick={(e) => {
+                          e.preventDefault();
+                          console.log('저장')
+                          const submitButton = document.getElementById(`submitButton_${index}`);
+                          if (submitButton) {
+                            submitButton.click();
+                          }
                         }}
                       />
                     </div>
                   }
-                  {userRole === 'ADMIN' && !data.passcode && adminIdInfo.isAdmin && adminIdInfo.adminId === userId &&
+
+                  {userRole === 'SUPER_ADMIN' && !data.passcode &&
+                    !viewPasscodeSettings[index] &&
                     <div>
                       <img src={add_icon} width='30px'
                         style={{opacity: 0.7, cursor: 'pointer', margin: '15px 5px 10px'}}
-                        onClick={() => {
-                          CustomAxiosPost(
-                            PostPutPasscodeApi,
-                            () => {
-                              const render = rendering;
-                              const renderTemp = render.concat(true);
-                              setRendering(renderTemp);
-                            },
-                            {
-                              deviceId: data.id,
-                              recycleCount: 1,
-                              userId: userData?.id,
-                              validTime: 60,
-                            },
-                            () => {
-
-                            }
-                          )
+                        onClick={(e) => {
+                          e.preventDefault();
+                          const updatedViewPasscodeSettings = [...viewPasscodeSettings];
+                          updatedViewPasscodeSettings[index] = !updatedViewPasscodeSettings[index];
+                          setViewPasscodeSettings(updatedViewPasscodeSettings);
+                          console.log('추가')
                         }}
                       />
                     </div>
+                  }
+
+                  {userRole === 'ADMIN' && !data.passcode && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
+                    viewPasscodeSettings[index] &&
+                    <div>
+                      <img src={setting_icon} width='30px'
+                        style={{opacity: 0.7, cursor: 'pointer', margin: '15px 5px 10px'}}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          console.log('저장')
+                          const submitButton = document.getElementById(`submitButton_${index}`);
+                          if (submitButton) {
+                            submitButton.click();
+                          }
+                        }}
+                      />
+                    </div>                  
+                  }
+
+                  {userRole === 'ADMIN' && !data.passcode && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
+                    !viewPasscodeSettings[index] &&
+                    <div>
+                      <img src={add_icon} width='30px'
+                        style={{opacity: 0.7, cursor: 'pointer', margin: '15px 5px 10px'}}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          const updatedViewPasscodeSettings = [...viewPasscodeSettings];
+                          updatedViewPasscodeSettings[index] = !updatedViewPasscodeSettings[index];
+                          setViewPasscodeSettings(updatedViewPasscodeSettings);
+                          console.log('추가')
+                        }}
+                      />
+                    </div>                    
                   }
                 </div>
 
-                <div>
-                  <h4>패스코드 설정</h4>
-                  <h5>코드 생성</h5>
-                  <ul>
-                    <li>랜덤 생성</li>
-                    <li>코드 지정 : <input /> (6자리 필수)</li>
-                  </ul>
-                  <h5>만료 시간</h5>
-                  <ul>
-                    <li><input /> 분 후</li>
-                    <li>기한 없음</li>
-                  </ul>
-                  <h5>재사용</h5>
-                  <ul>
-                    <li>1번</li>
-                    <li><input />번</li>
-                    <li>무제한</li>
-                  </ul>
+                <div
+                  className={'information_detail_passcode_setting ' + (viewPasscodeSettings[index] ? 'visible' : '')}
+                >
+                  <form
+                    id={'addPasscodeForm_' + index}
+                    onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+                      e.preventDefault();
+                      console.log('form')
+                      const { random, code, code_number, time_write, time_minute, forever, only_one, more_than_one, recycle_number, unlimited } = (e.currentTarget.elements as any);
+                      const randomChecked = random.checked;
+                      const codeChecked = code.checked;
+                      const codeNumber = code_number.value;
+                      const timeWriteChecked = time_write.checked;
+                      const timeMinute = time_minute.value;
+                      const foreverChecked = forever.checked;
+                      const oneChecked = only_one.checked;
+                      const moreThanOneChecked = more_than_one.checked;
+                      const recycleNumber = recycle_number.value;
+                      const unlimitedChecked = unlimited.checked;
+
+                      console.log(randomChecked,codeChecked,codeNumber)
+                      console.log(timeWriteChecked,timeMinute,foreverChecked)
+                      console.log(oneChecked,moreThanOneChecked,recycleNumber,unlimitedChecked)
+                      if(!randomChecked && !(codeChecked && codeNumber)) {
+                        message.error('코드를 입력해주세요');
+                      } else if(!foreverChecked && !(timeWriteChecked && timeMinute !== '')) {
+                        message.error('시간을 입력해주세요');
+                      } else if(!oneChecked && !unlimitedChecked && !(moreThanOneChecked && recycleNumber !== '')) {
+                        message.error('재사용 횟수를 입력해주세요');
+                      } else {
+                        if(modifyPasscodes[index]) {
+                          console.log('수정')
+
+                          CustomAxiosPut(
+                            PutPasscodeApi,
+                            () => {
+                              const updatedModifyPasscodes = [...modifyPasscodes];
+                              updatedModifyPasscodes[index] = !updatedModifyPasscodes[index];
+                              setModifyPasscodes(updatedModifyPasscodes);
+                              const updatedViewPasscodeSettings = [...viewPasscodeSettings];
+                              updatedViewPasscodeSettings[index] = !updatedViewPasscodeSettings[index];
+                              setViewPasscodeSettings(updatedViewPasscodeSettings);
+                              const render = rendering;
+                              const renderTemp = render.concat(true);
+                              setRendering(renderTemp);
+                            },{
+                              passcodeId: data.passcode.id,
+                              passcodeNumber: randomChecked ? null : codeChecked ? codeNumber : null,
+                              recycleCount: oneChecked ? 1 : unlimitedChecked ? -1 : recycleNumber,
+                              validTime: timeWriteChecked ? timeMinute : -1,
+                            },
+                            () => {
+                              message.error('패스코드 수정 실패')
+                            }
+                          )
+                        } else {
+                          console.log('뷰코드')
+                          CustomAxiosPost(
+                            PostPutPasscodeApi,
+                            () => {
+                              const updatedViewPasscodeSettings = [...viewPasscodeSettings];
+                              updatedViewPasscodeSettings[index] = !updatedViewPasscodeSettings[index];
+                              setViewPasscodeSettings(updatedViewPasscodeSettings);
+                              const render = rendering;
+                              const renderTemp = render.concat(true);
+                              setRendering(renderTemp);
+                            },
+                            {
+                              deviceId: data.id,
+                              recycleCount: oneChecked ? 1 : unlimitedChecked ? -1 : recycleNumber,
+                              userId: userData?.id,
+                              validTime: timeWriteChecked ? timeMinute : -1,
+                              passcodeNumber: randomChecked ? null : codeChecked ? codeNumber : null
+                            },
+                            () => {
+                              message.error('passcode 생성 실패');
+                            }
+                          )
+                        }
+
+                      }
+
+                    }}
+                  >
+                    <button id={"submitButton_" + index} type="submit" style={{ display: 'none' }} />
+                    <h4
+                      style={{marginLeft: '30px'}}
+                    >패스코드 설정</h4>
+                    <div
+                      style={{display: 'flex'}}
+                    >
+                      <div
+                        className='information_detail_passcode_setting_content width_40'
+                      >
+                        <h4>코드 생성</h4>
+                        <ul
+                          className='information_detail_passcode_setting_ul'
+                        >
+                          <li>
+                            <label
+                              className='mlr10'
+                            >
+                              <input type='radio' name='create_passcode' id='random' defaultChecked />
+                              랜덤 생성
+                            </label>
+                            <label
+                              className='mlr10'
+                            >
+                              <input type='radio' name='create_passcode' id='code' />
+                              코드 지정 : &nbsp;
+                              <input type='text' className='information_detail_passcode_setting_content_input' id='code_number' maxLength={6} />
+                              &nbsp; (6자리)
+                            </label>
+                          </li>
+                        </ul>
+                      </div>
+                      <div
+                        className='information_detail_passcode_setting_content'
+                      >
+                        <h4>만료 시간</h4>
+                        <ul>
+                          <li>
+                            <label
+                              className='mlr10'
+                            >
+                              <input type='radio' name='expiration_time' id='time_write' defaultChecked={data.passcode ? data.passcode.validTime ? true : false : true} />
+                              <input type='text' id='time_minute' className='information_detail_passcode_setting_content_input' maxLength={6}/> 분 후
+                            </label>
+                            <label
+                              className='mlr10'
+                            >
+                              <input type='radio' name='expiration_time' id='forever' defaultChecked={data.passcode ? data.passcode.validTime === -1 ? true : false : false} 
+                                onClick={(e) => {
+                                  console.log(e.currentTarget.checked)
+                                }}
+                              /> 기한 없음
+                            </label>
+                          </li>
+                        </ul>
+                      </div>
+                      <div
+                        className='information_detail_passcode_setting_content'
+                      >
+                        <h4>재사용</h4>
+                        <ul>
+                          <li>
+                            <label
+                              className='mlr10'
+                            >
+                              <input type='radio' name='recycle' id='only_one' maxLength={6} defaultChecked={data.passcode ? data.passcode.recycleCount === 1 ? true : false : true}/> 1번
+                            </label>
+                            <label
+                              className='mlr10'
+                            >
+                              <input type='radio' name='recycle' id='more_than_one' defaultChecked={data.passcode ? data.passcode.recycleCount > 1 ? true : false : false}/>
+                              <input type='text' id='recycle_number' className='information_detail_passcode_setting_content_input'/> 번
+                            </label>
+                            <label
+                              className='mlr10'
+                            >
+                              <input type='radio' name='recycle' id='unlimited' defaultChecked={data.passcode ? data.passcode.recycleCount === -1 ? true : false : false}/> 무제한
+                            </label>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </form>
                 </div>
                 
                 <div className='table-st1'>
@@ -652,45 +897,112 @@ const InformationDetail = () => {
                           <td
                             width='150px'
                           >
-                            {viewPasscode ?
+                            {viewPasscodes[index] ?
                               <span>{data.passcode.number}</span>
                             :
                               <span>⦁⦁⦁⦁⦁⦁</span>
                             }
-                            {/* <input 
-                              type={viewPasscode ? 'text' : 'password'}
-                              value='123455'
-                              readOnly
-                              style={{ width: '58px', border: 'none', fontSize: '1.1rem'}}
-                            /> */}
-                            <img src={viewPasscode ? view_password : dont_look_password} width='20px' style={{opacity: 0.5, marginLeft: '17px', position: 'relative', top: '4px'}}
+                            <img
+                              src={viewPasscodes[index] ? view_password : dont_look_password}
+                              width='20px'
+                              style={{ opacity: 0.5, marginLeft: '17px', position: 'relative', top: '4px' }}
                               onClick={() => {
-                                setViewPasscode(!viewPasscode);
+                                const updatedViewPasscodes = [...viewPasscodes];
+                                updatedViewPasscodes[index] = !updatedViewPasscodes[index];
+                                setViewPasscodes(updatedViewPasscodes);
                               }}
                             />
                           </td>
-                          <td>sfs@gmail.com</td>
-                          <td>2023.05.10 14:31</td>
-                          <td>2023.05.12 14:31</td>
-                          <td>{data.passcode.recycleCount}</td>
+                          <td>{data.passcode.issuerUsername}</td>
+                          <td>{data.passcode.createdAt}</td>
+                          <td>{data.passcode.expirationTime ? data.passcode.expirationTime : <FormattedMessage id='UNLIMITED' />}</td>
+                          <td>{data.passcode.recycleCount === -1 ? <FormattedMessage id='UNLIMITED' /> :  data.passcode.recycleCount}</td>
                           <td>
-                            {userRole !== 'USER' &&
-                              <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
-                                onClick={() => {
-                                  CustomAxiosDelete(
-                                    DeletePasscodeApi(data.passcode.id),
-                                    (data: any) => {
-                                      message.success('passcode 삭제 완료');
-                                      const render = rendering;
-                                      const renderTemp = render.concat(true);
-                                      setRendering(renderTemp);
-                                    },
-                                    {
+                            {userRole === 'SUPER_ADMIN' &&
+                              <>
+                                {modifyPasscodes[index] ?
+                                  <img src={add_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      const submitButton = document.getElementById(`submitButton_${index}`);
+                                      if (submitButton) {
+                                        submitButton.click();
+                                      }
+                                    }}
+                                  />
+                                :
+                                  <img src={setting_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                                    onClick={() => {
+                                      const updatedModifyPasscodes = [...modifyPasscodes];
+                                      updatedModifyPasscodes[index] = !updatedModifyPasscodes[index];
+                                      setModifyPasscodes(updatedModifyPasscodes);
+                                      const updatedViewPasscodeSettings = [...viewPasscodeSettings];
+                                      updatedViewPasscodeSettings[index] = !updatedViewPasscodeSettings[index];
+                                      setViewPasscodeSettings(updatedViewPasscodeSettings);
+                                    }}
+                                  />
+                                }
 
-                                    }
-                                  )
-                                }}
-                              />
+                                <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                                  onClick={() => {
+                                    CustomAxiosDelete(
+                                      DeletePasscodeApi(data.passcode.id),
+                                      (data: any) => {
+                                        message.success('passcode 삭제 완료');
+                                        const render = rendering;
+                                        const renderTemp = render.concat(true);
+                                        setRendering(renderTemp);
+                                      },
+                                      {
+
+                                      }
+                                    )
+                                  }}
+                                />
+                              </> 
+                            }
+                            {userRole === 'ADMIN' && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
+                              <>
+                                {modifyPasscodes[index] ?
+                                  <img src={add_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      const submitButton = document.getElementById(`submitButton_${index}`);
+                                      if (submitButton) {
+                                        submitButton.click();
+                                      }
+                                    }}
+                                  />
+                                :
+                                  <img src={setting_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                                    onClick={() => {
+                                      const updatedModifyPasscodes = [...modifyPasscodes];
+                                      updatedModifyPasscodes[index] = !updatedModifyPasscodes[index];
+                                      setModifyPasscodes(updatedModifyPasscodes);
+                                      const updatedViewPasscodeSettings = [...viewPasscodeSettings];
+                                      updatedViewPasscodeSettings[index] = !updatedViewPasscodeSettings[index];
+                                      setViewPasscodeSettings(updatedViewPasscodeSettings);
+                                    }}
+                                  />
+                                }
+
+                                <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                                  onClick={() => {
+                                    CustomAxiosDelete(
+                                      DeletePasscodeApi(data.passcode.id),
+                                      (data: any) => {
+                                        message.success('passcode 삭제 완료');
+                                        const render = rendering;
+                                        const renderTemp = render.concat(true);
+                                        setRendering(renderTemp);
+                                      },
+                                      {
+
+                                      }
+                                    )
+                                  }}
+                                />
+                              </> 
                             }
                           </td>
                         </tr>
@@ -705,20 +1017,6 @@ const InformationDetail = () => {
               </div>
             </div> 
           ))}
-        
-          {/* <div
-            className='content-center'
-          >
-            <Link to='/InformationList'>
-              <button
-                className='button-st4 information_detail_button'
-              ><FormattedMessage id='SAVE' /></button>
-            </Link>
-
-            <button
-              className='button-st5 information_detail_button'
-            ><FormattedMessage id='DELETE' /></button>
-          </div> */}
         </div>
       </div>
     </>

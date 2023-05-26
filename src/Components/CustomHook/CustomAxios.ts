@@ -35,7 +35,7 @@ export function CustomAxiosGetFile(url: string, callback?: Function, params?: an
     return axios.get(url, {
         params, headers: {
             authorization: localStorage.getItem('Authorization'),
-        }
+        }, responseType : 'blob'
     }).then(res => {
         if (res.headers.authorization) {
             localStorage.setItem('Authorization', res.headers.authorization);

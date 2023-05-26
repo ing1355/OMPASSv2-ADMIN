@@ -33,6 +33,9 @@ const OMPASSVerify = () => {
       {
         username: username,
         accessToken: access_token,
+        device: {
+          clientType: 'BROWSER',
+        }
       },
       () => {
         console.log('ompass 인증 실패');

@@ -180,6 +180,7 @@ const LocaleTexts = {
     USER_MANAGEMENT : 'User Management',
     ADMIN_MANAGEMENT: 'Admin Management',
     SECRET_KEY_MANAGEMENT:'Secret Key Management',
+    UNLIMITED: 'Unlimited',
   },
   'ko': {
     AGREE_POLICY_ALL: '원모어패스의 이용약관, 개인정보 수집 및 이용에 모두 동의합니다.',
@@ -362,6 +363,7 @@ const LocaleTexts = {
     USER_MANAGEMENT : '사용자 관리',
     ADMIN_MANAGEMENT: '관리자 관리',
     SECRET_KEY_MANAGEMENT:'비밀키 관리',
+    UNLIMITED: '무제한',
   }
 }
 

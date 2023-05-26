@@ -20,7 +20,7 @@ import { GetPutUsersApi, GetUsersCountApi, PostExcelUploadApi } from 'Constants/
 import { GetPutUsersApiArrayType, GetPutUsersApiDataType, GetPutUsersApiType, GetUsersCountApiType, userRoleType } from 'Types/ServerResponseDataTypes';
 import { userUuidChange } from 'Redux/actions/userChange';
 
-type listType = 'username' | 'os' | 'lastLoginDate' | 'pass';
+type listType = 'username' | 'os' | 'lastLoginDate' | 'enable_passcode_count';
 type sortingType = 'none' | 'asc' | 'desc';
 
 type sortingInfoType = {
@@ -151,6 +151,8 @@ export const Tab = () => {
         username: searchType === 'username' ? searchContent : null,
         last_login_time: searchType === 'lastLoginDate' ? searchContent : null,
         os: searchType === 'os' ? searchContent : null,
+        passcode: tabNow === 'PASSCODE_USERS' ? true : false, 
+        enable_passcode_count: searchType === 'enable_passcode_count' ? searchContent : null,
       }
     );
 
@@ -185,6 +187,7 @@ export const Tab = () => {
   const selectMenuHandler = (name: string, index: number) => {
     clickTab(index);
     setTabNow(name);
+    setPageNum(1);
   };
 
   // 행 호버 이벤트 핸들러
@@ -464,7 +467,7 @@ export const Tab = () => {
                 <li>
                   <div
                     onClick={() => {
-                      setSearchType('pass');
+                      setSearchType('enable_passcode_count');
                       setIsSearchDropdownOpen(false);
                     }}
                   >
@@ -599,19 +602,19 @@ export const Tab = () => {
                     {sortingUlFun('lastLoginDate', 2)}
                   </th>
                   <th>
-                    <input id='dropdown-3' type='checkbox' checked={sortingInfo?.list === 'pass' && sortingInfo.isToggle} readOnly></input>
-                    <label htmlFor='dropdown-3' className={'dropdown-label-3 ' + (sortingNow?.list === 'pass' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
+                    <input id='dropdown-3' type='checkbox' checked={sortingInfo?.list === 'enable_passcode_count' && sortingInfo.isToggle} readOnly></input>
+                    <label htmlFor='dropdown-3' className={'dropdown-label-3 ' + (sortingNow?.list === 'enable_passcode_count' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
                       onClick={()=>{
-                        if(sortingInfo === null || sortingInfo?.list !== 'pass') {
+                        if(sortingInfo === null || sortingInfo?.list !== 'enable_passcode_count') {
                           setSortingInfo({
-                            list: 'pass',
+                            list: 'enable_passcode_count',
                             sorting: 'none',
                             isToggle: true,
                           })
                         } else {
-                          if(sortingInfo?.list === 'pass') {
+                          if(sortingInfo?.list === 'enable_passcode_count') {
                             setSortingInfo({
-                              list: 'pass',
+                              list: 'enable_passcode_count',
                               sorting: 'none',
                               isToggle: !sortingInfo.isToggle,
                             })
@@ -624,10 +627,10 @@ export const Tab = () => {
                       {sortingNow === null ?
                         sortingImgFun(false, 'none')
                       :
-                        sortingImgFun((sortingNow?.list === 'pass' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'desc')), sortingNow!.sorting)
+                        sortingImgFun((sortingNow?.list === 'enable_passcode_count' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'desc')), sortingNow!.sorting)
                       }
                     </label>
-                    {sortingUlFun('pass', 3)}
+                    {sortingUlFun('enable_passcode_count', 3)}
                   </th>
                 </tr>
               </thead>

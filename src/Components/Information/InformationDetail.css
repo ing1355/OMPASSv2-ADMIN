@@ -68,3 +68,34 @@
   height: 40px;
   margin: 0px 10px;
 }
+
+.information_detail_passcode_setting {
+  display: none;
+}
+
+.information_detail_passcode_setting.visible {
+  display: block;
+}
+
+.information_detail_passcode_setting_content {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin: 0 1rem 1rem;
+  border-radius: 5px;
+  width: 32%;
+}
+
+.information_detail_passcode_setting_content.width_40 {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin: 0 1rem 1rem;
+  border-radius: 5px;
+  width: 40%;
+}
+
+.information_detail_passcode_setting_content_input {
+  border-radius: 5px;
+  border: 0.5px solid #ccc;
+  height: 30px;
+  width: 45px;
+}

@@ -1,6 +1,6 @@
 import './Login.css';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { OMPASS } from 'ompass';
 import { message, Modal } from 'antd';
 import { useState, useRef } from 'react';
@@ -41,11 +41,11 @@ const Login = () => {
 
   const height = useWindowHeight();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const userIdRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const passcodeRef = useRef<HTMLInputElement>(null);
-  console.log(passcodeRef.current?.value)
 
   const handleOk = () => {
     if(!isPasswordAlert && !isPasswordConfirmAlert) {
@@ -75,11 +75,29 @@ const Login = () => {
     if(passcodeRef.current && userIdRef.current && !isPasscodeAlert) {
       CustomAxiosPost(
         PostLoginApi,
-        () => {
+        (data:any) => {
+          console.log('passcode 로그인 data',data)
+          const role = data.userResponse.role;
+          console.log('role',role)
+          const userInfo = {
+            userId: data.userResponse.username,
+            userRole: role,
+            uuid: data.userResponse.id,
+          }
+          console.log('userInfo', userInfo)
+          sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
           message.success('로그인 완료')
+          if(role === 'USER') {
+            navigate('/InformationDetail/User');
+          } else if(role === 'ADMIN') {
+            navigate('/Main');
+          } else {
+            navigate('/Main');
+          }
         }, {
           username: userIdRef.current.value,
           passcodeNumber: passcodeRef.current.value,
+          clientType: 'BROWSER',
         },
         () => {
           message.error('로그인 실패')
@@ -120,6 +138,7 @@ const Login = () => {
         username: username,
         password: password,
         language: lang,
+        clientType: 'BROWSER',
       },
       () => {
         message.error('로그인 실패')

@@ -59,6 +59,7 @@ export type UserType = {
 }
 
 export type DevicesType = {
+  deviceType: 'BROWSER' | null,
   id: number,
   os: OsNamesType,
   osVersion: string,
@@ -81,6 +82,8 @@ type PasscodeType = {
   validTime: number,
   recycleCount: number,
   createdAt: string,
+  expirationTime: string,
+  issuerUsername: string,
 }
 
 type OsNamesType = "Windows" | "MacOs";

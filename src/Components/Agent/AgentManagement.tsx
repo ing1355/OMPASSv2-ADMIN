@@ -290,7 +290,7 @@ const AgentManagement = () => {
                             id={index.toString()}
                             checked={checkboxes[index]?.checked || false}
                             onChange={handleCheckboxChange}
-                          />{data.fileId}
+                          />
                         </td>
                         <td>{data.downloadTarget && <span className='manager-mark ml10'>현재</span>}{data.version}</td>
                         <td>{data.os}</td>
@@ -300,22 +300,15 @@ const AgentManagement = () => {
                           <button
                             style={{cursor: 'pointer'}}
                             onClick={() => {
+                              const versionName = 'ompass_installer_v' + data.version + '.zip';
                               CustomAxiosGetFile(
                                 GetAgentInstallerDownloadApi,
                                 (data:any) => {
-                                  console.log(data);
-
-                                  let output = JSON.stringify(data, null, 4);
-                                  // console.log('output',output)
-                                  const blob = new Blob([output], { type: 'image/jpeg' });
-                                  // const fileDownlaoadUrl = URL.createObjectURL(blob);
-
-                                  const fileData = new Blob([data]);
-                                  const fileDownlaoadUrl = URL.createObjectURL(fileData);
+                                  const fileDownlaoadUrl = URL.createObjectURL(data);
                                   console.log(fileDownlaoadUrl)
                                   const downloadLink = document.createElement('a');
                                   downloadLink.href = fileDownlaoadUrl;
-                                  downloadLink.download = 'download.jpg';
+                                  downloadLink.download = versionName;
                                   document.body.appendChild(downloadLink);
                                   downloadLink.click();
                                   document.body.removeChild(downloadLink);
@@ -326,13 +319,9 @@ const AgentManagement = () => {
                                 {
                                   file_id: data.fileId
                                 },
-                                () => {
-                                  message.error('다운로드 실패');
-                                }, 
-                                {
-                                  headers: {
-                                    'Content-Type': 'multipart/form-data',
-                                  },
+                                (error: any) => {
+                                  message.error('다운로드 실패', error);
+                                  console.log(error)
                                 }
                               )
                             }}

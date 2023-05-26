@@ -26,5 +26,6 @@ export const PostAgentInstallerUploadApi = `/v1/agent-installer/upload`;
 export const DeleteDeviceApi = (deviceId: number) => `/v1/device/${deviceId}`;
 
 // 패스코드
+export const PutPasscodeApi = '/v1/passcode';
 export const PostPutPasscodeApi = '/v1/passcode';
 export const DeletePasscodeApi = (passcodeId: number) => `/v1/passcode/${passcodeId}`;
