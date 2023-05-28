@@ -3,12 +3,12 @@ import { FormattedMessage } from 'react-intl';
 import { Link, useNavigate } from 'react-router-dom';
 import { OMPASS } from 'ompass';
 import { message, Modal } from 'antd';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { langChange } from 'Redux/actions/langChange';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
 import { useWindowHeight } from 'Components/CustomHook/useWindowHeight';
-import { CustomAxiosGet, CustomAxiosPatch, CustomAxiosPost } from 'Components/CustomHook/CustomAxios';
+import { CustomAxiosGet, CustomAxiosGetFile, CustomAxiosPatch, CustomAxiosPost } from 'Components/CustomHook/CustomAxios';
 import { GetAgentInstallerDownloadApi, PatchUsersResetPasswordApi, PostLoginApi } from 'Constants/ApiRoute';
 
 import { CopyRightText } from '../../Constants/ConstantValues';
@@ -20,6 +20,8 @@ import login_id from '../../assets/login_id.png';
 import login_password from '../../assets/login_password.png';
 import view_password from '../../assets/view_password.png';
 import dont_look_password from '../../assets/dont_look_password.png';
+import { GetAgentInstallerApi } from 'Constants/ApiRoute';
+import { GetAgentApiArrayType, GetAgentApiDataType, GetAgentApiType } from 'Types/ServerResponseDataTypes';
 
 
 const Login = () => {
@@ -38,6 +40,7 @@ const Login = () => {
   const [isPasscodeAlert, setIsPasscodeAlert] = useState<boolean>(false);
   const [isPasscodeLook, setIsPasscodeLook] = useState<boolean>(false);
   const [isIdAlert, setIsIdAlert] = useState<boolean>(false);
+  const [currentVersion, setCurrentVersion] = useState<GetAgentApiType | null>(null);
 
   const height = useWindowHeight();
   const dispatch = useDispatch();
@@ -46,6 +49,23 @@ const Login = () => {
   const userIdRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const passcodeRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() =>{
+    CustomAxiosGet(
+      GetAgentInstallerApi,
+      (data: GetAgentApiDataType) => {
+        const agentHistory = data.agentProgramHistories;
+        const currentData = agentHistory.filter((item)=>item.downloadTarget === true);
+        setCurrentVersion(currentData[0]);
+      },
+      {
+
+      },
+      () => {
+
+      }
+    )
+  },[]);
 
   const handleOk = () => {
     if(!isPasswordAlert && !isPasswordConfirmAlert) {
@@ -173,18 +193,29 @@ const Login = () => {
         >
           <img 
             src={login_main_image}
-            style={{maxWidth: '100%', height: 'auto', minWidth: '1000px'}}
+            style={{maxWidth: '100%', height: 'auto'}}
           />
           <button
             className='button-st3 login_agent_download_button'
             onClick={() => {
-              CustomAxiosGet(
+              const versionName = 'ompass_installer_v' + currentVersion?.version + '.zip';
+              CustomAxiosGetFile(
                 GetAgentInstallerDownloadApi,
-                () => {
+                (data:any) => {
+                  const fileDownlaoadUrl = URL.createObjectURL(data);
+                  console.log(fileDownlaoadUrl)
+                  const downloadLink = document.createElement('a');
+                  downloadLink.href = fileDownlaoadUrl;
+                  downloadLink.download = versionName;
+                  document.body.appendChild(downloadLink);
+                  downloadLink.click();
+                  document.body.removeChild(downloadLink);
+                  URL.revokeObjectURL(fileDownlaoadUrl);
+
                   message.success('다운로드 성공');
                 },
                 {
-                  // file_id: 8
+                  file_id: currentVersion?.fileId,
                 },
                 () => {
                   message.error('다운로드 실패');

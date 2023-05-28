@@ -1,3 +1,14 @@
 .agent_management_header {
   width: 1350px;
 }
+
+.agent_management_target_version_btn {
+  cursor: pointer;
+  padding: 4px 9px;
+  border-radius: 3px;
+}
+
+.agent_management_target_version_btn.disable {
+  background-color: #7FC8FC;
+  cursor: default;
+}

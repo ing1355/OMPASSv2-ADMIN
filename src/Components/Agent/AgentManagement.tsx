@@ -10,6 +10,7 @@ import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosGetFile, CustomAxiosPatch
 import { DeleteAgentInstallerApi, GetAgentInstallerApi, GetAgentInstallerDownloadApi, PatchAgentInstallerApi, PostAgentInstallerUploadApi } from 'Constants/ApiRoute';
 
 import delete_icon from '../../assets/delete_icon.png';
+import list_download from '../../assets/list_download.png';
 
 interface Checkbox {
   id: number;
@@ -297,8 +298,10 @@ const AgentManagement = () => {
                         <td>{data.uploadDate}</td>
                         <td>{data.uploader}</td>
                         <td>
-                          <button
+                          <img 
+                            src={list_download}
                             style={{cursor: 'pointer'}}
+                            width='18px'
                             onClick={() => {
                               const versionName = 'ompass_installer_v' + data.version + '.zip';
                               CustomAxiosGetFile(
@@ -325,11 +328,11 @@ const AgentManagement = () => {
                                 }
                               )
                             }}
-                          >다운로드</button>
+                          />
                         </td>
                         <td>
                           <button
-                            style={{cursor: 'pointer'}}
+                            className={'button-st4 agent_management_target_version_btn ' + (data.downloadTarget ? 'disable' : '' )}
                             disabled={data.downloadTarget ? true : false}
                             onClick={() => {
                               CustomAxiosPatch(
