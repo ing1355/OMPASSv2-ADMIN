@@ -42,9 +42,9 @@ const SecretKey = () => {
               style={{display: 'flex'}}
             >
               <h1>비밀키 관리</h1>
-              <div
+              {/* <div
                 className="App-view-manual-font"
-              ><Link to='/Manual'><FormattedMessage id='VIEW_MANUAL' /></Link></div>
+              ><Link to='/Manual'><FormattedMessage id='VIEW_MANUAL' /></Link></div> */}
             </div>
           </div>
 

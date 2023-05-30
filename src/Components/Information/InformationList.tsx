@@ -32,9 +32,9 @@ const InformationList = () => {
                 {/* <FormattedMessage id='REGISTRATION_INFORMATION_LIST' /> */}
                 사용자 목록
               </h1>
-              <div
+              {/* <div
                 className="App-view-manual-font"
-              ><Link to='/Manual'><FormattedMessage id='VIEW_MANUAL' /></Link></div>
+              ><Link to='/Manual'><FormattedMessage id='VIEW_MANUAL' /></Link></div> */}
             </div>
           </div>
 

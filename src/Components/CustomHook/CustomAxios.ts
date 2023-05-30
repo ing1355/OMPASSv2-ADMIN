@@ -4,17 +4,17 @@ export function CustomAxiosGet(url: string, callback?: Function, params?: any, e
     if (!callback) {
         return axios.get(url, {
             params, headers: {
-                authorization: localStorage.getItem('Authorization')
+                authorization: localStorage.getItem('authorization')
             }
         })
     }
     return axios.get(url, {
         params, headers: {
-            authorization: localStorage.getItem('Authorization'),
+            authorization: localStorage.getItem('authorization'),
         }
     }).then(res => {
         if (res.headers.authorization) {
-            localStorage.setItem('Authorization', res.headers.authorization);
+            localStorage.setItem('authorization', res.headers.authorization);
         }
         // if (callback) callback(res.data.rows);
         if (callback) callback(res.data.data);
@@ -28,17 +28,17 @@ export function CustomAxiosGetFile(url: string, callback?: Function, params?: an
     if (!callback) {
         return axios.get(url, {
             params, headers: {
-                authorization: localStorage.getItem('Authorization')
+                authorization: localStorage.getItem('authorization')
             }
         })
     }
     return axios.get(url, {
         params, headers: {
-            authorization: localStorage.getItem('Authorization'),
+            authorization: localStorage.getItem('authorization'),
         }, responseType : 'blob'
     }).then(res => {
         if (res.headers.authorization) {
-            localStorage.setItem('Authorization', res.headers.authorization);
+            localStorage.setItem('authorization', res.headers.authorization);
         }
         if (callback) callback(res.data);
     }).catch((err) => {
@@ -49,10 +49,10 @@ export function CustomAxiosGetFile(url: string, callback?: Function, params?: an
 
 export function CustomAxiosPost(url: string, callback?: Function, params?: any, errCallback?: (err?: AxiosError) => void, config?: any) {
     const headers = config ? {
-        authorization: config.authorization ? config.authorization : localStorage.getItem('Authorization'),
+        authorization: config.authorization ? config.authorization : localStorage.getItem('authorization'),
         ...config.headers
     } : {
-        authorization: localStorage.getItem('Authorization'),
+        authorization: localStorage.getItem('authorization'),
     }
 
     // const headers = config ? {
@@ -81,7 +81,7 @@ export function CustomAxiosPost(url: string, callback?: Function, params?: any, 
 export function CustomAxiosDelete(url: string, callback?: Function, params?: any, errCallback?: (err?: AxiosError) => void) {
     return axios.delete(url, {
         params, headers: {
-            authorization: localStorage.getItem('Authorization')
+            authorization: localStorage.getItem('authorization')
         }
     }).then(res => {
         if (callback) callback(res.data.rows);
@@ -93,10 +93,10 @@ export function CustomAxiosDelete(url: string, callback?: Function, params?: any
 
 export function CustomAxiosPut(url: string, callback?: Function, params?: any, errCallback?: (err?: AxiosError) => void, config?: any) {
     const headers = config ? {
-        authorization: config.authorization ? config.authorization : localStorage.getItem('Authorization'),
+        authorization: config.authorization ? config.authorization : localStorage.getItem('authorization'),
         ...config.headers
     } : {
-        authorization: localStorage.getItem('Authorization'),
+        authorization: localStorage.getItem('authorization'),
     }
     return axios.put(url, params, { headers }).then(res => {
         if (callback) callback(res.data.rows);
@@ -108,10 +108,10 @@ export function CustomAxiosPut(url: string, callback?: Function, params?: any, e
 
 export function CustomAxiosPatch(url: string, callback?: Function, params?: any, errCallback?: (err?: AxiosError) => void, config?: any) {
     const headers = config ? {
-        authorization: config.authorization ? config.authorization : localStorage.getItem('Authorization'),
+        authorization: config.authorization ? config.authorization : localStorage.getItem('authorization'),
         ...config.headers
     } : {
-        authorization: localStorage.getItem('Authorization'),
+        authorization: localStorage.getItem('authorization'),
     }
     return axios.patch(url, params, { headers }).then(res => {
         if (callback) callback(res.data.rows);

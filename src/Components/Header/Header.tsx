@@ -9,7 +9,8 @@ import ompass_logo_image from '../../assets/ompass_logo_image.png';
 import locale_image from '../../assets/locale_image.png';
 import menu_icon from '../../assets/menu_icon.png';
 import logout from '../../assets/logout.png';
-import list_download from '../../assets/list_download.png';
+import maunal_download from '../../assets/maunal_download.png';
+import maunal_download_blue from '../../assets/maunal_download_blue.png';
 import { UserInfoType } from 'Types/ServerResponseDataTypes';
 import { FormattedMessage } from 'react-intl';
 
@@ -94,9 +95,9 @@ const Header = () => {
                 download
               >
                 <img
-                  src={list_download}
-                  width="18px"
-                  style={{position: 'relative', top: '3px'}}
+                  src={maunal_download_blue}
+                  width="25px"
+                  style={{position: 'relative', top: '5px'}}
                 />
               </a>
             </li>

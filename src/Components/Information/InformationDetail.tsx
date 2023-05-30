@@ -235,9 +235,9 @@ console.log('deviceData', deviceData)
               <div
                 className='App-view-manual-font'
               >
-                <Link to='/Manual'>
+                {/* <Link to='/Manual'>
                   <FormattedMessage id='VIEW_MANUAL' />
-                </Link>
+                </Link> */}
               </div>
             </div>
           </div>
@@ -492,7 +492,7 @@ console.log('deviceData', deviceData)
                 className='mb30'
               >
                 <div style={{display: 'flex', flexDirection: 'column', width: '35%'}}>
-                  <h3>Agent 설치 환경</h3>
+                  {data.deviceType === 'BROWSER' ? <h3>로그인 환경</h3> : <h3>Agent 설치 환경</h3>}
                   {data.deviceType === 'BROWSER' ? 
                     <div
                       className='information_detail_device_container'
@@ -501,7 +501,7 @@ console.log('deviceData', deviceData)
                         <img src={browser_icon}/>
                         
                         <ul>
-                          <li>타입</li>
+                          <li>Type</li>
                           <li>BROWSER</li>
                         </ul>
                       </div>
@@ -570,194 +570,197 @@ console.log('deviceData', deviceData)
                 </div>  
               </div>
               <hr></hr>
-              <div
-                className='mt30 mb10'
-              >
+              
+              {data.deviceType !== 'BROWSER' &&
                 <div
-                  style={{display: 'flex', flexDirection: 'column'}}
+                  className='mt30 mb10'
                 >
                   <div
-                    style={{display: 'flex', justifyContent: 'space-between'}}
+                    style={{display: 'flex', flexDirection: 'column'}}
                   >
-                    <h3>접속 허용 계정</h3>
-                    {userRole === 'SUPER_ADMIN' &&
-                      <>
-                        {!allowAccounts[index] && 
-                          <div>
-                            <img src={add_icon} width='30px'
-                              style={{opacity: 0.7, cursor: 'pointer', margin: '15px 5px 10px'}}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                const updatedAllowAccounts = [...allowAccounts];
-                                updatedAllowAccounts[index] = !updatedAllowAccounts[index];
-                                setAllowAccounts(updatedAllowAccounts);
-                              }}
-                            />
-                          </div>
-                        }
-                      </>
-                    }
-                    {userRole === 'ADMIN' && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
-                      !allowAccounts[index] &&
-                      <div>
-                        <img src={add_icon} width='30px'
-                          style={{opacity: 0.7, cursor: 'pointer', margin: '15px 5px 10px'}}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            const updatedAllowAccounts = [...allowAccounts];
-                            updatedAllowAccounts[index] = !updatedAllowAccounts[index];
-                            setAllowAccounts(updatedAllowAccounts);
-                          }}
-                        />
-                      </div>
-                    }
-                  </div>
-                  
-                  <form
-                    id={'addAllowAccountForm_' + index}
-                    onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-                      e.preventDefault();
-                      const { allowUser } = (e.currentTarget.elements as any);
-                      const allowUserValue = allowUser.value;
-
-                      if(allowUserValue) {
-                        CustomAxiosGet(
-                          GetUsernameCheckApi(allowUserValue),
-                          (exist:any) => {
-                            if(exist.exist) {
-                              CustomAxiosPost(
-                                PostAccessUserApi,
-                                () => {
-                                  message.success('접속 허용 계정 등록 성공');
+                    <div
+                      style={{display: 'flex', justifyContent: 'space-between'}}
+                    >
+                      <h3>접속 허용 계정</h3>
+                      {userRole === 'SUPER_ADMIN' &&
+                        <>
+                          {!allowAccounts[index] && 
+                            <div>
+                              <img src={add_icon} width='30px'
+                                style={{opacity: 0.7, cursor: 'pointer', margin: '15px 5px 10px'}}
+                                onClick={(e) => {
+                                  e.preventDefault();
                                   const updatedAllowAccounts = [...allowAccounts];
                                   updatedAllowAccounts[index] = !updatedAllowAccounts[index];
                                   setAllowAccounts(updatedAllowAccounts);
-                                  const render = rendering;
-                                  const renderTemp = render.concat(true);
-                                  setRendering(renderTemp);
-                                },
-                                {
-                                  allowedAccessUsername: allowUserValue,
-                                  deviceId: data.id,
-                                },
-                                () => {
-                                  message.success('접속 허용 계정 등록 실패');
-                                }
-                              )
-                            } else {
-                              message.error('해당 아이디는 존재하지 않는 아이디입니다.');
-                            }
-                          },
-                          {
-
-                          },
-                          () => {
-
+                                }}
+                              />
+                            </div>
                           }
-                        )
-
-                      } else {
-                        message.error('계정을 입력해주세요');
+                        </>
                       }
-                    }}
-                  >
-                    <div className='table-st1'>
-                      <table
-                        className='information_detail_add_allow_account_table'
-                      >
-                        <thead>
-                          <tr>
-                            <th>허용 계정</th>
-                            <th>발급 관리자 id</th>
-                            <th>발급 일시</th>
-                            <th></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {data.allowedAccessUsers.map((item: AllowedAccessUsersType, ind: number) => (
-                            <tr>
-                              <td>{item.username}</td>
-                              <td>{item.adminUsername}</td>
-                              <td>{item.createdAt}</td>
-                              <td>
-                                {userRole === 'SUPER_ADMIN' &&
-                                  <>
-                                    <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
-                                      onClick={() => {
-                                        CustomAxiosDelete(
-                                          DeleteAccessUserApi(data.id, data.allowedAccessUsers[ind].id),
-                                          (data: any) => {
-                                            message.success('계정 삭제 완료');
-                                            const render = rendering;
-                                            const renderTemp = render.concat(true);
-                                            setRendering(renderTemp);
-                                          },
-                                          {
+                      {userRole === 'ADMIN' && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
+                        !allowAccounts[index] &&
+                        <div>
+                          <img src={add_icon} width='30px'
+                            style={{opacity: 0.7, cursor: 'pointer', margin: '15px 5px 10px'}}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              const updatedAllowAccounts = [...allowAccounts];
+                              updatedAllowAccounts[index] = !updatedAllowAccounts[index];
+                              setAllowAccounts(updatedAllowAccounts);
+                            }}
+                          />
+                        </div>
+                      }
+                    </div>
+                    
+                    <form
+                      id={'addAllowAccountForm_' + index}
+                      onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+                        e.preventDefault();
+                        const { allowUser } = (e.currentTarget.elements as any);
+                        const allowUserValue = allowUser.value;
 
-                                          }
-                                        )
-                                      }}
-                                    />
-                                  </>
-                                }
-                                {userRole === 'ADMIN' && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
-                                  <>
-                                    <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
-                                      onClick={() => {
-                                        CustomAxiosDelete(
-                                          DeleteAccessUserApi(data.id, data.allowedAccessUsers[ind].id),
-                                          (data: any) => {
-                                            message.success('계정 삭제 완료');
-                                            const render = rendering;
-                                            const renderTemp = render.concat(true);
-                                            setRendering(renderTemp);
-                                          },
-                                          {
-
-                                          }
-                                        )
-                                      }}
-                                    />
-                                  </>
-                                }
-                              </td>
-                            </tr>
-                          ))}
-                          
-                          {allowAccounts[index] &&
-                            <tr
-                              style={{height:'20px'}}
-                            >
-                              <td><input className='input-st1 information_detail_add_allow_account_input' id='allowUser'/></td>
-                              <td>-</td>
-                              <td>-</td>
-                              <td
-                                style={{display: 'flex', flexDirection: 'row'}}
-                              >
-                                <button
-                                  type='submit'
-                                  className='button-st4 information_detail_btn'
-                                >저장</button>
-                                <button
-                                  type='button'
-                                  className='button-st5 information_detail_btn'
-                                  onClick={(e) => {
-                                    e.preventDefault();
+                        if(allowUserValue) {
+                          CustomAxiosGet(
+                            GetUsernameCheckApi(allowUserValue),
+                            (exist:any) => {
+                              if(exist.exist) {
+                                CustomAxiosPost(
+                                  PostAccessUserApi,
+                                  () => {
+                                    message.success('접속 허용 계정 등록 성공');
                                     const updatedAllowAccounts = [...allowAccounts];
                                     updatedAllowAccounts[index] = !updatedAllowAccounts[index];
                                     setAllowAccounts(updatedAllowAccounts);
-                                  }}
-                                >취소</button>
-                              </td>
+                                    const render = rendering;
+                                    const renderTemp = render.concat(true);
+                                    setRendering(renderTemp);
+                                  },
+                                  {
+                                    allowedAccessUsername: allowUserValue,
+                                    deviceId: data.id,
+                                  },
+                                  () => {
+                                    message.success('접속 허용 계정 등록 실패');
+                                  }
+                                )
+                              } else {
+                                message.error('해당 아이디는 존재하지 않는 아이디입니다.');
+                              }
+                            },
+                            {
+
+                            },
+                            () => {
+
+                            }
+                          )
+
+                        } else {
+                          message.error('계정을 입력해주세요');
+                        }
+                      }}
+                    >
+                      <div className='table-st1'>
+                        <table
+                          className='information_detail_add_allow_account_table'
+                        >
+                          <thead>
+                            <tr>
+                              <th>허용 계정</th>
+                              <th>발급 관리자 id</th>
+                              <th>발급 일시</th>
+                              <th></th>
                             </tr>
-                          }
-                        </tbody>
-                      </table>
-                    </div>
-                  </form>
-                  
+                          </thead>
+                          <tbody>
+                            {data.allowedAccessUsers.map((item: AllowedAccessUsersType, ind: number) => (
+                              <tr>
+                                <td>{item.username}</td>
+                                <td>{item.adminUsername}</td>
+                                <td>{item.createdAt}</td>
+                                <td>
+                                  {userRole === 'SUPER_ADMIN' &&
+                                    <>
+                                      <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                                        onClick={() => {
+                                          CustomAxiosDelete(
+                                            DeleteAccessUserApi(data.id, data.allowedAccessUsers[ind].id),
+                                            (data: any) => {
+                                              message.success('계정 삭제 완료');
+                                              const render = rendering;
+                                              const renderTemp = render.concat(true);
+                                              setRendering(renderTemp);
+                                            },
+                                            {
+
+                                            }
+                                          )
+                                        }}
+                                      />
+                                    </>
+                                  }
+                                  {userRole === 'ADMIN' && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
+                                    <>
+                                      <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                                        onClick={() => {
+                                          CustomAxiosDelete(
+                                            DeleteAccessUserApi(data.id, data.allowedAccessUsers[ind].id),
+                                            (data: any) => {
+                                              message.success('계정 삭제 완료');
+                                              const render = rendering;
+                                              const renderTemp = render.concat(true);
+                                              setRendering(renderTemp);
+                                            },
+                                            {
+
+                                            }
+                                          )
+                                        }}
+                                      />
+                                    </>
+                                  }
+                                </td>
+                              </tr>
+                            ))}
+                            
+                            {allowAccounts[index] &&
+                              <tr
+                                style={{height:'20px'}}
+                              >
+                                <td><input className='input-st1 information_detail_add_allow_account_input' id='allowUser'/></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td
+                                  style={{display: 'flex', flexDirection: 'row'}}
+                                >
+                                  <button
+                                    type='submit'
+                                    className='button-st4 information_detail_btn'
+                                  >저장</button>
+                                  <button
+                                    type='button'
+                                    className='button-st5 information_detail_btn'
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      const updatedAllowAccounts = [...allowAccounts];
+                                      updatedAllowAccounts[index] = !updatedAllowAccounts[index];
+                                      setAllowAccounts(updatedAllowAccounts);
+                                    }}
+                                  >취소</button>
+                                </td>
+                              </tr>
+                            }
+                          </tbody>
+                        </table>
+                      </div>
+                    </form>
+                    
+                  </div>
                 </div>
-              </div>
+              }
               <div
                 className='mt30 mb10'
               >

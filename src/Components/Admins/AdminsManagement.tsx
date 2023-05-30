@@ -3,7 +3,7 @@ import './AdminsManagement.css';
 import Header from 'Components/Header/Header';
 import { FormattedMessage } from 'react-intl';
 import { Link, useNavigate } from 'react-router-dom';
-import { GetPutUsersApiArrayType, GetPutUsersApiDataType, GetPutUsersApiType } from 'Types/ServerResponseDataTypes';
+import { GetPutUsersApiArrayType, GetPutUsersApiDataType, GetPutUsersApiType, UserInfoType } from 'Types/ServerResponseDataTypes';
 import { useEffect, useState, useRef } from 'react';
 
 import { message, Pagination, PaginationProps } from 'antd';
@@ -39,7 +39,13 @@ const AdminsManagement = () => {
   const userNameRef = useRef<HTMLInputElement>(null);
   const userPhoneRef = useRef<HTMLInputElement>(null);
 
-  const [isActive, setIsActive] = useState<boolean>(false);
+  const userInfoString = sessionStorage.getItem('userInfo');
+  const userInfo:UserInfoType | null = userInfoString ? JSON.parse(userInfoString) : null;
+
+  const userId = userInfo?.userId;
+  const userRole = userInfo?.userRole;
+  const uuid = userInfo?.uuid;
+
 
   const navigate = useNavigate();
 
@@ -131,39 +137,41 @@ const AdminsManagement = () => {
                 {/* <FormattedMessage id='AGENT_MANAGEMENT_LIST' /> */}
                 관리자 목록
               </h1>
-              <div
+              {/* <div
                 className="App-view-manual-font"
-              ><Link to='/Manual'><FormattedMessage id='VIEW_MANUAL' /></Link></div>
+              ><Link to='/Manual'><FormattedMessage id='VIEW_MANUAL' /></Link></div> */}
             </div>
           </div>
 
           <div 
             style={{width: '1200px', marginTop: '1.8%'}}
           >
-            <div
-              style={{float: 'right'}}
-              className='mb20'
-            >
-              {isAddAdmin ?
-              <button className='tab_download_upload_button admins_management_button'
-                type='submit'
-                form='addAdminForm'
+            {userRole === 'SUPER_ADMIN' && 
+              <div
+                style={{float: 'right'}}
+                className='mb20'
               >
-                <span>관리자 등록</span>
-              </button>
-              :
-              <button className='tab_download_upload_button admins_management_button'
-                type='button'
-                onClick={(e) => {
-                  e.preventDefault();
-                  setIsAddAdmin(true);
-                }}
-              >
-                <span>관리자 추가</span>
-              </button>
-              }
+                {isAddAdmin ?
+                <button className='tab_download_upload_button admins_management_button'
+                  type='submit'
+                  form='addAdminForm'
+                >
+                  <span>관리자 등록</span>
+                </button>
+                :
+                <button className='tab_download_upload_button admins_management_button'
+                  type='button'
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsAddAdmin(true);
+                  }}
+                >
+                  <span>관리자 추가</span>
+                </button>
+                }
+              </div>
+            }
 
-            </div>
 
             {isAddAdmin ?
             <div

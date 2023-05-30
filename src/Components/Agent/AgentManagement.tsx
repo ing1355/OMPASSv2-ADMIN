@@ -110,9 +110,9 @@ const AgentManagement = () => {
               style={{display: 'flex'}}
             >
               <h1><FormattedMessage id='VERSION_LIST' /></h1>
-              <div
+              {/* <div
                 className="App-view-manual-font"
-              ><Link to='/Manual'><FormattedMessage id='VIEW_MANUAL' /></Link></div>
+              ><Link to='/Manual'><FormattedMessage id='VIEW_MANUAL' /></Link></div> */}
             </div>
           </div>
 

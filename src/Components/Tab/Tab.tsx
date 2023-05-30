@@ -6,6 +6,12 @@ import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
 import * as XLSX from 'xlsx';
+import { Pagination, message } from 'antd';
+import type { PaginationProps } from 'antd';
+import { CustomAxiosGet, CustomAxiosPost } from 'Components/CustomHook/CustomAxios';
+import { GetPutUsersApi, GetUsersCountApi, PostExcelUploadApi } from 'Constants/ApiRoute';
+import { GetPutUsersApiArrayType, GetPutUsersApiDataType, GetPutUsersApiType, GetUsersCountApiType, userRoleType } from 'Types/ServerResponseDataTypes';
+import { userUuidChange } from 'Redux/actions/userChange';
 
 import search_icon from '../../assets/search_icon.png';
 import list_download from '../../assets/list_download.png';
@@ -13,12 +19,7 @@ import list_upload from '../../assets/list_upload.png';
 import sorting_icon from '../../assets/sorting_icon.png';
 import sorting_bottom_arrow from '../../assets/sorting_bottom_arrow.png';
 import sorting_top_arrow from '../../assets/sorting_top_arrow.png';
-import { Pagination, message } from 'antd';
-import type { PaginationProps } from 'antd';
-import { CustomAxiosGet, CustomAxiosPost } from 'Components/CustomHook/CustomAxios';
-import { GetPutUsersApi, GetUsersCountApi, PostExcelUploadApi } from 'Constants/ApiRoute';
-import { GetPutUsersApiArrayType, GetPutUsersApiDataType, GetPutUsersApiType, GetUsersCountApiType, userRoleType } from 'Types/ServerResponseDataTypes';
-import { userUuidChange } from 'Redux/actions/userChange';
+import dropdown_icon from '../../assets/dropdown_icon.png';
 
 type listType = 'username' | 'os' | 'lastLoginDate' | 'enable_passcode_count';
 type sortingType = 'none' | 'asc' | 'desc';
@@ -124,7 +125,7 @@ export const Tab = () => {
   const [excelData, setExcelData] = useState<any>(null);
   const [excelDownloadAllData, setExcelDownloadAllData] = useState<any>(null);
   const searchContentRef = useRef<HTMLInputElement>(null);
-
+console.log('userData',userData)
   const menuArr = [
     { id: 0, name: 'TOTAL_USERS', content: 'Tab menu ONE', count: countData?.totalUserCount },
     { id: 1, name: 'REGISTERED_USERS', content: 'Tab menu TWO', count: countData?.registeredOmpassUserCount },
@@ -282,23 +283,24 @@ export const Tab = () => {
     setTableCellSize(pageSizeOptions);
   };
 
-  function OSNamesComponent({ osNames }: any) {
+  function OSNamesComponent({ osNames, deviceType }: any) {
     const windowsCount = osNames.filter((name: any) => (name === 'Windows' || name === 'windows')).length;
     const macosCount = osNames.filter((name: any) => name === 'MacOs').length;
+    const browserCount = osNames.filter((name: any) => name === 'BROWSER').length;
   
-    let result = '';
+    let result = [];
   
-    if (windowsCount > 0 && macosCount > 0) {
-      result = 'Windows, MacOs';
-    } else if (windowsCount > 0) {
-      result = 'Windows';
+    if (windowsCount > 0) {
+      result.push('Windows');
     } else if (macosCount > 0) {
-      result = 'MacOs';
-    } else {
-      result = '-';
-    }
-  
-    return <span>{result}</span>;
+      result.push('MacOs');
+    } else if (browserCount > 0) {
+      result.push('Browser');
+    } 
+
+    let resultString = result.join(', ');
+
+    return <span>{resultString}</span>;
   }
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -394,7 +396,9 @@ export const Tab = () => {
           <ul
             className='mb20 tab_search_ul'
           >
-            <li>
+            <li
+              style={{position: 'relative'}}
+            >
               <input id='dropdown-4' type='checkbox' readOnly checked={isSearchDropdownOpen}/>
               <label htmlFor='dropdown-4' className='dropdown-label-4' onClick={()=>{setIsSearchDropdownOpen(!isSearchDropdownOpen)}}>
                 {searchType ? 
@@ -402,8 +406,12 @@ export const Tab = () => {
                     className='dropdown-4-header'
                   >
                     <span>
-                      {searchType}
+                      {searchType === 'username' && <FormattedMessage id='username' /> }
+                      {searchType === 'os' && <FormattedMessage id='os' /> }
+                      {searchType === 'lastLoginDate' && <FormattedMessage id='lastLoginDate' /> }
+                      {searchType === 'enable_passcode_count' && <FormattedMessage id='enable_passcode_count' /> }
                     </span>
+                    <img className='tab_dropdown_arrow' src={dropdown_icon}/>
                   </div> 
                 : 
                   <div
@@ -412,6 +420,7 @@ export const Tab = () => {
                     <span>
                       검색 타입
                     </span>
+                    <img className='tab_dropdown_arrow' src={dropdown_icon}/>
                   </div>
                 }
               </label>
@@ -445,7 +454,7 @@ export const Tab = () => {
                       setIsSearchDropdownOpen(false);
                     }}
                   >
-                    <FormattedMessage id='AGENT_INSTALL_ENV' />
+                    <FormattedMessage id='ENV' />
                   </div>
                 </li>
                 {/* <li>
@@ -499,10 +508,14 @@ export const Tab = () => {
 
           {/* 테이블 */}
           <div className='table-st1'>
-            <table>
+            <table
+              className='tab_table_list'
+            >
               <thead>
                 <tr>
-                  <th>
+                  <th
+                    style={{position: 'relative'}}
+                  >
                     <input id='dropdown-0' type='checkbox' checked={sortingInfo?.list === 'username' && sortingInfo.isToggle} readOnly></input>
                     <label htmlFor='dropdown-0' className={'dropdown-label-0 ' + (sortingNow?.list === 'username' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
                       onClick={()=>{
@@ -532,7 +545,9 @@ export const Tab = () => {
                     </label>
                     {sortingUlFun("username", 0)}
                   </th>
-                  <th>
+                  <th
+                    style={{position: 'relative'}}
+                  >
                     <input id='dropdown-1' type='checkbox' checked={sortingInfo?.list === 'os' && sortingInfo.isToggle} readOnly></input>
                     <label htmlFor='dropdown-1' className={'dropdown-label-1 ' + (sortingNow?.list === 'os' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
                       onClick={()=>{
@@ -553,7 +568,7 @@ export const Tab = () => {
                         }
                       }}
                     >
-                      <FormattedMessage id='AGENT_INSTALL_ENV' />
+                      <FormattedMessage id='ENV' />
                       {sortingNow === null ?
                         sortingImgFun(false, 'none')
                       :
@@ -562,7 +577,9 @@ export const Tab = () => {
                     </label>
                     {sortingUlFun('os', 1)}
                   </th>
-                  <th>
+                  <th
+                    style={{position: 'relative'}}
+                  >
                     <input id='dropdown-2' type='checkbox' checked={sortingInfo?.list === 'lastLoginDate' && sortingInfo.isToggle} readOnly></input>
                     <label htmlFor='dropdown-2' className={'dropdown-label-2 ' + (sortingNow?.list === 'lastLoginDate' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
                       onClick={()=>{
@@ -592,7 +609,9 @@ export const Tab = () => {
                     </label>
                     {sortingUlFun('lastLoginDate', 2)}
                   </th>
-                  <th>
+                  <th
+                    style={{position: 'relative'}}
+                  >
                     <input id='dropdown-3' type='checkbox' checked={sortingInfo?.list === 'enable_passcode_count' && sortingInfo.isToggle} readOnly></input>
                     <label htmlFor='dropdown-3' className={'dropdown-label-3 ' + (sortingNow?.list === 'enable_passcode_count' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
                       onClick={()=>{

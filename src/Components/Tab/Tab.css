@@ -42,6 +42,10 @@ input[type="checkbox"] {
   margin-right: 3px;
 }
 
+.tab_table_list tbody tr th {
+  width: 30%;
+}
+
 .tab_table_sorting_image {
   position: relative;
   top: 2px;
@@ -58,19 +62,19 @@ input[type="checkbox"] {
 }
 
 .tab_table_sorting_dropdown.username {
-  margin-left: 194px;
+  margin-left: 180px;
 }
 
 .tab_table_sorting_dropdown.os {
-  margin-left: 233px;
+  margin-left: 216px;
 }
 
 .tab_table_sorting_dropdown.lastLoginDate {
-  margin-left: 196px;
+  margin-left: 233px;
 }
 
 .tab_table_sorting_dropdown.enable_passcode_count {
-  margin-left: 180px;
+  margin-left: 168px;
 }
 
 .manager-mark.red {
@@ -303,7 +307,7 @@ input[type="checkbox"] {
   background-color: white;
   box-shadow: 0px 5px 20px #ccc;
   position: absolute;
-  z-index: 100;
+  z-index: 1;
 }
 
 .dropdown-ul-4 li {
@@ -331,6 +335,11 @@ input[type="checkbox"] {
   display: block;
 }
 
+#dropdown-4:checked + label > div > img {
+  transform: rotate(180deg);
+  /* transition: all 0.5s ease-in-out; */
+}
+
 .dropdown-4-header {
   border: 1px solid #ccc;
   padding: 10px;
@@ -341,10 +350,18 @@ input[type="checkbox"] {
   top: -5px;
   height: 21.5px;
   margin-right: 20px;
-  z-index: 2;
+  display: flex;
+  justify-content: space-between;
 }
 
 .dropdown-4-header span {
   position: relative;
   top: 3px;
+}
+
+.tab_dropdown_arrow {
+  width: 20px;
+  height: 13px;
+  position: relative;
+  top: 5px;
 }

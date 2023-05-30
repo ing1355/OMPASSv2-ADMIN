@@ -159,7 +159,7 @@ const LocaleTexts = {
     DEVICE_INFORMATION: 'Device Information',
     ACTIVE: 'Active',
     INACTIVE: 'Inactive',
-    AGENT_INSTALL_ENV: 'Agent installation environment',
+    AGENT_INSTALL_ENV: 'Agent Installation Environment',
     LAST_LOGIN: 'Last Login',
     DOWNLOAD_USER_LIST: 'Download User List',
     UPLOAD_USER_LIST: 'Upload User List',
@@ -181,6 +181,10 @@ const LocaleTexts = {
     ADMIN_MANAGEMENT: 'Admin Management',
     SECRET_KEY_MANAGEMENT:'Secret Key Management',
     UNLIMITED: 'Unlimited',
+    username: 'User ID',
+    os: 'Environment',
+    lastLoginDate: 'Last Login',
+    enable_passcode_count: 'PASSCODE',
   },
   'ko': {
     AGREE_POLICY_ALL: '원모어패스의 이용약관, 개인정보 수집 및 이용에 모두 동의합니다.',
@@ -364,6 +368,11 @@ const LocaleTexts = {
     ADMIN_MANAGEMENT: '관리자 관리',
     SECRET_KEY_MANAGEMENT:'비밀키 관리',
     UNLIMITED: '무제한',
+    username: '사용자 아이디',
+    os: '환경',
+    lastLoginDate: '마지막 로그인',
+    enable_passcode_count: 'PASSCODE',
+    ENV : '환경',
   }
 }
 
