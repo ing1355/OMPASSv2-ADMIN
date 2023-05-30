@@ -244,7 +244,11 @@ const AdminsManagement = () => {
                             GetUsernameCheckApi(username),
                             (data: any) => {
                               setIdExist(data.exist);
-                              message.success(formatMessage({ id: 'AVAILABLE_USERNAME' }));
+                              if(data.exist) {
+                                message.error('중복된 아이디입니다')
+                              } else {
+                                message.success(formatMessage({ id: 'AVAILABLE_USERNAME' }));
+                              }
                             },
                             {
 
