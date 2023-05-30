@@ -42,9 +42,7 @@ input[type="checkbox"] {
   margin-right: 3px;
 }
 
-.tab_table_list tbody tr th {
-  width: 30%;
-}
+
 
 .tab_table_sorting_image {
   position: relative;
@@ -62,19 +60,19 @@ input[type="checkbox"] {
 }
 
 .tab_table_sorting_dropdown.username {
-  margin-left: 180px;
+  margin-left: 184px;
 }
 
 .tab_table_sorting_dropdown.os {
-  margin-left: 216px;
+  margin-left: 86px;
 }
 
 .tab_table_sorting_dropdown.lastLoginDate {
-  margin-left: 233px;
+  margin-left: 240px;
 }
 
 .tab_table_sorting_dropdown.enable_passcode_count {
-  margin-left: 168px;
+  margin-left: 172px;
 }
 
 .manager-mark.red {

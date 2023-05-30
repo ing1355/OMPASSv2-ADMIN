@@ -20,6 +20,7 @@ import login_id from '../../assets/login_id.png';
 import login_password from '../../assets/login_password.png';
 import view_password from '../../assets/view_password.png';
 import dont_look_password from '../../assets/dont_look_password.png';
+import maunal_download from '../../assets/maunal_download.png'
 import { GetAgentInstallerApi } from 'Constants/ApiRoute';
 import { GetAgentApiArrayType, GetAgentApiDataType, GetAgentApiType } from 'Types/ServerResponseDataTypes';
 
@@ -41,6 +42,10 @@ const Login = () => {
   const [isPasscodeLook, setIsPasscodeLook] = useState<boolean>(false);
   const [isIdAlert, setIsIdAlert] = useState<boolean>(false);
   const [currentVersion, setCurrentVersion] = useState<GetAgentApiType | null>(null);
+  const [idChange, setIdChange] = useState<string>('');
+  const [passwordChange, setPasswordChange] = useState<string>('');
+  console.log('idChange',idChange)
+  console.log('passwordChange',passwordChange)
 
   const height = useWindowHeight();
   const dispatch = useDispatch();
@@ -49,23 +54,6 @@ const Login = () => {
   const userIdRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const passcodeRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() =>{
-    CustomAxiosGet(
-      GetAgentInstallerApi,
-      (data: GetAgentApiDataType) => {
-        const agentHistory = data.agentProgramHistories;
-        const currentData = agentHistory.filter((item)=>item.downloadTarget === true);
-        setCurrentVersion(currentData[0]);
-      },
-      {
-
-      },
-      () => {
-
-      }
-    )
-  },[]);
 
   const handleOk = () => {
     if(!isPasswordAlert && !isPasswordConfirmAlert) {
@@ -82,9 +70,6 @@ const Login = () => {
     } else {
       message.error('비밀번호를 다시 입력해주세요.')
     }
-    console.log('userId',userId)
-    console.log('password',password)
-
   };
 
   const handleCancel = () => {
@@ -95,17 +80,15 @@ const Login = () => {
     if(passcodeRef.current && userIdRef.current && !isPasscodeAlert) {
       CustomAxiosPost(
         PostLoginApi,
-        (data:any) => {
-          console.log('passcode 로그인 data',data)
+        (data:any, header:any) => {
           const role = data.userResponse.role;
-          console.log('role',role)
           const userInfo = {
             userId: data.userResponse.username,
             userRole: role,
             uuid: data.userResponse.id,
           }
-          console.log('userInfo', userInfo)
           sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
+          localStorage.setItem('authorization', header);
           message.success('로그인 완료')
           if(role === 'USER') {
             navigate('/InformationDetail/User');
@@ -215,15 +198,9 @@ const Login = () => {
                   message.success('다운로드 성공');
                 },
                 {
-                  file_id: currentVersion?.fileId,
                 },
                 () => {
                   message.error('다운로드 실패');
-                }, 
-                {
-                  headers: {
-                    'Content-Type': 'multipart/form-data',
-                  },
                 }
               )
             }}
@@ -264,6 +241,9 @@ const Login = () => {
                 type='text'
                 id='userId'
                 maxLength={16}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setIdChange(e.currentTarget.value);
+                }}
               />
               <img src={login_id} width='30px' style={{position: 'relative', top: '-41px', left: '20px'}}/>
             </div>
@@ -276,6 +256,9 @@ const Login = () => {
                 type='password'
                 id='userPassword'
                 maxLength={16}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setPasswordChange(e.currentTarget.value);
+                }}
               />
               <img src={login_password} width='30px' style={{position: 'relative', top: '-41px', left: '20px'}}/>
             </div>
@@ -297,10 +280,10 @@ const Login = () => {
               </div>
             </div>
             <button
-              className='button-st1 login-button mb50'
+              className={'button-st1 login-button mb50 ' + ((idChange !== '' && passwordChange !== '') ? 'active' : '')}
+              // className={'login-button mb50 button-st1 ' + (idRef.current?.value && loginPasswordRef.current?.value) ? 'active' : ''}
               type='submit'
-              // onClick={() => {
-              // }}
+              disabled={!(idChange !== '' && passwordChange !== '')}
             >
               <FormattedMessage id='LOGIN' />
             </button>
@@ -333,11 +316,22 @@ const Login = () => {
           >KO</span>|
           <span 
             className={'mlr5 locale-toggle' + (lang === 'en' ? ' active' : '')}
+            style={{marginRight: '12px'}}
             onClick={() => {
               dispatch(langChange('en'));
               localStorage.setItem('locale','en');
             }}
           >EN</span>
+        <a
+          href="/OMPASS_Portal_manual.pdf"
+          download
+        >
+          <img
+            src={maunal_download}
+            width="25px"
+            style={{position: 'relative', top: '5px'}}
+          />
+        </a>
         </div>
         <div
           className='copyRight-style'

@@ -22,6 +22,7 @@ type menuInfoType = {
 }
 
 const Main = () => {
+  document.body.style.backgroundColor = 'white';
   const userInfoString = sessionStorage.getItem('userInfo');
   const userInfo:UserInfoType | null = userInfoString ? JSON.parse(userInfoString) : null;
 

@@ -20,6 +20,7 @@ import sorting_icon from '../../assets/sorting_icon.png';
 import sorting_bottom_arrow from '../../assets/sorting_bottom_arrow.png';
 import sorting_top_arrow from '../../assets/sorting_top_arrow.png';
 import dropdown_icon from '../../assets/dropdown_icon.png';
+import reset_icon from '../../assets/reset_icon.png';
 
 type listType = 'username' | 'os' | 'lastLoginDate' | 'enable_passcode_count';
 type sortingType = 'none' | 'asc' | 'desc';
@@ -125,7 +126,7 @@ export const Tab = () => {
   const [excelData, setExcelData] = useState<any>(null);
   const [excelDownloadAllData, setExcelDownloadAllData] = useState<any>(null);
   const searchContentRef = useRef<HTMLInputElement>(null);
-console.log('userData',userData)
+
   const menuArr = [
     { id: 0, name: 'TOTAL_USERS', content: 'Tab menu ONE', count: countData?.totalUserCount },
     { id: 1, name: 'REGISTERED_USERS', content: 'Tab menu TWO', count: countData?.registeredOmpassUserCount },
@@ -142,7 +143,6 @@ console.log('userData',userData)
       (data:GetPutUsersApiDataType)=>{
         setUserData(data.users);
         setTotalCount(data.queryTotalCount);
-        console.log('사용자 목록 불러오기')
       }, {
         page_size: tableCellSize,
         page: pageNum -1,
@@ -488,21 +488,38 @@ console.log('userData',userData)
               <button
                 className={'button-st4 tab_search_button ' + (lang === 'en' ? 'en' : '')}
                 onClick={(e) => {
-                  if(searchType === null) {
-                    message.error('검색 항목을 선택해주세요.')
-                  } else {
-                    const render = rendering;
-                    const renderTemp = render.concat(true);
-                    setRendering(renderTemp);
-                    if(searchContentRef.current) {
-                      setSearchContent(searchContentRef.current.value);
-                    }
+                  const render = rendering;
+                  const renderTemp = render.concat(true);
+                  setRendering(renderTemp);
+                  if(searchContentRef.current) {
+                    setSearchContent(searchContentRef.current.value);
                   }
+                  // if(searchType === null) {
+                  //   message.error('검색 항목을 선택해주세요.')
+                  // } else {
+                  //   const render = rendering;
+                  //   const renderTemp = render.concat(true);
+                  //   setRendering(renderTemp);
+                  //   if(searchContentRef.current) {
+                  //     setSearchContent(searchContentRef.current.value);
+                  //   }
+                  // }
                 }}
               >
                 <img src={search_icon} width='18px' className='tab_search_button_img'/>
                 <FormattedMessage id='SEARCH' />
               </button>
+              <img 
+                src={reset_icon} width='26px' style={{opacity: 0.5, marginLeft: '20px', cursor: 'pointer'}}
+                onClick={() => {
+                  setSortingNow(null);
+                  setSearchType(null);
+                  setSearchContent('');
+                  const render = rendering;
+                  const renderTemp = render.concat(true);
+                  setRendering(renderTemp);
+                }}
+              />
             </li>
           </ul>
 
@@ -513,6 +530,9 @@ console.log('userData',userData)
             >
               <thead>
                 <tr>
+                  <th>
+                    구분
+                  </th>
                   <th
                     style={{position: 'relative'}}
                   >
@@ -657,6 +677,11 @@ console.log('userData',userData)
                     }}
                     style={{ background: hoveredRow === index ? '#D6EAF5' : 'transparent', cursor: 'pointer' }}
                   >
+                    <td>
+                      {data.role === 'USER' && <>사용자</>}
+                      {data.role === 'ADMIN' && <>관리자</>}
+                      {data.role === 'SUPER_ADMIN' && <>최고 관리자</>}
+                    </td>
                     <td>
                       {data.username}
                       {/* {data.role === 'ADMIN' && <span className='manager-mark ml10'><FormattedMessage id='MANAGER' /></span>}

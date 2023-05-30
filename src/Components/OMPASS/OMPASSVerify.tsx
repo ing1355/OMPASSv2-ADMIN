@@ -14,9 +14,6 @@ const OMPASSVerify = () => {
     CustomAxiosPost(
       PostTokenVerifyApi,
       (data:any, header:any) => {
-        console.log('data', data);
-        console.log('header',header)
-
         const role = data.user.role;
         const userInfo = {
           userId: data.user.username,

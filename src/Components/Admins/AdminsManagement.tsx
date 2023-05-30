@@ -205,12 +205,10 @@ const AdminsManagement = () => {
                         username: username
                       },
                       () => {
-                        console.log('관리자 등록 실패');
-                        message.error('관리자 등록 실패');
                       }
                     );
                   } else {
-                    console.log('에러');
+                    message.error('항목을 모두 입력해주세요')
                   }
                 }}
               >
@@ -383,7 +381,8 @@ const AdminsManagement = () => {
                       <td>{data.phoneNumber}</td>
                       <td>
                         <img src={delete_icon} width='20px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation();
                             CustomAxiosDelete(
                               DeleteUsersApi(data.id),
                               () => {

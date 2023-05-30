@@ -15,6 +15,8 @@ import Manual from 'Components/Manual/Manual';
 import OMPASSVerify from 'Components/OMPASS/OMPASSVerify';
 import SecretKey from 'Components/SecretKey/SecretKey';
 import Main from 'Components/Information/Main';
+import AxiosController from 'AxiosController';
+import Locale from './Locale/index';
 
 const App: React.FC = () => {
   const { lang } = useSelector((state: ReduxStateType) => ({
@@ -22,8 +24,9 @@ const App: React.FC = () => {
   }));
 
   return (
-    <IntlProvider locale={lang} messages={LocaleTexts[lang]}>
+    <IntlProvider locale={lang} messages={Locale[lang]}>
       {/* <div className="App"> */}
+      <AxiosController />
         <Routes>
           <Route path='/' element={<Login />}/>
           <Route path='/CreateAccount' element={<CreateAccount />}/>
