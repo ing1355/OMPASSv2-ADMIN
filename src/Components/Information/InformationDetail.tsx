@@ -26,9 +26,7 @@ import { useRef } from 'react';
 import { message } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
-import { userUuidChange } from 'Redux/actions/userChange';
 import add_icon from '../../assets/add_icon.png';
-import setting_icon from '../../assets/setting_icon.png';
 
 type adminIdType = {
   isAdmin: boolean,
@@ -211,7 +209,7 @@ console.log('deviceData', deviceData)
             {(userRole !== 'USER' && params === 'Admin') &&
               <div>
                 <Link to='/AdminsManagement'>
-                  관리자 관리
+                  <FormattedMessage id='ADMIN_MANAGEMENT' />
                 </Link>
               </div>
             }
@@ -219,7 +217,7 @@ console.log('deviceData', deviceData)
             {(userRole !== 'USER' && params === 'User') &&
               <div>
                 <Link to='/InformationList'>
-                사용자 관리 / 사용자 목록
+                  <FormattedMessage id='USER_MANAGEMENT' /> / <FormattedMessage id='USER_LIST' />
                 </Link>
               </div>
             }
@@ -306,7 +304,7 @@ console.log('deviceData', deviceData)
                     </tr>            
                     <tr>
                       <td>
-                        이름
+                        <FormattedMessage id='ID' />
                       </td>
                       <td>
                         <input 
@@ -327,11 +325,11 @@ console.log('deviceData', deviceData)
                           }}
                         />
                       </td>
-                      <td className={'regex-alert ' + (isNameAlert ? 'visible' : '')}>한글, 영문으로 입력해주세요.</td>
+                      <td className={'regex-alert ' + (isNameAlert ? 'visible' : '')}><FormattedMessage id='NAME_CHECK' /></td>
                     </tr>
                     <tr>
                       <td>
-                        전화번호
+                        <FormattedMessage id='PHONE_NUMBER' />
                       </td>
                       <td>
                         <input 
@@ -350,11 +348,11 @@ console.log('deviceData', deviceData)
                           }}
                         />
                       </td>
-                      <td className={'regex-alert ' + (isPhoneAlert ? 'visible' : '')}>10~11자리 숫자만 입력해주세요.</td>
+                      <td className={'regex-alert ' + (isPhoneAlert ? 'visible' : '')}><FormattedMessage id='PHONE_NUMBER_CHECK' /></td>
                     </tr>
                     <tr>
                       <td>
-                        비밀번호
+                        <FormattedMessage id='PASSWORD' />
                       </td>
                       <td>
                         <input 
@@ -375,11 +373,11 @@ console.log('deviceData', deviceData)
                           }}
                         />
                       </td>
-                      <td className={'regex-alert ' + (isPasswordAlert ? 'visible' : '')}>비밀번호는 8자 이상 3가지 조합 혹은 10자 이상 2가지 조합이어야 합니다.</td>
+                      <td className={'regex-alert ' + (isPasswordAlert ? 'visible' : '')}><FormattedMessage id='PASSWORD_CHECK' /></td>
                     </tr>
                     <tr>
                       <td>
-                        비밀번호 확인
+                        <FormattedMessage id='RECONFIRM_PASSWORD' />
                       </td>
                       <td>
                         <input 
@@ -398,7 +396,7 @@ console.log('deviceData', deviceData)
                           }}
                         />
                       </td>
-                      <td className={'regex-alert ' + (isPasswordConfirmAlert ? 'visible' : '')}>비밀번호가 일치하지 않습니다.</td>
+                      <td className={'regex-alert ' + (isPasswordConfirmAlert ? 'visible' : '')}><FormattedMessage id='PASSWORD_NOT_MATCH' /></td>
                     </tr>  
                   </tbody>
                 </table>
@@ -418,7 +416,7 @@ console.log('deviceData', deviceData)
                   </tr>             
                   <tr>
                     <td>
-                      이름
+                      <FormattedMessage id='NAME' />
                     </td>
                     <td>
                       {userData?.name}
@@ -426,7 +424,7 @@ console.log('deviceData', deviceData)
                   </tr>
                   <tr>
                     <td>
-                      전화번호
+                      <FormattedMessage id='PHONE_NUMBER' />
                     </td>
                     <td>
                       {userData?.phoneNumber}
@@ -434,7 +432,7 @@ console.log('deviceData', deviceData)
                   </tr>
                   <tr>
                     <td>
-                      비밀번호
+                      <FormattedMessage id='PASSWORD' />
                     </td>
                     <td>
                       -

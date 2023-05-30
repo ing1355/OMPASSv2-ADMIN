@@ -1,8 +1,8 @@
 import { useWindowHeightHeader } from 'Components/CustomHook/useWindowHeight';
 import './AdminsManagement.css';
 import Header from 'Components/Header/Header';
-import { FormattedMessage } from 'react-intl';
-import { Link, useNavigate } from 'react-router-dom';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { useNavigate } from 'react-router-dom';
 import { GetPutUsersApiArrayType, GetPutUsersApiDataType, GetPutUsersApiType, UserInfoType } from 'Types/ServerResponseDataTypes';
 import { useEffect, useState, useRef } from 'react';
 
@@ -48,6 +48,7 @@ const AdminsManagement = () => {
 
 
   const navigate = useNavigate();
+  const { formatMessage } = useIntl();
 
   const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
     setPageNum(pageNumber);
@@ -126,20 +127,15 @@ const AdminsManagement = () => {
             className='agent_management_header'
           >
             <div>
-              {/* <FormattedMessage id='AGENT_MANAGEMENT' /> */}
-              관리자 관리
+              <FormattedMessage id='ADMIN_MANAGEMENT' />
             </div>
             <div
               className='mb40'
               style={{display: 'flex'}}
             >
               <h1>
-                {/* <FormattedMessage id='AGENT_MANAGEMENT_LIST' /> */}
-                관리자 목록
+                <FormattedMessage id='ADMIN_LIST' />
               </h1>
-              {/* <div
-                className="App-view-manual-font"
-              ><Link to='/Manual'><FormattedMessage id='VIEW_MANUAL' /></Link></div> */}
             </div>
           </div>
 
@@ -156,7 +152,7 @@ const AdminsManagement = () => {
                   type='submit'
                   form='addAdminForm'
                 >
-                  <span>관리자 등록</span>
+                  <span><FormattedMessage id='ADMIN_REGISTRATION' /></span>
                 </button>
                 :
                 <button className='tab_download_upload_button admins_management_button'
@@ -166,7 +162,7 @@ const AdminsManagement = () => {
                     setIsAddAdmin(true);
                   }}
                 >
-                  <span>관리자 추가</span>
+                  <span><FormattedMessage id='ADD_ADMIN' /></span>
                 </button>
                 }
               </div>
@@ -208,7 +204,7 @@ const AdminsManagement = () => {
                       }
                     );
                   } else {
-                    message.error('항목을 모두 입력해주세요')
+                    message.error(formatMessage({ id: 'PLEASE_ENTER_ALL_THE_ITEMS' }))
                   }
                 }}
               >
@@ -248,7 +244,7 @@ const AdminsManagement = () => {
                             GetUsernameCheckApi(username),
                             (data: any) => {
                               setIdExist(data.exist);
-                              message.success('사용 가능한 아이디입니다.');
+                              message.success(formatMessage({ id: 'AVAILABLE_USERNAME' }));
                             },
                             {
 
@@ -262,7 +258,7 @@ const AdminsManagement = () => {
                   <div
                     className={'regex-alert ' + (isIdAlert ? 'visible' : '')}
                   >
-                    4~16자의 영소문자 및 숫자만 사용 가능합니다.
+                    <FormattedMessage id='USER_ID_CHECK' />
                   </div>
                 </div>
                 <div>
@@ -287,7 +283,7 @@ const AdminsManagement = () => {
                   <div
                     className={'regex-alert ' + (isNameAlert ? 'visible' : '')}
                   >
-                    한글, 영문으로 입력해주세요.
+                    <FormattedMessage id='NAME_CHECK' />
                   </div>
                 </div>
                 
@@ -313,7 +309,7 @@ const AdminsManagement = () => {
                   <div
                     className={'regex-alert mt5 ' + (isPhoneAlert ? 'visible' : '')}
                   >
-                    10~11자리 숫자만 입력해주세요.
+                    <FormattedMessage id='PHONE_NUMBER_CHECK' />
                   </div>
                 </div>
               </form>
@@ -330,9 +326,9 @@ const AdminsManagement = () => {
                         onChange={handleCheckAll}
                       />
                     </th>
-                    <th>관리자 아이디</th>
-                    <th>이름</th>
-                    <th>전화번호</th>
+                    <th><FormattedMessage id='ADMIN_ID' /></th>
+                    <th><FormattedMessage id='NAME' /></th>
+                    <th><FormattedMessage id='PHONE_NUMBER' /></th>
                     <th>
                       <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
                         onClick={() => {
@@ -340,7 +336,7 @@ const AdminsManagement = () => {
                           CustomAxiosDelete(
                             DeleteUsersApi(userIds),
                             () => {
-                              message.success('선택한 관리자 삭제 완료');
+                              message.success(formatMessage({ id: 'SELECTED_ADMIN_DELETE_SUCCESS' }));
                               const render = rendering;
                               const renderTemp = render.concat(true);
                               setRendering(renderTemp);
@@ -386,7 +382,7 @@ const AdminsManagement = () => {
                             CustomAxiosDelete(
                               DeleteUsersApi(data.id),
                               () => {
-                                message.success('관리자 삭제 완료');
+                                message.success(formatMessage({ id: 'ADMIN_DELETION_COMPLETE' }));
                                 const render = rendering;
                                 const renderTemp = render.concat(true);
                                 setRendering(renderTemp);

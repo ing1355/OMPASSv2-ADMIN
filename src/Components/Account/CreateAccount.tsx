@@ -376,7 +376,7 @@ const CreateAccount = () => {
                     },
                     () => {
                       console.log('회원가입 실패');
-                      message.error('회원가입 실패');
+                      message.error(formatMessage({ id: 'FAIL_REGISTER' }));
                     }
                   );
                 } else {
@@ -422,7 +422,7 @@ const CreateAccount = () => {
                           (data: any) => {
                             console.log('아이디 중복 확인 data', data);
                             setIdExist(data.exist);
-                            message.success('사용 가능한 아이디입니다.');
+                            message.success(formatMessage({ id: 'AVAILABLE_USERNAME' }));
                           },
                           {
 
@@ -436,7 +436,7 @@ const CreateAccount = () => {
                 <div
                   className={'regex-alert ' + (isIdAlert ? 'visible' : '')}
                 >
-                  4~16자의 영소문자 및 숫자만 사용 가능합니다.
+                  <FormattedMessage id='USER_ID_CHECK' />
                 </div>
               </div>
               <div>
@@ -461,7 +461,7 @@ const CreateAccount = () => {
                 <div
                   className={'regex-alert ' + (isNameAlert ? 'visible' : '')}
                 >
-                  한글, 영문으로 입력해주세요.
+                  <FormattedMessage id='NAME_CHECK' />
                 </div>
               </div>
               <div>
@@ -492,7 +492,7 @@ const CreateAccount = () => {
                 <div
                   className={'regex-alert mt5 ' + (isPasswordAlert ? 'visible' : '')}
                 >
-                  비밀번호는 8자 이상 3가지 조합 혹은 10자 이상 2가지 조합이어야 합니다.
+                  <FormattedMessage id='PASSWORD_CHECK' />
                 </div>
               </div>
               <div
@@ -500,7 +500,8 @@ const CreateAccount = () => {
               >
                 <label><FormattedMessage id='RECONFIRM_PASSWORD' /></label>
                 <img 
-                  src={isPasswordConfirmLook ? view_password : dont_look_password} width='30px' style={{position: 'relative', top: '55px', left: '360px'}}
+                  src={isPasswordConfirmLook ? view_password : dont_look_password} width='30px' 
+                  className={lang === 'ko' ? 'create_account_password_confirm_img_ko' : 'create_account_password_confirm_img_en'}
                   onClick={() => {
                     setIsPasswordConfirmLook(!isPasswordConfirmLook);
                   }}
@@ -524,7 +525,7 @@ const CreateAccount = () => {
                 <div
                   className={'regex-alert mt5 ' + (isPasswordConfirmAlert ? 'visible' : '')}
                 >
-                  비밀번호가 일치하지 않습니다.
+                  <FormattedMessage id='PASSWORD_NOT_MATCH' />
                 </div>
               </div>
               <div>
@@ -549,7 +550,7 @@ const CreateAccount = () => {
                 <div
                   className={'regex-alert mt5 ' + (isPhoneAlert ? 'visible' : '')}
                 >
-                  10~11자리 숫자만 입력해주세요.
+                  <FormattedMessage id='PHONE_NUMBER_CHECK' />
                 </div>
               </div>
               <button
@@ -562,9 +563,6 @@ const CreateAccount = () => {
                   // setIsStepOne(true);
                 }}
               ><FormattedMessage id='SIGN_UP' /></button>
-              {/* <Link to='/'>
-
-              </Link> */}
             </form>
           </div>
         }

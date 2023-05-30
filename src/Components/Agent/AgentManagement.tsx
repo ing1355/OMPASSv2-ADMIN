@@ -217,10 +217,13 @@ const AgentManagement = () => {
                   </div>
                   <div>
                     <label>파일 업로드</label>
-                    <input 
-                      id='uploadFile'
-                      type='file'
-                    />
+                    <div
+                      style={{marginTop: '20px'}}
+                    >
+                      <label htmlFor="uploadFile" className='button-st4 agent_management_file_btn'>파일 선택</label>
+                      <input id="uploadFile" type="file" hidden/>
+                    </div>
+
                     {/* <div
                       className={'regex-alert ' + (isVersionAlert ? 'visible' : '')}
                     >

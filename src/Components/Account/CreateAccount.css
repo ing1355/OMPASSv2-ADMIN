@@ -33,6 +33,18 @@
   background-color: #7FC8FC;
 }
 
+.create_account_password_confirm_img_ko {
+  position: relative;
+  top: 55px;
+  left: 360px;
+}
+
+.create_account_password_confirm_img_en {
+  position: relative;
+  top: 55px;
+  left: 320px;
+}
+
 .create_account_input {
   width: 496px;
   height: 50px;
