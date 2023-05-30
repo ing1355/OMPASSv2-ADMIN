@@ -9,6 +9,6 @@
 }
 
 .agent_management_target_version_btn.disable {
-  background-color: #7FC8FC;
+  background-color: #ccc;
   cursor: default;
 }

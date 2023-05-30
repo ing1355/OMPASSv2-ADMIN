@@ -13,8 +13,9 @@
 .information_detail_btn {
   padding: 5px 10px;
   border-radius: 5px;
-  margin: 0 5px;
+  margin: 4px 5px;
   width: 47px;
+  /* height: 32px; */
 }
 
 .user_info_table tbody tr td {

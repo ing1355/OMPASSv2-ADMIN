@@ -85,7 +85,7 @@ const Main = () => {
     return (
     <div 
       className='main_menu_container'
-      style={{width: '1200px', marginTop: '1.8%', display: 'flex',}}
+      style={{width: '80rem', display: 'flex', marginTop: '3rem'}}
     >
       {userRole === 'SUPER_ADMIN' &&
         menuInfo.map((data: menuInfoType) => (
@@ -160,25 +160,11 @@ const Main = () => {
       <div style={{overflowY: 'auto', height: height}}>
         <div
           className='content-center'
-          style={{flexDirection: 'column', marginTop: '70px'}}
+          style={{flexDirection: 'column', marginTop: '8%'}}
         >
           <div
             className='agent_management_header'
           >
-            {/* <div>
-              메인 페이지
-            </div> */}
-            <div
-              className='mb40'
-              style={{display: 'flex'}}
-            >
-              {/* <h1>
-                메인 페이지
-              </h1> */}
-              <div
-                className="App-view-manual-font"
-              ><Link to='/Manual'><FormattedMessage id='VIEW_MANUAL' /></Link></div>
-            </div>
           </div>
           {menuInfoFun()}
         </div>

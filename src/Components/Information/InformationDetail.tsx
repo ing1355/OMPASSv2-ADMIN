@@ -230,7 +230,7 @@ console.log('deviceData', deviceData)
             >
               <h1>
                 {/* <FormattedMessage id='REGISTRATION_INFORMATION' /> */}
-                샤용자 등록 정보
+                사용자 등록 정보
               </h1>
               <div
                 className='App-view-manual-font'
@@ -725,7 +725,9 @@ console.log('deviceData', deviceData)
                           ))}
                           
                           {allowAccounts[index] &&
-                            <tr>
+                            <tr
+                              style={{height:'20px'}}
+                            >
                               <td><input className='input-st1 information_detail_add_allow_account_input' id='allowUser'/></td>
                               <td>-</td>
                               <td>-</td>
@@ -767,6 +769,7 @@ console.log('deviceData', deviceData)
                   {userRole === 'SUPER_ADMIN' && !data.passcode &&
                     viewPasscodeSettings[index] &&
                     <div
+                      className='button-st4 information_detail_save_btn'
                       onClick={(e) => {
                         e.preventDefault();
                         console.log('저장')
@@ -776,12 +779,14 @@ console.log('deviceData', deviceData)
                         }
                       }}
                     >
-                      저장
+                      <span
+                        style={{position: 'relative', top: '3px'}}
+                      >저장</span>
                       {/* <img src={setting_icon} width='30px'
                         style={{opacity: 0.7, cursor: 'pointer', margin: '15px 5px 10px'}}
 
                       /> */}
-                    </div>
+                    </div> 
                   }
 
                   {userRole === 'SUPER_ADMIN' && !data.passcode &&

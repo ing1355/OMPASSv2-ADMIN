@@ -9,6 +9,7 @@ import ompass_logo_image from '../../assets/ompass_logo_image.png';
 import locale_image from '../../assets/locale_image.png';
 import menu_icon from '../../assets/menu_icon.png';
 import logout from '../../assets/logout.png';
+import list_download from '../../assets/list_download.png';
 import { UserInfoType } from 'Types/ServerResponseDataTypes';
 import { FormattedMessage } from 'react-intl';
 
@@ -87,6 +88,18 @@ const Header = () => {
           // style={{marginRight: '10%'}}
         >
           <ul>
+            <li>
+              <a
+                href="/OMPASS_Portal_manual.pdf"
+                download
+              >
+                <img
+                  src={list_download}
+                  width="18px"
+                  style={{position: 'relative', top: '3px'}}
+                />
+              </a>
+            </li>
             <li>{userId}</li>
             <li>
               <img src={locale_image} width='20px' style={{position: 'relative', top: '3px', marginRight: '2px'}}/>

@@ -108,7 +108,7 @@ const SecretKey = () => {
                         id='secretKey'
                         type='text'
                         className={'input-st1 create_account_input mt8 mb5'}
-                        style={{width: '700px'}}
+                        style={{width: '700px', marginLeft: '2.5%'}}
                         autoComplete='off'
                         disabled={isAddSecretKey ? false : true}
                         value={secretKeyData}
