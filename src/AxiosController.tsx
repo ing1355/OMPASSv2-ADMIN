@@ -8,11 +8,13 @@ import { ReduxStateType } from 'Types/ReduxStateTypes';
 let oldInterceptorId = 0;
 let alertId = 0
 
+const NOT_AUTHORIZED_CODES = ['001', '002', '003', '004', '005', '006']
+
 const AxiosController = () => {
     const { formatMessage } = useIntl();
     // const history = useHistory()
     const { lang } = useSelector((state: ReduxStateType) => ({
-      lang: state.lang!,
+        lang: state.lang!,
     }));
 
     useLayoutEffect(() => {
@@ -26,10 +28,17 @@ const AxiosController = () => {
         oldInterceptorId = axios.interceptors.response.use(res => {
             return res;
         }, (err) => {
-            if(err && err.response && err.response.data) {
-              const { code } = err.response.data;
-              console.log(code)
-              message.error(formatMessage({ id: code}));
+            if (err && err.response && err.response.data) {
+                const { code } = err.response.data;
+                console.log(code)
+                message.error(formatMessage({ id: code }));
+                if (NOT_AUTHORIZED_CODES.includes(code.split('_')[1])) {
+                    sessionStorage.removeItem('userInfo');
+                    localStorage.removeItem('authorization');
+                    window.location.href = '/'
+                }
+            } else {
+
             }
             return Promise.reject(err);
         })
