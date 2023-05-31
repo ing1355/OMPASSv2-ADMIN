@@ -13,6 +13,7 @@ import maunal_download from '../../assets/maunal_download.png';
 import maunal_download_blue from '../../assets/maunal_download_blue.png';
 import { UserInfoType } from 'Types/ServerResponseDataTypes';
 import { FormattedMessage } from 'react-intl';
+import { userInfoClear } from 'Redux/actions/userChange';
 
 const Header = () => {
   const { lang } = useSelector((state: ReduxStateType) => ({
@@ -123,8 +124,7 @@ const Header = () => {
               <Link to='/'>
                 <img src={logout} width='25px' style={{opacity: 0.7, position: 'relative', top: '5.5px', left: '-5px'}}
                   onClick={() => {
-                    sessionStorage.removeItem('userInfo');
-                    localStorage.removeItem('authorization');
+                    dispatch(userInfoClear())
                   }}
                 />
               </Link>

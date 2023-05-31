@@ -27,6 +27,7 @@ import { message } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
 import add_icon from '../../assets/add_icon.png';
+import { userInfoClear } from 'Redux/actions/userChange';
 
 type adminIdType = {
   isAdmin: boolean,
@@ -34,10 +35,10 @@ type adminIdType = {
 }
 
 const InformationDetail = () => {
-  document.body.style.backgroundColor = 'white';
-  const { UserInfoDetailType } = useSelector((state: ReduxStateType) => ({
-    UserInfoDetailType: state.UserInfoDetailType,
-  }));
+  document.body.style.backgroundColor = 'white'; // ????????????
+  // const { UserInfoDetailType } = useSelector((state: ReduxStateType) => ({
+  //   UserInfoDetailType: state.UserInfoDetailType,
+  // }));
   const [isModify, setIsModify] = useState<boolean>(false);
   const [userData, setUserData] = useState<UserType | null>(null);
   const [userName, setUserName] = useState<string>('');
@@ -59,7 +60,8 @@ const InformationDetail = () => {
   const [modifyPasscodes, setModifyPasscodes] = useState<boolean[]>(new Array(deviceData.length).fill(false));
   const [allowAccounts, setAllowAccounts] = useState<boolean[]>(new Array(deviceData.length).fill(false));
   const height = useWindowHeightHeader();
-console.log('deviceData', deviceData)
+  const dispatch = useDispatch()
+// console.log('deviceData', deviceData)
   const userInfoString = sessionStorage.getItem('userInfo');
   const userUuid = sessionStorage.getItem('userUuid');
   const userInfo:UserInfoType | null = userInfoString ? JSON.parse(userInfoString) : null;
@@ -162,8 +164,7 @@ console.log('deviceData', deviceData)
                     DeleteUsersApi(uuid),
                     () => {
                       message.success('회원 정보 삭제 완료');
-                      sessionStorage.removeItem('userInfo');
-                      navigate('/');
+                      dispatch(userInfoClear())
                     },
                     {},
                     () => {

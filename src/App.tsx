@@ -18,28 +18,33 @@ import AxiosController from 'AxiosController';
 import Locale from './Locale/index';
 
 const App: React.FC = () => {
-  const authorization = localStorage.getItem('authorization')
-  const { lang } = useSelector((state: ReduxStateType) => ({
+  const { lang, userInfo } = useSelector((state: ReduxStateType) => ({
     lang: state.lang!,
+    userInfo: state.userInfo
   }));
-
+  
   return (
     <IntlProvider locale={lang} messages={Locale[lang]}>
       {/* <div className="App"> */}
       <AxiosController />
       <Routes>
         <Route path='/' element={<Login />} />
-        <Route path='/*' element={authorization ? <>
-          <Route path='/CreateAccount' element={<CreateAccount />} />
-          <Route path='/InformationList' element={<InformationList />} />
-          <Route path='/InformationDetail/:params' element={<InformationDetail />} />
-          <Route path='/AgentManagement' element={<AgentManagement />} />
-          <Route path='/AdminsManagement' element={<AdminsManagement />} />
-          <Route path='/Manual' element={<Manual />} />
-          <Route path='/ompass/*' element={<OMPASSVerify />} />
-          <Route path='/SecretKey' element={<SecretKey />} />
-          <Route path='/Main' element={<Main />} />
-        </> : <Navigate to='/' replace={true} />} />
+        <Route path='/ompass/*' element={<OMPASSVerify />} />
+        <Route path='/InformationDetail/:params' element={<InformationDetail />} />
+        {
+          userInfo ? (
+            userInfo.role === 'ADMIN' ? <>
+            <Route path='/Main' element={<Main />} />
+            <Route path='/CreateAccount' element={<CreateAccount />} />
+            <Route path='/InformationList' element={<InformationList />} />
+            <Route path='/AgentManagement' element={<AgentManagement />} />
+            <Route path='/AdminsManagement' element={<AdminsManagement />} />
+            <Route path='/Manual' element={<Manual />} />
+            <Route path='/SecretKey' element={<SecretKey />} />
+            <Route path='/*' element={<Navigate to='/Main' replace={true}/>}/>
+            </> : <Route path='/*' element={<Navigate to='/InformationDetail/User' replace={true}/>}/>
+          ) : <Route path='/*' element={<Navigate to='/' replace={true}/>}/>
+        }
       </Routes>
       {/* </div> */}
     </IntlProvider>

@@ -4,5 +4,5 @@ import userReducer from './userReducer';
 
 export default combineReducers({
   lang: langReducer,
-  UserInfoDetailType: userReducer,
+  userInfo: userReducer,
 });
