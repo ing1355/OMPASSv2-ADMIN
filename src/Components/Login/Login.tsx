@@ -103,7 +103,7 @@ const Login = () => {
           clientType: 'BROWSER',
         },
         () => {
-          message.error('로그인 실패')
+          message.error('PASSCODE 불일치')
         }
       )
     }
@@ -276,7 +276,7 @@ const Login = () => {
                   setIsPasscodeModalOpen(true);
                 }}
               >
-                passcode로 로그인
+                PASSCODE로 로그인
               </div>
             </div>
             <button
@@ -407,7 +407,7 @@ const Login = () => {
         </div>
       </form>
     </Modal>
-    <Modal  title='Passcode 입력' open={isPasscodeModalOpen} onOk={passcodeHandleOk} onCancel={passcodeHandleCancel} cancelText='취소' okText='확인' width='570px' centered>
+    <Modal  title='PASSCODE 입력' open={isPasscodeModalOpen} onOk={passcodeHandleOk} onCancel={passcodeHandleCancel} cancelText='취소' okText='확인' width='570px' centered>
       <div
         style={{marginBottom: '13px', marginTop: '20px'}}
       >
@@ -427,7 +427,7 @@ const Login = () => {
         </div>
       </div>
       <div>
-        <label>passcode</label>
+        <label>PASSCODE</label>
         <img 
           src={isPasscodeLook ? view_password : dont_look_password} width='30px' style={{position: 'relative', top: '55px', left: '410px'}}
           onClick={() => {

@@ -1054,7 +1054,7 @@ console.log('deviceData', deviceData)
                           <td>
                             {userRole === 'SUPER_ADMIN' &&
                               <>
-                                {modifyPasscodes[index] ?
+                                {/* {modifyPasscodes[index] ?
                                   <img src={add_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
                                     onClick={(e) => {
                                       e.preventDefault();
@@ -1075,14 +1075,14 @@ console.log('deviceData', deviceData)
                                       setViewPasscodeSettings(updatedViewPasscodeSettings);
                                     }}
                                   />
-                                }
+                                } */}
 
                                 <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
                                   onClick={() => {
                                     CustomAxiosDelete(
                                       DeletePasscodeApi(data.passcode.id),
                                       (data: any) => {
-                                        message.success('passcode 삭제 완료');
+                                        message.success('PASSCODE 삭제 완료');
                                         const render = rendering;
                                         const renderTemp = render.concat(true);
                                         setRendering(renderTemp);
@@ -1097,7 +1097,7 @@ console.log('deviceData', deviceData)
                             }
                             {userRole === 'ADMIN' && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
                               <>
-                                {modifyPasscodes[index] ?
+                                {/* {modifyPasscodes[index] ?
                                   <img src={add_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
                                     onClick={(e) => {
                                       e.preventDefault();
@@ -1118,7 +1118,7 @@ console.log('deviceData', deviceData)
                                       setViewPasscodeSettings(updatedViewPasscodeSettings);
                                     }}
                                   />
-                                }
+                                } */}
 
                                 <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
                                   className='ml10'
@@ -1126,7 +1126,7 @@ console.log('deviceData', deviceData)
                                     CustomAxiosDelete(
                                       DeletePasscodeApi(data.passcode.id),
                                       (data: any) => {
-                                        message.success('passcode 삭제 완료');
+                                        message.success('PASSCODE 삭제 완료');
                                         const render = rendering;
                                         const renderTemp = render.concat(true);
                                         setRendering(renderTemp);

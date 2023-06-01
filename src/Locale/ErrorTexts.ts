@@ -14,11 +14,11 @@ const ErrorTexts = {
     ERR_104: 'Invalid facility type.',
     ERR_105: 'Invalid API request.',
     ERR_106: 'The account is locked.',
-    ERR_107: 'The registered device does not exist. Please use the passcode after registering the device.',
+    ERR_107: 'The registered device does not exist. Please use the PASSCODE after registering the device.',
     ERR_108: 'The registered device does not exist.',
     ERR_109: 'Failed to verify OMPASS secret key.',
     ERR_110: 'The AGENT file to download does not exist.',
-    ERR_111: 'Invalid passcode.'
+    ERR_111: 'Invalid PASSCODE.'
   },
   'ko': {
     ERR_001 : '토큰이 만료되었습니다.',

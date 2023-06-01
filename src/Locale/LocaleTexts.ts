@@ -33,7 +33,7 @@ const LocaleTexts = {
     TOTAL_USERS: 'Total Users',
     REGISTERED_USERS: 'Registered Users',
     UNREGISTERED_USERS: 'Unregistered Users',
-    PASSCODE_USERS: 'Passcode Users',
+    PASSCODE_USERS: 'PASSCODE Users',
     UNSORTED: 'Unsorted',
     ASCENDING: 'Ascending',
     DESCENDING: 'Descending',
