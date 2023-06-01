@@ -104,9 +104,9 @@ const TabMenu = styled.ul`
 export const Tab = () => {
   // Tab Menu 중 현재 어떤 Tab이 선택되어 있는지 확인하기 위한 currentTab 상태와 currentTab을 갱신하는 함수가 존재해야 하고, 초기값은 0.
   const [currentTab, clickTab] = useState(0);
-  const { lang, UserInfoDetailType } = useSelector((state: ReduxStateType) => ({
+  const { lang, userInfo } = useSelector((state: ReduxStateType) => ({
     lang: state.lang,
-    UserInfoDetailType: state.UserInfoDetailType,
+    userInfo: state.userInfo,
   }));
 
   const [sortingInfo, setSortingInfo] = useState<sortingInfoType | null>(null);

@@ -12,6 +12,8 @@ import { DeleteUsersApi, GetPutUsersApi, GetUsernameCheckApi, PostSignUpApi } fr
 import { autoHypenPhoneFun } from 'Constants/ConstantValues';
 
 import delete_icon from '../../assets/delete_icon.png';
+import { useSelector } from 'react-redux';
+import { ReduxStateType } from 'Types/ReduxStateTypes';
 
 interface Checkbox {
   id: number;
@@ -20,6 +22,9 @@ interface Checkbox {
 }
 
 const AdminsManagement = () => {
+  const { userInfo } = useSelector((state: ReduxStateType) => ({
+    userInfo: state.userInfo!
+  }));
   const height = useWindowHeightHeader();
   const [totalCount, setTotalCount] = useState<number>(0);
   const [tableCellSize, setTableCellSize] = useState<number>(10);
@@ -39,14 +44,7 @@ const AdminsManagement = () => {
   const userNameRef = useRef<HTMLInputElement>(null);
   const userPhoneRef = useRef<HTMLInputElement>(null);
 
-  const userInfoString = sessionStorage.getItem('userInfo');
-  const userInfo:UserInfoType | null = userInfoString ? JSON.parse(userInfoString) : null;
-
-  const userId = userInfo?.userId;
-  const userRole = userInfo?.userRole;
-  const uuid = userInfo?.uuid;
-
-
+  const {role} = userInfo
   const navigate = useNavigate();
   const { formatMessage } = useIntl();
 
@@ -142,7 +140,7 @@ const AdminsManagement = () => {
           <div 
             style={{width: '1200px', marginTop: '1.8%'}}
           >
-            {userRole === 'SUPER_ADMIN' && 
+            {role === 'SUPER_ADMIN' && 
               <div
                 style={{float: 'right'}}
                 className='mb20'

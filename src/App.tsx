@@ -1,8 +1,7 @@
 import './App.css';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
-import LocaleTexts from 'Locale/LocaleTexts';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
 import Login from 'Components/Login/Login';
@@ -19,26 +18,34 @@ import AxiosController from 'AxiosController';
 import Locale from './Locale/index';
 
 const App: React.FC = () => {
-  const { lang } = useSelector((state: ReduxStateType) => ({
+  const { lang, userInfo } = useSelector((state: ReduxStateType) => ({
     lang: state.lang!,
+    userInfo: state.userInfo
   }));
-
+  console.log(userInfo)
   return (
     <IntlProvider locale={lang} messages={Locale[lang]}>
       {/* <div className="App"> */}
       <AxiosController />
-        <Routes>
-          <Route path='/' element={<Login />}/>
-          <Route path='/CreateAccount' element={<CreateAccount />}/>
-          <Route path='/InformationList' element={<InformationList />}/>
-          <Route path='/InformationDetail/:params' element={<InformationDetail />}/>
-          <Route path='/AgentManagement' element={<AgentManagement />}/>
-          <Route path='/AdminsManagement' element={<AdminsManagement />}/>
-          <Route path='/Manual' element={<Manual />}/>
-          <Route path='/ompass/*' element={<OMPASSVerify />} />
-          <Route path='/SecretKey' element={<SecretKey />} />
-          <Route path='/Main' element={<Main />}/>
-        </Routes>
+      <Routes>
+        <Route path='/' element={<Login />} />
+        <Route path='/ompass/*' element={<OMPASSVerify />} />
+        <Route path='/InformationDetail/:params' element={<InformationDetail />} />
+        <Route path='/CreateAccount' element={<CreateAccount />} />
+        {
+          userInfo ? (
+            userInfo.role!.includes('ADMIN') ? <>
+            <Route path='/Main' element={<Main />} />
+            <Route path='/InformationList' element={<InformationList />} />
+            <Route path='/AgentManagement' element={<AgentManagement />} />
+            <Route path='/AdminsManagement' element={<AdminsManagement />} />
+            <Route path='/Manual' element={<Manual />} />
+            <Route path='/SecretKey' element={<SecretKey />} />
+            <Route path='/*' element={<Navigate to='/Main' replace={true}/>}/>
+            </> : <Route path='/*' element={<Navigate to='/InformationDetail/User' replace={true}/>}/>
+          ) : <Route path='/*' element={<Navigate to='/' replace={true}/>}/>
+        }
+      </Routes>
       {/* </div> */}
     </IntlProvider>
   );

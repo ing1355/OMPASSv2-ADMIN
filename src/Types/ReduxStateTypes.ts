@@ -6,10 +6,12 @@ export type DefaultReduxActionType<T> = {
 type LanguageStateType = "ko" | "en";
 
 export type UserInfoDetailType = {
-  uuid: string,
+  uuid: string
+  userId: string
+  role: 'ADMIN' | 'USER' | 'SUPER_ADMIN' | null
 }
 
 export type ReduxStateType = {
   lang?: LanguageStateType;
-  UserInfoDetailType?: UserInfoDetailType;
+  userInfo?: UserInfoDetailType;
 }

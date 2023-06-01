@@ -422,7 +422,11 @@ const CreateAccount = () => {
                           (data: any) => {
                             console.log('아이디 중복 확인 data', data);
                             setIdExist(data.exist);
-                            message.success(formatMessage({ id: 'AVAILABLE_USERNAME' }));
+                            if(data.exist) {
+                              message.error(formatMessage({ id: 'UNAVAILABLE_USERNAME' }));
+                            } else {
+                              message.success(formatMessage({ id: 'AVAILABLE_USERNAME' }));
+                            }
                           },
                           {
 
