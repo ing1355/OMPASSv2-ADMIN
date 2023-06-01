@@ -36,9 +36,9 @@ type adminIdType = {
 
 const InformationDetail = () => {
   document.body.style.backgroundColor = 'white'; // ????????????
-  // const { UserInfoDetailType } = useSelector((state: ReduxStateType) => ({
-  //   UserInfoDetailType: state.UserInfoDetailType,
-  // }));
+  const { userInfo } = useSelector((state: ReduxStateType) => ({
+    userInfo: state.userInfo!,
+  }));
   const [isModify, setIsModify] = useState<boolean>(false);
   const [userData, setUserData] = useState<UserType | null>(null);
   const [userName, setUserName] = useState<string>('');
@@ -62,21 +62,16 @@ const InformationDetail = () => {
   const height = useWindowHeightHeader();
   const dispatch = useDispatch()
 // console.log('deviceData', deviceData)
-  const userInfoString = sessionStorage.getItem('userInfo');
   const userUuid = sessionStorage.getItem('userUuid');
-  const userInfo:UserInfoType | null = userInfoString ? JSON.parse(userInfoString) : null;
   const passwordRef = useRef<HTMLInputElement>(null);
-// console.log('allowAccounts',allowAccounts)
-  const userId = userInfo?.userId;
-  const userRole = userInfo?.userRole;
-  const uuid = userInfo?.uuid;
-
   const navigate = useNavigate();
   const { params } = useParams();
 
+  const {uuid, role, userId} = userInfo
+
   useEffect(() => {
     if(uuid) {
-      if(userRole === 'USER') {
+      if(role === 'USER') {
         CustomAxiosGet(
           GetUsersDetailsApi(uuid),
           (data: GetUsersDetailsApiType) => {
@@ -159,7 +154,7 @@ const InformationDetail = () => {
               className='button-st5 information_detail_user_btn'
               type='button'
               onClick={() => {
-                if(uuid && userRole === 'USER') {
+                if(uuid && role === 'USER') {
                   CustomAxiosDelete(
                     DeleteUsersApi(uuid),
                     () => {
@@ -207,7 +202,7 @@ const InformationDetail = () => {
           <div
             className='information_detail_header'
           >
-            {(userRole !== 'USER' && params === 'Admin') &&
+            {(role !== 'USER' && params === 'Admin') &&
               <div>
                 <Link to='/AdminsManagement'>
                   <FormattedMessage id='ADMIN_MANAGEMENT' />
@@ -215,7 +210,7 @@ const InformationDetail = () => {
               </div>
             }
 
-            {(userRole !== 'USER' && params === 'User') &&
+            {(role !== 'USER' && params === 'User') &&
               <div>
                 <Link to='/InformationList'>
                   <FormattedMessage id='USER_MANAGEMENT' /> / <FormattedMessage id='USER_LIST' />
@@ -247,10 +242,10 @@ const InformationDetail = () => {
             <div style={{display: 'flex', justifyContent: 'space-between'}}>
               <h3><FormattedMessage id='USER_INFORMATION' /></h3>
               {/* user, admin 계정의 경우 본인만 수정, 탈퇴할 수 있음 */}
-              {(userRole === 'SUPER_ADMIN' || userRole === 'USER') ?
+              {(role === 'SUPER_ADMIN' || role === 'USER') ?
                 modifyFun()
               :
-                (userRole === 'ADMIN' && (adminIdInfo.isAdmin && adminIdInfo.adminId === userId || userData?.role === 'USER')) ?
+                (role === 'ADMIN' && (adminIdInfo.isAdmin && adminIdInfo.adminId === userId || userData?.role === 'USER')) ?
                   modifyFun()
                 :
                   <></>
@@ -279,7 +274,7 @@ const InformationDetail = () => {
                         setIsModify(false);
                       },
                       {
-                        id: (userRole === 'USER' ? uuid : userUuid),
+                        id: (role === 'USER' ? uuid : userUuid),
                         name: name,
                         password: password,
                         phoneNumber: phoneNumber,
@@ -451,7 +446,7 @@ const InformationDetail = () => {
             >
               <div style={{display: 'flex', justifyContent: 'space-between'}}>
                 <h3><FormattedMessage id='DEVICE_INFORMATION' /></h3>
-                {userRole === 'SUPER_ADMIN' &&
+                {role === 'SUPER_ADMIN' &&
                   <button
                     className='button-st5 information_detail_device_delete_btn'
                     onClick={() => {
@@ -467,7 +462,7 @@ const InformationDetail = () => {
                     }}
                   >삭제</button>
                 }
-                {userRole === 'ADMIN' && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
+                {role === 'ADMIN' && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
                   <button
                     className='button-st5 information_detail_device_delete_btn'
                     onClick={() => {
@@ -581,7 +576,7 @@ const InformationDetail = () => {
                       style={{display: 'flex', justifyContent: 'space-between'}}
                     >
                       <h3>접속 허용 계정</h3>
-                      {userRole === 'SUPER_ADMIN' &&
+                      {role === 'SUPER_ADMIN' &&
                         <>
                           {!allowAccounts[index] && 
                             <div>
@@ -598,7 +593,7 @@ const InformationDetail = () => {
                           }
                         </>
                       }
-                      {userRole === 'ADMIN' && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
+                      {role === 'ADMIN' && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
                         !allowAccounts[index] &&
                         <div>
                           <img src={add_icon} width='30px'
@@ -681,7 +676,7 @@ const InformationDetail = () => {
                                 <td>{item.adminUsername}</td>
                                 <td>{item.createdAt}</td>
                                 <td>
-                                  {userRole === 'SUPER_ADMIN' &&
+                                  {role === 'SUPER_ADMIN' &&
                                     <>
                                       <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
                                         onClick={() => {
@@ -701,7 +696,7 @@ const InformationDetail = () => {
                                       />
                                     </>
                                   }
-                                  {userRole === 'ADMIN' && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
+                                  {role === 'ADMIN' && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
                                     <>
                                       <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
                                         onClick={() => {
@@ -768,7 +763,7 @@ const InformationDetail = () => {
                 >
                   <h3>PASSCODE</h3>
 
-                  {userRole === 'SUPER_ADMIN' && !data.passcode &&
+                  {role === 'SUPER_ADMIN' && !data.passcode &&
                     viewPasscodeSettings[index] &&
                     <div
                       className='button-st4 information_detail_save_btn'
@@ -791,7 +786,7 @@ const InformationDetail = () => {
                     </div> 
                   }
 
-                  {userRole === 'SUPER_ADMIN' && !data.passcode &&
+                  {role === 'SUPER_ADMIN' && !data.passcode &&
                     !viewPasscodeSettings[index] &&
                     <div>
                       <img src={add_icon} width='30px'
@@ -807,7 +802,7 @@ const InformationDetail = () => {
                     </div>
                   }
 
-                  {userRole === 'ADMIN' && !data.passcode && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
+                  {role === 'ADMIN' && !data.passcode && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
                     viewPasscodeSettings[index] &&
                     <div
                       className='button-st4 information_detail_save_btn'
@@ -830,7 +825,7 @@ const InformationDetail = () => {
                     </div>                 
                   }
 
-                  {userRole === 'ADMIN' && !data.passcode && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
+                  {role === 'ADMIN' && !data.passcode && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
                     !viewPasscodeSettings[index] &&
                     <div>
                       <img src={add_icon} width='30px'
@@ -1053,7 +1048,7 @@ const InformationDetail = () => {
                           <td>{data.passcode.expirationTime ? data.passcode.expirationTime : <FormattedMessage id='UNLIMITED' />}</td>
                           <td>{data.passcode.recycleCount === -1 ? <FormattedMessage id='UNLIMITED' /> :  data.passcode.recycleCount}</td>
                           <td>
-                            {userRole === 'SUPER_ADMIN' &&
+                            {role === 'SUPER_ADMIN' &&
                               <>
                                 {modifyPasscodes[index] ?
                                   <img src={add_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
@@ -1096,7 +1091,7 @@ const InformationDetail = () => {
                                 />
                               </> 
                             }
-                            {userRole === 'ADMIN' && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
+                            {role === 'ADMIN' && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
                               <>
                                 {modifyPasscodes[index] ?
                                   <img src={add_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}

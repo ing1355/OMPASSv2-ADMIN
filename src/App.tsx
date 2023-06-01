@@ -22,7 +22,7 @@ const App: React.FC = () => {
     lang: state.lang!,
     userInfo: state.userInfo
   }));
-  
+  console.log(userInfo)
   return (
     <IntlProvider locale={lang} messages={Locale[lang]}>
       {/* <div className="App"> */}
@@ -31,11 +31,11 @@ const App: React.FC = () => {
         <Route path='/' element={<Login />} />
         <Route path='/ompass/*' element={<OMPASSVerify />} />
         <Route path='/InformationDetail/:params' element={<InformationDetail />} />
+        <Route path='/CreateAccount' element={<CreateAccount />} />
         {
           userInfo ? (
-            userInfo.role === 'ADMIN' ? <>
+            userInfo.role!.includes('ADMIN') ? <>
             <Route path='/Main' element={<Main />} />
-            <Route path='/CreateAccount' element={<CreateAccount />} />
             <Route path='/InformationList' element={<InformationList />} />
             <Route path='/AgentManagement' element={<AgentManagement />} />
             <Route path='/AdminsManagement' element={<AdminsManagement />} />

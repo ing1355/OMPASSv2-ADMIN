@@ -13,6 +13,8 @@ import admin_management_white from '../../assets/admin_management_white.png';
 import version_management_white from '../../assets/version_management_white.png';
 import secret_key_management_white from '../../assets/secret_key_management_white.png';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { ReduxStateType } from 'Types/ReduxStateTypes';
 
 type menuInfoType = {
   id: number,
@@ -23,19 +25,17 @@ type menuInfoType = {
 
 const Main = () => {
   document.body.style.backgroundColor = 'white';
-  const userInfoString = sessionStorage.getItem('userInfo');
-  const userInfo:UserInfoType | null = userInfoString ? JSON.parse(userInfoString) : null;
-
-  const userId = userInfo?.userId;
-  const userRole = userInfo?.userRole;
-  const uuid = userInfo?.uuid;
-
+  const {userInfo} = useSelector((state: ReduxStateType) => ({
+    userInfo: state.userInfo!
+  }))
   const height = useWindowHeightHeader();
   const navigate = useNavigate();
   const [isHovered0, setIsHovered0] = useState(false);
   const [isHovered1, setIsHovered1] = useState(false);
   const [isHovered2, setIsHovered2] = useState(false);
   const [isHovered3, setIsHovered3] = useState(false);
+
+  const {role} = userInfo
 
   const menuInfo = [
     { id: 0, title: 'USER_MANAGEMENT', imgName: isHovered0 ? user_management_white :user_management, navi: '/InformationList' },
@@ -88,7 +88,7 @@ const Main = () => {
       className='main_menu_container'
       style={{width: '80rem', display: 'flex', marginTop: '3rem'}}
     >
-      {userRole === 'SUPER_ADMIN' &&
+      {role === 'SUPER_ADMIN' &&
         menuInfo.map((data: menuInfoType) => (
           <div
             className={
@@ -121,7 +121,7 @@ const Main = () => {
         ))
       }
 
-      {userRole === 'ADMIN' &&
+      {role === 'ADMIN' &&
         menuInfoAdmin.map((data: menuInfoType) => (
           <div
             className={

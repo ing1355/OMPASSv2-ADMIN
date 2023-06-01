@@ -11,25 +11,19 @@ import menu_icon from '../../assets/menu_icon.png';
 import logout from '../../assets/logout.png';
 import maunal_download from '../../assets/maunal_download.png';
 import maunal_download_blue from '../../assets/maunal_download_blue.png';
-import { UserInfoType } from 'Types/ServerResponseDataTypes';
 import { FormattedMessage } from 'react-intl';
 import { userInfoClear } from 'Redux/actions/userChange';
 
 const Header = () => {
-  const { lang } = useSelector((state: ReduxStateType) => ({
+  const { lang, userInfo } = useSelector((state: ReduxStateType) => ({
     lang: state.lang,
+    userInfo: state.userInfo!
   }));
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const {role, userId, uuid} = userInfo
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const userInfoString = sessionStorage.getItem('userInfo');
-  const userInfo:UserInfoType | null = userInfoString ? JSON.parse(userInfoString) : null;
-
-  const userId = userInfo?.userId;
-  const userRole = userInfo?.userRole;
-  const uuid = userInfo?.uuid;
 
   return (
     <div
@@ -44,7 +38,7 @@ const Header = () => {
           // style={{marginLeft: '10%'}}
         >
           <ul>
-            {userRole !== 'USER' &&
+            {role !== 'USER' &&
               <li>
                 <input id='dropdown_menu' type='checkbox' readOnly checked={isMenuOpen}/>
                 <label htmlFor='dropdown_menu' className='dropdown_menu_label' onClick={()=>{setIsMenuOpen(!isMenuOpen)}}>
@@ -54,7 +48,7 @@ const Header = () => {
                   <li><Link to='/InformationList'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='USER_MANAGEMENT' /></div></Link></li>
                   <li><Link to='/AdminsManagement'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='ADMIN_MANAGEMENT' /></div></Link></li>
                   <li><Link to='/AgentManagement'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='VERSION_MANAGEMENT' /></div></Link></li>
-                  {userRole === 'SUPER_ADMIN' &&<li><Link to='/SecretKey'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='SECRET_KEY_MANAGEMENT' /></div></Link></li>}
+                  {role === 'SUPER_ADMIN' &&<li><Link to='/SecretKey'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='SECRET_KEY_MANAGEMENT' /></div></Link></li>}
                 </ul>
               </li>
             }
@@ -65,7 +59,7 @@ const Header = () => {
             <li
               style={{cursor: 'pointer'}}
               onClick={() => {
-                if(userRole !== 'USER') {
+                if(role !== 'USER') {
                   navigate('/Main');
                 }
               }}

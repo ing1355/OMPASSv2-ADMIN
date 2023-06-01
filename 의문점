@@ -1,0 +1,6 @@
+sessionStroage 사용 이유 ??
+App.tsx 라우팅에는 param 잘 썼는데 사용자 상세 정보 진입 시 sessionStroage로 uuid를 공유하는 이유 ??
+유저 데이터를 Redux로 관리하지 않고 sessionStorage에서 파싱하던 이유 ??
+라우팅 전체 잡으면 USER와 ADMIN의 라우팅 구분이 불가능.
+회원가입 시 아이디 사용 가능 불가능 메세지 구분
+회원가입 -> 돌아가기

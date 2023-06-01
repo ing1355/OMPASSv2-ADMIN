@@ -8,7 +8,7 @@ type LanguageStateType = "ko" | "en";
 export type UserInfoDetailType = {
   uuid: string
   userId: string
-  role: 'ADMIN' | 'USER' | null
+  role: 'ADMIN' | 'USER' | 'SUPER_ADMIN' | null
 }
 
 export type ReduxStateType = {

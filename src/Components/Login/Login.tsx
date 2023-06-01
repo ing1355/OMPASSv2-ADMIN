@@ -23,6 +23,7 @@ import dont_look_password from '../../assets/dont_look_password.png';
 import maunal_download from '../../assets/maunal_download.png'
 import { GetAgentInstallerApi } from 'Constants/ApiRoute';
 import { GetAgentApiArrayType, GetAgentApiDataType, GetAgentApiType } from 'Types/ServerResponseDataTypes';
+import { userInfoChange } from 'Redux/actions/userChange';
 
 
 const Login = () => {
@@ -44,8 +45,6 @@ const Login = () => {
   const [currentVersion, setCurrentVersion] = useState<GetAgentApiType | null>(null);
   const [idChange, setIdChange] = useState<string>('');
   const [passwordChange, setPasswordChange] = useState<string>('');
-  console.log('idChange',idChange)
-  console.log('passwordChange',passwordChange)
 
   const height = useWindowHeight();
   const dispatch = useDispatch();
@@ -82,18 +81,11 @@ const Login = () => {
         PostLoginApi,
         (data:any, header:any) => {
           const role = data.userResponse.role;
-          const userInfo = {
-            userId: data.userResponse.username,
-            userRole: role,
-            uuid: data.userResponse.id,
-          }
-          sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
           localStorage.setItem('authorization', header);
+          dispatch(userInfoChange(header))
           message.success('로그인 완료')
           if(role === 'USER') {
             navigate('/InformationDetail/User');
-          } else if(role === 'ADMIN') {
-            navigate('/Main');
           } else {
             navigate('/Main');
           }
