@@ -292,12 +292,17 @@ export const Tab = () => {
   
     if (windowsCount > 0) {
       result.push('Windows');
-    } else if (macosCount > 0) {
+    } 
+    
+    if (macosCount > 0) {
       result.push('MacOs');
-    } else if (browserCount > 0) {
+    } 
+    
+    if (browserCount > 0) {
       result.push('Browser');
     } 
 
+    console.log('result', result)
     let resultString = result.join(', ');
 
     return <span>{resultString}</span>;
@@ -719,7 +724,7 @@ export const Tab = () => {
             <div
               style={{display: 'flex'}}
             >
-              <div
+              {/* <div
                 className='tab_download_upload_button'
               >
                 <label
@@ -736,7 +741,7 @@ export const Tab = () => {
                   style={{ display: "none" }}
                   onChange={handleFileUpload}
                 />
-              </div>
+              </div> */}
               <div
                 className='tab_download_upload_button'
                 onClick={downloadExcel}

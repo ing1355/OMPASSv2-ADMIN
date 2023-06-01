@@ -45,7 +45,7 @@ const Login = () => {
   const [currentVersion, setCurrentVersion] = useState<GetAgentApiType | null>(null);
   const [idChange, setIdChange] = useState<string>('');
   const [passwordChange, setPasswordChange] = useState<string>('');
-
+console.log('lang',lang)
   const height = useWindowHeight();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -131,7 +131,7 @@ const Login = () => {
       {
         username: username,
         password: password,
-        language: lang,
+        language: lang === 'ko' ? 'KO' : 'EN',
         clientType: 'BROWSER',
       },
       () => {
@@ -430,6 +430,7 @@ const Login = () => {
           maxLength={6}
           autoComplete='off'
           onChange={(e) => {
+            e.target.value = e.target.value.replace(/[^0-9]/g, "");
             const value = e.currentTarget.value;
             const passcodeRegex = /^\d{6}$/;
             if(passcodeRegex.test(value)) {

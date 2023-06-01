@@ -86,7 +86,7 @@ const Main = () => {
     return (
     <div 
       className='main_menu_container'
-      style={{width: '80rem', display: 'flex', marginTop: '3rem'}}
+      style={{display: 'flex', marginTop: '3rem'}}
     >
       {role === 'SUPER_ADMIN' &&
         menuInfo.map((data: menuInfoType) => (

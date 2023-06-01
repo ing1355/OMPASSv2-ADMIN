@@ -20,7 +20,7 @@ const Header = () => {
     userInfo: state.userInfo!
   }));
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const {role, userId, uuid} = userInfo
+  const {uuid, role, userId} = userInfo! ?? {};
 
   const dispatch = useDispatch();
   const navigate = useNavigate();

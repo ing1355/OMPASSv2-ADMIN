@@ -7,7 +7,7 @@ const ErrorTexts = {
     ERR_005: 'The token does not exist.',
     ERR_006: 'The token must be transmitted in Bearer format.',
     ERR_007: 'Unhandled error.',
-    ERR_008: 'The user does not have permission to use the API.',
+    ERR_008: 'You do not have permission to message.',
     ERR_101: 'User does not exist.',
     ERR_102: 'User ID already exists.',
     ERR_103: 'Please check the ID and password.',
@@ -18,7 +18,9 @@ const ErrorTexts = {
     ERR_108: 'The registered device does not exist.',
     ERR_109: 'Failed to verify OMPASS secret key.',
     ERR_110: 'The AGENT file to download does not exist.',
-    ERR_111: 'Invalid PASSCODE.'
+    ERR_111: 'Please check the PASSCODE.',
+    ERR_112: 'The super administrator cannot be deleted.',
+    ERR_113: 'No registered device exists.',
   },
   'ko': {
     ERR_001 : '토큰이 만료되었습니다.',
@@ -28,7 +30,7 @@ const ErrorTexts = {
     ERR_005 : '토큰이 존재하지 않습니다.',
     ERR_006 : '토큰은 Bearer 형식으로 전송되어야 합니다.',
     ERR_007 : '핸들링되지 않은 에러',
-    ERR_008 : '해당 API 사용권한을 가진 사용자가 아닙니다.',
+    ERR_008 : '메시지 권한이 없습니다.',
     ERR_101 : '존재하지 않는 사용자입니다.',
     ERR_102 : '이미 존재하는 사용자 아이디입니다.',
     ERR_103 : '아이디와 패스워드를 확인해주세요.',
@@ -39,7 +41,9 @@ const ErrorTexts = {
     ERR_108 : '등록된 Device 가 존재하지 않습니다.',
     ERR_109 : 'OMPASS 비밀키 검증에 실패하였습니다.',
     ERR_110 : '다운로드할 AGENT 파일이 존재하지 않습니다.',
-    ERR_111 : '올바르지 않은 패스코드입니다.',
+    ERR_111 : 'PASSCODE를 확인해주세요.',
+    ERR_112 : '최고관리자는 삭제할 수 없습니다.',
+    ERR_113 : '등록된 Device 가 존재하지 않습니다.',
   }
 }
 

@@ -17,7 +17,7 @@ export function userInfoChange(token: string) {
 export function userInfoClear() {
   return {
     type: types.userInfoClear,
-    payload: null
+    payload: null,
   }
 }
 

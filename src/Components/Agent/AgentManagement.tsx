@@ -30,6 +30,15 @@ const AgentManagement = () => {
   const [checkboxes, setCheckboxes] = useState<Checkbox[]>([]);
   const [hoveredRow, setHoveredRow] = useState<number>(-1);
   const [rendering, setRendering] = useState<boolean[]>([]);
+  const [fileName, setFileName] = useState('');
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const fileInput = event.target;
+    if (fileInput.files && fileInput.files[0]) {
+      const name = fileInput.files[0].name;
+      setFileName(name);
+    }
+  };
 
   const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
     setPageNum(pageNumber);
@@ -215,13 +224,29 @@ const AgentManagement = () => {
                       버전을 입력해주세요
                     </div>
                   </div>
+                  {/* <div>
+                    <label>해시값</label>
+                    <input 
+                      id='hash'
+                      type='text'
+                      className={'input-st1 create_account_input mt8 mb5 '}
+                      maxLength={16}
+                      autoComplete='off'
+                    />
+                  </div> */}
                   <div>
                     <label>파일 업로드</label>
                     <div
                       style={{marginTop: '20px'}}
                     >
                       <label htmlFor="uploadFile" className='button-st4 agent_management_file_btn'>파일 선택</label>
-                      <input id="uploadFile" type="file" hidden/>
+                      <input
+                        id="uploadFile"
+                        type="file"
+                        hidden
+                        onChange={handleFileChange}
+                      />
+                      <span style={{marginLeft: '15px'}}>{fileName}</span>
                     </div>
 
                     {/* <div
@@ -244,6 +269,7 @@ const AgentManagement = () => {
                           onChange={handleCheckAll}
                         />
                       </th>
+                      <th></th>
                       <th>버전</th>
                       <th>OS</th>
                       <th>업로드 일시</th>
@@ -296,7 +322,8 @@ const AgentManagement = () => {
                             onChange={handleCheckboxChange}
                           />
                         </td>
-                        <td>{data.downloadTarget && <span className='manager-mark ml10'>현재</span>}{data.version}</td>
+                        <td>{data.downloadTarget && <span className='manager-mark ml10'>현재</span>}</td>
+                        <td>{data.version}</td>
                         <td>{data.os}</td>
                         <td>{data.uploadDate}</td>
                         <td>{data.uploader}</td>

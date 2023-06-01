@@ -67,7 +67,9 @@ const InformationDetail = () => {
   const navigate = useNavigate();
   const { params } = useParams();
 
-  const {uuid, role, userId} = userInfo
+  const {uuid, role, userId} = userInfo! ?? {};
+
+  console.log('userInfo', userInfo)
 
   useEffect(() => {
     if(uuid) {
@@ -139,6 +141,15 @@ const InformationDetail = () => {
               type='submit'
               form='userInfoModifyForm'
             >저장</button>
+            <button
+              className='button-st5 information_detail_user_btn'
+              type='button'
+              onClick={() => {
+                setIsModify(false);
+              }}
+            >
+              취소
+            </button>
           </div>
           :
           <div style={{float: 'right'}}>
@@ -158,8 +169,10 @@ const InformationDetail = () => {
                   CustomAxiosDelete(
                     DeleteUsersApi(uuid),
                     () => {
+                      console.log('dsfdsfsf')
                       message.success('회원 정보 삭제 완료');
-                      dispatch(userInfoClear())
+                      navigate('/');
+                      dispatch(userInfoClear());
                     },
                     {},
                     () => {
@@ -172,7 +185,6 @@ const InformationDetail = () => {
                       DeleteUsersApi(userUuid),
                       () => {
                         message.success('회원 정보 삭제 완료');
-                        sessionStorage.removeItem('userUuid');
                         navigate('/InformationList');
                       },
                       {},
@@ -565,7 +577,8 @@ const InformationDetail = () => {
               </div>
               <hr></hr>
               
-              {data.deviceType !== 'BROWSER' &&
+              {/* 접속 허용 계정 - 이번 버전에서는 제외 */}
+              {/* {data.deviceType !== 'BROWSER' &&
                 <div
                   className='mt30 mb10'
                 >
@@ -754,7 +767,7 @@ const InformationDetail = () => {
                     
                   </div>
                 </div>
-              }
+              } */}
               <div
                 className='mt30 mb10'
               >
@@ -769,7 +782,6 @@ const InformationDetail = () => {
                       className='button-st4 information_detail_save_btn'
                       onClick={(e) => {
                         e.preventDefault();
-                        console.log('저장')
                         const submitButton = document.getElementById(`submitButton_${index}`);
                         if (submitButton) {
                           submitButton.click();
@@ -778,7 +790,7 @@ const InformationDetail = () => {
                     >
                       <span
                         style={{position: 'relative', top: '3px'}}
-                      >저장</span>
+                      >생성</span>
                       {/* <img src={setting_icon} width='30px'
                         style={{opacity: 0.7, cursor: 'pointer', margin: '15px 5px 10px'}}
 
@@ -808,7 +820,6 @@ const InformationDetail = () => {
                       className='button-st4 information_detail_save_btn'
                       onClick={(e) => {
                         e.preventDefault();
-                        console.log('저장')
                         const submitButton = document.getElementById(`submitButton_${index}`);
                         if (submitButton) {
                           submitButton.click();
@@ -817,7 +828,7 @@ const InformationDetail = () => {
                     >
                       <span
                         style={{position: 'relative', top: '3px'}}
-                      >저장</span>
+                      >생성</span>
                       {/* <img src={setting_icon} width='30px'
                         style={{opacity: 0.7, cursor: 'pointer', margin: '15px 5px 10px'}}
 
@@ -870,6 +881,10 @@ const InformationDetail = () => {
                         message.error('시간을 입력해주세요');
                       } else if(!oneChecked && !unlimitedChecked && !(moreThanOneChecked && recycleNumber !== '')) {
                         message.error('재사용 횟수를 입력해주세요');
+                      } else if(timeMinute === '0') {
+                        message.error('1분 이상으로 입력해주세요.')
+                      } else if(recycleNumber === '0') {
+                        message.error('1번 이상으로 입력해주세요.')
                       } else {
                         if(modifyPasscodes[index]) {
                           console.log('수정')
@@ -915,7 +930,7 @@ const InformationDetail = () => {
                               passcodeNumber: randomChecked ? null : codeChecked ? codeNumber : null
                             },
                             () => {
-                              message.error('passcode 생성 실패');
+                              message.error('PASSCODE 생성 실패');
                             }
                           )
                         }
@@ -950,7 +965,11 @@ const InformationDetail = () => {
                             >
                               <input type='radio' name='create_passcode' id='code' />
                               코드 지정 : &nbsp;
-                              <input type='text' className='information_detail_passcode_setting_content_input' id='code_number' maxLength={6} />
+                              <input type='text' className='information_detail_passcode_setting_content_input' id='code_number' maxLength={6} 
+                                onChange={(e) => {
+                                  e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                                }}
+                              />
                               &nbsp; (6자리)
                             </label>
                           </li>

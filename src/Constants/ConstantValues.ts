@@ -1,4 +1,4 @@
-export const CopyRightText = `OMPASS v${process.env.REACT_APP_VERSION} © 2020. OneMoreSecurity Inc. All Rights Reserved.`
+export const CopyRightText = `OMPASS Portal v${process.env.REACT_APP_VERSION} © 2023. OneMoreSecurity Inc. All Rights Reserved.`
 
 export const autoHypenPhoneFun = (phone: string) => {
   let str = phone.replace(/[^0-9]/g, '');

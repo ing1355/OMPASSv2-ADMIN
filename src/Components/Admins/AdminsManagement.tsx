@@ -321,32 +321,36 @@ const AdminsManagement = () => {
               <table>
                 <thead>
                   <tr>
-                    <th>
-                      <input 
-                        type='checkbox'
-                        checked={checkAll}
-                        onChange={handleCheckAll}
-                      />
-                    </th>
+                    {role === 'SUPER_ADMIN' &&
+                      <th>
+                        <input 
+                          type='checkbox'
+                          checked={checkAll}
+                          onChange={handleCheckAll}
+                        />
+                      </th>
+                    }
                     <th><FormattedMessage id='ADMIN_ID' /></th>
                     <th><FormattedMessage id='NAME' /></th>
                     <th><FormattedMessage id='PHONE_NUMBER' /></th>
-                    <th>
-                      <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
-                        onClick={() => {
-                          const userIds = checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.userId).join(',');
-                          CustomAxiosDelete(
-                            DeleteUsersApi(userIds),
-                            () => {
-                              message.success(formatMessage({ id: 'SELECTED_ADMIN_DELETE_SUCCESS' }));
-                              const render = rendering;
-                              const renderTemp = render.concat(true);
-                              setRendering(renderTemp);
-                            }
-                          )
-                        }}
-                      />
-                    </th>
+                    {role === 'SUPER_ADMIN' &&
+                      <th>
+                        <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                          onClick={() => {
+                            const userIds = checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.userId).join(',');
+                            CustomAxiosDelete(
+                              DeleteUsersApi(userIds),
+                              () => {
+                                message.success(formatMessage({ id: 'SELECTED_ADMIN_DELETE_SUCCESS' }));
+                                const render = rendering;
+                                const renderTemp = render.concat(true);
+                                setRendering(renderTemp);
+                              }
+                            )
+                          }}
+                        />
+                      </th>
+                    }
                   </tr>
                 </thead>
                 <tbody>
@@ -364,35 +368,39 @@ const AdminsManagement = () => {
                       }}
                       style={{ background: hoveredRow === index ? '#D6EAF5' : 'transparent', cursor: 'pointer' }}
                     >
-                      <td>
-                        <input 
-                          type='checkbox' 
-                          value={data.id}
-                          id={index.toString()}
-                          checked={checkboxes[index]?.checked || false}
-                          onChange={handleCheckboxChange}
-                          onClick={(e) => e.stopPropagation()}
-                        />
-                      </td>
+                      {role === 'SUPER_ADMIN' &&
+                        <td>
+                          <input 
+                            type='checkbox' 
+                            value={data.id}
+                            id={index.toString()}
+                            checked={checkboxes[index]?.checked || false}
+                            onChange={handleCheckboxChange}
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                        </td>
+                      }
                       <td>{data.username}</td>
                       <td>{data.name}</td>
                       <td>{data.phoneNumber}</td>
-                      <td>
-                        <img src={delete_icon} width='20px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            CustomAxiosDelete(
-                              DeleteUsersApi(data.id),
-                              () => {
-                                message.success(formatMessage({ id: 'ADMIN_DELETION_COMPLETE' }));
-                                const render = rendering;
-                                const renderTemp = render.concat(true);
-                                setRendering(renderTemp);
-                              }
-                            )
-                          }}
-                        />
-                      </td>
+                      {role === 'SUPER_ADMIN' &&
+                        <td>
+                          <img src={delete_icon} width='20px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              CustomAxiosDelete(
+                                DeleteUsersApi(data.id),
+                                () => {
+                                  message.success(formatMessage({ id: 'ADMIN_DELETION_COMPLETE' }));
+                                  const render = rendering;
+                                  const renderTemp = render.concat(true);
+                                  setRendering(renderTemp);
+                                }
+                              )
+                            }}
+                          />
+                        </td>
+                      }
                     </tr>
                   ))}
                 </tbody>
