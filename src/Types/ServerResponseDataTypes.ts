@@ -31,6 +31,7 @@ export type GetAgentApiType = {
   os: string,
   uploadDate: string,
   downloadTarget: boolean,
+  fileName: string,
 }
 
 export type userRoleType = "USER" | "ADMIN" | "SUPER_ADMIN";

@@ -211,7 +211,7 @@ const InformationDetail = () => {
         <div
           // className='absolute-center'
           className='content-center'
-          style={{flexDirection: 'column', paddingTop: '70px'}}
+          style={{flexDirection: 'column', paddingTop: '70px', minHeight: `${height - 130}px`, justifyContent: 'start'}}
         >
           <div
             className='information_detail_header'
@@ -475,7 +475,7 @@ const InformationDetail = () => {
                     className='button-st5 information_detail_device_delete_btn'
                     onClick={() => {
                       CustomAxiosDelete(
-                        DeleteDeviceApi(data.id),
+                        DeleteDeviceApi(userData?.id || '', data.id),
                         () => {
                           message.success('장치 삭제 완료');
                           const render = rendering;
@@ -491,7 +491,7 @@ const InformationDetail = () => {
                     className='button-st5 information_detail_device_delete_btn'
                     onClick={() => {
                       CustomAxiosDelete(
-                        DeleteDeviceApi(data.id),
+                        DeleteDeviceApi(userData?.id || '', data.id),
                         () => {
                           message.success('장치 삭제 완료');
                           const render = rendering;
@@ -1179,11 +1179,11 @@ const InformationDetail = () => {
               </div>
             </div> 
           ))}
-          <div
-            className='copyRight-style mt30'
-          >
-            {CopyRightText}
-          </div>   
+        </div>
+        <div
+          className='copyRight-style mb30'
+        >
+          {CopyRightText}
         </div>
       </div>
     </>

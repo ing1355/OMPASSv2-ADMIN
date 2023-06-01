@@ -32,7 +32,7 @@ const AgentManagement = () => {
   const [hoveredRow, setHoveredRow] = useState<number>(-1);
   const [rendering, setRendering] = useState<boolean[]>([]);
   const [fileName, setFileName] = useState('');
-
+  
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileInput = event.target;
     if (fileInput.files && fileInput.files[0]) {
@@ -109,7 +109,7 @@ const AgentManagement = () => {
       <div style={{overflowY: 'auto', height: height}}>
         <div
           className='content-center'
-          style={{flexDirection: 'column', marginTop: '70px'}}
+          style={{flexDirection: 'column', paddingTop: '70px', minHeight: `${height - 130}px`, justifyContent: 'start'}}
         >
           <div
             className='agent_management_header'
@@ -174,11 +174,13 @@ const AgentManagement = () => {
                     console.log('버전관리')
                     e.preventDefault();
                     // const { version } = (e.currentTarget.elements as any);
-                    const { version, uploadFile } = (e.currentTarget.elements as any);
+                    const { version, uploadFile, hash } = (e.currentTarget.elements as any);
                     const metaDataVersion = version.value;
+                    const hashValue = hash.value;
                     const multipartFile = uploadFile.files[0];
+                    const maxFileSize = 20 * 1024 * 1024;
                     
-                    console.log('multipartFile',multipartFile)
+                    console.log('multipartFile.size',multipartFile.size)
                     
                     if(metaDataVersion) {
                       setIsVersionAlert(false);
@@ -186,33 +188,42 @@ const AgentManagement = () => {
                       setIsVersionAlert(true);
                     }
 
-                    if(metaDataVersion && multipartFile && !isVersionAlert) {
-                      console.log('os 업로드 api');
-                      CustomAxiosPost(
-                        PostAgentInstallerUploadApi,
-                        (data: any) => {
-                          setIsAddVersion(false);
-                        },
-                        {
-                          // metaData: {version: metaDataVersion}, 
-                          'metaData.version': metaDataVersion,                          
-                          multipartFile: multipartFile,
-                        },
-                        () => {
-                          message.error('업로드 실패');
-                        },
-                        {
-                          headers: {
-                            'Content-Type': 'multipart/form-data',
+                    if(metaDataVersion && multipartFile && hashValue && !isVersionAlert) {
+                      if(multipartFile.size > maxFileSize) {
+                        message.error('파일 용량(20MB)를 초과하였습니다.');
+                      } else {
+                        console.log('os 업로드 api');
+                        CustomAxiosPost(
+                          PostAgentInstallerUploadApi,
+                          (data: any) => {
+                            setIsAddVersion(false);
+                            setFileName('');
                           },
-                        }
-                      );
+                          {
+                            // metaData: {version: metaDataVersion}, 
+                            'metaData.hash': hashValue,
+                            'metaData.os': 'WINDOWS',
+                            'metaData.version': metaDataVersion,                          
+                            multipartFile: multipartFile,
+                          },
+                          () => {
+                            message.error('업로드 실패');
+                          },
+                          {
+                            headers: {
+                              'Content-Type': 'multipart/form-data',
+                            },
+                          }
+                        );
+                      }
                     } else {
                       console.log('에러');
                     }
                   }}
                 >
-                  <div>
+                  <div
+                    className='mt50'
+                  >
                     <label>버전명</label>
                     <input 
                       id='version'
@@ -220,6 +231,7 @@ const AgentManagement = () => {
                       className={'input-st1 create_account_input mt8 mb5 ' + (isVersionAlert ? 'red' : '')}
                       maxLength={16}
                       autoComplete='off'
+                      style={{width: '600px'}}
                       onChange={(e) => {
                         const value = e.currentTarget.value;
                         if(value) {
@@ -235,25 +247,28 @@ const AgentManagement = () => {
                       버전을 입력해주세요
                     </div>
                   </div>
-                  {/* <div>
+                  <div
+                    className='mb20'
+                  >
                     <label>해시값</label>
                     <input 
                       id='hash'
                       type='text'
                       className={'input-st1 create_account_input mt8 mb5 '}
-                      maxLength={16}
                       autoComplete='off'
+                      style={{width: '600px'}}
                     />
-                  </div> */}
+                  </div>
                   <div>
                     <label>파일 업로드</label>
                     <div
-                      style={{marginTop: '20px'}}
+                      style={{marginTop: '22px'}}
                     >
                       <label htmlFor="uploadFile" className='button-st4 agent_management_file_btn'>파일 선택</label>
                       <input
                         id="uploadFile"
                         type="file"
+                        accept=".zip"
                         hidden
                         onChange={handleFileChange}
                       />
@@ -283,8 +298,9 @@ const AgentManagement = () => {
                       <th></th>
                       <th>버전</th>
                       <th>OS</th>
+                      <th>파일명</th>
                       <th>업로드 일시</th>
-                      <th>업로드 관리자 아이디</th>
+                      <th>업로더</th>
                       <th>다운로드</th>
                       <th>현재 버전 설정</th>
                       <th>
@@ -336,6 +352,7 @@ const AgentManagement = () => {
                         <td>{data.downloadTarget && <span className='manager-mark ml10'>현재</span>}</td>
                         <td>{data.version}</td>
                         <td>{data.os}</td>
+                        <td>{data.fileName}</td>
                         <td>{data.uploadDate}</td>
                         <td>{data.uploader}</td>
                         <td>
@@ -418,13 +435,13 @@ const AgentManagement = () => {
               </div>
             }
 
-          </div>
-          <div
-            className='copyRight-style mt30'
-          >
-            {CopyRightText}
-          </div>            
+          </div>           
         </div>
+        <div
+          className='copyRight-style mb30'
+        >
+          {CopyRightText}
+        </div> 
       </div>
     </>
   )

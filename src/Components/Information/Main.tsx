@@ -35,7 +35,7 @@ const Main = () => {
   const [isHovered1, setIsHovered1] = useState(false);
   const [isHovered2, setIsHovered2] = useState(false);
   const [isHovered3, setIsHovered3] = useState(false);
-
+console.log('height',height)
   const {role} = userInfo
 
   const menuInfo = [
@@ -162,21 +162,23 @@ const Main = () => {
       <div style={{overflowY: 'auto', height: height}}>
         <div
           className='content-center'
-          style={{flexDirection: 'column', marginTop: '8%'}}
+          style={{flexDirection: 'column', minHeight: `${height - 130}px`}}
         >
           <div
             className='agent_management_header'
           >
           </div>
           {menuInfoFun()}
-          <div
-            className='copyRight-style'
-            style={{ marginTop: `${height - 800}` }}
-          >
-            {CopyRightText}
-          </div>
+
+        </div>
+        <div
+          className='copyRight-style mb30'
+          style={{marginTop: '70px'}}
+        >
+          {CopyRightText}
         </div>
       </div>
+
     </>
   )
 }

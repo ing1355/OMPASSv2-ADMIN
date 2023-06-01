@@ -29,7 +29,7 @@ const SecretKey = () => {
       <div style={{overflowY: 'auto', height: height}}>
         <div
           className='content-center'
-          style={{flexDirection: 'column', marginTop: '70px'}}
+          style={{flexDirection: 'column', paddingTop: '70px', minHeight: `${height - 130}px`, justifyContent: 'start'}}
         >
           <div
             className='agent_management_header'
@@ -121,13 +121,13 @@ const SecretKey = () => {
               </form>
             </div>
           </div>
-          <div
-            className='copyRight-style'
-            style={{ marginTop: `${height - 400}px` }}
+        </div>
+        <div
+            className='copyRight-style mb30'
+            // style={{ marginTop: `${height - 385.5}px` }}
           >
             {CopyRightText}
           </div>
-        </div>
       </div>
     </>
   )

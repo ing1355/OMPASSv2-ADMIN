@@ -758,16 +758,8 @@ export const Tab = () => {
               </div>
             </div>
           </div>
-
         </div>
-      </div>
-      <div
-        className='copyRight-style mb30'
-      >
-        {CopyRightText}
-      </div>
-
-      
+      </div>      
     </>
   );
 };

@@ -119,7 +119,7 @@ const AdminsManagement = () => {
       <div style={{overflowY: 'auto', height: height}}>
         <div
           className='content-center'
-          style={{flexDirection: 'column', marginTop: '70px'}}
+          style={{flexDirection: 'column', paddingTop: '70px', minHeight: `${height - 130}px`, justifyContent: 'start'}}
         >
           <div
             className='agent_management_header'
@@ -424,13 +424,13 @@ const AdminsManagement = () => {
               </div>
             </div>
             }
-          </div>
-          <div
-            className='copyRight-style mt30'
-          >
-            {CopyRightText}
-          </div>          
+          </div>         
         </div>
+        <div
+          className='copyRight-style mb30'
+        >
+          {CopyRightText}
+        </div> 
       </div>
     </>
   )
