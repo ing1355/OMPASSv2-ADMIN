@@ -1,21 +1,19 @@
 import { useWindowHeightHeader } from "Components/CustomHook/useWindowHeight";
 import Header from "Components/Header/Header";
 import { FormattedMessage } from "react-intl";
-import { Link } from "react-router-dom";
 import { useEffect, useState } from 'react';
 import { CustomAxiosGet, CustomAxiosPut } from "Components/CustomHook/CustomAxios";
 import { GetPutSecretKeyApi } from "Constants/ApiRoute";
 import { GetPutSecretKeyApiType } from "Types/ServerResponseDataTypes";
 import { message } from "antd";
+import { CopyRightText } from "Constants/ConstantValues";
 
 const SecretKey = () => {
   const height = useWindowHeightHeader();
   const [isAddSecretKey, setIsAddSecretKey] = useState<boolean>(false);
-  const [totalCount, setTotalCount] = useState<number>(0);
-  const [tableCellSize, setTableCellSize] = useState<number>(10);
-  const [pageNum, setPageNum] = useState<number>(1);
   const [secretKeyData, setSecretKeyData] = useState<string>('');
 
+  console.log('height',height)
   useEffect(() => {
     CustomAxiosGet(
       GetPutSecretKeyApi,
@@ -122,7 +120,12 @@ const SecretKey = () => {
 
               </form>
             </div>
-
+          </div>
+          <div
+            className='copyRight-style'
+            style={{ marginTop: `${height - 400}px` }}
+          >
+            {CopyRightText}
           </div>
         </div>
       </div>

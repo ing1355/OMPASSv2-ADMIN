@@ -45,7 +45,7 @@ const Login = () => {
   const [currentVersion, setCurrentVersion] = useState<GetAgentApiType | null>(null);
   const [idChange, setIdChange] = useState<string>('');
   const [passwordChange, setPasswordChange] = useState<string>('');
-console.log('lang',lang)
+
   const height = useWindowHeight();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -118,7 +118,6 @@ console.log('lang',lang)
       PostLoginApi,
       (data:any) => {
         const { ompassUri, loginType } = data;
-        console.log('data', data)
         console.log('ompassUri',ompassUri)
 
         if(loginType === 'PW_CHANGE_USER') {

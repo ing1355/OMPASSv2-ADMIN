@@ -13,7 +13,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useWindowHeight } from 'Components/CustomHook/useWindowHeight';
 import { CustomAxiosGet, CustomAxiosPost } from 'Components/CustomHook/CustomAxios';
 import { GetUsernameCheckApi, PostSignUpApi } from 'Constants/ApiRoute';
-import { autoHypenPhoneFun } from 'Constants/ConstantValues';
+import { autoHypenPhoneFun, CopyRightText } from 'Constants/ConstantValues';
 
 type AgreePolicyType = 'agreeService' | 'agreePrivacyPolicy';
 
@@ -364,7 +364,6 @@ const CreateAccount = () => {
                   CustomAxiosPost(
                     PostSignUpApi,
                     (data: any) => {
-                      console.log('data', data);
                       navigate('/');
                     },
                     {
@@ -420,7 +419,6 @@ const CreateAccount = () => {
                         CustomAxiosGet(
                           GetUsernameCheckApi(username),
                           (data: any) => {
-                            console.log('아이디 중복 확인 data', data);
                             setIdExist(data.exist);
                             if(data.exist) {
                               message.error(formatMessage({ id: 'UNAVAILABLE_USERNAME' }));
@@ -570,6 +568,11 @@ const CreateAccount = () => {
             </form>
           </div>
         }
+        <div
+          className='copyRight-style mt30'
+        >
+          {CopyRightText}
+        </div>
       </div>
     </div>
     

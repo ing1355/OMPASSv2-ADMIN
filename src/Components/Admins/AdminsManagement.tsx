@@ -9,7 +9,7 @@ import { useEffect, useState, useRef } from 'react';
 import { message, Pagination, PaginationProps } from 'antd';
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPost } from 'Components/CustomHook/CustomAxios';
 import { DeleteUsersApi, GetPutUsersApi, GetUsernameCheckApi, PostSignUpApi } from 'Constants/ApiRoute';
-import { autoHypenPhoneFun } from 'Constants/ConstantValues';
+import { autoHypenPhoneFun, CopyRightText } from 'Constants/ConstantValues';
 
 import delete_icon from '../../assets/delete_icon.png';
 import { useSelector } from 'react-redux';
@@ -146,14 +146,25 @@ const AdminsManagement = () => {
                 className='mb20'
               >
                 {isAddAdmin ?
-                <button className='tab_download_upload_button admins_management_button'
-                  type='submit'
-                  form='addAdminForm'
-                >
-                  <span><FormattedMessage id='ADMIN_REGISTRATION' /></span>
-                </button>
+                <div>
+                  <button className='admins_management_button'
+                    type='submit'
+                    form='addAdminForm'
+                  >
+                    <span><FormattedMessage id='ADMIN_REGISTRATION' /></span>
+                  </button>
+                  <button className='admins_management_button'
+                    type='button'
+                    onClick={() => {
+                      setIsAddAdmin(false);
+                    }}
+                  >
+                    <span>취소</span>
+                  </button>
+                </div>
+
                 :
-                <button className='tab_download_upload_button admins_management_button'
+                <button className='admins_management_button'
                   type='button'
                   onClick={(e) => {
                     e.preventDefault();
@@ -414,6 +425,11 @@ const AdminsManagement = () => {
             </div>
             }
           </div>
+          <div
+            className='copyRight-style mt30'
+          >
+            {CopyRightText}
+          </div>          
         </div>
       </div>
     </>

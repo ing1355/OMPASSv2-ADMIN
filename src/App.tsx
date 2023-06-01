@@ -22,7 +22,6 @@ const App: React.FC = () => {
     lang: state.lang!,
     userInfo: state.userInfo
   }));
-  console.log(userInfo)
   return (
     <IntlProvider locale={lang} messages={Locale[lang]}>
       {/* <div className="App"> */}

@@ -42,7 +42,9 @@ input[type="checkbox"] {
   margin-right: 3px;
 }
 
-
+.tab_table_list tbody tr td {
+  width: 20%;
+}
 
 .tab_table_sorting_image {
   position: relative;
@@ -60,19 +62,19 @@ input[type="checkbox"] {
 }
 
 .tab_table_sorting_dropdown.username {
-  margin-left: 184px;
+  margin-left: 164px;
 }
 
 .tab_table_sorting_dropdown.os {
-  margin-left: 86px;
+  margin-left: 132px;
 }
 
 .tab_table_sorting_dropdown.lastLoginDate {
-  margin-left: 240px;
+  margin-left: 165px;
 }
 
 .tab_table_sorting_dropdown.enable_passcode_count {
-  margin-left: 172px;
+  margin-left: 162px;
 }
 
 .manager-mark.red {
@@ -172,6 +174,7 @@ input[type="checkbox"] {
   display: none;
   background-color: white;
   box-shadow: 0px 0px 20px #ccc;
+  z-index: 1;
 }
 
 .dropdown-ul-1 li {

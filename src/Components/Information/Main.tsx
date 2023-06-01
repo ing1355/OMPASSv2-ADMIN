@@ -15,6 +15,7 @@ import secret_key_management_white from '../../assets/secret_key_management_whit
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
+import { CopyRightText } from 'Constants/ConstantValues';
 
 type menuInfoType = {
   id: number,
@@ -168,6 +169,12 @@ const Main = () => {
           >
           </div>
           {menuInfoFun()}
+          <div
+            className='copyRight-style'
+            style={{ marginTop: `${height - 800}` }}
+          >
+            {CopyRightText}
+          </div>
         </div>
       </div>
     </>

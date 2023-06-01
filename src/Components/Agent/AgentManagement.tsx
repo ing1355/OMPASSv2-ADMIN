@@ -11,6 +11,7 @@ import { DeleteAgentInstallerApi, GetAgentInstallerApi, GetAgentInstallerDownloa
 
 import delete_icon from '../../assets/delete_icon.png';
 import list_download from '../../assets/list_download.png';
+import { CopyRightText } from 'Constants/ConstantValues';
 
 interface Checkbox {
   id: number;
@@ -133,14 +134,24 @@ const AgentManagement = () => {
               className='mb20'
             >
               {isAddVersion ?
-              <button className='tab_download_upload_button admins_management_button'
-                type='submit'
-                form='addVersionForm'
-              >
-                <span>버전 등록</span>
-              </button>
+              <div>
+                <button className='admins_management_button'
+                  type='submit'
+                  form='addVersionForm'
+                >
+                  <span>버전 등록</span>
+                </button>
+                <button className='admins_management_button'
+                  type='button'
+                  onClick={() => {
+                    setIsAddVersion(false);
+                  }}
+                >
+                  <span>취소</span>
+                </button>
+              </div>
               :
-              <button className='tab_download_upload_button admins_management_button'
+              <button className='admins_management_button'
                 type='button'
                 onClick={(e) => {
                   e.preventDefault();
@@ -408,6 +419,11 @@ const AgentManagement = () => {
             }
 
           </div>
+          <div
+            className='copyRight-style mt30'
+          >
+            {CopyRightText}
+          </div>            
         </div>
       </div>
     </>

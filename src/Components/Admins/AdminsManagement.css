@@ -4,4 +4,15 @@
 
 .admins_management_button {
   font-size: 1.1rem;
+  margin: 10px;
+  width: 200px;
+  height: 53px;
+  border-radius: 14px;
+  font-weight: 600;
+
+  border: #0092FA 2px solid;
+  background-color: white;
+  color: #0092FA;
+  cursor: pointer;
+  text-align: center;
 }

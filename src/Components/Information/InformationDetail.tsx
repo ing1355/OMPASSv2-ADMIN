@@ -21,7 +21,7 @@ import browser_icon from '../../assets/browser_icon.png';
 import { AllowedAccessUsersType, DevicesType, GetUsersDetailsApiType, OmpassInfoType, UserInfoType, UserType } from 'Types/ServerResponseDataTypes';
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPost, CustomAxiosPut } from 'Components/CustomHook/CustomAxios';
 import { DeleteAccessUserApi, DeleteDeviceApi, DeletePasscodeApi, DeleteUsersApi, GetPutUsersApi, GetUsernameCheckApi, GetUsersDetailsApi, PostAccessUserApi, PostPutPasscodeApi, PutPasscodeApi } from 'Constants/ApiRoute';
-import { autoHypenPhoneFun } from 'Constants/ConstantValues';
+import { CopyRightText, autoHypenPhoneFun } from 'Constants/ConstantValues';
 import { useRef } from 'react';
 import { message } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
@@ -61,7 +61,7 @@ const InformationDetail = () => {
   const [allowAccounts, setAllowAccounts] = useState<boolean[]>(new Array(deviceData.length).fill(false));
   const height = useWindowHeightHeader();
   const dispatch = useDispatch()
-// console.log('deviceData', deviceData)
+
   const userUuid = sessionStorage.getItem('userUuid');
   const passwordRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
@@ -69,7 +69,10 @@ const InformationDetail = () => {
 
   const {uuid, role, userId} = userInfo! ?? {};
 
-  console.log('userInfo', userInfo)
+  const MacAddressFun = (ad: string) => {
+    const macAddRep = ad.replace(/(.{2})/g, "$1:");
+    return macAddRep.slice(0, -1);
+  }
 
   useEffect(() => {
     if(uuid) {
@@ -169,7 +172,6 @@ const InformationDetail = () => {
                   CustomAxiosDelete(
                     DeleteUsersApi(uuid),
                     () => {
-                      console.log('dsfdsfsf')
                       message.success('회원 정보 삭제 완료');
                       navigate('/');
                       dispatch(userInfoClear());
@@ -236,7 +238,12 @@ const InformationDetail = () => {
             >
               <h1>
                 {/* <FormattedMessage id='REGISTRATION_INFORMATION' /> */}
-                사용자 등록 정보
+                {(role !== 'USER' && params === 'Admin') &&
+                <>관리자 등록 정보</>
+                }
+                {(role !== 'USER' && params === 'User') &&
+                <>사용자 등록 정보</>
+                }
               </h1>
               <div
                 className='App-view-manual-font'
@@ -252,7 +259,12 @@ const InformationDetail = () => {
             className="information_detail_section mb30"
           >
             <div style={{display: 'flex', justifyContent: 'space-between'}}>
-              <h3><FormattedMessage id='USER_INFORMATION' /></h3>
+              {(role !== 'USER' && params === 'Admin') &&
+                <h3>관리자 정보</h3>
+              }
+              {(role !== 'USER' && params === 'User') &&
+                <h3><FormattedMessage id='USER_INFORMATION' /></h3>
+              }
               {/* user, admin 계정의 경우 본인만 수정, 탈퇴할 수 있음 */}
               {(role === 'SUPER_ADMIN' || role === 'USER') ?
                 modifyFun()
@@ -517,10 +529,10 @@ const InformationDetail = () => {
                     className='information_detail_device_container'
                   >
                     <div>
-                      {data.os === 'Windows' ?
-                        <img src={os_windows}/>
+                      {data.os !== 'MacOs' ?
+                        <img src={os_windows} width='80px' height='80px' style={{padding: '30px'}} />
                       :
-                        <img src={os_mac}/>
+                        <img src={os_mac} width='80px' height='80px' style={{padding: '30px'}} />
                       }
                       
                       <ul>
@@ -532,7 +544,7 @@ const InformationDetail = () => {
                       <img src={mac_address}/>
                       <ul>
                         <li>MAC Address</li>
-                        <li>{data.macAddress}</li>
+                        <li>{MacAddressFun(data.macAddress)}</li>
                       </ul>
                     </div>
                   </div>
@@ -554,9 +566,9 @@ const InformationDetail = () => {
                     </div>
                     <div>
                       {ompassInfoData?.os === 'ios' ?
-                        <img src={device_image2_ios}/>
+                        <img src={device_image2_ios} width='80px' height='80px' style={{padding: '30px'}} />
                       :
-                        <img src={device_image2_android}/>
+                        <img src={device_image2_android} />
                       }
                       
                       <ul>
@@ -1167,6 +1179,11 @@ const InformationDetail = () => {
               </div>
             </div> 
           ))}
+          <div
+            className='copyRight-style mt30'
+          >
+            {CopyRightText}
+          </div>   
         </div>
       </div>
     </>

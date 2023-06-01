@@ -1,7 +1,7 @@
 import './Tab.css';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
@@ -12,6 +12,7 @@ import { CustomAxiosGet, CustomAxiosPost } from 'Components/CustomHook/CustomAxi
 import { GetPutUsersApi, GetUsersCountApi, PostExcelUploadApi } from 'Constants/ApiRoute';
 import { GetPutUsersApiArrayType, GetPutUsersApiDataType, GetPutUsersApiType, GetUsersCountApiType, userRoleType } from 'Types/ServerResponseDataTypes';
 import { userUuidChange } from 'Redux/actions/userChange';
+import { CopyRightText } from 'Constants/ConstantValues';
 
 import search_icon from '../../assets/search_icon.png';
 import list_download from '../../assets/list_download.png';
@@ -21,6 +22,9 @@ import sorting_bottom_arrow from '../../assets/sorting_bottom_arrow.png';
 import sorting_top_arrow from '../../assets/sorting_top_arrow.png';
 import dropdown_icon from '../../assets/dropdown_icon.png';
 import reset_icon from '../../assets/reset_icon.png';
+import browser_icon from '../../assets/browser_icon.png';
+import os_windows from '../../assets/os_windows.png';
+import os_mac from '../../assets/os_mac.png';
 
 type listType = 'username' | 'os' | 'lastLoginDate' | 'enable_passcode_count';
 type sortingType = 'none' | 'asc' | 'desc';
@@ -283,7 +287,7 @@ export const Tab = () => {
     setTableCellSize(pageSizeOptions);
   };
 
-  function OSNamesComponent({ osNames, deviceType }: any) {
+  function OSNamesComponent({ osNames }: any) {
     const windowsCount = osNames.filter((name: any) => (name === 'Windows' || name === 'windows')).length;
     const macosCount = osNames.filter((name: any) => name === 'MacOs').length;
     const browserCount = osNames.filter((name: any) => name === 'BROWSER').length;
@@ -291,21 +295,18 @@ export const Tab = () => {
     let result = [];
   
     if (windowsCount > 0) {
-      result.push('Windows');
+      result.push(<img src={os_windows} width='22px' height='22px' style={{padding: '10px'}}/>);
     } 
     
     if (macosCount > 0) {
-      result.push('MacOs');
+      result.push(<img src={os_mac} width='22px' height='22px' />);
     } 
     
     if (browserCount > 0) {
-      result.push('Browser');
+      result.push(<img src={browser_icon} width='38px' height='38px' />);
     } 
 
-    console.log('result', result)
-    let resultString = result.join(', ');
-
-    return <span>{resultString}</span>;
+    return <div style={{display: 'flex', justifyContent: 'center'}}>{result}</div>;
   }
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -692,7 +693,9 @@ export const Tab = () => {
                       {/* {data.role === 'ADMIN' && <span className='manager-mark ml10'><FormattedMessage id='MANAGER' /></span>}
                       {data.role === 'SUPER_ADMIN' && <span className='manager-mark ml10 red'>최고 관리자</span>} */}
                     </td>
-                    <td><OSNamesComponent osNames={data.osNames} /></td>
+                    <td
+                      style={{padding: 0}}
+                    ><OSNamesComponent osNames={data.osNames} /></td>
                     <td>{data.lastLoginDate}</td>
                     <td>{data.enablePasscodeCount}</td>
                   </tr>
@@ -711,7 +714,7 @@ export const Tab = () => {
 
           <div
             style={{float: 'right'}}
-            className='mt20 mb40'
+            className='mt20 mb30'
           >
             {/* <button className='tab_download_upload_button'>
               <img src={list_download} width='20px' className='tab_download_upload_button_img' />
@@ -755,7 +758,13 @@ export const Tab = () => {
               </div>
             </div>
           </div>
+
         </div>
+      </div>
+      <div
+        className='copyRight-style mb30'
+      >
+        {CopyRightText}
       </div>
 
       
