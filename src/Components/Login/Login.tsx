@@ -95,7 +95,6 @@ const Login = () => {
           clientType: 'BROWSER',
         },
         () => {
-          message.error('PASSCODE 불일치')
         }
       )
     }
@@ -136,7 +135,6 @@ const Login = () => {
         clientType: 'BROWSER',
       },
       () => {
-        message.error('로그인 실패')
       },
     );
   }
@@ -186,8 +184,6 @@ const Login = () => {
                   downloadLink.click();
                   document.body.removeChild(downloadLink);
                   URL.revokeObjectURL(fileDownlaoadUrl);
-
-                  message.success('다운로드 성공');
                 },
                 {
                 },

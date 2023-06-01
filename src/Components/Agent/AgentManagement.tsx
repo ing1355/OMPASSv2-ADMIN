@@ -319,8 +319,6 @@ const AgentManagement = () => {
                                   downloadLink.click();
                                   document.body.removeChild(downloadLink);
                                   URL.revokeObjectURL(fileDownlaoadUrl);
-
-                                  message.success('다운로드 성공');
                                 },
                                 {
                                   file_id: data.fileId
