@@ -11,8 +11,12 @@ import menu_icon from '../../assets/menu_icon.png';
 import logout from '../../assets/logout.png';
 import maunal_download from '../../assets/maunal_download.png';
 import maunal_download_blue from '../../assets/maunal_download_blue.png';
+import download_icon_blue from '../../assets/download_icon_blue.png';
 import { FormattedMessage } from 'react-intl';
 import { userInfoClear } from 'Redux/actions/userChange';
+import { CustomAxiosGetFile } from 'Components/CustomHook/CustomAxios';
+import { GetAgentInstallerDownloadApi } from 'Constants/ApiRoute';
+import { message } from 'antd';
 
 const Header = () => {
   const { lang, userInfo } = useSelector((state: ReduxStateType) => ({
@@ -84,6 +88,36 @@ const Header = () => {
           // style={{marginRight: '10%'}}
         >
           <ul>
+            <li>
+              <img src={download_icon_blue}
+                width='25px'
+                height='25px'
+                style={{position: 'relative', top: '5px', cursor: 'pointer'}}
+                onClick={() => {
+                  // const versionName = 'ompass_installer_v' + currentVersion?.version + '.zip';
+                  const versionName = 'ompass_installer.zip';
+                  CustomAxiosGetFile(
+                    GetAgentInstallerDownloadApi,
+                    (data:any) => {
+                      const fileDownlaoadUrl = URL.createObjectURL(data);
+                      console.log('data',data.fileName)
+                      const downloadLink = document.createElement('a');
+                      downloadLink.href = fileDownlaoadUrl;
+                      downloadLink.download = versionName;
+                      document.body.appendChild(downloadLink);
+                      downloadLink.click();
+                      document.body.removeChild(downloadLink);
+                      URL.revokeObjectURL(fileDownlaoadUrl);
+                    },
+                    {
+                    },
+                    () => {
+                      message.error('다운로드 실패');
+                    }
+                  )
+                }}
+              />
+            </li>
             <li>
               <a
                 href="/OMPASS_Portal_manual.pdf"

@@ -632,8 +632,9 @@ const InformationDetail = () => {
                 <div style={{display: 'flex', flexDirection: 'column', width: '55%'}}>
                   <h3>OMPASS 인증장치 환경</h3>
                   {ompassInfoData === null ? 
-                    <div style={{textAlign: 'center'}}>
-                      <img src={no_device} width='200px' height='200px' style={{position: 'relative', top: '35px'}}/>
+                    <div style={{textAlign: 'center', position: 'relative', top: '45px'}}>
+                      <img src={no_device} width='140px' height='140px'/>
+                      <div className='mt20'>인증장치를 찾을 수 없습니다.</div>
                     </div>
                   :
                     <>
