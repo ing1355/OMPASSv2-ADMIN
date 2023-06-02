@@ -23,7 +23,7 @@ import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPost, CustomAxiosPut } fr
 import { DeleteAccessUserApi, DeleteDeviceApi, DeletePasscodeApi, DeleteUsersApi, GetPutUsersApi, GetUsernameCheckApi, GetUsersDetailsApi, PostAccessUserApi, PostPutPasscodeApi, PutPasscodeApi } from 'Constants/ApiRoute';
 import { CopyRightText, autoHypenPhoneFun } from 'Constants/ConstantValues';
 import { useRef } from 'react';
-import { message } from 'antd';
+import { Popconfirm, message } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
 import add_icon from '../../assets/add_icon.png';
@@ -59,6 +59,10 @@ const InformationDetail = () => {
   const [viewPasscodeSettings, setViewPasscodeSettings] = useState<boolean[]>(new Array(deviceData.length).fill(false));
   const [modifyPasscodes, setModifyPasscodes] = useState<boolean[]>(new Array(deviceData.length).fill(false));
   const [allowAccounts, setAllowAccounts] = useState<boolean[]>(new Array(deviceData.length).fill(false));
+  const [open, setOpen] = useState<boolean>(false);
+  const [openDeviceDelete, setOpenDeviceDelete] = useState<boolean>(false);
+  const [openPasscodeDelete, setOpenPasscodeDelete] = useState<boolean>(false);
+
   const height = useWindowHeightHeader();
   const dispatch = useDispatch()
 
@@ -164,10 +168,17 @@ const InformationDetail = () => {
                 setIsModify(true);
               }}
             >수정</button>
-            <button 
-              className='button-st5 information_detail_user_btn'
-              type='button'
-              onClick={() => {
+            <Popconfirm
+              title="회원 탈퇴"
+              description="탈퇴하시겠습니까?"
+              okText="탈퇴"
+              cancelText="취소"
+              open={open}
+              onConfirm={() => {
+                setTimeout(() => {
+                  setOpen(false);
+                }, 2000);
+
                 if(uuid && role === 'USER') {
                   CustomAxiosDelete(
                     DeleteUsersApi(uuid),
@@ -197,7 +208,19 @@ const InformationDetail = () => {
                   }
                 }
               }}
-            >탈퇴</button>
+              onCancel={() => {
+                setOpen(false);
+              }}
+            >
+              <button 
+                className='button-st5 information_detail_user_btn'
+                type='button'
+                onClick={() => {
+                  setOpen(true);
+                }}
+              >탈퇴</button>
+            </Popconfirm>
+            
           </div>
         }
       </>
@@ -263,6 +286,9 @@ const InformationDetail = () => {
                 <h3>관리자 정보</h3>
               }
               {(role !== 'USER' && params === 'User') &&
+                <h3><FormattedMessage id='USER_INFORMATION' /></h3>
+              }
+              {(role === 'USER') &&
                 <h3><FormattedMessage id='USER_INFORMATION' /></h3>
               }
               {/* user, admin 계정의 경우 본인만 수정, 탈퇴할 수 있음 */}
@@ -471,36 +497,66 @@ const InformationDetail = () => {
               <div style={{display: 'flex', justifyContent: 'space-between'}}>
                 <h3><FormattedMessage id='DEVICE_INFORMATION' /></h3>
                 {role === 'SUPER_ADMIN' &&
-                  <button
-                    className='button-st5 information_detail_device_delete_btn'
-                    onClick={() => {
+                  <Popconfirm
+                    title="장치 삭제"
+                    description="장치를 삭제하시겠습니까?"
+                    okText="삭제"
+                    cancelText="취소"
+                    open={openDeviceDelete}
+                    onConfirm={() => {
                       CustomAxiosDelete(
                         DeleteDeviceApi(userData?.id || '', data.id),
                         () => {
                           message.success('장치 삭제 완료');
+                          setOpenDeviceDelete(false);
                           const render = rendering;
                           const renderTemp = render.concat(true);
                           setRendering(renderTemp);
                         }
                       )
                     }}
-                  >삭제</button>
+                    onCancel={() => {
+                      setOpenDeviceDelete(false);
+                    }}
+                  >
+                    <button
+                      className='button-st5 information_detail_device_delete_btn'
+                      onClick={() => {
+                        setOpenDeviceDelete(true);
+                      }}
+                    >삭제</button>
+                  </Popconfirm>
                 }
                 {role === 'ADMIN' && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
-                  <button
-                    className='button-st5 information_detail_device_delete_btn'
-                    onClick={() => {
+                  <Popconfirm
+                    title="장치 삭제"
+                    description="장치를 삭제하시겠습니까?"
+                    okText="삭제"
+                    cancelText="취소"
+                    open={openDeviceDelete}
+                    onConfirm={() => {
                       CustomAxiosDelete(
                         DeleteDeviceApi(userData?.id || '', data.id),
                         () => {
                           message.success('장치 삭제 완료');
+                          setOpenDeviceDelete(false);
                           const render = rendering;
                           const renderTemp = render.concat(true);
                           setRendering(renderTemp);
                         }
                       )
                     }}
-                  >삭제</button>
+                    onCancel={() => {
+                      setOpenDeviceDelete(false);
+                    }}
+                  >
+                    <button
+                      className='button-st5 information_detail_device_delete_btn'
+                      onClick={() => {
+                        setOpenDeviceDelete(true);
+                      }}
+                    >삭제</button>
+                  </Popconfirm>
                 }
               </div>
 
@@ -1103,23 +1159,33 @@ const InformationDetail = () => {
                                     }}
                                   />
                                 } */}
-
-                                <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
-                                  onClick={() => {
+                                <Popconfirm
+                                  title="PASSCODE 삭제"
+                                  description="PASSCODE를 삭제하시겠습니까?"
+                                  okText="삭제"
+                                  cancelText="취소"
+                                  open={openPasscodeDelete}
+                                  onConfirm={() => {
                                     CustomAxiosDelete(
                                       DeletePasscodeApi(data.passcode.id),
-                                      (data: any) => {
+                                      () => {
                                         message.success('PASSCODE 삭제 완료');
                                         const render = rendering;
                                         const renderTemp = render.concat(true);
                                         setRendering(renderTemp);
-                                      },
-                                      {
-
                                       }
                                     )
                                   }}
-                                />
+                                  onCancel={() => {
+                                    setOpenPasscodeDelete(false);
+                                  }}
+                                >
+                                  <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                                    onClick={() => {
+                                      setOpenPasscodeDelete(true);
+                                    }}
+                                  />
+                                </Popconfirm>
                               </> 
                             }
                             {role === 'ADMIN' && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
@@ -1147,23 +1213,33 @@ const InformationDetail = () => {
                                   />
                                 } */}
 
-                                <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
-                                  className='ml10'
-                                  onClick={() => {
+                                <Popconfirm
+                                  title="PASSCODE 삭제"
+                                  description="PASSCODE를 삭제하시겠습니까?"
+                                  okText="삭제"
+                                  cancelText="취소"
+                                  open={openPasscodeDelete}
+                                  onConfirm={() => {
                                     CustomAxiosDelete(
                                       DeletePasscodeApi(data.passcode.id),
-                                      (data: any) => {
+                                      () => {
                                         message.success('PASSCODE 삭제 완료');
                                         const render = rendering;
                                         const renderTemp = render.concat(true);
                                         setRendering(renderTemp);
-                                      },
-                                      {
-
                                       }
                                     )
                                   }}
-                                />
+                                  onCancel={() => {
+                                    setOpenPasscodeDelete(false);
+                                  }}
+                                >
+                                  <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                                    onClick={() => {
+                                      setOpenPasscodeDelete(true);
+                                    }}
+                                  />
+                                </Popconfirm>
                               </> 
                             }
                           </td>

@@ -145,6 +145,7 @@ const AgentManagement = () => {
                   type='button'
                   onClick={() => {
                     setIsAddVersion(false);
+                    setFileName('');
                   }}
                 >
                   <span>취소</span>
@@ -179,8 +180,9 @@ const AgentManagement = () => {
                     const hashValue = hash.value;
                     const multipartFile = uploadFile.files[0];
                     const maxFileSize = 20 * 1024 * 1024;
+                    const fileExtension = multipartFile.name.split('.').pop();
                     
-                    console.log('multipartFile.size',multipartFile.size)
+                    console.log('fileExtension',fileExtension)
                     
                     if(metaDataVersion) {
                       setIsVersionAlert(false);
@@ -191,7 +193,9 @@ const AgentManagement = () => {
                     if(metaDataVersion && multipartFile && hashValue && !isVersionAlert) {
                       if(multipartFile.size > maxFileSize) {
                         message.error('파일 용량(20MB)를 초과하였습니다.');
-                      } else {
+                      } else if(fileExtension !== 'zip') {
+                        message.error('zip 파일만 업로드 가능합니다.')
+                      }  else {
                         console.log('os 업로드 api');
                         CustomAxiosPost(
                           PostAgentInstallerUploadApi,
@@ -274,12 +278,6 @@ const AgentManagement = () => {
                       />
                       <span style={{marginLeft: '15px'}}>{fileName}</span>
                     </div>
-
-                    {/* <div
-                      className={'regex-alert ' + (isVersionAlert ? 'visible' : '')}
-                    >
-                      파일을 등록해주세요
-                    </div> */}
                   </div>
                 </form>
               </div>

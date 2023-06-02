@@ -35,7 +35,7 @@ const Main = () => {
   const [isHovered1, setIsHovered1] = useState(false);
   const [isHovered2, setIsHovered2] = useState(false);
   const [isHovered3, setIsHovered3] = useState(false);
-console.log('height',height)
+
   const {role} = userInfo
 
   const menuInfo = [

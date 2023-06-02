@@ -23,6 +23,7 @@ const ErrorTexts = {
     ERR_113: 'No registered device exists.',
     ERR_114 : 'File integrity check failed.',
     ERR_115 : 'File size exceeds 20MB.',
+    ERR_116 : 'The passcode to be deleted does not exist.',
   },
   'ko': {
     ERR_001 : '토큰이 만료되었습니다.',
@@ -48,6 +49,7 @@ const ErrorTexts = {
     ERR_113 : '등록된 Device 가 존재하지 않습니다.',
     ERR_114 : '파일 무결성검사에 실패하였습니다.',
     ERR_115 : '파일 크기가 20MB 를 초과하였습니다.',
+    ERR_116 : '삭제할 패스코드가 존재하지 않습니다.',
   }
 }
 

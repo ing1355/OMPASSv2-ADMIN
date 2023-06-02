@@ -295,7 +295,7 @@ export const Tab = () => {
     let result = [];
   
     if (windowsCount > 0) {
-      result.push(<img src={os_windows} width='22px' height='22px' style={{padding: '10px'}}/>);
+      result.push(<img src={os_windows} width='22px' height='22px' style={{padding: '8px'}} />);
     } 
     
     if (macosCount > 0) {
