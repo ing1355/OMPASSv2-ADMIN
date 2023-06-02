@@ -170,12 +170,13 @@ const Login = () => {
           <button
             className='button-st3 login_agent_download_button'
             onClick={() => {
-              const versionName = 'ompass_installer_v' + currentVersion?.version + '.zip';
+              // const versionName = 'ompass_installer_v' + currentVersion?.version + '.zip';
+              const versionName = 'ompass_installer.zip';
               CustomAxiosGetFile(
                 GetAgentInstallerDownloadApi,
                 (data:any) => {
                   const fileDownlaoadUrl = URL.createObjectURL(data);
-                  console.log(fileDownlaoadUrl)
+                  console.log('data',data.fileName)
                   const downloadLink = document.createElement('a');
                   downloadLink.href = fileDownlaoadUrl;
                   downloadLink.download = versionName;

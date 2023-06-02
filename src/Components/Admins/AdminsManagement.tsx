@@ -193,25 +193,28 @@ const AdminsManagement = () => {
                   const phoneNumber = userPhoneNumber.value;
 
                   if(username && name && phoneNumber && !isIdAlert && !isNameAlert && !isPhoneAlert) {
-                    console.log('관리자 등록api');
-                    CustomAxiosPost(
-                      PostSignUpApi,
-                      (data: any) => {
-                        setIsAddAdmin(false);
-                        const render = rendering;
-                        const renderTemp = render.concat(true);
-                        setRendering(renderTemp);
-                      },
-                      {
-                        name: name,
-                        password: '1234',
-                        phoneNumber: phoneNumber,
-                        role: 'ADMIN',
-                        username: username
-                      },
-                      () => {
-                      }
-                    );
+                    if(idExist) {
+                      message.error('아이디 중복 확인을 해주세요');
+                    } else {
+                      CustomAxiosPost(
+                        PostSignUpApi,
+                        (data: any) => {
+                          setIsAddAdmin(false);
+                          const render = rendering;
+                          const renderTemp = render.concat(true);
+                          setRendering(renderTemp);
+                        },
+                        {
+                          name: name,
+                          password: '1234',
+                          phoneNumber: phoneNumber,
+                          role: 'ADMIN',
+                          username: username
+                        },
+                        () => {
+                        }
+                      );
+                    }
                   } else {
                     message.error(formatMessage({ id: 'PLEASE_ENTER_ALL_THE_ITEMS' }))
                   }

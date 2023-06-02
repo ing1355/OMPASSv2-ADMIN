@@ -140,7 +140,7 @@ export const Tab = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+console.log('searchType',searchType)
   useEffect(()=>{
     CustomAxiosGet(
       GetPutUsersApi,
@@ -494,22 +494,22 @@ export const Tab = () => {
               <button
                 className={'button-st4 tab_search_button ' + (lang === 'en' ? 'en' : '')}
                 onClick={(e) => {
-                  const render = rendering;
-                  const renderTemp = render.concat(true);
-                  setRendering(renderTemp);
-                  if(searchContentRef.current) {
-                    setSearchContent(searchContentRef.current.value);
-                  }
-                  // if(searchType === null) {
-                  //   message.error('검색 항목을 선택해주세요.')
-                  // } else {
-                  //   const render = rendering;
-                  //   const renderTemp = render.concat(true);
-                  //   setRendering(renderTemp);
-                  //   if(searchContentRef.current) {
-                  //     setSearchContent(searchContentRef.current.value);
-                  //   }
+                  // const render = rendering;
+                  // const renderTemp = render.concat(true);
+                  // setRendering(renderTemp);
+                  // if(searchContentRef.current) {
+                  //   setSearchContent(searchContentRef.current.value);
                   // }
+                  if(searchType === null) {
+                    message.error('검색 항목을 선택해주세요.')
+                  } else {
+                    const render = rendering;
+                    const renderTemp = render.concat(true);
+                    setRendering(renderTemp);
+                    if(searchContentRef.current) {
+                      setSearchContent(searchContentRef.current.value);
+                    }
+                  }
                 }}
               >
                 <img src={search_icon} width='18px' className='tab_search_button_img'/>
