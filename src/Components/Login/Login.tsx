@@ -118,8 +118,7 @@ const Login = () => {
       PostLoginApi,
       (data:any) => {
         const { ompassUri, loginType } = data;
-        console.log('ompassUri',ompassUri)
-
+        
         if(loginType === 'PW_CHANGE_USER') {
           console.log('비밀번호 변경하기');
           setIsModalOpen(true)

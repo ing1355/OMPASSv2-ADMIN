@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { GetPutUsersApiArrayType, GetPutUsersApiDataType, GetPutUsersApiType, UserInfoType } from 'Types/ServerResponseDataTypes';
 import { useEffect, useState, useRef } from 'react';
 
-import { message, Pagination, PaginationProps } from 'antd';
+import { message, Pagination, PaginationProps, Popconfirm } from 'antd';
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPost } from 'Components/CustomHook/CustomAxios';
 import { DeleteUsersApi, GetPutUsersApi, GetUsernameCheckApi, PostSignUpApi } from 'Constants/ApiRoute';
 import { autoHypenPhoneFun, CopyRightText } from 'Constants/ConstantValues';
@@ -39,6 +39,8 @@ const AdminsManagement = () => {
   const [checkAll, setCheckAll] = useState(false);
   const [checkboxes, setCheckboxes] = useState<Checkbox[]>([]);
   const [hoveredRow, setHoveredRow] = useState<number>(-1);
+  const [openAdminsDelete, setOpenAdminsDelete] = useState<boolean>(false);
+  const [openAdminDelete, setOpenAdminDelete] = useState<boolean[]>(new Array(adminData.length).fill(false));
 
   const userIdRef = useRef<HTMLInputElement>(null);
   const userNameRef = useRef<HTMLInputElement>(null);
@@ -101,6 +103,7 @@ const AdminsManagement = () => {
       (data:GetPutUsersApiDataType) => {
         setAdminData(data.users);
         setTotalCount(data.queryTotalCount);
+        setOpenAdminDelete(new Array(data.users.length).fill(false));
       },
       {
         page_size: tableCellSize,
@@ -349,7 +352,37 @@ const AdminsManagement = () => {
                     <th><FormattedMessage id='PHONE_NUMBER' /></th>
                     {role === 'SUPER_ADMIN' &&
                       <th>
-                        <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                        <Popconfirm
+                          title="관리자 삭제"
+                          description="관리자 계정을 삭제하시겠습니까?"
+                          okText="삭제"
+                          cancelText="취소"
+                          open={openAdminsDelete}
+                          onConfirm={() => {
+                            const userIds = checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.userId).join(',');
+                            CustomAxiosDelete(
+                              DeleteUsersApi(userIds),
+                              () => {
+                                setOpenAdminsDelete(false);
+
+                                message.success(formatMessage({ id: 'SELECTED_ADMIN_DELETE_SUCCESS' }));
+                                const render = rendering;
+                                const renderTemp = render.concat(true);
+                                setRendering(renderTemp);
+                              }
+                            )
+                          }}
+                          onCancel={() => {
+                            setOpenAdminsDelete(false);
+                          }}
+                        >
+                          <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                            onClick={() => {
+                              setOpenAdminsDelete(true);
+                            }}
+                          />
+                        </Popconfirm>
+                        {/* <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
                           onClick={() => {
                             const userIds = checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.userId).join(',');
                             CustomAxiosDelete(
@@ -362,7 +395,7 @@ const AdminsManagement = () => {
                               }
                             )
                           }}
-                        />
+                        /> */}
                       </th>
                     }
                   </tr>
@@ -399,7 +432,45 @@ const AdminsManagement = () => {
                       <td>{data.phoneNumber}</td>
                       {role === 'SUPER_ADMIN' &&
                         <td>
-                          <img src={delete_icon} width='20px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                          <Popconfirm
+                          title="관리자 삭제"
+                          description="관리자 계정을 삭제하시겠습니까?"
+                          okText="삭제"
+                          cancelText="취소"
+                            open={openAdminDelete[index]}
+                            onConfirm={(e : any) => {
+                              e.stopPropagation();
+                              CustomAxiosDelete(
+                                DeleteUsersApi(data.id),
+                                () => {
+                                  const updatedOpenAdminDelete = [...openAdminDelete];
+                                  updatedOpenAdminDelete[index] = false;
+                                  setOpenAdminDelete(updatedOpenAdminDelete);
+
+                                  message.success(formatMessage({ id: 'ADMIN_DELETION_COMPLETE' }));
+                                  const render = rendering;
+                                  const renderTemp = render.concat(true);
+                                  setRendering(renderTemp);
+                                }
+                              )
+                            }}
+                            onCancel={() => {
+                              const updatedOpenAdminDelete = [...openAdminDelete];
+                              updatedOpenAdminDelete[index] = false;
+                              setOpenAdminDelete(updatedOpenAdminDelete);
+                            }}
+                          >
+                            <img src={delete_icon} width='20px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const updatedOpenAdminDelete = [...openAdminDelete];
+                                updatedOpenAdminDelete[index] = true;
+                                setOpenAdminDelete(updatedOpenAdminDelete);
+
+                              }}
+                            />             
+                          </Popconfirm>
+                          {/* <img src={delete_icon} width='20px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
                             onClick={(e) => {
                               e.stopPropagation();
                               CustomAxiosDelete(
@@ -412,7 +483,7 @@ const AdminsManagement = () => {
                                 }
                               )
                             }}
-                          />
+                          /> */}
                         </td>
                       }
                     </tr>

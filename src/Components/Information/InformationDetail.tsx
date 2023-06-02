@@ -18,6 +18,7 @@ import os_mac from '../../assets/os_mac.png';
 import mac_address from '../../assets/mac_address.png';
 import modify_icon from '../../assets/modify_icon.png';
 import browser_icon from '../../assets/browser_icon.png';
+import no_device from '../../assets/no_device.png';
 import { AllowedAccessUsersType, DevicesType, GetUsersDetailsApiType, OmpassInfoType, UserInfoType, UserType } from 'Types/ServerResponseDataTypes';
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPost, CustomAxiosPut } from 'Components/CustomHook/CustomAxios';
 import { DeleteAccessUserApi, DeleteDeviceApi, DeletePasscodeApi, DeleteUsersApi, GetPutUsersApi, GetUsernameCheckApi, GetUsersDetailsApi, PostAccessUserApi, PostPutPasscodeApi, PutPasscodeApi } from 'Constants/ApiRoute';
@@ -60,8 +61,8 @@ const InformationDetail = () => {
   const [modifyPasscodes, setModifyPasscodes] = useState<boolean[]>(new Array(deviceData.length).fill(false));
   const [allowAccounts, setAllowAccounts] = useState<boolean[]>(new Array(deviceData.length).fill(false));
   const [open, setOpen] = useState<boolean>(false);
-  const [openDeviceDelete, setOpenDeviceDelete] = useState<boolean>(false);
-  const [openPasscodeDelete, setOpenPasscodeDelete] = useState<boolean>(false);
+  const [openDeviceDelete, setOpenDeviceDelete] = useState<boolean[]>(new Array(deviceData.length).fill(false));
+  const [openPasscodeDelete, setOpenPasscodeDelete] = useState<boolean[]>(new Array(deviceData.length).fill(false));
 
   const height = useWindowHeightHeader();
   const dispatch = useDispatch()
@@ -94,6 +95,8 @@ const InformationDetail = () => {
             setViewPasscodeSettings(new Array(data.devices.length).fill(false));
             setModifyPasscodes(new Array(data.devices.length).fill(false));
             setAllowAccounts(new Array(data.devices.length).fill(false));
+            setOpenDeviceDelete(new Array(data.devices.length).fill(false));
+            setOpenPasscodeDelete(new Array(data.devices.length).fill(false));
           },
           {
   
@@ -117,6 +120,8 @@ const InformationDetail = () => {
               setViewPasscodeSettings(new Array(data.devices.length).fill(false));
               setModifyPasscodes(new Array(data.devices.length).fill(false));
               setAllowAccounts(new Array(data.devices.length).fill(false));
+              setOpenDeviceDelete(new Array(data.devices.length).fill(false));
+              setOpenPasscodeDelete(new Array(data.devices.length).fill(false));
               if(data.user.role === 'ADMIN') {
                 setAdminIdInfo({
                   isAdmin: true,
@@ -502,13 +507,17 @@ const InformationDetail = () => {
                     description="장치를 삭제하시겠습니까?"
                     okText="삭제"
                     cancelText="취소"
-                    open={openDeviceDelete}
+                    open={openDeviceDelete[index]}
                     onConfirm={() => {
                       CustomAxiosDelete(
                         DeleteDeviceApi(userData?.id || '', data.id),
                         () => {
+                          const updatedOpenDeviceDelete = [...openDeviceDelete];
+                          updatedOpenDeviceDelete[index] = false;
+                          setOpenDeviceDelete(updatedOpenDeviceDelete);
+
                           message.success('장치 삭제 완료');
-                          setOpenDeviceDelete(false);
+
                           const render = rendering;
                           const renderTemp = render.concat(true);
                           setRendering(renderTemp);
@@ -516,13 +525,17 @@ const InformationDetail = () => {
                       )
                     }}
                     onCancel={() => {
-                      setOpenDeviceDelete(false);
+                        const updatedOpenDeviceDelete = [...openDeviceDelete];
+                        updatedOpenDeviceDelete[index] = false;
+                        setOpenDeviceDelete(updatedOpenDeviceDelete);
                     }}
                   >
                     <button
                       className='button-st5 information_detail_device_delete_btn'
                       onClick={() => {
-                        setOpenDeviceDelete(true);
+                        const updatedOpenDeviceDelete = [...openDeviceDelete];
+                        updatedOpenDeviceDelete[index] = true;
+                        setOpenDeviceDelete(updatedOpenDeviceDelete);
                       }}
                     >삭제</button>
                   </Popconfirm>
@@ -533,13 +546,17 @@ const InformationDetail = () => {
                     description="장치를 삭제하시겠습니까?"
                     okText="삭제"
                     cancelText="취소"
-                    open={openDeviceDelete}
+                    open={openDeviceDelete[index]}
                     onConfirm={() => {
                       CustomAxiosDelete(
                         DeleteDeviceApi(userData?.id || '', data.id),
                         () => {
+                          const updatedOpenDeviceDelete = [...openDeviceDelete];
+                          updatedOpenDeviceDelete[index] = false;
+                          setOpenDeviceDelete(updatedOpenDeviceDelete);
+
                           message.success('장치 삭제 완료');
-                          setOpenDeviceDelete(false);
+
                           const render = rendering;
                           const renderTemp = render.concat(true);
                           setRendering(renderTemp);
@@ -547,13 +564,17 @@ const InformationDetail = () => {
                       )
                     }}
                     onCancel={() => {
-                      setOpenDeviceDelete(false);
+                        const updatedOpenDeviceDelete = [...openDeviceDelete];
+                        updatedOpenDeviceDelete[index] = false;
+                        setOpenDeviceDelete(updatedOpenDeviceDelete);
                     }}
                   >
                     <button
                       className='button-st5 information_detail_device_delete_btn'
                       onClick={() => {
-                        setOpenDeviceDelete(true);
+                        const updatedOpenDeviceDelete = [...openDeviceDelete];
+                        updatedOpenDeviceDelete[index] = true;
+                        setOpenDeviceDelete(updatedOpenDeviceDelete);
                       }}
                     >삭제</button>
                   </Popconfirm>
@@ -610,37 +631,46 @@ const InformationDetail = () => {
                 
                 <div style={{display: 'flex', flexDirection: 'column', width: '55%'}}>
                   <h3>OMPASS 인증장치 환경</h3>
-                  <div
-                    className='information_detail_device_container'
-                  >
-                    <div>
-                      <img src={device_image1}/>
-                      <ul>
-                        <li>Type</li>
-                        <li>OMPASS App v{ompassInfoData?.appVersion}</li>
-                      </ul>
+                  {ompassInfoData === null ? 
+                    <div style={{textAlign: 'center'}}>
+                      <img src={no_device} width='200px' height='200px' style={{position: 'relative', top: '35px'}}/>
                     </div>
-                    <div>
-                      {ompassInfoData?.os === 'ios' ?
-                        <img src={device_image2_ios} width='80px' height='80px' style={{padding: '30px'}} />
-                      :
-                        <img src={device_image2_android} />
-                      }
-                      
-                      <ul>
-                        <li>OS</li>
-                        <li>{ompassInfoData?.os} {ompassInfoData?.osVersion}</li>
-                      </ul>
-                    </div>
-                    <div>
-                      <img src={device_image3}/>
-                      <ul>
-                        <li>Model</li>
-                        <li>{ompassInfoData?.model}</li>
-                      </ul>
-                    </div>
-                  </div> 
-                  <div className='information_detail_update_date'>마지막 업데이트: {ompassInfoData?.updateAt}</div> 
+                  :
+                    <>
+                      <div
+                        className='information_detail_device_container'
+                      >
+                        <div>
+                          <img src={device_image1}/>
+                          <ul>
+                            <li>Type</li>
+                            <li>OMPASS App v{ompassInfoData?.appVersion}</li>
+                          </ul>
+                        </div>
+                        <div>
+                          {ompassInfoData?.os === 'ios' ?
+                            <img src={device_image2_ios} width='80px' height='80px' style={{padding: '30px'}} />
+                          :
+                            <img src={device_image2_android} />
+                          }
+                          
+                          <ul>
+                            <li>OS</li>
+                            <li>{ompassInfoData?.os} {ompassInfoData?.osVersion}</li>
+                          </ul>
+                        </div>
+                        <div>
+                          <img src={device_image3}/>
+                          <ul>
+                            <li>Model</li>
+                            <li>{ompassInfoData?.model}</li>
+                          </ul>
+                        </div>
+                      </div> 
+                      <div className='information_detail_update_date'>마지막 업데이트: {ompassInfoData?.updateAt}</div> 
+                    </>
+                  }
+
                 </div>  
               </div>
               <hr></hr>
@@ -1164,11 +1194,15 @@ const InformationDetail = () => {
                                   description="PASSCODE를 삭제하시겠습니까?"
                                   okText="삭제"
                                   cancelText="취소"
-                                  open={openPasscodeDelete}
+                                  open={openPasscodeDelete[index]}
                                   onConfirm={() => {
                                     CustomAxiosDelete(
                                       DeletePasscodeApi(data.passcode.id),
                                       () => {
+                                        const updatedOpenPasscodeDelete = [...openPasscodeDelete];
+                                        updatedOpenPasscodeDelete[index] = false;
+                                        setOpenPasscodeDelete(updatedOpenPasscodeDelete);
+
                                         message.success('PASSCODE 삭제 완료');
                                         const render = rendering;
                                         const renderTemp = render.concat(true);
@@ -1177,12 +1211,16 @@ const InformationDetail = () => {
                                     )
                                   }}
                                   onCancel={() => {
-                                    setOpenPasscodeDelete(false);
+                                    const updatedOpenPasscodeDelete = [...openPasscodeDelete];
+                                    updatedOpenPasscodeDelete[index] = false;
+                                    setOpenPasscodeDelete(updatedOpenPasscodeDelete);
                                   }}
                                 >
                                   <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
                                     onClick={() => {
-                                      setOpenPasscodeDelete(true);
+                                      const updatedOpenPasscodeDelete = [...openPasscodeDelete];
+                                      updatedOpenPasscodeDelete[index] = true;
+                                      setOpenPasscodeDelete(updatedOpenPasscodeDelete);
                                     }}
                                   />
                                 </Popconfirm>
@@ -1218,11 +1256,15 @@ const InformationDetail = () => {
                                   description="PASSCODE를 삭제하시겠습니까?"
                                   okText="삭제"
                                   cancelText="취소"
-                                  open={openPasscodeDelete}
+                                  open={openPasscodeDelete[index]}
                                   onConfirm={() => {
                                     CustomAxiosDelete(
                                       DeletePasscodeApi(data.passcode.id),
                                       () => {
+                                        const updatedOpenPasscodeDelete = [...openPasscodeDelete];
+                                        updatedOpenPasscodeDelete[index] = false;
+                                        setOpenPasscodeDelete(updatedOpenPasscodeDelete);
+
                                         message.success('PASSCODE 삭제 완료');
                                         const render = rendering;
                                         const renderTemp = render.concat(true);
@@ -1231,12 +1273,16 @@ const InformationDetail = () => {
                                     )
                                   }}
                                   onCancel={() => {
-                                    setOpenPasscodeDelete(false);
+                                    const updatedOpenPasscodeDelete = [...openPasscodeDelete];
+                                    updatedOpenPasscodeDelete[index] = false;
+                                    setOpenPasscodeDelete(updatedOpenPasscodeDelete);
                                   }}
                                 >
                                   <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
                                     onClick={() => {
-                                      setOpenPasscodeDelete(true);
+                                      const updatedOpenPasscodeDelete = [...openPasscodeDelete];
+                                      updatedOpenPasscodeDelete[index] = true;
+                                      setOpenPasscodeDelete(updatedOpenPasscodeDelete);
                                     }}
                                   />
                                 </Popconfirm>

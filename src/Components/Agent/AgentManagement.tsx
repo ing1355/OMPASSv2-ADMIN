@@ -3,7 +3,7 @@ import { FormattedMessage } from "react-intl";
 import Header from "Components/Header/Header";
 import { useWindowHeightHeader } from 'Components/CustomHook/useWindowHeight';
 import { Link } from 'react-router-dom';
-import { Pagination, PaginationProps, message } from 'antd';
+import { Pagination, PaginationProps, Popconfirm, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { GetAgentApiArrayType, GetAgentApiDataType, GetAgentApiType } from 'Types/ServerResponseDataTypes';
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosGetFile, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from 'Components/CustomHook/CustomAxios';
@@ -32,6 +32,8 @@ const AgentManagement = () => {
   const [hoveredRow, setHoveredRow] = useState<number>(-1);
   const [rendering, setRendering] = useState<boolean[]>([]);
   const [fileName, setFileName] = useState('');
+  const [openFileDelete, setOpenFileDelete] = useState<boolean[]>(new Array(agentData.length).fill(false));
+  const [openFilesDelete, setOpenFilesDelete] = useState<boolean>(false);
   
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileInput = event.target;
@@ -82,6 +84,7 @@ const AgentManagement = () => {
       (data: GetAgentApiDataType) => {
         setAgentData(data.agentProgramHistories);
         setTotalCount(data.queryTotalCount);
+        setOpenFileDelete(new Array(data.agentProgramHistories.length).fill(false));
       },
       {
         page_size: tableCellSize,
@@ -302,7 +305,49 @@ const AgentManagement = () => {
                       <th>다운로드</th>
                       <th>현재 버전 설정</th>
                       <th>
-                        <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                        <Popconfirm
+                          title="파일 삭제"
+                          description="파일을 삭제하시겠습니까?"
+                          okText="삭제"
+                          cancelText="취소"
+                          open={openFilesDelete}
+                          onConfirm={() => {
+                            const versionIds = checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.userId).join(',');
+                            const target = agentData.find((data) => data.downloadTarget === true);
+                            const targetVersion = checkboxes.filter((checkbox) => checkbox.userId ===  target?.fileId);
+
+                            if(targetVersion[0]?.checked) {
+                              message.error('현재 버전은 삭제할 수 없습니다.');
+                            } else {
+                              if(versionIds) {
+                                CustomAxiosDelete(
+                                  DeleteAgentInstallerApi(versionIds),
+                                  () => {
+                                    setOpenFilesDelete(false);
+
+                                    message.success('선택한 버전 삭제 완료');
+                                    
+                                    const render = rendering;
+                                    const renderTemp = render.concat(true);
+                                    setRendering(renderTemp);
+                                  }
+                                )
+                              } else {
+                                message.error('선택한 항목이 없습니다.');
+                              }
+                            }
+                          }}
+                          onCancel={() => {
+                            setOpenFilesDelete(false);
+                          }}
+                        >
+                          <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                            onClick={() => {
+                              setOpenFilesDelete(true);
+                            }}
+                          />
+                        </Popconfirm>
+                        {/* <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
                           onClick={() => {
                             const versionIds = checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.userId).join(',');
                             const target = agentData.find((data) => data.downloadTarget === true);
@@ -326,7 +371,7 @@ const AgentManagement = () => {
                               }
                             }
                           }}
-                        />
+                        /> */}
                       </th>
                     </tr>
                   </thead>
@@ -402,7 +447,46 @@ const AgentManagement = () => {
                           >변경</button>
                         </td>
                         <td>
-                          <img src={delete_icon} width='20px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                          <Popconfirm
+                            title="파일 삭제"
+                            description="파일을 삭제하시겠습니까?"
+                            okText="삭제"
+                            cancelText="취소"
+                            open={openFileDelete[index]}
+                            onConfirm={() => {
+                              if(data.downloadTarget) {
+                                message.error('현재 버전은 삭제할 수 없습니다.');
+                              } else {
+                                CustomAxiosDelete(
+                                  DeleteAgentInstallerApi(data.fileId.toString()),
+                                  () => {
+                                    const updatedOpenFileDelete = [...openFileDelete];
+                                    updatedOpenFileDelete[index] = false;
+                                    setOpenFileDelete(updatedOpenFileDelete);
+
+                                    message.success('버전 삭제 완료');
+                                    const render = rendering;
+                                    const renderTemp = render.concat(true);
+                                    setRendering(renderTemp);
+                                  }
+                                )
+                              }
+                            }}
+                            onCancel={() => {
+                              const updatedOpenFileDelete = [...openFileDelete];
+                              updatedOpenFileDelete[index] = false;
+                              setOpenFileDelete(updatedOpenFileDelete);
+                            }}
+                          >
+                            <img src={delete_icon} width='20px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                              onClick={() => {
+                              const updatedOpenFileDelete = [...openFileDelete];
+                              updatedOpenFileDelete[index] = true;
+                              setOpenFileDelete(updatedOpenFileDelete);
+                              }}
+                            />              
+                          </Popconfirm>
+                          {/* <img src={delete_icon} width='20px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
                             onClick={() => {
                               if(data.downloadTarget) {
                                 message.error('현재 버전은 삭제할 수 없습니다.');
@@ -418,7 +502,7 @@ const AgentManagement = () => {
                                 )
                               }
                             }}
-                          />                          
+                          />                           */}
                         </td>
                       </tr>
                     ))}
