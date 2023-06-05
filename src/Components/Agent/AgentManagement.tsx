@@ -1,5 +1,5 @@
 import './AgentManagement.css';
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import Header from "Components/Header/Header";
 import { useWindowHeightHeader } from 'Components/CustomHook/useWindowHeight';
 import { Link } from 'react-router-dom';
@@ -34,6 +34,8 @@ const AgentManagement = () => {
   const [fileName, setFileName] = useState('');
   const [openFileDelete, setOpenFileDelete] = useState<boolean[]>(new Array(agentData.length).fill(false));
   const [openFilesDelete, setOpenFilesDelete] = useState<boolean>(false);
+
+  const { formatMessage } = useIntl();
   
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileInput = event.target;
@@ -142,7 +144,7 @@ const AgentManagement = () => {
                   type='submit'
                   form='addVersionForm'
                 >
-                  <span>버전 등록</span>
+                  <span><FormattedMessage id='REGISTER_VERSION' /></span>
                 </button>
                 <button className='admins_management_button'
                   type='button'
@@ -151,7 +153,7 @@ const AgentManagement = () => {
                     setFileName('');
                   }}
                 >
-                  <span>취소</span>
+                  <span><FormattedMessage id='CANCEL' /></span>
                 </button>
               </div>
               :
@@ -162,7 +164,7 @@ const AgentManagement = () => {
                   setIsAddVersion(true);
                 }}
               >
-                <span>버전 업로드</span>
+                <span><FormattedMessage id='UPLOAD_VERSION' /></span>
               </button>
               }
 
@@ -175,9 +177,7 @@ const AgentManagement = () => {
                 <form 
                   id='addVersionForm'
                   onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-                    console.log('버전관리')
                     e.preventDefault();
-                    // const { version } = (e.currentTarget.elements as any);
                     const { version, uploadFile, hash } = (e.currentTarget.elements as any);
                     const metaDataVersion = version.value;
                     const hashValue = hash.value;
@@ -195,11 +195,10 @@ const AgentManagement = () => {
 
                     if(metaDataVersion && multipartFile && hashValue && !isVersionAlert) {
                       if(multipartFile.size > maxFileSize) {
-                        message.error('파일 용량(20MB)를 초과하였습니다.');
+                        message.error(formatMessage({ id: 'THE_FILE_SIZE_EXCEEDS_20MB' }));
                       } else if(fileExtension !== 'zip') {
-                        message.error('zip 파일만 업로드 가능합니다.')
+                        message.error(formatMessage({ id: 'ONLY_ZIP_FILES_CAN_BE_UPLOADED' }));
                       }  else {
-                        console.log('os 업로드 api');
                         CustomAxiosPost(
                           PostAgentInstallerUploadApi,
                           (data: any) => {
@@ -207,14 +206,13 @@ const AgentManagement = () => {
                             setFileName('');
                           },
                           {
-                            // metaData: {version: metaDataVersion}, 
                             'metaData.hash': hashValue,
                             'metaData.os': 'WINDOWS',
                             'metaData.version': metaDataVersion,                          
                             multipartFile: multipartFile,
                           },
                           () => {
-                            message.error('업로드 실패');
+                            message.error(formatMessage({ id: 'UPLOAD_FAILED' }));
                           },
                           {
                             headers: {
@@ -231,7 +229,7 @@ const AgentManagement = () => {
                   <div
                     className='mt50'
                   >
-                    <label>버전명</label>
+                    <label><FormattedMessage id='VERSION_NAME' /></label>
                     <input 
                       id='version'
                       type='text'
@@ -251,13 +249,13 @@ const AgentManagement = () => {
                     <div
                       className={'regex-alert ' + (isVersionAlert ? 'visible' : '')}
                     >
-                      버전을 입력해주세요
+                      <FormattedMessage id='PLEASE_ENTER_A_VERSION' />
                     </div>
                   </div>
                   <div
                     className='mb20'
                   >
-                    <label>해시값</label>
+                    <label><FormattedMessage id='HASH' /></label>
                     <input 
                       id='hash'
                       type='text'
@@ -267,11 +265,11 @@ const AgentManagement = () => {
                     />
                   </div>
                   <div>
-                    <label>파일 업로드</label>
+                    <label><FormattedMessage id='FILE_UPLOAD' /></label>
                     <div
                       style={{marginTop: '22px'}}
                     >
-                      <label htmlFor="uploadFile" className='button-st4 agent_management_file_btn'>파일 선택</label>
+                      <label htmlFor="uploadFile" className='button-st4 agent_management_file_btn'><FormattedMessage id='SELECT_FILE' /></label>
                       <input
                         id="uploadFile"
                         type="file"
@@ -297,19 +295,19 @@ const AgentManagement = () => {
                         />
                       </th>
                       <th></th>
-                      <th>버전</th>
+                      <th><FormattedMessage id='VERSION' /></th>
                       <th>OS</th>
-                      <th>파일명</th>
-                      <th>업로드 일시</th>
-                      <th>업로더</th>
-                      <th>다운로드</th>
-                      <th>현재 버전 설정</th>
+                      <th><FormattedMessage id='FILE_NAME' /></th>
+                      <th><FormattedMessage id='UPLOAD_DATE' /></th>
+                      <th><FormattedMessage id='UPLOADER' /></th>
+                      <th><FormattedMessage id='DOWNLOAD' /></th>
+                      <th><FormattedMessage id='CURRENT_VERSION_SETTING' /></th>
                       <th>
                         <Popconfirm
-                          title="파일 삭제"
-                          description="파일을 삭제하시겠습니까?"
-                          okText="삭제"
-                          cancelText="취소"
+                          title={formatMessage({ id: 'DELETE_A_FILE' })}
+                          description={formatMessage({ id: 'CONFIRM_DELETE_FILE' })}
+                          okText={formatMessage({ id: 'DELETE' })}
+                          cancelText={formatMessage({ id: 'CANCEL' })}
                           open={openFilesDelete}
                           onConfirm={() => {
                             const versionIds = checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.userId).join(',');
@@ -317,7 +315,7 @@ const AgentManagement = () => {
                             const targetVersion = checkboxes.filter((checkbox) => checkbox.userId ===  target?.fileId);
 
                             if(targetVersion[0]?.checked) {
-                              message.error('현재 버전은 삭제할 수 없습니다.');
+                              message.error(formatMessage({ id: 'CURRENT_VERSION_CANNOT_BE_DELETED' }));
                             } else {
                               if(versionIds) {
                                 CustomAxiosDelete(
@@ -325,7 +323,7 @@ const AgentManagement = () => {
                                   () => {
                                     setOpenFilesDelete(false);
 
-                                    message.success('선택한 버전 삭제 완료');
+                                    message.success(formatMessage({ id: 'VERSION_DELETE' }));
                                     
                                     const render = rendering;
                                     const renderTemp = render.concat(true);
@@ -333,7 +331,7 @@ const AgentManagement = () => {
                                   }
                                 )
                               } else {
-                                message.error('선택한 항목이 없습니다.');
+                                message.error(formatMessage({ id: 'NO_ITEM_SELECTED' }));
                               }
                             }
                           }}
@@ -392,7 +390,7 @@ const AgentManagement = () => {
                             onChange={handleCheckboxChange}
                           />
                         </td>
-                        <td>{data.downloadTarget && <span className='manager-mark ml10'>현재</span>}</td>
+                        <td>{data.downloadTarget && <span className='manager-mark ml10'><FormattedMessage id='CURRENT' /></span>}</td>
                         <td>{data.version}</td>
                         <td>{data.os}</td>
                         <td>{data.fileName}</td>
@@ -422,8 +420,7 @@ const AgentManagement = () => {
                                   file_id: data.fileId
                                 },
                                 (error: any) => {
-                                  message.error('다운로드 실패', error);
-                                  console.log(error)
+                                  message.error(formatMessage({ id: 'DOWNLOAD_FAILED' }));
                                 }
                               )
                             }}
@@ -437,25 +434,25 @@ const AgentManagement = () => {
                               CustomAxiosPatch(
                                 PatchAgentInstallerApi(data.fileId),
                                 () => {
-                                  message.success('현재 버전 변경 완료');
+                                  message.success(formatMessage({ id: 'CURRENT_VERSION_CHANGE_COMPLETE' }));
                                   const render = rendering;
                                   const renderTemp = render.concat(true);
                                   setRendering(renderTemp);
                                 }
                               )
                             }}
-                          >변경</button>
+                          ><FormattedMessage id='MODIFY_' /></button>
                         </td>
                         <td>
                           <Popconfirm
-                            title="파일 삭제"
-                            description="파일을 삭제하시겠습니까?"
-                            okText="삭제"
-                            cancelText="취소"
+                            title={formatMessage({ id: 'DELETE_A_FILE' })}
+                            description={formatMessage({ id: 'CONFIRM_DELETE_FILE' })}
+                            okText={formatMessage({ id: 'DELETE' })}
+                            cancelText={formatMessage({ id: 'CANCEL' })}
                             open={openFileDelete[index]}
                             onConfirm={() => {
                               if(data.downloadTarget) {
-                                message.error('현재 버전은 삭제할 수 없습니다.');
+                                message.error(formatMessage({ id: 'CURRENT_VERSION_CANNOT_BE_DELETED' }));
                               } else {
                                 CustomAxiosDelete(
                                   DeleteAgentInstallerApi(data.fileId.toString()),
@@ -464,7 +461,7 @@ const AgentManagement = () => {
                                     updatedOpenFileDelete[index] = false;
                                     setOpenFileDelete(updatedOpenFileDelete);
 
-                                    message.success('버전 삭제 완료');
+                                    message.success(formatMessage({ id: 'VERSION_DELETE' }));
                                     const render = rendering;
                                     const renderTemp = render.concat(true);
                                     setRendering(renderTemp);

@@ -1,6 +1,6 @@
 import './Tab.css';
 import { useEffect, useRef, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
@@ -140,6 +140,8 @@ export const Tab = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { formatMessage } = useIntl();
+
 console.log('searchType',searchType)
   useEffect(()=>{
     CustomAxiosGet(
@@ -174,7 +176,7 @@ console.log('searchType',searchType)
       CustomAxiosPost(
         PostExcelUploadApi,
         () => {
-          message.success('엑셀 파일 업로드 성공');
+          message.success(formatMessage({ id: 'EXCEL_FILE_UPLOAD_SUCCESSFUL' }));
           const render = rendering;
           const renderTemp = render.concat(true);
           setRendering(renderTemp);
@@ -183,7 +185,7 @@ console.log('searchType',searchType)
           signupRequests: excelData
         },
         () => {
-          message.error('엑셀 파일 업로드 실패');
+          message.error(formatMessage({ id: 'EXCEL_FILE_UPLOAD_FAILED' }));
         }
       )
     }
@@ -357,7 +359,7 @@ console.log('searchType',searchType)
         page_size: 999999,
       },
       () => {
-        message.error('엑셀 다운로드 실패')
+        message.error(formatMessage({ id: 'EXCEL_FILE_DOWNLOAD_FAILED' }))
       }
     )
   };
@@ -391,9 +393,6 @@ console.log('searchType',searchType)
             </li>
           ))}
         </TabMenu>
-        {/* <Desc>
-          <p>{menuArr[currentTab].content}</p>
-        </Desc> */}
         
         <div
           style={{width: '95%', margin: '0 auto'}}
@@ -424,7 +423,7 @@ console.log('searchType',searchType)
                     className='dropdown-4-header'
                   >
                     <span>
-                      검색 타입
+                      <FormattedMessage id='SEARCH_TYPE' />
                     </span>
                     <img className='tab_dropdown_arrow' src={dropdown_icon}/>
                   </div>
@@ -501,7 +500,7 @@ console.log('searchType',searchType)
                   //   setSearchContent(searchContentRef.current.value);
                   // }
                   if(searchType === null) {
-                    message.error('검색 항목을 선택해주세요.')
+                    message.error(formatMessage({ id: 'PLEASE_SELECT_A_SEARCH_ITEM' }))
                   } else {
                     const render = rendering;
                     const renderTemp = render.concat(true);
@@ -537,7 +536,7 @@ console.log('searchType',searchType)
               <thead>
                 <tr>
                   <th>
-                    구분
+                    <FormattedMessage id='TYPE' />
                   </th>
                   <th
                     style={{position: 'relative'}}
@@ -684,14 +683,12 @@ console.log('searchType',searchType)
                     style={{ background: hoveredRow === index ? '#D6EAF5' : 'transparent', cursor: 'pointer' }}
                   >
                     <td>
-                      {data.role === 'USER' && <>사용자</>}
-                      {data.role === 'ADMIN' && <>관리자</>}
-                      {data.role === 'SUPER_ADMIN' && <>최고 관리자</>}
+                      {data.role === 'USER' && <FormattedMessage id='USER' />}
+                      {data.role === 'ADMIN' && <FormattedMessage id='ADMIN' />}
+                      {data.role === 'SUPER_ADMIN' && <FormattedMessage id='SUPER_ADMIN' />}
                     </td>
                     <td>
                       {data.username}
-                      {/* {data.role === 'ADMIN' && <span className='manager-mark ml10'><FormattedMessage id='MANAGER' /></span>}
-                      {data.role === 'SUPER_ADMIN' && <span className='manager-mark ml10 red'>최고 관리자</span>} */}
                     </td>
                     <td
                       style={{padding: 0}}

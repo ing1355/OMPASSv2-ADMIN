@@ -1,6 +1,6 @@
 import { useWindowHeightHeader } from "Components/CustomHook/useWindowHeight";
 import Header from "Components/Header/Header";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { useEffect, useState } from 'react';
 import { CustomAxiosGet, CustomAxiosPut } from "Components/CustomHook/CustomAxios";
 import { GetPutSecretKeyApi } from "Constants/ApiRoute";
@@ -13,7 +13,8 @@ const SecretKey = () => {
   const [isAddSecretKey, setIsAddSecretKey] = useState<boolean>(false);
   const [secretKeyData, setSecretKeyData] = useState<string>('');
 
-  console.log('height',height)
+  const { formatMessage } = useIntl();
+
   useEffect(() => {
     CustomAxiosGet(
       GetPutSecretKeyApi,
@@ -34,15 +35,12 @@ const SecretKey = () => {
           <div
             className='agent_management_header'
           >
-            <div>비밀키 관리</div>
+            <div><FormattedMessage id='SECRET_KEY_MANAGEMENT' /></div>
             <div
               className='mb40'
               style={{display: 'flex'}}
             >
-              <h1>비밀키 관리</h1>
-              {/* <div
-                className="App-view-manual-font"
-              ><Link to='/Manual'><FormattedMessage id='VIEW_MANUAL' /></Link></div> */}
+              <h1><FormattedMessage id='SECRET_KEY_MANAGEMENT' /></h1>
             </div>
           </div>
 
@@ -58,7 +56,7 @@ const SecretKey = () => {
                   type='submit'
                   form='addSecretKeyForm'
                 >
-                  <span>비밀키 등록</span>
+                  <span><FormattedMessage id='REGISTER_A_SECRET_KEY' /></span>
                 </button>
                 :
                 <button className='tab_download_upload_button admins_management_button'
@@ -68,7 +66,7 @@ const SecretKey = () => {
                     setIsAddSecretKey(true);
                   }}
                 >
-                  <span>비밀키 수정</span>
+                  <span><FormattedMessage id='MODIFY_THE_SECRET_KEY' /></span>
                 </button>
               }
             </div>
@@ -84,7 +82,7 @@ const SecretKey = () => {
                       GetPutSecretKeyApi,
                       () => {
                         setIsAddSecretKey(false);
-                        message.success('비밀키 변경 성공');
+                        message.success(formatMessage({ id: 'SECRET_KEY_MODIFY_SUCCESS' }));
                       },
                       {
                         secretKey: secretKey.value
@@ -99,7 +97,7 @@ const SecretKey = () => {
                 <table>
                   <tbody>
                     <td>
-                      비밀키
+                      <FormattedMessage id='SECRET_KEY' />
                     </td>
                     <td>
                       <input 

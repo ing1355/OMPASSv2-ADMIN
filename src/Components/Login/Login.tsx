@@ -1,5 +1,5 @@
 import './Login.css';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { Link, useNavigate } from 'react-router-dom';
 import { OMPASS } from 'ompass';
 import { message, Modal } from 'antd';
@@ -49,6 +49,7 @@ const Login = () => {
   const height = useWindowHeight();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { formatMessage } = useIntl();
 
   const userIdRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -67,7 +68,7 @@ const Login = () => {
         }
       )
     } else {
-      message.error('비밀번호를 다시 입력해주세요.')
+      message.error(formatMessage({ id: 'PLEASE_REENTER_A_PASSWORD' }))
     }
   };
 
@@ -83,7 +84,7 @@ const Login = () => {
           const role = data.userResponse.role;
           localStorage.setItem('authorization', header);
           dispatch(userInfoChange(header))
-          message.success('로그인 완료')
+          message.success(formatMessage({ id: 'LOGIN_COMPLETE' }))
           if(role === 'USER') {
             navigate('/InformationDetail/User');
           } else {
@@ -106,7 +107,6 @@ const Login = () => {
   };
 
   const loginRequest = (e: React.FormEvent<HTMLFormElement>) => {
-    console.log('login')
     e.preventDefault();
     const { userId, userPassword } = (e.currentTarget.elements as any);
     const username = userId.value;
@@ -120,7 +120,6 @@ const Login = () => {
         const { ompassUri, loginType } = data;
         
         if(loginType === 'PW_CHANGE_USER') {
-          console.log('비밀번호 변경하기');
           setIsModalOpen(true)
         } else {
           OMPASS(ompassUri);
@@ -187,7 +186,7 @@ const Login = () => {
                 {
                 },
                 () => {
-                  message.error('다운로드 실패');
+                  message.error(formatMessage({ id: 'DOWNLOAD_FAILED' }));
                 }
               )
             }}
@@ -263,7 +262,7 @@ const Login = () => {
                   setIsPasscodeModalOpen(true);
                 }}
               >
-                PASSCODE로 로그인
+                <FormattedMessage id='LOGIN_WITH_PASSWORD' />
               </div>
             </div>
             <button
@@ -327,7 +326,7 @@ const Login = () => {
         </div>
       </div>
     </div>
-    <Modal title='비밀번호 변경' open={isModalOpen} onOk={handleOk} onCancel={handleCancel} cancelText='취소' okText='변경' width='570px' centered>
+    <Modal title={formatMessage({ id: 'CHANGE_PASSWORD' })} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} cancelText={formatMessage({ id: 'CANCEL' })} okText={formatMessage({ id: 'MODIFY_' })} width='570px' centered>
       <form>
         <div>
           <label><FormattedMessage id='PASSWORD' /></label>
@@ -357,7 +356,7 @@ const Login = () => {
           <div
             className={'regex-alert mt5 ' + (isPasswordAlert ? 'visible' : '')}
           >
-            비밀번호는 8자 이상 3가지 조합 혹은 10자 이상 2가지 조합이어야 합니다.
+            <FormattedMessage id='PASSWORD_CHECK' />
           </div>
         </div>
         <div
@@ -389,12 +388,12 @@ const Login = () => {
           <div
             className={'regex-alert mt5 ' + (isPasswordConfirmAlert ? 'visible' : '')}
           >
-            비밀번호가 일치하지 않습니다.
+            <FormattedMessage id='PASSWORD_NOT_MATCH' />
           </div>
         </div>
       </form>
     </Modal>
-    <Modal  title='PASSCODE 입력' open={isPasscodeModalOpen} onOk={passcodeHandleOk} onCancel={passcodeHandleCancel} cancelText='취소' okText='확인' width='570px' centered>
+    <Modal  title={formatMessage({ id: 'ENTER_PASSCODE' })} open={isPasscodeModalOpen} onOk={passcodeHandleOk} onCancel={passcodeHandleCancel} cancelText={formatMessage({ id: 'CANCEL' })} okText={formatMessage({ id: 'CONFIRM' })} width='570px' centered>
       <div
         style={{marginBottom: '13px', marginTop: '20px'}}
       >
@@ -442,7 +441,7 @@ const Login = () => {
         <div
           className={'regex-alert mt5 ' + (isPasscodeAlert ? 'visible' : '')}
         >
-          6자리 숫자를 입력해주세요.
+          <FormattedMessage id='PLEASE_ENTER_A_6DIGIT_NUMBER' />
         </div>
       </div>
     </Modal>

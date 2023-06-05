@@ -350,7 +350,6 @@ const CreateAccount = () => {
           >
             <form
               onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-                console.log('회원가입')
                 e.preventDefault();
                 const { userId, userName, userPassword, userPasswordConfirm, userPhoneNumber } = (e.currentTarget.elements as any);
                 const username = userId.value;
@@ -360,7 +359,6 @@ const CreateAccount = () => {
                 const phoneNumber = userPhoneNumber.value;
 
                 if(username && name && password && user_password && phoneNumber && !isIdAlert && !isNameAlert && !isPasswordAlert && !isPasswordConfirmAlert && !isPhoneAlert) {
-                  console.log('가입하기api');
                   CustomAxiosPost(
                     PostSignUpApi,
                     (data: any) => {
@@ -374,12 +372,9 @@ const CreateAccount = () => {
                       username: username
                     },
                     () => {
-                      console.log('회원가입 실패');
                       message.error(formatMessage({ id: 'FAIL_REGISTER' }));
                     }
                   );
-                } else {
-                  console.log('에러');
                 }
               }}
             >
@@ -415,7 +410,6 @@ const CreateAccount = () => {
                       const username = userIdRef.current?.value;
 
                       if(username && !isIdAlert) {
-                        console.log('중복확인');
                         CustomAxiosGet(
                           GetUsernameCheckApi(username),
                           (data: any) => {
@@ -426,10 +420,6 @@ const CreateAccount = () => {
                               message.success(formatMessage({ id: 'AVAILABLE_USERNAME' }));
                             }
                           },
-                          {
-
-                          },
-                          () => {console.log('아이디 중복 확인 에러')}
                         )
                       }
                     }}

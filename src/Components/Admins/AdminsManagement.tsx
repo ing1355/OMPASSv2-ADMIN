@@ -162,7 +162,7 @@ const AdminsManagement = () => {
                       setIsAddAdmin(false);
                     }}
                   >
-                    <span>취소</span>
+                    <span><FormattedMessage id='CANCEL' /></span>
                   </button>
                 </div>
 
@@ -188,7 +188,6 @@ const AdminsManagement = () => {
               <form
                 id='addAdminForm'
                 onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-                  console.log('관리자 등록')
                   e.preventDefault();
                   const { userId, userName, userPhoneNumber } = (e.currentTarget.elements as any);
                   const username = userId.value;
@@ -197,7 +196,7 @@ const AdminsManagement = () => {
 
                   if(username && name && phoneNumber && !isIdAlert && !isNameAlert && !isPhoneAlert) {
                     if(idExist) {
-                      message.error('아이디 중복 확인을 해주세요');
+                      message.error(formatMessage({ id: 'PLEASE_CHECK_THE_ID' }));
                     } else {
                       CustomAxiosPost(
                         PostSignUpApi,
@@ -260,15 +259,11 @@ const AdminsManagement = () => {
                             (data: any) => {
                               setIdExist(data.exist);
                               if(data.exist) {
-                                message.error('중복된 아이디입니다')
+                                message.error(formatMessage({ id: 'ID_IS_DUPLICATED' }))
                               } else {
                                 message.success(formatMessage({ id: 'AVAILABLE_USERNAME' }));
                               }
                             },
-                            {
-
-                            },
-                            () => {console.log('아이디 중복 확인 에러')}
                           )
                         }
                       }}
@@ -353,10 +348,10 @@ const AdminsManagement = () => {
                     {role === 'SUPER_ADMIN' &&
                       <th>
                         <Popconfirm
-                          title="관리자 삭제"
-                          description="관리자 계정을 삭제하시겠습니까?"
-                          okText="삭제"
-                          cancelText="취소"
+                          title={formatMessage({ id: 'DELETE_A_ADMIN_ACCOUNT' })}
+                          description={formatMessage({ id: 'CONFIRM_DELETE_ADMIN_ACCOUNT' })}
+                          okText={formatMessage({ id: 'DELETE' })}
+                          cancelText={formatMessage({ id: 'CANCEL' })}
                           open={openAdminsDelete}
                           onConfirm={() => {
                             const userIds = checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.userId).join(',');
@@ -433,10 +428,10 @@ const AdminsManagement = () => {
                       {role === 'SUPER_ADMIN' &&
                         <td>
                           <Popconfirm
-                          title="관리자 삭제"
-                          description="관리자 계정을 삭제하시겠습니까?"
-                          okText="삭제"
-                          cancelText="취소"
+                            title={formatMessage({ id: 'DELETE_A_ADMIN_ACCOUNT' })}
+                            description={formatMessage({ id: 'CONFIRM_DELETE_ADMIN_ACCOUNT' })}
+                            okText={formatMessage({ id: 'DELETE' })}
+                            cancelText={formatMessage({ id: 'CANCEL' })}
                             open={openAdminDelete[index]}
                             onConfirm={(e : any) => {
                               e.stopPropagation();

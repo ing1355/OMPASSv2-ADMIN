@@ -23,12 +23,12 @@
 }
 
 .user_info_table tbody tr td:first-child {
-  width: 100px;
+  width: 120px;
 }
 
 .user_info_table.title_color tbody tr td:first-child {
   color: #b7b7b7;
-  width: 100px;
+  width: 120px;
 }
 
 .user_info_table tbody tr td{

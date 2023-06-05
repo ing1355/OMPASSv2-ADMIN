@@ -1,5 +1,5 @@
 import './InformationDetail.css';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
@@ -65,7 +65,8 @@ const InformationDetail = () => {
   const [openPasscodeDelete, setOpenPasscodeDelete] = useState<boolean[]>(new Array(deviceData.length).fill(false));
 
   const height = useWindowHeightHeader();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const { formatMessage } = useIntl();
 
   const userUuid = sessionStorage.getItem('userUuid');
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -85,7 +86,6 @@ const InformationDetail = () => {
         CustomAxiosGet(
           GetUsersDetailsApi(uuid),
           (data: GetUsersDetailsApiType) => {
-            console.log('사용자 정보 불러오기 성공');
             setUserData(data.user);
             setUserPhone(data.user.phoneNumber);
             setUserName(data.user.name);
@@ -98,19 +98,12 @@ const InformationDetail = () => {
             setOpenDeviceDelete(new Array(data.devices.length).fill(false));
             setOpenPasscodeDelete(new Array(data.devices.length).fill(false));
           },
-          {
-  
-          },
-          ()=>{
-            console.log('사용자 정보 불러오기 실패');
-          }
         )
       } else {
         if(userUuid) {
           CustomAxiosGet(
             GetUsersDetailsApi(userUuid),
             (data: GetUsersDetailsApiType) => {
-              console.log('사용자 정보 불러오기 성공');
               setUserData(data.user);
               setUserPhone(data.user.phoneNumber);
               setUserName(data.user.name);
@@ -129,12 +122,6 @@ const InformationDetail = () => {
                 });
               }
             },
-            {
-    
-            },
-            ()=>{
-              console.log('사용자 정보 불러오기 실패');
-            }
           )
         }
       }
@@ -152,7 +139,7 @@ const InformationDetail = () => {
               className='button-st4 information_detail_user_btn'
               type='submit'
               form='userInfoModifyForm'
-            >저장</button>
+            ><FormattedMessage id='SAVE' /></button>
             <button
               className='button-st5 information_detail_user_btn'
               type='button'
@@ -160,7 +147,7 @@ const InformationDetail = () => {
                 setIsModify(false);
               }}
             >
-              취소
+              <FormattedMessage id='CANCEL' />
             </button>
           </div>
           :
@@ -172,12 +159,12 @@ const InformationDetail = () => {
                 e.preventDefault();
                 setIsModify(true);
               }}
-            >수정</button>
+            ><FormattedMessage id='MODIFY' /></button>
             <Popconfirm
-              title="회원 탈퇴"
-              description="탈퇴하시겠습니까?"
-              okText="탈퇴"
-              cancelText="취소"
+              title={formatMessage({ id: 'DELETE_ACCOUNT' })}
+              description={formatMessage({ id: 'CONFIRM_DELETE_ACCOUNT' })}
+              okText={formatMessage({ id: 'DELETE' })}
+              cancelText={formatMessage({ id: 'CANCEL' })}
               open={open}
               onConfirm={() => {
                 setTimeout(() => {
@@ -188,27 +175,19 @@ const InformationDetail = () => {
                   CustomAxiosDelete(
                     DeleteUsersApi(uuid),
                     () => {
-                      message.success('회원 정보 삭제 완료');
+                      message.success(formatMessage({ id: 'USER_INFO_DELETE' }));
                       navigate('/');
                       dispatch(userInfoClear());
                     },
-                    {},
-                    () => {
-                      console.log('회원정보 삭제 에러');
-                    }
                   );
                 } else {
                   if(userUuid) {
                     CustomAxiosDelete(
                       DeleteUsersApi(userUuid),
                       () => {
-                        message.success('회원 정보 삭제 완료');
+                        message.success(formatMessage({ id: 'USER_INFO_DELETE' }));
                         navigate('/InformationList');
                       },
-                      {},
-                      () => {
-                        console.log('회원정보 삭제 에러');
-                      }
                     );
                   }
                 }
@@ -223,7 +202,7 @@ const InformationDetail = () => {
                 onClick={() => {
                   setOpen(true);
                 }}
-              >탈퇴</button>
+              ><FormattedMessage id='DELETE_ACCOUNT_' /></button>
             </Popconfirm>
             
           </div>
@@ -265,20 +244,16 @@ const InformationDetail = () => {
               style={{display: 'flex'}}
             >
               <h1>
-                {/* <FormattedMessage id='REGISTRATION_INFORMATION' /> */}
                 {(role !== 'USER' && params === 'Admin') &&
-                <>관리자 등록 정보</>
+                <FormattedMessage id='ADMIN_REGISTRATION_INFO' />
                 }
                 {(role !== 'USER' && params === 'User') &&
-                <>사용자 등록 정보</>
+                <FormattedMessage id='USER_REGISTRATION_INFO' />
                 }
               </h1>
               <div
                 className='App-view-manual-font'
               >
-                {/* <Link to='/Manual'>
-                  <FormattedMessage id='VIEW_MANUAL' />
-                </Link> */}
               </div>
             </div>
           </div>
@@ -288,7 +263,7 @@ const InformationDetail = () => {
           >
             <div style={{display: 'flex', justifyContent: 'space-between'}}>
               {(role !== 'USER' && params === 'Admin') &&
-                <h3>관리자 정보</h3>
+                <h3><FormattedMessage id='ADMIN_INFORMATION' /></h3>
               }
               {(role !== 'USER' && params === 'User') &&
                 <h3><FormattedMessage id='USER_INFORMATION' /></h3>
@@ -311,7 +286,6 @@ const InformationDetail = () => {
               <form
                 id='userInfoModifyForm'
                 onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-                  console.log('회원정보 수정')
                   e.preventDefault();
                   const { userName, userPassword, userPasswordConfirm, userPhoneNumber } = (e.currentTarget.elements as any);
                   const name = userName.value;
@@ -320,12 +294,10 @@ const InformationDetail = () => {
                   const phoneNumber = userPhoneNumber.value;
   
                   if(name && password && user_password && password && phoneNumber && !isNameAlert && !isPasswordAlert && !isPasswordConfirmAlert && !isPhoneAlert) {
-                    console.log('수정하기api');
                     CustomAxiosPut(
                       GetPutUsersApi,
                       () => {
-                        console.log('유저 정보 수정 완료');
-                        message.success('회원정보 수정 완료');
+                        message.success(formatMessage({ id: 'USER_INFO_MODIFY' }));
                         setIsModify(false);
                       },
                       {
@@ -336,8 +308,7 @@ const InformationDetail = () => {
                       }
                     )  
                   } else {
-                    message.error('모든 항목을 조건에 맞게 입력해주세요')
-                    console.log('에러');
+                    message.error(formatMessage({ id: 'ENTER_ALL_CONDITIONS' }));
                   }
                 }}
               >
@@ -345,12 +316,12 @@ const InformationDetail = () => {
                   <tbody>
                     <tr>
                       <td>
-                        아이디
+                        <FormattedMessage id='ID' />
                       </td>
                       <td>
                         {userData?.username}
-                        {userData?.role === 'ADMIN' && <span className='manager-mark ml10'><FormattedMessage id='MANAGER' /></span>}
-                        {userData?.role === 'SUPER_ADMIN' && <span className='manager-mark ml10'>최고 관리자</span>}
+                        {userData?.role === 'ADMIN' && <span className='manager-mark ml10'><FormattedMessage id='ADMIN' /></span>}
+                        {userData?.role === 'SUPER_ADMIN' && <span className='manager-mark ml10'><FormattedMessage id='SUPER_ADMIN' /></span>}
                       </td>
                     </tr>            
                     <tr>
@@ -457,12 +428,12 @@ const InformationDetail = () => {
                 <tbody>
                   <tr>
                     <td>
-                      아이디
+                      <FormattedMessage id='ID' />
                     </td>
                     <td>
                       {userData?.username}
-                      {userData?.role === 'ADMIN' && <span className='manager-mark ml10'><FormattedMessage id='MANAGER' /></span>}
-                      {userData?.role === 'SUPER_ADMIN' && <span className='manager-mark ml10'>최고 관리자</span>}
+                      {userData?.role === 'ADMIN' && <span className='manager-mark ml10'><FormattedMessage id='ADMIN' /></span>}
+                      {userData?.role === 'SUPER_ADMIN' && <span className='manager-mark ml10'><FormattedMessage id='SUPER_ADMIN' /></span>}
                     </td>
                   </tr>             
                   <tr>
@@ -503,10 +474,10 @@ const InformationDetail = () => {
                 <h3><FormattedMessage id='DEVICE_INFORMATION' /></h3>
                 {role === 'SUPER_ADMIN' &&
                   <Popconfirm
-                    title="장치 삭제"
-                    description="장치를 삭제하시겠습니까?"
-                    okText="삭제"
-                    cancelText="취소"
+                    title={formatMessage({ id: 'DELETE_DEVICE' })}
+                    description={formatMessage({ id: 'CONFIRM_DELETE_DEVICE' })}
+                    okText={formatMessage({ id: 'DELETE' })}
+                    cancelText={formatMessage({ id: 'CANCEL' })}
                     open={openDeviceDelete[index]}
                     onConfirm={() => {
                       CustomAxiosDelete(
@@ -516,7 +487,7 @@ const InformationDetail = () => {
                           updatedOpenDeviceDelete[index] = false;
                           setOpenDeviceDelete(updatedOpenDeviceDelete);
 
-                          message.success('장치 삭제 완료');
+                          message.success(formatMessage({ id: 'DEVICE_DELETE' }));
 
                           const render = rendering;
                           const renderTemp = render.concat(true);
@@ -537,15 +508,15 @@ const InformationDetail = () => {
                         updatedOpenDeviceDelete[index] = true;
                         setOpenDeviceDelete(updatedOpenDeviceDelete);
                       }}
-                    >삭제</button>
+                    ><FormattedMessage id='DELETE' /></button>
                   </Popconfirm>
                 }
                 {role === 'ADMIN' && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
                   <Popconfirm
-                    title="장치 삭제"
-                    description="장치를 삭제하시겠습니까?"
-                    okText="삭제"
-                    cancelText="취소"
+                    title={formatMessage({ id: 'DELETE_DEVICE' })}
+                    description={formatMessage({ id: 'CONFIRM_DELETE_DEVICE' })}
+                    okText={formatMessage({ id: 'DELETE' })}
+                    cancelText={formatMessage({ id: 'CANCEL' })}
                     open={openDeviceDelete[index]}
                     onConfirm={() => {
                       CustomAxiosDelete(
@@ -555,7 +526,7 @@ const InformationDetail = () => {
                           updatedOpenDeviceDelete[index] = false;
                           setOpenDeviceDelete(updatedOpenDeviceDelete);
 
-                          message.success('장치 삭제 완료');
+                          message.success(formatMessage({ id: 'DEVICE_DELETE' }));
 
                           const render = rendering;
                           const renderTemp = render.concat(true);
@@ -576,7 +547,7 @@ const InformationDetail = () => {
                         updatedOpenDeviceDelete[index] = true;
                         setOpenDeviceDelete(updatedOpenDeviceDelete);
                       }}
-                    >삭제</button>
+                    ><FormattedMessage id='DELETE' /></button>
                   </Popconfirm>
                 }
               </div>
@@ -587,7 +558,7 @@ const InformationDetail = () => {
                 className='mb30'
               >
                 <div style={{display: 'flex', flexDirection: 'column', width: '35%'}}>
-                  {data.deviceType === 'BROWSER' ? <h3>로그인 환경</h3> : <h3>Agent 설치 환경</h3>}
+                  {data.deviceType === 'BROWSER' ? <h3><FormattedMessage id='LOGIN_ENV' /></h3> : <h3><FormattedMessage id='AGENT_INSTALL_ENV' /></h3>}
                   {data.deviceType === 'BROWSER' ? 
                     <div
                       className='information_detail_device_container'
@@ -626,15 +597,15 @@ const InformationDetail = () => {
                     </div>
                   </div>
                   }
-                  <div className='information_detail_update_date'>마지막 업데이트: {data.updatedAt}</div> 
+                  <div className='information_detail_update_date'><FormattedMessage id='LAST_UPDATED_DATE' /> : {data.updatedAt}</div> 
                 </div>
                 
                 <div style={{display: 'flex', flexDirection: 'column', width: '55%'}}>
-                  <h3>OMPASS 인증장치 환경</h3>
+                  <h3><FormattedMessage id='OMPASS_AUTH_DEVICE_ENV' /></h3>
                   {ompassInfoData === null ? 
                     <div style={{textAlign: 'center', position: 'relative', top: '45px'}}>
                       <img src={no_device} width='140px' height='140px'/>
-                      <div className='mt20'>인증장치를 찾을 수 없습니다.</div>
+                      <div className='mt20'><FormattedMessage id='AUTH_DEVICE_NOT_FOUND' /></div>
                     </div>
                   :
                     <>
@@ -668,7 +639,7 @@ const InformationDetail = () => {
                           </ul>
                         </div>
                       </div> 
-                      <div className='information_detail_update_date'>마지막 업데이트: {ompassInfoData?.updateAt}</div> 
+                      <div className='information_detail_update_date'><FormattedMessage id='LAST_UPDATED_DATE' /> : {ompassInfoData?.updateAt}</div> 
                     </>
                   }
 
@@ -687,7 +658,7 @@ const InformationDetail = () => {
                     <div
                       style={{display: 'flex', justifyContent: 'space-between'}}
                     >
-                      <h3>접속 허용 계정</h3>
+                      <h3><FormattedMessage id='ACCOUNT_ALLOWED_ACCESS' /></h3>
                       {role === 'SUPER_ADMIN' &&
                         <>
                           {!allowAccounts[index] && 
@@ -736,7 +707,7 @@ const InformationDetail = () => {
                                 CustomAxiosPost(
                                   PostAccessUserApi,
                                   () => {
-                                    message.success('접속 허용 계정 등록 성공');
+                                    message.success(formatMessage({ id: 'ACCOUNT_ALLOWED_ACCESS_SUCCESS' }));
                                     const updatedAllowAccounts = [...allowAccounts];
                                     updatedAllowAccounts[index] = !updatedAllowAccounts[index];
                                     setAllowAccounts(updatedAllowAccounts);
@@ -749,11 +720,11 @@ const InformationDetail = () => {
                                     deviceId: data.id,
                                   },
                                   () => {
-                                    message.success('접속 허용 계정 등록 실패');
+                                    message.success(formatMessage({ id: 'ACCOUNT_ALLOWED_ACCESS_FAIL' }));
                                   }
                                 )
                               } else {
-                                message.error('해당 아이디는 존재하지 않는 아이디입니다.');
+                                message.error(formatMessage({ id: 'ID_DOES_NOT_EXIST' }));
                               }
                             },
                             {
@@ -765,7 +736,7 @@ const InformationDetail = () => {
                           )
 
                         } else {
-                          message.error('계정을 입력해주세요');
+                          message.error(formatMessage({ id: 'PLEASE_ENTER_AN_ACCOUNT' }));
                         }
                       }}
                     >
@@ -775,7 +746,7 @@ const InformationDetail = () => {
                         >
                           <thead>
                             <tr>
-                              <th>허용 계정</th>
+                              <th><FormattedMessage id='ALLOWED_ACCOUNT' /></th>
                               <th>발급 관리자 id</th>
                               <th>발급 일시</th>
                               <th></th>
@@ -889,11 +860,7 @@ const InformationDetail = () => {
                     >
                       <span
                         style={{position: 'relative', top: '3px'}}
-                      >생성</span>
-                      {/* <img src={setting_icon} width='30px'
-                        style={{opacity: 0.7, cursor: 'pointer', margin: '15px 5px 10px'}}
-
-                      /> */}
+                      ><FormattedMessage id='CREATE' /></span>
                     </div> 
                   }
 
@@ -907,7 +874,6 @@ const InformationDetail = () => {
                           const updatedViewPasscodeSettings = [...viewPasscodeSettings];
                           updatedViewPasscodeSettings[index] = !updatedViewPasscodeSettings[index];
                           setViewPasscodeSettings(updatedViewPasscodeSettings);
-                          console.log('추가')
                         }}
                       />
                     </div>
@@ -927,11 +893,7 @@ const InformationDetail = () => {
                     >
                       <span
                         style={{position: 'relative', top: '3px'}}
-                      >생성</span>
-                      {/* <img src={setting_icon} width='30px'
-                        style={{opacity: 0.7, cursor: 'pointer', margin: '15px 5px 10px'}}
-
-                      /> */}
+                      ><FormattedMessage id='CREATE' /></span>
                     </div>                 
                   }
 
@@ -945,7 +907,6 @@ const InformationDetail = () => {
                           const updatedViewPasscodeSettings = [...viewPasscodeSettings];
                           updatedViewPasscodeSettings[index] = !updatedViewPasscodeSettings[index];
                           setViewPasscodeSettings(updatedViewPasscodeSettings);
-                          console.log('추가')
                         }}
                       />
                     </div>                    
@@ -975,19 +936,17 @@ const InformationDetail = () => {
                       console.log(timeWriteChecked,timeMinute,foreverChecked)
                       console.log(oneChecked,moreThanOneChecked,recycleNumber,unlimitedChecked)
                       if(!randomChecked && !(codeChecked && codeNumber)) {
-                        message.error('코드를 입력해주세요');
+                        message.error(formatMessage({ id: 'PLEASE_ENTER_A_CODE' }));
                       } else if(!foreverChecked && !(timeWriteChecked && timeMinute !== '')) {
-                        message.error('시간을 입력해주세요');
+                        message.error(formatMessage({ id: 'PLEASE_ENTER_TIME' }));
                       } else if(!oneChecked && !unlimitedChecked && !(moreThanOneChecked && recycleNumber !== '')) {
-                        message.error('재사용 횟수를 입력해주세요');
+                        message.error(formatMessage({ id: 'PLEASE_ENTER_THE_NUMBER_OF_REUSES' }));
                       } else if(timeMinute === '0') {
-                        message.error('1분 이상으로 입력해주세요.')
+                        message.error(formatMessage({ id: 'PLEASE_ENTER_AT_LEAST_1_MIN' }));
                       } else if(recycleNumber === '0') {
-                        message.error('1번 이상으로 입력해주세요.')
+                        message.error(formatMessage({ id: 'PLEASE_ENTER_MORE_THAN_1' }));
                       } else {
                         if(modifyPasscodes[index]) {
-                          console.log('수정')
-
                           CustomAxiosPut(
                             PutPasscodeApi,
                             () => {
@@ -1007,7 +966,7 @@ const InformationDetail = () => {
                               validTime: timeWriteChecked ? timeMinute : -1,
                             },
                             () => {
-                              message.error('패스코드 수정 실패')
+                              message.error(formatMessage({ id: 'FAILED_TO_MODIFY_PASSCODE' }))
                             }
                           )
                         } else {
@@ -1029,7 +988,7 @@ const InformationDetail = () => {
                               passcodeNumber: randomChecked ? null : codeChecked ? codeNumber : null
                             },
                             () => {
-                              message.error('PASSCODE 생성 실패');
+                              message.error(formatMessage({ id: 'FAILED_TO_CREATE_PASSCODE' }));
                             }
                           )
                         }
@@ -1041,14 +1000,14 @@ const InformationDetail = () => {
                     <button id={"submitButton_" + index} type="submit" style={{ display: 'none' }} />
                     <h4
                       style={{marginLeft: '30px'}}
-                    >패스코드 설정</h4>
+                    ><FormattedMessage id='PASSCODE_SETTINGS' /></h4>
                     <div
                       style={{display: 'flex'}}
                     >
                       <div
                         className='information_detail_passcode_setting_content width_40'
                       >
-                        <h4>코드 생성</h4>
+                        <h4><FormattedMessage id='CREATE_CODE' /></h4>
                         <ul
                           className='information_detail_passcode_setting_ul'
                         >
@@ -1057,19 +1016,19 @@ const InformationDetail = () => {
                               className='mlr10'
                             >
                               <input type='radio' name='create_passcode' id='random' defaultChecked />
-                              랜덤 생성
+                              <FormattedMessage id='CREATE_RANDOM_CODE' />
                             </label>
                             <label
                               className='mlr10'
                             >
                               <input type='radio' name='create_passcode' id='code' />
-                              코드 지정 : &nbsp;
+                              <FormattedMessage id='CREATE_SPECIFIC_CODE' /> : &nbsp;
                               <input type='text' className='information_detail_passcode_setting_content_input' id='code_number' maxLength={6} 
                                 onChange={(e) => {
                                   e.target.value = e.target.value.replace(/[^0-9]/g, "");
                                 }}
                               />
-                              &nbsp; (6자리)
+                              &nbsp; <FormattedMessage id='DEGITS_6' />
                             </label>
                           </li>
                         </ul>
@@ -1077,7 +1036,7 @@ const InformationDetail = () => {
                       <div
                         className='information_detail_passcode_setting_content'
                       >
-                        <h4>만료 시간</h4>
+                        <h4><FormattedMessage id='EXPIRATION_TIME' /></h4>
                         <ul>
                           <li>
                             <label
@@ -1093,7 +1052,7 @@ const InformationDetail = () => {
                                 onClick={(e) => {
                                   console.log(e.currentTarget.checked)
                                 }}
-                              /> 기한 없음
+                              /> <FormattedMessage id='NO_EXPIRATION_TIME' />
                             </label>
                           </li>
                         </ul>
@@ -1101,7 +1060,7 @@ const InformationDetail = () => {
                       <div
                         className='information_detail_passcode_setting_content'
                       >
-                        <h4>재사용</h4>
+                        <h4><FormattedMessage id='REUSE' /></h4>
                         <ul>
                           <li>
                             <label
@@ -1132,10 +1091,10 @@ const InformationDetail = () => {
                     <thead>
                       <tr>
                         <th>PASSCODE</th>
-                        <th>발급 관리자 id</th>
-                        <th>발급 일시</th>
-                        <th>유효 시간</th>
-                        <th>남은 사용 횟수</th>
+                        <th><FormattedMessage id='ISSUE_PASSCODE_ADMIN_ID' /></th>
+                        <th><FormattedMessage id='CREATION_DATE' /></th>
+                        <th><FormattedMessage id='VALID_TIME' /></th>
+                        <th><FormattedMessage id='NUMBER_OF_REMAINING_USES' /></th>
                         <th></th>
                       </tr>
                     </thead>
@@ -1191,10 +1150,10 @@ const InformationDetail = () => {
                                   />
                                 } */}
                                 <Popconfirm
-                                  title="PASSCODE 삭제"
-                                  description="PASSCODE를 삭제하시겠습니까?"
-                                  okText="삭제"
-                                  cancelText="취소"
+                                  title={formatMessage({ id: 'DELETE_PASSCODE' })}
+                                  description={formatMessage({ id: 'CONFIRM_DELETE_PASSCODE' })}
+                                  okText={formatMessage({ id: 'DELETE' })}
+                                  cancelText={formatMessage({ id: 'CANCEL' })}
                                   open={openPasscodeDelete[index]}
                                   onConfirm={() => {
                                     CustomAxiosDelete(
@@ -1204,7 +1163,7 @@ const InformationDetail = () => {
                                         updatedOpenPasscodeDelete[index] = false;
                                         setOpenPasscodeDelete(updatedOpenPasscodeDelete);
 
-                                        message.success('PASSCODE 삭제 완료');
+                                        message.success(formatMessage({ id: 'PASSCODE_DELETED' }));
                                         const render = rendering;
                                         const renderTemp = render.concat(true);
                                         setRendering(renderTemp);
@@ -1253,10 +1212,10 @@ const InformationDetail = () => {
                                 } */}
 
                                 <Popconfirm
-                                  title="PASSCODE 삭제"
-                                  description="PASSCODE를 삭제하시겠습니까?"
-                                  okText="삭제"
-                                  cancelText="취소"
+                                  title={formatMessage({ id: 'DELETE_PASSCODE' })}
+                                  description={formatMessage({ id: 'CONFIRM_DELETE_PASSCODE' })}
+                                  okText={formatMessage({ id: 'DELETE' })}
+                                  cancelText={formatMessage({ id: 'CANCEL' })}
                                   open={openPasscodeDelete[index]}
                                   onConfirm={() => {
                                     CustomAxiosDelete(
@@ -1266,7 +1225,7 @@ const InformationDetail = () => {
                                         updatedOpenPasscodeDelete[index] = false;
                                         setOpenPasscodeDelete(updatedOpenPasscodeDelete);
 
-                                        message.success('PASSCODE 삭제 완료');
+                                        message.success(formatMessage({ id: 'PASSCODE_DELETED' }));
                                         const render = rendering;
                                         const renderTemp = render.concat(true);
                                         setRendering(renderTemp);

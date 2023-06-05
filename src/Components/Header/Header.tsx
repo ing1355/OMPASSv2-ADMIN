@@ -12,7 +12,7 @@ import logout from '../../assets/logout.png';
 import maunal_download from '../../assets/maunal_download.png';
 import maunal_download_blue from '../../assets/maunal_download_blue.png';
 import download_icon_blue from '../../assets/download_icon_blue.png';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { userInfoClear } from 'Redux/actions/userChange';
 import { CustomAxiosGetFile } from 'Components/CustomHook/CustomAxios';
 import { GetAgentInstallerDownloadApi } from 'Constants/ApiRoute';
@@ -28,6 +28,7 @@ const Header = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { formatMessage } = useIntl();
 
   return (
     <div
@@ -56,10 +57,6 @@ const Header = () => {
                 </ul>
               </li>
             }
-
-            {/* <li className='header_title'>
-              <Link to='/'>Windows Agent RP</Link>
-            </li> */}
             <li
               style={{cursor: 'pointer'}}
               onClick={() => {
@@ -83,10 +80,7 @@ const Header = () => {
           </ul>
         </nav>
         
-        <nav
-          // className='mr30'
-          // style={{marginRight: '10%'}}
-        >
+        <nav>
           <ul>
             <li>
               <img src={download_icon_blue}
@@ -112,7 +106,7 @@ const Header = () => {
                     {
                     },
                     () => {
-                      message.error('다운로드 실패');
+                      message.error(formatMessage({ id: 'DOWNLOAD_FAILED' }));
                     }
                   )
                 }}

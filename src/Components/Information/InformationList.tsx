@@ -15,7 +15,6 @@ const InformationList = () => {
       <Header />
       <div style={{overflowY: 'auto', height: height}}>
         <div
-          // className='absolute-center'
           className='content-center'
           style={{flexDirection: 'column', paddingTop: '70px', minHeight: `${height - 130}px`, justifyContent: 'start'}}
         >
@@ -23,19 +22,15 @@ const InformationList = () => {
             className='information_list_header'
           >
             <div>
-              {/* <FormattedMessage id='REGISTRATION_INFORMATION_LIST' /> */}
-            사용자 관리</div>
+              <FormattedMessage id='USER_MANAGEMENT' />
+            </div>
             <div
               className='mb40'
               style={{display: 'flex'}}
             >
               <h1>
-                {/* <FormattedMessage id='REGISTRATION_INFORMATION_LIST' /> */}
-                사용자 목록
+                <FormattedMessage id='USER_LIST' />
               </h1>
-              {/* <div
-                className="App-view-manual-font"
-              ><Link to='/Manual'><FormattedMessage id='VIEW_MANUAL' /></Link></div> */}
             </div>
           </div>
 
