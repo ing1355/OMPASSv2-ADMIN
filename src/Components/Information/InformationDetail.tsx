@@ -463,7 +463,6 @@ const InformationDetail = () => {
                 </tbody>
               </table>          
             }
-            
           </div>
 
           {deviceData.map((data:DevicesType, index: number) => (

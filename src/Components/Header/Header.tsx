@@ -1,5 +1,5 @@
 import './Header.css';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
 import { useDispatch, useSelector } from 'react-redux';
 import { langChange } from 'Redux/actions/langChange';
@@ -25,10 +25,24 @@ const Header = () => {
   }));
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const {uuid, role, userId} = userInfo! ?? {};
+  const dropdownRef = useRef<any>(null);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { formatMessage } = useIntl();
+
+  const handleMouseDown = (event: MouseEvent) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      setIsMenuOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleMouseDown);
+    return () => {
+      document.removeEventListener('mousedown', handleMouseDown);
+    };
+  }, [isMenuOpen]);
 
   return (
     <div
@@ -44,7 +58,7 @@ const Header = () => {
         >
           <ul>
             {role !== 'USER' &&
-              <li>
+              <li ref={dropdownRef}>
                 <input id='dropdown_menu' type='checkbox' readOnly checked={isMenuOpen}/>
                 <label htmlFor='dropdown_menu' className='dropdown_menu_label' onClick={()=>{setIsMenuOpen(!isMenuOpen)}}>
                   <img src={menu_icon} width='30px' style={{opacity: 0.7, position: 'relative', top: '2px'}}/>

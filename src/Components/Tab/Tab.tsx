@@ -26,7 +26,7 @@ import browser_icon from '../../assets/browser_icon.png';
 import os_windows from '../../assets/os_windows.png';
 import os_mac from '../../assets/os_mac.png';
 
-type listType = 'username' | 'os' | 'lastLoginDate' | 'enable_passcode_count';
+type listType = 'username' | 'os' | 'lastLoginDate' | 'enable_passcode_count' | null;
 type sortingType = 'none' | 'asc' | 'desc';
 
 type sortingInfoType = {
@@ -113,7 +113,12 @@ export const Tab = () => {
     userInfo: state.userInfo,
   }));
 
-  const [sortingInfo, setSortingInfo] = useState<sortingInfoType | null>(null);
+  const [sortingInfo, setSortingInfo] = useState<sortingInfoType>({
+    list: null,
+    sorting: 'none',
+    isToggle: false,
+  });
+
   const [sortingNow, setSortingNow] = useState<sortingNowType | null>(null);
   const [userData, setUserData] = useState<GetPutUsersApiArrayType>([]);
   const [totalCount, setTotalCount] = useState<number>(0);
@@ -130,6 +135,9 @@ export const Tab = () => {
   const [excelData, setExcelData] = useState<any>(null);
   const [excelDownloadAllData, setExcelDownloadAllData] = useState<any>(null);
   const searchContentRef = useRef<HTMLInputElement>(null);
+  const dropdownRefs = useRef<any[]>([]);
+  const sortingUlFunRefs = useRef<any[]>([]);
+  const searchDropdownRef = useRef<any>(null);
 
   const menuArr = [
     { id: 0, name: 'TOTAL_USERS', content: 'Tab menu ONE', count: countData?.totalUserCount },
@@ -142,7 +150,43 @@ export const Tab = () => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
 
-console.log('searchType',searchType)
+  const searchHandleMouseDown = (event: MouseEvent) => {
+    if (searchDropdownRef.current && !searchDropdownRef.current.contains(event.target as Node)) {
+      setIsSearchDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', searchHandleMouseDown);
+    return () => {
+      document.removeEventListener('mousedown', searchHandleMouseDown);
+    };
+  }, [isSearchDropdownOpen]);
+
+  const handleMouseDown = (event: MouseEvent) => {
+    const index = 
+      sortingInfo?.list === 'username' ? 0 : 
+      sortingInfo?.list === 'os' ? 1 :
+      sortingInfo?.list === 'lastLoginDate' ? 2 : 3;
+
+      if (dropdownRefs.current[index] && !dropdownRefs.current[index].contains(event.target as Node)) {
+        setSortingInfo({
+          ...sortingInfo,
+          sorting: sortingNow ? sortingNow.sorting : 'none',
+          isToggle: false,
+        });
+      }
+  };
+
+  useEffect(() => {
+    console.log('111')
+    document.addEventListener('mousedown', handleMouseDown);
+    return () => {
+      console.log('222')
+      document.removeEventListener('mousedown', handleMouseDown);
+    };
+  }, [sortingInfo?.isToggle]);
+
   useEffect(()=>{
     CustomAxiosGet(
       GetPutUsersApi,
@@ -206,6 +250,7 @@ console.log('searchType',searchType)
     return (
       <ul
         className={'dropdown-ul-' + index + ' tab_table_sorting_dropdown ' + listType}
+        ref={ (el) => (sortingUlFunRefs.current[index] = el) }
       >
         <li>
           <div
@@ -403,6 +448,7 @@ console.log('searchType',searchType)
           >
             <li
               style={{position: 'relative'}}
+              ref={searchDropdownRef}
             >
               <input id='dropdown-4' type='checkbox' readOnly checked={isSearchDropdownOpen}/>
               <label htmlFor='dropdown-4' className='dropdown-label-4' onClick={()=>{setIsSearchDropdownOpen(!isSearchDropdownOpen)}}>
@@ -439,7 +485,7 @@ console.log('searchType',searchType)
                       setIsSearchDropdownOpen(false);
                     }}
                   >
-                    선택안함
+                    전체
                   </div>
                 </li>
                 <li>
@@ -540,6 +586,7 @@ console.log('searchType',searchType)
                   </th>
                   <th
                     style={{position: 'relative'}}
+                    ref={ (el) => (dropdownRefs.current[0] = el) }
                   >
                     <input id='dropdown-0' type='checkbox' checked={sortingInfo?.list === 'username' && sortingInfo.isToggle} readOnly></input>
                     <label htmlFor='dropdown-0' className={'dropdown-label-0 ' + (sortingNow?.list === 'username' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
@@ -572,6 +619,7 @@ console.log('searchType',searchType)
                   </th>
                   <th
                     style={{position: 'relative'}}
+                    ref={ (el) => (dropdownRefs.current[1] = el) }
                   >
                     <input id='dropdown-1' type='checkbox' checked={sortingInfo?.list === 'os' && sortingInfo.isToggle} readOnly></input>
                     <label htmlFor='dropdown-1' className={'dropdown-label-1 ' + (sortingNow?.list === 'os' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
@@ -604,6 +652,7 @@ console.log('searchType',searchType)
                   </th>
                   <th
                     style={{position: 'relative'}}
+                    ref={ (el) => (dropdownRefs.current[2] = el) }
                   >
                     <input id='dropdown-2' type='checkbox' checked={sortingInfo?.list === 'lastLoginDate' && sortingInfo.isToggle} readOnly></input>
                     <label htmlFor='dropdown-2' className={'dropdown-label-2 ' + (sortingNow?.list === 'lastLoginDate' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
@@ -636,6 +685,7 @@ console.log('searchType',searchType)
                   </th>
                   <th
                     style={{position: 'relative'}}
+                    ref={ (el) => (dropdownRefs.current[3] = el) }
                   >
                     <input id='dropdown-3' type='checkbox' checked={sortingInfo?.list === 'enable_passcode_count' && sortingInfo.isToggle} readOnly></input>
                     <label htmlFor='dropdown-3' className={'dropdown-label-3 ' + (sortingNow?.list === 'enable_passcode_count' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
