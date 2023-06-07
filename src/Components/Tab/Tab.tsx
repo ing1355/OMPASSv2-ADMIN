@@ -26,7 +26,7 @@ import browser_icon from '../../assets/browser_icon.png';
 import os_windows from '../../assets/os_windows.png';
 import os_mac from '../../assets/os_mac.png';
 
-type listType = 'username' | 'os' | 'lastLoginDate' | 'enable_passcode_count' | null;
+type listType = 'username' | 'os' | 'lastLoginDate' | 'enable_passcode_count' | 'all' | null;
 type sortingType = 'none' | 'asc' | 'desc';
 
 type sortingInfoType = {
@@ -179,10 +179,8 @@ export const Tab = () => {
   };
 
   useEffect(() => {
-    console.log('111')
     document.addEventListener('mousedown', handleMouseDown);
     return () => {
-      console.log('222')
       document.removeEventListener('mousedown', handleMouseDown);
     };
   }, [sortingInfo?.isToggle]);
@@ -457,6 +455,7 @@ export const Tab = () => {
                     className='dropdown-4-header'
                   >
                     <span>
+                      {searchType === 'all' && <FormattedMessage id='all' /> }
                       {searchType === 'username' && <FormattedMessage id='username' /> }
                       {searchType === 'os' && <FormattedMessage id='os' /> }
                       {searchType === 'lastLoginDate' && <FormattedMessage id='lastLoginDate' /> }
@@ -481,11 +480,11 @@ export const Tab = () => {
                 <li>
                   <div
                     onClick={() => {
-                      setSearchType(null);
+                      setSearchType('all');
                       setIsSearchDropdownOpen(false);
                     }}
                   >
-                    전체
+                    <FormattedMessage id='all' />
                   </div>
                 </li>
                 <li>
