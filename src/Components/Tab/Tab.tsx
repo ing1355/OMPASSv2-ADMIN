@@ -28,6 +28,7 @@ import os_mac from '../../assets/os_mac.png';
 
 type listType = 'username' | 'os' | 'lastLoginDate' | 'enable_passcode_count' | 'all' | null;
 type sortingType = 'none' | 'asc' | 'desc';
+type searchOsType = 'windows' | 'Windows' | 'WINDOWS' | 'mac' | 'BROWSER' | null;
 
 type sortingInfoType = {
   list: listType,
@@ -134,10 +135,13 @@ export const Tab = () => {
   const [file, setFile] = useState<File | null>(null);
   const [excelData, setExcelData] = useState<any>(null);
   const [excelDownloadAllData, setExcelDownloadAllData] = useState<any>(null);
+  const [isOsDropdownOpen, setIsOsDropdownOpen] = useState<boolean>(false);
+  const [searchOsInfo, setSearchOsInfo] = useState<searchOsType>(null);
   const searchContentRef = useRef<HTMLInputElement>(null);
   const dropdownRefs = useRef<any[]>([]);
   const sortingUlFunRefs = useRef<any[]>([]);
   const searchDropdownRef = useRef<any>(null);
+  const searchOsDropdownRef = useRef<any>(null);
 
   const menuArr = [
     { id: 0, name: 'TOTAL_USERS', content: 'Tab menu ONE', count: countData?.totalUserCount },
@@ -162,6 +166,19 @@ export const Tab = () => {
       document.removeEventListener('mousedown', searchHandleMouseDown);
     };
   }, [isSearchDropdownOpen]);
+
+  const searchOsHandleMouseDown = (event: MouseEvent) => {
+    if (searchOsDropdownRef.current && !searchOsDropdownRef.current.contains(event.target as Node)) {
+      setIsOsDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', searchOsHandleMouseDown);
+    return () => {
+      document.removeEventListener('mousedown', searchOsHandleMouseDown);
+    };
+  }, [isOsDropdownOpen]);
 
   const handleMouseDown = (event: MouseEvent) => {
     const index = 
@@ -199,7 +216,7 @@ export const Tab = () => {
         sortDirection: sortingNow ? sortingNow.sorting === 'none' ? null : sortingNow.sorting : null,
         username: searchType === 'username' ? searchContent : null,
         last_login_time: searchType === 'lastLoginDate' ? searchContent : null,
-        os: searchType === 'os' ? searchContent : null,
+        os: searchType === 'os' && searchOsInfo ? searchOsInfo : null,
         passcode: tabNow === 'PASSCODE_USERS' ? true : false, 
         enable_passcode_count: searchType === 'enable_passcode_count' ? searchContent : null,
       }
@@ -482,6 +499,7 @@ export const Tab = () => {
                     onClick={() => {
                       setSearchType('all');
                       setIsSearchDropdownOpen(false);
+                      setSearchOsInfo(null);
                     }}
                   >
                     <FormattedMessage id='all' />
@@ -492,6 +510,7 @@ export const Tab = () => {
                     onClick={() => {
                       setSearchType('username');
                       setIsSearchDropdownOpen(false);
+                      setSearchOsInfo(null);
                     }}
                   >
                     <FormattedMessage id='USER_ID' />
@@ -502,6 +521,7 @@ export const Tab = () => {
                     onClick={() => {
                       setSearchType('os');
                       setIsSearchDropdownOpen(false);
+                      setSearchOsInfo(null);
                     }}
                   >
                     <FormattedMessage id='ENV' />
@@ -522,6 +542,7 @@ export const Tab = () => {
                     onClick={() => {
                       setSearchType('enable_passcode_count');
                       setIsSearchDropdownOpen(false);
+                      setSearchOsInfo(null);
                     }}
                   >
                     PASSCODE
@@ -530,11 +551,77 @@ export const Tab = () => {
               </ul>
             </li>
             <li>
-              <input
-                ref={searchContentRef}
-                className='input-st1 tab_search_input'
-              >
-              </input>
+              {searchType === 'os' ? 
+                <div
+                  ref={searchOsDropdownRef}
+                >
+                  <input id='dropdown-5' type='checkbox' readOnly checked={isOsDropdownOpen}/>
+                  <label htmlFor='dropdown-5' className='dropdown-label-5' onClick={()=>{setIsOsDropdownOpen(!isOsDropdownOpen)}}>
+                    {searchOsInfo ? 
+                      <div
+                        className='dropdown-5-header'
+                      >
+                        <span>
+                          {searchOsInfo === 'windows' && <>windows</>}
+                          {searchOsInfo === 'mac' && <>mac</>}
+                          {searchOsInfo === 'BROWSER' && <>browser</>}
+                        </span>
+                        <img className='tab_dropdown_arrow' src={dropdown_icon}/>
+                      </div> 
+                    : 
+                      <div
+                        className='dropdown-5-header'
+                      >
+                        <span>
+                          <FormattedMessage id='ENV_TYPE' />
+                        </span>
+                        <img className='tab_dropdown_arrow' src={dropdown_icon}/>
+                      </div>
+                    }
+                  </label>
+                  <ul
+                    className='dropdown-ul-5'
+                  >
+                    <li>
+                      <div
+                        onClick={() => {
+                          setSearchOsInfo('windows');
+                          setIsOsDropdownOpen(false);
+                        }}
+                      >
+                        windows
+                      </div>
+                    </li>
+                    <li>
+                      <div
+                        onClick={() => {
+                          setSearchOsInfo('mac');
+                          setIsOsDropdownOpen(false);
+                        }}
+                      >
+                        mac
+                      </div>
+                    </li>
+                    <li>
+                      <div
+                        onClick={() => {
+                          setSearchOsInfo('BROWSER');
+                          setIsOsDropdownOpen(false);
+                        }}
+                      >
+                        browser
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              :
+                <input
+                  ref={searchContentRef}
+                  className='input-st1 tab_search_input'
+                />
+              }
+            </li>
+            <li>
               <button
                 className={'button-st4 tab_search_button ' + (lang === 'en' ? 'en' : '')}
                 onClick={(e) => {
@@ -560,7 +647,7 @@ export const Tab = () => {
                 <FormattedMessage id='SEARCH' />
               </button>
               <img 
-                src={reset_icon} width='26px' style={{opacity: 0.5, marginLeft: '20px', cursor: 'pointer'}}
+                src={reset_icon} width='27px' style={{opacity: 0.5, marginLeft: '20px', cursor: 'pointer', position: 'relative', top: '3px'}}
                 onClick={() => {
                   setSortingNow(null);
                   setSearchType(null);

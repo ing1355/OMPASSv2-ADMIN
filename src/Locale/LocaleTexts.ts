@@ -164,6 +164,7 @@ const LocaleTexts = {
     CURRENT_VERSION_CHANGE_COMPLETE: 'Current version change complete',
     VERSION_DELETE: 'The version has been deleted',
     all: 'All',
+    ENV_TYPE: 'Environment Type',
   },
   'ko': {
     LOGIN: '로그인',
@@ -330,6 +331,7 @@ const LocaleTexts = {
     CURRENT_VERSION_CHANGE_COMPLETE: '현재 버전 변경 완료',
     VERSION_DELETE: '버전 삭제 완료',
     all: '전체',
+    ENV_TYPE: '환경 타입',
   }
 }
 
