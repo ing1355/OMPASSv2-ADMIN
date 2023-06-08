@@ -68,10 +68,15 @@ const InformationDetail = () => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
 
-  const userUuid = sessionStorage.getItem('userUuid');
+  // const userUuid = sessionStorage.getItem('userUuid');
   const passwordRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-  const { params } = useParams();
+  const { params, selectedUuid } = useParams();
+
+  // const currentURL = window.location.href;
+  // const queryParams = new URLSearchParams(currentURL.split('?')[1]);
+  // const pageParam = queryParams.get('page');
+  // const pageSizeParam = queryParams.get('pageSize');
 
   const {uuid, role, userId} = userInfo! ?? {};
 
@@ -79,6 +84,11 @@ const InformationDetail = () => {
     const macAddRep = ad.replace(/(.{2})/g, "$1:");
     return macAddRep.slice(0, -1);
   }
+
+  // window.onpopstate = (event: any) => {
+  //   console.log('11111');
+  //   navigate(`/InformationList?page=${pageParam}&pageSize=${pageSizeParam}`)
+  // }
 
   useEffect(() => {
     if(uuid) {
@@ -100,9 +110,9 @@ const InformationDetail = () => {
           },
         )
       } else {
-        if(userUuid) {
+        if(selectedUuid) {
           CustomAxiosGet(
-            GetUsersDetailsApi(userUuid),
+            GetUsersDetailsApi(selectedUuid),
             (data: GetUsersDetailsApiType) => {
               setUserData(data.user);
               setUserPhone(data.user.phoneNumber);
@@ -181,9 +191,9 @@ const InformationDetail = () => {
                     },
                   );
                 } else {
-                  if(userUuid) {
+                  if(selectedUuid) {
                     CustomAxiosDelete(
-                      DeleteUsersApi(userUuid),
+                      DeleteUsersApi(selectedUuid),
                       () => {
                         message.success(formatMessage({ id: 'USER_INFO_DELETE' }));
                         navigate('/InformationList');
@@ -301,7 +311,7 @@ const InformationDetail = () => {
                         setIsModify(false);
                       },
                       {
-                        id: (role === 'USER' ? uuid : userUuid),
+                        id: (role === 'USER' ? uuid : selectedUuid),
                         name: name,
                         password: password,
                         phoneNumber: phoneNumber,

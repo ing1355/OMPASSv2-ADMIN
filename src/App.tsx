@@ -29,7 +29,7 @@ const App: React.FC = () => {
       <Routes>
         
         <Route path='/ompass/*' element={<OMPASSVerify />} />
-        <Route path='/InformationDetail/:params' element={<InformationDetail />} />
+        <Route path='/InformationDetail/:params/:selectedUuid' element={<InformationDetail />} />
         <Route path='/CreateAccount' element={<CreateAccount />} />
         <Route path='/Manual' element={<Manual />} />
         {

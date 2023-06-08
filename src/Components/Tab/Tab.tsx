@@ -357,15 +357,15 @@ export const Tab = () => {
     let result = [];
   
     if (windowsCount > 0) {
-      result.push(<img src={os_windows} width='22px' height='22px' style={{padding: '8px'}} />);
+      result.push(<img key='windows' src={os_windows} width='22px' height='22px' style={{padding: '8px'}} />);
     } 
     
     if (macosCount > 0) {
-      result.push(<img src={os_mac} width='22px' height='22px' />);
+      result.push(<img key='mac' src={os_mac} width='22px' height='22px' />);
     } 
     
     if (browserCount > 0) {
-      result.push(<img src={browser_icon} width='38px' height='38px' />);
+      result.push(<img key='browser' src={browser_icon} width='37px' height='37px' />);
     } 
 
     return <div style={{display: 'flex', justifyContent: 'center'}}>{result}</div>;
@@ -812,7 +812,7 @@ export const Tab = () => {
                     onMouseEnter={() => handleRowHover(index)}
                     onMouseLeave={() => handleRowHover(-1)}
                     onClick={() => {
-                      navigate('/InformationDetail/User');
+                      navigate(`/InformationDetail/User/${data.id}`);
                       dispatch(userUuidChange(data.id));
                       sessionStorage.setItem('userUuid', data.id);
                     }}
