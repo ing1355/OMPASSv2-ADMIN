@@ -1,16 +1,7 @@
-.main_click_menu {
-  width: 600px;
-}
-
-.main_menu_container {
-
-}
-
-.main_menu_container div {
+.main_menu_card {
   border: 1.2px solid #ccc;
   padding: 2.5rem;
   margin: 2rem 8px;
-  /* font-size: 1.5rem; */
   text-align: center;
   border-radius: 15px;
   cursor: pointer;
@@ -23,4 +14,12 @@
 
 .main_menu_container div h2 {
   margin-top: 3rem;
+}
+
+.main_menu_card_img {
+  max-width: 100%;
+}
+
+.main_menu_card_title {
+  font-size: 2vh;
 }

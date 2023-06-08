@@ -814,7 +814,7 @@ export const Tab = () => {
                     onClick={() => {
                       navigate(`/InformationDetail/User/${data.id}`);
                       dispatch(userUuidChange(data.id));
-                      sessionStorage.setItem('userUuid', data.id);
+                      // sessionStorage.setItem('userUuid', data.id);
                     }}
                     style={{ background: hoveredRow === index ? '#D6EAF5' : 'transparent', cursor: 'pointer' }}
                   >

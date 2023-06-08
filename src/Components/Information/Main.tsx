@@ -16,6 +16,7 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
 import { CopyRightText } from 'Constants/ConstantValues';
+import { Col, Row } from 'antd';
 
 type menuInfoType = {
   id: number,
@@ -85,74 +86,93 @@ const Main = () => {
 
   const menuInfoFun = () => {
     return (
-    <div 
+    <Row 
       className='main_menu_container'
       style={{display: 'flex', marginTop: '3rem'}}
     >
       {role === 'SUPER_ADMIN' &&
-        menuInfo.map((data: menuInfoType) => (
-          <div
-            className={
-              data.id === 0 && isHovered0 ? 'main_menu_hovered' :
-              data.id === 1 && isHovered1 ? 'main_menu_hovered' :
-              data.id === 2 && isHovered2 ? 'main_menu_hovered' :
-              data.id === 3 && isHovered3 ? 'main_menu_hovered' :
-              ''
-            }
-
-            onMouseEnter={
-              data.id === 0 ? handleHover0 :
-              data.id === 1 ? handleHover1 :
-              data.id === 2 ? handleHover2 :
-              handleHover3
-            }
-            onMouseLeave={
-              data.id === 0 ? handleMouseLeave0 :
-              data.id === 1 ? handleMouseLeave1 :
-              data.id === 2 ? handleMouseLeave2 :
-              handleMouseLeave3
-            }
-            onClick={() => {
-              navigate(data.navi);
-            }}
+        menuInfo.map((data: menuInfoType, index: number) => (
+          <Col
+            xs={24}
+            sm={12}
+            md={6}
+            lg={6}
+            xl={6}
           >
-            <img src={data.imgName}/>
-            <h2><FormattedMessage id={data.title} /></h2>
-          </div>
+            <div
+              key={'super_admin_' + index}
+              className={ 'main_menu_card ' + 
+                (data.id === 0 && isHovered0 ? 'main_menu_hovered' :
+                data.id === 1 && isHovered1 ? 'main_menu_hovered' :
+                data.id === 2 && isHovered2 ? 'main_menu_hovered' :
+                data.id === 3 && isHovered3 ? 'main_menu_hovered' :
+                '')
+              }
+
+              onMouseEnter={
+                data.id === 0 ? handleHover0 :
+                data.id === 1 ? handleHover1 :
+                data.id === 2 ? handleHover2 :
+                handleHover3
+              }
+              onMouseLeave={
+                data.id === 0 ? handleMouseLeave0 :
+                data.id === 1 ? handleMouseLeave1 :
+                data.id === 2 ? handleMouseLeave2 :
+                handleMouseLeave3
+              }
+              onClick={() => {
+                navigate(data.navi);
+              }}
+            >
+              <img src={data.imgName} className='main_menu_card_img' />
+              <h2 className='main_menu_card_title' ><FormattedMessage id={data.title} /></h2>
+            </div>
+          </Col>
         ))
       }
 
       {role === 'ADMIN' &&
-        menuInfoAdmin.map((data: menuInfoType) => (
-          <div
-            className={
-              data.id === 0 && isHovered0 ? 'main_menu_hovered' :
-              data.id === 1 && isHovered1 ? 'main_menu_hovered' :
-              data.id === 2 && isHovered2 ? 'main_menu_hovered' :
-              ''
-            }
-
-            onMouseEnter={
-              data.id === 0 ? handleHover0 :
-              data.id === 1 ? handleHover1 :
-              handleHover2
-            }
-            onMouseLeave={
-              data.id === 0 ? handleMouseLeave0 :
-              data.id === 1 ? handleMouseLeave1 :
-              handleMouseLeave2
-            }
-            onClick={() => {
-              navigate(data.navi);
-            }}
+        menuInfoAdmin.map((data: menuInfoType, index: number) => (
+          <Col
+            xs={24}
+            sm={12}
+            md={6}
+            lg={6}
+            xl={6}
           >
-            <img src={data.imgName}/>
-            <h2><FormattedMessage id={data.title} /></h2>
-          </div>
+            <div
+              key={'admin_' + index}
+              className={
+                'main_menu_card ' + 
+                (data.id === 0 && isHovered0 ? 'main_menu_hovered' :
+                data.id === 1 && isHovered1 ? 'main_menu_hovered' :
+                data.id === 2 && isHovered2 ? 'main_menu_hovered' :
+                '')
+              }
+
+              onMouseEnter={
+                data.id === 0 ? handleHover0 :
+                data.id === 1 ? handleHover1 :
+                handleHover2
+              }
+              onMouseLeave={
+                data.id === 0 ? handleMouseLeave0 :
+                data.id === 1 ? handleMouseLeave1 :
+                handleMouseLeave2
+              }
+              onClick={() => {
+                navigate(data.navi);
+              }}
+            >
+              <img src={data.imgName} className='main_menu_card_img' />
+              <h2 className='main_menu_card_title' ><FormattedMessage id={data.title} /></h2>
+            </div>
+          </Col>
         ))
       }
       
-    </div>
+    </Row>
     )
   }
   
@@ -164,12 +184,7 @@ const Main = () => {
           className='content-center'
           style={{flexDirection: 'column', minHeight: `${height - 130}px`}}
         >
-          <div
-            className='agent_management_header'
-          >
-          </div>
           {menuInfoFun()}
-
         </div>
         <div
           className='copyRight-style mb30'

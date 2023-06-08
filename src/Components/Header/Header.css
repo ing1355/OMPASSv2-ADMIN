@@ -20,7 +20,7 @@ nav ul li {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-width: 872px;
+  min-width: 692px;
   padding-left: 32px;
   padding-right: 32px;
 }

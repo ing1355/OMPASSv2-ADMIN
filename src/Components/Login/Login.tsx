@@ -326,7 +326,7 @@ const Login = () => {
     </div>
 
     <div
-      className='login_footer content-center mb30'
+      className='login_footer content-center'
     >
       <div
         className='mb10'
