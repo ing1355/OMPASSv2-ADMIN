@@ -141,15 +141,18 @@ const Login = () => {
       style={{overflowY: 'auto', height: height}}
     >
     <div
-      className='login_container content-center'
+      className='login_container'
     >
+
+      {/* header */}
       <Row
         className='login_header'
       >
         <Col>
           <img 
             src={ompass_logo_image} 
-            width="41px"
+            width="15%"
+            // style={{maxWidth: '65%'}}
           />
           <span 
             className='main-color1 login_logo_title'
@@ -157,175 +160,209 @@ const Login = () => {
         </Col>
       </Row>
 
-      <div
-        className='dis_flex'
+      {/* body */}
+      <Row
+        // gutter={{ xs: 8, sm: 8, md: 8, lg: 20 }}
+        align="middle"
+        justify="center"
       >
-        <div
-          style={{flex: '0.7 1', flexDirection: 'column', textAlign: 'center'}}
-        >
-          <img 
-            src={login_main_image}
-            style={{maxWidth: '100%', height: 'auto'}}
-          />
-          <button
-            className='button-st3 login_agent_download_button'
-            onClick={() => {
-              // const versionName = 'ompass_installer_v' + currentVersion?.version + '.zip';
-              const versionName = 'ompass_installer.zip';
-              CustomAxiosGetFile(
-                GetAgentInstallerDownloadApi,
-                (data:any) => {
-                  const fileDownlaoadUrl = URL.createObjectURL(data);
-                  console.log('data',data.fileName)
-                  const downloadLink = document.createElement('a');
-                  downloadLink.href = fileDownlaoadUrl;
-                  downloadLink.download = versionName;
-                  document.body.appendChild(downloadLink);
-                  downloadLink.click();
-                  document.body.removeChild(downloadLink);
-                  URL.revokeObjectURL(fileDownlaoadUrl);
-                },
-                {
-                },
-                () => {
-                  message.error(formatMessage({ id: 'DOWNLOAD_FAILED' }));
-                }
-              )
-            }}
-          >
-            <img src={download_icon} width='40px'/>
-            <span style={{position: 'relative', top: '-7px', marginLeft: '7px'}}><FormattedMessage id='DOWNLOAD_FOR_WINDOWS' /></span>  
-          </button>
 
-          {/* macOS 추가 */}
-          {/* <div>
-            <button
-              className='button-st3 login_agent_download_button mlr10'
-            >
-              <img src={download_icon} width='40px'/>
-              <span style={{position: 'relative', top: '-8px', marginLeft: '7px'}}><FormattedMessage id='DOWNLOAD_FOR_WINDOWS' /></span>  
-            </button>
-            <button
-              className='button-st3 login_agent_download_button mlr10'
-            >
-              <img src={download_icon} width='40px'/>
-              <span style={{position: 'relative', top: '-8px', marginLeft: '7px'}}><FormattedMessage id='DOWNLOAD_FOR_MAC' /></span>  
-            </button>
-          </div> */}
-        </div>
-        <div
-          className='login_form_container'
+        {/* img, download */}
+        <Col
+          xs={24}
+          sm={24}
+          md={10}
+          lg={12}
+          xl={14}
         >
-          <h1 className='mb40 login_form_title'><FormattedMessage id='LOGIN' /></h1>
-          <form
-            onSubmit={loginRequest}
+          <div
+            className='login_img_download'
           >
-            <div
-              className='login_input_container'
-            >
-              <label htmlFor='userId'><FormattedMessage id='ID' /></label>
-              <input 
-                className='input-st1 login_input mt5'
-                type='text'
-                id='userId'
-                maxLength={16}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setIdChange(e.currentTarget.value);
-                }}
-              />
-              <img src={login_id} width='30px' style={{position: 'relative', top: '-41px', left: '20px'}}/>
-            </div>
-            <div
-              className='mb10'
-            >
-              <label htmlFor='userPassword'><FormattedMessage id='PASSWORD' /></label>
-              <input 
-                className='input-st1 login_input mt5'
-                type='password'
-                id='userPassword'
-                maxLength={16}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setPasswordChange(e.currentTarget.value);
-                }}
-              />
-              <img src={login_password} width='30px' style={{position: 'relative', top: '-41px', left: '20px'}}/>
-            </div>
-            <div
-              className='dis_flex mb10'
-            >
-              <div>
-                {/* <input type='checkbox' className='mr10'/>
-                <span><FormattedMessage id='SAVE_ID' /></span> */}
-              </div>
-              <div
-                className='main-color1'
-                style={{cursor: 'pointer'}}
+            <img 
+              src={login_main_image}
+              style={{maxWidth: '77%'}}
+            />
+            <div>
+              <button
+                className='button-st3 login_agent_download_button'
                 onClick={() => {
-                  setIsPasscodeModalOpen(true);
+                  // const versionName = 'ompass_installer_v' + currentVersion?.version + '.zip';
+                  const versionName = 'ompass_installer.zip';
+                  CustomAxiosGetFile(
+                    GetAgentInstallerDownloadApi,
+                    (data:any) => {
+                      const fileDownlaoadUrl = URL.createObjectURL(data);
+                      console.log('data',data.fileName)
+                      const downloadLink = document.createElement('a');
+                      downloadLink.href = fileDownlaoadUrl;
+                      downloadLink.download = versionName;
+                      document.body.appendChild(downloadLink);
+                      downloadLink.click();
+                      document.body.removeChild(downloadLink);
+                      URL.revokeObjectURL(fileDownlaoadUrl);
+                    },
+                    {
+                    },
+                    () => {
+                      message.error(formatMessage({ id: 'DOWNLOAD_FAILED' }));
+                    }
+                  )
                 }}
               >
-                <FormattedMessage id='LOGIN_WITH_PASSWORD' />
-              </div>
+                <img src={download_icon} style={{maxWidth: '14%'}}/>
+                <span style={{position: 'relative', top: '-7px', marginLeft: '7px'}}><FormattedMessage id='DOWNLOAD_FOR_WINDOWS' /></span>  
+              </button>
             </div>
-            <button
-              className={'button-st1 login-button mb50 ' + ((idChange !== '' && passwordChange !== '') ? 'active' : '')}
-              // className={'login-button mb50 button-st1 ' + (idRef.current?.value && loginPasswordRef.current?.value) ? 'active' : ''}
-              type='submit'
-              disabled={!(idChange !== '' && passwordChange !== '')}
-            >
-              <FormattedMessage id='LOGIN' />
-            </button>
-            <div
-              className='mb20 content-center'
-            ><FormattedMessage id='NOT_A_MEMBER' /></div>
-            <Link to='/CreateAccount'>
-              <button
-                className='button-st2 login-button'
-              ><FormattedMessage id='CREATE_ACCOUNT' /></button>
-            </Link>
-          </form>
-        </div>
-      </div>
 
+
+            {/* macOS 추가 */}
+            {/* <div>
+              <button
+                className='button-st3 login_agent_download_button mlr10'
+              >
+                <img src={download_icon} width='40px'/>
+                <span style={{position: 'relative', top: '-8px', marginLeft: '7px'}}><FormattedMessage id='DOWNLOAD_FOR_WINDOWS' /></span>  
+              </button>
+              <button
+                className='button-st3 login_agent_download_button mlr10'
+              >
+                <img src={download_icon} width='40px'/>
+                <span style={{position: 'relative', top: '-8px', marginLeft: '7px'}}><FormattedMessage id='DOWNLOAD_FOR_MAC' /></span>  
+              </button>
+            </div> */}
+          </div>
+        </Col>
+
+        {/* login */}
+        <Col
+          xs={24}
+          sm={24}
+          md={14}
+          lg={12}
+          xl={10}
+          style={{alignItems: 'center'}}
+        >
+          <div
+            className='login_form_container'
+          >
+            <h1 className='mb40 login_form_title'><FormattedMessage id='LOGIN' /></h1>
+            <form
+              onSubmit={loginRequest}
+            >
+              <div
+                className='login_input_container'
+              >
+                <label htmlFor='userId'><FormattedMessage id='ID' /></label>
+                <input 
+                  className='input-st1 login_input mt5'
+                  type='text'
+                  id='userId'
+                  maxLength={16}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setIdChange(e.currentTarget.value);
+                  }}
+                />
+                <img src={login_id} width='30px' style={{position: 'relative', top: '-41px', left: '20px'}}/>
+              </div>
+              <div
+                className='mb10 login_input_container'
+              >
+                <label htmlFor='userPassword'><FormattedMessage id='PASSWORD' /></label>
+                <input 
+                  className='input-st1 login_input mt5'
+                  type='password'
+                  id='userPassword'
+                  maxLength={16}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setPasswordChange(e.currentTarget.value);
+                  }}
+                />
+                <img src={login_password} width='30px' style={{position: 'relative', top: '-41px', left: '20px'}}/>
+              </div>
+              <div
+                className='dis_flex mb10'
+              >
+                <div>
+                  {/* <input type='checkbox' className='mr10'/>
+                  <span><FormattedMessage id='SAVE_ID' /></span> */}
+                </div>
+                <div
+                  className='main-color1'
+                  style={{cursor: 'pointer'}}
+                  onClick={() => {
+                    setIsPasscodeModalOpen(true);
+                  }}
+                >
+                  <FormattedMessage id='LOGIN_WITH_PASSWORD' />
+                </div>
+              </div>
+              <button
+                className={'button-st1 login-button mb50 ' + ((idChange !== '' && passwordChange !== '') ? 'active' : '')}
+                // className={'login-button mb50 button-st1 ' + (idRef.current?.value && loginPasswordRef.current?.value) ? 'active' : ''}
+                type='submit'
+                disabled={!(idChange !== '' && passwordChange !== '')}
+              >
+                <FormattedMessage id='LOGIN' />
+              </button>
+              <div
+                className='mb20 content-center'
+              ><FormattedMessage id='NOT_A_MEMBER' /></div>
+              <Link to='/CreateAccount'>
+                <button
+                  className='button-st2 login-button mb30'
+                ><FormattedMessage id='CREATE_ACCOUNT' /></button>
+              </Link>
+            </form>
+          </div>
+        </Col>
+      </Row>
+
+      {/* footer */}
+      <Row>
+        
+      </Row>
+
+
+    </div>
+
+    <div
+      className='login_footer content-center mb30'
+    >
       <div
-        className='login_footer content-center'
+        className='mb10'
+        style={{fontSize: "1.2rem"}}
       >
-        <div
-          className='mb10'
-          style={{fontSize: "1.2rem"}}
-        >
-          <img src={locale_image} width='20px' style={{position: 'relative', top: '3px', marginRight: '2px'}}/>
-          <span 
-            className={'mlr5 locale-toggle' + (lang === 'ko' ? ' active' : '')}
-            onClick={() => {
-              dispatch(langChange('ko'));
-              localStorage.setItem('locale','ko');
-            }}
-          >KO</span>|
-          <span 
-            className={'mlr5 locale-toggle' + (lang === 'en' ? ' active' : '')}
-            style={{marginRight: '12px'}}
-            onClick={() => {
-              dispatch(langChange('en'));
-              localStorage.setItem('locale','en');
-            }}
-          >EN</span>
-        <a
-          href="/OMPASS_Portal_manual.pdf"
-          download
-        >
-          <img
-            src={maunal_download}
-            width="25px"
-            style={{position: 'relative', top: '5px'}}
-          />
-        </a>
-        </div>
-        <div
-          className='copyRight-style'
-        >
-          {CopyRightText}
-        </div>
+        <img src={locale_image} width='20px' style={{position: 'relative', top: '3px', marginRight: '2px'}}/>
+        <span 
+          className={'mlr5 locale-toggle' + (lang === 'ko' ? ' active' : '')}
+          onClick={() => {
+            dispatch(langChange('ko'));
+            localStorage.setItem('locale','ko');
+          }}
+        >KO</span>|
+        <span 
+          className={'mlr5 locale-toggle' + (lang === 'en' ? ' active' : '')}
+          style={{marginRight: '12px'}}
+          onClick={() => {
+            dispatch(langChange('en'));
+            localStorage.setItem('locale','en');
+          }}
+        >EN</span>
+      <a
+        href="/OMPASS_Portal_manual.pdf"
+        download
+      >
+        <img
+          src={maunal_download}
+          width="25px"
+          style={{position: 'relative', top: '5px'}}
+        />
+      </a>
+      </div>
+      <div
+        className='copyRight-style'
+      >
+        {CopyRightText}
       </div>
     </div>
 
