@@ -2,7 +2,7 @@ import './Login.css';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Link, useNavigate } from 'react-router-dom';
 import { OMPASS } from 'ompass';
-import { message, Modal } from 'antd';
+import { message, Modal, Col, Row } from 'antd';
 import { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { langChange } from 'Redux/actions/langChange';
@@ -143,17 +143,19 @@ const Login = () => {
     <div
       className='login_container content-center'
     >
-      <div
+      <Row
         className='login_header'
       >
-        <img 
-          src={ompass_logo_image} 
-          width="41px"
-        />
-        <span 
-          className='main-color1 login_logo_title'
-        >OMPASS</span>
-      </div>
+        <Col>
+          <img 
+            src={ompass_logo_image} 
+            width="41px"
+          />
+          <span 
+            className='main-color1 login_logo_title'
+          >OMPASS</span>
+        </Col>
+      </Row>
 
       <div
         className='dis_flex'
@@ -326,6 +328,8 @@ const Login = () => {
         </div>
       </div>
     </div>
+
+    {/* 관리자 첫 로그인 시 패스워드 변경 모달 */}
     <Modal title={formatMessage({ id: 'CHANGE_PASSWORD' })} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} cancelText={formatMessage({ id: 'CANCEL' })} okText={formatMessage({ id: 'MODIFY_' })} width='570px' centered>
       <form>
         <div>
@@ -393,7 +397,9 @@ const Login = () => {
         </div>
       </form>
     </Modal>
-    <Modal  title={formatMessage({ id: 'ENTER_PASSCODE' })} open={isPasscodeModalOpen} onOk={passcodeHandleOk} onCancel={passcodeHandleCancel} cancelText={formatMessage({ id: 'CANCEL' })} okText={formatMessage({ id: 'CONFIRM' })} width='570px' centered>
+
+    {/* 패스코드로 로그인 모달 */}
+    <Modal title={formatMessage({ id: 'ENTER_PASSCODE' })} open={isPasscodeModalOpen} onOk={passcodeHandleOk} onCancel={passcodeHandleCancel} cancelText={formatMessage({ id: 'CANCEL' })} okText={formatMessage({ id: 'CONFIRM' })} width='570px' centered>
       <div
         style={{marginBottom: '13px', marginTop: '20px'}}
       >
