@@ -3,7 +3,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import Header from "Components/Header/Header";
 import { useWindowHeightHeader } from 'Components/CustomHook/useWindowHeight';
 import { Link } from 'react-router-dom';
-import { Pagination, PaginationProps, Popconfirm, message } from 'antd';
+import { Col, Pagination, PaginationProps, Popconfirm, Row, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { GetAgentApiArrayType, GetAgentApiDataType, GetAgentApiType } from 'Types/ServerResponseDataTypes';
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosGetFile, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from 'Components/CustomHook/CustomAxios';

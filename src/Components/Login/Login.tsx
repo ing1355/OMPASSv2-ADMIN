@@ -142,6 +142,8 @@ const Login = () => {
     >
     <div
       className='login_container'
+      style={{minHeight: `${height - 190}px`}}
+      // style={{minHeight: '87vh'}}
     >
 
       {/* header */}
@@ -245,7 +247,7 @@ const Login = () => {
           <div
             className='login_form_container'
           >
-            <h1 className='mb40 login_form_title'><FormattedMessage id='LOGIN' /></h1>
+            <h1 className='login_form_title'><FormattedMessage id='LOGIN' /></h1>
             <form
               onSubmit={loginRequest}
             >
@@ -297,7 +299,7 @@ const Login = () => {
                 </div>
               </div>
               <button
-                className={'button-st1 login-button mb50 ' + ((idChange !== '' && passwordChange !== '') ? 'active' : '')}
+                className={'button-st1 login-button ' + ((idChange !== '' && passwordChange !== '') ? 'active' : '')}
                 // className={'login-button mb50 button-st1 ' + (idRef.current?.value && loginPasswordRef.current?.value) ? 'active' : ''}
                 type='submit'
                 disabled={!(idChange !== '' && passwordChange !== '')}
@@ -309,7 +311,7 @@ const Login = () => {
               ><FormattedMessage id='NOT_A_MEMBER' /></div>
               <Link to='/CreateAccount'>
                 <button
-                  className='button-st2 login-button mb30'
+                  className='button-st2 login-button'
                 ><FormattedMessage id='CREATE_ACCOUNT' /></button>
               </Link>
             </form>
@@ -330,9 +332,9 @@ const Login = () => {
     >
       <div
         className='mb10'
-        style={{fontSize: "1.2rem"}}
+        style={{fontSize: "1.4vh"}}
       >
-        <img src={locale_image} width='20px' style={{position: 'relative', top: '3px', marginRight: '2px'}}/>
+        <img className='login_footer_locale_img' src={locale_image} />
         <span 
           className={'mlr5 locale-toggle' + (lang === 'ko' ? ' active' : '')}
           onClick={() => {
@@ -354,13 +356,13 @@ const Login = () => {
       >
         <img
           src={maunal_download}
-          width="25px"
-          style={{position: 'relative', top: '5px'}}
+          className='login_footer_manual_download_img'
         />
       </a>
       </div>
       <div
         className='copyRight-style'
+        style={{fontSize: "1.1vh"}}
       >
         {CopyRightText}
       </div>

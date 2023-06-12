@@ -98,9 +98,9 @@ const Main = () => {
             md={6}
             lg={6}
             xl={6}
+            key={'super_admin_' + index}
           >
             <div
-              key={'super_admin_' + index}
               className={ 'main_menu_card ' + 
                 (data.id === 0 && isHovered0 ? 'main_menu_hovered' :
                 data.id === 1 && isHovered1 ? 'main_menu_hovered' :
@@ -140,9 +140,9 @@ const Main = () => {
             md={6}
             lg={6}
             xl={6}
+            key={'admin_' + index}
           >
             <div
-              key={'admin_' + index}
               className={
                 'main_menu_card ' + 
                 (data.id === 0 && isHovered0 ? 'main_menu_hovered' :

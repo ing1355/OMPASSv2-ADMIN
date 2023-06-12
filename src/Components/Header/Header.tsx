@@ -16,7 +16,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { userInfoClear } from 'Redux/actions/userChange';
 import { CustomAxiosGetFile } from 'Components/CustomHook/CustomAxios';
 import { GetAgentInstallerDownloadApi } from 'Constants/ApiRoute';
-import { message } from 'antd';
+import { Col, Row, message } from 'antd';
 
 const Header = () => {
   const { lang, userInfo } = useSelector((state: ReduxStateType) => ({
@@ -48,11 +48,17 @@ const Header = () => {
     <div
       className='header_container'
     >
-      <div
+      <Row
         className='header_nav_container'
-        style={{width: '90rem'}}
+        // style={{width: '90rem'}}
       >
-        <nav
+        <Col
+          className='header_col'
+          xs={{ span: 14, offset: 0 }} 
+          sm={{ span: 14, offset: 0 }} 
+          md={{ span: 10, offset: 1 }} 
+          lg={{ span: 8, offset: 2 }}
+          xl={{ span: 7, offset: 3 }}
           // className='ml30'
           // style={{marginLeft: '10%'}}
         >
@@ -92,9 +98,17 @@ const Header = () => {
               >Portal</span>
             </li>
           </ul>
-        </nav>
+        </Col>
         
-        <nav>
+        <Col
+          className='header_col'
+          style={{textAlign: 'right', alignItems: 'end'}}
+          xs={{ span: 10, offset: 0 }} 
+          sm={{ span: 10, offset: 0 }} 
+          md={{ span: 10, offset: 2 }} 
+          lg={{ span: 8, offset: 4 }}
+          xl={{ span: 7, offset: 4 }}
+        >
           <ul>
             <li>
               <img src={download_icon_blue}
@@ -166,8 +180,16 @@ const Header = () => {
               </Link>
             </li>
           </ul>
-        </nav>
-      </div>
+        </Col>
+        <Col
+          xs={0}
+          sm={0}
+          md={1}
+          lg={2}
+          xl={3}
+        >
+        </Col>
+      </Row>
     </div>
   )
 }

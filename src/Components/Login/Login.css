@@ -66,7 +66,7 @@
 
 .login_form_title {
   font-weight: 900;
-  font-size: 2.1rem;
+  font-size: 1.9rem;
 }
 
 .login_input_container {
@@ -88,27 +88,58 @@
   font-size: 1.2rem;
   font-weight: 700;
   border-radius: 12px;
+  margin-bottom: 2vh;
 }
 
 .login_footer {
   flex-direction: column;
   margin-bottom: 1%;
-  margin-top: 1.5%;
+}
+
+.login_footer_locale_img {
+  position: relative;
+  top: 3px;
+  margin-right: 2px;
+  width: 15px;
+}
+
+.login_footer_manual_download_img {
+  position: relative;
+  top: 5px;
+  width: 20px;
 }
 
 /* 반응형 */
 
 @media (min-width: 1400px) {
   .login_form_container {
-    margin: 10%;
-    width: 70%;
+    /* margin: 10%; */
+    width: 75%;
+  }
+  .login_footer_locale_img {
+    width: 15px;
+  }
+  .login_footer_manual_download_img {
+    width: 20px;
+  }
+  .login_form_title {
+    font-size: 1.9rem;
   }
 }
 
 @media (min-width: 1800px) {
   .login_form_container {
     margin: 10%;
-    width: 55%;
+    width: 60%;
+  }
+  .login_footer_locale_img {
+    width: 20px;
+  }
+  .login_footer_manual_download_img {
+    width: 25px;
+  }
+  .login_form_title {
+    font-size: 2.1rem;
   }
 }
 

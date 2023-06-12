@@ -26,7 +26,7 @@ import browser_icon from '../../assets/browser_icon.png';
 import os_windows from '../../assets/os_windows.png';
 import os_mac from '../../assets/os_mac.png';
 
-type listType = 'username' | 'os' | 'lastLoginDate' | 'enable_passcode_count' | 'all' | null;
+type listType = 'user_type' | 'username' | 'os' | 'lastLoginDate' | 'enable_passcode_count' | 'all' | null;
 type sortingType = 'none' | 'asc' | 'desc';
 type searchOsType = 'windows' | 'Windows' | 'WINDOWS' | 'mac' | 'BROWSER' | null;
 
@@ -142,7 +142,8 @@ export const Tab = () => {
   const sortingUlFunRefs = useRef<any[]>([]);
   const searchDropdownRef = useRef<any>(null);
   const searchOsDropdownRef = useRef<any>(null);
-
+console.log('sortingNow',sortingNow)
+console.log('sortingInfo',sortingInfo)
   const menuArr = [
     { id: 0, name: 'TOTAL_USERS', content: 'Tab menu ONE', count: countData?.totalUserCount },
     { id: 1, name: 'REGISTERED_USERS', content: 'Tab menu TWO', count: countData?.registeredOmpassUserCount },
@@ -184,7 +185,8 @@ export const Tab = () => {
     const index = 
       sortingInfo?.list === 'username' ? 0 : 
       sortingInfo?.list === 'os' ? 1 :
-      sortingInfo?.list === 'lastLoginDate' ? 2 : 3;
+      sortingInfo?.list === 'lastLoginDate' ? 2 :
+      sortingInfo?.list === 'enable_passcode_count' ? 3 : 4;
 
       if (dropdownRefs.current[index] && !dropdownRefs.current[index].contains(event.target as Node)) {
         setSortingInfo({
@@ -287,6 +289,7 @@ export const Tab = () => {
         <li>
           <div
             onClick={() => {
+              console.log('listType',listType)
               setSortingInfo({
                 list: listType,
                 sorting: 'asc',
@@ -465,11 +468,11 @@ export const Tab = () => {
               style={{position: 'relative'}}
               ref={searchDropdownRef}
             >
-              <input id='dropdown-4' type='checkbox' readOnly checked={isSearchDropdownOpen}/>
-              <label htmlFor='dropdown-4' className='dropdown-label-4' onClick={()=>{setIsSearchDropdownOpen(!isSearchDropdownOpen)}}>
+              <input id='dropdown-100' type='checkbox' readOnly checked={isSearchDropdownOpen}/>
+              <label htmlFor='dropdown-100' className='dropdown-label-100' onClick={()=>{setIsSearchDropdownOpen(!isSearchDropdownOpen)}}>
                 {searchType ? 
                   <div
-                    className='dropdown-4-header'
+                    className='dropdown-100-header'
                   >
                     <span>
                       {searchType === 'all' && <FormattedMessage id='all' /> }
@@ -482,7 +485,7 @@ export const Tab = () => {
                   </div> 
                 : 
                   <div
-                    className='dropdown-4-header'
+                    className='dropdown-100-header'
                   >
                     <span>
                       <FormattedMessage id='SEARCH_TYPE' />
@@ -492,7 +495,7 @@ export const Tab = () => {
                 }
               </label>
               <ul
-                className='dropdown-ul-4'
+                className='dropdown-ul-100'
               >
                 <li>
                   <div
@@ -555,11 +558,11 @@ export const Tab = () => {
                 <div
                   ref={searchOsDropdownRef}
                 >
-                  <input id='dropdown-5' type='checkbox' readOnly checked={isOsDropdownOpen}/>
-                  <label htmlFor='dropdown-5' className='dropdown-label-5' onClick={()=>{setIsOsDropdownOpen(!isOsDropdownOpen)}}>
+                  <input id='dropdown-101' type='checkbox' readOnly checked={isOsDropdownOpen}/>
+                  <label htmlFor='dropdown-101' className='dropdown-label-5' onClick={()=>{setIsOsDropdownOpen(!isOsDropdownOpen)}}>
                     {searchOsInfo ? 
                       <div
-                        className='dropdown-5-header'
+                        className='dropdown-101-header'
                       >
                         <span>
                           {searchOsInfo === 'windows' && <>windows</>}
@@ -570,7 +573,7 @@ export const Tab = () => {
                       </div> 
                     : 
                       <div
-                        className='dropdown-5-header'
+                        className='dropdown-101-header'
                       >
                         <span>
                           <FormattedMessage id='ENV_TYPE' />
@@ -580,7 +583,7 @@ export const Tab = () => {
                     }
                   </label>
                   <ul
-                    className='dropdown-ul-5'
+                    className='dropdown-ul-101'
                   >
                     <li>
                       <div
@@ -667,8 +670,38 @@ export const Tab = () => {
             >
               <thead>
                 <tr>
-                  <th>
-                    <FormattedMessage id='TYPE' />
+                  <th
+                    style={{position: 'relative'}}
+                    ref={ (el) => (dropdownRefs.current[4] = el) }
+                  >
+                    <input id='dropdown-4' type='checkbox' checked={sortingInfo?.list === 'user_type' && sortingInfo.isToggle} readOnly></input>
+                    <label htmlFor='dropdown-4' className={'dropdown-label-4 ' + (sortingNow?.list === 'user_type' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
+                      onClick={()=>{
+                        if(sortingInfo === null || sortingInfo?.list !== 'user_type') {
+                          setSortingInfo({
+                            list: 'user_type',
+                            sorting: 'none',
+                            isToggle: true,
+                          })
+                        } else {
+                          if(sortingInfo?.list === 'user_type') {
+                            setSortingInfo({
+                              list: 'user_type',
+                              sorting: 'none',
+                              isToggle: !sortingInfo.isToggle,
+                            })
+                          }
+                        }
+                      }}
+                    >
+                      <FormattedMessage id='TYPE' />
+                      {sortingNow === null ?
+                        sortingImgFun(false, 'none')
+                      :
+                        sortingImgFun((sortingNow?.list === 'user_type' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'desc')), sortingNow!.sorting)
+                      }
+                    </label>
+                    {sortingUlFun("user_type", 4)}
                   </th>
                   <th
                     style={{position: 'relative'}}
@@ -828,6 +861,9 @@ export const Tab = () => {
                     </td>
                     <td
                       style={{padding: 0}}
+                      onClick={() => {
+                        
+                      }}
                     ><OSNamesComponent osNames={data.osNames} /></td>
                     <td>{data.lastLoginDate}</td>
                     <td>{data.enablePasscodeCount}</td>
