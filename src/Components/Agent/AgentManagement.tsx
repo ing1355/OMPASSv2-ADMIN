@@ -98,7 +98,7 @@ const AgentManagement = () => {
     )
   },[tableCellSize, pageNum, rendering, isAddVersion]);
 
-  // adminData가 변경되면 checkboxes 초기화
+  // agentData가 변경되면 checkboxes 초기화
   useEffect(() => {
     const updatedCheckboxes = agentData.map((data, index) => ({
       id: index,

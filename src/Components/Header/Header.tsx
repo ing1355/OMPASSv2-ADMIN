@@ -73,6 +73,7 @@ const Header = () => {
                   <li><Link to='/InformationList'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='USER_MANAGEMENT' /></div></Link></li>
                   <li><Link to='/AdminsManagement'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='ADMIN_MANAGEMENT' /></div></Link></li>
                   <li><Link to='/AgentManagement'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='VERSION_MANAGEMENT' /></div></Link></li>
+                  <li><Link to='/PasscodeManagement'><div onClick={()=>{setIsMenuOpen(false)}}>패스코드 관리</div></Link></li>
                   {role === 'SUPER_ADMIN' &&<li><Link to='/SecretKey'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='SECRET_KEY_MANAGEMENT' /></div></Link></li>}
                 </ul>
               </li>
