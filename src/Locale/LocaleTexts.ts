@@ -165,6 +165,9 @@ const LocaleTexts = {
     VERSION_DELETE: 'The version has been deleted',
     all: 'All',
     ENV_TYPE: 'Environment Type',
+    MINUTES_LATER: 'minutes later',
+    ONCE: 'once',
+    TIMES: 'times',
   },
   'ko': {
     LOGIN: '로그인',
@@ -332,6 +335,9 @@ const LocaleTexts = {
     VERSION_DELETE: '버전 삭제 완료',
     all: '전체',
     ENV_TYPE: '환경 타입',
+    MINUTES_LATER: '분 후',
+    ONCE: '1번',
+    TIMES: '번',
   }
 }
 

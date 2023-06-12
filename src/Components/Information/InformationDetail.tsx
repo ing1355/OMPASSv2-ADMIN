@@ -478,6 +478,7 @@ const InformationDetail = () => {
           {deviceData.map((data:DevicesType, index: number) => (
             <div
               className='information_detail_section mb30'
+              key={'information_detail_section' + index}
             >
               <div style={{display: 'flex', justifyContent: 'space-between'}}>
                 <h3><FormattedMessage id='DEVICE_INFORMATION' /></h3>
@@ -1052,7 +1053,11 @@ const InformationDetail = () => {
                               className='mlr10'
                             >
                               <input type='radio' name='expiration_time' id='time_write' defaultChecked={data.passcode ? data.passcode.validTime ? true : false : true} />
-                              <input type='text' id='time_minute' className='information_detail_passcode_setting_content_input' maxLength={6}/> 분 후
+                              <input type='text' id='time_minute' className='information_detail_passcode_setting_content_input' maxLength={6}
+                                onChange={(e) => {
+                                  e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                                }}
+                              /> <FormattedMessage id='MINUTES_LATER' />
                             </label>
                             <label
                               className='mlr10'
@@ -1075,18 +1080,22 @@ const InformationDetail = () => {
                             <label
                               className='mlr10'
                             >
-                              <input type='radio' name='recycle' id='only_one' maxLength={6} defaultChecked={data.passcode ? data.passcode.recycleCount === 1 ? true : false : true}/> 1번
+                              <input type='radio' name='recycle' id='only_one' maxLength={6} defaultChecked={data.passcode ? data.passcode.recycleCount === 1 ? true : false : true}/> <FormattedMessage id='ONCE' />
                             </label>
                             <label
                               className='mlr10'
                             >
                               <input type='radio' name='recycle' id='more_than_one' defaultChecked={data.passcode ? data.passcode.recycleCount > 1 ? true : false : false}/>
-                              <input type='text' id='recycle_number' className='information_detail_passcode_setting_content_input'/> 번
+                              <input type='text' id='recycle_number' className='information_detail_passcode_setting_content_input'
+                                onChange={(e) => {
+                                  e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                                }}
+                              /> <FormattedMessage id='TIMES' />
                             </label>
                             <label
                               className='mlr10'
                             >
-                              <input type='radio' name='recycle' id='unlimited' defaultChecked={data.passcode ? data.passcode.recycleCount === -1 ? true : false : false}/> 무제한
+                              <input type='radio' name='recycle' id='unlimited' defaultChecked={data.passcode ? data.passcode.recycleCount === -1 ? true : false : false}/> <FormattedMessage id='UNLIMITED' />
                             </label>
                           </li>
                         </ul>

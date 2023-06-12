@@ -223,7 +223,7 @@ const AdminsManagement = () => {
                 }}
               >
                 <div
-                  style={{marginBottom: '13px'}}
+                  className='mb20'
                 >
                   <label><FormattedMessage id='ID' /></label>
                   <div
@@ -250,6 +250,7 @@ const AdminsManagement = () => {
                     <button
                       type='button'
                       className={'button-st1 create_account_id_check ' + (!isIdAlert && userIdRef.current?.value ? 'active' : '')}
+                      style={{fontSize: '1.15vh', fontWeight: '500'}}
                       onClick={() => {
                         const username = userIdRef.current?.value;
 
@@ -275,7 +276,9 @@ const AdminsManagement = () => {
                     <FormattedMessage id='USER_ID_CHECK' />
                   </div>
                 </div>
-                <div>
+                <div
+                  className='mb20'
+                >
                   <label><FormattedMessage id='NAME' /></label>
                   <input 
                     ref={userNameRef}
