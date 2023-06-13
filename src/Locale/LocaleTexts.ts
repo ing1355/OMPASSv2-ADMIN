@@ -168,6 +168,7 @@ const LocaleTexts = {
     MINUTES_LATER: 'minutes later',
     ONCE: 'once',
     TIMES: 'times',
+    PASSCODE_MANAGEMENT: 'Passcode Management',
   },
   'ko': {
     LOGIN: '로그인',
@@ -338,6 +339,7 @@ const LocaleTexts = {
     MINUTES_LATER: '분 후',
     ONCE: '1번',
     TIMES: '번',
+    PASSCODE_MANAGEMENT: '패스코드 관리',
   }
 }
 

@@ -54,13 +54,11 @@ const PasscodeManagement = () => {
                         />
                       </th>
                       <th></th> */}
-                      <th><FormattedMessage id='VERSION' /></th>
-                      <th>OS</th>
-                      <th><FormattedMessage id='FILE_NAME' /></th>
-                      <th><FormattedMessage id='UPLOAD_DATE' /></th>
-                      <th><FormattedMessage id='UPLOADER' /></th>
-                      <th><FormattedMessage id='DOWNLOAD' /></th>
-                      <th><FormattedMessage id='CURRENT_VERSION_SETTING' /></th>
+                      <th>패스코드</th>
+                      <th>발급 관리자 아이디</th>
+                      <th>발급 일시</th>
+                      <th>유효 시간</th>
+                      <th>남은 사용 횟수</th>
                       {/* <th>
                         <Popconfirm
                           title={formatMessage({ id: 'DELETE_A_FILE' })}

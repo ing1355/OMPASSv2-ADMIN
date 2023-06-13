@@ -36,6 +36,7 @@ const Main = () => {
   const [isHovered1, setIsHovered1] = useState(false);
   const [isHovered2, setIsHovered2] = useState(false);
   const [isHovered3, setIsHovered3] = useState(false);
+  const [isHovered4, setIsHovered4] = useState(false);
 
   const {role} = userInfo
 
@@ -43,13 +44,15 @@ const Main = () => {
     { id: 0, title: 'USER_MANAGEMENT', imgName: isHovered0 ? user_management_white :user_management, navi: '/InformationList' },
     { id: 1, title: 'ADMIN_MANAGEMENT', imgName: isHovered1 ? admin_management_white : admin_management, navi: '/AdminsManagement' }, 
     { id: 2, title: 'VERSION_MANAGEMENT', imgName: isHovered2 ? version_management_white : version_management, navi: '/AgentManagement' }, 
-    { id: 3, title: 'SECRET_KEY_MANAGEMENT', imgName: isHovered3 ? secret_key_management_white : secret_key_management, navi: '/SecretKey' }, 
+    { id: 3, title: 'PASSCODE_MANAGEMENT', imgName: isHovered3 ? secret_key_management_white : secret_key_management, navi: '/PasscodeManagement' }, 
+    { id: 4, title: 'SECRET_KEY_MANAGEMENT', imgName: isHovered4 ? secret_key_management_white : secret_key_management, navi: '/SecretKey' }, 
   ];
 
   const menuInfoAdmin = [
     { id: 0, title: 'USER_MANAGEMENT', imgName: isHovered0 ? user_management_white :user_management, navi: '/InformationList' },
     { id: 1, title: 'ADMIN_MANAGEMENT', imgName: isHovered1 ? admin_management_white : admin_management, navi: '/AdminsManagement' }, 
     { id: 2, title: 'VERSION_MANAGEMENT', imgName: isHovered2 ? version_management_white : version_management, navi: '/AgentManagement' }, 
+    { id: 3, title: 'PASSCODE_MANAGEMENT', imgName: isHovered3 ? secret_key_management_white : secret_key_management, navi: '/PasscodeManagement' }, 
   ];
 
   const handleHover0 = () => {
@@ -84,20 +87,29 @@ const Main = () => {
     setIsHovered3(false);
   };
 
+  const handleHover4 = () => {
+    setIsHovered3(true);
+  };
+
+  const handleMouseLeave4 = () => {
+    setIsHovered3(false);
+  };
+
   const menuInfoFun = () => {
     return (
     <Row 
       className='main_menu_container'
       style={{display: 'flex', marginTop: '3rem'}}
+      justify={'center'}
     >
       {role === 'SUPER_ADMIN' &&
         menuInfo.map((data: menuInfoType, index: number) => (
           <Col
             xs={24}
             sm={12}
-            md={6}
-            lg={6}
-            xl={6}
+            md={12}
+            lg={4}
+            xl={4}
             key={'super_admin_' + index}
           >
             <div
@@ -106,6 +118,7 @@ const Main = () => {
                 data.id === 1 && isHovered1 ? 'main_menu_hovered' :
                 data.id === 2 && isHovered2 ? 'main_menu_hovered' :
                 data.id === 3 && isHovered3 ? 'main_menu_hovered' :
+                data.id === 4 && isHovered4 ? 'main_menu_hovered' :
                 '')
               }
 
@@ -113,13 +126,15 @@ const Main = () => {
                 data.id === 0 ? handleHover0 :
                 data.id === 1 ? handleHover1 :
                 data.id === 2 ? handleHover2 :
-                handleHover3
+                data.id === 3 ? handleHover3 :
+                handleHover4
               }
               onMouseLeave={
                 data.id === 0 ? handleMouseLeave0 :
                 data.id === 1 ? handleMouseLeave1 :
                 data.id === 2 ? handleMouseLeave2 :
-                handleMouseLeave3
+                data.id === 3 ? handleMouseLeave3 :
+                handleMouseLeave4
               }
               onClick={() => {
                 navigate(data.navi);
@@ -148,18 +163,21 @@ const Main = () => {
                 (data.id === 0 && isHovered0 ? 'main_menu_hovered' :
                 data.id === 1 && isHovered1 ? 'main_menu_hovered' :
                 data.id === 2 && isHovered2 ? 'main_menu_hovered' :
+                data.id === 3 && isHovered3 ? 'main_menu_hovered' :
                 '')
               }
 
               onMouseEnter={
                 data.id === 0 ? handleHover0 :
                 data.id === 1 ? handleHover1 :
-                handleHover2
+                data.id === 2 ? handleHover2 :
+                handleHover3
               }
               onMouseLeave={
                 data.id === 0 ? handleMouseLeave0 :
                 data.id === 1 ? handleMouseLeave1 :
-                handleMouseLeave2
+                data.id === 2 ? handleMouseLeave2 :
+                handleMouseLeave3
               }
               onClick={() => {
                 navigate(data.navi);
