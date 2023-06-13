@@ -182,7 +182,7 @@ const AgentManagement = () => {
                     const metaDataVersion = version.value;
                     const hashValue = hash.value;
                     const multipartFile = uploadFile.files[0];
-                    const maxFileSize = 20 * 1024 * 1024;
+                    const maxFileSize = 100 * 1024 * 1024;
                     const fileExtension = multipartFile.name.split('.').pop();
                     
                     console.log('fileExtension',fileExtension)
@@ -195,7 +195,7 @@ const AgentManagement = () => {
 
                     if(metaDataVersion && multipartFile && hashValue && !isVersionAlert) {
                       if(multipartFile.size > maxFileSize) {
-                        message.error(formatMessage({ id: 'THE_FILE_SIZE_EXCEEDS_20MB' }));
+                        message.error(formatMessage({ id: 'THE_FILE_SIZE_EXCEEDS_100MB' }));
                       } else if(fileExtension !== 'zip') {
                         message.error(formatMessage({ id: 'ONLY_ZIP_FILES_CAN_BE_UPLOADED' }));
                       }  else {
