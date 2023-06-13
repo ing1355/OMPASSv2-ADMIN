@@ -119,7 +119,6 @@ const LocaleTexts = {
     DELETE_ACCOUNT_: 'Delete',
     SEARCH_TYPE: 'Search Type',
     DOWNLOAD_FAILED: 'Download failed',
-    MODIFY_: 'Modify',
     PLEASE_RE_ENTER_A_PASSWORD: 'Please re-enter a password',
     LOGIN_COMPLETE: 'Login Complete',
     LOGIN_WITH_PASSWORD: 'Login with PASSCODE',
@@ -171,6 +170,7 @@ const LocaleTexts = {
     PASSCODE_MANAGEMENT: 'Passcode Management',
     user_type: 'type',
     USER_TYPE: 'User Type',
+    APPLY: 'Apply',
   },
   'ko': {
     LOGIN: '로그인',
@@ -292,7 +292,6 @@ const LocaleTexts = {
     DELETE_ACCOUNT_: '탈퇴',
     SEARCH_TYPE: '검색 타입',
     DOWNLOAD_FAILED: '다운로드 실패',
-    MODIFY_: '변경',
     PLEASE_REENTER_A_PASSWORD: '비밀번호를 다시 입력해주세요',
     LOGIN_COMPLETE: '로그인 완료',
     LOGIN_WITH_PASSWORD: 'PASSCODE로 로그인',
@@ -344,6 +343,7 @@ const LocaleTexts = {
     PASSCODE_MANAGEMENT: '패스코드 관리',
     user_type: '타입',
     USER_TYPE: '사용자 타입',
+    APPLY: '적용',
   }
 }
 

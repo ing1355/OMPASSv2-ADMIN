@@ -441,7 +441,7 @@ const AgentManagement = () => {
                                 }
                               )
                             }}
-                          ><FormattedMessage id='MODIFY_' /></button>
+                          ><FormattedMessage id='APPLY' /></button>
                         </td>
                         <td>
                           <Popconfirm
