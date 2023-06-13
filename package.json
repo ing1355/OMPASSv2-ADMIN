@@ -1,7 +1,7 @@
 {
   "name": "ompass_rp_admin",
   "version": "0.1.0(1)",
-  "proxy": "https://192.168.182.140:8085",
+  "proxy": "https://192.168.182.140:8084",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",

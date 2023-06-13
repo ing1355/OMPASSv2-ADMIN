@@ -54,8 +54,11 @@ const PasscodeManagement = () => {
                         />
                       </th>
                       <th></th> */}
+                      <th>타입</th>
+                      <th>사용자 아이디</th>
+                      <th>환경</th>
                       <th>패스코드</th>
-                      <th>발급 관리자 아이디</th>
+                      <th>발급자 아이디</th>
                       <th>발급 일시</th>
                       <th>유효 시간</th>
                       <th>남은 사용 횟수</th>

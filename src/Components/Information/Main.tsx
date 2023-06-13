@@ -3,20 +3,22 @@ import './Main.css';
 import Header from 'Components/Header/Header';
 import { Link, useNavigate } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import { UserInfoType } from 'Types/ServerResponseDataTypes';
-import user_management from '../../assets/user_management.png';
-import admin_management from '../../assets/admin_management.png';
-import version_management from '../../assets/version_management.png';
-import secret_key_management from '../../assets/secret_key_management.png';
-import user_management_white from '../../assets/user_management_white.png';
-import admin_management_white from '../../assets/admin_management_white.png';
-import version_management_white from '../../assets/version_management_white.png';
-import secret_key_management_white from '../../assets/secret_key_management_white.png';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
 import { CopyRightText } from 'Constants/ConstantValues';
 import { Col, Row } from 'antd';
+import { UserInfoType } from 'Types/ServerResponseDataTypes';
+import user_management from '../../assets/user_management.png';
+import admin_management from '../../assets/admin_management.png';
+import version_management from '../../assets/version_management.png';
+import secret_key_management from '../../assets/secret_key_management.png';
+import passcode_management from '../../assets/passcode_management.png';
+import user_management_white from '../../assets/user_management_white.png';
+import admin_management_white from '../../assets/admin_management_white.png';
+import version_management_white from '../../assets/version_management_white.png';
+import secret_key_management_white from '../../assets/secret_key_management_white.png';
+import passcode_management_white from '../../assets/passcode_management_white.png';
 
 type menuInfoType = {
   id: number,
@@ -44,7 +46,7 @@ const Main = () => {
     { id: 0, title: 'USER_MANAGEMENT', imgName: isHovered0 ? user_management_white :user_management, navi: '/InformationList' },
     { id: 1, title: 'ADMIN_MANAGEMENT', imgName: isHovered1 ? admin_management_white : admin_management, navi: '/AdminsManagement' }, 
     { id: 2, title: 'VERSION_MANAGEMENT', imgName: isHovered2 ? version_management_white : version_management, navi: '/AgentManagement' }, 
-    { id: 3, title: 'PASSCODE_MANAGEMENT', imgName: isHovered3 ? secret_key_management_white : secret_key_management, navi: '/PasscodeManagement' }, 
+    { id: 3, title: 'PASSCODE_MANAGEMENT', imgName: isHovered3 ? passcode_management_white : passcode_management, navi: '/PasscodeManagement' }, 
     { id: 4, title: 'SECRET_KEY_MANAGEMENT', imgName: isHovered4 ? secret_key_management_white : secret_key_management, navi: '/SecretKey' }, 
   ];
 
@@ -52,7 +54,7 @@ const Main = () => {
     { id: 0, title: 'USER_MANAGEMENT', imgName: isHovered0 ? user_management_white :user_management, navi: '/InformationList' },
     { id: 1, title: 'ADMIN_MANAGEMENT', imgName: isHovered1 ? admin_management_white : admin_management, navi: '/AdminsManagement' }, 
     { id: 2, title: 'VERSION_MANAGEMENT', imgName: isHovered2 ? version_management_white : version_management, navi: '/AgentManagement' }, 
-    { id: 3, title: 'PASSCODE_MANAGEMENT', imgName: isHovered3 ? secret_key_management_white : secret_key_management, navi: '/PasscodeManagement' }, 
+    { id: 3, title: 'PASSCODE_MANAGEMENT', imgName: isHovered3 ? passcode_management_white : passcode_management, navi: '/PasscodeManagement' }, 
   ];
 
   const handleHover0 = () => {
@@ -88,11 +90,11 @@ const Main = () => {
   };
 
   const handleHover4 = () => {
-    setIsHovered3(true);
+    setIsHovered4(true);
   };
 
   const handleMouseLeave4 = () => {
-    setIsHovered3(false);
+    setIsHovered4(false);
   };
 
   const menuInfoFun = () => {

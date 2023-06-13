@@ -137,13 +137,15 @@ export const Tab = () => {
   const [excelDownloadAllData, setExcelDownloadAllData] = useState<any>(null);
   const [isOsDropdownOpen, setIsOsDropdownOpen] = useState<boolean>(false);
   const [searchOsInfo, setSearchOsInfo] = useState<searchOsType>(null);
+  const [isTypeDropdownOpen, setIsTypeDropdownOpen] = useState<boolean>(false);
+  const [searchTypeInfo, setSearchTypeInfo] = useState<userRoleType>(null);
   const searchContentRef = useRef<HTMLInputElement>(null);
   const dropdownRefs = useRef<any[]>([]);
   const sortingUlFunRefs = useRef<any[]>([]);
   const searchDropdownRef = useRef<any>(null);
   const searchOsDropdownRef = useRef<any>(null);
-console.log('sortingNow',sortingNow)
-console.log('sortingInfo',sortingInfo)
+  const searchTypeDropdownRef = useRef<any>(null);
+
   const menuArr = [
     { id: 0, name: 'TOTAL_USERS', content: 'Tab menu ONE', count: countData?.totalUserCount },
     { id: 1, name: 'REGISTERED_USERS', content: 'Tab menu TWO', count: countData?.registeredOmpassUserCount },
@@ -443,9 +445,6 @@ console.log('sortingInfo',sortingInfo)
     <>
       <div>
         <TabMenu> 
-          {/* <li className="submenu">{menuArr[0].name}</li>
-          <li className="submenu">{menuArr[1].name}</li>
-          <li className="submenu">{menuArr[2].name}</li> */}
           {menuArr.map((el,index) => (
             <li
               key={'tab' + index} 
@@ -476,6 +475,7 @@ console.log('sortingInfo',sortingInfo)
                   >
                     <span>
                       {searchType === 'all' && <FormattedMessage id='all' /> }
+                      {searchType === 'user_type' && <FormattedMessage id='user_type' /> }
                       {searchType === 'username' && <FormattedMessage id='username' /> }
                       {searchType === 'os' && <FormattedMessage id='os' /> }
                       {searchType === 'lastLoginDate' && <FormattedMessage id='lastLoginDate' /> }
@@ -503,6 +503,8 @@ console.log('sortingInfo',sortingInfo)
                       setSearchType('all');
                       setIsSearchDropdownOpen(false);
                       setSearchOsInfo(null);
+                      setIsTypeDropdownOpen(false);
+                      setSearchTypeInfo(null);
                     }}
                   >
                     <FormattedMessage id='all' />
@@ -511,9 +513,24 @@ console.log('sortingInfo',sortingInfo)
                 <li>
                   <div
                     onClick={() => {
+                      setSearchType('user_type');
+                      setIsSearchDropdownOpen(false);
+                      setSearchOsInfo(null);
+                      setIsTypeDropdownOpen(false);
+                      setSearchTypeInfo(null);
+                    }}
+                  >
+                    <FormattedMessage id='user_type' />
+                  </div>
+                </li>
+                <li>
+                  <div
+                    onClick={() => {
                       setSearchType('username');
                       setIsSearchDropdownOpen(false);
                       setSearchOsInfo(null);
+                      setIsTypeDropdownOpen(false);
+                      setSearchTypeInfo(null);
                     }}
                   >
                     <FormattedMessage id='USER_ID' />
@@ -525,6 +542,8 @@ console.log('sortingInfo',sortingInfo)
                       setSearchType('os');
                       setIsSearchDropdownOpen(false);
                       setSearchOsInfo(null);
+                      setIsTypeDropdownOpen(false);
+                      setSearchTypeInfo(null);
                     }}
                   >
                     <FormattedMessage id='ENV' />
@@ -546,6 +565,8 @@ console.log('sortingInfo',sortingInfo)
                       setSearchType('enable_passcode_count');
                       setIsSearchDropdownOpen(false);
                       setSearchOsInfo(null);
+                      setIsTypeDropdownOpen(false);
+                      setSearchTypeInfo(null);
                     }}
                   >
                     PASSCODE
@@ -617,7 +638,75 @@ console.log('sortingInfo',sortingInfo)
                     </li>
                   </ul>
                 </div>
+
               :
+
+                searchType === 'user_type' ?
+                <div
+                  ref={searchTypeDropdownRef}
+                >
+                  <input id='dropdown-102' type='checkbox' readOnly checked={isTypeDropdownOpen}/>
+                  <label htmlFor='dropdown-102' className='dropdown-label-5' onClick={()=>{setIsTypeDropdownOpen(!isTypeDropdownOpen)}}>
+                    {searchTypeInfo ? 
+                      <div
+                        className='dropdown-102-header'
+                      >
+                        <span>
+                          {searchTypeInfo === 'USER' && <FormattedMessage id='USER' />}
+                          {searchTypeInfo === 'ADMIN' && <FormattedMessage id='ADMIN' />}
+                          {searchTypeInfo === 'SUPER_ADMIN' && <FormattedMessage id='SUPER_ADMIN' />}
+                        </span>
+                        <img className='tab_dropdown_arrow' src={dropdown_icon}/>
+                      </div> 
+                    : 
+                      <div
+                        className='dropdown-102-header'
+                      >
+                        <span>
+                          <FormattedMessage id='USER_TYPE' />
+                        </span>
+                        <img className='tab_dropdown_arrow' src={dropdown_icon}/>
+                      </div>
+                    }
+                  </label>
+                  <ul
+                    className='dropdown-ul-102'
+                  >
+                    <li>
+                      <div
+                        onClick={() => {
+                          setSearchTypeInfo('USER');
+                          setIsTypeDropdownOpen(false);
+                        }}
+                      >
+                        <FormattedMessage id='USER' />
+                      </div>
+                    </li>
+                    <li>
+                      <div
+                        onClick={() => {
+                          setSearchTypeInfo('ADMIN');
+                          setIsTypeDropdownOpen(false);
+                        }}
+                      >
+                        <FormattedMessage id='ADMIN' />
+                      </div>
+                    </li>
+                    <li>
+                      <div
+                        onClick={() => {
+                          setSearchTypeInfo('SUPER_ADMIN');
+                          setIsTypeDropdownOpen(false);
+                        }}
+                      >
+                        <FormattedMessage id='SUPER_ADMIN' />
+                      </div>
+                    </li>
+                  </ul>
+                </div> 
+
+              :
+
                 <input
                   ref={searchContentRef}
                   className='input-st1 tab_search_input'

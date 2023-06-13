@@ -118,7 +118,7 @@ const Login = () => {
       PostLoginApi,
       (data:any) => {
         const { ompassUri, loginType } = data;
-        
+        console.log('ompassUri',ompassUri)
         if(loginType === 'PW_CHANGE_USER') {
           setIsModalOpen(true)
         } else {

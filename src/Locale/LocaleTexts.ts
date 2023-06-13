@@ -169,6 +169,8 @@ const LocaleTexts = {
     ONCE: 'once',
     TIMES: 'times',
     PASSCODE_MANAGEMENT: 'Passcode Management',
+    user_type: 'type',
+    USER_TYPE: 'User Type',
   },
   'ko': {
     LOGIN: '로그인',
@@ -340,6 +342,8 @@ const LocaleTexts = {
     ONCE: '1번',
     TIMES: '번',
     PASSCODE_MANAGEMENT: '패스코드 관리',
+    user_type: '타입',
+    USER_TYPE: '사용자 타입',
   }
 }
 

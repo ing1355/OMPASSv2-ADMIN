@@ -34,7 +34,7 @@ export type GetAgentApiType = {
   fileName: string,
 }
 
-export type userRoleType = "USER" | "ADMIN" | "SUPER_ADMIN";
+export type userRoleType = "USER" | "ADMIN" | "SUPER_ADMIN" | null;
 
 export type UserInfoType = {
   userId: string;

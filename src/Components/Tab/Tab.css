@@ -486,9 +486,73 @@ input[type="checkbox"] {
   top: 3px;
 }
 
-.tab_dropdown_arrow {
-  width: 20px;
-  height: 13px;
+#dropdown-102 {
+  left: 0;
+  visibility: hidden;
+  position: absolute;
+}
+
+.dropdown-label-102:hover {
+  cursor: pointer;
+} 
+
+.dropdown-label-102.fontBlack {
+  color: black;
+}
+
+.dropdown-ul-102 {
+  display: none;
+  background-color: white;
+  box-shadow: 0px 5px 20px #ccc;
+  position: absolute;
+  z-index: 1;
+}
+
+.dropdown-ul-102 li {
+  border-bottom: 1px solid #ccc;
+  width: 200px;
+}
+
+.dropdown-ul-102 li div {
+  border: none;
+  background-color: white;
+  color: #999;
+  /* font-size: 1rem; */
+  cursor: pointer;
+  padding: 10px 10px;
+  border-radius: 3px;
+  font-weight: 100;
+}
+
+.dropdown-ul-102 li div:hover {
+  background-color: #0092FA;
+  color: white;
+}
+
+#dropdown-102:checked + label + .dropdown-ul-102 {
+  display: block;
+}
+
+#dropdown-102:checked + label > div > img {
+  transform: rotate(180deg);
+  /* transition: all 0.5s ease-in-out; */
+}
+
+.dropdown-102-header {
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: white;
+  width: 180px;
+  border-radius: 5px;
   position: relative;
-  top: 5px;
+  top: -5px;
+  height: 21.5px;
+  margin-right: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.dropdown-102-header span {
+  position: relative;
+  top: 3px;
 }
