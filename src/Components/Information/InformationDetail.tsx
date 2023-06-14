@@ -36,7 +36,6 @@ type adminIdType = {
 }
 
 const InformationDetail = () => {
-  document.body.style.backgroundColor = 'white'; // ????????????
   const { userInfo } = useSelector((state: ReduxStateType) => ({
     userInfo: state.userInfo!,
   }));

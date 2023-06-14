@@ -28,16 +28,14 @@ const App: React.FC = () => {
       {/* <div className="App"> */}
       <AxiosController />
       <Routes>
-        
         <Route path='/ompass/*' element={<OMPASSVerify />} />
-        <Route path='/InformationDetail/:params/:selectedUuid' element={<InformationDetail />} />
-        <Route path='/CreateAccount' element={<CreateAccount />} />
         <Route path='/Manual' element={<Manual />} />
         {
           userInfo ? (
             userInfo.role!.includes('ADMIN') ? <>
             <Route path='/Main' element={<Main />} />
-            <Route path='/InformationList' element={<InformationList />} />
+            <Route path='/InformationList*' element={<InformationList />} />
+            <Route path='/InformationDetail/:params/:selectedUuid' element={<InformationDetail />} />
             <Route path='/AgentManagement' element={<AgentManagement />} />
             <Route path='/AdminsManagement' element={<AdminsManagement />} />
             <Route path='/PasscodeManagement' element={<PasscodeManagement />} />
@@ -47,6 +45,7 @@ const App: React.FC = () => {
           ) : 
           <>
             <Route path='/*' element={<Navigate to='/' replace={true}/>}/>
+            <Route path='/CreateAccount' element={<CreateAccount />} />
             <Route path='/' element={<Login />} />
           </>
         }

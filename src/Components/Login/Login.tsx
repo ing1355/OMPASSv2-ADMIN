@@ -27,7 +27,7 @@ import { userInfoChange } from 'Redux/actions/userChange';
 
 
 const Login = () => {
-  document.body.style.backgroundColor = '#E4EBEF';
+  // document.body.style.backgroundColor = '#E4EBEF';
   const { lang } = useSelector((state: ReduxStateType) => ({
     lang: state.lang,
   }));
@@ -138,7 +138,7 @@ const Login = () => {
 
   return (
     <div
-      style={{overflowY: 'auto', height: height}}
+      style={{overflowY: 'auto', height: height, backgroundColor: '#E4EBEF'}}
     >
     <div
       className='login_container'

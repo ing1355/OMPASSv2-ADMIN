@@ -28,7 +28,6 @@ type menuInfoType = {
 }
 
 const Main = () => {
-  document.body.style.backgroundColor = 'white';
   const {userInfo} = useSelector((state: ReduxStateType) => ({
     userInfo: state.userInfo!
   }))

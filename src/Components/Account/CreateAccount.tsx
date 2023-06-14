@@ -18,7 +18,6 @@ import { autoHypenPhoneFun, CopyRightText } from 'Constants/ConstantValues';
 type AgreePolicyType = 'agreeService' | 'agreePrivacyPolicy';
 
 const CreateAccount = () => {
-  document.body.style.backgroundColor = '#E4EBEF';
   const height = useWindowHeight();
   const [isStepOne, setIsStepOne] = useState<boolean>(true);
   const [selectAll, setSelectAll] = useState(false);
@@ -156,7 +155,7 @@ const CreateAccount = () => {
 
   return (
     <div
-      style={{overflowY: 'auto', height: height}}
+      style={{overflowY: 'auto', height: height, backgroundColor: '#E4EBEF'}}
     >
       <Row
         justify={'center'}

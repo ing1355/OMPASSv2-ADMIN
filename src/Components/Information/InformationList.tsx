@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 import { CopyRightText } from 'Constants/ConstantValues';
 
 const InformationList = () => {
-  document.body.style.backgroundColor = 'white';
   const height = useWindowHeightHeader();
 
   return (
