@@ -123,8 +123,7 @@ export const Tab = () => {
   const [sortingNow, setSortingNow] = useState<sortingNowType | null>(null);
   const [userData, setUserData] = useState<GetPutUsersApiArrayType>([]);
   const [totalCount, setTotalCount] = useState<number>(0);
-  const [tableCellSize, setTableCellSize] = useState<number>(10);
-  const [pageNum, setPageNum] = useState<number>(1);
+
   const [hoveredRow, setHoveredRow] = useState<number>(-1);
   const [countData, setCountData] = useState<GetUsersCountApiType | null>(null);
   const [tabNow, setTabNow] = useState<string>('TOTAL_USERS');
@@ -156,6 +155,9 @@ export const Tab = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
+  // const { page, pageSize } = useLocation().state ?? { page: 1, pageSize: 10 };
+  const [tableCellSize, setTableCellSize] = useState<number>(10);
+  const [pageNum, setPageNum] = useState<number>(1);
 
   const searchHandleMouseDown = (event: MouseEvent) => {
     if (searchDropdownRef.current && !searchDropdownRef.current.contains(event.target as Node)) {
@@ -252,7 +254,16 @@ export const Tab = () => {
         }
       )
     }
-  },[excelData])
+  },[excelData]);
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setPageNum(parseInt(page));
+  //     setTableCellSize(parseInt(pageSize));
+  //   }, 200);
+  //   // setPageNum(parseInt(page));
+  //   // setTableCellSize(parseInt(pageSize));
+  // },[page, pageSize]);
 
   const selectMenuHandler = (name: string, index: number) => {
     clickTab(index);
@@ -935,6 +946,7 @@ export const Tab = () => {
                     onMouseLeave={() => handleRowHover(-1)}
                     onClick={() => {
                       navigate(`/InformationDetail/User/${data.id}`);
+                      // navigate(`/InformationDetail/User/${data.id}`, { state: { pageNum, tableCellSize } });
                       dispatch(userUuidChange(data.id));
                       // sessionStorage.setItem('userUuid', data.id);
                     }}
@@ -950,8 +962,10 @@ export const Tab = () => {
                     </td>
                     <td
                       style={{padding: 0}}
-                      onClick={() => {
-                        
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.isPropagationStopped();
+                        navigate(`/InformationDetail/User/${data.id}`);
                       }}
                     ><OSNamesComponent osNames={data.osNames} /></td>
                     <td>{data.lastLoginDate}</td>
@@ -967,7 +981,7 @@ export const Tab = () => {
             className="mt50 mb40"
             style={{textAlign: 'center'}}
           >
-            <Pagination showQuickJumper showSizeChanger current={pageNum} total={totalCount} onChange={onChangePage}/>
+            <Pagination showQuickJumper showSizeChanger current={pageNum} pageSize={tableCellSize} total={totalCount} onChange={onChangePage}/>
           </div>
 
           <div

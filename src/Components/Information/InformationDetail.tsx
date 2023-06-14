@@ -79,11 +79,19 @@ const InformationDetail = () => {
   // const pageSizeParam = queryParams.get('pageSize');
 
   const {uuid, role, userId} = userInfo! ?? {};
+  // const { pageNum, tableCellSize } = useLocation().state;
 
   const MacAddressFun = (ad: string) => {
     const macAddRep = ad.replace(/(.{2})/g, "$1:");
     return macAddRep.slice(0, -1);
   }
+
+  // const page = pageNum;
+  // const pageSize = tableCellSize;
+  // window.onpopstate = (event: any) => {
+  //   console.log('11111');
+  //   navigate('/InformationList', { state: { page, pageSize } })
+  // }
 
   // window.onpopstate = (event: any) => {
   //   console.log('11111');
