@@ -171,6 +171,7 @@ const LocaleTexts = {
     user_type: 'type',
     USER_TYPE: 'User Type',
     APPLY: 'Apply',
+    MODIFY_: 'Modify',
   },
   'ko': {
     LOGIN: '로그인',
@@ -344,6 +345,7 @@ const LocaleTexts = {
     user_type: '타입',
     USER_TYPE: '사용자 타입',
     APPLY: '적용',
+    MODIFY_: '변걍',
   }
 }
 

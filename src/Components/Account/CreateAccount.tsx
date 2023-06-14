@@ -33,7 +33,7 @@ const CreateAccount = () => {
   const { lang } = useSelector((state: ReduxStateType) => ({
     lang: state.lang,
   }));
-console.log('height', height)
+  
   const [isIdAlert, setIsIdAlert] = useState<boolean>(false);
   const [isNameAlert, setIsNameAlert] = useState<boolean>(false);
   const [isPasswordAlert, setIsPasswordAlert] = useState<boolean>(false);

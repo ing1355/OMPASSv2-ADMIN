@@ -408,7 +408,7 @@ const AdminsManagement = () => {
                         if (e.currentTarget.tagName !== 'INPUT') {
                           e.stopPropagation();
                           navigate('/InformationDetail/Admin');
-                          sessionStorage.setItem('userUuid', data.id);
+                          // sessionStorage.setItem('userUuid', data.id);
                         }                       
                       }}
                       style={{ background: hoveredRow === index ? '#D6EAF5' : 'transparent', cursor: 'pointer' }}
