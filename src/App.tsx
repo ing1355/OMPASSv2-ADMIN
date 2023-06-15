@@ -36,12 +36,12 @@ const App: React.FC = () => {
           userInfo ? (
             userInfo.role!.includes('ADMIN') ? <>
             <Route path='/Main' element={<Main />} />
-            <Route path='/Information*' element={<Information />} />
+            <Route path='/Information/*' element={<Information />} />
             {/* <Route path='/InformationList*' element={<InformationList />} /> */}
             {/* <Route path='/InformationDetail/:params/:selectedUuid' element={<InformationDetail />} /> */}
             {/* <Route path='/Information/detail/:params/:selectedUuid' element={<InformationDetail />} /> */}
             <Route path='/AgentManagement' element={<AgentManagement />} />
-            <Route path='/AdminsManagement*' element={<Admins />} />
+            <Route path='/AdminsManagement/*' element={<Admins />} />
             <Route path='/PasscodeManagement' element={<PasscodeManagement />} />
             <Route path='/SecretKey' element={<SecretKey />} />
             <Route path='/*' element={<Navigate to='/Main' replace={true}/>}/>
