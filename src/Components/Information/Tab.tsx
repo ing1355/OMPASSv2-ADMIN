@@ -949,7 +949,7 @@ export const Tab = () => {
                     onMouseEnter={() => handleRowHover(index)}
                     onMouseLeave={() => handleRowHover(-1)}
                     onClick={() => {
-                      navigate(`/InformationDetail/User/${data.id}`);
+                      navigate(`/Information/detail/User/${data.id}`);
                       // navigate(`/InformationDetail/User/${data.id}`, { state: { pageNum, tableCellSize } });
                       dispatch(userUuidChange(data.id));
                       // sessionStorage.setItem('userUuid', data.id);

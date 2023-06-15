@@ -42,7 +42,7 @@ const Main = () => {
   const {role} = userInfo
 
   const menuInfo = [
-    { id: 0, title: 'USER_MANAGEMENT', imgName: isHovered0 ? user_management_white :user_management, navi: '/InformationList' },
+    { id: 0, title: 'USER_MANAGEMENT', imgName: isHovered0 ? user_management_white :user_management, navi: '/Information' },
     { id: 1, title: 'ADMIN_MANAGEMENT', imgName: isHovered1 ? admin_management_white : admin_management, navi: '/AdminsManagement' }, 
     { id: 2, title: 'VERSION_MANAGEMENT', imgName: isHovered2 ? version_management_white : version_management, navi: '/AgentManagement' }, 
     { id: 3, title: 'PASSCODE_MANAGEMENT', imgName: isHovered3 ? passcode_management_white : passcode_management, navi: '/PasscodeManagement' }, 
@@ -50,7 +50,7 @@ const Main = () => {
   ];
 
   const menuInfoAdmin = [
-    { id: 0, title: 'USER_MANAGEMENT', imgName: isHovered0 ? user_management_white :user_management, navi: '/InformationList' },
+    { id: 0, title: 'USER_MANAGEMENT', imgName: isHovered0 ? user_management_white :user_management, navi: '/Information' },
     { id: 1, title: 'ADMIN_MANAGEMENT', imgName: isHovered1 ? admin_management_white : admin_management, navi: '/AdminsManagement' }, 
     { id: 2, title: 'VERSION_MANAGEMENT', imgName: isHovered2 ? version_management_white : version_management, navi: '/AgentManagement' }, 
     { id: 3, title: 'PASSCODE_MANAGEMENT', imgName: isHovered3 ? passcode_management_white : passcode_management, navi: '/PasscodeManagement' }, 

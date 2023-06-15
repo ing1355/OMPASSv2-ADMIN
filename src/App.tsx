@@ -13,10 +13,11 @@ import AdminsManagement from 'Components/Admins/AdminsManagement';
 import Manual from 'Components/Manual/Manual';
 import OMPASSVerify from 'Components/OMPASS/OMPASSVerify';
 import SecretKey from 'Components/SecretKey/SecretKey';
-import Main from 'Components/Information/Main';
+import Main from 'Components/Main/Main';
 import AxiosController from 'AxiosController';
 import Locale from './Locale/index';
 import PasscodeManagement from 'Components/PasscodeManagement/PasscodeManagement';
+import Information from 'Components/Information/Information';
 
 const App: React.FC = () => {
   const { lang, userInfo } = useSelector((state: ReduxStateType) => ({
@@ -34,14 +35,16 @@ const App: React.FC = () => {
           userInfo ? (
             userInfo.role!.includes('ADMIN') ? <>
             <Route path='/Main' element={<Main />} />
-            <Route path='/InformationList*' element={<InformationList />} />
-            <Route path='/InformationDetail/:params/:selectedUuid' element={<InformationDetail />} />
+            <Route path='/Information*' element={<Information />} />
+            {/* <Route path='/InformationList*' element={<InformationList />} /> */}
+            {/* <Route path='/InformationDetail/:params/:selectedUuid' element={<InformationDetail />} /> */}
+            {/* <Route path='/Information/detail/:params/:selectedUuid' element={<InformationDetail />} /> */}
             <Route path='/AgentManagement' element={<AgentManagement />} />
             <Route path='/AdminsManagement' element={<AdminsManagement />} />
             <Route path='/PasscodeManagement' element={<PasscodeManagement />} />
             <Route path='/SecretKey' element={<SecretKey />} />
             <Route path='/*' element={<Navigate to='/Main' replace={true}/>}/>
-            </> : <Route path='/*' element={<Navigate to='/InformationDetail/User' replace={true}/>}/>
+            </> : <Route path='/*' element={<Navigate to='/InformationList/InformationDetail/User' replace={true}/>}/>
           ) : 
           <>
             <Route path='/*' element={<Navigate to='/' replace={true}/>}/>

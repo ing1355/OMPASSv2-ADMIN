@@ -70,7 +70,7 @@ const Header = () => {
                   <img src={menu_icon} width='30px' style={{opacity: 0.7, position: 'relative', top: '2px'}}/>
                 </label>
                 <ul className='dropdown_menu_ul'>
-                  <li><Link to='/InformationList'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='USER_MANAGEMENT' /></div></Link></li>
+                  <li><Link to='/Information'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='USER_MANAGEMENT' /></div></Link></li>
                   <li><Link to='/AdminsManagement'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='ADMIN_MANAGEMENT' /></div></Link></li>
                   <li><Link to='/AgentManagement'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='VERSION_MANAGEMENT' /></div></Link></li>
                   <li><Link to='/PasscodeManagement'><div onClick={()=>{setIsMenuOpen(false)}}>패스코드 관리</div></Link></li>

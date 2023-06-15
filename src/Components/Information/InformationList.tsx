@@ -1,7 +1,7 @@
 import { useWindowHeightHeader } from 'Components/CustomHook/useWindowHeight';
 import './InformationList.css';
 import Header from "Components/Header/Header";
-import { Tab } from "Components/Tab/Tab";
+import { Tab } from "Components/Information/Tab";
 import { FormattedMessage } from "react-intl";
 import { Link } from 'react-router-dom';
 import { CopyRightText } from 'Constants/ConstantValues';
