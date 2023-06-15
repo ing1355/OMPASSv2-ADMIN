@@ -14,6 +14,7 @@ import { autoHypenPhoneFun, CopyRightText } from 'Constants/ConstantValues';
 import delete_icon from '../../assets/delete_icon.png';
 import { useSelector } from 'react-redux';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
+import { InformationProps } from 'Types/PropsTypes';
 
 interface Checkbox {
   id: number;
@@ -21,14 +22,12 @@ interface Checkbox {
   checked: boolean;
 }
 
-const AdminsManagement = () => {
+const AdminsManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }: InformationProps) => {
   const { userInfo } = useSelector((state: ReduxStateType) => ({
     userInfo: state.userInfo!
   }));
   const height = useWindowHeightHeader();
   const [totalCount, setTotalCount] = useState<number>(0);
-  const [tableCellSize, setTableCellSize] = useState<number>(10);
-  const [pageNum, setPageNum] = useState<number>(1);
   const [adminData, setAdminData] = useState<GetPutUsersApiArrayType>([]);
   const [isAddAdmin, setIsAddAdmin] = useState<boolean>(false);
   const [isIdAlert, setIsIdAlert] = useState<boolean>(false);
@@ -407,7 +406,7 @@ const AdminsManagement = () => {
                       onClick={(e) => { 
                         if (e.currentTarget.tagName !== 'INPUT') {
                           e.stopPropagation();
-                          navigate(`/InformationDetail/Admin/${data.id}`);
+                          navigate(`/AdminsManagement/detail/Admin/${data.id}`);
                           // sessionStorage.setItem('userUuid', data.id);
                         }                       
                       }}
@@ -492,7 +491,7 @@ const AdminsManagement = () => {
                 className="mt50 mb40"
                 style={{textAlign: 'center'}}
               >
-                <Pagination showQuickJumper showSizeChanger current={pageNum} total={totalCount} onChange={onChangePage}/>
+                <Pagination showQuickJumper showSizeChanger current={pageNum} pageSize={tableCellSize} total={totalCount} onChange={onChangePage}/>
               </div>
             </div>
             }

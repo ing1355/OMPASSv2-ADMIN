@@ -18,6 +18,7 @@ import AxiosController from 'AxiosController';
 import Locale from './Locale/index';
 import PasscodeManagement from 'Components/PasscodeManagement/PasscodeManagement';
 import Information from 'Components/Information/Information';
+import Admins from 'Components/Admins/Admins';
 
 const App: React.FC = () => {
   const { lang, userInfo } = useSelector((state: ReduxStateType) => ({
@@ -40,7 +41,7 @@ const App: React.FC = () => {
             {/* <Route path='/InformationDetail/:params/:selectedUuid' element={<InformationDetail />} /> */}
             {/* <Route path='/Information/detail/:params/:selectedUuid' element={<InformationDetail />} /> */}
             <Route path='/AgentManagement' element={<AgentManagement />} />
-            <Route path='/AdminsManagement' element={<AdminsManagement />} />
+            <Route path='/AdminsManagement*' element={<Admins />} />
             <Route path='/PasscodeManagement' element={<PasscodeManagement />} />
             <Route path='/SecretKey' element={<SecretKey />} />
             <Route path='/*' element={<Navigate to='/Main' replace={true}/>}/>

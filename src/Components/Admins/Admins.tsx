@@ -1,9 +1,9 @@
 import { Route, Routes } from "react-router"
 import { useState } from 'react';
-import InformationList from "./InformationList"
-import InformationDetail from "./InformationDetail"
+import AdminsManagement from "./AdminsManagement";
+import InformationDetail from "Components/Information/InformationDetail";
 
-const Information = () => {
+const Admins = () => {
   const [tableCellSize, setTableCellSize] = useState<number>(10);
   const [pageNum, setPageNum] = useState<number>(1);
 
@@ -13,7 +13,7 @@ const Information = () => {
         <Route 
           path="/" 
           element={
-            <InformationList 
+            <AdminsManagement
               pageNum={pageNum} 
               setPageNum={setPageNum} 
               tableCellSize={tableCellSize}
@@ -27,4 +27,4 @@ const Information = () => {
   )
 }
 
-export default Information
+export default Admins
