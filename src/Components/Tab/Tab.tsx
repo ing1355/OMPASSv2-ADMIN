@@ -987,7 +987,7 @@ export const Tab = () => {
             style={{textAlign: 'center'}}
           >
             <Pagination showQuickJumper showSizeChanger current={pageNum} pageSize={tableCellSize} total={totalCount} onChange={onChangePage}/>
-          d</div>
+          </div>
 
           <div
             style={{float: 'right'}}
