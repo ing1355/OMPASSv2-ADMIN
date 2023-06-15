@@ -365,27 +365,31 @@ export const Tab = () => {
     setTableCellSize(pageSizeOptions);
   };
 
-  function OSNamesComponent({ osNames }: any) {
-    const windowsCount = osNames.filter((name: any) => (name === 'Windows' || name === 'windows')).length;
-    const macosCount = osNames.filter((name: any) => name === 'MacOs').length;
-    const browserCount = osNames.filter((name: any) => name === 'BROWSER').length;
+  // function OSNamesComponent({ osNames }: any) {
+  //   const windowsCount = osNames.filter((name: any) => (name === 'Windows' || name === 'windows')).length;
+  //   const macosCount = osNames.filter((name: any) => name === 'MacOs').length;
+  //   const browserCount = osNames.filter((name: any) => name === 'BROWSER').length;
   
-    let result = [];
+  //   let result = [];
   
-    if (windowsCount > 0) {
-      result.push(<img key='windows' src={os_windows} width='22px' height='22px' style={{padding: '8px'}} />);
-    } 
+  //   if (windowsCount > 0) {
+  //     result.push(<img key='windows' src={os_windows} width='22px' height='22px' style={{padding: '8px'}} />);
+  //   } 
     
-    if (macosCount > 0) {
-      result.push(<img key='mac' src={os_mac} width='22px' height='22px' />);
-    } 
+  //   if (macosCount > 0) {
+  //     result.push(<img key='mac' src={os_mac} width='22px' height='22px' />);
+  //   } 
     
-    if (browserCount > 0) {
-      result.push(<img key='browser' src={browser_icon} width='37px' height='37px' />);
-    } 
+  //   if (browserCount > 0) {
+  //     result.push(<img key='browser' src={browser_icon} width='37px' height='37px' onClick={() => {
+  //       console.log('444')
+  //     }} />);
+  //   } 
 
-    return <div style={{display: 'flex', justifyContent: 'center'}}>{result}</div>;
-  }
+  //   return <div style={{display: 'flex', justifyContent: 'center'}} onClick={() => {
+  //     console.log('3333')
+  //   }}>{result}</div>;
+  // }
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = e.target.files?.[0];
@@ -962,17 +966,18 @@ export const Tab = () => {
                     </td>
                     <td
                       style={{padding: 0}}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.isPropagationStopped();
-                        navigate(`/InformationDetail/User/${data.id}`);
-                      }}
-                    ><OSNamesComponent osNames={data.osNames} /></td>
+                    >
+                    {/* <OSNamesComponent osNames={data.osNames} onClick={(e: any) => {
+                      console.log('222')
+                    }} /> */}
+                    {data.osNames.includes('Windows' || 'windows') && <img key='windows' src={os_windows} width='22px' height='22px' style={{padding: '8px'}} />}
+                    {data.osNames.includes('MacOs') && <img key='mac' src={os_mac} width='22px' height='22px' />}
+                    {data.osNames.includes('BROWSER') && <img key='browser' src={browser_icon} width='37px' height='37px' />}
+                    </td>
                     <td>{data.lastLoginDate}</td>
                     <td>{data.enablePasscodeCount}</td>
                   </tr>
                 ))}
-
               </tbody>
             </table>
           </div>
@@ -982,7 +987,7 @@ export const Tab = () => {
             style={{textAlign: 'center'}}
           >
             <Pagination showQuickJumper showSizeChanger current={pageNum} pageSize={tableCellSize} total={totalCount} onChange={onChangePage}/>
-          </div>
+          d</div>
 
           <div
             style={{float: 'right'}}
