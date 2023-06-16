@@ -345,7 +345,7 @@ const LocaleTexts = {
     user_type: '타입',
     USER_TYPE: '사용자 타입',
     APPLY: '적용',
-    MODIFY_: '변걍',
+    MODIFY_: '변경',
   }
 }
 

@@ -64,6 +64,7 @@ const TabMenu = styled.ul`
     border-left: 0.5px solid rgb(232, 234, 237,0.9);
     border-right: 0.5px solid rgb(232, 234, 237,0.9);
     border-bottom: 1px solid #b7b7b7;
+    cursor: pointer;
   }
 
   // 선택된 Tabmenu

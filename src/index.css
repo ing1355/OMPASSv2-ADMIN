@@ -122,13 +122,25 @@ a {
   color: white;
   cursor: pointer;
   border: none;
+  box-shadow: 1.5px 3px 5px 1px #ccc;
+}
+
+.button-st4:hover {
+  background-color: #0077cc;
+  transition-duration: 0.5s;
 }
 
 .button-st5 {
-  background-color: #e02828;
+  background-color: #e51414;
   color: white;
   cursor: pointer;
   border: none;
+  box-shadow: 1.5px 3px 5px 1px #ccc;
+}
+
+.button-st5:hover {
+  background-color: #d10000;
+  transition-duration: 0.5s;
 }
 
 .button-st3:hover {
@@ -316,4 +328,9 @@ a {
 
 .mr30 {
   margin-right: 30px;
+}
+
+/* bold */
+.title_bold {
+  font-weight: 900;
 }

@@ -584,7 +584,7 @@ const InformationDetail = () => {
                         <img src={browser_icon}/>
                         
                         <ul>
-                          <li>Type</li>
+                          <li className='title_bold'>Type</li>
                           <li>BROWSER</li>
                         </ul>
                       </div>
@@ -601,14 +601,14 @@ const InformationDetail = () => {
                       }
                       
                       <ul>
-                        <li>OS</li>
+                        <li className='title_bold'>OS</li>
                         <li>{data.os} {data.osVersion}</li>
                       </ul>
                     </div>
                     <div>
                       <img src={mac_address}/>
                       <ul>
-                        <li>MAC Address</li>
+                        <li className='title_bold'>MAC Address</li>
                         <li>{MacAddressFun(data.macAddress)}</li>
                       </ul>
                     </div>
@@ -632,7 +632,7 @@ const InformationDetail = () => {
                         <div>
                           <img src={device_image1}/>
                           <ul>
-                            <li>Type</li>
+                            <li className='title_bold'>Type</li>
                             <li>OMPASS App v{ompassInfoData?.appVersion}</li>
                           </ul>
                         </div>
@@ -644,14 +644,14 @@ const InformationDetail = () => {
                           }
                           
                           <ul>
-                            <li>OS</li>
+                            <li className='title_bold'>OS</li>
                             <li>{ompassInfoData?.os} {ompassInfoData?.osVersion}</li>
                           </ul>
                         </div>
                         <div>
                           <img src={device_image3}/>
                           <ul>
-                            <li>Model</li>
+                            <li className='title_bold'>Model</li>
                             <li>{ompassInfoData?.model}</li>
                           </ul>
                         </div>

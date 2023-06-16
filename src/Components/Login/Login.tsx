@@ -27,7 +27,6 @@ import { userInfoChange } from 'Redux/actions/userChange';
 
 
 const Login = () => {
-  // document.body.style.backgroundColor = '#E4EBEF';
   const { lang } = useSelector((state: ReduxStateType) => ({
     lang: state.lang,
   }));
