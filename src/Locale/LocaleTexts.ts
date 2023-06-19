@@ -172,6 +172,8 @@ const LocaleTexts = {
     USER_TYPE: 'User Type',
     APPLY: 'Apply',
     MODIFY_: 'Modify',
+    DOWNLOAD_MANUAL: 'Download Manual',
+    DOWNLOAD_INSTALL_FILE: 'Download Installation File',
   },
   'ko': {
     LOGIN: '로그인',
@@ -346,6 +348,8 @@ const LocaleTexts = {
     USER_TYPE: '사용자 타입',
     APPLY: '적용',
     MODIFY_: '변경',
+    DOWNLOAD_MANUAL: '매뉴얼 다운로드',
+    DOWNLOAD_INSTALL_FILE: '설치 파일 다운로드',
   }
 }
 

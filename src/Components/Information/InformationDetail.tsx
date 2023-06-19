@@ -2,9 +2,18 @@ import './InformationDetail.css';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-
 import Header from 'Components/Header/Header';
 import { useWindowHeightHeader }from 'Components/CustomHook/useWindowHeight';
+import { AllowedAccessUsersType, DevicesType, GetUsersDetailsApiType, OmpassInfoType, UserInfoType, UserType } from 'Types/ServerResponseDataTypes';
+import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPost, CustomAxiosPut } from 'Components/CustomHook/CustomAxios';
+import { DeleteAccessUserApi, DeleteDeviceApi, DeletePasscodeApi, DeleteUsersApi, GetPutUsersApi, GetUsernameCheckApi, GetUsersDetailsApi, PostAccessUserApi, PostPutPasscodeApi, PutPasscodeApi } from 'Constants/ApiRoute';
+import { CopyRightText, autoHypenPhoneFun } from 'Constants/ConstantValues';
+import { useRef } from 'react';
+import { Popconfirm, message } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { ReduxStateType } from 'Types/ReduxStateTypes';
+import add_icon from '../../assets/add_icon.png';
+import { userInfoClear } from 'Redux/actions/userChange';
 
 import device_image1 from '../../assets/device_image1.png';
 import device_image2_android from '../../assets/device_image2_android.png';
@@ -19,16 +28,8 @@ import mac_address from '../../assets/mac_address.png';
 import modify_icon from '../../assets/modify_icon.png';
 import browser_icon from '../../assets/browser_icon.png';
 import no_device from '../../assets/no_device.png';
-import { AllowedAccessUsersType, DevicesType, GetUsersDetailsApiType, OmpassInfoType, UserInfoType, UserType } from 'Types/ServerResponseDataTypes';
-import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPost, CustomAxiosPut } from 'Components/CustomHook/CustomAxios';
-import { DeleteAccessUserApi, DeleteDeviceApi, DeletePasscodeApi, DeleteUsersApi, GetPutUsersApi, GetUsernameCheckApi, GetUsersDetailsApi, PostAccessUserApi, PostPutPasscodeApi, PutPasscodeApi } from 'Constants/ApiRoute';
-import { CopyRightText, autoHypenPhoneFun } from 'Constants/ConstantValues';
-import { useRef } from 'react';
-import { Popconfirm, message } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
-import { ReduxStateType } from 'Types/ReduxStateTypes';
-import add_icon from '../../assets/add_icon.png';
-import { userInfoClear } from 'Redux/actions/userChange';
+import user_modify_icon from '../../assets/user_modify_icon.png';
+import user_account_icon from '../../assets/user_account_delete_icon.png';
 
 type adminIdType = {
   isAdmin: boolean,
@@ -72,30 +73,12 @@ const InformationDetail = () => {
   const navigate = useNavigate();
   const { params, selectedUuid } = useParams();
 
-  // const currentURL = window.location.href;
-  // const queryParams = new URLSearchParams(currentURL.split('?')[1]);
-  // const pageParam = queryParams.get('page');
-  // const pageSizeParam = queryParams.get('pageSize');
-
   const {uuid, role, userId} = userInfo! ?? {};
-  // const { pageNum, tableCellSize } = useLocation().state;
 
   const MacAddressFun = (ad: string) => {
     const macAddRep = ad.replace(/(.{2})/g, "$1:");
     return macAddRep.slice(0, -1);
   }
-
-  // const page = pageNum;
-  // const pageSize = tableCellSize;
-  // window.onpopstate = (event: any) => {
-  //   console.log('11111');
-  //   navigate('/InformationList', { state: { page, pageSize } })
-  // }
-
-  // window.onpopstate = (event: any) => {
-  //   console.log('11111');
-  //   navigate(`/InformationList?page=${pageParam}&pageSize=${pageSizeParam}`)
-  // }
 
   useEffect(() => {
     if(uuid) {

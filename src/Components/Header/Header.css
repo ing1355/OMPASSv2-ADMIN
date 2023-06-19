@@ -8,6 +8,14 @@
   font-weight: 500;
 }
 
+.header_id {
+  cursor: pointer;
+}
+
+.header_id:hover {
+  color: #0092FA;
+}
+
 .header_container {
   padding-top: 8px;
   height: 72px;
@@ -43,7 +51,7 @@
   position: absolute;
   top: 74px;
   z-index: 1;
-  width: 155px;
+  width: 235px;
 }
 
 .dropdown_menu_ul li {
@@ -63,7 +71,7 @@
   padding: 15px 20px;
   /* border-radius: 3px; */
   font-weight: 100;
-  width: 115px;
+  width: 195px;
 }
 
 .dropdown_menu_ul li div:hover {
