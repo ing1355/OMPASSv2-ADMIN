@@ -24,6 +24,7 @@ import maunal_download from '../../assets/maunal_download.png'
 import { GetAgentInstallerApi } from 'Constants/ApiRoute';
 import { GetAgentApiArrayType, GetAgentApiDataType, GetAgentApiType } from 'Types/ServerResponseDataTypes';
 import { userInfoChange } from 'Redux/actions/userChange';
+import { useCookies } from 'react-cookie';
 
 
 const Login = () => {
@@ -44,6 +45,8 @@ const Login = () => {
   const [currentVersion, setCurrentVersion] = useState<GetAgentApiType | null>(null);
   const [idChange, setIdChange] = useState<string>('');
   const [passwordChange, setPasswordChange] = useState<string>('');
+  const [cookies, setCookie, removeCookie] = useCookies(["rememberUserId"]); // Cookies 이름
+  const [isRemember, setIsRemember] = useState(false); // 아이디 저장 체크박스 체크 유무
 
   const height = useWindowHeight();
   const dispatch = useDispatch();
@@ -53,6 +56,23 @@ const Login = () => {
   const userIdRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const passcodeRef = useRef<HTMLInputElement>(null);
+
+  // 아이디 저장
+  // 첫 렌더링
+  useEffect(() => {
+    console.log('쿠키',cookies.rememberUserId)
+    if (cookies.rememberUserId !== undefined) {
+      setIdChange(cookies.rememberUserId);
+      setIsRemember(true);
+    }
+  }, []);
+
+  const saveIdCookieFun = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsRemember(e.target.checked);
+    if (!e.target.checked) {
+        removeCookie("rememberUserId");
+    }
+  };
 
   const handleOk = () => {
     if(!isPasswordAlert && !isPasswordConfirmAlert) {
@@ -117,7 +137,9 @@ const Login = () => {
       PostLoginApi,
       (data:any) => {
         const { ompassUri, loginType } = data;
-        console.log('ompassUri',ompassUri)
+        if(isRemember) {
+          setCookie('rememberUserId', username, {maxAge: 60*60*24*7});
+        }
         if(loginType === 'PW_CHANGE_USER') {
           setIsModalOpen(true)
         } else {
@@ -259,6 +281,7 @@ const Login = () => {
                   type='text'
                   id='userId'
                   maxLength={16}
+                  value={idChange ? idChange : ''}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     setIdChange(e.currentTarget.value);
                   }}
@@ -283,13 +306,16 @@ const Login = () => {
               <div
                 className='dis_flex mb10'
               >
+                {/* 아이디 저장 */}
                 <div>
-                  {/* <input type='checkbox' className='mr10'/>
-                  <span><FormattedMessage id='SAVE_ID' /></span> */}
+                  <input id='saveId' type='checkbox' className='mr10' onChange={saveIdCookieFun} checked={isRemember}/>
+                  <label htmlFor='saveId' style={{cursor: 'pointer', position: 'relative', top: '-2px'}}><FormattedMessage id='SAVE_ID' /></label>
                 </div>
+
+                {/* 패스코드로 로그인 */}
                 <div
                   className='main-color1'
-                  style={{cursor: 'pointer'}}
+                  style={{cursor: 'pointer', paddingTop: '1.5px'}}
                   onClick={() => {
                     setIsPasscodeModalOpen(true);
                   }}
