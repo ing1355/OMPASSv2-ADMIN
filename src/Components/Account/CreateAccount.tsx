@@ -100,12 +100,12 @@ const CreateAccount = () => {
             </div>
 
             {innerNumberList.length > 0 && 
-              innerNumberList.map((num) => {
+              innerNumberList.map((num, index) => {
                 if(innerList[num-1][0] === item) {
                   return (
-                    <>
+                    <div key={'innerList' + index}>
                       {AgreeSubList(isService, number,innerList[num-1][0], innerList[num-1][1])}
-                    </>
+                    </div>
                   )
                 }
               })

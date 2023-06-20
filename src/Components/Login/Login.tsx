@@ -60,7 +60,6 @@ const Login = () => {
   // 아이디 저장
   // 첫 렌더링
   useEffect(() => {
-    console.log('쿠키',cookies.rememberUserId)
     if (cookies.rememberUserId !== undefined) {
       setIdChange(cookies.rememberUserId);
       setIsRemember(true);
