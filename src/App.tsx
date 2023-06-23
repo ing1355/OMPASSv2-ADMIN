@@ -45,7 +45,10 @@ const App: React.FC = () => {
             <Route path='/PasscodeManagement' element={<PasscodeManagement />} />
             <Route path='/SecretKey' element={<SecretKey />} />
             <Route path='/*' element={<Navigate to='/Main' replace={true}/>}/>
-            </> : <Route path='/*' element={<Navigate to='/InformationList/InformationDetail/User' replace={true}/>}/>
+            </> 
+            : 
+            // <Route path='/*' element={<Navigate to='/Information/*' replace={true}/>}/>
+            <Route path='/*' element={<InformationDetail />}/>
           ) : 
           <>
             <Route path='/*' element={<Navigate to='/' replace={true}/>}/>

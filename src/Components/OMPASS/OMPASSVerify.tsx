@@ -18,13 +18,13 @@ const OMPASSVerify = () => {
       PostTokenVerifyApi,
       (data:any, header:any) => {
         const role = data.user.role;
-        const uuid = data.user.uuid;
+        const uuid = data.user.id;
         localStorage.setItem('authorization', header);
         dispatch(userInfoChange(header))
         if(role.includes('ADMIN')) {
           navigate('/Main')
         } else {
-          navigate(`/InformationDetail/User/${uuid}`)
+          navigate(`/information/detail/User/${uuid}`)
         }
       },
       {
