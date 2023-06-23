@@ -233,7 +233,7 @@ const InformationDetail = () => {
 
             {(role !== 'USER' && params === 'User') &&
               <div>
-                <Link to='/InformationList'>
+                <Link to='/Information'>
                   <FormattedMessage id='USER_MANAGEMENT' /> / <FormattedMessage id='USER_LIST' />
                 </Link>
               </div>
