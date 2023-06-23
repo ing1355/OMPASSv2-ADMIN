@@ -558,7 +558,7 @@ const InformationDetail = () => {
                 className='mb30'
               >
                 <div style={{display: 'flex', flexDirection: 'column', width: '35%'}}>
-                  {data.deviceType === 'BROWSER' ? <h3><FormattedMessage id='LOGIN_ENV' /></h3> : <h3><FormattedMessage id='AGENT_INSTALL_ENV' /></h3>}
+                  <h3><FormattedMessage id='LOGIN_ENV' /></h3>
                   {data.deviceType === 'BROWSER' ? 
                     <div
                       className='information_detail_device_container'
