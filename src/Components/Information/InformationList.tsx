@@ -129,7 +129,7 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
     const searchDropdownRef = useRef<any>(null);
     const searchOsDropdownRef = useRef<any>(null);
     const searchTypeDropdownRef = useRef<any>(null);
-  
+
     const menuArr = [
       { id: 0, name: 'TOTAL_USERS', content: 'Tab menu ONE', count: countData?.totalUserCount },
       { id: 1, name: 'REGISTERED_USERS', content: 'Tab menu TWO', count: countData?.registeredOmpassUserCount },
@@ -967,12 +967,9 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                         <td
                           style={{padding: 0}}
                         >
-                        {/* <OSNamesComponent osNames={data.osNames} onClick={(e: any) => {
-                          console.log('222')
-                        }} /> */}
-                        {data.osNames.includes('Windows' || 'windows') && <img key='windows' src={os_windows} width='22px' height='22px' style={{padding: '8px'}} />}
-                        {data.osNames.includes('MacOs') && <img key='mac' src={os_mac} width='22px' height='22px' />}
-                        {data.osNames.includes('BROWSER') && <img key='browser' src={browser_icon} width='37px' height='37px' />}
+                          {data.osNames.includes('windows') && <img key='windows' src={os_windows} width='22px' height='22px' style={{padding: '8px'}} />}
+                          {data.osNames.includes('MacOs') && <img key='mac' src={os_mac} width='22px' height='22px' />}
+                          {data.osNames.includes('BROWSER') && <img key='browser' src={browser_icon} width='37px' height='37px' />}
                         </td>
                         <td>{data.lastLoginDate}</td>
                         <td>{data.enablePasscodeCount}</td>
