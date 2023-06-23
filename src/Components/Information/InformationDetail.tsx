@@ -337,7 +337,7 @@ const InformationDetail = () => {
                           autoComplete='off'
                           onChange={(e) => {
                             const value = e.currentTarget.value;
-                            const nameRegex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z]{1,16}$/
+                            const nameRegex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]{1,16}$/
                             setUserName(value);
                             if(nameRegex.test(value)) {
                               setIsNameAlert(false);
@@ -932,9 +932,6 @@ const InformationDetail = () => {
                       const recycleNumber = recycle_number.value;
                       const unlimitedChecked = unlimited.checked;
 
-                      console.log(randomChecked,codeChecked,codeNumber)
-                      console.log(timeWriteChecked,timeMinute,foreverChecked)
-                      console.log(oneChecked,moreThanOneChecked,recycleNumber,unlimitedChecked)
                       if(!randomChecked && !(codeChecked && codeNumber)) {
                         message.error(formatMessage({ id: 'PLEASE_ENTER_A_CODE' }));
                       } else if(!foreverChecked && !(timeWriteChecked && timeMinute !== '')) {

@@ -288,7 +288,7 @@ const AdminsManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize
                     autoComplete='off'
                     onChange={(e) => {
                       const value = e.currentTarget.value;
-                      const nameRegex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z]{1,16}$/
+                      const nameRegex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]{1,16}$/
                       if(nameRegex.test(value)) {
                         setIsNameAlert(false);
                       } else {
