@@ -248,6 +248,28 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
     const handleRowHover = (index: number) => {
       setHoveredRow(index);
     };
+
+    // input enter 시 검색 버튼 이벤트 실행
+    const searchInputKeyDownFun = (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        searchClickButtonFun();
+      }
+    };
+
+    // 검색 버튼 이벤트
+    const searchClickButtonFun = () => {
+      if(searchType === null) {
+        message.error(formatMessage({ id: 'PLEASE_SELECT_A_SEARCH_ITEM' }))
+      } else {
+        const render = rendering;
+        const renderTemp = render.concat(true);
+        setRendering(renderTemp);
+        if(searchContentRef.current) {
+          setSearchContent(searchContentRef.current.value);
+        }
+      }
+    }
   
     const sortingUlFun = (listType: listType, index: number) => {
       return (
@@ -721,30 +743,14 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                     <input
                       ref={searchContentRef}
                       className='input-st1 tab_search_input'
+                      onKeyDown={searchInputKeyDownFun}
                     />
                   }
                 </li>
                 <li>
                   <button
                     className={'button-st4 tab_search_button ' + (lang === 'en' ? 'en' : '')}
-                    onClick={(e) => {
-                      // const render = rendering;
-                      // const renderTemp = render.concat(true);
-                      // setRendering(renderTemp);
-                      // if(searchContentRef.current) {
-                      //   setSearchContent(searchContentRef.current.value);
-                      // }
-                      if(searchType === null) {
-                        message.error(formatMessage({ id: 'PLEASE_SELECT_A_SEARCH_ITEM' }))
-                      } else {
-                        const render = rendering;
-                        const renderTemp = render.concat(true);
-                        setRendering(renderTemp);
-                        if(searchContentRef.current) {
-                          setSearchContent(searchContentRef.current.value);
-                        }
-                      }
-                    }}
+                    onClick={searchClickButtonFun}
                   >
                     <img src={search_icon} width='18px' className='tab_search_button_img'/>
                     <FormattedMessage id='SEARCH' />
