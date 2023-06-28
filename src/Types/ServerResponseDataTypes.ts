@@ -110,6 +110,11 @@ export type GetUsersCountApiType = {
 }
 
 export type GetPasscodeHistoriesApiType = {
+  queryTotalCount: number,
+  passcodeHistories: passcodeHistoriesType[],
+}
+
+export type passcodeHistoriesType = {
   action: string,
   createdAt: string,
   passcode: PasscodeType,

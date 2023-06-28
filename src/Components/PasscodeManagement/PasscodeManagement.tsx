@@ -3,7 +3,7 @@ import { useWindowHeightHeader } from "Components/CustomHook/useWindowHeight";
 import Header from "Components/Header/Header";
 import { GetPasscodeHistoriesApi } from "Constants/ApiRoute";
 import { CopyRightText } from "Constants/ConstantValues";
-import { GetPasscodeHistoriesApiType } from "Types/ServerResponseDataTypes";
+import { GetPasscodeHistoriesApiType, passcodeHistoriesType } from "Types/ServerResponseDataTypes";
 import { Pagination, PaginationProps, Popconfirm } from "antd";
 import { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -13,7 +13,7 @@ const PasscodeManagement = () => {
   const [totalCount, setTotalCount] = useState<number>(0);
   const [tableCellSize, setTableCellSize] = useState<number>(10);
   const [pageNum, setPageNum] = useState<number>(1);
-  const [passcodeHistoryData, setPasscodeHistoryData] = useState<GetPasscodeHistoriesApiType[]>([]);
+  const [passcodeHistoryData, setPasscodeHistoryData] = useState<passcodeHistoriesType[]>([]);
 
   const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
     setPageNum(pageNumber);
@@ -23,14 +23,15 @@ const PasscodeManagement = () => {
   useEffect(() => {
     CustomAxiosGet(
       GetPasscodeHistoriesApi,
-      (data: GetPasscodeHistoriesApiType[]) => {
-        setPasscodeHistoryData(data);
+      (data: GetPasscodeHistoriesApiType) => {
+        setTotalCount(data.queryTotalCount);
+        setPasscodeHistoryData(data.passcodeHistories);
       }, {
         page_size: tableCellSize,
         page: pageNum -1,
       }
     )
-  },[])
+  },[tableCellSize, pageNum])
 
   return (
     <>
@@ -126,7 +127,7 @@ const PasscodeManagement = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {passcodeHistoryData.map((data:GetPasscodeHistoriesApiType, index: number) => (
+                    {passcodeHistoryData.map((data:passcodeHistoriesType, index: number) => (
                       <tr
                         key={'passcode_history_data_'+index}
                       >
