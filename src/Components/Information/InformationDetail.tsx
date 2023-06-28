@@ -68,7 +68,6 @@ const InformationDetail = () => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
 
-  // const userUuid = sessionStorage.getItem('userUuid');
   const passwordRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { params, selectedUuid } = useParams();
@@ -79,7 +78,7 @@ const InformationDetail = () => {
     const macAddRep = ad.replace(/(.{2})/g, "$1:");
     return macAddRep.slice(0, -1);
   }
-
+console.log('ompassInfoData', ompassInfoData)
   useEffect(() => {
     if(uuid) {
       if(role === 'USER') {
@@ -90,7 +89,7 @@ const InformationDetail = () => {
             setUserPhone(data.user.phoneNumber);
             setUserName(data.user.name);
             setDeviceData(data.devices);
-            setOmpassInfoData(data.ompassInfo);
+            // setOmpassInfoData(data.ompassInfo);
             setViewPasscodes(new Array(data.devices.length).fill(false));
             setViewPasscodeSettings(new Array(data.devices.length).fill(false));
             setModifyPasscodes(new Array(data.devices.length).fill(false));
@@ -104,11 +103,12 @@ const InformationDetail = () => {
           CustomAxiosGet(
             GetUsersDetailsApi(selectedUuid),
             (data: GetUsersDetailsApiType) => {
+              console.log(data)
               setUserData(data.user);
               setUserPhone(data.user.phoneNumber);
               setUserName(data.user.name);
               setDeviceData(data.devices);
-              setOmpassInfoData(data.ompassInfo);
+              // setOmpassInfoData(data.ompassInfo);
               setViewPasscodes(new Array(data.devices.length).fill(false));
               setViewPasscodeSettings(new Array(data.devices.length).fill(false));
               setModifyPasscodes(new Array(data.devices.length).fill(false));
@@ -602,6 +602,50 @@ const InformationDetail = () => {
                 
                 <div style={{display: 'flex', flexDirection: 'column', width: '55%'}}>
                   <h3><FormattedMessage id='OMPASS_AUTH_DEVICE_ENV' /></h3>
+                  {data.ompassInfo === null ? 
+                    <div style={{textAlign: 'center', position: 'relative', top: '45px'}}>
+                      <img src={no_device} width='140px' height='140px'/>
+                      <div className='mt20'><FormattedMessage id='AUTH_DEVICE_NOT_FOUND' /></div>
+                    </div>
+                  :
+                    <>
+                      <div
+                        className='information_detail_device_container'
+                      >
+                        <div>
+                          <img src={device_image1}/>
+                          <ul>
+                            <li className='title_bold'>Type</li>
+                            <li>OMPASS App v{data.ompassInfo.appVersion}</li>
+                          </ul>
+                        </div>
+                        <div>
+                          {ompassInfoData?.os === 'ios' ?
+                            <img src={device_image2_ios} width='80px' height='80px' style={{padding: '30px'}} />
+                          :
+                            <img src={device_image2_android} />
+                          }
+                          
+                          <ul>
+                            <li className='title_bold'>OS</li>
+                            <li>{data.ompassInfo.os} {data.ompassInfo.osVersion}</li>
+                          </ul>
+                        </div>
+                        <div>
+                          <img src={device_image3}/>
+                          <ul>
+                            <li className='title_bold'>Model</li>
+                            <li>{data.ompassInfo.model}</li>
+                          </ul>
+                        </div>
+                      </div> 
+                      <div className='information_detail_update_date'><FormattedMessage id='LAST_UPDATED_DATE' /> : {data.ompassInfo.updateAt}</div> 
+                    </>
+                  }
+
+                </div>  
+                {/* <div style={{display: 'flex', flexDirection: 'column', width: '55%'}}>
+                  <h3><FormattedMessage id='OMPASS_AUTH_DEVICE_ENV' /></h3>
                   {ompassInfoData === null ? 
                     <div style={{textAlign: 'center', position: 'relative', top: '45px'}}>
                       <img src={no_device} width='140px' height='140px'/>
@@ -642,8 +686,7 @@ const InformationDetail = () => {
                       <div className='information_detail_update_date'><FormattedMessage id='LAST_UPDATED_DATE' /> : {ompassInfoData?.updateAt}</div> 
                     </>
                   }
-
-                </div>  
+                </div> */}
               </div>
               <hr></hr>
               

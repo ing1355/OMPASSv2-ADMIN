@@ -145,7 +145,7 @@ const LocaleTexts = {
     VERSION_NAME: 'Version Name',
     VERSION: 'Version',
     PLEASE_ENTER_A_VERSION: 'Please enter a version',
-    HASH: 'Hash',
+    HASH: 'Hash(SHA256)',
     FILE_UPLOAD: 'File Upload',
     FILE_NAME: 'File Name',
     UPLOAD_DATE: 'Upload Date',
@@ -173,6 +173,7 @@ const LocaleTexts = {
     MODIFY_: 'Modify',
     DOWNLOAD_MANUAL: 'Download Manual',
     DOWNLOAD_INSTALL_FILE: 'Download Installation File',
+    SUCCESS_REGISTER: 'You have successfully registered',
   },
   'ko': {
     LOGIN: '로그인',
@@ -320,7 +321,7 @@ const LocaleTexts = {
     VERSION_NAME: '버전명',
     VERSION: '버전',
     PLEASE_ENTER_A_VERSION: '버전을 입력해주세요',
-    HASH: '해시값',
+    HASH: '해시값(SHA256)',
     FILE_UPLOAD: '파일 업로드',
     FILE_NAME: '파일명',
     UPLOAD_DATE: '업로드 일시',
@@ -348,6 +349,7 @@ const LocaleTexts = {
     MODIFY_: '변경',
     DOWNLOAD_MANUAL: '매뉴얼 다운로드',
     DOWNLOAD_INSTALL_FILE: '설치 파일 다운로드',
+    SUCCESS_REGISTER: '회원가입 성공',
   }
 }
 

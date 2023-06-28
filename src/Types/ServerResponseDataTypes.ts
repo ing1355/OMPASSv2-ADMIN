@@ -37,26 +37,24 @@ export type GetAgentApiType = {
 export type userRoleType = "USER" | "ADMIN" | "SUPER_ADMIN" | null;
 
 export type UserInfoType = {
-  userId: string;
-  userRole: userRoleType;
-  uuid: string;
+  userId: string,
+  userRole: userRoleType,
+  uuid: string,
 }
 
 export type GetUsersDetailsApiType = {
-  user: UserType;
-  // devices: DevicesType;
-  devices: DevicesType[];
-  ompassInfo: OmpassInfoType;
+  user: UserType,
+  devices: DevicesType[],
 }
 
 export type UserType = {
-  id: string;
-  username: string;
-  role: userRoleType;
-  name: string;
-  phoneNumber: string;
-  enablePasscodeCount: number;
-  osNames: OsNamesType[];
+  id: string,
+  username: string,
+  role: userRoleType,
+  name: string,
+  phoneNumber: string,
+  enablePasscodeCount: number,
+  osNames: OsNamesType[],
 }
 
 export type DevicesType = {
@@ -68,6 +66,7 @@ export type DevicesType = {
   passcode: PasscodeType,
   updatedAt: string,
   allowedAccessUsers: AllowedAccessUsersType[],
+  ompassInfo: OmpassInfoType,
 }
 
 export type AllowedAccessUsersType = {
