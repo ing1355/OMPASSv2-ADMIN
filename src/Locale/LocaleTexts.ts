@@ -175,6 +175,15 @@ const LocaleTexts = {
     DOWNLOAD_INSTALL_FILE: 'Download Installation File',
     SUCCESS_REGISTER: 'You have successfully registered',
     ACTION: 'Action',
+    OMPASS_SETTINGS: 'OMPASS Settings',
+    API_SERVER_URL: 'Api Server Url',
+    API_SERVER_URL_MODIFY_SUCCESS: 'Api Server Url modified successfully',
+    API_SERVER_URL_MODIFY_Fail: 'Failed to modify Api Server Url',
+    SECRET_KEY_MODIFY_Fail: 'Failed to modify Secret Key',
+    REGISTER: 'Register',
+    SOCKET_SERVER_URL: 'Socket Server Url',
+    SOCKET_SERVER_URL_MODIFY_SUCCESS: 'Socket Server Url modified successfully',
+    SOCKET_SERVER_URL_MODIFY_Fail: 'Failed to modify Socket Server Url',
   },
   'ko': {
     LOGIN: '로그인',
@@ -352,6 +361,15 @@ const LocaleTexts = {
     DOWNLOAD_INSTALL_FILE: '설치 파일 다운로드',
     SUCCESS_REGISTER: '회원가입 성공',
     ACTION: '활동',
+    OMPASS_SETTINGS: 'OMPASS 설정',
+    API_SERVER_URL: 'Api 서버 Url',
+    API_SERVER_URL_MODIFY_SUCCESS: 'Api 서버 Url 수정 성공',
+    API_SERVER_URL_MODIFY_Fail: 'Api 서버 Url 수정 실패',
+    SECRET_KEY_MODIFY_Fail: '비밀키 수정 실패',
+    REGISTER: '등록',
+    SOCKET_SERVER_URL: '소켓 서버 Url',
+    SOCKET_SERVER_URL_MODIFY_SUCCESS: '소켓 서버 Url 수정 성공',
+    SOCKET_SERVER_URL_MODIFY_Fail: '소켓 서버 Url 수정 실패',
   }
 }
 

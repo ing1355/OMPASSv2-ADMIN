@@ -111,7 +111,7 @@ const Header = () => {
                   <li><Link to='/AdminsManagement'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='ADMIN_MANAGEMENT' /></div></Link></li>
                   <li><Link to='/AgentManagement'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='VERSION_MANAGEMENT' /></div></Link></li>
                   <li><Link to='/PasscodeManagement'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='PASSCODE_MANAGEMENT' /></div></Link></li>
-                  {role === 'SUPER_ADMIN' &&<li><Link to='/SecretKey'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='SECRET_KEY_MANAGEMENT' /></div></Link></li>}
+                  {role === 'SUPER_ADMIN' &&<li><Link to='/SecretKey'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='OMPASS_SETTINGS' /></div></Link></li>}
                   <li>
                     <div onClick={()=>{setIsMenuOpen(false)}}>
                       <FormattedMessage id='DOWNLOAD_INSTALL_FILE' />
@@ -164,7 +164,7 @@ const Header = () => {
                   <li><Link to='/AdminsManagement'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='ADMIN_MANAGEMENT' /></div></Link></li>
                   <li><Link to='/AgentManagement'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='VERSION_MANAGEMENT' /></div></Link></li>
                   <li><Link to='/PasscodeManagement'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='PASSCODE_MANAGEMENT' /></div></Link></li>
-                  {role === 'SUPER_ADMIN' &&<li><Link to='/SecretKey'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='SECRET_KEY_MANAGEMENT' /></div></Link></li>}
+                  {role === 'SUPER_ADMIN' &&<li><Link to='/SecretKey'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='OMPASS_SETTINGS' /></div></Link></li>}
                 </ul>                  
                 }
 

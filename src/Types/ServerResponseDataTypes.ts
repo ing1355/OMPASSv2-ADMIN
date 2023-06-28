@@ -100,6 +100,8 @@ type OsNamesType = "WINDOWS" | "MAC";
 
 export type GetPutSecretKeyApiType = {
   secretKey: string,
+  interfaceApiServer: string,
+  interfaceSocketServer: string,
 }
 
 export type GetUsersCountApiType = {
