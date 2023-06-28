@@ -207,6 +207,8 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
           os: searchType === 'os' && searchOsInfo ? searchOsInfo : null,
           passcode: tabNow === 'PASSCODE_USERS' ? true : false, 
           enable_passcode_count: searchType === 'enable_passcode_count' ? searchContent : null,
+          role: searchTypeInfo ? searchTypeInfo : null,
+          integration_search_word: searchType === 'all' ? searchContent : null,
         }
       );
   
@@ -508,7 +510,7 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                       >
                         <span>
                           {searchType === 'all' && <FormattedMessage id='all' /> }
-                          {searchType === 'user_type' && <FormattedMessage id='user_type' /> }
+                          {searchType === 'role' && <FormattedMessage id='user_type' /> }
                           {searchType === 'username' && <FormattedMessage id='username' /> }
                           {searchType === 'os' && <FormattedMessage id='os' /> }
                           {searchType === 'lastLoginDate' && <FormattedMessage id='lastLoginDate' /> }
@@ -546,7 +548,7 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                     <li>
                       <div
                         onClick={() => {
-                          setSearchType('user_type');
+                          setSearchType('role');
                           setIsSearchDropdownOpen(false);
                           setSearchOsInfo(null);
                           setIsTypeDropdownOpen(false);
@@ -674,7 +676,7 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
 
                   :
 
-                    searchType === 'user_type' ?
+                    searchType === 'role' ?
                     <div
                       ref={searchTypeDropdownRef}
                     >
@@ -780,19 +782,19 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                         style={{position: 'relative'}}
                         ref={ (el) => (dropdownRefs.current[4] = el) }
                       >
-                        <input id='dropdown-4' type='checkbox' checked={sortingInfo?.list === 'user_type' && sortingInfo.isToggle} readOnly></input>
-                        <label htmlFor='dropdown-4' className={'dropdown-label-4 ' + (sortingNow?.list === 'user_type' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
+                        <input id='dropdown-4' type='checkbox' checked={sortingInfo?.list === 'role' && sortingInfo.isToggle} readOnly></input>
+                        <label htmlFor='dropdown-4' className={'dropdown-label-4 ' + (sortingNow?.list === 'role' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
                           onClick={()=>{
-                            if(sortingInfo === null || sortingInfo?.list !== 'user_type') {
+                            if(sortingInfo === null || sortingInfo?.list !== 'role') {
                               setSortingInfo({
-                                list: 'user_type',
+                                list: 'role',
                                 sorting: 'none',
                                 isToggle: true,
                               })
                             } else {
-                              if(sortingInfo?.list === 'user_type') {
+                              if(sortingInfo?.list === 'role') {
                                 setSortingInfo({
-                                  list: 'user_type',
+                                  list: 'role',
                                   sorting: 'none',
                                   isToggle: !sortingInfo.isToggle,
                                 })
@@ -804,10 +806,10 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                           {sortingNow === null ?
                             sortingImgFun(false, 'none')
                           :
-                            sortingImgFun((sortingNow?.list === 'user_type' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'desc')), sortingNow!.sorting)
+                            sortingImgFun((sortingNow?.list === 'role' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'desc')), sortingNow!.sorting)
                           }
                         </label>
-                        {sortingUlFun("user_type", 4)}
+                        {sortingUlFun("role", 4)}
                       </th>
                       <th
                         style={{position: 'relative'}}
@@ -967,8 +969,8 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                         <td
                           style={{padding: 0}}
                         >
-                          {data.osNames.includes('windows') && <img key='windows' src={os_windows} width='22px' height='22px' style={{padding: '8px'}} />}
-                          {data.osNames.includes('MacOs') && <img key='mac' src={os_mac} width='22px' height='22px' />}
+                          {data.osNames.includes('WINDOWS') && <img key='windows' src={os_windows} width='22px' height='22px' style={{padding: '8px'}} />}
+                          {data.osNames.includes('MAC') && <img key='mac' src={os_mac} width='22px' height='22px' />}
                           {data.osNames.includes('BROWSER') && <img key='browser' src={browser_icon} width='37px' height='37px' />}
                         </td>
                         <td>{data.lastLoginDate}</td>

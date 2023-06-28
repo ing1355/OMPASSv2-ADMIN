@@ -7,7 +7,7 @@ export type InformationProps = {
   setTableCellSize: React.Dispatch<React.SetStateAction<number>>,
 }
 
-export type listType = 'user_type' | 'username' | 'os' | 'lastLoginDate' | 'enable_passcode_count' | 'all' | null;
+export type listType = 'role' | 'username' | 'os' | 'lastLoginDate' | 'enable_passcode_count' | 'all' | null;
 export type sortingType = 'none' | 'asc' | 'desc';
 export type searchOsType = 'WINDOWS' | 'MAC' | 'BROWSER' | null;
 
