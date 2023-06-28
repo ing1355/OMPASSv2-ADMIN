@@ -184,6 +184,7 @@ const LocaleTexts = {
     SOCKET_SERVER_URL: 'Socket Server Url',
     SOCKET_SERVER_URL_MODIFY_SUCCESS: 'Socket Server Url modified successfully',
     SOCKET_SERVER_URL_MODIFY_Fail: 'Failed to modify Socket Server Url',
+    ACTION_TIME: 'Action Date',
   },
   'ko': {
     LOGIN: '로그인',
@@ -370,6 +371,7 @@ const LocaleTexts = {
     SOCKET_SERVER_URL: '소켓 서버 Url',
     SOCKET_SERVER_URL_MODIFY_SUCCESS: '소켓 서버 Url 수정 성공',
     SOCKET_SERVER_URL_MODIFY_Fail: '소켓 서버 Url 수정 실패',
+    ACTION_DATE: '활동 일시',
   }
 }
 

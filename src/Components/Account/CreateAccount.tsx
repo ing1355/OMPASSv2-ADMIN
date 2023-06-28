@@ -363,9 +363,8 @@ const CreateAccount = () => {
                   if(username && name && password && user_password && phoneNumber && !isIdAlert && !isNameAlert && !isPasswordAlert && !isPasswordConfirmAlert && !isPhoneAlert) {
                     CustomAxiosPost(
                       PostSignUpApi,
-                      (data: any) => {
-                        message.success(formatMessage({ id: 'SUCCESS_REGISTER' }));
-                        navigate('/');
+                      () => {
+                        message.success(formatMessage({ id: 'SUCCESS_REGISTER' }), () => {navigate('/');});
                       },
                       {
                         name: name,

@@ -77,7 +77,7 @@ const PasscodeManagement = () => {
                       <th><FormattedMessage id="ENV" /></th>
                       <th>PASSCODE</th>
                       <th><FormattedMessage id="ISSUE_PASSCODE_ADMIN_ID" /></th>
-                      <th><FormattedMessage id="CREATION_DATE" /></th>
+                      <th><FormattedMessage id="ACTION_DATE" /></th>
                       <th><FormattedMessage id="VALID_TIME" /></th>
                       <th><FormattedMessage id="NUMBER_OF_REMAINING_USES" /></th>
                       {/* <th>
