@@ -1,3 +1,5 @@
+import { type } from "os"
+
 export type GetPutUsersApiDataType = {
   queryTotalCount: number,
   users: GetPutUsersApiArrayType
@@ -86,7 +88,7 @@ export type OmpassInfoType = {
 
 type PasscodeType = {
   id: number,
-  number: number,
+  number: string,
   validTime: number,
   recycleCount: number,
   createdAt: string,
@@ -94,7 +96,7 @@ type PasscodeType = {
   issuerUsername: string,
 }
 
-type OsNamesType = "Windows" | "MacOs";
+type OsNamesType = "WINDOWS" | "MAC";
 
 export type GetPutSecretKeyApiType = {
   secretKey: string,
@@ -105,4 +107,22 @@ export type GetUsersCountApiType = {
   registeredOmpassUserCount: number,
   totalUserCount: number,
   ubRegisteredOmpassUserCount: number,
+}
+
+export type GetPasscodeHistoriesApiType = {
+  action: string,
+  createdAt: string,
+  passcode: PasscodeType,
+  user: userSimpleType,
+  device: deviceSimpleType,
+}
+
+type userSimpleType = {
+  username: string,
+  role: userRoleType,
+}
+
+type deviceSimpleType = {
+  deviceType: string,
+  macAddress: string,
 }

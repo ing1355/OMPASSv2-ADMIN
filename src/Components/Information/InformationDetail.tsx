@@ -78,7 +78,7 @@ const InformationDetail = () => {
     const macAddRep = ad.replace(/(.{2})/g, "$1:");
     return macAddRep.slice(0, -1);
   }
-console.log('ompassInfoData', ompassInfoData)
+
   useEffect(() => {
     if(uuid) {
       if(role === 'USER') {
@@ -577,7 +577,7 @@ console.log('ompassInfoData', ompassInfoData)
                     className='information_detail_device_container'
                   >
                     <div>
-                      {data.os !== 'MacOs' ?
+                      {data.os !== 'MAC' ?
                         <img src={os_windows} width='80px' height='80px' style={{padding: '30px'}} />
                       :
                         <img src={os_mac} width='80px' height='80px' style={{padding: '30px'}} />

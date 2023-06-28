@@ -619,8 +619,8 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                             className='dropdown-101-header'
                           >
                             <span>
-                              {searchOsInfo === 'windows' && <>windows</>}
-                              {searchOsInfo === 'mac' && <>mac</>}
+                              {searchOsInfo === 'WINDOWS' && <>windows</>}
+                              {searchOsInfo === 'MAC' && <>mac</>}
                               {searchOsInfo === 'BROWSER' && <>browser</>}
                             </span>
                             <img className='tab_dropdown_arrow' src={dropdown_icon}/>
@@ -642,7 +642,7 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                         <li>
                           <div
                             onClick={() => {
-                              setSearchOsInfo('windows');
+                              setSearchOsInfo('WINDOWS');
                               setIsOsDropdownOpen(false);
                             }}
                           >
@@ -652,7 +652,7 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                         <li>
                           <div
                             onClick={() => {
-                              setSearchOsInfo('mac');
+                              setSearchOsInfo('MAC');
                               setIsOsDropdownOpen(false);
                             }}
                           >

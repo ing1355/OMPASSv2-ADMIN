@@ -9,7 +9,7 @@ export type InformationProps = {
 
 export type listType = 'user_type' | 'username' | 'os' | 'lastLoginDate' | 'enable_passcode_count' | 'all' | null;
 export type sortingType = 'none' | 'asc' | 'desc';
-export type searchOsType = 'windows' | 'Windows' | 'WINDOWS' | 'mac' | 'BROWSER' | null;
+export type searchOsType = 'WINDOWS' | 'MAC' | 'BROWSER' | null;
 
 export type sortingInfoType = {
   list: listType,

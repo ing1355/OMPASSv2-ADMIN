@@ -31,3 +31,7 @@ export const DeleteDeviceApi = (userId: string, deviceId: number) => `/v1/users/
 export const PutPasscodeApi = '/v1/passcode';
 export const PostPutPasscodeApi = '/v1/passcode';
 export const DeletePasscodeApi = (passcodeId: number) => `/v1/passcode/${passcodeId}`;
+
+
+// 패스코드 이력
+export const GetPasscodeHistoriesApi = '/v1/passcode-histories';

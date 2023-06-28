@@ -1,8 +1,11 @@
+import { CustomAxiosGet } from "Components/CustomHook/CustomAxios";
 import { useWindowHeightHeader } from "Components/CustomHook/useWindowHeight";
 import Header from "Components/Header/Header";
+import { GetPasscodeHistoriesApi } from "Constants/ApiRoute";
 import { CopyRightText } from "Constants/ConstantValues";
+import { GetPasscodeHistoriesApiType } from "Types/ServerResponseDataTypes";
 import { Pagination, PaginationProps, Popconfirm } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 const PasscodeManagement = () => {
@@ -10,11 +13,24 @@ const PasscodeManagement = () => {
   const [totalCount, setTotalCount] = useState<number>(0);
   const [tableCellSize, setTableCellSize] = useState<number>(10);
   const [pageNum, setPageNum] = useState<number>(1);
+  const [passcodeHistoryData, setPasscodeHistoryData] = useState<GetPasscodeHistoriesApiType[]>([]);
 
-    const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
+  const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
     setPageNum(pageNumber);
     setTableCellSize(pageSizeOptions);
   };
+
+  useEffect(() => {
+    CustomAxiosGet(
+      GetPasscodeHistoriesApi,
+      (data: GetPasscodeHistoriesApiType[]) => {
+        setPasscodeHistoryData(data);
+      }, {
+        page_size: tableCellSize,
+        page: pageNum -1,
+      }
+    )
+  },[])
 
   return (
     <>
@@ -54,14 +70,15 @@ const PasscodeManagement = () => {
                         />
                       </th>
                       <th></th> */}
-                      <th>타입</th>
-                      <th>사용자 아이디</th>
-                      <th>환경</th>
-                      <th>패스코드</th>
-                      <th>발급자 아이디</th>
-                      <th>발급 일시</th>
-                      <th>유효 시간</th>
-                      <th>남은 사용 횟수</th>
+                      <th><FormattedMessage id="ACTION" /></th>
+                      <th><FormattedMessage id="TYPE" /></th>
+                      <th><FormattedMessage id="USER_ID" /></th>
+                      <th><FormattedMessage id="ENV" /></th>
+                      <th>PASSCODE</th>
+                      <th><FormattedMessage id="ISSUE_PASSCODE_ADMIN_ID" /></th>
+                      <th><FormattedMessage id="CREATION_DATE" /></th>
+                      <th><FormattedMessage id="VALID_TIME" /></th>
+                      <th><FormattedMessage id="NUMBER_OF_REMAINING_USES" /></th>
                       {/* <th>
                         <Popconfirm
                           title={formatMessage({ id: 'DELETE_A_FILE' })}
@@ -108,120 +125,27 @@ const PasscodeManagement = () => {
                       </th> */}
                     </tr>
                   </thead>
-                  {/* <tbody>
-                    {agentData.map((data: GetAgentApiType, index: number) => (
+                  <tbody>
+                    {passcodeHistoryData.map((data:GetPasscodeHistoriesApiType, index: number) => (
                       <tr
-                        key={'agent_data_' + index}
-                        onMouseEnter={() => handleRowHover(index)}
-                        onMouseLeave={() => handleRowHover(-1)}
-                        style={{ background: hoveredRow === index ? '#D6EAF5' : 'transparent', cursor: 'default' }}
+                        key={'passcode_history_data_'+index}
                       >
+                        <td><FormattedMessage id={data.action} /></td>
                         <td>
-                          <input 
-                            type='checkbox' 
-                            value={data.fileId}
-                            id={index.toString()}
-                            checked={checkboxes[index]?.checked || false}
-                            onChange={handleCheckboxChange}
-                          />
+                          {data.user.role === 'USER' && <FormattedMessage id='USER' />}
+                          {data.user.role === 'ADMIN' && <FormattedMessage id='ADMIN' />}
+                          {data.user.role === 'SUPER_ADMIN' && <FormattedMessage id='SUPER_ADMIN' />}
                         </td>
-                        <td>{data.downloadTarget && <span className='manager-mark ml10'><FormattedMessage id='CURRENT' /></span>}</td>
-                        <td>{data.version}</td>
-                        <td>{data.os}</td>
-                        <td>{data.fileName}</td>
-                        <td>{data.uploadDate}</td>
-                        <td>{data.uploader}</td>
-                        <td>
-                          <img 
-                            src={list_download}
-                            style={{cursor: 'pointer'}}
-                            width='18px'
-                            onClick={() => {
-                              const versionName = 'ompass_installer_v' + data.version + '.zip';
-                              CustomAxiosGetFile(
-                                GetAgentInstallerDownloadApi,
-                                (data:any) => {
-                                  const fileDownlaoadUrl = URL.createObjectURL(data);
-                                  console.log(fileDownlaoadUrl)
-                                  const downloadLink = document.createElement('a');
-                                  downloadLink.href = fileDownlaoadUrl;
-                                  downloadLink.download = versionName;
-                                  document.body.appendChild(downloadLink);
-                                  downloadLink.click();
-                                  document.body.removeChild(downloadLink);
-                                  URL.revokeObjectURL(fileDownlaoadUrl);
-                                },
-                                {
-                                  file_id: data.fileId
-                                },
-                                (error: any) => {
-                                  message.error(formatMessage({ id: 'DOWNLOAD_FAILED' }));
-                                }
-                              )
-                            }}
-                          />
-                        </td>
-                        <td>
-                          <button
-                            className={'button-st4 agent_management_target_version_btn ' + (data.downloadTarget ? 'disable' : '' )}
-                            disabled={data.downloadTarget ? true : false}
-                            onClick={() => {
-                              CustomAxiosPatch(
-                                PatchAgentInstallerApi(data.fileId),
-                                () => {
-                                  message.success(formatMessage({ id: 'CURRENT_VERSION_CHANGE_COMPLETE' }));
-                                  const render = rendering;
-                                  const renderTemp = render.concat(true);
-                                  setRendering(renderTemp);
-                                }
-                              )
-                            }}
-                          ><FormattedMessage id='MODIFY_' /></button>
-                        </td>
-                        <td>
-                          <Popconfirm
-                            title={formatMessage({ id: 'DELETE_A_FILE' })}
-                            description={formatMessage({ id: 'CONFIRM_DELETE_FILE' })}
-                            okText={formatMessage({ id: 'DELETE' })}
-                            cancelText={formatMessage({ id: 'CANCEL' })}
-                            open={openFileDelete[index]}
-                            onConfirm={() => {
-                              if(data.downloadTarget) {
-                                message.error(formatMessage({ id: 'CURRENT_VERSION_CANNOT_BE_DELETED' }));
-                              } else {
-                                CustomAxiosDelete(
-                                  DeleteAgentInstallerApi(data.fileId.toString()),
-                                  () => {
-                                    const updatedOpenFileDelete = [...openFileDelete];
-                                    updatedOpenFileDelete[index] = false;
-                                    setOpenFileDelete(updatedOpenFileDelete);
-
-                                    message.success(formatMessage({ id: 'VERSION_DELETE' }));
-                                    const render = rendering;
-                                    const renderTemp = render.concat(true);
-                                    setRendering(renderTemp);
-                                  }
-                                )
-                              }
-                            }}
-                            onCancel={() => {
-                              const updatedOpenFileDelete = [...openFileDelete];
-                              updatedOpenFileDelete[index] = false;
-                              setOpenFileDelete(updatedOpenFileDelete);
-                            }}
-                          >
-                            <img src={delete_icon} width='20px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
-                              onClick={() => {
-                              const updatedOpenFileDelete = [...openFileDelete];
-                              updatedOpenFileDelete[index] = true;
-                              setOpenFileDelete(updatedOpenFileDelete);
-                              }}
-                            />              
-                          </Popconfirm>
-                        </td>
+                        <td>{data.user.username}</td>
+                        <td>{data.device.deviceType}</td>
+                        <td>{data.passcode.number}</td>
+                        <td>{data.passcode.issuerUsername}</td>
+                        <td>{data.passcode.createdAt}</td>
+                        <td>{data.passcode.expirationTime ? data.passcode.expirationTime : <FormattedMessage id='UNLIMITED' />}</td>
+                        <td>{data.passcode.recycleCount === -1 ? <FormattedMessage id='UNLIMITED' /> :  data.passcode.recycleCount}</td>
                       </tr>
                     ))}
-                  </tbody> */}
+                  </tbody>
                 </table> 
                 <div
                   className="mt50 mb40"
