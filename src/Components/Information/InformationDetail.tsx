@@ -1139,7 +1139,7 @@ const InformationDetail = () => {
                     <thead>
                       <tr>
                         <th>PASSCODE</th>
-                        <th><FormattedMessage id='ISSUE_PASSCODE_ADMIN_ID' /></th>
+                        <th><FormattedMessage id='ADMIN_ID' /></th>
                         <th><FormattedMessage id='CREATION_DATE' /></th>
                         <th><FormattedMessage id='VALID_TIME' /></th>
                         <th><FormattedMessage id='NUMBER_OF_REMAINING_USES' /></th>

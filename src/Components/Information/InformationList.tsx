@@ -510,7 +510,7 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                       >
                         <span>
                           {searchType === 'all' && <FormattedMessage id='all' /> }
-                          {searchType === 'role' && <FormattedMessage id='user_type' /> }
+                          {searchType === 'role' && <FormattedMessage id='RANK' /> }
                           {searchType === 'username' && <FormattedMessage id='username' /> }
                           {searchType === 'os' && <FormattedMessage id='os' /> }
                           {searchType === 'lastLoginDate' && <FormattedMessage id='lastLoginDate' /> }
@@ -555,7 +555,7 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                           setSearchTypeInfo(null);
                         }}
                       >
-                        <FormattedMessage id='user_type' />
+                        <FormattedMessage id='RANK' />
                       </div>
                     </li>
                     <li>
@@ -802,7 +802,7 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                             }
                           }}
                         >
-                          <FormattedMessage id='TYPE' />
+                          <FormattedMessage id='RANK' />
                           {sortingNow === null ?
                             sortingImgFun(false, 'none')
                           :

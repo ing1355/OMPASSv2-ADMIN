@@ -71,12 +71,12 @@ const PasscodeManagement = () => {
                         />
                       </th>
                       <th></th> */}
+                      <th><FormattedMessage id="RANK" /></th>
+                      <th><FormattedMessage id="ADMIN_ID" /></th>
                       <th><FormattedMessage id="ACTION" /></th>
-                      <th><FormattedMessage id="TYPE" /></th>
+                      <th>PASSCODE</th>
                       <th><FormattedMessage id="USER_ID" /></th>
                       <th><FormattedMessage id="ENV" /></th>
-                      <th>PASSCODE</th>
-                      <th><FormattedMessage id="ISSUE_PASSCODE_ADMIN_ID" /></th>
                       <th><FormattedMessage id="ACTION_DATE" /></th>
                       <th><FormattedMessage id="VALID_TIME" /></th>
                       <th><FormattedMessage id="NUMBER_OF_REMAINING_USES" /></th>
@@ -131,16 +131,16 @@ const PasscodeManagement = () => {
                       <tr
                         key={'passcode_history_data_'+index}
                       >
-                        <td><FormattedMessage id={data.action} /></td>
                         <td>
                           {data.user.role === 'USER' && <FormattedMessage id='USER' />}
                           {data.user.role === 'ADMIN' && <FormattedMessage id='ADMIN' />}
                           {data.user.role === 'SUPER_ADMIN' && <FormattedMessage id='SUPER_ADMIN' />}
                         </td>
+                        <td>{data.passcode.issuerUsername}</td>
+                        <td><FormattedMessage id={data.action} /></td>
+                        <td>{data.passcode.number}</td>
                         <td>{data.user.username}</td>
                         <td>{data.device.deviceType}</td>
-                        <td>{data.passcode.number}</td>
-                        <td>{data.passcode.issuerUsername}</td>
                         <td>{data.passcode.createdAt}</td>
                         <td>{data.passcode.expirationTime ? data.passcode.expirationTime : <FormattedMessage id='UNLIMITED' />}</td>
                         <td>{data.passcode.recycleCount === -1 ? <FormattedMessage id='UNLIMITED' /> :  data.passcode.recycleCount}</td>
