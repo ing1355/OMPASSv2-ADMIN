@@ -113,7 +113,7 @@ const CreateAdmins = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }: 
                       CustomAxiosPost(
                         PostSignUpApi,
                         () => {
-                          message.success(formatMessage({ id: 'SUCCESS_REGISTER' }));
+                          message.success(formatMessage({ id: 'SUCCESS_REGISTER_ADMINS' }));
                           setPageNum(1);
                           navigate('/AdminsManagement');
                         },

@@ -188,6 +188,7 @@ const LocaleTexts = {
     LOADING: 'Loading...',
     UPLOADING: 'Uploading...',
     RANK: 'Rank',
+    SUCCESS_REGISTER_ADMINS: 'You have successfully registered',
   },
   'ko': {
     LOGIN: '로그인',
@@ -378,6 +379,7 @@ const LocaleTexts = {
     LOADING: '로딩중...',
     UPLOADING: '업로드중...',
     RANK: '등급',
+    SUCCESS_REGISTER_ADMINS: '관리자 등록 성공',
   }
 }
 
