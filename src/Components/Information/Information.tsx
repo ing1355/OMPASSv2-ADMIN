@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router"
-import { useState } from 'react';
+import { useState } from 'react'
 import InformationList from "./InformationList"
 import InformationDetail from "./InformationDetail"
 

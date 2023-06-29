@@ -19,6 +19,7 @@ import Locale from './Locale/index';
 import PasscodeManagement from 'Components/PasscodeManagement/PasscodeManagement';
 import Information from 'Components/Information/Information';
 import Admins from 'Components/Admins/Admins';
+import Agent from 'Components/Agent/Agent';
 
 const App: React.FC = () => {
   const { lang, userInfo } = useSelector((state: ReduxStateType) => ({
@@ -40,7 +41,7 @@ const App: React.FC = () => {
             {/* <Route path='/InformationList*' element={<InformationList />} /> */}
             {/* <Route path='/InformationDetail/:params/:selectedUuid' element={<InformationDetail />} /> */}
             {/* <Route path='/Information/detail/:params/:selectedUuid' element={<InformationDetail />} /> */}
-            <Route path='/AgentManagement' element={<AgentManagement />} />
+            <Route path='/AgentManagement/*' element={<Agent />} />
             <Route path='/AdminsManagement/*' element={<Admins />} />
             <Route path='/PasscodeManagement' element={<PasscodeManagement />} />
             <Route path='/SecretKey' element={<SecretKey />} />

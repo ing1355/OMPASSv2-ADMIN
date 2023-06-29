@@ -79,6 +79,7 @@ const PasscodeManagement = () => {
                       <th><FormattedMessage id="ADMIN_ID" /></th>
                       <th><FormattedMessage id="ACTION" /></th>
                       <th>PASSCODE</th>
+                      <th style={{width: '20px'}}></th>
                       <th><FormattedMessage id="USER_ID" /></th>
                       <th><FormattedMessage id="ENV" /></th>
                       <th><FormattedMessage id="ACTION_DATE" /></th>
@@ -143,17 +144,19 @@ const PasscodeManagement = () => {
                         <td>{data.passcode.issuerUsername}</td>
                         <td><FormattedMessage id={data.action} /></td>
                         <td
-                          width='150px'
+                          style={{width: '50px'}}
                         >
                           {viewPasscodes[index] ?
                             <span>{data.passcode.number}</span>
                           :
                             <span>⦁⦁⦁⦁⦁⦁</span>
                           }
+                        </td>
+                        <td>
                           <img
                             src={viewPasscodes[index] ? view_password : dont_look_password}
                             width='20px'
-                            style={{ opacity: 0.5, marginLeft: '17px', position: 'relative', top: '4px' }}
+                            style={{ opacity: 0.5, position: 'relative', top: '4px' }}
                             onClick={() => {
                               const updatedViewPasscodes = [...viewPasscodes];
                               updatedViewPasscodes[index] = !updatedViewPasscodes[index];

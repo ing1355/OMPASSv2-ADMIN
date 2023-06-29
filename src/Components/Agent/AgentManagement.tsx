@@ -2,7 +2,7 @@ import './AgentManagement.css';
 import { FormattedMessage, useIntl } from "react-intl";
 import Header from "Components/Header/Header";
 import { useWindowHeightHeader } from 'Components/CustomHook/useWindowHeight';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Col, Pagination, PaginationProps, Popconfirm, Row, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { GetAgentApiArrayType, GetAgentApiDataType, GetAgentApiType } from 'Types/ServerResponseDataTypes';
@@ -12,6 +12,7 @@ import { DeleteAgentInstallerApi, GetAgentInstallerApi, GetAgentInstallerDownloa
 import delete_icon from '../../assets/delete_icon.png';
 import list_download from '../../assets/list_download.png';
 import { CopyRightText } from 'Constants/ConstantValues';
+import { InformationProps } from 'Types/PropsTypes';
 
 interface Checkbox {
   id: number;
@@ -19,33 +20,20 @@ interface Checkbox {
   checked: boolean;
 }
 
-const AgentManagement = () => {
+const AgentManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }: InformationProps) => {
   const height = useWindowHeightHeader();
   const [totalCount, setTotalCount] = useState<number>(0);
-  const [tableCellSize, setTableCellSize] = useState<number>(10);
-  const [pageNum, setPageNum] = useState<number>(1);
   const [agentData, setAgentData] = useState<GetAgentApiArrayType>([]);
-  const [isAddVersion, setIsAddVersion] = useState<boolean>(false);
-  const [isVersionAlert, setIsVersionAlert] = useState<boolean>(false);
   const [checkAll, setCheckAll] = useState(false);
   const [checkboxes, setCheckboxes] = useState<Checkbox[]>([]);
   const [hoveredRow, setHoveredRow] = useState<number>(-1);
   const [rendering, setRendering] = useState<boolean[]>([]);
-  const [fileName, setFileName] = useState('');
   const [openFileDelete, setOpenFileDelete] = useState<boolean[]>(new Array(agentData.length).fill(false));
   const [openFilesDelete, setOpenFilesDelete] = useState<boolean>(false);
-  const [isUploadingFile, setIsUploadingFile] = useState<boolean>(false);
   const [isAgentDataLoading, setIsAgentDataLoading] = useState<boolean>(true);
 
   const { formatMessage } = useIntl();
-  
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const fileInput = event.target;
-    if (fileInput.files && fileInput.files[0]) {
-      const name = fileInput.files[0].name;
-      setFileName(name);
-    }
-  };
+  const navigate = useNavigate();
 
   const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
     setPageNum(pageNumber);
@@ -103,7 +91,7 @@ const AgentManagement = () => {
         setIsAgentDataLoading(false);
       }
     )
-  },[tableCellSize, pageNum, rendering, isAddVersion]);
+  },[tableCellSize, pageNum, rendering]);
 
   // agentData가 변경되면 checkboxes 초기화
   useEffect(() => {
@@ -132,426 +120,267 @@ const AgentManagement = () => {
               style={{display: 'flex'}}
             >
               <h1><FormattedMessage id='VERSION_LIST' /></h1>
-              {/* <div
-                className="App-view-manual-font"
-              ><Link to='/Manual'><FormattedMessage id='VIEW_MANUAL' /></Link></div> */}
             </div>
           </div>
 
           <div 
             style={{width: '1200px', marginTop: '1.8%'}}
           >
-            <div
+             <div
               style={{float: 'right'}}
               className='mb20'
             >
-              {isAddVersion ?
-              <div>
-                {isUploadingFile ?
-                  <button className='admins_management_button'
-                    type='button'
-                    disabled
-                    style={{cursor: 'default'}}
-                  >
-                    <span><FormattedMessage id='LOADING' /></span>
-                  </button>                
-                :
-                  <button className='admins_management_button'
-                    type='submit'
-                    form='addVersionForm'
-                  >
-                    <span><FormattedMessage id='REGISTER_VERSION' /></span>
-                  </button>
-                }
-                {/* <button className='admins_management_button'
-                  type='submit'
-                  form='addVersionForm'
-                >
-                  <span><FormattedMessage id='REGISTER_VERSION' /></span>
-                </button> */}
-                <button className='admins_management_button'
-                  type='button'
-                  onClick={() => {
-                    setIsAddVersion(false);
-                    setFileName('');
-                  }}
-                >
-                  <span><FormattedMessage id='CANCEL' /></span>
-                </button>
-              </div>
-              :
               <button className='admins_management_button'
                 type='button'
                 onClick={(e) => {
                   e.preventDefault();
-                  setIsAddVersion(true);
+                  navigate('/AgentManagement/upload');
                 }}
               >
                 <span><FormattedMessage id='UPLOAD_VERSION' /></span>
               </button>
-              }
 
             </div>
-
-            {isAddVersion ?
-              <div
-                className='create_account_content'
-              >
-                <form 
-                  id='addVersionForm'
-                  onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-                    e.preventDefault();
-                    const { version, uploadFile, hash } = (e.currentTarget.elements as any);
-                    const metaDataVersion = version.value;
-                    const hashValue = hash.value;
-                    const multipartFile = uploadFile.files[0];
-                    const maxFileSize = 100 * 1024 * 1024;
-                    const fileExtension = multipartFile?.name.split('.').pop();
-                    
-                    console.log('fileExtension',fileExtension)
-                    
-                    if(metaDataVersion) {
-                      setIsVersionAlert(false);
-                    } else {
-                      setIsVersionAlert(true);
-                    }
-
-                    if(metaDataVersion && multipartFile && hashValue && !isVersionAlert && !isUploadingFile) {
-                      if(multipartFile.size > maxFileSize) {
-                        message.error(formatMessage({ id: 'THE_FILE_SIZE_EXCEEDS_100MB' }));
-                      } else if(fileExtension !== 'zip') {
-                        message.error(formatMessage({ id: 'ONLY_ZIP_FILES_CAN_BE_UPLOADED' }));
-                      }  else {
-                        setIsUploadingFile(true);
-                        CustomAxiosPost(
-                          PostAgentInstallerUploadApi,
-                          (data: any) => {
-                            setIsAddVersion(false);
-                            setFileName('');
-                          },
-                          {
-                            'metaData.hash': hashValue,
-                            'metaData.os': 'WINDOWS',
-                            'metaData.version': metaDataVersion,                          
-                            multipartFile: multipartFile,
-                          },
-                          () => {
-                            message.error(formatMessage({ id: 'UPLOAD_FAILED' }));
-                          },
-                          {
-                            headers: {
-                              'Content-Type': 'multipart/form-data',
-                            },
-                          },
-                          () => {
-                            setIsUploadingFile(false);
-                          }
-                        );
-                      }
-                    } else {
-                      message.error(formatMessage({ id: 'PLEASE_ENTER_ALL_THE_ITEMS' }))
-                    }
-                  }}
-                >
-                  <div
-                    className='mt50'
-                  >
-                    <label><FormattedMessage id='VERSION_NAME' /></label>
-                    <input 
-                      id='version'
-                      type='text'
-                      className={'input-st1 create_account_input mt8 mb5 ' + (isVersionAlert ? 'red' : '')}
-                      maxLength={16}
-                      autoComplete='off'
-                      style={{width: '600px'}}
-                      onChange={(e) => {
-                        const value = e.currentTarget.value;
-                        if(value) {
-                          setIsVersionAlert(false);
-                        } else {
-                          setIsVersionAlert(true);
-                        }
-                      }}
-                    />
-                    <div
-                      className={'regex-alert ' + (isVersionAlert ? 'visible' : '')}
-                    >
-                      <FormattedMessage id='PLEASE_ENTER_A_VERSION' />
-                    </div>
-                  </div>
-                  <div
-                    className='mb20'
-                  >
-                    <label><FormattedMessage id='HASH' /></label>
-                    <input 
-                      id='hash'
-                      type='text'
-                      className={'input-st1 create_account_input mt8 mb5 '}
-                      autoComplete='off'
-                      style={{width: '600px'}}
-                    />
-                  </div>
-                  <div>
-                    <label><FormattedMessage id='FILE_UPLOAD' /></label>
-                    <div
-                      style={{marginTop: '22px'}}
-                    >
-                      <label htmlFor="uploadFile" className='button-st4 agent_management_file_btn'><FormattedMessage id='SELECT_FILE' /></label>
-                      <input
-                        id="uploadFile"
-                        type="file"
-                        accept=".zip"
-                        hidden
-                        onChange={handleFileChange}
+            <div className='table-st1'>
+              <table>
+                <thead>
+                  <tr>
+                    <th>
+                      <input 
+                        type='checkbox'
+                        checked={checkAll}
+                        onChange={handleCheckAll}
                       />
-                      <span style={{marginLeft: '15px'}}>{fileName}</span>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            :
-              <div className='table-st1'>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>
-                        <input 
-                          type='checkbox'
-                          checked={checkAll}
-                          onChange={handleCheckAll}
-                        />
-                      </th>
-                      <th></th>
-                      <th><FormattedMessage id='VERSION' /></th>
-                      <th>OS</th>
-                      <th><FormattedMessage id='FILE_NAME' /></th>
-                      <th><FormattedMessage id='UPLOAD_DATE' /></th>
-                      <th><FormattedMessage id='UPLOADER' /></th>
-                      <th><FormattedMessage id='DOWNLOAD' /></th>
-                      <th><FormattedMessage id='CURRENT_VERSION_SETTING' /></th>
-                      <th>
-                        <Popconfirm
-                          title={formatMessage({ id: 'DELETE_A_FILE' })}
-                          description={formatMessage({ id: 'CONFIRM_DELETE_FILE' })}
-                          okText={formatMessage({ id: 'DELETE' })}
-                          cancelText={formatMessage({ id: 'CANCEL' })}
-                          open={openFilesDelete}
-                          onConfirm={() => {
-                            const versionIds = checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.userId).join(',');
-                            const target = agentData.find((data) => data.downloadTarget === true);
-                            const targetVersion = checkboxes.filter((checkbox) => checkbox.userId ===  target?.fileId);
+                    </th>
+                    <th></th>
+                    <th><FormattedMessage id='VERSION' /></th>
+                    <th>OS</th>
+                    <th><FormattedMessage id='FILE_NAME' /></th>
+                    <th><FormattedMessage id='UPLOAD_DATE' /></th>
+                    <th><FormattedMessage id='UPLOADER' /></th>
+                    <th><FormattedMessage id='DOWNLOAD' /></th>
+                    <th><FormattedMessage id='CURRENT_VERSION_SETTING' /></th>
+                    <th>
+                      <Popconfirm
+                        title={formatMessage({ id: 'DELETE_A_FILE' })}
+                        description={formatMessage({ id: 'CONFIRM_DELETE_FILE' })}
+                        okText={formatMessage({ id: 'DELETE' })}
+                        cancelText={formatMessage({ id: 'CANCEL' })}
+                        open={openFilesDelete}
+                        onConfirm={() => {
+                          const versionIds = checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.userId).join(',');
+                          const target = agentData.find((data) => data.downloadTarget === true);
+                          const targetVersion = checkboxes.filter((checkbox) => checkbox.userId ===  target?.fileId);
 
-                            if(targetVersion[0]?.checked) {
-                              message.error(formatMessage({ id: 'CURRENT_VERSION_CANNOT_BE_DELETED' }));
+                          if(targetVersion[0]?.checked) {
+                            message.error(formatMessage({ id: 'CURRENT_VERSION_CANNOT_BE_DELETED' }));
+                          } else {
+                            if(versionIds) {
+                              CustomAxiosDelete(
+                                DeleteAgentInstallerApi(versionIds),
+                                () => {
+                                  setOpenFilesDelete(false);
+
+                                  message.success(formatMessage({ id: 'VERSION_DELETE' }));
+                                  
+                                  const render = rendering;
+                                  const renderTemp = render.concat(true);
+                                  setRendering(renderTemp);
+                                }
+                              )
                             } else {
-                              if(versionIds) {
-                                CustomAxiosDelete(
-                                  DeleteAgentInstallerApi(versionIds),
-                                  () => {
-                                    setOpenFilesDelete(false);
-
-                                    message.success(formatMessage({ id: 'VERSION_DELETE' }));
-                                    
-                                    const render = rendering;
-                                    const renderTemp = render.concat(true);
-                                    setRendering(renderTemp);
-                                  }
-                                )
-                              } else {
-                                message.error(formatMessage({ id: 'NO_ITEM_SELECTED' }));
-                              }
+                              message.error(formatMessage({ id: 'NO_ITEM_SELECTED' }));
                             }
+                          }
+                        }}
+                        onCancel={() => {
+                          setOpenFilesDelete(false);
+                        }}
+                      >
+                        <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                          onClick={() => {
+                            setOpenFilesDelete(true);
                           }}
-                          onCancel={() => {
-                            setOpenFilesDelete(false);
-                          }}
-                        >
-                          <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                        />
+                      </Popconfirm>
+                      {/* <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                        onClick={() => {
+                          const versionIds = checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.userId).join(',');
+                          const target = agentData.find((data) => data.downloadTarget === true);
+                          const targetVersion = checkboxes.filter((checkbox) => checkbox.userId ===  target?.fileId);
+
+                          if(targetVersion[0]?.checked) {
+                            message.error('현재 버전은 삭제할 수 없습니다.');
+                          } else {
+                            if(versionIds) {
+                              CustomAxiosDelete(
+                                DeleteAgentInstallerApi(versionIds),
+                                () => {
+                                  message.success('선택한 버전 삭제 완료');
+                                  const render = rendering;
+                                  const renderTemp = render.concat(true);
+                                  setRendering(renderTemp);
+                                }
+                              )
+                            } else {
+                              message.error('선택한 항목이 없습니다.');
+                            }
+                          }
+                        }}
+                      /> */}
+                    </th>
+                  </tr>
+                </thead>
+
+                {isAgentDataLoading ?
+                  <tbody>
+                    <tr>
+                      <td colSpan={12}>
+                        <FormattedMessage id='LOADING' />
+                      </td>
+                    </tr>
+                  </tbody>
+                :
+                  <tbody>
+                    {agentData.map((data: GetAgentApiType, index: number) => (
+                      <tr
+                        key={'agent_data_' + index}
+                        onMouseEnter={() => handleRowHover(index)}
+                        onMouseLeave={() => handleRowHover(-1)}
+                        style={{ background: hoveredRow === index ? '#D6EAF5' : 'transparent', cursor: 'default' }}
+                      >
+                        <td>
+                          <input 
+                            type='checkbox' 
+                            value={data.fileId}
+                            id={index.toString()}
+                            checked={checkboxes[index]?.checked || false}
+                            onChange={handleCheckboxChange}
+                          />
+                        </td>
+                        <td>{data.downloadTarget && <span className='manager-mark ml10'><FormattedMessage id='CURRENT' /></span>}</td>
+                        <td>{data.version}</td>
+                        <td>{data.os}</td>
+                        <td>{data.fileName}</td>
+                        <td>{data.uploadDate}</td>
+                        <td>{data.uploader}</td>
+                        <td>
+                          <img 
+                            src={list_download}
+                            style={{cursor: 'pointer'}}
+                            width='18px'
                             onClick={() => {
-                              setOpenFilesDelete(true);
+                              const versionName = 'ompass_installer_v' + data.version + '.zip';
+                              CustomAxiosGetFile(
+                                GetAgentInstallerDownloadApi,
+                                (data:any) => {
+                                  const fileDownlaoadUrl = URL.createObjectURL(data);
+                                  console.log(fileDownlaoadUrl)
+                                  const downloadLink = document.createElement('a');
+                                  downloadLink.href = fileDownlaoadUrl;
+                                  downloadLink.download = versionName;
+                                  document.body.appendChild(downloadLink);
+                                  downloadLink.click();
+                                  document.body.removeChild(downloadLink);
+                                  URL.revokeObjectURL(fileDownlaoadUrl);
+                                },
+                                {
+                                  file_id: data.fileId
+                                },
+                                (error: any) => {
+                                  message.error(formatMessage({ id: 'DOWNLOAD_FAILED' }));
+                                }
+                              )
                             }}
                           />
-                        </Popconfirm>
-                        {/* <img src={delete_icon} width='25px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
-                          onClick={() => {
-                            const versionIds = checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.userId).join(',');
-                            const target = agentData.find((data) => data.downloadTarget === true);
-                            const targetVersion = checkboxes.filter((checkbox) => checkbox.userId ===  target?.fileId);
-
-                            if(targetVersion[0]?.checked) {
-                              message.error('현재 버전은 삭제할 수 없습니다.');
-                            } else {
-                              if(versionIds) {
+                        </td>
+                        <td>
+                          <button
+                            className={'button-st4 agent_management_target_version_btn ' + (data.downloadTarget ? 'disable' : '' )}
+                            disabled={data.downloadTarget ? true : false}
+                            onClick={() => {
+                              CustomAxiosPatch(
+                                PatchAgentInstallerApi(data.fileId),
+                                () => {
+                                  message.success(formatMessage({ id: 'CURRENT_VERSION_CHANGE_COMPLETE' }));
+                                  const render = rendering;
+                                  const renderTemp = render.concat(true);
+                                  setRendering(renderTemp);
+                                }
+                              )
+                            }}
+                          ><FormattedMessage id='APPLY' /></button>
+                        </td>
+                        <td>
+                          <Popconfirm
+                            title={formatMessage({ id: 'DELETE_A_FILE' })}
+                            description={formatMessage({ id: 'CONFIRM_DELETE_FILE' })}
+                            okText={formatMessage({ id: 'DELETE' })}
+                            cancelText={formatMessage({ id: 'CANCEL' })}
+                            open={openFileDelete[index]}
+                            onConfirm={() => {
+                              if(data.downloadTarget) {
+                                message.error(formatMessage({ id: 'CURRENT_VERSION_CANNOT_BE_DELETED' }));
+                              } else {
                                 CustomAxiosDelete(
-                                  DeleteAgentInstallerApi(versionIds),
+                                  DeleteAgentInstallerApi(data.fileId.toString()),
                                   () => {
-                                    message.success('선택한 버전 삭제 완료');
+                                    const updatedOpenFileDelete = [...openFileDelete];
+                                    updatedOpenFileDelete[index] = false;
+                                    setOpenFileDelete(updatedOpenFileDelete);
+
+                                    message.success(formatMessage({ id: 'VERSION_DELETE' }));
                                     const render = rendering;
                                     const renderTemp = render.concat(true);
                                     setRendering(renderTemp);
                                   }
                                 )
-                              } else {
-                                message.error('선택한 항목이 없습니다.');
                               }
-                            }
-                          }}
-                        /> */}
-                      </th>
-                    </tr>
-                  </thead>
-
-                  {isAgentDataLoading ?
-                    <tbody>
-                      <tr>
-                        <td colSpan={12}>
-                          <FormattedMessage id='LOADING' />
+                            }}
+                            onCancel={() => {
+                              const updatedOpenFileDelete = [...openFileDelete];
+                              updatedOpenFileDelete[index] = false;
+                              setOpenFileDelete(updatedOpenFileDelete);
+                            }}
+                          >
+                            <img src={delete_icon} width='20px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                              onClick={() => {
+                              const updatedOpenFileDelete = [...openFileDelete];
+                              updatedOpenFileDelete[index] = true;
+                              setOpenFileDelete(updatedOpenFileDelete);
+                              }}
+                            />              
+                          </Popconfirm>
+                          {/* <img src={delete_icon} width='20px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
+                            onClick={() => {
+                              if(data.downloadTarget) {
+                                message.error('현재 버전은 삭제할 수 없습니다.');
+                              } else {
+                                CustomAxiosDelete(
+                                  DeleteAgentInstallerApi(data.fileId.toString()),
+                                  () => {
+                                    message.success('버전 삭제 완료');
+                                    const render = rendering;
+                                    const renderTemp = render.concat(true);
+                                    setRendering(renderTemp);
+                                  }
+                                )
+                              }
+                            }}
+                          />                           */}
                         </td>
                       </tr>
-                    </tbody>
-                  :
-                    <tbody>
-                      {agentData.map((data: GetAgentApiType, index: number) => (
-                        <tr
-                          key={'agent_data_' + index}
-                          onMouseEnter={() => handleRowHover(index)}
-                          onMouseLeave={() => handleRowHover(-1)}
-                          style={{ background: hoveredRow === index ? '#D6EAF5' : 'transparent', cursor: 'default' }}
-                        >
-                          <td>
-                            <input 
-                              type='checkbox' 
-                              value={data.fileId}
-                              id={index.toString()}
-                              checked={checkboxes[index]?.checked || false}
-                              onChange={handleCheckboxChange}
-                            />
-                          </td>
-                          <td>{data.downloadTarget && <span className='manager-mark ml10'><FormattedMessage id='CURRENT' /></span>}</td>
-                          <td>{data.version}</td>
-                          <td>{data.os}</td>
-                          <td>{data.fileName}</td>
-                          <td>{data.uploadDate}</td>
-                          <td>{data.uploader}</td>
-                          <td>
-                            <img 
-                              src={list_download}
-                              style={{cursor: 'pointer'}}
-                              width='18px'
-                              onClick={() => {
-                                const versionName = 'ompass_installer_v' + data.version + '.zip';
-                                CustomAxiosGetFile(
-                                  GetAgentInstallerDownloadApi,
-                                  (data:any) => {
-                                    const fileDownlaoadUrl = URL.createObjectURL(data);
-                                    console.log(fileDownlaoadUrl)
-                                    const downloadLink = document.createElement('a');
-                                    downloadLink.href = fileDownlaoadUrl;
-                                    downloadLink.download = versionName;
-                                    document.body.appendChild(downloadLink);
-                                    downloadLink.click();
-                                    document.body.removeChild(downloadLink);
-                                    URL.revokeObjectURL(fileDownlaoadUrl);
-                                  },
-                                  {
-                                    file_id: data.fileId
-                                  },
-                                  (error: any) => {
-                                    message.error(formatMessage({ id: 'DOWNLOAD_FAILED' }));
-                                  }
-                                )
-                              }}
-                            />
-                          </td>
-                          <td>
-                            <button
-                              className={'button-st4 agent_management_target_version_btn ' + (data.downloadTarget ? 'disable' : '' )}
-                              disabled={data.downloadTarget ? true : false}
-                              onClick={() => {
-                                CustomAxiosPatch(
-                                  PatchAgentInstallerApi(data.fileId),
-                                  () => {
-                                    message.success(formatMessage({ id: 'CURRENT_VERSION_CHANGE_COMPLETE' }));
-                                    const render = rendering;
-                                    const renderTemp = render.concat(true);
-                                    setRendering(renderTemp);
-                                  }
-                                )
-                              }}
-                            ><FormattedMessage id='APPLY' /></button>
-                          </td>
-                          <td>
-                            <Popconfirm
-                              title={formatMessage({ id: 'DELETE_A_FILE' })}
-                              description={formatMessage({ id: 'CONFIRM_DELETE_FILE' })}
-                              okText={formatMessage({ id: 'DELETE' })}
-                              cancelText={formatMessage({ id: 'CANCEL' })}
-                              open={openFileDelete[index]}
-                              onConfirm={() => {
-                                if(data.downloadTarget) {
-                                  message.error(formatMessage({ id: 'CURRENT_VERSION_CANNOT_BE_DELETED' }));
-                                } else {
-                                  CustomAxiosDelete(
-                                    DeleteAgentInstallerApi(data.fileId.toString()),
-                                    () => {
-                                      const updatedOpenFileDelete = [...openFileDelete];
-                                      updatedOpenFileDelete[index] = false;
-                                      setOpenFileDelete(updatedOpenFileDelete);
-
-                                      message.success(formatMessage({ id: 'VERSION_DELETE' }));
-                                      const render = rendering;
-                                      const renderTemp = render.concat(true);
-                                      setRendering(renderTemp);
-                                    }
-                                  )
-                                }
-                              }}
-                              onCancel={() => {
-                                const updatedOpenFileDelete = [...openFileDelete];
-                                updatedOpenFileDelete[index] = false;
-                                setOpenFileDelete(updatedOpenFileDelete);
-                              }}
-                            >
-                              <img src={delete_icon} width='20px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
-                                onClick={() => {
-                                const updatedOpenFileDelete = [...openFileDelete];
-                                updatedOpenFileDelete[index] = true;
-                                setOpenFileDelete(updatedOpenFileDelete);
-                                }}
-                              />              
-                            </Popconfirm>
-                            {/* <img src={delete_icon} width='20px' style={{opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer'}}
-                              onClick={() => {
-                                if(data.downloadTarget) {
-                                  message.error('현재 버전은 삭제할 수 없습니다.');
-                                } else {
-                                  CustomAxiosDelete(
-                                    DeleteAgentInstallerApi(data.fileId.toString()),
-                                    () => {
-                                      message.success('버전 삭제 완료');
-                                      const render = rendering;
-                                      const renderTemp = render.concat(true);
-                                      setRendering(renderTemp);
-                                    }
-                                  )
-                                }
-                              }}
-                            />                           */}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  }
-                </table> 
-                <div
-                  className="mt50 mb40"
-                  style={{textAlign: 'center'}}
-                >
-                  <Pagination showQuickJumper showSizeChanger current={pageNum} total={totalCount} onChange={onChangePage}/>
-                </div>
+                    ))}
+                  </tbody>
+                }
+              </table> 
+              <div
+                className="mt50 mb40"
+                style={{textAlign: 'center'}}
+              >
+                <Pagination showQuickJumper showSizeChanger current={pageNum} pageSize={tableCellSize} total={totalCount} onChange={onChangePage}/>
               </div>
-            }
-
+            </div>
           </div>           
         </div>
         <div
