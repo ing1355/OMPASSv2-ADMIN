@@ -3,15 +3,13 @@ import './AdminsManagement.css';
 import Header from 'Components/Header/Header';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
-import { GetPutUsersApiArrayType, GetPutUsersApiDataType, GetPutUsersApiType, UserInfoType } from 'Types/ServerResponseDataTypes';
-import { useEffect, useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 
-import { message, Pagination, PaginationProps, Popconfirm } from 'antd';
-import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPost } from 'Components/CustomHook/CustomAxios';
-import { DeleteUsersApi, GetPutUsersApi, GetUsernameCheckApi, PostSignUpApi } from 'Constants/ApiRoute';
+import { message } from 'antd';
+import { CustomAxiosGet, CustomAxiosPost } from 'Components/CustomHook/CustomAxios';
+import { GetUsernameCheckApi, PostSignUpApi } from 'Constants/ApiRoute';
 import { autoHypenPhoneFun, CopyRightText } from 'Constants/ConstantValues';
 
-import delete_icon from '../../assets/delete_icon.png';
 import { useSelector } from 'react-redux';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
 import { InformationProps } from 'Types/PropsTypes';
@@ -21,18 +19,10 @@ const CreateAdmins = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }: 
     userInfo: state.userInfo!
   }));
   const height = useWindowHeightHeader();
-  const [totalCount, setTotalCount] = useState<number>(0);
-  const [adminData, setAdminData] = useState<GetPutUsersApiArrayType>([]);
-  const [isAddAdmin, setIsAddAdmin] = useState<boolean>(false);
   const [isIdAlert, setIsIdAlert] = useState<boolean>(false);
   const [isNameAlert, setIsNameAlert] = useState<boolean>(false);
   const [isPhoneAlert, setIsPhoneAlert] = useState<boolean>(false);
   const [idExist, setIdExist] = useState<boolean>(true);
-  const [rendering, setRendering] = useState<boolean[]>([]);
-  const [checkAll, setCheckAll] = useState(false);
-  const [hoveredRow, setHoveredRow] = useState<number>(-1);
-  const [openAdminsDelete, setOpenAdminsDelete] = useState<boolean>(false);
-  const [openAdminDelete, setOpenAdminDelete] = useState<boolean[]>(new Array(adminData.length).fill(false));
 
   const userIdRef = useRef<HTMLInputElement>(null);
   const userNameRef = useRef<HTMLInputElement>(null);
