@@ -98,7 +98,7 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
       lang: state.lang,
       userInfo: state.userInfo,
     }));
-  
+
     const [sortingInfo, setSortingInfo] = useState<sortingInfoType>({
       list: null,
       sorting: 'none',
@@ -209,6 +209,7 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
           enable_passcode_count: searchType === 'enable_passcode_count' ? searchContent : null,
           role: searchTypeInfo ? searchTypeInfo : null,
           integration_search_word: searchType === 'all' ? searchContent : null,
+          language: lang === 'ko' ? 'KO' : 'EN',
         }
       );
   

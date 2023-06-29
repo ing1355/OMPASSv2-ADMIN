@@ -106,7 +106,7 @@ const AdminsManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize
       },
       {
         page_size: tableCellSize,
-        role: "ADMIN",
+        role: "SUPER_ADMIN,ADMIN",
         page: pageNum -1,
       },
       () => {
