@@ -8,12 +8,16 @@ import { Pagination, PaginationProps, Popconfirm } from "antd";
 import { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
+import view_password from '../../assets/view_password.png';
+import dont_look_password from '../../assets/dont_look_password.png';
+
 const PasscodeManagement = () => {
   const height = useWindowHeightHeader();
   const [totalCount, setTotalCount] = useState<number>(0);
   const [tableCellSize, setTableCellSize] = useState<number>(10);
   const [pageNum, setPageNum] = useState<number>(1);
   const [passcodeHistoryData, setPasscodeHistoryData] = useState<passcodeHistoriesType[]>([]);
+  const [viewPasscodes, setViewPasscodes] = useState<boolean[]>(new Array(passcodeHistoryData.length).fill(false));
 
   const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
     setPageNum(pageNumber);
@@ -138,7 +142,25 @@ const PasscodeManagement = () => {
                         </td>
                         <td>{data.passcode.issuerUsername}</td>
                         <td><FormattedMessage id={data.action} /></td>
-                        <td>{data.passcode.number}</td>
+                        <td
+                          width='150px'
+                        >
+                          {viewPasscodes[index] ?
+                            <span>{data.passcode.number}</span>
+                          :
+                            <span>⦁⦁⦁⦁⦁⦁</span>
+                          }
+                          <img
+                            src={viewPasscodes[index] ? view_password : dont_look_password}
+                            width='20px'
+                            style={{ opacity: 0.5, marginLeft: '17px', position: 'relative', top: '4px' }}
+                            onClick={() => {
+                              const updatedViewPasscodes = [...viewPasscodes];
+                              updatedViewPasscodes[index] = !updatedViewPasscodes[index];
+                              setViewPasscodes(updatedViewPasscodes);
+                            }}
+                          />
+                        </td>
                         <td>{data.user.username}</td>
                         <td>{data.device.deviceType}</td>
                         <td>{data.passcode.createdAt}</td>

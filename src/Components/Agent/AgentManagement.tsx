@@ -36,7 +36,7 @@ const AgentManagement = () => {
   const [openFilesDelete, setOpenFilesDelete] = useState<boolean>(false);
   const [isUploadingFile, setIsUploadingFile] = useState<boolean>(false);
   const [isAgentDataLoading, setIsAgentDataLoading] = useState<boolean>(true);
-console.log('isAgentDataLoading',isAgentDataLoading)
+
   const { formatMessage } = useIntl();
   
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
