@@ -620,7 +620,7 @@ const InformationDetail = () => {
                           </ul>
                         </div>
                         <div>
-                          {ompassInfoData?.os === 'ios' ?
+                          {data.ompassInfo.os === 'ios' ?
                             <img src={device_image2_ios} width='80px' height='80px' style={{padding: '30px'}} />
                           :
                             <img src={device_image2_android} />
