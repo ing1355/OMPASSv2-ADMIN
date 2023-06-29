@@ -201,13 +201,12 @@ const AgentManagement = () => {
                   id='addVersionForm'
                   onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
                     e.preventDefault();
-                    setIsUploadingFile(true);
                     const { version, uploadFile, hash } = (e.currentTarget.elements as any);
                     const metaDataVersion = version.value;
                     const hashValue = hash.value;
                     const multipartFile = uploadFile.files[0];
                     const maxFileSize = 100 * 1024 * 1024;
-                    const fileExtension = multipartFile.name.split('.').pop();
+                    const fileExtension = multipartFile?.name.split('.').pop();
                     
                     console.log('fileExtension',fileExtension)
                     
@@ -223,6 +222,7 @@ const AgentManagement = () => {
                       } else if(fileExtension !== 'zip') {
                         message.error(formatMessage({ id: 'ONLY_ZIP_FILES_CAN_BE_UPLOADED' }));
                       }  else {
+                        setIsUploadingFile(true);
                         CustomAxiosPost(
                           PostAgentInstallerUploadApi,
                           (data: any) => {
@@ -249,7 +249,7 @@ const AgentManagement = () => {
                         );
                       }
                     } else {
-                      console.log('에러');
+                      message.error(formatMessage({ id: 'PLEASE_ENTER_ALL_THE_ITEMS' }))
                     }
                   }}
                 >
