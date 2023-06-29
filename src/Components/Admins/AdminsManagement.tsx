@@ -3,13 +3,13 @@ import './AdminsManagement.css';
 import Header from 'Components/Header/Header';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
-import { GetPutUsersApiArrayType, GetPutUsersApiDataType, GetPutUsersApiType, UserInfoType } from 'Types/ServerResponseDataTypes';
-import { useEffect, useState, useRef } from 'react';
+import { GetPutUsersApiArrayType, GetPutUsersApiDataType, GetPutUsersApiType } from 'Types/ServerResponseDataTypes';
+import { useEffect, useState} from 'react';
 
 import { message, Pagination, PaginationProps, Popconfirm } from 'antd';
-import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPost } from 'Components/CustomHook/CustomAxios';
-import { DeleteUsersApi, GetPutUsersApi, GetUsernameCheckApi, PostSignUpApi } from 'Constants/ApiRoute';
-import { autoHypenPhoneFun, CopyRightText } from 'Constants/ConstantValues';
+import { CustomAxiosDelete, CustomAxiosGet } from 'Components/CustomHook/CustomAxios';
+import { DeleteUsersApi, GetPutUsersApi, } from 'Constants/ApiRoute';
+import { CopyRightText } from 'Constants/ConstantValues';
 
 import delete_icon from '../../assets/delete_icon.png';
 import { useSelector } from 'react-redux';
@@ -29,11 +29,6 @@ const AdminsManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize
   const height = useWindowHeightHeader();
   const [totalCount, setTotalCount] = useState<number>(0);
   const [adminData, setAdminData] = useState<GetPutUsersApiArrayType>([]);
-  const [isAddAdmin, setIsAddAdmin] = useState<boolean>(false);
-  const [isIdAlert, setIsIdAlert] = useState<boolean>(false);
-  const [isNameAlert, setIsNameAlert] = useState<boolean>(false);
-  const [isPhoneAlert, setIsPhoneAlert] = useState<boolean>(false);
-  const [idExist, setIdExist] = useState<boolean>(true);
   const [rendering, setRendering] = useState<boolean[]>([]);
   const [checkAll, setCheckAll] = useState(false);
   const [checkboxes, setCheckboxes] = useState<Checkbox[]>([]);
@@ -41,9 +36,6 @@ const AdminsManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize
   const [openAdminsDelete, setOpenAdminsDelete] = useState<boolean>(false);
   const [openAdminDelete, setOpenAdminDelete] = useState<boolean[]>(new Array(adminData.length).fill(false));
 
-  const userIdRef = useRef<HTMLInputElement>(null);
-  const userNameRef = useRef<HTMLInputElement>(null);
-  const userPhoneRef = useRef<HTMLInputElement>(null);
 
   const {role} = userInfo
   const navigate = useNavigate();
@@ -147,190 +139,18 @@ const AdminsManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize
                 style={{float: 'right'}}
                 className='mb20'
               >
-                {isAddAdmin ?
-                <div>
-                  <button className='admins_management_button'
-                    type='submit'
-                    form='addAdminForm'
-                  >
-                    <span><FormattedMessage id='ADMIN_REGISTRATION' /></span>
-                  </button>
-                  <button className='admins_management_button'
-                    type='button'
-                    onClick={() => {
-                      setIsAddAdmin(false);
-                    }}
-                  >
-                    <span><FormattedMessage id='CANCEL' /></span>
-                  </button>
-                </div>
-
-                :
                 <button className='admins_management_button'
                   type='button'
                   onClick={(e) => {
                     e.preventDefault();
-                    setIsAddAdmin(true);
+                    navigate('/AdminsManagement/CreateAdmins');
                   }}
                 >
                   <span><FormattedMessage id='ADD_ADMIN' /></span>
                 </button>
-                }
               </div>
             }
 
-
-            {isAddAdmin ?
-            <div
-              className='create_account_content admins_management_add_admin'
-            >
-              <form
-                id='addAdminForm'
-                onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-                  e.preventDefault();
-                  const { userId, userName, userPhoneNumber } = (e.currentTarget.elements as any);
-                  const username = userId.value;
-                  const name = userName.value;
-                  const phoneNumber = userPhoneNumber.value;
-
-                  if(username && name && phoneNumber && !isIdAlert && !isNameAlert && !isPhoneAlert) {
-                    if(idExist) {
-                      message.error(formatMessage({ id: 'PLEASE_CHECK_THE_ID' }));
-                    } else {
-                      CustomAxiosPost(
-                        PostSignUpApi,
-                        (data: any) => {
-                          setIsAddAdmin(false);
-                          const render = rendering;
-                          const renderTemp = render.concat(true);
-                          setRendering(renderTemp);
-                        },
-                        {
-                          name: name,
-                          password: '1234',
-                          phoneNumber: phoneNumber,
-                          role: 'ADMIN',
-                          username: username
-                        },
-                        () => {
-                        }
-                      );
-                    }
-                  } else {
-                    message.error(formatMessage({ id: 'PLEASE_ENTER_ALL_THE_ITEMS' }))
-                  }
-                }}
-              >
-                <div
-                  className='mb20'
-                >
-                  <label><FormattedMessage id='ID' /></label>
-                  <div
-                    className='mt8 mb5'
-                    style={{display: 'flex'}}
-                  >
-                    <input 
-                      ref={userIdRef}
-                      id='userId'
-                      type='text'
-                      className={'input-st1 create_account_input ' + (isIdAlert ? 'red' : '')}
-                      maxLength={16}
-                      autoComplete='off'
-                      onChange={(e) => {
-                        const value = e.currentTarget.value;
-                        const idRegex = /^[a-z0-9]{4,16}$/;
-                        if(idRegex.test(value)) {
-                          setIsIdAlert(false);
-                        } else {
-                          setIsIdAlert(true);
-                        }
-                      }}
-                    />
-                    <button
-                      type='button'
-                      className={'button-st1 create_account_id_check ' + (!isIdAlert && userIdRef.current?.value ? 'active' : '')}
-                      style={{fontSize: '1.15vh', fontWeight: '500'}}
-                      onClick={() => {
-                        const username = userIdRef.current?.value;
-
-                        if(username && !isIdAlert) {
-                          CustomAxiosGet(
-                            GetUsernameCheckApi(username),
-                            (data: any) => {
-                              setIdExist(data.exist);
-                              if(data.exist) {
-                                message.error(formatMessage({ id: 'ID_IS_DUPLICATED' }))
-                              } else {
-                                message.success(formatMessage({ id: 'AVAILABLE_USERNAME' }));
-                              }
-                            },
-                          )
-                        }
-                      }}
-                    ><FormattedMessage id='ID_CHECK' /></button>
-                  </div>
-                  <div
-                    className={'regex-alert ' + (isIdAlert ? 'visible' : '')}
-                  >
-                    <FormattedMessage id='USER_ID_CHECK' />
-                  </div>
-                </div>
-                <div
-                  className='mb20'
-                >
-                  <label><FormattedMessage id='NAME' /></label>
-                  <input 
-                    ref={userNameRef}
-                    id='userName'
-                    type='text'
-                    className={'input-st1 create_account_input mt8 mb5 ' + (isNameAlert ? 'red' : '')}
-                    maxLength={16}
-                    autoComplete='off'
-                    onChange={(e) => {
-                      const value = e.currentTarget.value;
-                      const nameRegex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]{1,16}$/
-                      if(nameRegex.test(value)) {
-                        setIsNameAlert(false);
-                      } else {
-                        setIsNameAlert(true);
-                      }
-                    }}
-                  />
-                  <div
-                    className={'regex-alert ' + (isNameAlert ? 'visible' : '')}
-                  >
-                    <FormattedMessage id='NAME_CHECK' />
-                  </div>
-                </div>
-                
-                <div>
-                  <label><FormattedMessage id='PHONE_NUMBER' /></label>
-                  <input 
-                    ref={userPhoneRef}
-                    id='userPhoneNumber'
-                    type='text'
-                    className={'input-st1 create_account_input mt8 ' + (isPhoneAlert ? 'red' : '')}
-                    maxLength={13}
-                    autoComplete='off'
-                    onChange={(e) => {
-                      const value = e.currentTarget.value;
-                      e.currentTarget.value = autoHypenPhoneFun(value);
-                      if(e.currentTarget.value.length < 12) {
-                        setIsPhoneAlert(true);
-                      } else {
-                        setIsPhoneAlert(false);
-                      }
-                    }}
-                  />
-                  <div
-                    className={'regex-alert mt5 ' + (isPhoneAlert ? 'visible' : '')}
-                  >
-                    <FormattedMessage id='PHONE_NUMBER_CHECK' />
-                  </div>
-                </div>
-              </form>
-            </div>
-            :
             <div className='table-st1'>
               <table>
                 <thead>
@@ -494,7 +314,6 @@ const AdminsManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize
                 <Pagination showQuickJumper showSizeChanger current={pageNum} pageSize={tableCellSize} total={totalCount} onChange={onChangePage}/>
               </div>
             </div>
-            }
           </div>         
         </div>
         <div

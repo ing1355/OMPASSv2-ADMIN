@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router"
 import { useState } from 'react';
 import AdminsManagement from "./AdminsManagement";
 import InformationDetail from "Components/Information/InformationDetail";
+import CreateAdmins from "./CreateAdmins";
 
 const Admins = () => {
   const [tableCellSize, setTableCellSize] = useState<number>(10);
@@ -14,6 +15,17 @@ const Admins = () => {
           path="/" 
           element={
             <AdminsManagement
+              pageNum={pageNum} 
+              setPageNum={setPageNum} 
+              tableCellSize={tableCellSize}
+              setTableCellSize={setTableCellSize}
+            />
+          }
+        />
+        <Route 
+          path="/CreateAdmins"
+          element={
+            <CreateAdmins 
               pageNum={pageNum} 
               setPageNum={setPageNum} 
               tableCellSize={tableCellSize}

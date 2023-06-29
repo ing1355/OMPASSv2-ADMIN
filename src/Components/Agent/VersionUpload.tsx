@@ -107,8 +107,6 @@ const VersionUpload = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }:
                   const maxFileSize = 100 * 1024 * 1024;
                   const fileExtension = multipartFile?.name.split('.').pop();
                   
-                  console.log('fileExtension',fileExtension)
-                  
                   if(metaDataVersion) {
                     setIsVersionAlert(false);
                   } else {
