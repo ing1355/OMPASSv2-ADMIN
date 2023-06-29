@@ -19,6 +19,8 @@ import admin_management_white from '../../assets/admin_management_white.png';
 import version_management_white from '../../assets/version_management_white.png';
 import secret_key_management_white from '../../assets/secret_key_management_white.png';
 import passcode_management_white from '../../assets/passcode_management_white.png';
+import OMPASS_settings from '../../assets/OMPASS_settings.png';
+import OMPASS_settings_white from '../../assets/OMPASS_settings_white.png';
 
 type menuInfoType = {
   id: number,
@@ -46,7 +48,7 @@ const Main = () => {
     { id: 1, title: 'ADMIN_MANAGEMENT', imgName: isHovered1 ? admin_management_white : admin_management, navi: '/AdminsManagement' }, 
     { id: 2, title: 'VERSION_MANAGEMENT', imgName: isHovered2 ? version_management_white : version_management, navi: '/AgentManagement' }, 
     { id: 3, title: 'PASSCODE_MANAGEMENT', imgName: isHovered3 ? passcode_management_white : passcode_management, navi: '/PasscodeManagement' }, 
-    { id: 4, title: 'OMPASS_SETTINGS', imgName: isHovered4 ? secret_key_management_white : secret_key_management, navi: '/SecretKey' }, 
+    { id: 4, title: 'OMPASS_SETTINGS', imgName: isHovered4 ? OMPASS_settings_white : OMPASS_settings, navi: '/SecretKey' }, 
   ];
 
   const menuInfoAdmin = [

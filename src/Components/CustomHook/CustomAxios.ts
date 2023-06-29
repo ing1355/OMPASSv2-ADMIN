@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 
-export function CustomAxiosGet(url: string, callback?: Function, params?: any, errCallback?: (err?: AxiosError) => void, config?: any) {
+export function CustomAxiosGet(url: string, callback?: Function, params?: any, errCallback?: (err?: AxiosError) => void, config?: any, finalCallback?: any) {
     if (!callback) {
         return axios.get(url, {
             params, headers: {
@@ -21,6 +21,8 @@ export function CustomAxiosGet(url: string, callback?: Function, params?: any, e
     }).catch((err) => {
         if (errCallback && err.response && err.response.data) errCallback(err);
         else if(errCallback) errCallback();
+    }).finally(() => {
+        if(finalCallback) finalCallback();
     })
 }
 
@@ -47,7 +49,7 @@ export function CustomAxiosGetFile(url: string, callback?: Function, params?: an
     })
 }
 
-export function CustomAxiosPost(url: string, callback?: Function, params?: any, errCallback?: (err?: AxiosError) => void, config?: any) {
+export function CustomAxiosPost(url: string, callback?: Function, params?: any, errCallback?: (err?: AxiosError) => void, config?: any, finalCallback?: any) {
     const headers = config ? {
         authorization: config.authorization ? config.authorization : localStorage.getItem('authorization'),
         ...config.headers
@@ -67,6 +69,8 @@ export function CustomAxiosPost(url: string, callback?: Function, params?: any, 
         console.log('err',err)
         if (errCallback && err.response && err.response.data) errCallback(err);
         else if(errCallback) errCallback();
+    }).finally(() => {
+        if(finalCallback) finalCallback();
     })
 
     // return axios.post(url, params).then(res => {
