@@ -109,7 +109,7 @@ const SecretKey = () => {
                 <input 
                   id='secretKey'
                   type='text'
-                  className={'input-st1 create_account_input mt8 mb5 '}
+                  className={'input-st1 create_account_input mt8 mb5 ' + (isAddSecretKey ? '' : 'disable')}
                   style={{width: '100%', marginLeft: '2.5%'}}
                   autoComplete='off'
                   disabled={isAddSecretKey ? false : true}
@@ -197,7 +197,7 @@ const SecretKey = () => {
                 <input 
                   id='apiServer'
                   type='text'
-                  className={'input-st1 create_account_input mt8 mb5'}
+                  className={'input-st1 create_account_input mt8 mb5 ' + (isAddApiServer ? '' : 'disable')}
                   style={{width: '100%', marginLeft: '2.5%'}}
                   autoComplete='off'
                   disabled={isAddApiServer ? false : true}
@@ -285,7 +285,7 @@ const SecretKey = () => {
                 <input 
                   id='socketServer'
                   type='text'
-                  className={'input-st1 create_account_input mt8 mb5'}
+                  className={'input-st1 create_account_input mt8 mb5 ' + (isAddSocketServer ? '' : 'disable')}
                   style={{width: '100%', marginLeft: '2.5%'}}
                   autoComplete='off'
                   disabled={isAddSocketServer ? false : true}
