@@ -209,7 +209,7 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
           enable_passcode_count: searchType === 'enable_passcode_count' ? searchContent : null,
           role: searchTypeInfo ? searchTypeInfo : null,
           integration_search_word: searchType === 'all' ? searchContent : null,
-          language: lang === 'ko' ? 'KO' : 'EN',
+          language: lang === 'ko' ? 'KR' : 'EN',
         }
       );
   
