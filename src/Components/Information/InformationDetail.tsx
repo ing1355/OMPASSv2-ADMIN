@@ -326,7 +326,7 @@ const InformationDetail = () => {
                     </tr>            
                     <tr>
                       <td>
-                        <FormattedMessage id='ID' />
+                        <FormattedMessage id='NAME' />
                       </td>
                       <td>
                         <input 
@@ -358,7 +358,7 @@ const InformationDetail = () => {
                           id='userPhoneNumber'
                           className={'input-st1 information_detail_input ' + (isPhoneAlert ? 'red' : '')} 
                           value={userPhone}
-                          maxLength={16}
+                          maxLength={13}
                           autoComplete='off'
                           onChange={(e) => {
                             setUserPhone(autoHypenPhoneFun(e.currentTarget.value));
