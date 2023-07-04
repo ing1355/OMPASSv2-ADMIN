@@ -364,7 +364,8 @@ const CreateAccount = () => {
                     CustomAxiosPost(
                       PostSignUpApi,
                       () => {
-                        message.success(formatMessage({ id: 'SUCCESS_REGISTER' }), () => {navigate('/');});
+                        message.success(formatMessage({ id: 'SUCCESS_REGISTER' }));
+                        navigate('/');
                       },
                       {
                         name: name,
