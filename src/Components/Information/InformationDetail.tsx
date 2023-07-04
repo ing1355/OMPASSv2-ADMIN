@@ -186,7 +186,7 @@ const InformationDetail = () => {
                       DeleteUsersApi(selectedUuid),
                       () => {
                         message.success(formatMessage({ id: 'USER_INFO_DELETE' }));
-                        navigate('/InformationList');
+                        navigate('/Information');
                       },
                     );
                   }
