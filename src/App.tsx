@@ -20,6 +20,7 @@ import PasscodeManagement from 'Components/PasscodeManagement/PasscodeManagement
 import Information from 'Components/Information/Information';
 import Admins from 'Components/Admins/Admins';
 import Agent from 'Components/Agent/Agent';
+import GuidePage from 'Components/Account/GuidePage';
 
 const App: React.FC = () => {
   const { lang, userInfo } = useSelector((state: ReduxStateType) => ({
@@ -55,6 +56,7 @@ const App: React.FC = () => {
             <Route path='/*' element={<Navigate to='/' replace={true}/>}/>
             <Route path='/CreateAccount' element={<CreateAccount />} />
             <Route path='/' element={<Login />} />
+            <Route path='/GuidePage' element={<GuidePage />} />
           </>
         }
       </Routes>

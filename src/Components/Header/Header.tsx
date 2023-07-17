@@ -66,7 +66,6 @@ const Header = () => {
       GetAgentInstallerDownloadApi,
       (data:any) => {
         const fileDownlaoadUrl = URL.createObjectURL(data);
-        console.log('data',data.fileName)
         const downloadLink = document.createElement('a');
         downloadLink.href = fileDownlaoadUrl;
         downloadLink.download = versionName;

@@ -84,7 +84,7 @@ const PasscodeManagement = () => {
                       <th><FormattedMessage id="ENV" /></th>
                       <th><FormattedMessage id="ACTION_DATE" /></th>
                       <th><FormattedMessage id="VALID_TIME" /></th>
-                      <th><FormattedMessage id="NUMBER_OF_REMAINING_USES" /></th>
+                      <th><FormattedMessage id="REMAINING_USES" /></th>
                       {/* <th>
                         <Popconfirm
                           title={formatMessage({ id: 'DELETE_A_FILE' })}

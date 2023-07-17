@@ -393,7 +393,7 @@ const Login = () => {
     </div>
 
     {/* 관리자 첫 로그인 시 패스워드 변경 모달 */}
-    <Modal title={formatMessage({ id: 'CHANGE_PASSWORD' })} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} cancelText={formatMessage({ id: 'CANCEL' })} okText={formatMessage({ id: 'MODIFY_' })} width='570px' centered>
+    <Modal title={formatMessage({ id: 'CHANGE_PASSWORD' })} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} cancelText={formatMessage({ id: 'CANCEL' })} okText={formatMessage({ id: 'EDIT_' })} width='570px' centered>
       <form>
         <div>
           <label><FormattedMessage id='PASSWORD' /></label>

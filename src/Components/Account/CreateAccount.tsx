@@ -365,7 +365,7 @@ const CreateAccount = () => {
                       PostSignUpApi,
                       () => {
                         message.success(formatMessage({ id: 'SUCCESS_REGISTER' }));
-                        navigate('/');
+                        navigate('/GuidePage');
                       },
                       {
                         name: name,

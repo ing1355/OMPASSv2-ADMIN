@@ -159,7 +159,7 @@ const InformationDetail = () => {
                 e.preventDefault();
                 setIsModify(true);
               }}
-            ><FormattedMessage id='MODIFY' /></button>
+            ><FormattedMessage id='EDIT' /></button>
             <Popconfirm
               title={formatMessage({ id: 'DELETE_ACCOUNT' })}
               description={formatMessage({ id: 'CONFIRM_DELETE_ACCOUNT' })}
@@ -903,7 +903,7 @@ const InformationDetail = () => {
                     >
                       <span
                         style={{position: 'relative', top: '3px'}}
-                      ><FormattedMessage id='CREATE' /></span>
+                      ><FormattedMessage id='GENERATE' /></span>
                     </div> 
                   }
 
@@ -936,7 +936,7 @@ const InformationDetail = () => {
                     >
                       <span
                         style={{position: 'relative', top: '3px'}}
-                      ><FormattedMessage id='CREATE' /></span>
+                      ><FormattedMessage id='GENERATE' /></span>
                     </div>                 
                   }
 
@@ -1047,7 +1047,7 @@ const InformationDetail = () => {
                       <div
                         className='information_detail_passcode_setting_content width_40'
                       >
-                        <h4><FormattedMessage id='CREATE_CODE' /></h4>
+                        <h4><FormattedMessage id='GENERATE_CODE' /></h4>
                         <ul
                           className='information_detail_passcode_setting_ul'
                         >
@@ -1056,13 +1056,13 @@ const InformationDetail = () => {
                               className='mlr10'
                             >
                               <input type='radio' name='create_passcode' id='random' defaultChecked />
-                              <FormattedMessage id='CREATE_RANDOM_CODE' />
+                              <FormattedMessage id='GENERATE_A_RANDOM_CODE' />
                             </label>
                             <label
                               className='mlr10'
                             >
                               <input type='radio' name='create_passcode' id='code' />
-                              <FormattedMessage id='CREATE_SPECIFIC_CODE' /> : &nbsp;
+                              <FormattedMessage id='USE_THIS_CODE_INSTEAD' /> : &nbsp;
                               <input type='text' className='information_detail_passcode_setting_content_input' id='code_number' maxLength={6} 
                                 onChange={(e) => {
                                   e.target.value = e.target.value.replace(/[^0-9]/g, "");
@@ -1140,9 +1140,9 @@ const InformationDetail = () => {
                       <tr>
                         <th>PASSCODE</th>
                         <th><FormattedMessage id='ADMIN_ID' /></th>
-                        <th><FormattedMessage id='CREATION_DATE' /></th>
+                        <th><FormattedMessage id='CREATION_ON' /></th>
                         <th><FormattedMessage id='VALID_TIME' /></th>
-                        <th><FormattedMessage id='NUMBER_OF_REMAINING_USES' /></th>
+                        <th><FormattedMessage id='REMAINING_USES' /></th>
                         <th></th>
                       </tr>
                     </thead>

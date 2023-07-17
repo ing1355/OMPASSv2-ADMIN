@@ -142,7 +142,7 @@ const SecretKey = () => {
                     setIsAddSecretKey(true);
                   }}
                 >
-                  <span><FormattedMessage id='MODIFY' /></span>
+                  <span><FormattedMessage id='EDIT' /></span>
                 </button>
               }
             </Col>
@@ -230,7 +230,7 @@ const SecretKey = () => {
                     setIsAddApiServer(true);
                   }}
                 >
-                  <span><FormattedMessage id='MODIFY' /></span>
+                  <span><FormattedMessage id='EDIT' /></span>
                 </button>
               }
             </Col>
@@ -318,7 +318,7 @@ const SecretKey = () => {
                     setIsAddSocketServer(true);
                   }}
                 >
-                  <span><FormattedMessage id='MODIFY' /></span>
+                  <span><FormattedMessage id='EDIT' /></span>
                 </button>
               }
             </Col>
