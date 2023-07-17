@@ -80,7 +80,7 @@ const VersionUpload = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }:
                     type='submit'
                     form='addVersionForm'
                   >
-                    <span><FormattedMessage id='REGISTER_VERSION' /></span>
+                    <span><FormattedMessage id='CONFIRM' /></span>
                   </button>
                   <button className='admins_management_button'
                     type='button'
