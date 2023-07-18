@@ -37,7 +37,8 @@ type adminIdType = {
 }
 
 const InformationDetail = () => {
-  const { userInfo } = useSelector((state: ReduxStateType) => ({
+  const { lang, userInfo } = useSelector((state: ReduxStateType) => ({
+    lang: state.lang,
     userInfo: state.userInfo!,
   }));
   const [isModify, setIsModify] = useState<boolean>(false);
@@ -1051,15 +1052,16 @@ const InformationDetail = () => {
                         <ul
                           className='information_detail_passcode_setting_ul'
                         >
-                          <li>
+                          <li style={{flexDirection: 'column'}}>
                             <label
-                              className='mlr10'
+                              className={(lang !== 'en' ? 'mlr10 ' : '')}
                             >
                               <input type='radio' name='create_passcode' id='random' defaultChecked />
                               <FormattedMessage id='GENERATE_A_RANDOM_CODE' />
                             </label>
+                            {lang === 'en' && <br />}
                             <label
-                              className='mlr10'
+                              className={(lang !== 'en' ? 'mlr10 ' : '')}
                             >
                               <input type='radio' name='create_passcode' id='code' />
                               <FormattedMessage id='USE_THIS_CODE_INSTEAD' /> : &nbsp;
@@ -1089,6 +1091,7 @@ const InformationDetail = () => {
                                 }}
                               /> <FormattedMessage id='MINUTES_LATER' />
                             </label>
+                            {lang === 'en' && <br />}
                             <label
                               className='mlr10'
                             >
@@ -1122,6 +1125,7 @@ const InformationDetail = () => {
                                 }}
                               /> <FormattedMessage id='TIMES' />
                             </label>
+                            {lang === 'en' && <br />}
                             <label
                               className='mlr10'
                             >
