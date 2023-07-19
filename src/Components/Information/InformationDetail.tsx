@@ -30,6 +30,14 @@ import browser_icon from '../../assets/browser_icon.png';
 import no_device from '../../assets/no_device.png';
 import user_modify_icon from '../../assets/user_modify_icon.png';
 import user_account_icon from '../../assets/user_account_delete_icon.png';
+import uuid_img from '../../assets/uuid_img.png';
+import chrome_img from '../../assets/chrome_img.png';
+import chrome_mobile_img from '../../assets/chrome_mobile_img.png';
+import firefox_img from '../../assets/firefox_img.png';
+import microsoft_edge_img from '../../assets/microsoft_edge_img.png';
+import safari_img from '../../assets/safari_img.png';
+import safari_mobile_img from '../../assets/safari_mobile_img.png';
+import samsung_browser_mobile_img from '../../assets/samsung_browser_mobile_img.png';
 
 type adminIdType = {
   isAdmin: boolean,
@@ -558,7 +566,9 @@ const InformationDetail = () => {
                 style={{display: 'flex', justifyContent: 'space-between'}}
                 className='mb30'
               >
-                <div style={{display: 'flex', flexDirection: 'column', width: '35%'}}>
+                <div 
+                  style={{display: 'flex', flexDirection: 'column', width: '42%'}}
+                >
                   <h3><FormattedMessage id='LOGIN_ENV' /></h3>
                   {data.deviceType === 'BROWSER' ? 
                     <div
@@ -590,15 +600,19 @@ const InformationDetail = () => {
                       </ul>
                     </div>
                     <div>
-                      <img src={mac_address}/>
-                      <ul>
-                        <li className='title_bold'>MAC Address</li>
-                        <li>{MacAddressFun(data.macAddress)}</li>
+                      <img 
+                        src={uuid_img}
+                        className='information_detail_img_resizing'
+                      />
+                      <ul
+                      >
+                        <li className='title_bold'>UUID</li>
+                        {/* <li>{MacAddressFun(data.macAddress)}</li> */}
+                        <li style={{width: '200px', wordWrap: 'break-word'}}>{data.deviceIdentifier}</li>
                       </ul>
                     </div>
                   </div>
                   }
-                  <div className='information_detail_update_date'><FormattedMessage id='LAST_UPDATED_DATE' /> : {data.updatedAt}</div> 
                 </div>
                 
                 <div style={{display: 'flex', flexDirection: 'column', width: '55%'}}>
@@ -617,21 +631,23 @@ const InformationDetail = () => {
                           <img src={device_image1}/>
                           <ul>
                             <li className='title_bold'>Type</li>
-                            <li>OMPASS App v{data.ompassInfo.appVersion}</li>
+                            {data.ompassInfo.type === 'OMPASS' ? 
+                              <li>{data.ompassInfo.type} App v{data.ompassInfo.appVersion}</li>
+                            :
+                              <li>{data.ompassInfo.type}</li>
+                            }
                           </ul>
                         </div>
                         <div>
-                          {data.ompassInfo.os === 'ios' ?
-                            <img src={device_image2_ios} width='80px' height='80px' style={{padding: '30px'}} />
-                          :
-                            <img src={device_image2_android} />
-                          }
-                          
+                          {data.ompassInfo.os === 'ios' && <img src={device_image2_ios} width='80px' height='80px' style={{padding: '30px'}} />}
+                          {data.ompassInfo.os === 'android' && <img src={device_image2_android} />}   
+                          {data.ompassInfo.os === 'Windows' && <img src={os_windows} width='80px' height='80px' style={{padding: '30px'}} />}                                                    
                           <ul>
                             <li className='title_bold'>OS</li>
                             <li>{data.ompassInfo.os} {data.ompassInfo.osVersion}</li>
                           </ul>
                         </div>
+                        {data.ompassInfo.type === 'OMPASS' && 
                         <div>
                           <img src={device_image3}/>
                           <ul>
@@ -639,12 +655,77 @@ const InformationDetail = () => {
                             <li>{data.ompassInfo.model}</li>
                           </ul>
                         </div>
+                        }
+                        {/* "Chrome", "Chrome Mobile", "Microsoft Edge", "Firefox", "Safari", "Mobile Safari", "Samsung Browser Mobile" */}
+                        {data.ompassInfo.type === 'WEBAUTHN' && data.ompassInfo.browser === 'Chrome' &&
+                        <div>
+                          <img src={chrome_img} className='information_detail_img_resizing'/>
+                          <ul>
+                            <li className='title_bold'>Browser</li>
+                            <li>{data.ompassInfo.browser}</li>
+                          </ul>
+                        </div>
+                        }
+                        {data.ompassInfo.type === 'WEBAUTHN' && data.ompassInfo.browser === 'Chrome Mobile' &&
+                        <div>
+                          <img src={chrome_mobile_img} className='information_detail_img_resizing'/>
+                          <ul>
+                            <li className='title_bold'>Browser</li>
+                            <li>{data.ompassInfo.browser}</li>
+                          </ul>
+                        </div>
+                        }
+                        {data.ompassInfo.type === 'WEBAUTHN' && data.ompassInfo.browser === 'Microsoft Edge' &&
+                        <div>
+                          <img src={microsoft_edge_img} className='information_detail_img_resizing'/>
+                          <ul>
+                            <li className='title_bold'>Browser</li>
+                            <li>{data.ompassInfo.browser}</li>
+                          </ul>
+                        </div>
+                        }
+                        {data.ompassInfo.type === 'WEBAUTHN' && data.ompassInfo.browser === 'Firefox' &&
+                        <div>
+                          <img src={firefox_img} className='information_detail_img_resizing'/>
+                          <ul>
+                            <li className='title_bold'>Browser</li>
+                            <li>{data.ompassInfo.browser}</li>
+                          </ul>
+                        </div>
+                        }
+                        {data.ompassInfo.type === 'WEBAUTHN' && data.ompassInfo.browser === 'Safari' &&
+                        <div>
+                          <img src={safari_img} className='information_detail_img_resizing'/>
+                          <ul>
+                            <li className='title_bold'>Browser</li>
+                            <li>{data.ompassInfo.browser}</li>
+                          </ul>
+                        </div>
+                        }
+                        {data.ompassInfo.type === 'WEBAUTHN' && data.ompassInfo.browser === 'Mobile Safari' &&
+                        <div>
+                          <img src={safari_mobile_img} className='information_detail_img_resizing'/>
+                          <ul>
+                            <li className='title_bold'>Browser</li>
+                            <li>{data.ompassInfo.browser}</li>
+                          </ul>
+                        </div>
+                        }
+                        {data.ompassInfo.type === 'WEBAUTHN' && data.ompassInfo.browser === 'Samsung Browser Mobile' &&
+                        <div>
+                          <img src={samsung_browser_mobile_img} className='information_detail_img_resizing'/>
+                          <ul>
+                            <li className='title_bold'>Browser</li>
+                            <li>{data.ompassInfo.browser}</li>
+                          </ul>
+                        </div>
+                        }
                       </div> 
-                      <div className='information_detail_update_date'><FormattedMessage id='LAST_UPDATED_DATE' /> : {data.ompassInfo.updateAt}</div> 
                     </>
                   }
 
                 </div>  
+                
                 {/* <div style={{display: 'flex', flexDirection: 'column', width: '55%'}}>
                   <h3><FormattedMessage id='OMPASS_AUTH_DEVICE_ENV' /></h3>
                   {ompassInfoData === null ? 
@@ -684,10 +765,20 @@ const InformationDetail = () => {
                           </ul>
                         </div>
                       </div> 
-                      <div className='information_detail_update_date'><FormattedMessage id='LAST_UPDATED_DATE' /> : {ompassInfoData?.updateAt}</div> 
+                      <div className='information_detail_update_date'><FormattedMessage id='LAST_LOGIN' /> : {ompassInfoData?.updateAt}</div> 
                     </>
                   }
                 </div> */}
+              </div>
+              <div
+                style={{display: 'flex'}}
+                className='mb30'
+              >
+                <div className='information_detail_update_date' style={{width: '42%', marginLeft: '20px'}}>
+                  <FormattedMessage id='LAST_LOGIN' /> : {data.lastLoginDate}
+                  {data.agentVersion && <div style={{marginTop: '10px'}}><FormattedMessage id='AGENT_VERSION' /> : {data.agentVersion}</div>}
+                </div> 
+                <div className='information_detail_update_date' style={{width: '55%', marginLeft: '50px'}}><FormattedMessage id='LAST_LOGIN' /> : {data.ompassInfo.updateAt}</div> 
               </div>
               <hr></hr>
               

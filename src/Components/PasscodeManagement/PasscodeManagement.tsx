@@ -10,8 +10,13 @@ import { FormattedMessage } from "react-intl";
 
 import view_password from '../../assets/view_password.png';
 import dont_look_password from '../../assets/dont_look_password.png';
+import { useSelector } from "react-redux";
+import { ReduxStateType } from "Types/ReduxStateTypes";
 
 const PasscodeManagement = () => {
+  const { lang } = useSelector((state: ReduxStateType) => ({
+    lang: state.lang,
+  }));
   const height = useWindowHeightHeader();
   const [totalCount, setTotalCount] = useState<number>(0);
   const [tableCellSize, setTableCellSize] = useState<number>(10);
@@ -75,15 +80,15 @@ const PasscodeManagement = () => {
                         />
                       </th>
                       <th></th> */}
-                      <th><FormattedMessage id="RANK" /></th>
                       <th><FormattedMessage id="ADMIN_ID" /></th>
                       <th><FormattedMessage id="ACTION" /></th>
                       <th>PASSCODE</th>
                       <th style={{width: '20px'}}></th>
                       <th><FormattedMessage id="USER_ID" /></th>
+                      <th style={(lang === 'en' ? {width: '60px'} : {})}><FormattedMessage id="RANK" /></th>
                       <th><FormattedMessage id="ENV" /></th>
-                      <th><FormattedMessage id="ACTION_DATE" /></th>
-                      <th><FormattedMessage id="VALID_TIME" /></th>
+                      <th style={{width: '110px'}}><FormattedMessage id="ACTION_DATE" /></th>
+                      <th style={{width: '110px'}}><FormattedMessage id="VALID_TIME" /></th>
                       <th><FormattedMessage id="REMAINING_USES" /></th>
                       {/* <th>
                         <Popconfirm
@@ -137,12 +142,20 @@ const PasscodeManagement = () => {
                         key={'passcode_history_data_'+index}
                       >
                         <td>
-                          {data.user.role === 'USER' && <FormattedMessage id='USER' />}
-                          {data.user.role === 'ADMIN' && <FormattedMessage id='ADMIN' />}
-                          {data.user.role === 'SUPER_ADMIN' && <FormattedMessage id='SUPER_ADMIN' />}
+                          {/* {data.passcode.issuerUsername} */}
+                          {data.passcode.createdAt >= data.passcode.expirationTime || data.passcode.recycleCount === 0 ? 
+                          '-'
+                          :
+                          data.passcode.issuerUsername
+                          }
                         </td>
-                        <td>{data.passcode.issuerUsername}</td>
-                        <td><FormattedMessage id={data.action} /></td>
+                        <td>
+                          {data.passcode.createdAt >= data.passcode.expirationTime || data.passcode.recycleCount === 0 ? 
+                          <FormattedMessage id='EXPIRED' />
+                          :
+                          <FormattedMessage id={data.action} />
+                          }
+                        </td>
                         <td
                           style={{width: '50px'}}
                         >
@@ -165,6 +178,11 @@ const PasscodeManagement = () => {
                           />
                         </td>
                         <td>{data.user.username}</td>
+                        <td>
+                          {data.user.role === 'USER' && <FormattedMessage id='USER' />}
+                          {data.user.role === 'ADMIN' && <FormattedMessage id='ADMIN' />}
+                          {data.user.role === 'SUPER_ADMIN' && <FormattedMessage id='SUPER_ADMIN' />}
+                        </td>
                         <td>{data.device.deviceType}</td>
                         <td>{data.passcode.createdAt}</td>
                         <td>{data.passcode.expirationTime ? data.passcode.expirationTime : <FormattedMessage id='UNLIMITED' />}</td>

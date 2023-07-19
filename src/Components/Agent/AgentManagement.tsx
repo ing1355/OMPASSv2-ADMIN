@@ -152,14 +152,14 @@ const AgentManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                         onChange={handleCheckAll}
                       />
                     </th>
-                    <th></th>
+                    <th style={{width: '46px'}}></th>
                     <th><FormattedMessage id='VERSION' /></th>
                     <th>OS</th>
                     <th><FormattedMessage id='FILE_NAME' /></th>
                     <th><FormattedMessage id='UPLOAD_DATE' /></th>
                     <th><FormattedMessage id='UPLOADER' /></th>
-                    <th><FormattedMessage id='DOWNLOAD' /></th>
-                    <th><FormattedMessage id='CURRENT_VERSION_SETTING' /></th>
+                    <th style={{width: '70px'}}><FormattedMessage id='DOWNLOAD' /></th>
+                    <th style={{width: '120px'}}><FormattedMessage id='CURRENT_VERSION_SETTING' /></th>
                     <th>
                       <Popconfirm
                         title={formatMessage({ id: 'DELETE_A_FILE' })}

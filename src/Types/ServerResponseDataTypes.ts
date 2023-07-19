@@ -69,6 +69,9 @@ export type DevicesType = {
   updatedAt: string,
   allowedAccessUsers: AllowedAccessUsersType[],
   ompassInfo: OmpassInfoType,
+  agentVersion: string,
+  lastLoginDate: string,
+  deviceIdentifier: string,
 }
 
 export type AllowedAccessUsersType = {
@@ -83,7 +86,9 @@ export type OmpassInfoType = {
   model: string,
   os: string,
   osVersion: string,
-  updateAt: string
+  updateAt: string,
+  browser: string,
+  type: string,
 }
 
 type PasscodeType = {

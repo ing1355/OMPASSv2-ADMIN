@@ -57,7 +57,7 @@ const SecretKey = () => {
                 style={{display: 'flex'}}
               >
                 {/* <h1><FormattedMessage id='SECRET_KEY_MANAGEMENT' /></h1> */}
-                <h1><FormattedMessage id='OMPASS_SETTINGS' /></h1>
+                <h1><FormattedMessage id='OMPASS_SERVER_SETTINGS' /></h1>
               </div>
             </Col>
           </Row>

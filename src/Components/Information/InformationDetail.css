@@ -134,3 +134,9 @@
   height: 30px;
   width: 48px;
 }
+
+.information_detail_img_resizing {
+  width: 100px;
+  height: 100px;
+  margin: 20px;
+}

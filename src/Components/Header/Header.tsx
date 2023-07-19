@@ -16,7 +16,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { userInfoClear } from 'Redux/actions/userChange';
 import { CustomAxiosGetFile } from 'Components/CustomHook/CustomAxios';
 import { GetAgentInstallerDownloadApi } from 'Constants/ApiRoute';
-import { Col, Row, message } from 'antd';
+import { Col, Row, Tooltip, message } from 'antd';
 
 const Header = () => {
   const { lang, userInfo } = useSelector((state: ReduxStateType) => ({
@@ -203,28 +203,38 @@ const Header = () => {
         >
           <ul>
             {windowWidth > 785 &&
-              <li>
-                <img src={download_icon_blue}
-                  width='25px'
-                  height='25px'
-                  style={{position: 'relative', top: '5px', cursor: 'pointer'}}
-                  onClick={downloadAgentFileFun}
-                />
-              </li>
+              <Tooltip
+                key='download_agent_file'
+                title={formatMessage({ id: 'DOWNLOAD_FOR_WINDOWS_AGNET_FILE' })}
+              >
+                <li>
+                  <img src={download_icon_blue}
+                    width='25px'
+                    height='25px'
+                    style={{position: 'relative', top: '5px', cursor: 'pointer'}}
+                    onClick={downloadAgentFileFun}
+                  />
+                </li>
+              </Tooltip>
             }
             {windowWidth > 785 && 
-              <li>
-                <a
-                  href="/OMPASS_Portal_manual.pdf"
-                  download
-                >
-                  <img
-                    src={maunal_download_blue}
-                    width="25px"
-                    style={{position: 'relative', top: '5px'}}
-                  />
-                </a>
-              </li>
+              <Tooltip
+                key='download_manual'
+                title={formatMessage({ id: 'DOWNLOAD_MANUAL' })}
+              >
+                <li>
+                  <a
+                    href="/OMPASS_Portal_manual.pdf"
+                    download
+                  >
+                    <img
+                      src={maunal_download_blue}
+                      width="25px"
+                      style={{position: 'relative', top: '5px'}}
+                    />
+                  </a>
+                </li>
+              </Tooltip>
             }
             <li
               className='header_id'
