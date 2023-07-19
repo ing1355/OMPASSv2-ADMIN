@@ -193,6 +193,7 @@ const LocaleTexts = {
     AGENT_VERSION: 'Agent Version',
     OMPASS_SERVER_SETTINGS: 'OMPASS Server Settings',
     EXPIRED: 'Expired',
+    DOWNLOADING: 'Downloading...',
   },
   'ko': {
     LOGIN: '로그인',
@@ -388,6 +389,7 @@ const LocaleTexts = {
     AGENT_VERSION: 'Agent 버전',
     OMPASS_SERVER_SETTINGS: 'OMPASS 서버 설정',
     EXPIRED: '만료',
+    DOWNLOADING: '다운로드중...',
   }
 }
 

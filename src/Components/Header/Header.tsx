@@ -12,6 +12,7 @@ import logout from '../../assets/logout.png';
 import maunal_download from '../../assets/maunal_download.png';
 import maunal_download_blue from '../../assets/maunal_download_blue.png';
 import download_icon_blue from '../../assets/download_icon_blue.png';
+import download_installer_icon from '../../assets/download_installer_icon.png';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { userInfoClear } from 'Redux/actions/userChange';
 import { CustomAxiosGetFile } from 'Components/CustomHook/CustomAxios';
@@ -24,6 +25,8 @@ const Header = () => {
     userInfo: state.userInfo!
   }));
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [isAgentFileDisable, setIsAgentFileDisable] = useState<boolean>(false);
+
   const {uuid, role, userId} = userInfo! ?? {};
   const dropdownRef = useRef<any>(null);
 
@@ -78,6 +81,9 @@ const Header = () => {
       },
       () => {
         message.error(formatMessage({ id: 'DOWNLOAD_FAILED' }));
+      },{},
+      () => {
+        setIsAgentFileDisable(false);
       }
     )
   }
@@ -111,17 +117,20 @@ const Header = () => {
                   <li><Link to='/AgentManagement'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='VERSION_MANAGEMENT' /></div></Link></li>
                   <li><Link to='/PasscodeManagement'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='PASSCODE_MANAGEMENT' /></div></Link></li>
                   {role === 'SUPER_ADMIN' &&<li><Link to='/SecretKey'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='OMPASS_SETTINGS' /></div></Link></li>}
-                  <li>
+                  {/* <li>
                     <div onClick={()=>{setIsMenuOpen(false)}}>
                       <FormattedMessage id='DOWNLOAD_INSTALL_FILE' />
                       <img src={download_icon_blue}
                         width='25px'
                         height='25px'
                         style={{position: 'relative', top: '5px', cursor: 'pointer', marginLeft: '7px'}}
-                        onClick={downloadAgentFileFun}
+                        onClick={()=>{
+                          setIsAgentFileDisable(true);
+                          downloadAgentFileFun();
+                        }}
                       />
                     </div>
-                  </li>
+                  </li> */}
                   <li>
                     <div onClick={()=>{setIsMenuOpen(false)}}>
                       <a
@@ -203,6 +212,15 @@ const Header = () => {
         >
           <ul>
             {windowWidth > 785 &&
+              isAgentFileDisable ?
+              <li>
+                <img src={download_installer_icon}
+                  width='25px'
+                  height='25px'
+                  style={{position: 'relative', top: '5px', cursor: 'default', pointerEvents: 'none'}}
+                />
+              </li>
+              :
               <Tooltip
                 key='download_agent_file'
                 title={formatMessage({ id: 'DOWNLOAD_FOR_WINDOWS_AGNET_FILE' })}
@@ -212,7 +230,10 @@ const Header = () => {
                     width='25px'
                     height='25px'
                     style={{position: 'relative', top: '5px', cursor: 'pointer'}}
-                    onClick={downloadAgentFileFun}
+                    onClick={()=>{
+                      setIsAgentFileDisable(true);
+                      downloadAgentFileFun();
+                    }}
                   />
                 </li>
               </Tooltip>

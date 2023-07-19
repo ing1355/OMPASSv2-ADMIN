@@ -47,6 +47,7 @@ const Login = () => {
   const [passwordChange, setPasswordChange] = useState<string>('');
   const [cookies, setCookie, removeCookie] = useCookies(["rememberUserId"]); // Cookies 이름
   const [isRemember, setIsRemember] = useState(false); // 아이디 저장 체크박스 체크 유무
+  const [isAgentFileDisable, setIsAgentFileDisable] = useState<boolean>(false);
 
   const height = useWindowHeight();
   const dispatch = useDispatch();
@@ -156,6 +157,21 @@ const Login = () => {
     );
   }
 
+    // 화면 너비
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+    useEffect(() => {
+      const handleResize = () => {
+        setWindowWidth(window.innerWidth);
+      };
+  
+      window.addEventListener('resize', handleResize);
+  
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }, []);
+
   return (
     <div
       style={{overflowY: 'auto', height: height, backgroundColor: '#E4EBEF'}}
@@ -204,37 +220,49 @@ const Login = () => {
               src={login_main_image}
               style={{maxWidth: '77%'}}
             />
+            {windowWidth <= 785 ?
+            <></>
+            :
             <div>
               <button
                 className='button-st3 login_agent_download_button'
+                style={(isAgentFileDisable ? {cursor: 'default', pointerEvents: 'none'} : {})}
                 onClick={() => {
-                  // const versionName = 'ompass_installer_v' + currentVersion?.version + '.zip';
-                  const versionName = 'ompass_installer.zip';
-                  CustomAxiosGetFile(
-                    GetAgentInstallerDownloadApi,
-                    (data:any) => {
-                      const fileDownlaoadUrl = URL.createObjectURL(data);
-                      console.log('data',data.fileName)
-                      const downloadLink = document.createElement('a');
-                      downloadLink.href = fileDownlaoadUrl;
-                      downloadLink.download = versionName;
-                      document.body.appendChild(downloadLink);
-                      downloadLink.click();
-                      document.body.removeChild(downloadLink);
-                      URL.revokeObjectURL(fileDownlaoadUrl);
-                    },
-                    {
-                    },
-                    () => {
-                      message.error(formatMessage({ id: 'DOWNLOAD_FAILED' }));
-                    }
-                  )
+                  if(!isAgentFileDisable) {
+                    setIsAgentFileDisable(true);
+                    // const versionName = 'ompass_installer_v' + currentVersion?.version + '.zip';
+                    const versionName = 'ompass_installer.zip';
+                    CustomAxiosGetFile(
+                      GetAgentInstallerDownloadApi,
+                      (data:any) => {
+                        const fileDownlaoadUrl = URL.createObjectURL(data);
+                        // console.log('data',data.fileName)
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = fileDownlaoadUrl;
+                        downloadLink.download = versionName;
+                        document.body.appendChild(downloadLink);
+                        downloadLink.click();
+                        document.body.removeChild(downloadLink);
+                        URL.revokeObjectURL(fileDownlaoadUrl);
+                      },
+                      {
+                      },
+                      () => {
+                        message.error(formatMessage({ id: 'DOWNLOAD_FAILED' }));
+                      }, {},
+                      () => {
+                        setIsAgentFileDisable(false);
+                      }
+                    )  
+                  }
                 }}
               >
                 <img src={download_icon} style={{maxWidth: '14%'}}/>
                 <span style={{position: 'relative', top: '-7px', marginLeft: '7px'}}><FormattedMessage id='DOWNLOAD_FOR_WINDOWS' /></span>  
               </button>
             </div>
+            }
+
 
 
             {/* macOS 추가 */}

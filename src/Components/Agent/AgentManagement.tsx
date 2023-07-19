@@ -11,6 +11,7 @@ import { DeleteAgentInstallerApi, GetAgentInstallerApi, GetAgentInstallerDownloa
 
 import delete_icon from '../../assets/delete_icon.png';
 import list_download from '../../assets/list_download.png';
+import download_installer_icon from '../../assets/download_installer_icon.png';
 import { CopyRightText } from 'Constants/ConstantValues';
 import { InformationProps } from 'Types/PropsTypes';
 
@@ -31,6 +32,7 @@ const AgentManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
   const [openFileDelete, setOpenFileDelete] = useState<boolean[]>(new Array(agentData.length).fill(false));
   const [openFilesDelete, setOpenFilesDelete] = useState<boolean>(false);
   const [isAgentDataLoading, setIsAgentDataLoading] = useState<boolean>(true);
+  const [isAgentFileDisable, setIsAgentFileDisable] = useState<boolean[]>(new Array(agentData.length).fill(false));
 
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
@@ -78,6 +80,7 @@ const AgentManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
         setAgentData(data.agentProgramHistories);
         setTotalCount(data.queryTotalCount);
         setOpenFileDelete(new Array(data.agentProgramHistories.length).fill(false));
+        setIsAgentFileDisable(new Array(data.agentProgramHistories.length).fill(false));
       },
       {
         page_size: tableCellSize,
@@ -265,17 +268,27 @@ const AgentManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                         <td>{data.uploadDate}</td>
                         <td>{data.uploader}</td>
                         <td>
+                          {isAgentFileDisable[index] ?
+                          <img 
+                            src={download_installer_icon}
+                            style={{cursor: 'default', pointerEvents: 'none'}}
+                            width='20px'
+                          />                          
+                          :
                           <img 
                             src={list_download}
                             style={{cursor: 'pointer'}}
                             width='18px'
                             onClick={() => {
+                              const updatedIsAgentFileDisable= [...isAgentFileDisable];
+                              updatedIsAgentFileDisable[index] = true;
+                              setIsAgentFileDisable(updatedIsAgentFileDisable);
                               const versionName = 'ompass_installer_v' + data.version + '.zip';
                               CustomAxiosGetFile(
                                 GetAgentInstallerDownloadApi,
                                 (data:any) => {
                                   const fileDownlaoadUrl = URL.createObjectURL(data);
-                                  console.log(fileDownlaoadUrl)
+                                  // console.log(fileDownlaoadUrl)
                                   const downloadLink = document.createElement('a');
                                   downloadLink.href = fileDownlaoadUrl;
                                   downloadLink.download = versionName;
@@ -289,10 +302,16 @@ const AgentManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                                 },
                                 (error: any) => {
                                   message.error(formatMessage({ id: 'DOWNLOAD_FAILED' }));
+                                }, {},
+                                () => {
+                                  const updatedIsAgentFileDisable= [...isAgentFileDisable];
+                                  updatedIsAgentFileDisable[index] = false;
+                                  setIsAgentFileDisable(updatedIsAgentFileDisable);
                                 }
                               )
                             }}
                           />
+                          }
                         </td>
                         <td>
                           <button

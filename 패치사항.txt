@@ -16,3 +16,23 @@ user
   - 퀵가이드 페이지 신규 생성 (회원가입->가이드->로그인)
 
 0.1.0(2) 버전 54005 배포
+
+// 23.07.19
+* v0.1.0(3) ~ (6) - 54005 배포
+
+ * 영문 수정 (#2861)
+
+ * user page
+  - webauthn 연동 (#2867)
+
+ * 버튼, 레이아웃 깨지는 현상 수정 및 위치 수정 등등 (#2864, ...)
+
+ * 패스코드 관리
+  - 유효시간 및 유효횟수 만료 시 admin ID, action 처리
+
+ * Header
+  - installer icon 및 manual 아이콘 tooltip으로 가이드 넣기 (#2856)
+
+ * Agent installer download
+  - header, version page, login page download 중일 때 클릭 방지 (#2856)
+  - 모바일 버전일 때 설치 파일 다운로드 아이콘 삭제, 헤더에서도 삭제

@@ -26,7 +26,7 @@ export function CustomAxiosGet(url: string, callback?: Function, params?: any, e
     })
 }
 
-export function CustomAxiosGetFile(url: string, callback?: Function, params?: any, errCallback?: (err?: AxiosError) => void, config?: any) {
+export function CustomAxiosGetFile(url: string, callback?: Function, params?: any, errCallback?: (err?: AxiosError) => void, config?: any, finalCallback?: any) {
     if (!callback) {
         return axios.get(url, {
             params, headers: {
@@ -46,6 +46,8 @@ export function CustomAxiosGetFile(url: string, callback?: Function, params?: an
     }).catch((err) => {
         if (errCallback && err.response && err.response.data) errCallback(err);
         else if(errCallback) errCallback();
+    }).finally(() => {
+        if(finalCallback) finalCallback();
     })
 }
 
