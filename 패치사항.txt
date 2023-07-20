@@ -36,3 +36,6 @@ user
  * Agent installer download
   - header, version page, login page download 중일 때 클릭 방지 (#2856)
   - 모바일 버전일 때 설치 파일 다운로드 아이콘 삭제, 헤더에서도 삭제
+
+  // 23.07.20
+  

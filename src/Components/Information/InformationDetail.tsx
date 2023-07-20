@@ -639,9 +639,10 @@ const InformationDetail = () => {
                           </ul>
                         </div>
                         <div>
-                          {data.ompassInfo.os === 'ios' && <img src={device_image2_ios} width='80px' height='80px' style={{padding: '30px'}} />}
-                          {data.ompassInfo.os === 'android' && <img src={device_image2_android} />}   
-                          {data.ompassInfo.os === 'Windows' && <img src={os_windows} width='80px' height='80px' style={{padding: '30px'}} />}                                                    
+                          {data.ompassInfo.os === 'IOS' && <img src={device_image2_ios} width='80px' height='80px' style={{padding: '30px'}} />}
+                          {data.ompassInfo.os === 'ANDROID' && <img src={device_image2_android} />}   
+                          {data.ompassInfo.os === 'Windows' && <img src={os_windows} width='80px' height='80px' style={{padding: '30px'}} />} 
+                          {data.ompassInfo.os === 'MAC' && <img src={os_mac} width='80px' height='80px' style={{padding: '30px'}} />}                                                     
                           <ul>
                             <li className='title_bold'>OS</li>
                             <li>{data.ompassInfo.os} {data.ompassInfo.osVersion}</li>
@@ -712,6 +713,15 @@ const InformationDetail = () => {
                         </div>
                         }
                         {data.ompassInfo.type === 'WEBAUTHN' && data.ompassInfo.browser === 'Samsung Browser Mobile' &&
+                        <div>
+                          <img src={samsung_browser_mobile_img} className='information_detail_img_resizing'/>
+                          <ul>
+                            <li className='title_bold'>Browser</li>
+                            <li>{data.ompassInfo.browser}</li>
+                          </ul>
+                        </div>
+                        }
+                        {data.ompassInfo.type === 'WEBAUTHN' && data.ompassInfo.browser === 'MAC' &&
                         <div>
                           <img src={samsung_browser_mobile_img} className='information_detail_img_resizing'/>
                           <ul>

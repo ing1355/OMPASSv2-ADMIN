@@ -54,18 +54,17 @@ const CreateAccount = () => {
 
   useEffect(() => {
     if(!isIdAlert && !isNameAlert && !isPasswordAlert && !isPasswordConfirmAlert && !isPhoneAlert 
-      && userIdRef.current?.value
-      && userNameRef.current?.value
-      && passwordRef.current?.value
-      && passwordConfirmRef.current?.value
-      && userPhoneRef.current?.value
+      && userIdRef.current?.value !== ''
+      && userNameRef.current?.value !== ''
+      && passwordRef.current?.value !== ''
+      && passwordConfirmRef.current?.value !== ''
+      && userPhoneRef.current?.value !== ''
       && !idExist
       ) {
       setIsActive(true);
     } else {
       setIsActive(false);
     }
-
   }, [idExist, isIdAlert, isNameAlert, isPasswordAlert, isPasswordConfirmAlert, isPhoneAlert, userIdRef, userNameRef, passwordRef, passwordConfirmRef, userPhoneRef])
 
   const AgreePolicyList = (isService:boolean, number:number, count:number, innerNumber?: number[], innerCount?: number[]) => {
