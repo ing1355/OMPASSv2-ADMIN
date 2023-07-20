@@ -112,7 +112,7 @@ const InformationDetail = () => {
           CustomAxiosGet(
             GetUsersDetailsApi(selectedUuid),
             (data: GetUsersDetailsApiType) => {
-              console.log(data)
+              // console.log(data)
               setUserData(data.user);
               setUserPhone(data.user.phoneNumber);
               setUserName(data.user.name);
@@ -641,8 +641,8 @@ const InformationDetail = () => {
                         <div>
                           {data.ompassInfo.os === 'IOS' && <img src={device_image2_ios} width='80px' height='80px' style={{padding: '30px'}} />}
                           {data.ompassInfo.os === 'ANDROID' && <img src={device_image2_android} />}   
-                          {data.ompassInfo.os === 'Windows' && <img src={os_windows} width='80px' height='80px' style={{padding: '30px'}} />} 
-                          {data.ompassInfo.os === 'MAC' && <img src={os_mac} width='80px' height='80px' style={{padding: '30px'}} />}                                                     
+                          {data.ompassInfo.os === 'WINDOWS' && <img src={os_windows} width='80px' height='80px' style={{padding: '30px'}} />} 
+                          {data.ompassInfo.os === 'MAC' && <img src={os_mac} width='100px' height='100px' style={{padding: '20px'}} />}                                                     
                           <ul>
                             <li className='title_bold'>OS</li>
                             <li>{data.ompassInfo.os} {data.ompassInfo.osVersion}</li>

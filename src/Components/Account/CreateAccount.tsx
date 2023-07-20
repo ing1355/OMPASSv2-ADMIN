@@ -52,20 +52,20 @@ const CreateAccount = () => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if(!isIdAlert && !isNameAlert && !isPasswordAlert && !isPasswordConfirmAlert && !isPhoneAlert 
-      && userIdRef.current?.value !== ''
-      && userNameRef.current?.value !== ''
-      && passwordRef.current?.value !== ''
-      && passwordConfirmRef.current?.value !== ''
-      && userPhoneRef.current?.value !== ''
-      && !idExist
-      ) {
-      setIsActive(true);
-    } else {
-      setIsActive(false);
-    }
-  }, [idExist, isIdAlert, isNameAlert, isPasswordAlert, isPasswordConfirmAlert, isPhoneAlert, userIdRef, userNameRef, passwordRef, passwordConfirmRef, userPhoneRef])
+  // useEffect(() => {
+  //   if(!isIdAlert && !isNameAlert && !isPasswordAlert && !isPasswordConfirmAlert && !isPhoneAlert 
+  //     && userIdRef.current?.value !== ''
+  //     && userNameRef.current?.value !== ''
+  //     && passwordRef.current?.value !== ''
+  //     && passwordConfirmRef.current?.value !== ''
+  //     && userPhoneRef.current?.value !== ''
+  //     && !idExist
+  //     ) {
+  //     setIsActive(true);
+  //   } else {
+  //     setIsActive(false);
+  //   }
+  // }, [idExist, isIdAlert, isNameAlert, isPasswordAlert, isPasswordConfirmAlert, isPhoneAlert, userIdRef, userNameRef, passwordRef, passwordConfirmRef, userPhoneRef])
 
   const AgreePolicyList = (isService:boolean, number:number, count:number, innerNumber?: number[], innerCount?: number[]) => {
     const subList = Array.from(Array(count), (_, index) => index + 1);
@@ -359,7 +359,7 @@ const CreateAccount = () => {
                   const password = userPasswordConfirm.value;
                   const phoneNumber = userPhoneNumber.value;
 
-                  if(username && name && password && user_password && phoneNumber && !isIdAlert && !isNameAlert && !isPasswordAlert && !isPasswordConfirmAlert && !isPhoneAlert) {
+                  if(username && name && password && user_password && phoneNumber && !isIdAlert && !isNameAlert && !isPasswordAlert && !isPasswordConfirmAlert && !isPhoneAlert && !idExist) {
                     CustomAxiosPost(
                       PostSignUpApi,
                       () => {
@@ -377,6 +377,10 @@ const CreateAccount = () => {
                         message.error(formatMessage({ id: 'FAIL_REGISTER' }));
                       }
                     );
+                  } else if(username && idExist) {
+                    message.error(formatMessage({ id: 'PLEASE_CHECK_THE_ID' }));
+                  } else {
+                    message.error(formatMessage({ id: 'PLEASE_ENTER_ALL_THE_ITEMS' }));
                   }
                 }}
               >
@@ -549,10 +553,10 @@ const CreateAccount = () => {
                 </div>
                 <button
                   type='submit'
-                  className={'button-st1 create_account_button ' 
-                    + (isActive ? 'active' : '') }
+                  className={'button-st4 create_account_button '}
+                    // + (isActive ? 'active' : '') }
                   style={{marginTop: '14.5px'}}
-                  disabled={!isActive}
+                  // disabled={!isActive}
                   onClick={() => {
                     // setIsStepOne(true);
                   }}
