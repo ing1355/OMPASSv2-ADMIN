@@ -366,6 +366,11 @@ const Login = () => {
                   className='button-st2 login-button'
                 ><FormattedMessage id='CREATE_ACCOUNT' /></button>
               </Link>
+              <Link to='/GuidePage'>
+                <div className='main-color1'>
+                  <FormattedMessage id='GO_TO_QUICK_GUIDE' />
+                </div>
+              </Link>
             </form>
           </div>
         </Col>

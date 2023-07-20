@@ -30,14 +30,10 @@ const GuidePage = () => {
           justify='center'
           // align='bottom'
         >
-          <Col
-            // style={{textAlign: 'center'}}
-          >
-            <img 
-              src={installerGuide}
-              // height='90%'
-            />
-          </Col>
+          <img 
+            src={installerGuide}
+            width='65%'
+          />
         </Row>
         <Row
           justify='center'
@@ -59,7 +55,7 @@ const GuidePage = () => {
                   GetAgentInstallerDownloadApi,
                   (data:any) => {
                     const fileDownlaoadUrl = URL.createObjectURL(data);
-                    console.log('data',data.fileName)
+                    // console.log('data',data.fileName)
                     const downloadLink = document.createElement('a');
                     downloadLink.href = fileDownlaoadUrl;
                     downloadLink.download = versionName;
