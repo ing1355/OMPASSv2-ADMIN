@@ -196,7 +196,7 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
         (data:GetPutUsersApiDataType)=>{
           setUserData(data.users);
           setTotalCount(data.queryTotalCount);
-        }, {
+        },{
           page_size: tableCellSize,
           page: pageNum -1,
           ompass: tabNow === 'REGISTERED_USERS' ? true : tabNow === 'UNREGISTERED_USERS' ? false : null,
@@ -210,6 +210,11 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
           role: searchTypeInfo ? searchTypeInfo : null,
           integration_search_word: searchType === 'all' ? searchContent : null,
           language: lang === 'ko' ? 'KR' : 'EN',
+        },
+        (err:any) => {
+          if(err.response.data.code === 'ERR_001') {
+            navigate('/AutoLogout');
+          }
         }
       );
   
@@ -234,8 +239,11 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
           {
             signupRequests: excelData
           },
-          () => {
+          (err:any) => {
             message.error(formatMessage({ id: 'EXCEL_FILE_UPLOAD_FAILED' }));
+            if(err.response.data.code === 'ERR_001') {
+              navigate('/AutoLogout');
+            }
           }
         )
       }
@@ -436,8 +444,11 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
           page: 0,
           page_size: 999999,
         },
-        () => {
-          message.error(formatMessage({ id: 'EXCEL_FILE_DOWNLOAD_FAILED' }))
+        (err:any) => {
+          message.error(formatMessage({ id: 'EXCEL_FILE_DOWNLOAD_FAILED' }));
+          if(err.response.data.code === 'ERR_001') {
+            navigate('/AutoLogout');
+          }
         }
       )
     };

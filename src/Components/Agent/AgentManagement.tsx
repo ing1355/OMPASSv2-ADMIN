@@ -86,8 +86,11 @@ const AgentManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
         page_size: tableCellSize,
         page: pageNum -1
       },
-      () => {
-        console.log('agent data get 실패')
+      (err:any) => {
+        console.log('agent data get 실패');
+        if(err.response.data.code === 'ERR_001') {
+          navigate('/AutoLogout');
+        }
       },
       {},
       () => {
@@ -189,6 +192,11 @@ const AgentManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                                   const render = rendering;
                                   const renderTemp = render.concat(true);
                                   setRendering(renderTemp);
+                                }, {},
+                                (err:any) => {
+                                  if(err.response.data.code === 'ERR_001') {
+                                    navigate('/AutoLogout');
+                                  }
                                 }
                               )
                             } else {
@@ -300,7 +308,7 @@ const AgentManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                                 {
                                   file_id: data.fileId
                                 },
-                                (error: any) => {
+                                (err:any) => {
                                   message.error(formatMessage({ id: 'DOWNLOAD_FAILED' }));
                                 }, {},
                                 () => {
@@ -325,6 +333,11 @@ const AgentManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                                   const render = rendering;
                                   const renderTemp = render.concat(true);
                                   setRendering(renderTemp);
+                                },{},
+                                (err:any) => {
+                                  if(err.response.data.code === 'ERR_001') {
+                                    navigate('/AutoLogout');
+                                  }
                                 }
                               )
                             }}
@@ -352,6 +365,11 @@ const AgentManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                                     const render = rendering;
                                     const renderTemp = render.concat(true);
                                     setRendering(renderTemp);
+                                  },{},
+                                  (err:any) => {
+                                    if(err.response.data.code === 'ERR_001') {
+                                      navigate('/AutoLogout');
+                                    }
                                   }
                                 )
                               }

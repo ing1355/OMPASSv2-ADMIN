@@ -132,17 +132,17 @@ const VersionUpload = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }:
                           'metaData.version': metaDataVersion,                          
                           multipartFile: multipartFile,
                         },
-                        () => {
+                        (err:any) => {
                           message.error(formatMessage({ id: 'UPLOAD_FAILED' }));
+                          if(err.response.data.code === 'ERR_001') {
+                            navigate('/AutoLogout');
+                          }
                         },
                         {
                           headers: {
                             'Content-Type': 'multipart/form-data',
                           },
                         },
-                        () => {
-                          setIsUploadingFile(false);
-                        }
                       );
                     }
                   } else {

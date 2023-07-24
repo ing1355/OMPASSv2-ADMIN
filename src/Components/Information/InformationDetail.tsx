@@ -105,7 +105,12 @@ const InformationDetail = () => {
             setAllowAccounts(new Array(data.devices.length).fill(false));
             setOpenDeviceDelete(new Array(data.devices.length).fill(false));
             setOpenPasscodeDelete(new Array(data.devices.length).fill(false));
-          },
+          },{},
+          (err:any)=>{
+            if(err.response.data.code === 'ERR_001') {
+              navigate('/AutoLogout');
+            }
+          }
         )
       } else {
         if(selectedUuid) {
@@ -130,7 +135,12 @@ const InformationDetail = () => {
                   adminId: data.user.username
                 });
               }
-            },
+            },{},
+            (err:any)=>{
+              if(err.response.data.code === 'ERR_001') {
+                navigate('/AutoLogout');
+              }
+            }
           )
         }
       }
@@ -187,7 +197,12 @@ const InformationDetail = () => {
                       message.success(formatMessage({ id: 'USER_INFO_DELETE' }));
                       navigate('/');
                       dispatch(userInfoClear());
-                    },
+                    },{},
+                    (err:any) => {
+                      if(err.response.data.code === 'ERR_001') {
+                        navigate('/AutoLogout');
+                      }
+                    }
                   );
                 } else {
                   if(selectedUuid) {
@@ -196,7 +211,12 @@ const InformationDetail = () => {
                       () => {
                         message.success(formatMessage({ id: 'USER_INFO_DELETE' }));
                         navigate('/Information');
-                      },
+                      },{},
+                      (err:any) => {
+                        if(err.response.data.code === 'ERR_001') {
+                          navigate('/AutoLogout');
+                        }
+                      }
                     );
                   }
                 }
@@ -314,6 +334,10 @@ const InformationDetail = () => {
                         name: name,
                         password: password,
                         phoneNumber: phoneNumber,
+                      }, (err:any) => {
+                        if(err.response.data.code === 'ERR_001') {
+                          navigate('/AutoLogout');
+                        }
                       }
                     )  
                   } else {
@@ -501,6 +525,11 @@ const InformationDetail = () => {
                           const render = rendering;
                           const renderTemp = render.concat(true);
                           setRendering(renderTemp);
+                        },{},
+                        (err:any) => {
+                          if(err.response.data.code === 'ERR_001') {
+                            navigate('/AutoLogout');
+                          }
                         }
                       )
                     }}
@@ -540,6 +569,11 @@ const InformationDetail = () => {
                           const render = rendering;
                           const renderTemp = render.concat(true);
                           setRendering(renderTemp);
+                        },{},
+                        (err:any) => {
+                          if(err.response.data.code === 'ERR_001') {
+                            navigate('/AutoLogout');
+                          }
                         }
                       )
                     }}
@@ -1107,8 +1141,11 @@ const InformationDetail = () => {
                               recycleCount: oneChecked ? 1 : unlimitedChecked ? -1 : recycleNumber,
                               validTime: timeWriteChecked ? timeMinute : -1,
                             },
-                            () => {
-                              message.error(formatMessage({ id: 'FAILED_TO_MODIFY_PASSCODE' }))
+                            (err:any) => {
+                              message.error(formatMessage({ id: 'FAILED_TO_MODIFY_PASSCODE' }));
+                              if(err.response.data.code === 'ERR_001') {
+                                navigate('/AutoLogout');
+                              }
                             }
                           )
                         } else {
@@ -1129,8 +1166,11 @@ const InformationDetail = () => {
                               validTime: timeWriteChecked ? timeMinute : -1,
                               passcodeNumber: randomChecked ? null : codeChecked ? codeNumber : null
                             },
-                            () => {
+                            (err:any) => {
                               message.error(formatMessage({ id: 'FAILED_TO_CREATE_PASSCODE' }));
+                              if(err.response.data.code === 'ERR_001') {
+                                navigate('/AutoLogout');
+                              }
                             }
                           )
                         }
@@ -1320,6 +1360,11 @@ const InformationDetail = () => {
                                         const render = rendering;
                                         const renderTemp = render.concat(true);
                                         setRendering(renderTemp);
+                                      },{},
+                                      (err:any) => {
+                                        if(err.response.data.code === 'ERR_001') {
+                                          navigate('/AutoLogout');
+                                        }
                                       }
                                     )
                                   }}

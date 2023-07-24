@@ -8,6 +8,7 @@ import { GetPutSecretKeyApi } from "Constants/ApiRoute";
 import { GetPutSecretKeyApiType } from "Types/ServerResponseDataTypes";
 import { Col, Row, message } from "antd";
 import { CopyRightText } from "Constants/ConstantValues";
+import { useNavigate } from 'react-router';
 
 const SecretKey = () => {
   const height = useWindowHeightHeader();
@@ -19,6 +20,7 @@ const SecretKey = () => {
   const [socketServerData, setSocketServerData] = useState<string>('');
 
   const { formatMessage } = useIntl();
+  const navigate = useNavigate();
 
   useEffect(() => {
     CustomAxiosGet(
@@ -27,6 +29,11 @@ const SecretKey = () => {
         setSecretKeyData(data.secretKey);
         setApiServerData(data.interfaceApiServer);
         setSocketServerData(data.interfaceSocketServer);
+      }, {},
+      (err:any) => {
+        if(err.response.data.code === 'ERR_001') {
+          navigate('/AutoLogout');
+        }
       }
     )
   },[])
@@ -99,8 +106,11 @@ const SecretKey = () => {
                       {
                         secretKey: secretKey.value
                       },
-                      () => {
+                      (err:any) => {
                         message.error(formatMessage({ id: 'SECRET_KEY_MODIFY_Fail' }));
+                        if(err.response.data.code === 'ERR_001') {
+                          navigate('/AutoLogout');
+                        }
                       }
                     )
                   }
@@ -187,8 +197,11 @@ const SecretKey = () => {
                       {
                         interfaceApiServer: apiServer.value
                       },
-                      () => {
+                      (err:any) => {
                         message.error(formatMessage({ id: 'API_SERVER_URL_MODIFY_Fail' }));
+                        if(err.response.data.code === 'ERR_001') {
+                          navigate('/AutoLogout');
+                        }
                       }
                     )
                   }
@@ -275,8 +288,11 @@ const SecretKey = () => {
                       {
                         interfaceSocketServer: socketServer.value
                       },
-                      () => {
+                      (err:any) => {
                         message.error(formatMessage({ id: 'SOCKET_SERVER_URL_MODIFY_Fail' }));
+                        if(err.response.data.code === 'ERR_001') {
+                          navigate('/AutoLogout');
+                        }
                       }
                     )
                   }

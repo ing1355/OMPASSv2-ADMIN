@@ -114,7 +114,10 @@ const CreateAdmins = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }: 
                           role: 'ADMIN',
                           username: username
                         },
-                        () => {
+                        (err:any) => {
+                          if(err.response.data.code === 'ERR_001') {
+                            navigate('/AutoLogout');
+                          }
                         }
                       );
                     }
@@ -165,7 +168,12 @@ const CreateAdmins = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }: 
                               } else {
                                 message.success(formatMessage({ id: 'AVAILABLE_USERNAME' }));
                               }
-                            },
+                            },{},
+                            (err:any) => {
+                              if(err.response.data.code === 'ERR_001') {
+                                navigate('/AutoLogout');
+                              }
+                            }
                           )
                         }
                       }}

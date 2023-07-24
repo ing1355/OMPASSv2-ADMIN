@@ -82,7 +82,7 @@ const Header = () => {
       () => {
         message.error(formatMessage({ id: 'DOWNLOAD_FAILED' }));
       },{},
-      () => {
+      (err:any) => {
         setIsAgentFileDisable(false);
       }
     )

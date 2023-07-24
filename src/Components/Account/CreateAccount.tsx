@@ -48,8 +48,6 @@ const CreateAccount = () => {
   const passwordConfirmRef = useRef<HTMLInputElement>(null);
   const userPhoneRef = useRef<HTMLInputElement>(null);
 
-  const [isActive, setIsActive] = useState<boolean>(false);
-
   const navigate = useNavigate();
 
   // useEffect(() => {

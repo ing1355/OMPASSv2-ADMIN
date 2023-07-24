@@ -101,8 +101,11 @@ const AdminsManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize
         role: "SUPER_ADMIN,ADMIN",
         page: pageNum -1,
       },
-      () => {
-        console.log('admin 유저 가져오기 실패')
+      (err:any) => {
+        console.log('admin 유저 가져오기 실패');
+        if(err.response.data.code === 'ERR_001') {
+          navigate('/AutoLogout');
+        }
       }
     )
   },[tableCellSize, pageNum, rendering]);

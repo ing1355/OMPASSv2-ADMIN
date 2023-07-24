@@ -6,10 +6,8 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { useNavigate } from 'react-router';
 import installerGuide from '../../assets/installerGuide.png';
 import { useWindowHeight } from 'Components/CustomHook/useWindowHeight';
-import { useEffect, useRef, useState } from 'react';
 
 import maunal_download_blue from '../../assets/maunal_download_blue.png';
-import download_icon_blue from '../../assets/download_icon_blue.png';
 import download_icon from '../../assets/download_icon.png';
 import user_management_white from '../../assets/user_management_white.png';
 import { CopyRightText } from 'Constants/ConstantValues';

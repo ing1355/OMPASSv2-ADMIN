@@ -12,6 +12,7 @@ import view_password from '../../assets/view_password.png';
 import dont_look_password from '../../assets/dont_look_password.png';
 import { useSelector } from "react-redux";
 import { ReduxStateType } from "Types/ReduxStateTypes";
+import { useNavigate } from "react-router";
 
 const PasscodeManagement = () => {
   const { lang } = useSelector((state: ReduxStateType) => ({
@@ -23,6 +24,8 @@ const PasscodeManagement = () => {
   const [pageNum, setPageNum] = useState<number>(1);
   const [passcodeHistoryData, setPasscodeHistoryData] = useState<passcodeHistoriesType[]>([]);
   const [viewPasscodes, setViewPasscodes] = useState<boolean[]>(new Array(passcodeHistoryData.length).fill(false));
+
+  const navigate = useNavigate();
 
   const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
     setPageNum(pageNumber);
@@ -38,6 +41,10 @@ const PasscodeManagement = () => {
       }, {
         page_size: tableCellSize,
         page: pageNum -1,
+      }, (err:any) => {
+        if(err.response.data.code === 'ERR_001') {
+          navigate('/AutoLogout');
+        }
       }
     )
   },[tableCellSize, pageNum])
