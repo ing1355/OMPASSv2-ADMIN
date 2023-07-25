@@ -199,6 +199,7 @@ const LocaleTexts = {
     AUTO_LOGOUT_INFO_CONTENT_1 : 'You have been automatically logged out after 1 hour of inactivity.',
     AUTO_LOGOUT_INFO_CONTENT_2 : 'To log in again, please click the button below.',
     LOGOUT: 'Logout',
+    CLOSE: 'Close',
   },
   'ko': {
     LOGIN: '로그인',
@@ -400,6 +401,7 @@ const LocaleTexts = {
     AUTO_LOGOUT_INFO_CONTENT_1 : '1시간 동안 사용하지 않아 자동 로그아웃 되었습니다.',
     AUTO_LOGOUT_INFO_CONTENT_2 : '다시 로그인을 하려면 아래 버튼을 클릭해주세요.',
     LOGOUT: '로그아웃',
+    CLOSE: '닫기',
   }
 }
 

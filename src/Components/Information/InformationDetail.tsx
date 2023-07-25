@@ -1027,20 +1027,35 @@ const InformationDetail = () => {
 
                   {role === 'SUPER_ADMIN' && !data.passcode &&
                     viewPasscodeSettings[index] &&
-                    <div
-                      className='button-st4 information_detail_save_btn'
-                      onClick={(e) => {
-                        e.preventDefault();
-                        const submitButton = document.getElementById(`submitButton_${index}`);
-                        if (submitButton) {
-                          submitButton.click();
-                        }
-                      }}
-                    >
-                      <span
-                        style={{position: 'relative', top: '3px'}}
-                      ><FormattedMessage id='GENERATE' /></span>
-                    </div> 
+                    <div style={{}}>
+                      <div
+                        className='button-st4 information_detail_save_btn'
+                        onClick={(e) => {
+                          e.preventDefault();
+                          const submitButton = document.getElementById(`submitButton_${index}`);
+                          if (submitButton) {
+                            submitButton.click();
+                          }
+                        }}
+                      >
+                        <span
+                          style={{position: 'relative', top: '3px'}}
+                        ><FormattedMessage id='GENERATE' /></span>
+                      </div> 
+                      <div
+                        className='button-st5 information_detail_save_btn'
+                        onClick={(e) => {
+                          e.preventDefault();
+                          const updatedViewPasscodeSettings = [...viewPasscodeSettings];
+                          updatedViewPasscodeSettings[index] = !updatedViewPasscodeSettings[index];
+                          setViewPasscodeSettings(updatedViewPasscodeSettings);
+                        }}
+                      >
+                        <span
+                          style={{position: 'relative', top: '3px'}}
+                        ><FormattedMessage id='CLOSE' /></span>
+                      </div> 
+                    </div>
                   }
 
                   {role === 'SUPER_ADMIN' && !data.passcode &&
