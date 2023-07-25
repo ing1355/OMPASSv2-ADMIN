@@ -285,13 +285,18 @@ const Header = () => {
               </li>
             }
             <li>
-              <Link to='/'>
-                <img src={logout} width='25px' style={{opacity: 0.7, position: 'relative', top: '5.5px', left: '-5px'}}
-                  onClick={() => {
-                    dispatch(userInfoClear())
-                  }}
-                />
-              </Link>
+              <Tooltip
+                key='logout_info'
+                title={formatMessage({ id: 'LOGOUT' })}
+              >
+                <Link to='/'>
+                  <img src={logout} width='25px' style={{opacity: 0.7, position: 'relative', top: '5.5px', left: '-5px'}}
+                    onClick={() => {
+                      dispatch(userInfoClear());
+                    }}
+                  />
+                </Link>
+              </Tooltip>
             </li>
           </ul>
         </Col>
