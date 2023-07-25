@@ -28,6 +28,11 @@
   align-items: center;
 }
 
+.login_agent_download_loading {
+  position: relative;
+  top: -9vh;
+}
+
 .login_agent_download_button {
   font-size: 1.4vh;
   border-radius: 2.2rem;

@@ -2,7 +2,7 @@ import './Login.css';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Link, useNavigate } from 'react-router-dom';
 import { OMPASS } from 'ompass';
-import { message, Modal, Col, Row } from 'antd';
+import { message, Modal, Col, Row, Spin } from 'antd';
 import { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { langChange } from 'Redux/actions/langChange';
@@ -25,6 +25,7 @@ import { GetAgentInstallerApi } from 'Constants/ApiRoute';
 import { GetAgentApiArrayType, GetAgentApiDataType, GetAgentApiType } from 'Types/ServerResponseDataTypes';
 import { userInfoChange } from 'Redux/actions/userChange';
 import { useCookies } from 'react-cookie';
+import { LoadingOutlined } from '@ant-design/icons';
 
 
 const Login = () => {
@@ -57,6 +58,8 @@ const Login = () => {
   const userIdRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const passcodeRef = useRef<HTMLInputElement>(null);
+
+  const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
   // 아이디 저장
   // 첫 렌더링
@@ -224,6 +227,9 @@ const Login = () => {
             <></>
             :
             <div>
+              {isAgentFileDisable ?
+              <Spin className='login_agent_download_loading' indicator={antIcon} />
+              :
               <button
                 className='button-st3 login_agent_download_button'
                 style={(isAgentFileDisable ? {cursor: 'default', pointerEvents: 'none'} : {})}
@@ -258,8 +264,9 @@ const Login = () => {
                 }}
               >
                 <img src={download_icon} style={{maxWidth: '14%'}}/>
-                <span style={{position: 'relative', top: '-7px', marginLeft: '7px'}}><FormattedMessage id='DOWNLOAD_FOR_WINDOWS' /></span>  
+                <span style={{position: 'relative', top: '-7px', marginLeft: '7px'}}><FormattedMessage id='DOWNLOAD_FOR_WINDOWS' /></span> 
               </button>
+              }
             </div>
             }
 
