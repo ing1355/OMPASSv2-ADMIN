@@ -67,10 +67,16 @@ user
 * v0.1.0(10) - 54005 배포
 
  * header
-  -  로그아웃 마우스 오버 tooltip 설명 넣기
+  - 로그아웃 마우스 오버 tooltip 설명 넣기
 
  * passcode
   - 생성 시 닫기 버튼 추가
 
  * login page
   - 설치 파일 다운로드 버튼 다운 중일 때 ui 바꿔주기
+
+
+* v0.1.0(11) - 54005 배포
+
+ * installer
+  - installer 이름 업로드 파일명으로 수정

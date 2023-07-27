@@ -63,12 +63,11 @@ const Header = () => {
   }, []);
 
   const downloadAgentFileFun = () => {
-    // const versionName = 'ompass_installer_v' + currentVersion?.version + '.zip';
-    const versionName = 'ompass_installer.zip';
     CustomAxiosGetFile(
       GetAgentInstallerDownloadApi,
-      (data:any) => {
-        const fileDownlaoadUrl = URL.createObjectURL(data);
+      (res:any) => {
+        const versionName = res.headers['content-disposition'].split(';').filter((str:any) => str.includes('filename'))[0].match(/filename="([^"]+)"/)[1];
+        const fileDownlaoadUrl = URL.createObjectURL(res.data);
         const downloadLink = document.createElement('a');
         downloadLink.href = fileDownlaoadUrl;
         downloadLink.download = versionName;

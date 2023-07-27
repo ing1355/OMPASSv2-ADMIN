@@ -291,12 +291,11 @@ const AgentManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                               const updatedIsAgentFileDisable= [...isAgentFileDisable];
                               updatedIsAgentFileDisable[index] = true;
                               setIsAgentFileDisable(updatedIsAgentFileDisable);
-                              const versionName = 'ompass_installer_v' + data.version + '.zip';
+                              const versionName = data.fileName;
                               CustomAxiosGetFile(
                                 GetAgentInstallerDownloadApi,
-                                (data:any) => {
-                                  const fileDownlaoadUrl = URL.createObjectURL(data);
-                                  // console.log(fileDownlaoadUrl)
+                                (res:any) => {
+                                  const fileDownlaoadUrl = URL.createObjectURL(res.data);
                                   const downloadLink = document.createElement('a');
                                   downloadLink.href = fileDownlaoadUrl;
                                   downloadLink.download = versionName;

@@ -42,7 +42,7 @@ export function CustomAxiosGetFile(url: string, callback?: Function, params?: an
         if (res.headers.authorization) {
             localStorage.setItem('authorization', res.headers.authorization);
         }
-        if (callback) callback(res.data);
+        if (callback) callback(res);
     }).catch((err) => {
         if (errCallback && err.response && err.response.data) errCallback(err);
         else if(errCallback) errCallback();
