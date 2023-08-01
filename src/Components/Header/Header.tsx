@@ -133,7 +133,8 @@ const Header = () => {
                   <li>
                     <div onClick={()=>{setIsMenuOpen(false)}}>
                       <a
-                        href="/OMPASS_Portal_manual.pdf"
+                        // href="/OMPASS_Portal_manual.pdf"
+                        href="/OMPASS_Portal_User_Manual.pdf"
                         download
                       >
                         <FormattedMessage id='DOWNLOAD_MANUAL' />
@@ -244,7 +245,8 @@ const Header = () => {
               >
                 <li>
                   <a
-                    href="/OMPASS_Portal_manual.pdf"
+                    // href="/OMPASS_Portal_manual.pdf"
+                    href="/OMPASS_Portal_User_Manual.pdf"
                     download
                   >
                     <img

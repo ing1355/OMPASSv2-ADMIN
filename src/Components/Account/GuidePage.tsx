@@ -80,7 +80,8 @@ const GuidePage = () => {
             {/* 매뉴얼 다운로드 */}
             <a
               id="menual_download_link"
-              href="/OMPASS_Portal_manual.pdf"
+              // href="/OMPASS_Portal_manual.pdf"
+              href="/OMPASS_Portal_User_Manual.pdf"
               download
             >
               <button
