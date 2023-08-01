@@ -30,7 +30,7 @@ const GuidePage = () => {
         >
           <img 
             src={installerGuide}
-            width='65%'
+            width='75%'
           />
         </Row>
         <Row
