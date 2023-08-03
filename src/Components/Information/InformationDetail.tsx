@@ -822,7 +822,10 @@ const InformationDetail = () => {
                   <FormattedMessage id='LAST_LOGIN' /> : {data.lastLoginDate}
                   {data.agentVersion && <div style={{marginTop: '10px'}}><FormattedMessage id='AGENT_VERSION' /> : {data.agentVersion}</div>}
                 </div> 
-                <div className='information_detail_update_date' style={{width: '55%', marginLeft: '50px'}}><FormattedMessage id='LAST_LOGIN' /> : {data.ompassInfo.updateAt}</div> 
+                <div className='information_detail_update_date' style={{width: '55%', marginLeft: '50px'}}>
+                  <FormattedMessage id='LAST_LOGIN' /> : {data.ompassInfo.updateAt}
+                  {data.ompassInfo.alias && <div style={{marginTop: '10px'}}><FormattedMessage id='ALIAS' /> : {data.ompassInfo.alias}</div>}
+                </div> 
               </div>
               <hr></hr>
               

@@ -200,6 +200,7 @@ const LocaleTexts = {
     AUTO_LOGOUT_INFO_CONTENT_2 : 'To log in again, please click the button below.',
     LOGOUT: 'Logout',
     CLOSE: 'Close',
+    ALIAS: 'Alias',
   },
   'ko': {
     LOGIN: '로그인',
@@ -402,6 +403,7 @@ const LocaleTexts = {
     AUTO_LOGOUT_INFO_CONTENT_2 : '다시 로그인을 하려면 아래 버튼을 클릭해주세요.',
     LOGOUT: '로그아웃',
     CLOSE: '닫기',
+    ALIAS: '별칭',
   }
 }
 

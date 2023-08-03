@@ -89,6 +89,7 @@ export type OmpassInfoType = {
   updateAt: string,
   browser: string,
   type: string,
+  alias: string,
 }
 
 type PasscodeType = {
