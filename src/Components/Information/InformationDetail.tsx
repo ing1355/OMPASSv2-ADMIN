@@ -504,7 +504,8 @@ const InformationDetail = () => {
               key={'information_detail_section' + index}
             >
               <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                <h3><FormattedMessage id='DEVICE_INFORMATION' /></h3>
+                <h3><span style={{position: 'relative', top: '4px'}}>#{index+1} &nbsp;<FormattedMessage id='DEVICE_INFORMATION' /></span> 
+                {data.ompassInfo.alias && <span className='information_detail_alias'>{data.ompassInfo.alias.split('_')[1]}</span>}</h3>
                 {role === 'SUPER_ADMIN' &&
                   <Popconfirm
                     title={formatMessage({ id: 'DELETE_DEVICE' })}
@@ -824,7 +825,7 @@ const InformationDetail = () => {
                 </div> 
                 <div className='information_detail_update_date' style={{width: '55%', marginLeft: '50px'}}>
                   <FormattedMessage id='LAST_LOGIN' /> : {data.ompassInfo.updateAt}
-                  {data.ompassInfo.alias && <div style={{marginTop: '10px'}}><FormattedMessage id='ALIAS' /> : {data.ompassInfo.alias}</div>}
+                  {/* {data.ompassInfo.alias && <div style={{marginTop: '10px'}}><FormattedMessage id='ALIAS' /> : {data.ompassInfo.alias}</div>} */}
                 </div> 
               </div>
               <hr></hr>
