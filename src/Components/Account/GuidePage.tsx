@@ -77,7 +77,7 @@ const GuidePage = () => {
               <span style={{position: 'relative', top: '-6px', margin: '0 12px 0 6px'}}><FormattedMessage id='DOWNLOAD_FOR_WINDOWS' /></span>  
             </button>
 
-            {/* 매뉴얼 다운로드 */}
+            {/* 사용자 매뉴얼 다운로드 */}
             <a
               id="menual_download_link"
               href="/OMPASS_Portal_User_Manual.pdf"
@@ -94,7 +94,7 @@ const GuidePage = () => {
                   width="25px"
                   style={{position: 'relative', top: '2px', marginLeft: '5px'}}
                 />
-                <span style={{position: 'relative', top: '-5px', margin: '0 9px 0 4px'}}><FormattedMessage id='DOWNLOAD_MANUAL' /></span>
+                <span style={{position: 'relative', top: '-5px', margin: '0 9px 0 4px'}}><FormattedMessage id='DOWNLOAD_USER_MANUAL' /></span>
               </button>            
             </a>
 

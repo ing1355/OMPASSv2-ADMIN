@@ -137,7 +137,7 @@ const Header = () => {
                         href="/OMPASS_Portal_User_Manual.pdf"
                         download
                       >
-                        <FormattedMessage id='DOWNLOAD_MANUAL' />
+                        <FormattedMessage id='DOWNLOAD_USER_MANUAL' />
                         <img
                           src={maunal_download_blue}
                           width="25px"

@@ -30,8 +30,9 @@ type menuInfoType = {
 }
 
 const Main = () => {
-  const {userInfo} = useSelector((state: ReduxStateType) => ({
-    userInfo: state.userInfo!
+  const { userInfo, lang } = useSelector((state: ReduxStateType) => ({
+    userInfo: state.userInfo!,
+    lang: state.lang,
   }))
   const height = useWindowHeightHeader();
   const navigate = useNavigate();
@@ -144,7 +145,7 @@ const Main = () => {
               }}
             >
               <img src={data.imgName} className='main_menu_card_img' />
-              <h2 className='main_menu_card_title' ><FormattedMessage id={data.title} /></h2>
+              <h2 className={'main_menu_card_title ' + (lang === 'en' ? 'en' :'')}><FormattedMessage id={data.title} /></h2>
             </div>
           </Col>
         ))
@@ -187,7 +188,7 @@ const Main = () => {
               }}
             >
               <img src={data.imgName} className='main_menu_card_img' />
-              <h2 className='main_menu_card_title' ><FormattedMessage id={data.title} /></h2>
+              <h2 className={'main_menu_card_title ' + (lang === 'en' ? 'en' :'')}><FormattedMessage id={data.title} /></h2>
             </div>
           </Col>
         ))
