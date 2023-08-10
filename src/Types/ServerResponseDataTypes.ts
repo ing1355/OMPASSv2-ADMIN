@@ -108,6 +108,7 @@ export type GetPutSecretKeyApiType = {
   secretKey: string,
   interfaceApiServer: string,
   interfaceSocketServer: string,
+  ompassPortalServer: string,
 }
 
 export type GetUsersCountApiType = {

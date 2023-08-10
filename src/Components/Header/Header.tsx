@@ -11,6 +11,7 @@ import menu_icon from '../../assets/menu_icon.png';
 import logout from '../../assets/logout.png';
 import maunal_download from '../../assets/maunal_download.png';
 import maunal_download_blue from '../../assets/maunal_download_blue.png';
+import admin_manual_download_blue from '../../assets/admin_manual_download_blue.png';
 import download_icon_blue from '../../assets/download_icon_blue.png';
 import download_installer_icon from '../../assets/download_installer_icon.png';
 import { FormattedMessage, useIntl } from 'react-intl';
@@ -133,7 +134,6 @@ const Header = () => {
                   <li>
                     <div onClick={()=>{setIsMenuOpen(false)}}>
                       <a
-                        // href="/OMPASS_Portal_manual.pdf"
                         href="/OMPASS_Portal_User_Manual.pdf"
                         download
                       >
@@ -240,17 +240,35 @@ const Header = () => {
             }
             {windowWidth > 785 && 
               <Tooltip
-                key='download_manual'
-                title={formatMessage({ id: 'DOWNLOAD_MANUAL' })}
+                key='download_user_manual'
+                title={formatMessage({ id: 'DOWNLOAD_USER_MANUAL' })}
               >
                 <li>
                   <a
-                    // href="/OMPASS_Portal_manual.pdf"
                     href="/OMPASS_Portal_User_Manual.pdf"
                     download
                   >
                     <img
                       src={maunal_download_blue}
+                      width="25px"
+                      style={{position: 'relative', top: '5px'}}
+                    />
+                  </a>
+                </li>
+              </Tooltip>
+            }
+            {windowWidth > 785 && role?.includes('ADMIN') &&
+              <Tooltip
+                key='download_admin_manual'
+                title={formatMessage({ id: 'DOWNLOAD_ADMIN_MANUAL' })}
+              >
+                <li>
+                  <a
+                    href="/OMPASS_Portal_Admin_Manual.pdf"
+                    download
+                  >
+                    <img
+                      src={admin_manual_download_blue}
                       width="25px"
                       style={{position: 'relative', top: '5px'}}
                     />

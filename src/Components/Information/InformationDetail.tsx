@@ -505,7 +505,7 @@ const InformationDetail = () => {
             >
               <div style={{display: 'flex', justifyContent: 'space-between'}}>
                 <h3><span style={{position: 'relative', top: '4px'}}>#{index+1} &nbsp;<FormattedMessage id='DEVICE_INFORMATION' /></span> 
-                {data.ompassInfo.alias && <span className='information_detail_alias'>{data.ompassInfo.alias.split('_')[1]}</span>}</h3>
+                {data.ompassInfo.alias && <span className='information_detail_alias'>{data.ompassInfo.alias}</span>}</h3>
                 {role === 'SUPER_ADMIN' &&
                   <Popconfirm
                     title={formatMessage({ id: 'DELETE_DEVICE' })}

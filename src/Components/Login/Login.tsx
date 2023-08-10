@@ -413,7 +413,6 @@ const Login = () => {
           }}
         >EN</span>
       <a
-        // href="/OMPASS_Portal_manual.pdf"
         href="/OMPASS_Portal_User_Manual.pdf"
         download
       >

@@ -171,7 +171,8 @@ const LocaleTexts = {
     USER_TYPE: 'User Rank',
     APPLY: 'Apply',
     EDIT_: 'Edit',
-    DOWNLOAD_MANUAL: 'Download manual',
+    DOWNLOAD_USER_MANUAL: 'Download user manual',
+    DOWNLOAD_ADMIN_MANUAL: 'Download administrator manual',
     DOWNLOAD_INSTALL_FILE: 'Download Installation File',
     SUCCESS_REGISTER: 'You have successfully registered',
     ACTION: 'Admin-Action',
@@ -184,6 +185,8 @@ const LocaleTexts = {
     SOCKET_SERVER_URL: 'Socket Server URL',
     SOCKET_SERVER_URL_MODIFY_SUCCESS: 'Socket Server URL modified successfully',
     SOCKET_SERVER_URL_MODIFY_Fail: 'Failed to modify Socket Server URL',
+    PORTAL_SERVER_URL_MODIFY_SUCCESS: 'OMPASS Portal Server URL modified successfully',
+    PORTAL_SERVER_URL_MODIFY_Fail: 'Failed to modify OMPASS Portal Server URL',
     ACTION_DATE: 'Timestamp',
     LOADING: 'Loading...',
     UPLOADING: 'Uploading...',
@@ -201,6 +204,7 @@ const LocaleTexts = {
     LOGOUT: 'Logout',
     CLOSE: 'Close',
     ALIAS: 'Alias',
+    OMPASS_PORTAL_SERVER_URL: 'OMPASS Portal Server URL',
   },
   'ko': {
     LOGIN: '로그인',
@@ -374,7 +378,8 @@ const LocaleTexts = {
     USER_TYPE: '사용자 등급',
     APPLY: '적용',
     EDIT_: '변경',
-    DOWNLOAD_MANUAL: '매뉴얼 다운로드',
+    DOWNLOAD_USER_MANUAL: '사용자 매뉴얼 다운로드',
+    DOWNLOAD_ADMIN_MANUAL: '관리자 매뉴얼 다운로드',
     DOWNLOAD_INSTALL_FILE: '설치 파일 다운로드',
     SUCCESS_REGISTER: '회원가입 성공',
     ACTION: '행동',
@@ -387,6 +392,8 @@ const LocaleTexts = {
     SOCKET_SERVER_URL: '소켓 서버 URL',
     SOCKET_SERVER_URL_MODIFY_SUCCESS: '소켓 서버 URL 수정 성공',
     SOCKET_SERVER_URL_MODIFY_Fail: '소켓 서버 URL 수정 실패',
+    PORTAL_SERVER_URL_MODIFY_SUCCESS: 'OMPASS Portal 서버 URL 수정 성공',
+    PORTAL_SERVER_URL_MODIFY_Fail: 'OMPASS Portal 서버 URL 수정 실패',
     ACTION_DATE: '일시',
     LOADING: '로딩중...',
     UPLOADING: '업로드중...',
@@ -404,6 +411,7 @@ const LocaleTexts = {
     LOGOUT: '로그아웃',
     CLOSE: '닫기',
     ALIAS: '별칭',
+    OMPASS_PORTAL_SERVER_URL: 'OMPASS Portal 서버 URL',
   }
 }
 

@@ -15,9 +15,11 @@ const SecretKey = () => {
   const [isAddSecretKey, setIsAddSecretKey] = useState<boolean>(false);
   const [isAddApiServer, setIsAddApiServer] = useState<boolean>(false);
   const [isAddSocketServer, setIsAddSocketServer] = useState<boolean>(false);
+  const [isPortalServer, setIsPortalServer] = useState<boolean>(false);
   const [secretKeyData, setSecretKeyData] = useState<string>('');
   const [apiServerData, setApiServerData] = useState<string>('');
   const [socketServerData, setSocketServerData] = useState<string>('');
+  const [portalServerData, setPortalServerData] = useState<string>('');
 
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
@@ -29,6 +31,7 @@ const SecretKey = () => {
         setSecretKeyData(data.secretKey);
         setApiServerData(data.interfaceApiServer);
         setSocketServerData(data.interfaceSocketServer);
+        setPortalServerData(data.ompassPortalServer);
       }, {},
       (err:any) => {
         if(err.response.data.code === 'ERR_001') {
@@ -332,6 +335,97 @@ const SecretKey = () => {
                   onClick={(e) => {
                     e.preventDefault();
                     setIsAddSocketServer(true);
+                  }}
+                >
+                  <span><FormattedMessage id='EDIT' /></span>
+                </button>
+              }
+            </Col>
+          </Row>
+
+          {/* OMPASS Portal server URL input */}
+          <Row
+            style={{marginTop: '3vh'}}
+          >
+            <Col
+              xs={{ span: 22, offset: 1 }} 
+              sm={{ span: 6, offset: 2 }} 
+              md={{ span: 6, offset: 2 }} 
+              lg={{ span: 6, offset: 2 }}
+              xl={{ span: 6, offset: 4 }}
+            >
+              <h2><FormattedMessage id='OMPASS_PORTAL_SERVER_URL' /></h2>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col 
+              xs={{ span: 20, offset: 1 }} 
+              sm={{ span: 20, offset: 2 }} 
+              md={{ span: 13, offset: 2 }} 
+              lg={{ span: 12, offset: 2 }}
+              xl={{ span: 10, offset: 4 }}
+            >
+              <form
+                id='addPortalServerForm'
+                style={{display: 'flex', flexDirection: 'row'}}
+                onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+                  e.preventDefault();
+                  const { portalServer } = (e.currentTarget.elements as any);
+                  if(isPortalServer) {
+                    CustomAxiosPut(
+                      GetPutSecretKeyApi,
+                      () => {
+                        setIsPortalServer(false);
+                        message.success(formatMessage({ id: 'PORTAL_SERVER_URL_MODIFY_SUCCESS' }));
+                      },
+                      {
+                        ompassPortalServer: portalServer.value
+                      },
+                      (err:any) => {
+                        message.error(formatMessage({ id: 'PORTAL_SERVER_URL_MODIFY_Fail' }));
+                        if(err.response.data.code === 'ERR_001') {
+                          navigate('/AutoLogout');
+                        }
+                      }
+                    )
+                  }
+                }}
+              >                
+                <input 
+                  id='portalServer'
+                  type='text'
+                  className={'input-st1 create_account_input mt8 mb5 ' + (isPortalServer ? '' : 'disable')}
+                  style={{width: '100%', marginLeft: '2.5%'}}
+                  autoComplete='off'
+                  disabled={isPortalServer ? false : true}
+                  value={portalServerData}
+                  onChange={(e) => {
+                    setPortalServerData(e.currentTarget.value);
+                  }}
+                />
+              </form>
+            </Col>
+            <Col
+              xs={{ span: 9, offset: 1 }} 
+              sm={{ span: 9, offset: 2 }} 
+              md={{ span: 5 }} 
+              lg={{ span: 2 }}
+              xl={{ span: 7 }}
+            >
+              {isPortalServer ?
+                <button className='tab_download_upload_button admins_management_button'
+                  type='submit'
+                  form='addPortalServerForm'
+                >
+                  <span><FormattedMessage id='REGISTER' /></span>
+                </button>
+                :
+                <button className='tab_download_upload_button admins_management_button'
+                  type='button'
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsPortalServer(true);
                   }}
                 >
                   <span><FormattedMessage id='EDIT' /></span>
