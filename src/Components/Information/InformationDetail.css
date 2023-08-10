@@ -50,13 +50,14 @@
 }
 
 .information_detail_alias {
-  border: 1px #ccc solid;
-  padding: 10px;
-  border-radius: 5px;
+  /* border: 1px #ccc solid; */
+  /* padding: 10px; */
+  /* border-radius: 5px; */
   margin-left: 15px;
   font-weight: 500;
   position: relative;
-  top: 2.5px;
+  top: 2.8px;
+  /* color: #aaa; */
 }
 
 .information_detail_device_delete_btn {
