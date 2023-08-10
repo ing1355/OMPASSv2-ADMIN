@@ -208,7 +208,7 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
           passcode: tabNow === 'PASSCODE_USERS' ? true : false, 
           enable_passcode_count: searchType === 'enable_passcode_count' ? searchContent : null,
           role: searchTypeInfo ? searchTypeInfo : null,
-          integration_search_word: searchType === 'all' ? searchContent : null,
+          integration_search_word: searchType === 'all' || searchType === null ? searchContent : null,
           language: lang === 'ko' ? 'KR' : 'EN',
         },
         (err:any) => {
@@ -270,16 +270,22 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
 
     // 검색 버튼 이벤트
     const searchClickButtonFun = () => {
-      if(searchType === null) {
-        message.error(formatMessage({ id: 'PLEASE_SELECT_A_SEARCH_ITEM' }))
-      } else {
-        const render = rendering;
-        const renderTemp = render.concat(true);
-        setRendering(renderTemp);
-        if(searchContentRef.current) {
-          setSearchContent(searchContentRef.current.value);
-        }
+      const render = rendering;
+      const renderTemp = render.concat(true);
+      setRendering(renderTemp);
+      if(searchContentRef.current) {
+        setSearchContent(searchContentRef.current.value);
       }
+      // if(searchType === null) {
+      //   message.error(formatMessage({ id: 'PLEASE_SELECT_A_SEARCH_ITEM' }))
+      // } else {
+      //   const render = rendering;
+      //   const renderTemp = render.concat(true);
+      //   setRendering(renderTemp);
+      //   if(searchContentRef.current) {
+      //     setSearchContent(searchContentRef.current.value);
+      //   }
+      // }
     }
   
     const sortingUlFun = (listType: listType, index: number) => {
