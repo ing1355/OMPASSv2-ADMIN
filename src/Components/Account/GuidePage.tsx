@@ -11,11 +11,13 @@ import maunal_download_blue from '../../assets/maunal_download_blue.png';
 import download_icon from '../../assets/download_icon.png';
 import user_management_white from '../../assets/user_management_white.png';
 import { CopyRightText } from 'Constants/ConstantValues';
+import { useState } from 'react';
 
 const GuidePage = () => {
   const height = useWindowHeight();
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
+  const [isFileDownloadDisable, setIsFileDownloadDisable] = useState<boolean>(false);
 
   return (
     <div
@@ -47,13 +49,12 @@ const GuidePage = () => {
             <button
               className='button-st3 common_button guide_page_windows_download'
               onClick={() => {
-                // const versionName = 'ompass_installer_v' + currentVersion?.version + '.zip';
-                const versionName = 'ompass_installer.zip';
+                setIsFileDownloadDisable(true);
                 CustomAxiosGetFile(
                   GetAgentInstallerDownloadApi,
-                  (data:any) => {
-                    const fileDownlaoadUrl = URL.createObjectURL(data);
-                    // console.log('data',data.fileName)
+                  (res:any) => {
+                    const versionName = res.headers['content-disposition'].split(';').filter((str:any) => str.includes('filename'))[0].match(/filename="([^"]+)"/)[1];
+                    const fileDownlaoadUrl = URL.createObjectURL(res.data);
                     const downloadLink = document.createElement('a');
                     downloadLink.href = fileDownlaoadUrl;
                     downloadLink.download = versionName;
@@ -66,6 +67,9 @@ const GuidePage = () => {
                   },
                   () => {
                     message.error(formatMessage({ id: 'DOWNLOAD_FAILED' }));
+                  },{},
+                  (err:any) => {
+                    setIsFileDownloadDisable(false);
                   }
                 )
               }}
@@ -74,7 +78,7 @@ const GuidePage = () => {
                 width='25px'
                 style={{position: 'relative', top: '1px', marginLeft: '9px'}}
               />
-              <span style={{position: 'relative', top: '-6px', margin: '0 12px 0 6px'}}><FormattedMessage id='DOWNLOAD_FOR_WINDOWS' /></span>  
+              <span style={{position: 'relative', top: '-6px', margin: '0 12px 0 6px'}}>{isFileDownloadDisable ? <FormattedMessage id='DOWNLOADING'/> :<FormattedMessage id='DOWNLOAD_FOR_WINDOWS' />}</span>  
             </button>
 
             {/* 사용자 매뉴얼 다운로드 */}
