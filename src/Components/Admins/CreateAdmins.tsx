@@ -13,6 +13,7 @@ import { autoHypenPhoneFun, CopyRightText } from 'Constants/ConstantValues';
 import { useSelector } from 'react-redux';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
 import { InformationProps } from 'Types/PropsTypes';
+import { idRegex, nameRegex } from 'Components/CustomHook/CommonRegex';
 
 const CreateAdmins = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }: InformationProps) => {
   const { userInfo } = useSelector((state: ReduxStateType) => ({
@@ -143,8 +144,8 @@ const CreateAdmins = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }: 
                       autoComplete='off'
                       onChange={(e) => {
                         const value = e.currentTarget.value;
-                        const idRegex = /^[a-z0-9]{4,16}$/;
-                        if(idRegex.test(value)) {
+                        const idRgx:RegExp = idRegex;
+                        if(idRgx.test(value)) {
                           setIsIdAlert(false);
                         } else {
                           setIsIdAlert(true);
@@ -198,8 +199,8 @@ const CreateAdmins = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }: 
                     autoComplete='off'
                     onChange={(e) => {
                       const value = e.currentTarget.value;
-                      const nameRegex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]{1,16}$/
-                      if(nameRegex.test(value)) {
+                      const nameRgx:RegExp = nameRegex;
+                      if(nameRgx.test(value)) {
                         setIsNameAlert(false);
                       } else {
                         setIsNameAlert(true);

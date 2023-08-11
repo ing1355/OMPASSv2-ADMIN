@@ -14,6 +14,7 @@ import { useWindowHeight } from 'Components/CustomHook/useWindowHeight';
 import { CustomAxiosGet, CustomAxiosPost } from 'Components/CustomHook/CustomAxios';
 import { GetUsernameCheckApi, PostSignUpApi } from 'Constants/ApiRoute';
 import { autoHypenPhoneFun, CopyRightText } from 'Constants/ConstantValues';
+import { idRegex, nameRegex, passwordRegex } from 'Components/CustomHook/CommonRegex';
 
 type AgreePolicyType = 'agreeService' | 'agreePrivacyPolicy';
 
@@ -399,8 +400,8 @@ const CreateAccount = () => {
                       autoComplete='off'
                       onChange={(e) => {
                         const value = e.currentTarget.value;
-                        const idRegex = /^[a-z0-9]{4,16}$/;
-                        if(idRegex.test(value)) {
+                        const idRgx:RegExp = idRegex;
+                        if(idRgx.test(value)) {
                           setIsIdAlert(false);
                         } else {
                           setIsIdAlert(true);
@@ -446,8 +447,8 @@ const CreateAccount = () => {
                     autoComplete='off'
                     onChange={(e) => {
                       const value = e.currentTarget.value;
-                      const nameRegex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]{1,16}$/
-                      if(nameRegex.test(value)) {
+                      const nameRgx:RegExp = nameRegex;
+                      if(nameRgx.test(value)) {
                         setIsNameAlert(false);
                       } else {
                         setIsNameAlert(true);
@@ -477,8 +478,8 @@ const CreateAccount = () => {
                     autoComplete='off'
                     onChange={(e) => {
                       const value = e.currentTarget.value;
-                      const passwordRegex = /(?=.*[a-zA-Z])(?=.*[\d])(?=.*[\W]).{8,16}|(?=.*[a-zA-Z])(?=.*[\d]).{10,16}|(?=.*[a-zA-Z])(?=.*[\W]).{10,16}|(?=.*[\d])(?=.*[\W]).{10,16}/
-                      if(passwordRegex.test(value)) {
+                      const passwordRgx:RegExp = passwordRegex;
+                      if(passwordRgx.test(value)) {
                         setIsPasswordAlert(false);
                       } else {
                         setIsPasswordAlert(true);

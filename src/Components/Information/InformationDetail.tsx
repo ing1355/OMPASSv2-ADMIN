@@ -39,6 +39,7 @@ import safari_img from '../../assets/safari_img.png';
 import safari_mobile_img from '../../assets/safari_mobile_img.png';
 import samsung_browser_mobile_img from '../../assets/samsung_browser_mobile_img.png';
 import user_management from '../../assets/user_management.png';
+import { nameRegex, passwordRegex } from 'Components/CustomHook/CommonRegex';
 
 type adminIdType = {
   isAdmin: boolean,
@@ -371,9 +372,9 @@ const InformationDetail = () => {
                           autoComplete='off'
                           onChange={(e) => {
                             const value = e.currentTarget.value;
-                            const nameRegex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]{1,16}$/
+                            const nameRgx:RegExp = nameRegex;
                             setUserName(value);
-                            if(nameRegex.test(value)) {
+                            if(nameRgx.test(value)) {
                               setIsNameAlert(false);
                             } else {
                               setIsNameAlert(true);
@@ -420,8 +421,8 @@ const InformationDetail = () => {
                           type='password'
                           onChange={(e) => {
                             const value = e.currentTarget.value;
-                            const passwordRegex = /(?=.*[a-zA-Z])(?=.*[\d])(?=.*[\W]).{8,16}|(?=.*[a-zA-Z])(?=.*[\d]).{10,16}|(?=.*[a-zA-Z])(?=.*[\W]).{10,16}|(?=.*[\d])(?=.*[\W]).{10,16}/
-                            if(passwordRegex.test(value)) {
+                            const passwordRgx:RegExp = passwordRegex;
+                            if(passwordRgx.test(value)) {
                               setIsPasswordAlert(false);
                             } else {
                               setIsPasswordAlert(true);

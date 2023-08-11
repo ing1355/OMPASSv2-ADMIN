@@ -26,6 +26,7 @@ import { GetAgentApiArrayType, GetAgentApiDataType, GetAgentApiType } from 'Type
 import { userInfoChange } from 'Redux/actions/userChange';
 import { useCookies } from 'react-cookie';
 import { LoadingOutlined } from '@ant-design/icons';
+import { passwordRegex } from 'Components/CustomHook/CommonRegex';
 
 
 const Login = () => {
@@ -450,8 +451,8 @@ const Login = () => {
             autoComplete='off'
             onChange={(e) => {
               const value = e.currentTarget.value;
-              const passwordRegex = /(?=.*[a-zA-Z])(?=.*[\d])(?=.*[\W]).{8,16}|(?=.*[a-zA-Z])(?=.*[\d]).{10,16}|(?=.*[a-zA-Z])(?=.*[\W]).{10,16}|(?=.*[\d])(?=.*[\W]).{10,16}/
-              if(passwordRegex.test(value)) {
+              const passwordRgx:RegExp = passwordRegex;
+              if(passwordRgx.test(value)) {
                 setIsPasswordAlert(false);
               } else {
                 setIsPasswordAlert(true);
