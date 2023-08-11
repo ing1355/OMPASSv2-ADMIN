@@ -95,6 +95,7 @@ const VersionUpload = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }:
             </div>
             <div
               className='create_account_content'
+              style={{width: '620px'}}
             >
               <form 
                 id='addVersionForm'
@@ -193,15 +194,19 @@ const VersionUpload = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }:
                   <div
                     style={{marginTop: '22px'}}
                   >
-                    <label htmlFor="uploadFile" className='button-st4 agent_management_file_btn'><FormattedMessage id='SELECT_FILE' /></label>
-                    <input
-                      id="uploadFile"
-                      type="file"
-                      accept=".zip"
-                      hidden
-                      onChange={handleFileChange}
-                    />
-                    <span style={{marginLeft: '15px'}}>{fileName}</span>
+                    <div>
+                      <label htmlFor="uploadFile" className='button-st4 agent_management_file_btn'><FormattedMessage id='SELECT_FILE' /></label>
+                      <input
+                        id="uploadFile"
+                        type="file"
+                        accept=".zip"
+                        hidden
+                        onChange={handleFileChange}
+                      />
+                    </div>
+                    <div style={{marginTop: '22px', width: '620px', wordWrap: 'break-word'}}>
+                      {fileName}
+                    </div>
                   </div>
                 </div>
               </form>
