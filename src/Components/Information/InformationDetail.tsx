@@ -38,7 +38,7 @@ import microsoft_edge_img from '../../assets/microsoft_edge_img.png';
 import safari_img from '../../assets/safari_img.png';
 import safari_mobile_img from '../../assets/safari_mobile_img.png';
 import samsung_browser_mobile_img from '../../assets/samsung_browser_mobile_img.png';
-import user_management from '../../assets/user_management.png';
+import alias_img from '../../assets/alias_img.png';
 import { nameRegex, passwordRegex } from 'Components/CustomHook/CommonRegex';
 
 type adminIdType = {
@@ -510,7 +510,7 @@ const InformationDetail = () => {
                   <span className={'information_detail_alias_title ' + (data.ompassInfo && data.ompassInfo.alias ? 'top' : '')}>#{index+1} &nbsp;<FormattedMessage id='DEVICE_INFORMATION' /></span> 
                   {data.ompassInfo && data.ompassInfo.alias && 
                     <span className={'information_detail_alias ' + (data.ompassInfo && data.ompassInfo.alias ? 'top' : '')}>
-                      <img className='information_detail_alias_img' src={user_management}/>
+                      <img className='information_detail_alias_img' src={alias_img}/>
                       {data.ompassInfo.alias}
                     </span>
                   }

@@ -55,7 +55,7 @@
 }
 
 .information_detail_alias_title.top {
-  top: -9px;
+  top: 0px;
 }
 
 .information_detail_alias {
@@ -69,16 +69,16 @@
   /* color: #aaa; */
 }
 
-.information_detail_alias {
-  top: -9px;
+.information_detail_alias.top {
+  top: -1px;
 }
 
 .information_detail_alias_img {
-  width: 33px;
-  height: 30px;
+  width: 21px;
+  height: 21px;
   position: relative;
-  top: 8px;
-  margin-right: 3px;
+  top: 5px;
+  margin-right: 6px;
   margin-left: 10px;
 }
 

@@ -14,7 +14,7 @@ import { useWindowHeight } from 'Components/CustomHook/useWindowHeight';
 import { CustomAxiosGet, CustomAxiosPost } from 'Components/CustomHook/CustomAxios';
 import { GetUsernameCheckApi, PostSignUpApi } from 'Constants/ApiRoute';
 import { autoHypenPhoneFun, CopyRightText } from 'Constants/ConstantValues';
-import { idRegex, nameRegex, passwordRegex } from 'Components/CustomHook/CommonRegex';
+import { idRegex, koreanRegex, nameRegex, passwordRegex } from 'Components/CustomHook/CommonRegex';
 
 type AgreePolicyType = 'agreeService' | 'agreePrivacyPolicy';
 
@@ -477,7 +477,9 @@ const CreateAccount = () => {
                     maxLength={16}
                     autoComplete='off'
                     onChange={(e) => {
+                      e.target.value = e.target.value.replace(koreanRegex, '');
                       const value = e.currentTarget.value;
+                      
                       const passwordRgx:RegExp = passwordRegex;
                       if(passwordRgx.test(value)) {
                         setIsPasswordAlert(false);
@@ -511,6 +513,7 @@ const CreateAccount = () => {
                     maxLength={16}
                     autoComplete='off'
                     onChange={(e) => {
+                      e.target.value = e.target.value.replace(koreanRegex, '');
                       const value = e.currentTarget.value;
                       if(value===passwordRef.current?.value) {
                         setIsPasswordConfirmAlert(false);
