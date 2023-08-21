@@ -6,11 +6,7 @@ import { useSelector } from 'react-redux';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
 import Login from 'Components/Login/Login';
 import CreateAccount from 'Components/Account/CreateAccount';
-import InformationList from 'Components/Information/InformationList';
 import InformationDetail from 'Components/Information/InformationDetail';
-import AgentManagement from 'Components/Agent/AgentManagement';
-import AdminsManagement from 'Components/Admins/AdminsManagement';
-import Manual from 'Components/Manual/Manual';
 import OMPASSVerify from 'Components/OMPASS/OMPASSVerify';
 import SecretKey from 'Components/SecretKey/SecretKey';
 import Main from 'Components/Main/Main';
@@ -34,7 +30,6 @@ const App: React.FC = () => {
       <AxiosController />
       <Routes>
         <Route path='/ompass/*' element={<OMPASSVerify />} />
-        <Route path='/Manual' element={<Manual />} />
         {
           userInfo ? (
             userInfo.role!.includes('ADMIN') ? <>
