@@ -1,6 +1,6 @@
 {
   "name": "ompass_rp_admin",
-  "version": "0.1.0(15)(2)",
+  "version": "0.1.0(16)",
   "proxy": "https://192.168.182.140:8084",
   "private": true,
   "dependencies": {
