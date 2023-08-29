@@ -39,11 +39,11 @@ const GuidePage = () => {
           justify='center'
         >
           <Col
-            xs={{ offset: 0 }} 
-            sm={{ offset: 0 }} 
-            md={{ offset: 1 }} 
-            lg={{ offset: 4 }}
-            xl={{ offset: 7 }}
+            // xs={{ offset: 0 }} 
+            // sm={{ offset: 0 }} 
+            // md={{ offset: 1 }} 
+            // lg={{ offset: 4 }}
+            // xl={{ offset: 7 }}
           >
             {/* windows 다운로드 */}
             <button
