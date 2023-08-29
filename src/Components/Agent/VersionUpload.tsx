@@ -105,7 +105,7 @@ const VersionUpload = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }:
                   const metaDataVersion = version.value;
                   const hashValue = hash.value;
                   const multipartFile = uploadFile.files[0];
-                  const maxFileSize = 100 * 1024 * 1024;
+                  const maxFileSize = 200 * 1024 * 1024;
                   const fileExtension = multipartFile?.name.split('.').pop();
                   
                   if(metaDataVersion) {
@@ -116,7 +116,7 @@ const VersionUpload = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }:
 
                   if(metaDataVersion && multipartFile && hashValue && !isVersionAlert && !isUploadingFile) {
                     if(multipartFile.size > maxFileSize) {
-                      message.error(formatMessage({ id: 'THE_FILE_SIZE_EXCEEDS_100MB' }));
+                      message.error(formatMessage({ id: 'THE_FILE_SIZE_EXCEEDS_200MB' }));
                     } else if(fileExtension !== 'zip') {
                       message.error(formatMessage({ id: 'ONLY_ZIP_FILES_CAN_BE_UPLOADED' }));
                     }  else {
@@ -134,7 +134,8 @@ const VersionUpload = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }:
                           multipartFile: multipartFile,
                         },
                         (err:any) => {
-                          message.error(formatMessage({ id: 'UPLOAD_FAILED' }));
+                          setIsUploadingFile(false);
+                          // message.error(formatMessage({ id: 'UPLOAD_FAILED' }));
                           if(err.response.data.code === 'ERR_001') {
                             navigate('/AutoLogout');
                           }
