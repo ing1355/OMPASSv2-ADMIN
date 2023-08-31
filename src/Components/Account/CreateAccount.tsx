@@ -10,11 +10,11 @@ import { useSelector } from 'react-redux';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
 import { Col, Row, message } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
-import { useWindowHeight } from 'Components/CustomComponents/useWindowHeight';
-import { CustomAxiosGet, CustomAxiosPost } from 'Components/CustomComponents/CustomAxios';
+import { useWindowHeight } from 'Components/CommonCustomComponents/useWindowHeight';
+import { CustomAxiosGet, CustomAxiosPost } from 'Components/CommonCustomComponents/CustomAxios';
 import { GetUsernameCheckApi, PostSignUpApi } from 'Constants/ApiRoute';
 import { autoHypenPhoneFun, CopyRightText } from 'Constants/ConstantValues';
-import { idRegex, koreanRegex, nameRegex, passwordRegex } from 'Components/CustomComponents/CommonRegex';
+import { idRegex, koreanRegex, nameRegex, passwordRegex } from 'Components/CommonCustomComponents/CommonRegex';
 
 type AgreePolicyType = 'agreeService' | 'agreePrivacyPolicy';
 

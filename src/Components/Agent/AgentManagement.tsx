@@ -1,12 +1,12 @@
 import './AgentManagement.css';
 import { FormattedMessage, useIntl } from "react-intl";
 import Header from "Components/Header/Header";
-import { useWindowHeightHeader } from 'Components/CustomComponents/useWindowHeight';
+import { useWindowHeightHeader } from 'Components/CommonCustomComponents/useWindowHeight';
 import { Link, useNavigate } from 'react-router-dom';
 import { Col, Pagination, PaginationProps, Popconfirm, Row, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { GetAgentApiArrayType, GetAgentApiDataType, GetAgentApiType } from 'Types/ServerResponseDataTypes';
-import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosGetFile, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from 'Components/CustomComponents/CustomAxios';
+import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosGetFile, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from 'Components/CommonCustomComponents/CustomAxios';
 import { DeleteAgentInstallerApi, GetAgentInstallerApi, GetAgentInstallerDownloadApi, PatchAgentInstallerApi, PostAgentInstallerUploadApi } from 'Constants/ApiRoute';
 
 import delete_icon from '../../assets/delete_icon.png';

@@ -1,7 +1,7 @@
 import './InformationList.css';
 import './Tab.css';
 import Header from "Components/Header/Header";
-import { useWindowHeightHeader } from 'Components/CustomComponents/useWindowHeight';
+import { useWindowHeightHeader } from 'Components/CommonCustomComponents/useWindowHeight';
 import { Link } from 'react-router-dom';
 import { CopyRightText } from 'Constants/ConstantValues';
 
@@ -14,7 +14,7 @@ import { ReduxStateType } from 'Types/ReduxStateTypes';
 import * as XLSX from 'xlsx';
 import { Pagination, message } from 'antd';
 import type { PaginationProps } from 'antd';
-import { CustomAxiosGet, CustomAxiosPost } from 'Components/CustomComponents/CustomAxios';
+import { CustomAxiosGet, CustomAxiosPost } from 'Components/CommonCustomComponents/CustomAxios';
 import { GetPutUsersApi, GetUsersCountApi, PostExcelUploadApi } from 'Constants/ApiRoute';
 import { GetPutUsersApiArrayType, GetPutUsersApiDataType, GetPutUsersApiType, GetUsersCountApiType, userRoleType } from 'Types/ServerResponseDataTypes';
 import { userUuidChange } from 'Redux/actions/userChange';

@@ -1,4 +1,4 @@
-import { useWindowHeightHeader } from 'Components/CustomComponents/useWindowHeight';
+import { useWindowHeightHeader } from 'Components/CommonCustomComponents/useWindowHeight';
 import './AdminsManagement.css';
 import Header from 'Components/Header/Header';
 import { FormattedMessage, useIntl } from 'react-intl';
@@ -7,7 +7,7 @@ import { GetPutUsersApiArrayType, GetPutUsersApiDataType, GetPutUsersApiType } f
 import { useEffect, useState} from 'react';
 
 import { message, Pagination, PaginationProps, Popconfirm } from 'antd';
-import { CustomAxiosDelete, CustomAxiosGet } from 'Components/CustomComponents/CustomAxios';
+import { CustomAxiosDelete, CustomAxiosGet } from 'Components/CommonCustomComponents/CustomAxios';
 import { DeleteUsersApi, GetPutUsersApi, } from 'Constants/ApiRoute';
 import { CopyRightText } from 'Constants/ConstantValues';
 

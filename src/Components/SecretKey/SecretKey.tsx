@@ -1,9 +1,9 @@
 import './SecretKey.css';
-import { useWindowHeightHeader } from "Components/CustomComponents/useWindowHeight";
+import { useWindowHeightHeader } from "Components/CommonCustomComponents/useWindowHeight";
 import Header from "Components/Header/Header";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useEffect, useState } from 'react';
-import { CustomAxiosGet, CustomAxiosPut } from "Components/CustomComponents/CustomAxios";
+import { CustomAxiosGet, CustomAxiosPut } from "Components/CommonCustomComponents/CustomAxios";
 import { GetPutSecretKeyApi } from "Constants/ApiRoute";
 import { GetPutSecretKeyApiType } from "Types/ServerResponseDataTypes";
 import { Col, Row, message } from "antd";

@@ -2,14 +2,14 @@ import './GuidePage.css';
 import { Col, Row } from 'antd';
 import { FormattedMessage, useIntl } from 'react-intl';
 import installerGuide from '../../assets/installerGuide.png';
-import { useWindowHeight } from 'Components/CustomComponents/useWindowHeight';
+import { useWindowHeight } from 'Components/CommonCustomComponents/useWindowHeight';
 
 import maunal_download_blue from '../../assets/maunal_download_blue.png';
 import download_icon from '../../assets/download_icon.png';
 import { CopyRightText } from 'Constants/ConstantValues';
 import { useState } from 'react';
-import { AgentFileDownload } from 'Components/CustomComponents/AgentFileDownload';
-import GoToLoginPageButton from 'Components/CustomComponents/goToLoginPageButton';
+import { AgentFileDownload } from 'Components/CommonCustomComponents/AgentFileDownload';
+import GoToLoginPageButton from 'Components/CommonCustomComponents/goToLoginPageButton';
 
 const GuidePage = () => {
   const height = useWindowHeight();

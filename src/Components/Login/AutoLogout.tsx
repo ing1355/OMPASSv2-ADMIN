@@ -3,7 +3,7 @@ import { FormattedMessage } from "react-intl";
 
 import ompass_logo_image from '../../assets/ompass_logo_image.png';
 import { Link } from 'react-router-dom';
-import GoToLoginPageButton from 'Components/CustomComponents/goToLoginPageButton';
+import GoToLoginPageButton from 'Components/CommonCustomComponents/goToLoginPageButton';
 
 const AutoLogout = () => {
 

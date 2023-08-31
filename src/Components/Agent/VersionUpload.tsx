@@ -1,10 +1,10 @@
 import './AgentManagement.css';
 import { FormattedMessage, useIntl } from "react-intl";
 import Header from "Components/Header/Header";
-import { useWindowHeightHeader } from 'Components/CustomComponents/useWindowHeight';
+import { useWindowHeightHeader } from 'Components/CommonCustomComponents/useWindowHeight';
 import { message } from 'antd';
 import { useEffect, useState } from 'react';
-import { CustomAxiosPost } from 'Components/CustomComponents/CustomAxios';
+import { CustomAxiosPost } from 'Components/CommonCustomComponents/CustomAxios';
 import { PostAgentInstallerUploadApi } from 'Constants/ApiRoute';
 import { CopyRightText } from 'Constants/ConstantValues';
 import { useNavigate } from 'react-router';

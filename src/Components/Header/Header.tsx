@@ -16,10 +16,10 @@ import download_icon_blue from '../../assets/download_icon_blue.png';
 import download_installer_icon from '../../assets/download_installer_icon.png';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { userInfoClear } from 'Redux/actions/userChange';
-import { CustomAxiosGetFile } from 'Components/CustomComponents/CustomAxios';
+import { CustomAxiosGetFile } from 'Components/CommonCustomComponents/CustomAxios';
 import { GetAgentInstallerDownloadApi } from 'Constants/ApiRoute';
 import { Col, Row, Tooltip, message } from 'antd';
-import { AgentFileDownload } from 'Components/CustomComponents/AgentFileDownload';
+import { AgentFileDownload } from 'Components/CommonCustomComponents/AgentFileDownload';
 
 const Header = () => {
   const { lang, userInfo } = useSelector((state: ReduxStateType) => ({

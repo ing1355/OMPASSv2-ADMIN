@@ -7,8 +7,8 @@ import { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { langChange } from 'Redux/actions/langChange';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
-import { useWindowHeight } from 'Components/CustomComponents/useWindowHeight';
-import { CustomAxiosGet, CustomAxiosGetFile, CustomAxiosPatch, CustomAxiosPost } from 'Components/CustomComponents/CustomAxios';
+import { useWindowHeight } from 'Components/CommonCustomComponents/useWindowHeight';
+import { CustomAxiosGet, CustomAxiosGetFile, CustomAxiosPatch, CustomAxiosPost } from 'Components/CommonCustomComponents/CustomAxios';
 import { GetAgentInstallerDownloadApi, PatchUsersResetPasswordApi, PostLoginApi } from 'Constants/ApiRoute';
 
 import { CopyRightText } from '../../Constants/ConstantValues';
@@ -26,8 +26,8 @@ import { GetAgentApiArrayType, GetAgentApiDataType, GetAgentApiType } from 'Type
 import { userInfoChange } from 'Redux/actions/userChange';
 import { useCookies } from 'react-cookie';
 import { LoadingOutlined } from '@ant-design/icons';
-import { passwordRegex } from 'Components/CustomComponents/CommonRegex';
-import { AgentFileDownload } from 'Components/CustomComponents/AgentFileDownload';
+import { passwordRegex } from 'Components/CommonCustomComponents/CommonRegex';
+import { AgentFileDownload } from 'Components/CommonCustomComponents/AgentFileDownload';
 
 
 const Login = () => {
