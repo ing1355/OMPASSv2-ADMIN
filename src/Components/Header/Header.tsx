@@ -19,6 +19,7 @@ import { userInfoClear } from 'Redux/actions/userChange';
 import { CustomAxiosGetFile } from 'Components/CustomHook/CustomAxios';
 import { GetAgentInstallerDownloadApi } from 'Constants/ApiRoute';
 import { Col, Row, Tooltip, message } from 'antd';
+import { AgentFileDownload } from 'Components/CustomHook/AgentFileDownload';
 
 const Header = () => {
   const { lang, userInfo } = useSelector((state: ReduxStateType) => ({
@@ -63,30 +64,30 @@ const Header = () => {
     };
   }, []);
 
-  const downloadAgentFileFun = () => {
-    CustomAxiosGetFile(
-      GetAgentInstallerDownloadApi,
-      (res:any) => {
-        const versionName = res.headers['content-disposition'].split(';').filter((str:any) => str.includes('filename'))[0].match(/filename="([^"]+)"/)[1];
-        const fileDownlaoadUrl = URL.createObjectURL(res.data);
-        const downloadLink = document.createElement('a');
-        downloadLink.href = fileDownlaoadUrl;
-        downloadLink.download = versionName;
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-        URL.revokeObjectURL(fileDownlaoadUrl);
-      },
-      {
-      },
-      () => {
-        message.error(formatMessage({ id: 'DOWNLOAD_FAILED' }));
-      },{},
-      (err:any) => {
-        setIsAgentFileDisable(false);
-      }
-    )
-  }
+  // const downloadAgentFileFun = () => {
+  //   CustomAxiosGetFile(
+  //     GetAgentInstallerDownloadApi,
+  //     (res:any) => {
+  //       const versionName = res.headers['content-disposition'].split(';').filter((str:any) => str.includes('filename'))[0].match(/filename="([^"]+)"/)[1];
+  //       const fileDownlaoadUrl = URL.createObjectURL(res.data);
+  //       const downloadLink = document.createElement('a');
+  //       downloadLink.href = fileDownlaoadUrl;
+  //       downloadLink.download = versionName;
+  //       document.body.appendChild(downloadLink);
+  //       downloadLink.click();
+  //       document.body.removeChild(downloadLink);
+  //       URL.revokeObjectURL(fileDownlaoadUrl);
+  //     },
+  //     {
+  //     },
+  //     () => {
+  //       message.error(formatMessage({ id: 'DOWNLOAD_FAILED' }));
+  //     },{},
+  //     (err:any) => {
+  //       setIsAgentFileDisable(false);
+  //     }
+  //   )
+  // }
 
   return (
     <div
@@ -230,9 +231,12 @@ const Header = () => {
                     width='25px'
                     height='25px'
                     style={{position: 'relative', top: '5px', cursor: 'pointer'}}
-                    onClick={()=>{
-                      setIsAgentFileDisable(true);
-                      downloadAgentFileFun();
+                    // onClick={()=>{
+                    //   setIsAgentFileDisable(true);
+                    //   downloadAgentFileFun();
+                    // }}
+                    onClick={() => {
+                      AgentFileDownload(setIsAgentFileDisable, formatMessage({ id: 'DOWNLOAD_FAILED' }))
                     }}
                   />
                 </li>
