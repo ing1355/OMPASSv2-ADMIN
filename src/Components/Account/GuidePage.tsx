@@ -1,18 +1,19 @@
 import './GuidePage.css';
-import { CustomAxiosGetFile } from 'Components/CustomHook/CustomAxios';
+import { CustomAxiosGetFile } from 'Components/CustomComponents/CustomAxios';
 import { GetAgentInstallerDownloadApi } from 'Constants/ApiRoute';
 import { Col, Row, message } from 'antd';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useNavigate } from 'react-router';
 import installerGuide from '../../assets/installerGuide.png';
-import { useWindowHeight } from 'Components/CustomHook/useWindowHeight';
+import { useWindowHeight } from 'Components/CustomComponents/useWindowHeight';
 
 import maunal_download_blue from '../../assets/maunal_download_blue.png';
 import download_icon from '../../assets/download_icon.png';
 import user_management_white from '../../assets/user_management_white.png';
 import { CopyRightText } from 'Constants/ConstantValues';
 import { useState } from 'react';
-import { AgentFileDownload } from 'Components/CustomHook/AgentFileDownload';
+import { AgentFileDownload } from 'Components/CustomComponents/AgentFileDownload';
+import GoToLoginPageButton from 'Components/CustomComponents/goToLoginPageButton';
 
 const GuidePage = () => {
   const height = useWindowHeight();
@@ -107,20 +108,10 @@ const GuidePage = () => {
               </button>            
             </a>
 
-            {/* 로그인하기 */}
-            <button
-              className='button-st4 common_button guide_page_login'
-              onClick={() => {
-                navigate('/');
-              }}
-            >
-              <img  
-                src={user_management_white}
-                width='32px'
-                style={{marginLeft: '4px', position: 'relative', top: '2px'}}
-              />
-              <span style={{position: 'relative', top: '-7px', margin: '0 10px 0 2px'}}><FormattedMessage id='LOGIN' /></span>
-            </button>
+            {/* 로그인 바로가기 */}
+            <GoToLoginPageButton 
+              className='button-st4 common_button guide_page_login' 
+            />
           </Col>
         </Row>
       </div>

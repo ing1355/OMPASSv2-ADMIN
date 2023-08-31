@@ -1,5 +1,5 @@
-import { CustomAxiosGet } from "Components/CustomHook/CustomAxios";
-import { useWindowHeightHeader } from "Components/CustomHook/useWindowHeight";
+import { CustomAxiosGet } from "Components/CustomComponents/CustomAxios";
+import { useWindowHeightHeader } from "Components/CustomComponents/useWindowHeight";
 import Header from "Components/Header/Header";
 import { GetPasscodeHistoriesApi } from "Constants/ApiRoute";
 import { CopyRightText } from "Constants/ConstantValues";

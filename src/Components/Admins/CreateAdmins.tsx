@@ -1,4 +1,4 @@
-import { useWindowHeightHeader } from 'Components/CustomHook/useWindowHeight';
+import { useWindowHeightHeader } from 'Components/CustomComponents/useWindowHeight';
 import './AdminsManagement.css';
 import Header from 'Components/Header/Header';
 import { FormattedMessage, useIntl } from 'react-intl';
@@ -6,14 +6,14 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useRef } from 'react';
 
 import { message } from 'antd';
-import { CustomAxiosGet, CustomAxiosPost } from 'Components/CustomHook/CustomAxios';
+import { CustomAxiosGet, CustomAxiosPost } from 'Components/CustomComponents/CustomAxios';
 import { GetUsernameCheckApi, PostSignUpApi } from 'Constants/ApiRoute';
 import { autoHypenPhoneFun, CopyRightText } from 'Constants/ConstantValues';
 
 import { useSelector } from 'react-redux';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
 import { InformationProps } from 'Types/PropsTypes';
-import { idRegex, nameRegex } from 'Components/CustomHook/CommonRegex';
+import { idRegex, nameRegex } from 'Components/CustomComponents/CommonRegex';
 
 const CreateAdmins = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }: InformationProps) => {
   const { userInfo } = useSelector((state: ReduxStateType) => ({

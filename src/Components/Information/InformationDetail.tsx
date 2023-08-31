@@ -3,9 +3,9 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Header from 'Components/Header/Header';
-import { useWindowHeightHeader }from 'Components/CustomHook/useWindowHeight';
+import { useWindowHeightHeader }from 'Components/CustomComponents/useWindowHeight';
 import { AllowedAccessUsersType, DevicesType, GetUsersDetailsApiType, OmpassInfoType, UserInfoType, UserType } from 'Types/ServerResponseDataTypes';
-import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPost, CustomAxiosPut } from 'Components/CustomHook/CustomAxios';
+import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPost, CustomAxiosPut } from 'Components/CustomComponents/CustomAxios';
 import { DeleteAccessUserApi, DeleteDeviceApi, DeletePasscodeApi, DeleteUsersApi, GetPutUsersApi, GetUsernameCheckApi, GetUsersDetailsApi, PostAccessUserApi, PostPutPasscodeApi, PutPasscodeApi } from 'Constants/ApiRoute';
 import { CopyRightText, autoHypenPhoneFun } from 'Constants/ConstantValues';
 import { useRef } from 'react';
@@ -39,7 +39,7 @@ import safari_img from '../../assets/safari_img.png';
 import safari_mobile_img from '../../assets/safari_mobile_img.png';
 import samsung_browser_mobile_img from '../../assets/samsung_browser_mobile_img.png';
 import alias_img from '../../assets/alias_img.png';
-import { nameRegex, passwordRegex } from 'Components/CustomHook/CommonRegex';
+import { nameRegex, passwordRegex } from 'Components/CustomComponents/CommonRegex';
 
 type adminIdType = {
   isAdmin: boolean,

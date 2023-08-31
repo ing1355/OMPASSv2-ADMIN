@@ -1,4 +1,4 @@
-import { useWindowHeightHeader } from 'Components/CustomHook/useWindowHeight';
+import { useWindowHeightHeader } from 'Components/CustomComponents/useWindowHeight';
 import './Main.css';
 import Header from 'Components/Header/Header';
 import { Link, useNavigate } from 'react-router-dom';
