@@ -1,14 +1,11 @@
 import './AutoLogout.css';
 import { FormattedMessage } from "react-intl";
-import { useNavigate } from 'react-router';
 
-import user_management_white from '../../assets/user_management_white.png';
 import ompass_logo_image from '../../assets/ompass_logo_image.png';
 import { Link } from 'react-router-dom';
 import GoToLoginPageButton from 'Components/CustomComponents/goToLoginPageButton';
 
 const AutoLogout = () => {
-  const navigate = useNavigate();
 
   return(
     <div className='auto_logout_body'>
