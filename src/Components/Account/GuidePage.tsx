@@ -73,7 +73,7 @@ const GuidePage = () => {
               // }}
 
               onClick={() => {
-                AgentFileDownload(setIsFileDownloadDisable, formatMessage({ id: 'DOWNLOAD_FAILED' }))
+                AgentFileDownload(setIsFileDownloadDisable, formatMessage({ id: 'DOWNLOAD_FAILED' }));
               }}
             >
               <img src={download_icon}

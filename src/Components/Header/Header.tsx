@@ -236,7 +236,7 @@ const Header = () => {
                     //   downloadAgentFileFun();
                     // }}
                     onClick={() => {
-                      AgentFileDownload(setIsAgentFileDisable, formatMessage({ id: 'DOWNLOAD_FAILED' }))
+                      AgentFileDownload(setIsAgentFileDisable, formatMessage({ id: 'DOWNLOAD_FAILED' }));
                     }}
                   />
                 </li>
