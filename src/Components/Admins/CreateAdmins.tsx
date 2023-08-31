@@ -53,7 +53,7 @@ const CreateAdmins = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }: 
               style={{display: 'flex'}}
             >
               <h1>
-                <FormattedMessage id='ADMIN_LIST' />
+                <FormattedMessage id='ADMIN_REGISTRATION' />
               </h1>
             </div>
           </div>
@@ -155,7 +155,6 @@ const CreateAdmins = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }: 
                     <button
                       type='button'
                       className={'button-st1 create_account_id_check ' + (!isIdAlert && userIdRef.current?.value ? 'active' : '')}
-                      style={{fontSize: '1.15vh', fontWeight: '500'}}
                       onClick={() => {
                         const username = userIdRef.current?.value;
 

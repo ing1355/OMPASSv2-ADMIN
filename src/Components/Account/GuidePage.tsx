@@ -83,7 +83,7 @@ const GuidePage = () => {
                 width='25px'
                 style={{position: 'relative', top: '1px', marginLeft: '9px'}}
               />
-              <span style={{position: 'relative', top: '-6px', margin: '0 12px 0 6px'}}>{isFileDownloadDisable ? <FormattedMessage id='DOWNLOADING'/> :<FormattedMessage id='DOWNLOAD_FOR_WINDOWS' />}</span>  
+              <span style={{position: 'relative', top: '-4px', margin: '0 12px 0 6px'}}>{isFileDownloadDisable ? <FormattedMessage id='DOWNLOADING'/> :<FormattedMessage id='DOWNLOAD_FOR_WINDOWS' />}</span>  
             </button>
 
             {/* 사용자 매뉴얼 다운로드 */}
@@ -103,7 +103,7 @@ const GuidePage = () => {
                   width="25px"
                   style={{position: 'relative', top: '2px', marginLeft: '5px'}}
                 />
-                <span style={{position: 'relative', top: '-5px', margin: '0 9px 0 4px'}}><FormattedMessage id='DOWNLOAD_USER_MANUAL' /></span>
+                <span style={{position: 'relative', top: '-4px', margin: '0 9px 0 4px'}}><FormattedMessage id='DOWNLOAD_USER_MANUAL' /></span>
               </button>            
             </a>
 
@@ -119,7 +119,7 @@ const GuidePage = () => {
                 width='32px'
                 style={{marginLeft: '4px', position: 'relative', top: '2px'}}
               />
-              <span style={{position: 'relative', top: '-8px', margin: '0 10px 0 2px'}}><FormattedMessage id='LOGIN' /></span>
+              <span style={{position: 'relative', top: '-7px', margin: '0 10px 0 2px'}}><FormattedMessage id='LOGIN' /></span>
             </button>
           </Col>
         </Row>
