@@ -185,27 +185,27 @@ const CreateAccount = () => {
                 className='mb40'
               >
                 <input 
-                  className='mr10'
+                  className='mr10 cursor-pointer'
                   type='checkbox'
                   name="allSelect"
                   id="allSelect"
                   onChange={handleAllChecked}
                   checked={selectAll}              
                 />
-                <span><FormattedMessage id='AGREE_POLICY_ALL' /></span>
+                <label htmlFor='allSelect' className='cursor-pointer'><FormattedMessage id='AGREE_POLICY_ALL' /></label>
               </div>
               <div
                 className='mb40'
               >
                 <input 
-                  className='mr10 mb10'
+                  className='mr10 mb10 cursor-pointer'
                   type='checkbox'
                   name='agreeService'
                   id='agreeService'
                   onChange={handleSingleChecked}
                   checked={checkBoxes.find(cb => cb.name === 'agreeService')?.isChecked || false}
                 />
-                <span><FormattedMessage id='AGREE_SERVICE' /></span>
+                <label htmlFor='agreeService' className='cursor-pointer'><FormattedMessage id='AGREE_SERVICE' /></label>
                 <div
                   className='create_account_text_box mt8 text-box-st1'
                 >
@@ -273,14 +273,14 @@ const CreateAccount = () => {
                 className='mb50'
               >
                 <input 
-                  className='mr10 mb10'
+                  className='mr10 mb10 cursor-pointer'
                   type='checkbox'
                   name='agreePrivacyPolicy'
                   id='agreePrivacyPolicy'
                   onChange={handleSingleChecked}
                   checked={checkBoxes.find(cb => cb.name === 'agreePrivacyPolicy')?.isChecked || false}
                 />
-                <span><FormattedMessage id='AGREE_PRIVACY_POLICY' /></span>
+                <label htmlFor='agreePrivacyPolicy' className='cursor-pointer' style={{position: 'relative', top: '-4px'}}><FormattedMessage id='AGREE_PRIVACY_POLICY' /></label>
                 <div
                   className='create_account_text_box mt8 text-box-st1'
                 >
