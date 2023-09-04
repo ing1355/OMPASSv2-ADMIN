@@ -24,7 +24,7 @@ const LocaleTexts = {
     REGISTRATION_INFORMATION: 'Registration Information',
     REGISTRATION_INFORMATION_LIST: 'Registration Information List',
     SEARCH: 'Search',
-    DEVICE_INFORMATION: 'Device Information',
+    DEVICE_INFORMATION: 'Registered Device Information',
     ACTIVE: 'Active',
     INACTIVE: 'Inactive',
     LAST_LOGIN: 'Last Login',
@@ -205,6 +205,7 @@ const LocaleTexts = {
     CLOSE: 'Close',
     ALIAS: 'Alias',
     OMPASS_PORTAL_SERVER_URL: 'OMPASS Portal Server URL',
+    CLEAR_DEVICE: 'Clear',
   },
   'ko': {
     LOGIN: '로그인',
@@ -231,7 +232,7 @@ const LocaleTexts = {
     REGISTRATION_INFORMATION: '등록 정보',
     REGISTRATION_INFORMATION_LIST: '등록 정보 조회',
     SEARCH: '검색',
-    DEVICE_INFORMATION: '장치 정보',
+    DEVICE_INFORMATION: '등록 장치 정보',
     ACTIVE: '활성화',
     INACTIVE: '비활성화',
     LAST_LOGIN: '마지막 로그인',
@@ -412,6 +413,7 @@ const LocaleTexts = {
     CLOSE: '닫기',
     ALIAS: '별칭',
     OMPASS_PORTAL_SERVER_URL: 'OMPASS Portal 서버 URL',
+    CLEAR_DEVICE: '등록 해제',
   }
 }
 

@@ -557,7 +557,9 @@ const InformationDetail = () => {
                         updatedOpenDeviceDelete[index] = true;
                         setOpenDeviceDelete(updatedOpenDeviceDelete);
                       }}
-                    ><FormattedMessage id='DELETE' /></button>
+                    >
+                      <FormattedMessage id='CLEAR_DEVICE' />
+                    </button>
                   </Popconfirm>
                 }
                 {role === 'ADMIN' && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
@@ -601,7 +603,9 @@ const InformationDetail = () => {
                         updatedOpenDeviceDelete[index] = true;
                         setOpenDeviceDelete(updatedOpenDeviceDelete);
                       }}
-                    ><FormattedMessage id='DELETE' /></button>
+                    >
+                      <FormattedMessage id='CLEAR_DEVICE' />
+                    </button>
                   </Popconfirm>
                 }
               </div>
