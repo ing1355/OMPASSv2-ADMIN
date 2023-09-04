@@ -396,8 +396,7 @@ const Login = () => {
       className='login_footer content-center'
     >
       <div
-        className='mb10'
-        style={{fontSize: "1.4vh"}}
+        className='mb10 login_footer_font'
       >
         <img className='login_footer_locale_img' src={locale_image} />
         <span 

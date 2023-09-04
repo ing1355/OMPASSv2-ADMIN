@@ -1,19 +1,32 @@
 import './GuidePage.css';
-import { Col, Row } from 'antd';
-import { FormattedMessage, useIntl } from 'react-intl';
-import installerGuide from '../../assets/installerGuide.png';
-import { useWindowHeight } from 'Components/CommonCustomComponents/useWindowHeight';
 
-import maunal_download_blue from '../../assets/maunal_download_blue.png';
-import download_icon from '../../assets/download_icon.png';
-import { CopyRightText } from 'Constants/ConstantValues';
 import { useState } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { Col, Row } from 'antd';
+import { ReduxStateType } from 'Types/ReduxStateTypes';
+import { useWindowHeight } from 'Components/CommonCustomComponents/useWindowHeight';
+import { CopyRightText } from 'Constants/ConstantValues';
 import { AgentFileDownload } from 'Components/CommonCustomComponents/AgentFileDownload';
 import GoToLoginPageButton from 'Components/CommonCustomComponents/goToLoginPageButton';
 
+import maunal_download_blue from '../../assets/maunal_download_blue.png';
+import download_icon from '../../assets/download_icon.png';
+import installerGuide from '../../assets/installerGuide.png';
+import quick_start_guide_en from '../../assets/quick_start_guide_en.png';
+import quick_start_guide_ko from '../../assets/quick_start_guide_ko.png';
+import locale_image from '../../assets/locale_image.png';
+import { langChange } from 'Redux/actions/langChange';
+
 const GuidePage = () => {
+  const { lang } = useSelector((state: ReduxStateType) => ({
+    lang: state.lang,
+  }));
+
   const height = useWindowHeight();
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
 
   const [isFileDownloadDisable, setIsFileDownloadDisable] = useState<boolean>(false);
 
@@ -29,7 +42,7 @@ const GuidePage = () => {
           // align='bottom'
         >
           <img 
-            src={installerGuide}
+            src={lang === 'ko' ? quick_start_guide_ko : quick_start_guide_en}
             width='75%'
           />
         </Row>
@@ -45,7 +58,7 @@ const GuidePage = () => {
           >
             {/* windows 다운로드 */}
             <button
-              className='button-st3 common_button guide_page_windows_download'
+              className={'button-st3 common_button guide_page_windows_download ' + (lang === 'en' ? 'en' : '')}
               // onClick={() => {
               //   setIsFileDownloadDisable(true);
               //   CustomAxiosGetFile(
@@ -112,10 +125,34 @@ const GuidePage = () => {
         </Row>
       </div>
       <div
-        className='copyRight-style mb30'
-        style={{marginTop: '70px'}}
+        className='login_footer content-center'
       >
-        {CopyRightText}
+        <div
+          className='mb10 login_footer_font'
+        >
+          <img className='login_footer_locale_img' src={locale_image} />
+          <span 
+            className={'mlr5 locale-toggle' + (lang === 'ko' ? ' active' : '')}
+            onClick={() => {
+              dispatch(langChange('ko'));
+              localStorage.setItem('locale','ko');
+            }}
+          >KO</span>|
+          <span 
+            className={'mlr5 locale-toggle' + (lang === 'en' ? ' active' : '')}
+            style={{marginRight: '12px'}}
+            onClick={() => {
+              dispatch(langChange('en'));
+              localStorage.setItem('locale','en');
+            }}
+          >EN</span>
+        </div>
+        <div
+          className='copyRight-style'
+          style={{fontSize: "1.1vh"}}
+        >
+          {CopyRightText}
+        </div>
       </div>
     </div>
   )
