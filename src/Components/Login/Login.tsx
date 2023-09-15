@@ -183,7 +183,7 @@ const Login = () => {
     >
     <div
       className='login_container'
-      style={{minHeight: `${height - 190}px`}}
+      style={{minHeight: `${height - 130}px`}}
       // style={{minHeight: '87vh'}}
     >
 
@@ -194,8 +194,7 @@ const Login = () => {
         <Col>
           <img 
             src={ompass_logo_image} 
-            width="15%"
-            // style={{maxWidth: '65%'}}
+            className='login_ompass_log_img'
           />
           <span 
             className='main-color1 login_logo_title'
@@ -223,7 +222,7 @@ const Login = () => {
           >
             <img 
               src={login_main_image}
-              style={{maxWidth: '77%'}}
+              className='login-main-img'
             />
             {windowWidth <= 785 ?
             <></>
@@ -265,7 +264,7 @@ const Login = () => {
                 }}
               >
                 <img src={download_icon} style={{maxWidth: '14%'}}/>
-                <span style={{position: 'relative', top: '-7px', marginLeft: '7px'}}><FormattedMessage id='DOWNLOAD_FOR_WINDOWS' /></span> 
+                <span className='login_download_button_title'><FormattedMessage id='DOWNLOAD_FOR_WINDOWS' /></span> 
               </button>
               }
             </div>
@@ -321,7 +320,10 @@ const Login = () => {
                     setIdChange(e.currentTarget.value);
                   }}
                 />
-                <img src={login_id} width='30px' style={{position: 'relative', top: '-41px', left: '20px'}}/>
+                <img 
+                  src={login_id} 
+                  className='login_input_img'
+                />
               </div>
               <div
                 className='mb10 login_input_container'
@@ -336,7 +338,10 @@ const Login = () => {
                     setPasswordChange(e.currentTarget.value);
                   }}
                 />
-                <img src={login_password} width='30px' style={{position: 'relative', top: '-41px', left: '20px'}}/>
+                <img 
+                  src={login_password} 
+                  className='login_input_img'
+                />
               </div>
               <div
                 className='dis_flex mb10'
@@ -344,13 +349,13 @@ const Login = () => {
                 {/* 아이디 저장 */}
                 <div>
                   <input id='saveId' type='checkbox' className='mr10' onChange={saveIdCookieFun} checked={isRemember}/>
-                  <label htmlFor='saveId' style={{cursor: 'pointer', position: 'relative', top: '-2px'}}><FormattedMessage id='SAVE_ID' /></label>
+                  <label htmlFor='saveId' style={{cursor: 'pointer', position: 'relative', top: '-1px'}}><FormattedMessage id='SAVE_ID' /></label>
                 </div>
 
                 {/* 패스코드로 로그인 */}
                 <div
                   className='main-color1'
-                  style={{cursor: 'pointer', paddingTop: '1.5px'}}
+                  style={{cursor: 'pointer', position: 'relative', top: '4px'}}
                   onClick={() => {
                     setIsPasscodeModalOpen(true);
                   }}
@@ -425,8 +430,7 @@ const Login = () => {
       </a>
       </div>
       <div
-        className='copyRight-style'
-        style={{fontSize: "1.1vh"}}
+        className='copyRight-style login-copyright'
       >
         {CopyRightText}
       </div>
