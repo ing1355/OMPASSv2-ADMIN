@@ -78,7 +78,7 @@
 
 .login_form_title {
   font-weight: 900;
-  font-size: 1.9rem;
+  font-size: 2.1rem;
 }
 
 .login_input_container {
@@ -201,6 +201,9 @@
   
 @media (min-width:1024px) and (max-width:1279px) {
   /* 타블렛 가로 */
+  .login_form_container { 
+    margin: 5%;
+  }
   .login_footer_locale_img {
     width: 13.1px;
   }

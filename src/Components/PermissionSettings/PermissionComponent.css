@@ -1,0 +1,33 @@
+.permission_component_menu_container {
+  display: flex;
+  border-bottom: 1.3px dashed #ccc;
+  padding: 10px;
+}
+
+.permission_component_menu_container.noline {
+  border: none;
+}
+
+.permission_component_menu_item {
+  width: 180px;
+  padding-top: 2.5px;
+}
+
+.permission_component_checkbox_label {
+  margin-left: 6px;
+}
+
+.permission_component_checkbox_label.title {
+/*  */
+}
+
+.permission_component_all_checkbox_container {
+  width: 950px;
+  border-left: 1px solid #ccc;
+  padding-top: 1.5px;
+}
+
+.permission_component_checkbox_container {
+  margin: 1px 10px;
+  display: inline-block;
+}

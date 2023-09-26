@@ -518,9 +518,9 @@ const InformationDetail = () => {
 
                 {role === 'SUPER_ADMIN' &&
                   <Popconfirm
-                    title={formatMessage({ id: 'DELETE_DEVICE' })}
-                    description={formatMessage({ id: 'CONFIRM_DELETE_DEVICE' })}
-                    okText={formatMessage({ id: 'DELETE' })}
+                    title={formatMessage({ id: 'UNREGISTER_DEVICE' })}
+                    description={formatMessage({ id: 'CONFIRM_UNREGISTER_DEVICE' })}
+                    okText={formatMessage({ id: 'CLEAR_DEVICE' })}
                     cancelText={formatMessage({ id: 'CANCEL' })}
                     open={openDeviceDelete[index]}
                     onConfirm={() => {
@@ -531,7 +531,7 @@ const InformationDetail = () => {
                           updatedOpenDeviceDelete[index] = false;
                           setOpenDeviceDelete(updatedOpenDeviceDelete);
 
-                          message.success(formatMessage({ id: 'DEVICE_DELETE' }));
+                          message.success(formatMessage({ id: 'DEVICE_UNREGISTER' }));
 
                           const render = rendering;
                           const renderTemp = render.concat(true);
@@ -564,9 +564,9 @@ const InformationDetail = () => {
                 }
                 {role === 'ADMIN' && ((adminIdInfo.isAdmin && adminIdInfo.adminId === userId) || userData?.role === 'USER')  &&
                   <Popconfirm
-                    title={formatMessage({ id: 'DELETE_DEVICE' })}
-                    description={formatMessage({ id: 'CONFIRM_DELETE_DEVICE' })}
-                    okText={formatMessage({ id: 'DELETE' })}
+                    title={formatMessage({ id: 'UNREGISTER_DEVICE' })}
+                    description={formatMessage({ id: 'CONFIRM_UNREGISTER_DEVICE' })}
+                    okText={formatMessage({ id: 'CLEAR_DEVICE' })}
                     cancelText={formatMessage({ id: 'CANCEL' })}
                     open={openDeviceDelete[index]}
                     onConfirm={() => {
@@ -577,7 +577,7 @@ const InformationDetail = () => {
                           updatedOpenDeviceDelete[index] = false;
                           setOpenDeviceDelete(updatedOpenDeviceDelete);
 
-                          message.success(formatMessage({ id: 'DEVICE_DELETE' }));
+                          message.success(formatMessage({ id: 'DEVICE_UNREGISTER' }));
 
                           const render = rendering;
                           const renderTemp = render.concat(true);

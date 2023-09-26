@@ -18,6 +18,7 @@ import Admins from 'Components/Admins/Admins';
 import Agent from 'Components/Agent/Agent';
 import GuidePage from 'Components/Account/GuidePage';
 import AutoLogout from 'Components/Login/AutoLogout';
+import PermissionSettings from 'Components/PermissionSettings/PermissionSettings';
 
 const App: React.FC = () => {
   const { lang, userInfo } = useSelector((state: ReduxStateType) => ({
@@ -54,6 +55,7 @@ const App: React.FC = () => {
             <Route path='/' element={<Login />} />
             <Route path='/GuidePage' element={<GuidePage />} />
             <Route path='/AutoLogout' element={<AutoLogout />} />
+            <Route path='/PermissionSettings' element={<PermissionSettings />} />
           </>
         }
       </Routes>

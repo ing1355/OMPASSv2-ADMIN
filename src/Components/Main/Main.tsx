@@ -215,7 +215,6 @@ const Main = () => {
           {CopyRightText}
         </div>
       </div>
-
     </>
   )
 }

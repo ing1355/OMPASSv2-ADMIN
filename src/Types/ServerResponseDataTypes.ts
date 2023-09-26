@@ -140,3 +140,52 @@ type deviceSimpleType = {
   deviceType: string,
   macAddress: string,
 }
+
+export type GetPermissionsSettingApiType = {
+  SUPER_ADMIN: SUPER_AND_ADMIN_Type,
+  ADMIN: SUPER_AND_ADMIN_Type,
+  USER: USER_Type,
+}
+
+type SUPER_AND_ADMIN_Type = {
+  userMgmt: userMgmtType,
+  adminMgmt: adminMgmtType,
+  versionMgmt: versionMgmtType,
+  passcodeMgmt: passcodeMgmtType,
+  settingMgmt: settingMgmtType,
+}
+
+type USER_Type = {
+  userMgmt: userMgmtType,
+}
+
+type userMgmtType = {
+  modifyUserInfo: boolean,
+  deleteUserInfo: boolean,
+  unRegisterDevice: boolean,
+  createPasscode: boolean,
+  deletePasscode: boolean,
+}
+
+type adminMgmtType = {
+  accessAdminPage: boolean,
+  registerAdmin: boolean,
+  deleteAdmin: boolean,
+}
+
+type versionMgmtType = {
+  accessVersionPage: boolean,
+  uploadFile: boolean,
+  deleteVersion: boolean,
+  currentTarget: boolean,
+}
+
+type passcodeMgmtType = {
+  accessPasscodePage: boolean,
+}
+
+type settingMgmtType = {
+  accessSettingPage: boolean,
+  modifySecretKey: boolean,
+  modifyUrl: boolean,
+}
