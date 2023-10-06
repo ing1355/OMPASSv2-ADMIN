@@ -1,3 +1,5 @@
+import { userRoleType } from "./ServerResponseDataTypes";
+
 export type DefaultReduxActionType<T> = {
   type: string;
   payload: T;
@@ -6,9 +8,10 @@ export type DefaultReduxActionType<T> = {
 type LanguageStateType = "ko" | "en";
 
 export type UserInfoDetailType = {
-  uuid: string
-  userId: string
-  role: 'ADMIN' | 'USER' | 'SUPER_ADMIN' | null
+  uuid: string;
+  userId: string;
+  // role: 'ADMIN' | 'USER' | 'SUPER_ADMIN' | null;
+  role: userRoleType;
 }
 
 export type ReduxStateType = {

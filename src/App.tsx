@@ -55,7 +55,7 @@ const App: React.FC = () => {
             <Route path='/' element={<Login />} />
             <Route path='/GuidePage' element={<GuidePage />} />
             <Route path='/AutoLogout' element={<AutoLogout />} />
-            <Route path='/PermissionSettings' element={<PermissionSettings />} />
+            {/* <Route path='/PermissionSettings' element={<PermissionSettings />} /> */}
           </>
         }
       </Routes>

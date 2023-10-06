@@ -222,6 +222,7 @@ const LocaleTexts = {
     accessSettingPage: 'Access OMPASS settings page',
     modifySecretKey: 'Modify secret key',
     modifyUrl: 'Modify url',
+    permissionSettings: 'Permission settings',
   },
   'ko': {
     LOGIN: '로그인',
@@ -311,7 +312,7 @@ const LocaleTexts = {
     CREATE: '생성',
     CANCEL: '취소',
     UNREGISTER_DEVICE: '장치 등록 해제',
-    CONFIRM_UNREGISTER_DEVICE: '장치 등록을 해제하시겠습니까?',
+    CONFIRM_UNREGISTER_DEVICE: '등록된 장치를 해제하시겠습니까?',
     LOGIN_ENV: '로그인 환경',
     AUTH_DEVICE_NOT_FOUND: '인증장치를 찾을 수 없습니다',
     PLEASE_ENTER_A_CODE: '코드를 입력해주세요',
@@ -446,6 +447,7 @@ const LocaleTexts = {
     accessSettingPage: 'OMPASS 설정 접근',
     modifySecretKey: '비밀키 수정',
     modifyUrl: 'url 수정',
+    permissionSettings: '권한 설정',
   }
 }
 

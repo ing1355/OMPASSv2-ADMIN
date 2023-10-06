@@ -13,6 +13,7 @@ import dont_look_password from '../../assets/dont_look_password.png';
 import { useSelector } from "react-redux";
 import { ReduxStateType } from "Types/ReduxStateTypes";
 import { useNavigate } from "react-router";
+import { error1Fun } from "Components/CommonCustomComponents/CommonFunction";
 
 const PasscodeManagement = () => {
   const { lang } = useSelector((state: ReduxStateType) => ({
@@ -42,9 +43,10 @@ const PasscodeManagement = () => {
         page_size: tableCellSize,
         page: pageNum -1,
       }, (err:any) => {
-        if(err.response.data.code === 'ERR_001') {
-          navigate('/AutoLogout');
-        }
+        error1Fun(err, navigate);
+        // if(err.response.data.code === 'ERR_001') {
+        //   navigate('/AutoLogout');
+        // }
       }
     )
   },[tableCellSize, pageNum])

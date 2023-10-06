@@ -9,6 +9,7 @@ import { GetPutSecretKeyApiType } from "Types/ServerResponseDataTypes";
 import { Col, Row, message } from "antd";
 import { CopyRightText } from "Constants/ConstantValues";
 import { useNavigate } from 'react-router';
+import { error1Fun } from 'Components/CommonCustomComponents/CommonFunction';
 
 const SecretKey = () => {
   const height = useWindowHeightHeader();
@@ -34,9 +35,10 @@ const SecretKey = () => {
         setPortalServerData(data.ompassPortalServer);
       }, {},
       (err:any) => {
-        if(err.response.data.code === 'ERR_001') {
-          navigate('/AutoLogout');
-        }
+        error1Fun(err, navigate);
+        // if(err.response.data.code === 'ERR_001') {
+        //   navigate('/AutoLogout');
+        // }
       }
     )
   },[])
@@ -111,9 +113,10 @@ const SecretKey = () => {
                       },
                       (err:any) => {
                         message.error(formatMessage({ id: 'SECRET_KEY_MODIFY_Fail' }));
-                        if(err.response.data.code === 'ERR_001') {
-                          navigate('/AutoLogout');
-                        }
+                        error1Fun(err, navigate);
+                        // if(err.response.data.code === 'ERR_001') {
+                        //   navigate('/AutoLogout');
+                        // }
                       }
                     )
                   }
@@ -202,9 +205,10 @@ const SecretKey = () => {
                       },
                       (err:any) => {
                         message.error(formatMessage({ id: 'API_SERVER_URL_MODIFY_Fail' }));
-                        if(err.response.data.code === 'ERR_001') {
-                          navigate('/AutoLogout');
-                        }
+                        error1Fun(err, navigate);
+                        // if(err.response.data.code === 'ERR_001') {
+                        //   navigate('/AutoLogout');
+                        // }
                       }
                     )
                   }
@@ -293,9 +297,10 @@ const SecretKey = () => {
                       },
                       (err:any) => {
                         message.error(formatMessage({ id: 'SOCKET_SERVER_URL_MODIFY_Fail' }));
-                        if(err.response.data.code === 'ERR_001') {
-                          navigate('/AutoLogout');
-                        }
+                        error1Fun(err, navigate);
+                        // if(err.response.data.code === 'ERR_001') {
+                        //   navigate('/AutoLogout');
+                        // }
                       }
                     )
                   }
@@ -384,9 +389,10 @@ const SecretKey = () => {
                       },
                       (err:any) => {
                         message.error(formatMessage({ id: 'PORTAL_SERVER_URL_MODIFY_Fail' }));
-                        if(err.response.data.code === 'ERR_001') {
-                          navigate('/AutoLogout');
-                        }
+                        error1Fun(err, navigate);
+                        // if(err.response.data.code === 'ERR_001') {
+                        //   navigate('/AutoLogout');
+                        // }
                       }
                     )
                   }

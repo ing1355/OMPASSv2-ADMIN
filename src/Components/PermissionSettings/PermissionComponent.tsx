@@ -4,20 +4,19 @@ import { FormattedMessage } from 'react-intl';
 import { useEffect, useState, ChangeEvent } from 'react';
 import { CustomAxiosGet } from 'Components/CommonCustomComponents/CustomAxios';
 import { GetPatchPermissionsSettingApi } from 'Constants/ApiRoute';
-import { GetPermissionsSettingApiType } from 'Types/ServerResponseDataTypes';
+import { GetPermissionsSettingApiType, userRoleType } from 'Types/ServerResponseDataTypes';
 
-type roleType = 'SUPER_ADMIN' | 'ADMIN' | 'USER';
 type menuType = 'userMgmt' | 'adminMgmt' | 'versionMgmt' | 'passcodeMgmt' | 'settingMgmt';
 
 type selectCheckboxType = {
-  role: roleType;
+  role: userRoleType;
   menu: menuType;
   name: string;
   isChecked: boolean;
 }
 
 type allselectCheckboxType = {
-  role: roleType;
+  role: userRoleType;
   menu: menuType;
   isChecked: boolean;
 }
@@ -121,7 +120,7 @@ const allCheckItem = s_allCheck.concat(
   }
 )
 
-const PermissionComponent = ({ roleType }: { roleType: roleType }) => {
+const PermissionComponent = ({ roleType }: { roleType: userRoleType }) => {
   const [allCheck, setAllCheck] = useState<allselectCheckboxType[]>(allCheckItem);
   const [selectCheckbox, setSelectCheckbox] = useState<selectCheckboxType[]>(selectCheckboxItem);
   
@@ -165,7 +164,7 @@ const PermissionComponent = ({ roleType }: { roleType: roleType }) => {
 
   }
 
-  const permissionCheckboxFun = (roleType: roleType) => {
+  const permissionCheckboxFun = (roleType: userRoleType) => {
     const s_MenuTemp = [...new Set(selectCheckbox.filter((data) => data.role === 'SUPER_ADMIN').map((d) => d.menu))];
     const a_MenuTemp = [...new Set(selectCheckbox.filter((data) => data.role === 'ADMIN').map((d) => d.menu))];
     const u_MenuTemp = [...new Set(selectCheckbox.filter((data) => data.role === 'USER').map((d) => d.menu))];

@@ -31,6 +31,7 @@ import browser_icon from '../../assets/browser_icon.png';
 import os_windows from '../../assets/os_windows.png';
 import os_mac from '../../assets/os_mac.png';
 import { InformationProps, listType, searchOsType, sortingInfoType, sortingNowType, sortingType } from 'Types/PropsTypes';
+import { error1Fun } from 'Components/CommonCustomComponents/CommonFunction';
 
 const TabMenu = styled.ul`
   // background-color: #dcdcdc;
@@ -146,7 +147,7 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
         setIsSearchDropdownOpen(false);
       }
     };
-  
+
     useEffect(() => {
       document.addEventListener('mousedown', searchHandleMouseDown);
       return () => {
@@ -212,9 +213,10 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
           language: lang === 'ko' ? 'KR' : 'EN',
         },
         (err:any) => {
-          if(err.response.data.code === 'ERR_001') {
-            navigate('/AutoLogout');
-          }
+          error1Fun(err, navigate);
+          // if(err.response.data.code === 'ERR_001') {
+          //   navigate('/AutoLogout');
+          // }
         }
       );
   
@@ -241,13 +243,61 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
           },
           (err:any) => {
             message.error(formatMessage({ id: 'EXCEL_FILE_UPLOAD_FAILED' }));
-            if(err.response.data.code === 'ERR_001') {
-              navigate('/AutoLogout');
-            }
+            error1Fun(err, navigate);
+            // if(err.response.data.code === 'ERR_001') {
+            //   navigate('/AutoLogout');
+            // }
           }
         )
       }
     },[excelData]);
+
+    function roleTypeFun(role: userRoleType) {
+      if(role !== null) {
+        return <FormattedMessage id={role as string} />
+      }
+    }
+
+    function searchTypeFun(search: listType) {
+      if(search !== null) {
+        if(search === 'role') {
+          return <FormattedMessage id='RANK' />
+        } else {
+          return <FormattedMessage id={search as string} />
+        }
+      }
+    }
+
+    function dropdownUl100Fun() {
+      const searchTypeArr:listType[] = ['all', 'role', 'username', 'os', 'enable_passcode_count'];
+
+      return (
+        searchTypeArr.map((data:listType) => {
+          return (
+            <li key={'search_type_arr_' + data}>
+              <div
+                onClick={() => {
+                  setSearchType(data);
+                  setIsSearchDropdownOpen(false);
+                  setSearchOsInfo(null);
+                  setIsTypeDropdownOpen(false);
+                  setSearchTypeInfo(null);
+                }}
+              >
+                {data === 'role' ? 
+                  <FormattedMessage id='RANK' />
+                :
+                  data === 'enable_passcode_count' ?
+                    <>PASSCODE</>
+                    :
+                    <FormattedMessage id={data as string} />
+                }
+              </div>
+            </li>
+          )
+        })
+      )
+    }
   
     const selectMenuHandler = (name: string, index: number) => {
       clickTab(index);
@@ -289,63 +339,36 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
     }
   
     const sortingUlFun = (listType: listType, index: number) => {
+      const sortingArr:sortingType[] = ['none', 'asc', 'desc'];
+
       return (
         <ul
           className={'dropdown-ul-' + index + ' tab_table_sorting_dropdown ' + listType}
           ref={ (el) => (sortingUlFunRefs.current[index] = el) }
         >
-          <li>
-            <div
-              onClick={() => {
-                setSortingInfo({
-                  list: listType,
-                  sorting: 'none',
-                  isToggle: false,
-                });
-                setSortingNow({
-                  list: listType,
-                  sorting: 'none',
-                });
-              }}
-            >
-              <FormattedMessage id='UNSORTED' />
-            </div>
-          </li>
-          <li>
-            <div
-              onClick={() => {
-                console.log('listType',listType)
-                setSortingInfo({
-                  list: listType,
-                  sorting: 'asc',
-                  isToggle: false,
-                });
-                setSortingNow({
-                  list: listType,
-                  sorting: 'asc',
-                });
-              }}
-            >
-              <FormattedMessage id='ASCENDING' />
-            </div>
-          </li>
-          <li>
-            <div
-              onClick={() => {
-                setSortingInfo({
-                  list: listType,
-                  sorting: 'desc',
-                  isToggle: false,
-                });
-                setSortingNow({
-                  list: listType,
-                  sorting: 'desc',
-                });
-              }}
-            >
-              <FormattedMessage id='DESCENDING' />
-            </div>
-          </li>
+          {sortingArr.map((sorting: sortingType) => {
+            return (
+              <li key={'sorting_arr_' + sorting}>
+                <div
+                  onClick={() => {
+                    setSortingInfo({
+                      list: listType,
+                      sorting: sorting,
+                      isToggle: false,
+                    });
+                    setSortingNow({
+                      list: listType,
+                      sorting: sorting,
+                    });
+                  }}
+                >
+                  {sorting === 'none' && <FormattedMessage id='UNSORTED' />}
+                  {sorting === 'asc' && <FormattedMessage id='ASCENDING' />}
+                  {sorting === 'desc' && <FormattedMessage id='DESCENDING' />}
+                </div>
+              </li>
+            )
+          })}
         </ul>
       )
     };
@@ -452,9 +475,10 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
         },
         (err:any) => {
           message.error(formatMessage({ id: 'EXCEL_FILE_DOWNLOAD_FAILED' }));
-          if(err.response.data.code === 'ERR_001') {
-            navigate('/AutoLogout');
-          }
+          error1Fun(err, navigate);
+          // if(err.response.data.code === 'ERR_001') {
+          //   navigate('/AutoLogout');
+          // }
         }
       )
     };
@@ -527,12 +551,7 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                         className='dropdown-100-header'
                       >
                         <span>
-                          {searchType === 'all' && <FormattedMessage id='all' /> }
-                          {searchType === 'role' && <FormattedMessage id='RANK' /> }
-                          {searchType === 'username' && <FormattedMessage id='username' /> }
-                          {searchType === 'os' && <FormattedMessage id='os' /> }
-                          {searchType === 'lastLoginDate' && <FormattedMessage id='lastLoginDate' /> }
-                          {searchType === 'enable_passcode_count' && <FormattedMessage id='enable_passcode_count' /> }
+                          {searchTypeFun(searchType)}
                         </span>
                         <img className='tab_dropdown_arrow' src={dropdown_icon}/>
                       </div> 
@@ -550,81 +569,7 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                   <ul
                     className='dropdown-ul-100'
                   >
-                    <li>
-                      <div
-                        onClick={() => {
-                          setSearchType('all');
-                          setIsSearchDropdownOpen(false);
-                          setSearchOsInfo(null);
-                          setIsTypeDropdownOpen(false);
-                          setSearchTypeInfo(null);
-                        }}
-                      >
-                        <FormattedMessage id='all' />
-                      </div>
-                    </li>
-                    <li>
-                      <div
-                        onClick={() => {
-                          setSearchType('role');
-                          setIsSearchDropdownOpen(false);
-                          setSearchOsInfo(null);
-                          setIsTypeDropdownOpen(false);
-                          setSearchTypeInfo(null);
-                        }}
-                      >
-                        <FormattedMessage id='RANK' />
-                      </div>
-                    </li>
-                    <li>
-                      <div
-                        onClick={() => {
-                          setSearchType('username');
-                          setIsSearchDropdownOpen(false);
-                          setSearchOsInfo(null);
-                          setIsTypeDropdownOpen(false);
-                          setSearchTypeInfo(null);
-                        }}
-                      >
-                        <FormattedMessage id='USER_ID' />
-                      </div>
-                    </li>
-                    <li>
-                      <div
-                        onClick={() => {
-                          setSearchType('os');
-                          setIsSearchDropdownOpen(false);
-                          setSearchOsInfo(null);
-                          setIsTypeDropdownOpen(false);
-                          setSearchTypeInfo(null);
-                        }}
-                      >
-                        <FormattedMessage id='ENV' />
-                      </div>
-                    </li>
-                    {/* <li>
-                      <div
-                        onClick={() => {
-                          setSearchType('lastLoginDate');
-                          setIsSearchDropdownOpen(false);
-                        }}
-                      >
-                        <FormattedMessage id='LAST_LOGIN' />
-                      </div>
-                    </li> */}
-                    <li>
-                      <div
-                        onClick={() => {
-                          setSearchType('enable_passcode_count');
-                          setIsSearchDropdownOpen(false);
-                          setSearchOsInfo(null);
-                          setIsTypeDropdownOpen(false);
-                          setSearchTypeInfo(null);
-                        }}
-                      >
-                        PASSCODE
-                      </div>
-                    </li>
+                    {dropdownUl100Fun()}
                   </ul>
                 </li>
                 <li>
@@ -705,9 +650,7 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                             className='dropdown-102-header'
                           >
                             <span>
-                              {searchTypeInfo === 'USER' && <FormattedMessage id='USER' />}
-                              {searchTypeInfo === 'ADMIN' && <FormattedMessage id='ADMIN' />}
-                              {searchTypeInfo === 'SUPER_ADMIN' && <FormattedMessage id='SUPER_ADMIN' />}
+                              {roleTypeFun(searchTypeInfo)}
                             </span>
                             <img className='tab_dropdown_arrow' src={dropdown_icon}/>
                           </div> 
@@ -775,12 +718,17 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                     <img src={search_icon} width='18px' className='tab_search_button_img'/>
                     <FormattedMessage id='SEARCH' />
                   </button>
-                  <img 
-                    src={reset_icon} width='27px' style={{opacity: 0.5, marginLeft: '20px', cursor: 'pointer', position: 'relative', top: '3px'}}
+                  <img
+                    className='information_list_search_reset'
+                    src={reset_icon} width='27px'
                     onClick={() => {
                       setSortingNow(null);
                       setSearchType(null);
                       setSearchContent('');
+                      const inputElement = searchContentRef.current;
+                      if (inputElement) {
+                        inputElement.value = ''; // input 내용을 지움
+                      }
                       const render = rendering;
                       const renderTemp = render.concat(true);
                       setRendering(renderTemp);
@@ -977,9 +925,7 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                         style={{ background: hoveredRow === index ? '#D6EAF5' : 'transparent', cursor: 'pointer' }}
                       >
                         <td>
-                          {data.role === 'USER' && <FormattedMessage id='USER' />}
-                          {data.role === 'ADMIN' && <FormattedMessage id='ADMIN' />}
-                          {data.role === 'SUPER_ADMIN' && <FormattedMessage id='SUPER_ADMIN' />}
+                          {roleTypeFun(data.role as userRoleType)}
                         </td>
                         <td>
                           {data.username}
@@ -987,9 +933,11 @@ const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                         <td
                           style={{padding: 0}}
                         >
-                          {data.osNames.includes('WINDOWS') && <img key='windows' src={os_windows} width='22px' height='22px' style={{padding: '8px'}} />}
-                          {data.osNames.includes('MAC') && <img key='mac' src={os_mac} width='22px' height='22px' />}
-                          {data.osNames.includes('BROWSER') && <img key='browser' src={browser_icon} width='37px' height='37px' />}
+                          <div style={{position: 'relative', top: '2px'}}>
+                            {data.osNames.includes('WINDOWS') && <img key='windows' src={os_windows} width='22px' height='22px' style={{padding: '8px'}} />}
+                            {data.osNames.includes('MAC') && <img key='mac' src={os_mac} width='22px' height='22px' />}
+                            {data.osNames.includes('BROWSER') && <img key='browser' src={browser_icon} width='37px' height='37px' />}
+                          </div>
                         </td>
                         <td>{data.lastLoginDate}</td>
                         <td>{data.enablePasscodeCount}</td>

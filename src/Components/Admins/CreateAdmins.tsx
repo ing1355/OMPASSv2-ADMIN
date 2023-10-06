@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
 import { InformationProps } from 'Types/PropsTypes';
 import { idRegex, nameRegex } from 'Components/CommonCustomComponents/CommonRegex';
+import { error1Fun } from 'Components/CommonCustomComponents/CommonFunction';
 
 const CreateAdmins = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }: InformationProps) => {
   const { userInfo } = useSelector((state: ReduxStateType) => ({
@@ -116,9 +117,10 @@ const CreateAdmins = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }: 
                           username: username
                         },
                         (err:any) => {
-                          if(err.response.data.code === 'ERR_001') {
-                            navigate('/AutoLogout');
-                          }
+                          error1Fun(err, navigate);
+                          // if(err.response.data.code === 'ERR_001') {
+                          //   navigate('/AutoLogout');
+                          // }
                         }
                       );
                     }
@@ -170,9 +172,10 @@ const CreateAdmins = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }: 
                               }
                             },{},
                             (err:any) => {
-                              if(err.response.data.code === 'ERR_001') {
-                                navigate('/AutoLogout');
-                              }
+                              error1Fun(err, navigate);
+                              // if(err.response.data.code === 'ERR_001') {
+                              //   navigate('/AutoLogout');
+                              // }
                             }
                           )
                         }

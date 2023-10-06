@@ -20,16 +20,14 @@ const PermissionSettings = () => {
             className='agent_management_header'
           >
             <div>
-              {/* <FormattedMessage id='VERSION_MANAGEMENT' /> */}
-              권한 설정
+              <FormattedMessage id='permissionSettings' />
             </div>
             <div
               className='mb40'
               style={{display: 'flex'}}
             >
               <h1>
-                {/* <FormattedMessage id='VERSION_LIST' /> */}
-                권한 설정
+                <FormattedMessage id='permissionSettings' />
               </h1>
             </div>
           </div>
@@ -40,7 +38,7 @@ const PermissionSettings = () => {
               className='mb40'
             >
               <h3>
-                최고 관리자
+                <FormattedMessage id='SUPER_ADMIN' />
               </h3>
               <PermissionComponent
                 roleType='SUPER_ADMIN'
@@ -50,7 +48,7 @@ const PermissionSettings = () => {
               className='mb40'
             >
               <h3>
-                관리자
+                <FormattedMessage id='ADMIN' />
               </h3>
               <PermissionComponent 
                 roleType='ADMIN'
@@ -58,7 +56,7 @@ const PermissionSettings = () => {
             </div>
             <div>
               <h3>
-                사용자
+                <FormattedMessage id='USER' />
               </h3>
               <PermissionComponent 
                 roleType='USER'

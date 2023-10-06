@@ -15,6 +15,7 @@ import delete_icon from '../../assets/delete_icon.png';
 import { useSelector } from 'react-redux';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
 import { InformationProps } from 'Types/PropsTypes';
+import { error1Fun } from 'Components/CommonCustomComponents/CommonFunction';
 
 interface Checkbox {
   id: number;
@@ -103,9 +104,10 @@ const AdminsManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize
       },
       (err:any) => {
         console.log('admin 유저 가져오기 실패');
-        if(err.response.data.code === 'ERR_001') {
-          navigate('/AutoLogout');
-        }
+        error1Fun(err, navigate);
+        // if(err.response.data.code === 'ERR_001') {
+        //   navigate('/AutoLogout');
+        // }
       }
     )
   },[tableCellSize, pageNum, rendering]);

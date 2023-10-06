@@ -9,6 +9,7 @@ import { PostAgentInstallerUploadApi } from 'Constants/ApiRoute';
 import { CopyRightText } from 'Constants/ConstantValues';
 import { useNavigate } from 'react-router';
 import { InformationProps } from 'Types/PropsTypes';
+import { error1Fun } from 'Components/CommonCustomComponents/CommonFunction';
 
 const VersionUpload = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }: InformationProps) => {
   const height = useWindowHeightHeader();
@@ -136,9 +137,10 @@ const VersionUpload = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }:
                         (err:any) => {
                           setIsUploadingFile(false);
                           // message.error(formatMessage({ id: 'UPLOAD_FAILED' }));
-                          if(err.response.data.code === 'ERR_001') {
-                            navigate('/AutoLogout');
-                          }
+                          error1Fun(err, navigate);
+                          // if(err.response.data.code === 'ERR_001') {
+                          //   navigate('/AutoLogout');
+                          // }
                         },
                         {
                           headers: {

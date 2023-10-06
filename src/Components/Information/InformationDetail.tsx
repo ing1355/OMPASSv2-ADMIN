@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Header from 'Components/Header/Header';
 import { useWindowHeightHeader }from 'Components/CommonCustomComponents/useWindowHeight';
-import { AllowedAccessUsersType, DevicesType, GetUsersDetailsApiType, OmpassInfoType, UserInfoType, UserType } from 'Types/ServerResponseDataTypes';
+import { AllowedAccessUsersType, DevicesType, GetUsersDetailsApiType, OmpassInfoType, UserInfoType, UserType, userRoleType } from 'Types/ServerResponseDataTypes';
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPost, CustomAxiosPut } from 'Components/CommonCustomComponents/CustomAxios';
 import { DeleteAccessUserApi, DeleteDeviceApi, DeletePasscodeApi, DeleteUsersApi, GetPutUsersApi, GetUsernameCheckApi, GetUsersDetailsApi, PostAccessUserApi, PostPutPasscodeApi, PutPasscodeApi } from 'Constants/ApiRoute';
 import { CopyRightText, autoHypenPhoneFun } from 'Constants/ConstantValues';
@@ -40,6 +40,7 @@ import safari_mobile_img from '../../assets/safari_mobile_img.png';
 import samsung_browser_mobile_img from '../../assets/samsung_browser_mobile_img.png';
 import alias_img from '../../assets/alias_img.png';
 import { nameRegex, passwordRegex } from 'Components/CommonCustomComponents/CommonRegex';
+import { error1Fun } from 'Components/CommonCustomComponents/CommonFunction';
 
 type adminIdType = {
   isAdmin: boolean,
@@ -96,22 +97,13 @@ const InformationDetail = () => {
         CustomAxiosGet(
           GetUsersDetailsApi(uuid),
           (data: GetUsersDetailsApiType) => {
-            setUserData(data.user);
-            setUserPhone(data.user.phoneNumber);
-            setUserName(data.user.name);
-            setDeviceData(data.devices);
-            // setOmpassInfoData(data.ompassInfo);
-            setViewPasscodes(new Array(data.devices.length).fill(false));
-            setViewPasscodeSettings(new Array(data.devices.length).fill(false));
-            setModifyPasscodes(new Array(data.devices.length).fill(false));
-            setAllowAccounts(new Array(data.devices.length).fill(false));
-            setOpenDeviceDelete(new Array(data.devices.length).fill(false));
-            setOpenPasscodeDelete(new Array(data.devices.length).fill(false));
+            setInitFun(data);
           },{},
           (err:any)=>{
-            if(err.response.data.code === 'ERR_001') {
-              navigate('/AutoLogout');
-            }
+            error1Fun(err, navigate);
+            // if(err.response.data.code === 'ERR_001') {
+            //   navigate('/AutoLogout');
+            // }
           }
         )
       } else {
@@ -119,18 +111,7 @@ const InformationDetail = () => {
           CustomAxiosGet(
             GetUsersDetailsApi(selectedUuid),
             (data: GetUsersDetailsApiType) => {
-              // console.log(data)
-              setUserData(data.user);
-              setUserPhone(data.user.phoneNumber);
-              setUserName(data.user.name);
-              setDeviceData(data.devices);
-              // setOmpassInfoData(data.ompassInfo);
-              setViewPasscodes(new Array(data.devices.length).fill(false));
-              setViewPasscodeSettings(new Array(data.devices.length).fill(false));
-              setModifyPasscodes(new Array(data.devices.length).fill(false));
-              setAllowAccounts(new Array(data.devices.length).fill(false));
-              setOpenDeviceDelete(new Array(data.devices.length).fill(false));
-              setOpenPasscodeDelete(new Array(data.devices.length).fill(false));
+              setInitFun(data);
               if(data.user.role === 'ADMIN') {
                 setAdminIdInfo({
                   isAdmin: true,
@@ -139,9 +120,10 @@ const InformationDetail = () => {
               }
             },{},
             (err:any)=>{
-              if(err.response.data.code === 'ERR_001') {
-                navigate('/AutoLogout');
-              }
+              error1Fun(err, navigate);
+              // if(err.response.data.code === 'ERR_001') {
+              //   navigate('/AutoLogout');
+              // }
             }
           )
         }
@@ -150,6 +132,28 @@ const InformationDetail = () => {
       console.log('uuid 없음')
     }
   },[isModify, rendering])
+
+  function setInitFun(data: GetUsersDetailsApiType) {
+    setUserData(data.user);
+    setUserPhone(data.user.phoneNumber);
+    setUserName(data.user.name);
+    setDeviceData(data.devices);
+    setViewPasscodes(new Array(data.devices.length).fill(false));
+    setViewPasscodeSettings(new Array(data.devices.length).fill(false));
+    setModifyPasscodes(new Array(data.devices.length).fill(false));
+    setAllowAccounts(new Array(data.devices.length).fill(false));
+    setOpenDeviceDelete(new Array(data.devices.length).fill(false));
+    setOpenPasscodeDelete(new Array(data.devices.length).fill(false));
+  }
+
+  function adminMarkingFun(role: userRoleType | undefined) {
+    if(role) {
+      if(role.includes('ADMIN')) {
+        return <span className='manager-mark ml10'><FormattedMessage id={role} /></span>
+      }
+    }
+    return null
+  }
 
   const modifyFun = () => {
     return (
@@ -201,9 +205,10 @@ const InformationDetail = () => {
                       dispatch(userInfoClear());
                     },{},
                     (err:any) => {
-                      if(err.response.data.code === 'ERR_001') {
-                        navigate('/AutoLogout');
-                      }
+                      error1Fun(err, navigate);
+                      // if(err.response.data.code === 'ERR_001') {
+                      //   navigate('/AutoLogout');
+                      // }
                     }
                   );
                 } else {
@@ -215,9 +220,10 @@ const InformationDetail = () => {
                         navigate('/Information');
                       },{},
                       (err:any) => {
-                        if(err.response.data.code === 'ERR_001') {
-                          navigate('/AutoLogout');
-                        }
+                        error1Fun(err, navigate);
+                        // if(err.response.data.code === 'ERR_001') {
+                        //   navigate('/AutoLogout');
+                        // }
                       }
                     );
                   }
@@ -337,9 +343,10 @@ const InformationDetail = () => {
                         password: password,
                         phoneNumber: phoneNumber,
                       }, (err:any) => {
-                        if(err.response.data.code === 'ERR_001') {
-                          navigate('/AutoLogout');
-                        }
+                        error1Fun(err, navigate);
+                        // if(err.response.data.code === 'ERR_001') {
+                        //   navigate('/AutoLogout');
+                        // }
                       }
                     )  
                   } else {
@@ -355,8 +362,7 @@ const InformationDetail = () => {
                       </td>
                       <td>
                         {userData?.username}
-                        {userData?.role === 'ADMIN' && <span className='manager-mark ml10'><FormattedMessage id='ADMIN' /></span>}
-                        {userData?.role === 'SUPER_ADMIN' && <span className='manager-mark ml10'><FormattedMessage id='SUPER_ADMIN' /></span>}
+                        {adminMarkingFun(userData?.role)}
                       </td>
                     </tr>            
                     <tr>
@@ -467,8 +473,7 @@ const InformationDetail = () => {
                     </td>
                     <td>
                       {userData?.username}
-                      {userData?.role === 'ADMIN' && <span className='manager-mark ml10'><FormattedMessage id='ADMIN' /></span>}
-                      {userData?.role === 'SUPER_ADMIN' && <span className='manager-mark ml10'><FormattedMessage id='SUPER_ADMIN' /></span>}
+                      {adminMarkingFun(userData?.role)}
                     </td>
                   </tr>             
                   <tr>
@@ -538,9 +543,10 @@ const InformationDetail = () => {
                           setRendering(renderTemp);
                         },{},
                         (err:any) => {
-                          if(err.response.data.code === 'ERR_001') {
-                            navigate('/AutoLogout');
-                          }
+                          error1Fun(err, navigate);
+                          // if(err.response.data.code === 'ERR_001') {
+                          //   navigate('/AutoLogout');
+                          // }
                         }
                       )
                     }}
@@ -584,9 +590,10 @@ const InformationDetail = () => {
                           setRendering(renderTemp);
                         },{},
                         (err:any) => {
-                          if(err.response.data.code === 'ERR_001') {
-                            navigate('/AutoLogout');
-                          }
+                          error1Fun(err, navigate);
+                          // if(err.response.data.code === 'ERR_001') {
+                          //   navigate('/AutoLogout');
+                          // }
                         }
                       )
                     }}
@@ -1176,9 +1183,10 @@ const InformationDetail = () => {
                             },
                             (err:any) => {
                               message.error(formatMessage({ id: 'FAILED_TO_MODIFY_PASSCODE' }));
-                              if(err.response.data.code === 'ERR_001') {
-                                navigate('/AutoLogout');
-                              }
+                              error1Fun(err, navigate);
+                              // if(err.response.data.code === 'ERR_001') {
+                              //   navigate('/AutoLogout');
+                              // }
                             }
                           )
                         } else {
@@ -1201,9 +1209,10 @@ const InformationDetail = () => {
                             },
                             (err:any) => {
                               message.error(formatMessage({ id: 'FAILED_TO_CREATE_PASSCODE' }));
-                              if(err.response.data.code === 'ERR_001') {
-                                navigate('/AutoLogout');
-                              }
+                              error1Fun(err, navigate);
+                              // if(err.response.data.code === 'ERR_001') {
+                              //   navigate('/AutoLogout');
+                              // }
                             }
                           )
                         }
@@ -1395,9 +1404,10 @@ const InformationDetail = () => {
                                         setRendering(renderTemp);
                                       },{},
                                       (err:any) => {
-                                        if(err.response.data.code === 'ERR_001') {
-                                          navigate('/AutoLogout');
-                                        }
+                                        error1Fun(err, navigate);
+                                        // if(err.response.data.code === 'ERR_001') {
+                                        //   navigate('/AutoLogout');
+                                        // }
                                       }
                                     )
                                   }}

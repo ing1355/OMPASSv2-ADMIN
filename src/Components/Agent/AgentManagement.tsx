@@ -14,6 +14,7 @@ import list_download from '../../assets/list_download.png';
 import download_installer_icon from '../../assets/download_installer_icon.png';
 import { CopyRightText } from 'Constants/ConstantValues';
 import { InformationProps } from 'Types/PropsTypes';
+import { error1Fun } from 'Components/CommonCustomComponents/CommonFunction';
 
 interface Checkbox {
   id: number;
@@ -88,9 +89,10 @@ const AgentManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
       },
       (err:any) => {
         console.log('agent data get 실패');
-        if(err.response.data.code === 'ERR_001') {
-          navigate('/AutoLogout');
-        }
+        error1Fun(err, navigate);
+        // if(err.response.data.code === 'ERR_001') {
+        //   navigate('/AutoLogout');
+        // }
       },
       {},
       () => {
@@ -194,9 +196,10 @@ const AgentManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                                   setRendering(renderTemp);
                                 }, {},
                                 (err:any) => {
-                                  if(err.response.data.code === 'ERR_001') {
-                                    navigate('/AutoLogout');
-                                  }
+                                  error1Fun(err, navigate);
+                                  // if(err.response.data.code === 'ERR_001') {
+                                  //   navigate('/AutoLogout');
+                                  // }
                                 }
                               )
                             } else {
@@ -334,9 +337,10 @@ const AgentManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                                   setRendering(renderTemp);
                                 },{},
                                 (err:any) => {
-                                  if(err.response.data.code === 'ERR_001') {
-                                    navigate('/AutoLogout');
-                                  }
+                                  error1Fun(err, navigate);
+                                  // if(err.response.data.code === 'ERR_001') {
+                                  //   navigate('/AutoLogout');
+                                  // }
                                 }
                               )
                             }}
@@ -366,9 +370,10 @@ const AgentManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
                                     setRendering(renderTemp);
                                   },{},
                                   (err:any) => {
-                                    if(err.response.data.code === 'ERR_001') {
-                                      navigate('/AutoLogout');
-                                    }
+                                    error1Fun(err, navigate);
+                                    // if(err.response.data.code === 'ERR_001') {
+                                    //   navigate('/AutoLogout');
+                                    // }
                                   }
                                 )
                               }
