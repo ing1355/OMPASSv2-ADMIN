@@ -9,17 +9,16 @@ import ompass_logo_image from '../../assets/ompass_logo_image.png';
 import locale_image from '../../assets/locale_image.png';
 import menu_icon from '../../assets/menu_icon.png';
 import logout from '../../assets/logout.png';
-import maunal_download from '../../assets/maunal_download.png';
-import maunal_download_blue from '../../assets/maunal_download_blue.png';
+import manunal_download_blue from '../../assets/manunal_download_blue.png';
 import admin_manual_download_blue from '../../assets/admin_manual_download_blue.png';
 import download_icon_blue from '../../assets/download_icon_blue.png';
 import download_installer_icon from '../../assets/download_installer_icon.png';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { userInfoClear } from 'Redux/actions/userChange';
-import { CustomAxiosGetFile } from 'Components/CommonCustomComponents/CustomAxios';
-import { GetAgentInstallerDownloadApi } from 'Constants/ApiRoute';
 import { Col, Row, Tooltip, message } from 'antd';
 import { AgentFileDownload } from 'Components/CommonCustomComponents/AgentFileDownload';
+import { menuDatas } from 'Constants/ConstantValues';
+import { saveLocaleToLocalStorage } from 'Functions/GlobalFunctions';
 
 const Header = () => {
   const { lang, userInfo } = useSelector((state: ReduxStateType) => ({
@@ -29,9 +28,9 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isAgentFileDisable, setIsAgentFileDisable] = useState<boolean>(false);
 
-  const {uuid, role, userId} = userInfo! ?? {};
+  const {username, role, userId} = userInfo! ?? {};
   const dropdownRef = useRef<any>(null);
-
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { formatMessage } = useIntl();
@@ -113,11 +112,9 @@ const Header = () => {
                 </label>
                 {windowWidth <= 785 ? 
                 <ul className='dropdown_menu_ul'>
-                  <li><Link to='/Information'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='USER_MANAGEMENT' /></div></Link></li>
-                  <li><Link to='/AdminsManagement'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='ADMIN_MANAGEMENT' /></div></Link></li>
-                  <li><Link to='/AgentManagement'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='VERSION_MANAGEMENT' /></div></Link></li>
-                  <li><Link to='/PasscodeManagement'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='PASSCODE_MANAGEMENT' /></div></Link></li>
-                  {role === 'SUPER_ADMIN' &&<li><Link to='/SecretKey'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='OMPASS_SETTINGS' /></div></Link></li>}
+                  {
+                    menuDatas(role).map((_, ind) => <li key={ind}><Link to={_.route}><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id={_.label} /></div></Link></li>)
+                  }
                   {/* <li>
                     <div onClick={()=>{setIsMenuOpen(false)}}>
                       <FormattedMessage id='DOWNLOAD_INSTALL_FILE' />
@@ -140,8 +137,9 @@ const Header = () => {
                       >
                         <FormattedMessage id='DOWNLOAD_USER_MANUAL' />
                         <img
-                          src={maunal_download_blue}
+                          src={manunal_download_blue}
                           width="25px"
+                          className=''
                           style={{position: 'relative', top: '5px', marginLeft: '7px'}}
                         />
                       </a>
@@ -151,17 +149,17 @@ const Header = () => {
                     <div onClick={()=>{setIsMenuOpen(false)}}>
                       <img src={locale_image} width='20px' style={{position: 'relative', top: '3px', marginRight: '2px'}}/>
                       <span 
-                        className={'mlr5 locale-toggle' + (lang === 'ko' ? ' active' : '')}
+                        className={'mlr5 locale-toggle' + (lang === 'KR' ? ' active' : '')}
                         onClick={() => {
-                          dispatch(langChange('ko'));
-                          localStorage.setItem('locale','ko');
+                          dispatch(langChange('KR'));
+                          saveLocaleToLocalStorage('EN')
                         }}
                       >KO</span>|
                       <span 
-                        className={'mlr5 locale-toggle' + (lang === 'en' ? ' active' : '')}
+                        className={'mlr5 locale-toggle' + (lang === 'EN' ? ' active' : '')}
                         onClick={() => {
-                          dispatch(langChange('en'));
-                          localStorage.setItem('locale','en');
+                          dispatch(langChange('EN'));
+                          saveLocaleToLocalStorage('EN')
                         }}
                       >EN</span>
                     </div>
@@ -169,11 +167,9 @@ const Header = () => {
                 </ul>
                 :
                 <ul className='dropdown_menu_ul'>
-                  <li><Link to='/Information'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='USER_MANAGEMENT' /></div></Link></li>
-                  <li><Link to='/AdminsManagement'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='ADMIN_MANAGEMENT' /></div></Link></li>
-                  <li><Link to='/AgentManagement'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='VERSION_MANAGEMENT' /></div></Link></li>
-                  <li><Link to='/PasscodeManagement'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='PASSCODE_MANAGEMENT' /></div></Link></li>
-                  {role === 'SUPER_ADMIN' &&<li><Link to='/SecretKey'><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id='OMPASS_SETTINGS' /></div></Link></li>}
+                  {
+                    menuDatas(role).map((_, ind) => <li key={ind}><Link to={_.route}><div onClick={()=>{setIsMenuOpen(false)}}><FormattedMessage id={_.label} /></div></Link></li>)
+                  }
                 </ul>                  
                 }
 
@@ -253,7 +249,7 @@ const Header = () => {
                     download
                   >
                     <img
-                      src={maunal_download_blue}
+                      src={manunal_download_blue}
                       width="25px"
                       style={{position: 'relative', top: '5px'}}
                     />
@@ -283,26 +279,26 @@ const Header = () => {
             <li
               className='header_id'
               onClick={() => {
-                navigate(`/Information/detail/User/${uuid}`);
+                navigate(`/UserManagement/detail/${userId}`);
               }}
             >
-              {userId}
+              {username}
             </li>
             {windowWidth > 785 && 
               <li>
                 <img src={locale_image} width='20px' style={{position: 'relative', top: '3px', marginRight: '2px'}}/>
                 <span 
-                  className={'mlr5 locale-toggle' + (lang === 'ko' ? ' active' : '')}
+                  className={'mlr5 locale-toggle' + (lang === 'KR' ? ' active' : '')}
                   onClick={() => {
-                    dispatch(langChange('ko'));
-                    localStorage.setItem('locale','ko');
+                    dispatch(langChange('KR'));
+                    saveLocaleToLocalStorage('KR')
                   }}
                 >KO</span>|
                 <span 
-                  className={'mlr5 locale-toggle' + (lang === 'en' ? ' active' : '')}
+                  className={'mlr5 locale-toggle' + (lang === 'EN' ? ' active' : '')}
                   onClick={() => {
-                    dispatch(langChange('en'));
-                    localStorage.setItem('locale','en');
+                    dispatch(langChange('EN'));
+                    saveLocaleToLocalStorage('EN')
                   }}
                 >EN</span>
               </li>

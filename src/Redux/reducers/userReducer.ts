@@ -1,18 +1,23 @@
-import jwtDecode from 'jwt-decode';
+import { UserDataType } from 'Functions/ApiFunctions';
 import { DefaultReduxActionType, ReduxStateType } from '../../Types/ReduxStateTypes';
 import types from '../types';
+import { parseJwtToken } from 'Functions/GlobalFunctions';
 
-const user = localStorage.getItem('authorization') ? (jwtDecode(localStorage.getItem('authorization')!) as any).access_token : null
+const defaultUser = localStorage.getItem('authorization')
 
-const userReducer = (state = user && {
-  uuid: user.id,
-  role: user.role,
-  userId: user.username
-}, action: DefaultReduxActionType<ReduxStateType['userInfo']>) => {
+let user: UserDataType|null = null
+
+try {
+  if(defaultUser) user = parseJwtToken(defaultUser)
+} catch(e) {
+  console.log("default jwt parse error : ", e)
+  localStorage.removeItem('authorization')
+}
+
+const userReducer = (state = user, action: DefaultReduxActionType<ReduxStateType['userInfo']>) => {
   const { payload } = action;
   switch (action.type) {
     case types.userInfoClear:
-      sessionStorage.removeItem('userInfo');
       localStorage.removeItem('authorization');
       return null;
     case types.userInfoChange:

@@ -19,8 +19,8 @@ const GoToLoginPageButton: React.FC<GoToLoginPageButtonProps> = ({className}) =>
     >
       <img
         src={user_management_white}
-        width="32px"
-        style={{ marginLeft: '4px', position: 'relative', top: '2px' }}
+        width="25px"
+        style={{ marginLeft: '4px', top: '2px', position: 'relative' }}
       />
       <span style={{ position: 'relative', top: '-7px', margin: '0 10px 0 2px' }}>
         <FormattedMessage id="LOGIN" />

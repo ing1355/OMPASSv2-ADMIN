@@ -1,16 +1,12 @@
+import { UserDataType } from 'Functions/ApiFunctions';
 import types from '../types';
-import { UserInfoDetailType } from '../../Types/ReduxStateTypes'
-import jwtDecode from 'jwt-decode';
+
+import { parseJwtToken } from 'Functions/GlobalFunctions';
 
 export function userInfoChange(token: string) {
-  const { id, role, username } = (jwtDecode(token) as any).access_token
   return {
     type: types.userInfoChange,
-    payload: {
-      userId: username,
-      uuid: id,
-      role
-    }
+    payload: parseJwtToken(token)
   }
 }
 
@@ -21,7 +17,7 @@ export function userInfoClear() {
   }
 }
 
-export function userUuidChange(event: UserInfoDetailType['uuid']) {
+export function userUuidChange(event: UserDataType['userId']) {
   return {
     type: types.userUuidChange,
     payload: event

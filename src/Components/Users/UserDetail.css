@@ -1,0 +1,136 @@
+.user-detail-section {
+    border: 1px solid #b7b7b7;
+    border-radius: 10px;
+    padding: 5px 25px 25px;
+    min-width: 840px;
+    width: 1100px;
+}
+
+.user-detail-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    height: 60px;
+    border-bottom: 1px solid rgba(123,123,123,.5);
+    margin-bottom: 12px;
+    & h4 {
+        margin: 0;
+    }   
+}
+
+.user-detail-header-btns {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+}
+
+.user-detail-alias-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+}
+
+.user-detail-action-btn {
+    padding: 7px 11px;
+    border-radius: 5px;
+    margin: 0 5px;
+    position: relative;
+    top: 15px;
+}
+
+.user-detail-info-container {
+    padding: 0 16px;
+    &:not(:last-child) {
+        border-bottom: 1px solid rgba(123,123,123,.5);
+        padding-bottom: 48px;
+        margin-bottom: 48px;
+    }
+}
+
+.user-detail-info-row {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    height: 42px;
+}
+
+.user-detail-info-col {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    &:first-child {
+        width: 120px;
+        position: relative;
+        color: #b7b7b7;
+    }
+    &:last-child {
+        flex: 1;
+    }
+}
+
+.user-detail-content-passcode-container {
+    & > table {
+        width: 100%;
+    }
+}
+
+.user-alias-image {
+    width: 18px;
+}
+
+.user-detail-header-application-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-detail-info-device-info-title {
+    height: 60px;
+    & > h3,h5 {
+        margin: 8px 0;
+    }
+}
+
+.user-detail-info-device-info-content {
+    padding: 0 12px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 24px;
+}
+
+.user-detail-info-device-info-content-item {
+    flex: 0 0 20%;
+    padding: 24px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    & > img {
+        width: 40%;
+        max-width: 40%;
+    }
+    & > div {
+        text-align: center;
+    }
+}
+
+.user-detail-info-device-info-content-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.passcode-add {
+    text-align: end;
+    height: 48px;
+    & > img {
+        width: 48px;
+        height: 100%;
+        cursor: pointer;
+    }
+}

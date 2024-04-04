@@ -1,6 +1,6 @@
 import './CreateAccount.css';
 import ompass_logo_image from '../../assets/ompass_logo_image.png';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import RefundImg from '../../assets/refunded_img.png';
@@ -13,8 +13,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useWindowHeight } from 'Components/CommonCustomComponents/useWindowHeight';
 import { CustomAxiosGet, CustomAxiosPost } from 'Components/CommonCustomComponents/CustomAxios';
 import { GetUsernameCheckApi, PostSignUpApi } from 'Constants/ApiRoute';
-import { autoHypenPhoneFun, CopyRightText } from 'Constants/ConstantValues';
+import { CopyRightText } from 'Constants/ConstantValues';
 import { idRegex, koreanRegex, nameRegex, passwordRegex } from 'Components/CommonCustomComponents/CommonRegex';
+import { autoHypenPhoneFun } from 'Functions/GlobalFunctions';
 
 type AgreePolicyType = 'agreeService' | 'agreePrivacyPolicy';
 
@@ -226,7 +227,7 @@ const CreateAccount = () => {
                     <h3><FormattedMessage id='AGREE_SERVICE_TITLE_4' /></h3>
                     {AgreePolicyList(true,4,9)}
                   </div>
-                  {lang === 'en' ?
+                  {lang === 'EN' ?
                     <div>
                       <h3><FormattedMessage id='AGREE_SERVICE_TITLE_5' /></h3>
                       {AgreePolicyList(true,5,3)}
@@ -358,6 +359,10 @@ const CreateAccount = () => {
                   const password = userPasswordConfirm.value;
                   const phoneNumber = userPhoneNumber.value;
 
+                  if(idExist) {
+                    return message.error(formatMessage({ id: 'PLEASE_CHECK_THE_ID' }));
+                  }
+
                   if(username && name && password && user_password && phoneNumber && !isIdAlert && !isNameAlert && !isPasswordAlert && !isPasswordConfirmAlert && !isPhoneAlert && !idExist) {
                     CustomAxiosPost(
                       PostSignUpApi,
@@ -376,8 +381,6 @@ const CreateAccount = () => {
                         message.error(formatMessage({ id: 'FAIL_REGISTER' }));
                       }
                     );
-                  } else if(username && idExist) {
-                    message.error(formatMessage({ id: 'PLEASE_CHECK_THE_ID' }));
                   } else {
                     message.error(formatMessage({ id: 'PLEASE_ENTER_ALL_THE_ITEMS' }));
                   }
@@ -413,7 +416,6 @@ const CreateAccount = () => {
                       className={'button-st1 create_account_id_check ' + (!isIdAlert && userIdRef.current?.value ? 'active' : '')}
                       onClick={() => {
                         const username = userIdRef.current?.value;
-
                         if(username && !isIdAlert) {
                           CustomAxiosGet(
                             GetUsernameCheckApi(username),
@@ -428,6 +430,7 @@ const CreateAccount = () => {
                           )
                         }
                       }}
+                      disabled={!userIdRef.current?.value.length || isIdAlert}
                     ><FormattedMessage id='ID_CHECK' /></button>
                   </div>
                   <div
@@ -500,7 +503,7 @@ const CreateAccount = () => {
                   <label><FormattedMessage id='RECONFIRM_PASSWORD' /></label>
                   <img 
                     src={isPasswordConfirmLook ? view_password : dont_look_password} width='30px' 
-                    className={lang === 'ko' ? 'create_account_password_confirm_img_ko' : 'create_account_password_confirm_img_en'}
+                    className={lang === 'KR' ? 'create_account_password_confirm_img_ko' : 'create_account_password_confirm_img_en'}
                     onClick={() => {
                       setIsPasswordConfirmLook(!isPasswordConfirmLook);
                     }}
@@ -559,9 +562,6 @@ const CreateAccount = () => {
                     // + (isActive ? 'active' : '') }
                   style={{marginTop: '14.5px'}}
                   // disabled={!isActive}
-                  onClick={() => {
-                    // setIsStepOne(true);
-                  }}
                 ><FormattedMessage id='SIGN_UP' /></button>
               </form>
             </div>

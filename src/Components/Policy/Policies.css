@@ -1,0 +1,35 @@
+.policy-setting-box {
+    border: 1px solid #ccc;
+    padding: 4px 16px;
+    & label {
+        display: flex;
+        & > input {
+            margin-right: 10px;
+        }
+    }
+}
+
+.policy-setting-item-row {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px;
+    &:not(:last-child) {
+        border-bottom: 1.3px dashed #ccc;
+    }
+}
+
+.policy-setting-item-title {
+    width: 180px;
+}
+
+.policy-setting-item-contents {
+    flex: 1;
+    border-left: 1px solid #ccc;
+}
+
+.policy-setting-item-contents-col {
+    display: inline-block;
+    padding: 2px 8px;
+}

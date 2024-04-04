@@ -1,0 +1,11 @@
+OMPASS ADMIN 상수
+
+userRole : ROOT, ADMIN, USER
+applicationType : DEFAULT, WINDOWS_LOGIN, LINUX_LOGIN, MAC_LOGIN, ADMIN
+passcodeAction : CREATE, UPDATE, DELETE
+language : KR, EN
+processType : REGISTRAION, AUTHENTICATION
+authenticatorType : OMPASS, WEBAUTHN, PASSCODE
+browser : Chrome, CHROME Mobile, Microsoft Edge, FireFox, Safari, Mbile Safari
+policyAccessControl : ACTIVE, INACTIVE, DENY
+policyType : DEFAULT, CUSTOM

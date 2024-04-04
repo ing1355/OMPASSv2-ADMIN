@@ -1,17 +1,20 @@
 import CreateAccountTexts from "./CreateAccountText";
 import ErrorTexts from "./ErrorTexts";
 import LocaleTexts from "./LocaleTexts";
+import ApplicationTypes from "./ApplicationTypes";
 
 const Locale = {
-  en: {
+  EN: {
     ...LocaleTexts.en,
     ...ErrorTexts.en,
     ...CreateAccountTexts.en,
+    ...ApplicationTypes.EN
   },
-  ko: {
+  KR: {
     ...LocaleTexts.ko,
     ...ErrorTexts.ko,
     ...CreateAccountTexts.ko,
+    ...ApplicationTypes.KR
   }
 };
 

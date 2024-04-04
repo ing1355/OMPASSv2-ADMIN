@@ -1,0 +1,6 @@
+.table-no-data {
+    height: 200px;
+    border: 1px solid #b7b7b7;
+    border-bottom: none;
+    border-top: none;
+}

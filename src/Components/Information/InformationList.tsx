@@ -1,27 +1,22 @@
 import './InformationList.css';
 import './Tab.css';
-import Header from "Components/Header/Header";
 import { useWindowHeightHeader } from 'Components/CommonCustomComponents/useWindowHeight';
-import { Link } from 'react-router-dom';
-import { CopyRightText } from 'Constants/ConstantValues';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
 import * as XLSX from 'xlsx';
 import { Pagination, message } from 'antd';
 import type { PaginationProps } from 'antd';
-import { CustomAxiosGet, CustomAxiosPost } from 'Components/CommonCustomComponents/CustomAxios';
-import { GetPutUsersApi, GetUsersCountApi, PostExcelUploadApi } from 'Constants/ApiRoute';
+import { CustomAxiosGet, CustomAxiosGetAll } from 'Components/CommonCustomComponents/CustomAxios';
+import { GetPutUsersApi, GetUsersCountApi } from 'Constants/ApiRoute';
 import { GetPutUsersApiArrayType, GetPutUsersApiDataType, GetPutUsersApiType, GetUsersCountApiType, userRoleType } from 'Types/ServerResponseDataTypes';
-import { userUuidChange } from 'Redux/actions/userChange';
 
 import search_icon from '../../assets/search_icon.png';
 import list_download from '../../assets/list_download.png';
-import list_upload from '../../assets/list_upload.png';
 import sorting_icon from '../../assets/sorting_icon.png';
 import sorting_bottom_arrow from '../../assets/sorting_bottom_arrow.png';
 import sorting_top_arrow from '../../assets/sorting_top_arrow.png';
@@ -31,7 +26,11 @@ import browser_icon from '../../assets/browser_icon.png';
 import os_windows from '../../assets/os_windows.png';
 import os_mac from '../../assets/os_mac.png';
 import { InformationProps, listType, searchOsType, sortingInfoType, sortingNowType, sortingType } from 'Types/PropsTypes';
-import { error1Fun } from 'Components/CommonCustomComponents/CommonFunction';
+import ContentsHeader from 'Components/Layout/ContentsHeader';
+import Contents from 'Components/Layout/Contents';
+import CustomTable from 'Components/CommonCustomComponents/CustomTable';
+
+const sortingArr: sortingType[] = ['none', 'asc', 'desc'];
 
 const TabMenu = styled.ul`
   // background-color: #dcdcdc;
@@ -93,922 +92,616 @@ const TabMenu = styled.ul`
 
 const InformationList = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }: InformationProps) => {
   const height = useWindowHeightHeader();
-    // Tab Menu 중 현재 어떤 Tab이 선택되어 있는지 확인하기 위한 currentTab 상태와 currentTab을 갱신하는 함수가 존재해야 하고, 초기값은 0.
-    const [currentTab, clickTab] = useState(0);
-    const { lang, userInfo } = useSelector((state: ReduxStateType) => ({
-      lang: state.lang,
-      userInfo: state.userInfo,
-    }));
+  // Tab Menu 중 현재 어떤 Tab이 선택되어 있는지 확인하기 위한 currentTab 상태와 currentTab을 갱신하는 함수가 존재해야 하고, 초기값은 0.
+  const [currentTab, clickTab] = useState(0);
+  const { lang } = useSelector((state: ReduxStateType) => ({
+    lang: state.lang,
+  }));
 
-    const [sortingInfo, setSortingInfo] = useState<sortingInfoType>({
-      list: null,
-      sorting: 'none',
-      isToggle: false,
-    });
-  
-    const [sortingNow, setSortingNow] = useState<sortingNowType | null>(null);
-    const [userData, setUserData] = useState<GetPutUsersApiArrayType>([]);
-    const [totalCount, setTotalCount] = useState<number>(0);
-  
-    const [hoveredRow, setHoveredRow] = useState<number>(-1);
-    const [countData, setCountData] = useState<GetUsersCountApiType | null>(null);
-    const [tabNow, setTabNow] = useState<string>('TOTAL_USERS');
-    const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState<boolean>(false);
-    const [searchType, setSearchType] = useState<listType | null>(null);
-    const [searchContent, setSearchContent] = useState<string>('');
-    const [rendering, setRendering] = useState<boolean[]>([]);
-    const [file, setFile] = useState<File | null>(null);
-    const [excelData, setExcelData] = useState<any>(null);
-    const [excelDownloadAllData, setExcelDownloadAllData] = useState<any>(null);
-    const [isOsDropdownOpen, setIsOsDropdownOpen] = useState<boolean>(false);
-    const [searchOsInfo, setSearchOsInfo] = useState<searchOsType>(null);
-    const [isTypeDropdownOpen, setIsTypeDropdownOpen] = useState<boolean>(false);
-    const [searchTypeInfo, setSearchTypeInfo] = useState<userRoleType>(null);
-    const searchContentRef = useRef<HTMLInputElement>(null);
-    const dropdownRefs = useRef<any[]>([]);
-    const sortingUlFunRefs = useRef<any[]>([]);
-    const searchDropdownRef = useRef<any>(null);
-    const searchOsDropdownRef = useRef<any>(null);
-    const searchTypeDropdownRef = useRef<any>(null);
+  const [sortingInfo, setSortingInfo] = useState<sortingInfoType>({
+    list: null,
+    sorting: 'none',
+    isToggle: false,
+  });
 
-    const menuArr = [
-      { id: 0, name: 'TOTAL_USERS', content: 'Tab menu ONE', count: countData?.totalUserCount },
-      { id: 1, name: 'REGISTERED_USERS', content: 'Tab menu TWO', count: countData?.registeredOmpassUserCount },
-      { id: 2, name: 'UNREGISTERED_USERS', content: 'Tab menu THREE', count: countData?.ubRegisteredOmpassUserCount },
-      { id: 3, name: 'PASSCODE_USERS', content: 'Tab menu FOUR', count: countData?.passcodeUserCount },
-    ];
-  
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const { formatMessage } = useIntl();
-  
-    const searchHandleMouseDown = (event: MouseEvent) => {
-      if (searchDropdownRef.current && !searchDropdownRef.current.contains(event.target as Node)) {
-        setIsSearchDropdownOpen(false);
+  const [sortingNow, setSortingNow] = useState<sortingNowType | null>(null);
+  const [userData, setUserData] = useState<GetPutUsersApiArrayType>([]);
+  const [totalCount, setTotalCount] = useState<number>(0);
+
+  const [hoveredRow, setHoveredRow] = useState<number>(-1);
+  const [countData, setCountData] = useState<GetUsersCountApiType | null>(null);
+  const [tabNow, setTabNow] = useState<string>('TOTAL_USERS');
+  const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState<boolean>(false);
+  const [searchType, setSearchType] = useState<listType | null>(null);
+  const [searchContent, setSearchContent] = useState<string>('');
+  const [rendering, setRendering] = useState<boolean[]>([]);
+  // const [excelDownloadAllData, setExcelDownloadAllData] = useState<any>(null);
+  const [isOsDropdownOpen, setIsOsDropdownOpen] = useState<boolean>(false);
+  const [searchOsInfo, setSearchOsInfo] = useState<searchOsType>(null);
+  const [isTypeDropdownOpen, setIsTypeDropdownOpen] = useState<boolean>(false);
+  const [searchTypeInfo, setSearchTypeInfo] = useState<userRoleType|null>(null);
+  const searchContentRef = useRef<HTMLInputElement>(null);
+  // const dropdownRefs = useRef<any[]>([]);
+  const dropdownRefs = useRef<HTMLElement>();
+  const searchDropdownRef = useRef<any>(null);
+  const searchOsDropdownRef = useRef<any>(null);
+  const searchTypeDropdownRef = useRef<any>(null);
+
+  const menuArr = [
+    { id: 0, name: 'TOTAL_USERS', content: 'Tab menu ONE', count: countData?.totalUserCount || 0 },
+    { id: 1, name: 'REGISTERED_USERS', content: 'Tab menu TWO', count: countData?.registeredOmpassUserCount || 0 },
+    { id: 2, name: 'UNREGISTERED_USERS', content: 'Tab menu THREE', count: countData?.ubRegisteredOmpassUserCount || 0 },
+    { id: 3, name: 'PASSCODE_USERS', content: 'Tab menu FOUR', count: countData?.passcodeUserCount || 0 },
+  ];
+
+  const navigate = useNavigate();
+  const { formatMessage } = useIntl();
+
+  const searchHandleMouseDown = (event: MouseEvent) => {
+    if (searchDropdownRef.current && !searchDropdownRef.current.contains(event.target as Node)) {
+      setIsSearchDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', searchHandleMouseDown);
+    return () => {
+      document.removeEventListener('mousedown', searchHandleMouseDown);
+    };
+  }, [isSearchDropdownOpen]);
+
+  const searchOsHandleMouseDown = (event: MouseEvent) => {
+    if (searchOsDropdownRef.current && !searchOsDropdownRef.current.contains(event.target as Node)) {
+      setIsOsDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', searchOsHandleMouseDown);
+    return () => {
+      document.removeEventListener('mousedown', searchOsHandleMouseDown);
+    };
+  }, [isOsDropdownOpen]);
+
+  const handleMouseDown = (event: MouseEvent) => {
+    if (dropdownRefs.current && !dropdownRefs.current.contains(event.target as Node)) {
+      setSortingInfo({
+        ...sortingInfo,
+        sorting: sortingNow ? sortingNow.sorting : 'none',
+        isToggle: false,
+      });
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleMouseDown);
+    return () => {
+      document.removeEventListener('mousedown', handleMouseDown);
+    };
+  }, [sortingInfo?.isToggle]);
+
+  useLayoutEffect(() => {
+    CustomAxiosGetAll([GetPutUsersApi, GetUsersCountApi], [
+      (data: GetPutUsersApiDataType) => {
+        setUserData(data.users);
+        setTotalCount(data.queryTotalCount);
+      }, (data: GetUsersCountApiType) => {
+        setCountData(data);
       }
-    };
-
-    useEffect(() => {
-      document.addEventListener('mousedown', searchHandleMouseDown);
-      return () => {
-        document.removeEventListener('mousedown', searchHandleMouseDown);
-      };
-    }, [isSearchDropdownOpen]);
-  
-    const searchOsHandleMouseDown = (event: MouseEvent) => {
-      if (searchOsDropdownRef.current && !searchOsDropdownRef.current.contains(event.target as Node)) {
-        setIsOsDropdownOpen(false);
+    ], [
+      {
+        page_size: tableCellSize,
+        page: pageNum - 1,
+        ompass: tabNow === 'REGISTERED_USERS' ? true : tabNow === 'UNREGISTERED_USERS' ? false : null,
+        sortBy: sortingNow ? sortingNow.sorting === 'none' ? null : sortingNow.list : null,
+        sortDirection: sortingNow ? sortingNow.sorting === 'none' ? null : sortingNow.sorting : null,
+        username: searchType === 'username' ? searchContent : null,
+        last_login_time: searchType === 'lastLoginDate' ? searchContent : null,
+        os: searchType === 'osNames' && searchOsInfo ? searchOsInfo : null,
+        passcode: tabNow === 'PASSCODE_USERS' ? true : false,
+        enable_passcode_count: searchType === 'enablePasscodeCount' ? searchContent : null,
+        role: searchTypeInfo ? searchTypeInfo : null,
+        integration_search_word: searchType === 'all' || searchType === null ? searchContent : null,
+        language: lang,
       }
-    };
-  
-    useEffect(() => {
-      document.addEventListener('mousedown', searchOsHandleMouseDown);
-      return () => {
-        document.removeEventListener('mousedown', searchOsHandleMouseDown);
-      };
-    }, [isOsDropdownOpen]);
-  
-    const handleMouseDown = (event: MouseEvent) => {
-      const index = 
-        sortingInfo?.list === 'username' ? 0 : 
-        sortingInfo?.list === 'os' ? 1 :
-        sortingInfo?.list === 'lastLoginDate' ? 2 :
-        sortingInfo?.list === 'enable_passcode_count' ? 3 : 4;
-  
-        if (dropdownRefs.current[index] && !dropdownRefs.current[index].contains(event.target as Node)) {
-          setSortingInfo({
-            ...sortingInfo,
-            sorting: sortingNow ? sortingNow.sorting : 'none',
-            isToggle: false,
-          });
-        }
-    };
-  
-    useEffect(() => {
-      document.addEventListener('mousedown', handleMouseDown);
-      return () => {
-        document.removeEventListener('mousedown', handleMouseDown);
-      };
-    }, [sortingInfo?.isToggle]);
-  
-    useEffect(()=>{
-      CustomAxiosGet(
-        GetPutUsersApi,
-        (data:GetPutUsersApiDataType)=>{
-          setUserData(data.users);
-          setTotalCount(data.queryTotalCount);
-        },{
-          page_size: tableCellSize,
-          page: pageNum -1,
-          ompass: tabNow === 'REGISTERED_USERS' ? true : tabNow === 'UNREGISTERED_USERS' ? false : null,
-          sortBy: sortingNow ? sortingNow.sorting === 'none' ? null : sortingNow.list : null,
-          sortDirection: sortingNow ? sortingNow.sorting === 'none' ? null : sortingNow.sorting : null,
-          username: searchType === 'username' ? searchContent : null,
-          last_login_time: searchType === 'lastLoginDate' ? searchContent : null,
-          os: searchType === 'os' && searchOsInfo ? searchOsInfo : null,
-          passcode: tabNow === 'PASSCODE_USERS' ? true : false, 
-          enable_passcode_count: searchType === 'enable_passcode_count' ? searchContent : null,
-          role: searchTypeInfo ? searchTypeInfo : null,
-          integration_search_word: searchType === 'all' || searchType === null ? searchContent : null,
-          language: lang === 'ko' ? 'KR' : 'EN',
-        },
-        (err:any) => {
-          error1Fun(err, navigate);
-          // if(err.response.data.code === 'ERR_001') {
-          //   navigate('/AutoLogout');
-          // }
-        }
-      );
-  
-      CustomAxiosGet(
-        GetUsersCountApi,
-        (data:GetUsersCountApiType) => {
-          setCountData(data);
-        }
-      )
-    },[tableCellSize, pageNum, sortingNow, tabNow, rendering]);
-  
-    useEffect(() => {
-      if(excelData) {
-        CustomAxiosPost(
-          PostExcelUploadApi,
-          () => {
-            message.success(formatMessage({ id: 'EXCEL_FILE_UPLOAD_SUCCESSFUL' }));
-            const render = rendering;
-            const renderTemp = render.concat(true);
-            setRendering(renderTemp);
-          }, 
-          {
-            signupRequests: excelData
-          },
-          (err:any) => {
-            message.error(formatMessage({ id: 'EXCEL_FILE_UPLOAD_FAILED' }));
-            error1Fun(err, navigate);
-            // if(err.response.data.code === 'ERR_001') {
-            //   navigate('/AutoLogout');
-            // }
-          }
+    ])
+  }, [tableCellSize, pageNum, sortingNow, tabNow, rendering]);
+
+  function roleTypeFun(role: userRoleType) {
+    if (role !== null) {
+      return <FormattedMessage id={role as string} />
+    }
+  }
+
+  function searchTypeFun(search: listType) {
+    if (search !== null) {
+      if (search === 'role') {
+        return <FormattedMessage id='RANK' />
+      } else {
+        return <FormattedMessage id={search as string} />
+      }
+    }
+  }
+
+  function dropdownUl100Fun() {
+    const searchTypeArr: listType[] = ['all', 'role', 'username', 'osNames', 'enablePasscodeCount'];
+
+    return (
+      searchTypeArr.map((data: listType) => {
+        return (
+          <li key={'search_type_arr_' + data}>
+            <div
+              onClick={() => {
+                setSearchType(data);
+                setIsSearchDropdownOpen(false);
+                setSearchOsInfo(null);
+                setIsTypeDropdownOpen(false);
+                setSearchTypeInfo(null);
+              }}
+            >
+              {data === 'role' ?
+                <FormattedMessage id='RANK' />
+                :
+                data === 'enablePasscodeCount' ?
+                  <>PASSCODE</>
+                  :
+                  <FormattedMessage id={data as string} />
+              }
+            </div>
+          </li>
         )
-      }
-    },[excelData]);
+      })
+    )
+  }
 
-    function roleTypeFun(role: userRoleType) {
-      if(role !== null) {
-        return <FormattedMessage id={role as string} />
-      }
+  const selectMenuHandler = (name: string, index: number) => {
+    clickTab(index);
+    setTabNow(name);
+    setPageNum(1);
+  };
+
+  // 행 호버 이벤트 핸들러
+  const handleRowHover = (index: number) => {
+    setHoveredRow(index);
+  };
+
+  // input enter 시 검색 버튼 이벤트 실행
+  const searchInputKeyDownFun = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      searchClickButtonFun();
     }
+  };
 
-    function searchTypeFun(search: listType) {
-      if(search !== null) {
-        if(search === 'role') {
-          return <FormattedMessage id='RANK' />
-        } else {
-          return <FormattedMessage id={search as string} />
-        }
-      }
+  // 검색 버튼 이벤트
+  const searchClickButtonFun = () => {
+    const render = rendering;
+    const renderTemp = render.concat(true);
+    setRendering(renderTemp);
+    if (searchContentRef.current) {
+      setSearchContent(searchContentRef.current.value);
     }
+  }
 
-    function dropdownUl100Fun() {
-      const searchTypeArr:listType[] = ['all', 'role', 'username', 'os', 'enable_passcode_count'];
-
-      return (
-        searchTypeArr.map((data:listType) => {
+  const sortingUlFun = (listType: listType, opened: boolean) => {
+    return (
+      <ul
+        className={'dropdown-ul tab_table_sorting_dropdown ' + listType}
+        aria-hidden={!opened}
+      >
+        {sortingArr.map((sorting: sortingType) => {
           return (
-            <li key={'search_type_arr_' + data}>
+            <li key={'sorting_arr_' + sorting}>
               <div
                 onClick={() => {
-                  setSearchType(data);
-                  setIsSearchDropdownOpen(false);
-                  setSearchOsInfo(null);
-                  setIsTypeDropdownOpen(false);
-                  setSearchTypeInfo(null);
+                  setSortingInfo({
+                    list: listType,
+                    sorting: sorting,
+                    isToggle: false,
+                  });
+                  setSortingNow({
+                    list: listType,
+                    sorting: sorting,
+                  });
                 }}
               >
-                {data === 'role' ? 
-                  <FormattedMessage id='RANK' />
-                :
-                  data === 'enable_passcode_count' ?
-                    <>PASSCODE</>
-                    :
-                    <FormattedMessage id={data as string} />
-                }
+                {sorting === 'none' && <FormattedMessage id='UNSORTED' />}
+                {sorting === 'asc' && <FormattedMessage id='ASCENDING' />}
+                {sorting === 'desc' && <FormattedMessage id='DESCENDING' />}
               </div>
             </li>
           )
-        })
-      )
-    }
-  
-    const selectMenuHandler = (name: string, index: number) => {
-      clickTab(index);
-      setTabNow(name);
-      setPageNum(1);
-    };
-  
-    // 행 호버 이벤트 핸들러
-    const handleRowHover = (index: number) => {
-      setHoveredRow(index);
-    };
+        })}
+      </ul>
+    )
+  };
 
-    // input enter 시 검색 버튼 이벤트 실행
-    const searchInputKeyDownFun = (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-        searchClickButtonFun();
-      }
-    };
-
-    // 검색 버튼 이벤트
-    const searchClickButtonFun = () => {
-      const render = rendering;
-      const renderTemp = render.concat(true);
-      setRendering(renderTemp);
-      if(searchContentRef.current) {
-        setSearchContent(searchContentRef.current.value);
-      }
-      // if(searchType === null) {
-      //   message.error(formatMessage({ id: 'PLEASE_SELECT_A_SEARCH_ITEM' }))
-      // } else {
-      //   const render = rendering;
-      //   const renderTemp = render.concat(true);
-      //   setRendering(renderTemp);
-      //   if(searchContentRef.current) {
-      //     setSearchContent(searchContentRef.current.value);
-      //   }
-      // }
-    }
-  
-    const sortingUlFun = (listType: listType, index: number) => {
-      const sortingArr:sortingType[] = ['none', 'asc', 'desc'];
-
-      return (
-        <ul
-          className={'dropdown-ul-' + index + ' tab_table_sorting_dropdown ' + listType}
-          ref={ (el) => (sortingUlFunRefs.current[index] = el) }
-        >
-          {sortingArr.map((sorting: sortingType) => {
-            return (
-              <li key={'sorting_arr_' + sorting}>
-                <div
-                  onClick={() => {
-                    setSortingInfo({
-                      list: listType,
-                      sorting: sorting,
-                      isToggle: false,
-                    });
-                    setSortingNow({
-                      list: listType,
-                      sorting: sorting,
-                    });
-                  }}
-                >
-                  {sorting === 'none' && <FormattedMessage id='UNSORTED' />}
-                  {sorting === 'asc' && <FormattedMessage id='ASCENDING' />}
-                  {sorting === 'desc' && <FormattedMessage id='DESCENDING' />}
-                </div>
-              </li>
-            )
-          })}
-        </ul>
-      )
-    };
-  
-    const sortingImgFun = (isSorting: boolean, sortingType: sortingType) => {
-      if(isSorting) {
-        if(sortingType === 'asc') {
-          return (
-            <img src={sorting_top_arrow} width='18px' className='tab_table_sorting_image' />
-          )
-        } else if (sortingType === 'desc') {
-          return (
-            <img src={sorting_bottom_arrow} width='18px' className='tab_table_sorting_image' />
-          )
-        } else {
-          return (
-            <img src={sorting_icon} width='18px' className='tab_table_sorting_image opac' />
-          )      
-        }
+  const sortingImgFun = (isSorting: boolean, sortingType: sortingType) => {
+    if (isSorting) {
+      if (sortingType === 'asc') {
+        return (
+          <img src={sorting_top_arrow} width='18px' className='tab_table_sorting_image' />
+        )
+      } else if (sortingType === 'desc') {
+        return (
+          <img src={sorting_bottom_arrow} width='18px' className='tab_table_sorting_image' />
+        )
       } else {
         return (
           <img src={sorting_icon} width='18px' className='tab_table_sorting_image opac' />
         )
       }
-    };
-  
-    const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
-      setPageNum(pageNumber);
-      setTableCellSize(pageSizeOptions);
-    };
-  
-    // function OSNamesComponent({ osNames }: any) {
-    //   const windowsCount = osNames.filter((name: any) => (name === 'Windows' || name === 'windows')).length;
-    //   const macosCount = osNames.filter((name: any) => name === 'MacOs').length;
-    //   const browserCount = osNames.filter((name: any) => name === 'BROWSER').length;
-    
-    //   let result = [];
-    
-    //   if (windowsCount > 0) {
-    //     result.push(<img key='windows' src={os_windows} width='22px' height='22px' style={{padding: '8px'}} />);
-    //   } 
-      
-    //   if (macosCount > 0) {
-    //     result.push(<img key='mac' src={os_mac} width='22px' height='22px' />);
-    //   } 
-      
-    //   if (browserCount > 0) {
-    //     result.push(<img key='browser' src={browser_icon} width='37px' height='37px' onClick={() => {
-    //       console.log('444')
-    //     }} />);
-    //   } 
-  
-    //   return <div style={{display: 'flex', justifyContent: 'center'}} onClick={() => {
-    //     console.log('3333')
-    //   }}>{result}</div>;
-    // }
-  
-    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const uploadedFile = e.target.files?.[0];
-      if (uploadedFile) {
-        setFile(uploadedFile);
-        parseExcel(uploadedFile);
-      }
-    };
-  
-    const parseExcel = (uploadedFile: File) => {
-      const reader = new FileReader();
-  
-      reader.onload = (e) => {
-        const data = new Uint8Array(e.target?.result as ArrayBuffer);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 0});
-        setExcelData(jsonData);
-      };
-  
-      reader.readAsArrayBuffer(uploadedFile);
-    };
-  
-    const downloadExcel = () => {
-      CustomAxiosGet(
-        GetPutUsersApi,
-        (data: GetPutUsersApiDataType) => {
-          const rawData = data.users;
-          const filtedData = rawData.map((data: GetPutUsersApiType) => {
-            return {
-              name: data.name,
-              phoneNumber: data.phoneNumber,
-              role: data.role,
-              username: data.username,
-            }
-          })
-  
-          const worksheet = XLSX.utils.json_to_sheet(filtedData);
-          const workbook = XLSX.utils.book_new();
-          XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-          const excelBuffer = XLSX.write(workbook, { type: 'array', bookType: 'xlsx' });
-  
-          saveAsExcel(excelBuffer, 'user_list.xlsx');
-        },
-        {
-          page: 0,
-          page_size: 999999,
-        },
-        (err:any) => {
-          message.error(formatMessage({ id: 'EXCEL_FILE_DOWNLOAD_FAILED' }));
-          error1Fun(err, navigate);
-          // if(err.response.data.code === 'ERR_001') {
-          //   navigate('/AutoLogout');
-          // }
-        }
+    } else {
+      return (
+        <img src={sorting_icon} width='18px' className='tab_table_sorting_image opac' />
       )
-    };
-  
-    const saveAsExcel = (buffer: any, fileName: string) => {
-      const data = new Blob([buffer], { type: 'application/octet-stream' });
-      const url = window.URL.createObjectURL(data);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = fileName;
-      link.click();
-      setTimeout(() => {
-        window.URL.revokeObjectURL(url);
-      }, 100);
-    };
+    }
+  };
+
+  const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
+    setPageNum(pageNumber);
+    setTableCellSize(pageSizeOptions);
+  };
+
+  const downloadExcel = () => {
+    CustomAxiosGet(
+      GetPutUsersApi,
+      (data: GetPutUsersApiDataType) => {
+        const rawData = data.users;
+        const filtedData = rawData.map((data: GetPutUsersApiType) => {
+          return {
+            name: data.name,
+            phoneNumber: data.phoneNumber,
+            role: data.role,
+            username: data.username,
+          }
+        })
+
+        const worksheet = XLSX.utils.json_to_sheet(filtedData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+        const excelBuffer = XLSX.write(workbook, { type: 'array', bookType: 'xlsx' });
+
+        saveAsExcel(excelBuffer, 'user_list.xlsx');
+      },
+      {
+        page: 0,
+        page_size: 999999,
+      },
+      (err: any) => {
+        message.error(formatMessage({ id: 'EXCEL_FILE_DOWNLOAD_FAILED' }));
+
+      }
+    )
+  };
+
+  const saveAsExcel = (buffer: any, fileName: string) => {
+    const data = new Blob([buffer], { type: 'application/octet-stream' });
+    const url = window.URL.createObjectURL(data);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    link.click();
+    setTimeout(() => {
+      window.URL.revokeObjectURL(url);
+    }, 100);
+  };
+
+  const labelDropdownOnclickCallback = (label: listType) => {
+    if (sortingInfo === null || sortingInfo?.list !== label) {
+      setSortingInfo({
+        list: label,
+        sorting: 'none',
+        isToggle: true,
+      })
+    } else {
+      if (sortingInfo?.list === label) {
+        setSortingInfo({
+          list: label,
+          sorting: 'none',
+          isToggle: !sortingInfo.isToggle,
+        })
+      }
+    }
+  }
+
+  const labelSortingComponent = (label: listType) => sortingNow === null ?
+    sortingImgFun(false, 'none')
+    :
+    sortingImgFun((sortingNow?.list === label && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'desc')), sortingNow!.sorting)
+
+  const isSortingDropdownChecked = (label: listType) => sortingInfo?.list === label && sortingInfo.isToggle
+
+  const createHeaderColumn = (label: listType, formattedId: string) => {
+    const isNotSorted = label === 'osNames' || label === 'role' || label === 'enablePasscodeCount'
+    return <>
+      <label className={'dropdown-label ' + (sortingNow?.list === label && sortingNow?.sorting !== 'none' ? 'fontBlack' : '')}>
+        <FormattedMessage id={formattedId} />
+        {!isNotSorted && labelSortingComponent(label)}
+      </label>
+      {!isNotSorted && sortingUlFun(label, isSortingDropdownChecked(label))}
+    </>
+  }
+  const createOSSearchOptionComponent = (os: string) => <li>
+    <div
+      onClick={() => {
+        setSearchOsInfo(os.toUpperCase() as searchOsType);
+        setIsOsDropdownOpen(false);
+      }}
+    >
+      {os}
+    </div>
+  </li>
+
+  const createRoleSearchOptionComponent = (role: userRoleType) => <li>
+    <div
+      onClick={() => {
+        setSearchTypeInfo(role);
+        setIsTypeDropdownOpen(false);
+      }}
+    >
+      <FormattedMessage id={role as string} />
+    </div>
+  </li>
+
+  const createSearchComponent = () => {
+    
+  }
 
   return (
     <>
-      <Header />
-      <div style={{overflowY: 'auto', height: height}}>
-        <div
-          className='content-center'
-          style={{flexDirection: 'column', paddingTop: '70px', minHeight: `${height - 130}px`, justifyContent: 'start'}}
-        >
-          <div
-            className='information_list_header'
-          >
-            <div>
-              <FormattedMessage id='USER_MANAGEMENT' />
-            </div>
-            <div
-              className='mb40'
-              style={{display: 'flex'}}
-            >
-              <h1>
-                <FormattedMessage id='USER_LIST' />
-              </h1>
-            </div>
-          </div>
+      <Contents>
+        <ContentsHeader title="USER_MANAGEMENT" subTitle='USER_LIST' />
 
-          {/* 탭 tab */}
-          <div>
-            <TabMenu> 
-              {menuArr.map((el,index) => (
-                <li
-                  key={'tab' + index} 
-                  className={index === currentTab ? "submenu focused" : "submenu" }
-                  onClick={() => selectMenuHandler(el.name, index)}>
-                  <div className='submenu_content_count'>{el.count}</div>
-                  <div><FormattedMessage id={el.name} /></div>
-                </li>
-              ))}
-            </TabMenu>
-            
-            <div
-              style={{width: '95%', margin: '0 auto'}}
+        {/* 탭 tab */}
+        <div>
+          <TabMenu>
+            {menuArr.map((el, index) => (
+              <li
+                key={'tab' + index}
+                className={index === currentTab ? "submenu focused" : "submenu"}
+                onClick={() => selectMenuHandler(el.name, index)}>
+                <div className='submenu_content_count'>{el.count}</div>
+                <div><FormattedMessage id={el.name} /></div>
+              </li>
+            ))}
+          </TabMenu>
+
+          <div
+            style={{ width: '95%', margin: '0 auto' }}
+          >
+            {/* 검색 */}
+            <ul
+              className='mb20 tab_search_ul'
             >
-              {/* 검색 */}
-              <ul
-                className='mb20 tab_search_ul'
+              <li
+                style={{ position: 'relative' }}
+                ref={searchDropdownRef}
               >
-                <li
-                  style={{position: 'relative'}}
-                  ref={searchDropdownRef}
-                >
-                  <input id='dropdown-100' type='checkbox' readOnly checked={isSearchDropdownOpen}/>
-                  <label htmlFor='dropdown-100' className='dropdown-label-100' onClick={()=>{setIsSearchDropdownOpen(!isSearchDropdownOpen)}}>
-                    {searchType ? 
-                      <div
-                        className='dropdown-100-header'
-                      >
-                        <span>
-                          {searchTypeFun(searchType)}
-                        </span>
-                        <img className='tab_dropdown_arrow' src={dropdown_icon}/>
-                      </div> 
-                    : 
-                      <div
-                        className='dropdown-100-header'
-                      >
-                        <span>
-                          <FormattedMessage id='SEARCH_TYPE' />
-                        </span>
-                        <img className='tab_dropdown_arrow' src={dropdown_icon}/>
-                      </div>
-                    }
-                  </label>
-                  <ul
-                    className='dropdown-ul-100'
-                  >
-                    {dropdownUl100Fun()}
-                  </ul>
-                </li>
-                <li>
-                  {searchType === 'os' ? 
+                <input id='dropdown-100' type='checkbox' className='sorting-dropdown' readOnly checked={isSearchDropdownOpen} />
+                <label htmlFor='dropdown-100' className='dropdown-label-100' onClick={() => { setIsSearchDropdownOpen(!isSearchDropdownOpen) }}>
+                  {searchType ?
                     <div
-                      ref={searchOsDropdownRef}
+                      className='dropdown-100-header'
                     >
-                      <input id='dropdown-101' type='checkbox' readOnly checked={isOsDropdownOpen}/>
-                      <label htmlFor='dropdown-101' className='dropdown-label-5' onClick={()=>{setIsOsDropdownOpen(!isOsDropdownOpen)}}>
-                        {searchOsInfo ? 
-                          <div
-                            className='dropdown-101-header'
-                          >
-                            <span>
-                              {searchOsInfo === 'WINDOWS' && <>windows</>}
-                              {searchOsInfo === 'MAC' && <>mac</>}
-                              {searchOsInfo === 'BROWSER' && <>browser</>}
-                            </span>
-                            <img className='tab_dropdown_arrow' src={dropdown_icon}/>
-                          </div> 
-                        : 
-                          <div
-                            className='dropdown-101-header'
-                          >
-                            <span>
-                              <FormattedMessage id='ENV_TYPE' />
-                            </span>
-                            <img className='tab_dropdown_arrow' src={dropdown_icon}/>
-                          </div>
-                        }
-                      </label>
-                      <ul
-                        className='dropdown-ul-101'
-                      >
-                        <li>
-                          <div
-                            onClick={() => {
-                              setSearchOsInfo('WINDOWS');
-                              setIsOsDropdownOpen(false);
-                            }}
-                          >
-                            windows
-                          </div>
-                        </li>
-                        <li>
-                          <div
-                            onClick={() => {
-                              setSearchOsInfo('MAC');
-                              setIsOsDropdownOpen(false);
-                            }}
-                          >
-                            mac
-                          </div>
-                        </li>
-                        <li>
-                          <div
-                            onClick={() => {
-                              setSearchOsInfo('BROWSER');
-                              setIsOsDropdownOpen(false);
-                            }}
-                          >
-                            browser
-                          </div>
-                        </li>
-                      </ul>
+                      <span>
+                        {searchTypeFun(searchType)}
+                      </span>
+                      <img className='tab_dropdown_arrow' src={dropdown_icon} />
                     </div>
+                    :
+                    <div
+                      className='dropdown-100-header'
+                    >
+                      <span>
+                        <FormattedMessage id='SEARCH_TYPE' />
+                      </span>
+                      <img className='tab_dropdown_arrow' src={dropdown_icon} />
+                    </div>
+                  }
+                </label>
+                <ul
+                  className='dropdown-ul-100'
+                >
+                  {dropdownUl100Fun()}
+                </ul>
+              </li>
+              <li>
+                {searchType === 'osNames' ?
+                  <div
+                    ref={searchOsDropdownRef}
+                  >
+                    <input id='dropdown-101' type='checkbox' className='sorting-dropdown' readOnly checked={isOsDropdownOpen} />
+                    <label htmlFor='dropdown-101' className='dropdown-label' onClick={() => { setIsOsDropdownOpen(!isOsDropdownOpen) }}>
+                      {searchOsInfo ?
+                        <div
+                          className='dropdown-101-header'
+                        >
+                          <span>
+                            {searchOsInfo === 'WINDOWS' && <>windows</>}
+                            {searchOsInfo === 'MAC' && <>mac</>}
+                            {searchOsInfo === 'BROWSER' && <>browser</>}
+                          </span>
+                          <img className='tab_dropdown_arrow' src={dropdown_icon} />
+                        </div>
+                        :
+                        <div
+                          className='dropdown-101-header'
+                        >
+                          <span>
+                            <FormattedMessage id='ENV_TYPE' />
+                          </span>
+                          <img className='tab_dropdown_arrow' src={dropdown_icon} />
+                        </div>
+                      }
+                    </label>
+                    <ul
+                      className='dropdown-ul-101'
+                    >
+                      {createOSSearchOptionComponent('windows')}
+                      {createOSSearchOptionComponent('mac')}
+                      {createOSSearchOptionComponent('browser')}
+                    </ul>
+                  </div>
 
                   :
 
-                    searchType === 'role' ?
+                  searchType === 'role' ?
                     <div
                       ref={searchTypeDropdownRef}
                     >
-                      <input id='dropdown-102' type='checkbox' readOnly checked={isTypeDropdownOpen}/>
-                      <label htmlFor='dropdown-102' className='dropdown-label-5' onClick={()=>{setIsTypeDropdownOpen(!isTypeDropdownOpen)}}>
-                        {searchTypeInfo ? 
+                      <input id='dropdown-102' type='checkbox' readOnly checked={isTypeDropdownOpen} />
+                      <label htmlFor='dropdown-102' className='dropdown-label' onClick={() => { setIsTypeDropdownOpen(!isTypeDropdownOpen) }}>
+                        {searchTypeInfo ?
                           <div
                             className='dropdown-102-header'
                           >
                             <span>
                               {roleTypeFun(searchTypeInfo)}
                             </span>
-                            <img className='tab_dropdown_arrow' src={dropdown_icon}/>
-                          </div> 
-                        : 
+                            <img className='tab_dropdown_arrow' src={dropdown_icon} />
+                          </div>
+                          :
                           <div
                             className='dropdown-102-header'
                           >
                             <span>
                               <FormattedMessage id='USER_TYPE' />
                             </span>
-                            <img className='tab_dropdown_arrow' src={dropdown_icon}/>
+                            <img className='tab_dropdown_arrow' src={dropdown_icon} />
                           </div>
                         }
                       </label>
                       <ul
                         className='dropdown-ul-102'
                       >
-                        <li>
-                          <div
-                            onClick={() => {
-                              setSearchTypeInfo('USER');
-                              setIsTypeDropdownOpen(false);
-                            }}
-                          >
-                            <FormattedMessage id='USER' />
-                          </div>
-                        </li>
-                        <li>
-                          <div
-                            onClick={() => {
-                              setSearchTypeInfo('ADMIN');
-                              setIsTypeDropdownOpen(false);
-                            }}
-                          >
-                            <FormattedMessage id='ADMIN' />
-                          </div>
-                        </li>
-                        <li>
-                          <div
-                            onClick={() => {
-                              setSearchTypeInfo('SUPER_ADMIN');
-                              setIsTypeDropdownOpen(false);
-                            }}
-                          >
-                            <FormattedMessage id='SUPER_ADMIN' />
-                          </div>
-                        </li>
+                        {createRoleSearchOptionComponent('USER')}
+                        {createRoleSearchOptionComponent('ADMIN')}
+                        {createRoleSearchOptionComponent('ROOT')}
                       </ul>
-                    </div> 
+                    </div>
 
-                  :
+                    :
 
                     <input
                       ref={searchContentRef}
                       className='input-st1 tab_search_input'
                       onKeyDown={searchInputKeyDownFun}
                     />
-                  }
-                </li>
-                <li>
-                  <button
-                    className={'button-st4 tab_search_button ' + (lang === 'en' ? 'en' : '')}
-                    onClick={searchClickButtonFun}
-                  >
-                    <img src={search_icon} width='18px' className='tab_search_button_img'/>
-                    <FormattedMessage id='SEARCH' />
-                  </button>
-                  <img
-                    className='information_list_search_reset'
-                    src={reset_icon} width='27px'
-                    onClick={() => {
-                      setSortingNow(null);
-                      setSearchType(null);
-                      setSearchContent('');
-                      const inputElement = searchContentRef.current;
-                      if (inputElement) {
-                        inputElement.value = ''; // input 내용을 지움
-                      }
-                      const render = rendering;
-                      const renderTemp = render.concat(true);
-                      setRendering(renderTemp);
-                    }}
-                  />
-                </li>
-              </ul>
-
-              {/* 테이블 */}
-              <div className='table-st1'>
-                <table
-                  className='tab_table_list'
+                }
+              </li>
+              <li>
+                <button
+                  className={'button-st4 tab_search_button ' + (lang === 'EN' ? 'en' : '')}
+                  onClick={searchClickButtonFun}
                 >
-                  <thead>
-                    <tr>
-                      <th
-                        style={{position: 'relative'}}
-                        ref={ (el) => (dropdownRefs.current[4] = el) }
-                      >
-                        <input id='dropdown-4' type='checkbox' checked={sortingInfo?.list === 'role' && sortingInfo.isToggle} readOnly></input>
-                        <label htmlFor='dropdown-4' className={'dropdown-label-4 ' + (sortingNow?.list === 'role' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
-                          onClick={()=>{
-                            if(sortingInfo === null || sortingInfo?.list !== 'role') {
-                              setSortingInfo({
-                                list: 'role',
-                                sorting: 'none',
-                                isToggle: true,
-                              })
-                            } else {
-                              if(sortingInfo?.list === 'role') {
-                                setSortingInfo({
-                                  list: 'role',
-                                  sorting: 'none',
-                                  isToggle: !sortingInfo.isToggle,
-                                })
-                              }
-                            }
-                          }}
-                        >
-                          <FormattedMessage id='RANK' />
-                          {sortingNow === null ?
-                            sortingImgFun(false, 'none')
-                          :
-                            sortingImgFun((sortingNow?.list === 'role' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'desc')), sortingNow!.sorting)
-                          }
-                        </label>
-                        {sortingUlFun("role", 4)}
-                      </th>
-                      <th
-                        style={{position: 'relative'}}
-                        ref={ (el) => (dropdownRefs.current[0] = el) }
-                      >
-                        <input id='dropdown-0' type='checkbox' checked={sortingInfo?.list === 'username' && sortingInfo.isToggle} readOnly></input>
-                        <label htmlFor='dropdown-0' className={'dropdown-label-0 ' + (sortingNow?.list === 'username' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
-                          onClick={()=>{
-                            if(sortingInfo === null || sortingInfo?.list !== 'username') {
-                              setSortingInfo({
-                                list: 'username',
-                                sorting: 'none',
-                                isToggle: true,
-                              })
-                            } else {
-                              if(sortingInfo?.list === 'username') {
-                                setSortingInfo({
-                                  list: 'username',
-                                  sorting: 'none',
-                                  isToggle: !sortingInfo.isToggle,
-                                })
-                              }
-                            }
-                          }}
-                        >
-                          <FormattedMessage id='USER_ID' />
-                          {sortingNow === null ?
-                            sortingImgFun(false, 'none')
-                          :
-                            sortingImgFun((sortingNow?.list === 'username' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'desc')), sortingNow!.sorting)
-                          }
-                        </label>
-                        {sortingUlFun("username", 0)}
-                      </th>
-                      <th
-                        style={{position: 'relative'}}
-                        ref={ (el) => (dropdownRefs.current[1] = el) }
-                      >
-                        <input id='dropdown-1' type='checkbox' checked={sortingInfo?.list === 'os' && sortingInfo.isToggle} readOnly></input>
-                        <label htmlFor='dropdown-1' className={'dropdown-label-1 ' + (sortingNow?.list === 'os' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
-                          onClick={()=>{
-                            if(sortingInfo === null || sortingInfo?.list !== 'os') {
-                              setSortingInfo({
-                                list: 'os',
-                                sorting: 'none',
-                                isToggle: true,
-                              })
-                            } else {
-                              if(sortingInfo?.list === 'os') {
-                                setSortingInfo({
-                                  list: 'os',
-                                  sorting: 'none',
-                                  isToggle: !sortingInfo.isToggle,
-                                })
-                              }
-                            }
-                          }}
-                        >
-                          <FormattedMessage id='ENV' />
-                          {sortingNow === null ?
-                            sortingImgFun(false, 'none')
-                          :
-                            sortingImgFun((sortingNow?.list === 'os' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'desc')), sortingNow!.sorting)
-                          }
-                        </label>
-                        {sortingUlFun('os', 1)}
-                      </th>
-                      <th
-                        style={{position: 'relative'}}
-                        ref={ (el) => (dropdownRefs.current[2] = el) }
-                      >
-                        <input id='dropdown-2' type='checkbox' checked={sortingInfo?.list === 'lastLoginDate' && sortingInfo.isToggle} readOnly></input>
-                        <label htmlFor='dropdown-2' className={'dropdown-label-2 ' + (sortingNow?.list === 'lastLoginDate' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
-                          onClick={()=>{
-                            if(sortingInfo === null || sortingInfo?.list !== 'lastLoginDate') {
-                              setSortingInfo({
-                                list: 'lastLoginDate',
-                                sorting: 'none',
-                                isToggle: true,
-                              })
-                            } else {
-                              if(sortingInfo?.list === 'lastLoginDate') {
-                                setSortingInfo({
-                                  list: 'lastLoginDate',
-                                  sorting: 'none',
-                                  isToggle: !sortingInfo.isToggle,
-                                })
-                              }
-                            }
-                          }}
-                        >
-                          <FormattedMessage id='LAST_LOGIN' />
-                          {sortingNow === null ?
-                            sortingImgFun(false, 'none')
-                          :
-                            sortingImgFun((sortingNow?.list === 'lastLoginDate' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'desc')), sortingNow!.sorting)
-                          }
-                        </label>
-                        {sortingUlFun('lastLoginDate', 2)}
-                      </th>
-                      <th
-                        style={{position: 'relative'}}
-                        ref={ (el) => (dropdownRefs.current[3] = el) }
-                      >
-                        <input id='dropdown-3' type='checkbox' checked={sortingInfo?.list === 'enable_passcode_count' && sortingInfo.isToggle} readOnly></input>
-                        <label htmlFor='dropdown-3' className={'dropdown-label-3 ' + (sortingNow?.list === 'enable_passcode_count' && sortingNow?.sorting !== 'none'? 'fontBlack' : '')}
-                          onClick={()=>{
-                            if(sortingInfo === null || sortingInfo?.list !== 'enable_passcode_count') {
-                              setSortingInfo({
-                                list: 'enable_passcode_count',
-                                sorting: 'none',
-                                isToggle: true,
-                              })
-                            } else {
-                              if(sortingInfo?.list === 'enable_passcode_count') {
-                                setSortingInfo({
-                                  list: 'enable_passcode_count',
-                                  sorting: 'none',
-                                  isToggle: !sortingInfo.isToggle,
-                                })
-                              }
-                            }
-                          }}
-                        >
-                          PASSCODE
-                          {sortingNow === null ?
-                            sortingImgFun(false, 'none')
-                          :
-                            sortingImgFun((sortingNow?.list === 'enable_passcode_count' && (sortingNow?.sorting === 'asc' || sortingNow?.sorting === 'desc')), sortingNow!.sorting)
-                          }
-                        </label>
-                        {sortingUlFun('enable_passcode_count', 3)}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {userData.map((data:GetPutUsersApiType, index:number)=>(
-                      <tr
-                        key={'user_data_' + index}
-                        onMouseEnter={() => handleRowHover(index)}
-                        onMouseLeave={() => handleRowHover(-1)}
-                        onClick={() => {
-                          navigate(`/Information/detail/User/${data.id}`);
-                          dispatch(userUuidChange(data.id));
-                          // sessionStorage.setItem('userUuid', data.id);
-                        }}
-                        style={{ background: hoveredRow === index ? '#D6EAF5' : 'transparent', cursor: 'pointer' }}
-                      >
-                        <td>
-                          {roleTypeFun(data.role as userRoleType)}
-                        </td>
-                        <td>
-                          {data.username}
-                        </td>
-                        <td
-                          style={{padding: 0}}
-                        >
-                          <div style={{position: 'relative', top: '2px'}}>
-                            {data.osNames.includes('WINDOWS') && <img key='windows' src={os_windows} width='22px' height='22px' style={{padding: '8px'}} />}
-                            {data.osNames.includes('MAC') && <img key='mac' src={os_mac} width='22px' height='22px' />}
-                            {data.osNames.includes('BROWSER') && <img key='browser' src={browser_icon} width='37px' height='37px' />}
-                          </div>
-                        </td>
-                        <td>{data.lastLoginDate}</td>
-                        <td>{data.enablePasscodeCount}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              <div
-                className="mt50 mb40"
-                style={{textAlign: 'center'}}
-              >
-                <Pagination showQuickJumper showSizeChanger current={pageNum} pageSize={tableCellSize} total={totalCount} onChange={onChangePage}/>
-              </div>
-
-              <div
-                style={{float: 'right'}}
-                className='mt20 mb30'
-              >
-                {/* <button className='tab_download_upload_button'>
-                  <img src={list_download} width='20px' className='tab_download_upload_button_img' />
-                  <span className='tab_download_upload_button_title'><FormattedMessage id='DOWNLOAD_USER_LIST' /></span>
+                  <img src={search_icon} width='18px' className='tab_search_button_img' />
+                  <FormattedMessage id='SEARCH' />
                 </button>
-                <button className='tab_download_upload_button'>
-                  <img src={list_upload} width='20px' className='tab_download_upload_button_img' />
-                  <span className='tab_download_upload_button_title'><FormattedMessage id='UPLOAD_USER_LIST' /></span>
-                </button> */}
-                <div
-                  style={{display: 'flex'}}
-                >
-                  {/* <div
-                    className='tab_download_upload_button'
-                  >
-                    <label
-                      htmlFor="excel-upload"
-                      style={{cursor: 'pointer'}}
-                    >
-                      <img src={list_upload} width='20px' className='tab_download_upload_button_img' />
-                      <span className='tab_download_upload_button_title'><FormattedMessage id='UPLOAD_USER_LIST' /></span>
-                    </label>
-                    <input
-                      id="excel-upload"
-                      type="file"
-                      accept=".xlsx"
-                      style={{ display: "none" }}
-                      onChange={handleFileUpload}
-                    />
-                  </div> */}
-                  <div
-                    className='tab_download_upload_button'
-                    onClick={downloadExcel}
-                  >
-                    <label
-                      style={{cursor: 'pointer'}}
-                    >
-                      <img src={list_download} width='20px' className='tab_download_upload_button_img' />
-                      <span className='tab_download_upload_button_title'><FormattedMessage id='DOWNLOAD_USER_LIST' /></span>
-                    </label>
+                <img
+                  className='information_list_search_reset'
+                  src={reset_icon} width='27px'
+                  onClick={() => {
+                    setSortingNow(null);
+                    setSearchType(null);
+                    setSearchContent('');
+                    const inputElement = searchContentRef.current;
+                    if (inputElement) {
+                      inputElement.value = ''; // input 내용을 지움
+                    }
+                    const render = rendering;
+                    const renderTemp = render.concat(true);
+                    setRendering(renderTemp);
+                  }}
+                />
+              </li>
+            </ul>
+
+            {/* 테이블 */}
+            <CustomTable<GetPutUsersApiType>
+              className='tab_table_list'
+              theme='table-st1'
+              datas={userData}
+              columns={[
+                {
+                  key: 'role',
+                  title: createHeaderColumn('role', 'RANK'),
+                  render: (data) => roleTypeFun(data as userRoleType)
+                },
+                {
+                  key: 'username',
+                  title: createHeaderColumn('username', 'USER_ID')
+                },
+                {
+                  key: 'name',
+                  title: createHeaderColumn('name', 'NAME')
+                },
+                {
+                  key: 'osNames',
+                  title: createHeaderColumn('osNames', 'ENV'),
+                  render: (data, index, row) => <div className='information-env-col-div'>
+                    {data.includes('WINDOWS') && <img key='windows' src={os_windows} width='17px' height='17px' />}
+                    {data.includes('MAC') && <img key='mac' src={os_mac} width='22px' height='22px' />}
+                    {data.includes('BROWSER') && <img key='browser' src={browser_icon} width='27px' height='27px' />}
                   </div>
+                },
+                {
+                  key: 'lastLoginDate',
+                  title: createHeaderColumn('lastLoginDate', 'LAST_LOGIN')
+                },
+                {
+                  key: 'enablePasscodeCount',
+                  title: createHeaderColumn('enablePasscodeCount', 'PASSCODE')
+                }
+              ]}
+              onHeaderColClick={(col, target) => {
+                labelDropdownOnclickCallback(col.key as listType)
+                dropdownRefs.current = target
+              }}
+              onBodyRowHover={(_, index) => {
+                handleRowHover(index)
+              }}
+              onBodyRowMouseLeave={() => {
+                handleRowHover(-1)
+              }}
+              onBodyRowClick={(row, index, arr) => {
+                navigate(`/Information/detail/User/${row.id}`);
+              }}
+              bodyRowStyle={(_, index) => ({
+                background: hoveredRow === index ? '#D6EAF5' : 'transparent'
+              })}
+            />
+
+            <div
+              className="mt50 mb40"
+              style={{ textAlign: 'center' }}
+            >
+              <Pagination showQuickJumper showSizeChanger current={pageNum} pageSize={tableCellSize} total={totalCount} onChange={onChangePage} />
+            </div>
+
+            <div
+              style={{ float: 'right' }}
+              className='mt20 mb30'
+            >
+              <div
+                style={{ display: 'flex' }}
+              >
+                <div
+                  className='tab_download_upload_button'
+                  onClick={downloadExcel}
+                >
+                  <label
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <img src={list_download} width='20px' className='tab_download_upload_button_img' />
+                    <span className='tab_download_upload_button_title'><FormattedMessage id='DOWNLOAD_USER_LIST' /></span>
+                  </label>
                 </div>
               </div>
             </div>
-          </div>      
+          </div>
         </div>
-        <div
-          className='copyRight-style mb30'
-        >
-          {CopyRightText}
-        </div>
-      </div>
+      </Contents>
     </>
   )
 }

@@ -38,38 +38,28 @@
 
 .login_agent_download_loading {
   position: relative;
-  top: -9vh;
 }
 
 .login_agent_download_button_container {
   width: 280px;
-  height: 50px;
   text-align: center;
 }
 
 .login_agent_download_button {
-  font-size: 1.2rem;
-  border-radius: 2.2rem;
+  font-size: 1rem;
+  border-radius: 1.2rem;
   position: relative;
-  top: -10vh;
-  padding: 7%;
+  padding: 8px 12px;
   width: 100%;
-}
-
-/* .login_agent_download_button {
-  width: 30%;
-  font-size: 1.2rem;
-  border-radius: 30px;
-  padding: 12px;
-  position: relative;
-  top: -130px;
-  min-width: 300px;
-} */
-
-.login_download_button_title {
-  position: relative;
-  top: -7px;
-  margin-left: 7px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  & > img {
+    width: 24px;
+    height: 24px;
+  }
 }
 
 .login_form_container { 
@@ -109,7 +99,6 @@
 
 .login-button {
   width: 100%;
-  height: 72px;
   font-size: 1.2rem;
   font-weight: 700;
   border-radius: 12px;
@@ -159,14 +148,10 @@
     max-width: 63%;
   }
   .login_agent_download_button_container {
-    width: 220px;
+    width: 240px;
   }
   .login_agent_download_button {
     font-size: 0.95rem;
-    padding: 5%;
-  }
-  .login_download_button_title {
-    top: -5px;
   }
   .login_form_container {
     width: 47%;
@@ -214,8 +199,7 @@
     width: 190px;
   }
   .login_agent_download_button {
-    font-size: 0.8rem;
-    padding: 5%;
+    font-size: 0.7rem;
   }
   .login_footer_locale_img {
     width: 13.1px;
@@ -233,8 +217,12 @@
     width: 180px;
   }
   .login_agent_download_button {
-    font-size: 0.75rem;
-    padding: 5%;
+    top: 0;
+    font-size: 0.65rem;
+    padding: 4px 8px;
+  }
+  .login_agent_download_loading {
+    top: 0;
   }
 }
 
@@ -253,65 +241,3 @@
     margin: auto;
   }
 }
-
-/* @media (min-width: 1200px) {
-  .login_form_container {
-    width: 75%;
-  }
-  .login_footer_locale_img {
-    width: 14px;
-  }
-  .login_footer_manual_download_img {
-    width: 19px;
-  }
-  .login_form_title {
-    font-size: 1.9rem;
-  }
-}
-
-@media (min-width: 1300px) {
-  .login_form_container {
-    width: 75%;
-  }
-  .login_footer_locale_img {
-    width: 13px;
-  }
-  .login_footer_manual_download_img {
-    width: 20px;
-  }
-  .login_form_title {
-    font-size: 1.9rem;
-  }
-}
-
-@media (min-width: 1800px) {
-  .login_form_container {
-    margin: 10%;
-    width: 60%;
-  }
-  .login_footer_locale_img {
-    width: 16px;
-  }
-  .login_footer_manual_download_img {
-    width: 21px;
-  }
-  .login_form_title {
-    font-size: 2.1rem;
-  }
-}
-
-@media (min-width: 2000px) {
-  .login_form_container {
-    margin: 10%;
-    width: 50%;
-  }
-  .login_footer_locale_img {
-    width: 16px;
-  }
-  .login_footer_manual_download_img {
-    width: 21px;
-  }
-  .login_form_title {
-    font-size: 2.1rem;
-  }
-} */

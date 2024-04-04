@@ -1,0 +1,176 @@
+.billing-contents-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.plans-description-container {
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+}
+
+.billing-item-container {
+    padding: 32px 0;
+}
+
+.plan-box {
+    padding: 12px;
+    border: 1px solid #1D8EFF;
+    border-radius: 16px;
+    width: 300px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+    box-shadow: 0 0 5px rgba(0,0,0,.5);
+}
+
+.plan-box.selected {
+    padding-top: 28px;
+}
+
+.plan-selected {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    text-align: center;
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 20px;
+    line-height: 20px;
+    background-color: #1D8EFF;
+    color: white;
+    padding: 1px 8px;
+    border-radius: 12px;
+    font-size: .66rem;
+    font-weight: 700;
+}
+
+.plan-title {
+    text-align: center;
+}
+
+.plan-price-container {
+    width: 100%;
+    flex: 0 0 80px;
+    background-color: #F0F8FF;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+    padding: 12px 0;
+    gap: 8px;
+}
+
+.plan-price-number {
+    font-size: 1.6rem;
+    margin-right: 8px;
+}
+
+.plan-price-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.plan_sub_price_text {
+    font-size: .7rem;
+    color: #777777;
+}
+
+.plan-description-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    flex: 1;
+}
+
+.plan-description-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 16px;
+    gap: 12px;
+    font-size: .7rem;
+    height: 24px;
+}
+
+.plan-description-icon {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &>img {
+        height: 70%;
+    }
+}
+
+.billing-user-nums-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 8px;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.billing-current-user-nums {
+    color: #1D8EFF;
+}
+
+.billing-current-user-gauge-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-right: 44px;
+    margin-top: 12px;
+}
+
+.billing-current-plan-user-gauge {
+    background-color: #E1F1FF;
+    width: 340px;
+    height: 28px;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    z-index: 2;
+}
+
+.billing-current-plan-user-gauge-inner {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    z-index: 1;
+    background-color: #1D8EFF;
+    border-radius: 20px;
+    transition: width .2s ease-out;
+}
+
+.billing-input-row {
+    display: flex;
+    flex-direction: row;
+    gap: 48px;
+}
+
+.billing-input-label {
+    flex: 0 0 240px;
+    text-align: end;
+    height: 30px;
+}
+
+.billing-input-contents {
+    flex: 1;
+    align-self: center;
+    min-height: 30px;
+}

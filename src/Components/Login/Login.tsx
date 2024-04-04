@@ -8,8 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { langChange } from 'Redux/actions/langChange';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
 import { useWindowHeight } from 'Components/CommonCustomComponents/useWindowHeight';
-import { CustomAxiosGet, CustomAxiosGetFile, CustomAxiosPatch, CustomAxiosPost } from 'Components/CommonCustomComponents/CustomAxios';
-import { GetAgentInstallerDownloadApi, PatchUsersResetPasswordApi, PostLoginApi } from 'Constants/ApiRoute';
+import { CustomAxiosPatch, CustomAxiosPost } from 'Components/CommonCustomComponents/CustomAxios';
+import { PatchUsersResetPasswordApi, PostLoginApi } from 'Constants/ApiRoute';
 
 import { CopyRightText } from '../../Constants/ConstantValues';
 import ompass_logo_image from '../../assets/ompass_logo_image.png';
@@ -20,14 +20,14 @@ import login_id from '../../assets/login_id.png';
 import login_password from '../../assets/login_password.png';
 import view_password from '../../assets/view_password.png';
 import dont_look_password from '../../assets/dont_look_password.png';
-import maunal_download from '../../assets/maunal_download.png'
-import { GetAgentInstallerApi } from 'Constants/ApiRoute';
-import { GetAgentApiArrayType, GetAgentApiDataType, GetAgentApiType } from 'Types/ServerResponseDataTypes';
+import manunal_download from '../../assets/manunal_download.png'
 import { userInfoChange } from 'Redux/actions/userChange';
 import { useCookies } from 'react-cookie';
 import { LoadingOutlined } from '@ant-design/icons';
 import { passwordRegex } from 'Components/CommonCustomComponents/CommonRegex';
 import { AgentFileDownload } from 'Components/CommonCustomComponents/AgentFileDownload';
+import { LoginFunc } from 'Functions/ApiFunctions';
+import { saveLocaleToLocalStorage } from 'Functions/GlobalFunctions';
 
 
 const Login = () => {
@@ -44,8 +44,6 @@ const Login = () => {
   const [isPasscodeModalOpen, setIsPasscodeModalOpen] = useState<boolean>(false);
   const [isPasscodeAlert, setIsPasscodeAlert] = useState<boolean>(false);
   const [isPasscodeLook, setIsPasscodeLook] = useState<boolean>(false);
-  const [isIdAlert, setIsIdAlert] = useState<boolean>(false);
-  const [currentVersion, setCurrentVersion] = useState<GetAgentApiType | null>(null);
   const [idChange, setIdChange] = useState<string>('');
   const [passwordChange, setPasswordChange] = useState<string>('');
   const [cookies, setCookie, removeCookie] = useCookies(["rememberUserId"]); // Cookies 이름
@@ -110,7 +108,7 @@ const Login = () => {
           dispatch(userInfoChange(header))
           message.success(formatMessage({ id: 'LOGIN_COMPLETE' }))
           if(role === 'USER') {
-            navigate('/InformationDetail/User');
+            navigate('/UserManagement');
           } else {
             navigate('/Main');
           }
@@ -137,29 +135,31 @@ const Login = () => {
     const password = userPassword.value;
 
     setUserId(username);
-
-    CustomAxiosPost(
-      PostLoginApi,
-      (data:any) => {
-        const { ompassUri, loginType } = data;
-        if(isRemember) {
-          setCookie('rememberUserId', username, {maxAge: 60*60*24*7});
-        }
-        if(loginType === 'PW_CHANGE_USER') {
-          setIsModalOpen(true)
-        } else {
-          OMPASS(ompassUri);
-        }
-      },
-      {
-        username: username,
-        password: password,
-        language: lang === 'ko' ? 'KO' : 'EN',
-        clientType: 'BROWSER',
-      },
-      () => {
-      },
-    );
+    LoginFunc({
+      domain: 'hozzi1',
+      username: username,
+      password: password,
+      language: lang!,
+      loginClientType: 'ADMIN',
+      clientMetadata: null
+    }, (token) => {
+      console.log(token)
+      // localStorage.setItem('authorization', token);
+      // dispatch(userInfoChange(token))
+      // navigate('/Main')
+      // const { ompassUri, loginType } = data;
+      // if(isRemember) {
+      //   setCookie('rememberUserId', username, {maxAge: 60*60*24*7});
+      // }
+      // if(loginType === 'PW_CHANGE_USER') {
+      //   setIsModalOpen(true)
+      // } else {
+      //   // console.log(ompassUri)
+      //   // console.log('https://localhost:9002/' + ompassUri.split('/').slice(3,).join('/'))
+      //   // OMPASS('https://localhost:9002/' + ompassUri.split('/').slice(3,).join('/'))
+      //   OMPASS(ompassUri);
+      // }
+    })
   }
 
     // 화면 너비
@@ -177,8 +177,7 @@ const Login = () => {
       };
     }, []);
 
-  return (
-    <div
+  return <div
       style={{overflowY: 'auto', height: height, backgroundColor: '#E4EBEF'}}
     >
     <div
@@ -240,7 +239,7 @@ const Login = () => {
                   }
                 }}
               >
-                <img src={download_icon} style={{maxWidth: '14%'}}/>
+                <img src={download_icon}/>
                 <span className='login_download_button_title'><FormattedMessage id='DOWNLOAD_FOR_WINDOWS' /></span> 
               </button>
               }
@@ -363,12 +362,6 @@ const Login = () => {
         </Col>
       </Row>
 
-      {/* footer */}
-      <Row>
-        
-      </Row>
-
-
     </div>
 
     <div
@@ -379,18 +372,18 @@ const Login = () => {
       >
         <img className='login_footer_locale_img' src={locale_image} />
         <span 
-          className={'mlr5 locale-toggle' + (lang === 'ko' ? ' active' : '')}
+          className={'mlr5 locale-toggle' + (lang === 'KR' ? ' active' : '')}
           onClick={() => {
-            dispatch(langChange('ko'));
-            localStorage.setItem('locale','ko');
+            dispatch(langChange('KR'));
+            saveLocaleToLocalStorage('KR')
           }}
         >KO</span>|
         <span 
-          className={'mlr5 locale-toggle' + (lang === 'en' ? ' active' : '')}
+          className={'mlr5 locale-toggle' + (lang === 'EN' ? ' active' : '')}
           style={{marginRight: '12px'}}
           onClick={() => {
-            dispatch(langChange('en'));
-            localStorage.setItem('locale','en');
+            dispatch(langChange('EN'));
+            saveLocaleToLocalStorage('EN')
           }}
         >EN</span>
       <a
@@ -398,7 +391,7 @@ const Login = () => {
         download
       >
         <img
-          src={maunal_download}
+          src={manunal_download}
           className='login_footer_manual_download_img'
         />
       </a>
@@ -533,7 +526,6 @@ const Login = () => {
       </div>
     </Modal>
     </div>
-  )
 }
 
 export default Login;

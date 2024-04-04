@@ -1,23 +1,11 @@
 .common_button {
-  height: 54px;
-  border-radius: 8px;
-  margin: 5px;
   font-size: 1rem;
+  height: 100%;
+  &:nth-child(2) {
+    margin: 0 8px;
+  }
 }
-
-.guide_page_windows_download {
-  width: 216px;
-}
-
-.guide_page_windows_download.en {
-  width: 247px;
-}
-
-/* .guide_page_manual_download {
-
-} */
 
 .guide_page_login {
-  position: relative;
-  top: 3px;
+  height: 100%;
 }

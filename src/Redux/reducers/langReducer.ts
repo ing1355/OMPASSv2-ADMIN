@@ -1,7 +1,7 @@
 import { DefaultReduxActionType, ReduxStateType } from '../../Types/ReduxStateTypes';
 import types from '../types';
 
-const lang: ReduxStateType['lang'] = localStorage.getItem('locale') as ('ko' | 'en') || 'ko';
+const lang: ReduxStateType['lang'] = localStorage.getItem('locale') as ReduxStateType['lang'] || 'KR';
 
 const langReducer = (state = lang, action: DefaultReduxActionType<ReduxStateType['lang']>) => {
   switch (action.type) {

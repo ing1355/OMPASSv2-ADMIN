@@ -1,6 +1,7 @@
 .header_col ul {
   padding: 0;
 }
+
 .header_col ul li {
   display: inline-block;
   margin-left: 16px;
@@ -42,7 +43,7 @@
 
 .dropdown_menu_label:hover {
   cursor: pointer;
-} 
+}
 
 .dropdown_menu_ul {
   display: none;
@@ -80,7 +81,7 @@
   /* background-color: rgba(0,0,0,0.64); */
 }
 
-#dropdown_menu:checked + label + .dropdown_menu_ul {
+#dropdown_menu:checked+label+.dropdown_menu_ul {
   display: block;
 }
 
@@ -109,3 +110,34 @@
   font-weight: bold;
 }
 
+@media (max-width:768px) {
+
+  /* 모바일 가로, 타블렛 세로 */
+  .header_logo_title {
+    font-size: 1.3rem;
+  }
+
+  .header_logo_title_agent {
+    font-size: 1.1rem;
+  }
+
+  .dropdown_menu_ul li div {
+    font-size: .9rem;
+  }
+
+  .dropdown_menu_ul {
+    top: 62px;
+    left: 0;
+  }
+
+  .header_col ul li {
+    margin-left: 8px;
+    font-size: 16px;
+  }
+  .header_title_img {
+    max-width: 18px;
+  }
+  .dropdown_menu_label > img {
+    max-width: 22px;
+  }
+}

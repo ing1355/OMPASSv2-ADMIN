@@ -60,7 +60,7 @@ const allManagememtItem = userManagementItem.concat(
 );
 
 const s_allManagememtItem: selectCheckboxType[] = allManagememtItem.map((data) => ({
-  role: 'SUPER_ADMIN',
+  role: 'ROOT',
   menu: userManagementItem.includes(data) ? 'userMgmt' :
     managerMangementItem.includes(data) ? 'adminMgmt' :
     versionManagementItem.includes(data) ? 'versionMgmt' :
@@ -100,7 +100,7 @@ const mgmtItem = [
 ];
 
 const s_allCheck: allselectCheckboxType[] = mgmtItem.map((data) => ({
-  role: 'SUPER_ADMIN',
+  role: 'ROOT',
   menu: data as menuType,
   isChecked: false
 }))
@@ -165,13 +165,13 @@ const PermissionComponent = ({ roleType }: { roleType: userRoleType }) => {
   }
 
   const permissionCheckboxFun = (roleType: userRoleType) => {
-    const s_MenuTemp = [...new Set(selectCheckbox.filter((data) => data.role === 'SUPER_ADMIN').map((d) => d.menu))];
+    const s_MenuTemp = [...new Set(selectCheckbox.filter((data) => data.role === 'ROOT').map((d) => d.menu))];
     const a_MenuTemp = [...new Set(selectCheckbox.filter((data) => data.role === 'ADMIN').map((d) => d.menu))];
     const u_MenuTemp = [...new Set(selectCheckbox.filter((data) => data.role === 'USER').map((d) => d.menu))];
 
     return (
-      roleType === 'SUPER_ADMIN'?
-        allCheck.filter((d) => d.role === 'SUPER_ADMIN').map((chk, index) => {
+      roleType === 'ROOT'?
+        allCheck.filter((d) => d.role === 'ROOT').map((chk, index) => {
           return (
             <div 
               key={'s_Menu' + chk.role + chk.menu}

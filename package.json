@@ -1,12 +1,11 @@
 {
   "name": "ompass_rp_admin",
   "version": "0.1.0(20)",
-  "proxy": "https://192.168.182.140:8084",
+  "proxy": "http://192.168.182.140:7500",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@mui/material": "^5.13.5",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -17,10 +16,8 @@
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@types/styled-components": "^5.1.26",
-    "antd": "^5.4.7",
+    "antd": "^5.14.1",
     "axios": "^1.4.0",
-    "history": "^5.3.0",
-    "install": "^0.13.0",
     "jwt-decode": "^3.1.2",
     "ompass": "^0.5.1",
     "query-string": "^8.1.0",
@@ -43,7 +40,8 @@
     "build": "cross-env GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "scp -r ./build/* oms@192.168.182.140:/usr/local/ompass_agent_rp"
+    "deploy": "scp -r ./build/* hozzi@192.168.182.140:/usr/local/ompass_agent_rp",
+    "testDeploy": "scp -r ./build/* hozzi@192.168.182.140:/usr/local/ompass_agent_rp_test"
   },
   "eslintConfig": {
     "extends": [

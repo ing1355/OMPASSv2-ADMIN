@@ -21,9 +21,8 @@ export function AgentFileDownload(setIsFileDownloadDisable: React.Dispatch<React
     },
     () => {
       message.error(errMessage);
-    },{},
-    (err:any) => {
-      setIsFileDownloadDisable(false);
     }
-  )
+  ).finally(() => {
+    setIsFileDownloadDisable(false);
+  })
 }

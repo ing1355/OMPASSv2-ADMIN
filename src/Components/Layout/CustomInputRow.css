@@ -1,0 +1,36 @@
+.custom-detail-label-input-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 48px;
+    padding: 12px 0;
+    width: 100%;
+}
+
+.custom-detail-label {
+    flex: 0 0 200px;
+    height: 100%;
+    text-align: end;
+}
+
+.custom-detail-contents {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 12px;
+    & > input {
+        flex: 0 0 80%;
+        height: 36px;
+    }
+    & > textarea {
+        flex: 0 0 82%;
+        height: 36px;
+        padding: 20px 12px;
+    }
+    & > button {
+    }
+}

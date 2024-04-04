@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router"
 import { useState } from 'react'
 import InformationList from "./InformationList"
-import InformationDetail from "./InformationDetail"
 
 const Information = () => {
   const [tableCellSize, setTableCellSize] = useState<number>(10);
@@ -10,18 +9,21 @@ const Information = () => {
   return (
     <>
       <Routes>
-        <Route 
-          path="/" 
+        <Route path="/detail/:uuid" element={<>
+          authTestPolicies
+        </>} />
+        <Route
+          path="/"
           element={
-            <InformationList 
-              pageNum={pageNum} 
-              setPageNum={setPageNum} 
+            <InformationList
+              pageNum={pageNum}
+              setPageNum={setPageNum}
               tableCellSize={tableCellSize}
               setTableCellSize={setTableCellSize}
             />
           }
         />
-        <Route path='/detail/:params/:selectedUuid' element={<InformationDetail />} />
+
       </Routes>
     </>
   )

@@ -1,42 +1,42 @@
 import { Route, Routes } from "react-router"
 import { useState } from 'react';
-import AdminsManagement from "./AdminsManagement";
-import InformationDetail from "Components/Information/InformationDetail";
+import UserManagement from "./UserManagement";
 import CreateAdmins from "./CreateAdmins";
+import ApplicationDetail from "Components/Application/ApplicationDetail";
 
-const Admins = () => {
+const Users = () => {
   const [tableCellSize, setTableCellSize] = useState<number>(10);
   const [pageNum, setPageNum] = useState<number>(1);
 
   return (
     <>
       <Routes>
-        <Route 
-          path="/" 
+        <Route
+          path="/"
           element={
-            <AdminsManagement
-              pageNum={pageNum} 
-              setPageNum={setPageNum} 
+            <UserManagement
+              pageNum={pageNum}
+              setPageNum={setPageNum}
               tableCellSize={tableCellSize}
               setTableCellSize={setTableCellSize}
             />
           }
         />
-        <Route 
+        <Route path="/detail/*" element={<ApplicationDetail />} />
+        <Route
           path="/CreateAdmins"
           element={
-            <CreateAdmins 
-              pageNum={pageNum} 
-              setPageNum={setPageNum} 
+            <CreateAdmins
+              pageNum={pageNum}
+              setPageNum={setPageNum}
               tableCellSize={tableCellSize}
               setTableCellSize={setTableCellSize}
             />
           }
         />
-        <Route path='/detail/:params/:selectedUuid' element={<InformationDetail />} />
       </Routes>
     </>
   )
 }
 
-export default Admins
+export default Users

@@ -1,4 +1,4 @@
-import { type } from "os"
+import { PasscodeHistoryDataType } from "Functions/ApiFunctions"
 
 export type GetPutUsersApiDataType = {
   queryTotalCount: number,
@@ -36,7 +36,8 @@ export type GetAgentApiType = {
   fileName: string,
 }
 
-export type userRoleType = "USER" | "ADMIN" | "SUPER_ADMIN" | null;
+// export type userRoleType = "USER" | "ADMIN" | "SUPER_ADMIN" | null;
+export type userRoleType = "USER" | "ADMIN" | "ROOT";
 
 export type UserInfoType = {
   userId: string,
@@ -65,7 +66,7 @@ export type DevicesType = {
   os: OsNamesType,
   osVersion: string,
   macAddress: string,
-  passcode: PasscodeType,
+  passcode: PasscodeHistoryDataType['passcode'],
   updatedAt: string,
   allowedAccessUsers: AllowedAccessUsersType[],
   ompassInfo: OmpassInfoType,
@@ -92,16 +93,6 @@ export type OmpassInfoType = {
   alias: string,
 }
 
-type PasscodeType = {
-  id: number,
-  number: string,
-  validTime: number,
-  recycleCount: number,
-  createdAt: string,
-  expirationTime: string,
-  issuerUsername: string,
-}
-
 type OsNamesType = "WINDOWS" | "MAC";
 
 export type GetPutSecretKeyApiType = {
@@ -116,29 +107,6 @@ export type GetUsersCountApiType = {
   registeredOmpassUserCount: number,
   totalUserCount: number,
   ubRegisteredOmpassUserCount: number,
-}
-
-export type GetPasscodeHistoriesApiType = {
-  queryTotalCount: number,
-  passcodeHistories: passcodeHistoriesType[],
-}
-
-export type passcodeHistoriesType = {
-  action: string,
-  createdAt: string,
-  passcode: PasscodeType,
-  user: userSimpleType,
-  device: deviceSimpleType,
-}
-
-type userSimpleType = {
-  username: string,
-  role: userRoleType,
-}
-
-type deviceSimpleType = {
-  deviceType: string,
-  macAddress: string,
 }
 
 export type GetPermissionsSettingApiType = {

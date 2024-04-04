@@ -1,0 +1,9 @@
+.custom-detail-policy-navigate-text {
+    position: absolute;
+    left: 4px;
+    top: 105%;
+    height: 24px;
+    font-size: .8rem;
+
+    background-color: var(--bg-color);
+}

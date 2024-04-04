@@ -1,0 +1,34 @@
+.application-detail-input-sub-btn {
+    height: 40px;
+}
+
+.application-detail-logo-change-contents {
+    padding: 16px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 36px;
+}
+
+.applicaiton-detail-logo-change-image-container {
+    height: 200px;
+    width: 200px;
+}
+
+.applicaiton-detail-logo-change-image-box {
+    border: 1px solid black;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    & > img {
+        max-width: 95%;
+        max-height: 95%;
+    }
+}
+
+.application-detail-logo-change-text {
+    text-align: center;
+}

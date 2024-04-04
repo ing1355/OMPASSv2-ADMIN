@@ -9,3 +9,15 @@
   position: relative;
   top: 3px;
 }
+
+.tab_table_list > thead > tr > th {
+  position: relative;
+}
+
+.information-env-col-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}

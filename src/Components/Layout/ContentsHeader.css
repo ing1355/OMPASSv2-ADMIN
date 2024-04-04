@@ -1,0 +1,27 @@
+.contents-header-container { 
+    width: 1350px;
+}
+
+.contents-header-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    & > div {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+    }
+}
+
+.custom-detail-header-items-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    & > div:hover {
+        color: #0b69e5;
+        cursor: pointer;
+    }
+}

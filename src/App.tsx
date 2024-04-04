@@ -6,62 +6,71 @@ import { useSelector } from 'react-redux';
 import { ReduxStateType } from 'Types/ReduxStateTypes';
 import Login from 'Components/Login/Login';
 import CreateAccount from 'Components/Account/CreateAccount';
-import InformationDetail from 'Components/Information/InformationDetail';
 import OMPASSVerify from 'Components/OMPASS/OMPASSVerify';
 import SecretKey from 'Components/SecretKey/SecretKey';
 import Main from 'Components/Main/Main';
 import AxiosController from 'AxiosController';
 import Locale from './Locale/index';
 import PasscodeManagement from 'Components/PasscodeManagement/PasscodeManagement';
-import Information from 'Components/Information/Information';
-import Admins from 'Components/Admins/Admins';
 import Agent from 'Components/Agent/Agent';
 import GuidePage from 'Components/Account/GuidePage';
 import AutoLogout from 'Components/Login/AutoLogout';
 import PermissionSettings from 'Components/PermissionSettings/PermissionSettings';
+import Header from 'Components/Header/Header';
+import Billing from 'Components/Billing/Billing';
+import Application from 'Components/Application/Application';
+import Policies from 'Components/Policy/Policies';
+import Groups from 'Components/Group/Groups';
+import Users from 'Components/Users/Users';
+import AuthLog from 'Components/Log/AuthLog';
+import PortalLog from 'Components/Log/PortalLog';
+
+const convertLangToIntlVer = (lang: ReduxStateType['lang']) => {
+  return lang === 'EN' ? 'en-us' : 'ko-kr'
+}
 
 const App: React.FC = () => {
   const { lang, userInfo } = useSelector((state: ReduxStateType) => ({
     lang: state.lang!,
     userInfo: state.userInfo
   }));
-  return (
-    <IntlProvider locale={lang} messages={Locale[lang]}>
-      {/* <div className="App"> */}
+  
+  return <IntlProvider locale={convertLangToIntlVer(lang)} messages={Locale[lang]}>
       <AxiosController />
+      {userInfo && <Header />}
       <Routes>
         <Route path='/ompass/*' element={<OMPASSVerify />} />
+        <Route path='/GuidePage' element={<GuidePage />} />
+        <Route path='/AutoLogout' element={<AutoLogout />} />
         {
           userInfo ? (
-            userInfo.role!.includes('ADMIN') ? <>
-            <Route path='/Main' element={<Main />} />
-            <Route path='/Information/*' element={<Information />} />
-            {/* <Route path='/InformationList*' element={<InformationList />} /> */}
-            {/* <Route path='/InformationDetail/:params/:selectedUuid' element={<InformationDetail />} /> */}
-            {/* <Route path='/Information/detail/:params/:selectedUuid' element={<InformationDetail />} /> */}
-            <Route path='/AgentManagement/*' element={<Agent />} />
-            <Route path='/AdminsManagement/*' element={<Admins />} />
-            <Route path='/PasscodeManagement' element={<PasscodeManagement />} />
-            <Route path='/SecretKey' element={<SecretKey />} />
-            <Route path='/*' element={<Navigate to='/Main' replace={true}/>}/>
-            </> 
-            : 
-            // <Route path='/*' element={<Navigate to='/Information/*' replace={true}/>}/>
-            <Route path='/*' element={<InformationDetail />}/>
-          ) : 
-          <>
-            <Route path='/*' element={<Navigate to='/' replace={true}/>}/>
-            <Route path='/CreateAccount' element={<CreateAccount />} />
-            <Route path='/' element={<Login />} />
-            <Route path='/GuidePage' element={<GuidePage />} />
-            <Route path='/AutoLogout' element={<AutoLogout />} />
-            {/* <Route path='/PermissionSettings' element={<PermissionSettings />} /> */}
-          </>
+            userInfo.role! !== 'USER' ? <>
+              <Route path='/Main' element={<Main />} />
+              <Route path='/AgentManagement/*' element={<Agent />} />
+              <Route path='/UserManagement/*' element={<Users />} />
+              <Route path='/PasscodeManagement' element={<PasscodeManagement />} />
+              <Route path='/SecretKey' element={<SecretKey />} />
+              <Route path='/PermissionSettings' element={<PermissionSettings />} />
+              <Route path='/Billing' element={<Billing />} />
+              <Route path='/Applications/*' element={<Application />} />
+              <Route path='/Policies/*' element={<Policies />} />
+              <Route path='/Groups/*' element={<Groups />} />
+              <Route path='/AuthLogs' element={<AuthLog />} />
+              <Route path='/PortalLogs' element={<PortalLog />} />
+              <Route path='/*' element={<Navigate to='/Main' replace={true} />} />
+            </>
+              : <>
+              <Route path='/UserManagement/*' element={<Users />} />
+              </>
+          ) :
+            <>
+              <Route path='/*' element={<Navigate to='/' replace={true} />} />
+              <Route path='/CreateAccount' element={<CreateAccount />} />
+              <Route path='/' element={<Login />} />
+            </>
         }
       </Routes>
-      {/* </div> */}
-    </IntlProvider>
-  );
+    </IntlProvider>;
 }
 
 export default App;

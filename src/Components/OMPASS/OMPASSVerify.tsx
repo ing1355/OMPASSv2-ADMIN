@@ -24,7 +24,7 @@ const OMPASSVerify = () => {
         if(role.includes('ADMIN')) {
           navigate('/Main')
         } else {
-          navigate(`/information/detail/User/${uuid}`)
+          navigate(`/UserManagement/detail/${uuid}`)
         }
       },
       {
