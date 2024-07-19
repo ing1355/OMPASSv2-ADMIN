@@ -1,10 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
 import { FormattedMessage } from 'react-intl';
-import user_management_white from '../../assets/user_management_white.png';
+import userManagementMenuIconWhite from '../../assets/userManagementMenuIconWhite.png';
 
 interface GoToLoginPageButtonProps {
-  className: string;
+  className?: string;
 }
 
 const GoToLoginPageButton: React.FC<GoToLoginPageButtonProps> = ({className}) => {
@@ -12,19 +12,17 @@ const GoToLoginPageButton: React.FC<GoToLoginPageButtonProps> = ({className}) =>
 
   return (
     <button
-      className={className}
+      className={className || 'button-st1'}
       onClick={() => {
         navigate('/');
       }}
     >
       <img
-        src={user_management_white}
-        width="25px"
-        style={{ marginLeft: '4px', top: '2px', position: 'relative' }}
+        src={userManagementMenuIconWhite}
       />
-      <span style={{ position: 'relative', top: '-7px', margin: '0 10px 0 2px' }}>
+      <div>
         <FormattedMessage id="LOGIN" />
-      </span>
+      </div>
     </button>
   );
 };

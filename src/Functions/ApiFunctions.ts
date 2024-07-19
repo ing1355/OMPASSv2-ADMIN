@@ -1,118 +1,21 @@
-import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPost, CustomAxiosPut } from "Components/CommonCustomComponents/CustomAxios";
-import { AddApplicationListApi, AddPasscodeApi, AddPoliciesListApi, AddUserDataApi, AddUserGroupApi, DeleteApplicationListApi, DeletePasscodeApi, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetPasscodeHistoriesApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, PostLoginApi, UpdateApplicationListApi, UpdatePoliciesListApi, UpdateUserDataApi, UpdateUserGroupApi } from "Constants/ApiRoute";
+import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosGetFile, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from "Components/CommonCustomComponents/CustomAxios";
+import { AddApplicationListApi, AddPasscodeApi, AddPoliciesListApi, AddUserDataApi, AddUserGroupApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DownloadAgentInstallerApi, DuplicateUserNameCheckApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetPasscodeHistoriesApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, PostLoginApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi } from "Constants/ApiRoute";
 import { INT_MAX_VALUE } from "Constants/ConstantValues";
-import { userRoleType } from "Types/ServerResponseDataTypes";
+import { AxiosResponse } from "axios";
 
-type ClientMetaDataType = {
-    os: {
-        name: string
-        version: string
-    }
-    clientId: string
-    macAddress: string
-    agentVersion: string
-}
-type UserNameType = {
-    name: {
-        lastName: string
-        firstName: string
-    }
-}
-type HttpMethodType = "GET" | "POST" | "PUT" | "DELETE"
-type ProcessTypeType = "REGISTRATION" | "AUTHENTICATION"
-type AuthenticatorStatusType = "REGISTERED" | "ENABLED" | "DISABLED" | "MODIFIED"
-type AuthenticatorTypeType = "OMPASS" | "WEBAUTHN" | "PASSCODE"
-type AuthenticatorDataType = OMPASSAuthenticatorDataType | PasscodeAuthenticatorDataType
-export type OMPASSAuthenticatorDataType = {
-    id: string
-    type: "OMPASS"
-    status: AuthenticatorStatusType
-    createdAt: string
-    mobile: {
-        ompassAppVersion: string
-        model: string
-        os: string
-        deviceId: string
-    }
-}
-export type PasscodeAuthenticatorDataType = {
-    id: string
-    type: "PASSCODE"
-    status: AuthenticatorStatusType
-    number: string
-    validTime: number
-    recycleCount: number
-    expirationTime: string
-    issuerUsername: string
-    createdAt: string
-}
-
-type GetListDataGeneralType<T> = {
-    totalCount: number
-    results: T[]
-}
-type GeneralParamsType = {
-    page_size?: number
-    page?: number,
-    sortDirection?: DirectionType
-}
-
-type DirectionType = "DESC" | "ASC"
-type RPUserType = {
-    username: string
-}
-
-type LoginApiParamsType = {
-    domain: string,
-    username: string,
-    password: string,
-    loginClientType: ApplicationDataType['applicationType'],
-    clientMetadata: null
-    language: 'KR' | 'EN'
-}
-export const LoginFunc = (params: LoginApiParamsType, callback: (jwtToken: string) => void) => {
+export const LoginFunc = (params: LoginApiParamsType, callback: (res: LoginApiResponseType, token: string) => void) => {
     return CustomAxiosPost(
         PostLoginApi,
-        (token: string, header: any) => {
-            console.log('Bearer ' + token)
-            callback('Bearer ' + token)
+        (res: LoginApiResponseType, token: string) => {
+            console.log(res)
+            callback(res, token)
         }, params
     )
 }
 
-type PasscodeHistoriesParamsType = GeneralParamsType & {
-    sortBy?: "CREATED_AT" | "USERNAME" | "PASSCODE_ACTION"
-    sortDirection?: DirectionType
-}
-type PasscodeDataType = {
-    id: string
-    type: "PASSCODE"
-    status: AuthenticatorStatusType
-    number: string
-    validTime: number
-    recycleCount: number
-    expirationTime: string
-    issuerUsername: string
-    createdAt: string
-}
-
-export type PasscodeParamsType = {
-    authenticationDataId: string
-    passcodeNumber: string
-    validTime: number
-    recycleCount: number
-}
-
-export type PasscodeHistoryDataType = {
-    action: "CREATE" | "UPDATE" | "DELETE",
-    createdAt: string
-    passcode: PasscodeDataType
-    rpUser: RPUserType
-}
-
 export const GetPasscodeHistoriesFunc = ({
     page_size = 10,
-    page = 0,
+    page = 1,
     sortBy = "CREATED_AT",
     sortDirection = "DESC"
 }: PasscodeHistoriesParamsType, callback: (data: GetListDataGeneralType<PasscodeHistoryDataType>) => void) => {
@@ -126,122 +29,53 @@ export const GetPasscodeHistoriesFunc = ({
     } as PasscodeHistoriesParamsType)
 }
 
-export const AddPasscodeFunc = (params: PasscodeParamsType, callback: (data: PasscodeDataType) => void) => {
+export const AddPasscodeFunc = (params: PasscodeParamsType, callback: (data: PasscodeAuthenticatorDataType) => void) => {
     return CustomAxiosPost(AddPasscodeApi, callback, params)
-}
-
-export const DeletePasscodeFunc = (authDataId: RPUserDetailAuthDataType['id'], passcodeId: PasscodeDataType['id'], callback: () => void) => {
-    return CustomAxiosDelete(DeletePasscodeApi(authDataId, passcodeId), callback)
-}
-
-type DefaultApplicationDataType = {
-    policyId: string
-    applicationType: "DEFAULT" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "ADMIN"
-    name: string
-    domain: string
-    redirectUri: string
-    description: string
-    helpDeskMessage?: string
-    logoImage?: string
-}
-
-export type ApplicationDataType = DefaultApplicationDataType & {
-    secretKey: string
-    applicationId: string
-}
-
-type ApplicationListParamsType = GeneralParamsType & {
-    applicationId?: ApplicationDataType['applicationId']
-    name?: ApplicationDataType['name']
-    applicationType?: ApplicationDataType['applicationType']|""
-    sortBy?: "CREATED_AT" | "NAME"
-    sortDirection?: DirectionType
 }
 
 export const GetApplicationListFunc = ({
     page_size = 10,
-    page = 0,
-    applicationId = "",
+    page = 1,
+    id = "",
     name = "",
-    applicationType="",
+    type = "",
     sortBy = "CREATED_AT",
     sortDirection = "DESC"
-}: ApplicationListParamsType, callback: (data: GetListDataGeneralType<ApplicationDataType>) => void) => {
-    return CustomAxiosGet(GetApplicationListApi, (data: GetListDataGeneralType<ApplicationDataType>) => {
-        callback(data)
-    }, {
+}: ApplicationListParamsType, callback: (data: GetListDataGeneralType<ApplicationListDataType>) => void) => {
+    return CustomAxiosGet(GetApplicationListApi, callback, {
         page_size,
         page,
-        applicationId,
+        id,
         name,
         sortBy,
-        applicationType,
+        type,
         sortDirection
     } as ApplicationListParamsType)
 }
 
-export const GetApplicationDetailFunc = (applicationId: ApplicationDataType['applicationId'], callback: (data: ApplicationDataType) => void) => {
-    return CustomAxiosGet(GetApplicationDetailApi(applicationId), (data: ApplicationDataType) => {
-        callback(data)
-    })
+export const GetApplicationDetailFunc = (applicationId: ApplicationDataType['id'], callback: (data: ApplicationDataType) => void) => {
+    return CustomAxiosGet(GetApplicationDetailApi(applicationId), callback)
 }
 
-export const AddApplicationListFunc = (params: DefaultApplicationDataType, callback: () => void) => {
-    return CustomAxiosPost(AddApplicationListApi, () => {
-        callback()
-    }, params)
+export const AddApplicationDataFunc = (params: ApplicationDataParamsType, callback: () => void) => {
+    return CustomAxiosPost(AddApplicationListApi, callback, params)
 }
 
-export const UpdateApplicationListFunc = (applicationId: ApplicationDataType['applicationId'], params: DefaultApplicationDataType, callback: () => void) => {
-    return CustomAxiosPut(UpdateApplicationListApi(applicationId), () => {
-        callback()
-    }, params)
+export const UpdateApplicationDataFunc = (applicationId: ApplicationDataType['id'], params: ApplicationDataParamsType, callback: () => void) => {
+    return CustomAxiosPut(UpdateApplicationListApi(applicationId), callback, params)
 }
 
-export const DeleteApplicationListFunc = (applicationId: ApplicationDataType['applicationId'], callback: () => void) => {
-    return CustomAxiosDelete(DeleteApplicationListApi(applicationId), () => {
-        callback()
-    })
+export const DeleteApplicationListFunc = (applicationId: ApplicationDataType['id'], callback: () => void) => {
+    return CustomAxiosDelete(DeleteApplicationListApi(applicationId), callback)
 }
 
-export type LocationPolicyItemType = {
-    isEnabled: boolean
-    location: string | "ETC"
+export const UpdateApplicationSecretkeyFunc = (applicationId: ApplicationDataType['id'], callback: (appData: ApplicationDataType) => void) => {
+    return CustomAxiosPatch(UpdateApplicationSecretkeyApi(applicationId), callback)
 }
-type LocationPolicyType = {
-    locationEnabled: boolean
-    locations: LocationPolicyItemType[]
-}
-export type BrowserPolicyType = "FireFox" | "Safari" | "Chrome Mobile" | "Chrome" | "Microsoft Edge" | "Mobile Safari" | "Samsung Browser" | "All other browsers"
-export type AuthenticatorPolicyType = "WEBAUTHN" | "PASSCODE" | "OMPASS" | "OTP"
-type DefaultPolicyDataType = {
-    name: string
-    accessControl?: 'ACTIVE' | 'INACTIVE' | 'DENY'
-    policyType: 'DEFAULT' | 'CUSTOM'
-    location: LocationPolicyType
-    enableBrowsers: BrowserPolicyType[]
-    enableAuthenticators: AuthenticatorPolicyType[]
-    description?: string
-}
-export type PolicyDataType = DefaultPolicyDataType & {
-    id: string
-}
-export type PolicyListDataType = {
-    id: string
-    name: string
-    policyType: DefaultPolicyDataType['policyType']
-    description: string
-    createdAt: string
-}
-type PoliciesListParamsType = GeneralParamsType & {
-    policyId?: string
-    name?: string
-    sortBy?: "CREATED_AT" | "NAME"
-    sortDirection?: DirectionType
-}
+
 export const GetPoliciesListFunc = ({
     page_size = 10,
-    page = 0,
+    page = 1,
     policyId = "",
     name = "",
     sortBy = "CREATED_AT",
@@ -281,68 +115,13 @@ export const DeletePoliciesListFunc = (policyId: PolicyDataType['id'], callback:
     })
 }
 
-
-type DefaultUserDataParamsType = {
-    username: string;
-    role: userRoleType;
-    phone: string
-    email: string
-}
-
-type DefaultUserDataType = UserNameType & DefaultUserDataParamsType
-
-export type UserDataType = DefaultUserDataType & {
-    userId: string
-    group?: UserGroupListDataType
-}
-
-type UserDataParamsType = UserNameType & {
-    password: string
-    email: string
-    phone: string
-}
-
-type UserListParamsType = GeneralParamsType & {
-    hasGroup?: boolean
-    userId?: UserDataType['userId']
-    username?: UserDataType['username']
-    name?: string
-    sortBy?: "CREATED_AT" | "USERNAME" | "NAME"
-}
-
-export type RPUserDetailAuthDataType = {
-    id: string
-    clientMetadata: ClientMetaDataType
-    authenticators: AuthenticatorDataType[]
-}
-
-type UserDetailDataParamsType = GeneralParamsType & {
-    rpUserId: string
-}
-
-type RPUserDetailDataType = {
-    authenticationInfo: RPUserDetailAuthDataType[]
-}
-
-export type UserDetailDataType = RPUserDetailDataType & {
-    id: string
-    applicationName: string
-    username: string
-}
-
-export type UserDataModifyValuesType = {
-    name: UserDataType['name']
-    email: UserDataType['email']
-    phone: UserDataType['phone']
-    password: string
-}
-
 export const GetUserDataListFunc = ({
     page_size = 10,
-    page = 0,
+    page = 1,
     userId = "",
     username = "",
     name = "",
+    role = undefined,
     hasGroup = undefined,
     sortBy = "CREATED_AT",
     sortDirection = "DESC"
@@ -353,6 +132,7 @@ export const GetUserDataListFunc = ({
         page_size,
         page,
         userId,
+        role,
         username,
         name,
         sortBy,
@@ -361,7 +141,7 @@ export const GetUserDataListFunc = ({
     } as PasscodeHistoriesParamsType)
 }
 
-export const AddUserDataFunc = (params: DefaultUserDataType, callback: () => void) => {
+export const AddUserDataFunc = (params: UserDataAddLocalValuesType, callback: () => void) => {
     return CustomAxiosPost(AddUserDataApi, callback, params)
 }
 
@@ -377,43 +157,20 @@ export const GetUserDetailDataFunc = (userId: UserDataType['userId'], callback: 
     return CustomAxiosGet(GetUserDetailDataApi(userId), (data: UserDetailDataType[]) => {
         callback(data)
     }, {
-        page: 0,
+        page: 1,
         page_size: INT_MAX_VALUE,
         rpUserId: userId
     } as UserDetailDataParamsType)
 }
 
-type DefaultUserGroupDataType = {
-    description: string
-    id: string
-    name: string
-}
-export type UserGroupDataType = DefaultUserGroupDataType & {
-    policy: PolicyListDataType
-    users: UserDataType[]
-}
-export type UserGroupListDataType = DefaultUserGroupDataType & {
-    createdAt: string
-}
-type UserGroupParamsType = {
-    name: string
-    description: string
-    policyId: PolicyDataType['id']
-    userIds: UserDataType['userId'][]
-}
-type GroupListParamsType = GeneralParamsType & {
-    name?: string
-    sortBy?: "CREATED_AT" | "NAME"
-}
-
 export const GetUserGroupDataListFunc = ({
     page_size = 10,
-    page = 0,
+    page = 1,
     name = "",
     sortBy = "CREATED_AT",
     sortDirection = "DESC"
-}: GroupListParamsType, callback: ((data: GetListDataGeneralType<UserGroupDataType>) => void)) => {
-    return CustomAxiosGet(GetUserGroupsApi, (data: GetListDataGeneralType<UserGroupDataType>) => {
+}: GroupListParamsType, callback: ((data: GetListDataGeneralType<UserGroupListDataType>) => void)) => {
+    return CustomAxiosGet(GetUserGroupsApi, (data: GetListDataGeneralType<UserGroupListDataType>) => {
         callback(data)
     }, {
         page_size,
@@ -442,41 +199,9 @@ export const DeleteUserGroupDataFunc = (groupId: UserGroupDataType['id'], callba
     return CustomAxiosDelete(DeleteUserGroupApi(groupId), callback)
 }
 
-type AuthLogListParamsType = GeneralParamsType & {
-    username?: string
-    applicationName?: string
-    processType?: string
-    isProcessSuccesss?: boolean
-    sortBy?: "CREATED_AT" | "AUTHENTICATION_TIME" | "USERNAME" | "APPLICATION_NAME" | "IS_PROCESS_SUCCESS"
-}
-
-type ProtalLogListParamsType = GeneralParamsType & {
-    username?: string
-    httpMethod?: HttpMethodType
-    apiUri?: string
-    sortBy?: 'CREATED_AT' | 'USERNAME' | 'API_URI' | 'HTTP_METHOD'
-}
-
-export type AuthLogDataType = {
-    id: number
-    username: string
-    applicationName: string
-    processType: ProcessTypeType
-    isProcessSuccess: boolean
-    authenticationTime: string
-}
-
-export type PortalLogDataType = {
-    id: number
-    username: string
-    httpMethod: HttpMethodType
-    apiUri: string
-    createdAt: string
-}
-
 export const GetAuthLogDataListFunc = ({
     page_size = 10,
-    page = 0,
+    page = 1,
     username = "",
     applicationName = "",
     processType = "",
@@ -500,14 +225,14 @@ export const GetAuthLogDataListFunc = ({
 
 export const GetPortalLogDataListFunc = ({
     page_size = 10,
-    page = 0,
-    username= "",
-    httpMethod= undefined,
-    apiUri= "",
+    page = 1,
+    username = "",
+    httpMethod = undefined,
+    apiUri = "",
     sortBy = "CREATED_AT",
     sortDirection = "DESC"
 }: ProtalLogListParamsType, callback: ((data: GetListDataGeneralType<PortalLogDataType>) => void)) => {
-    return CustomAxiosGet(GetAuthLogDataListApi, (data: GetListDataGeneralType<PortalLogDataType>) => {
+    return CustomAxiosGet(GetPortalLogDataListApi, (data: GetListDataGeneralType<PortalLogDataType>) => {
         callback(data)
     }, {
         page_size,
@@ -518,4 +243,70 @@ export const GetPortalLogDataListFunc = ({
         sortBy,
         sortDirection
     })
+}
+
+export const DeleteAuthenticatorDataFunc = (authenticatorId: AuthenticatorDataType['id'], callback: () => void) => {
+    return CustomAxiosDelete(DeleteAuthenticatorData(authenticatorId), callback)
+}
+
+export const DuplicateUserNameCheckFunc = (username: UserDataType['username'], callback: (response: {
+    isExist: boolean
+}) => void) => {
+    return CustomAxiosGet(DuplicateUserNameCheckApi(username), callback)
+}
+
+export const GetAgentInstallerListFunc = ({
+    page_size = 10,
+    page = 1,
+    sortDirection = "DESC"
+}: GeneralParamsType, callback: (data: GetAgentInstallerApiResponseType) => void) => {
+    return CustomAxiosGet(GetAgentInstallerListApi, callback, {
+        page_size,
+        page,
+        sortDirection
+    })
+}
+
+export const DownloadAgentInstallerFunc = (params?: {
+    file_id: number
+}) => {
+    return CustomAxiosGetFile(DownloadAgentInstallerApi, (res: AxiosResponse) => {
+        const versionName = res.headers['content-disposition'].split(';').filter((str: any) => str.includes('filename'))[0].match(/filename="([^"]+)"/)[1];
+        const fileDownlaoadUrl = URL.createObjectURL(res.data);
+        const downloadLink = document.createElement('a');
+        downloadLink.href = fileDownlaoadUrl;
+        downloadLink.download = versionName;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        URL.revokeObjectURL(fileDownlaoadUrl);
+    }, params)
+}
+
+export const UploadAgentInstallerFunc = (params: AgentInstallerUploadParamsType, callback: () => void) => {
+    return CustomAxiosPost(UploadAgentInstallerApi, callback, params, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    })
+}
+
+export const CurrentAgentVersionChangeFunc = (fileId: AgentInstallerDataType['fileId'], callback: () => void) => {
+    return CustomAxiosPatch(CurrentAgentInstallerVersionChangeApi(fileId), callback)
+}
+
+export const DeleteAgentInstallerFunc = (fileIds: string, callback: () => void) => {
+    return CustomAxiosDelete(DeleteAgentInstallerApi(fileIds), callback)
+}
+
+export const GetSubDomainInfoFunc = (subdomain: string, callback: (data: SubDomainInfoDataType) => void) => {
+    return CustomAxiosGet(GetSubDomainInfoApi(subdomain), callback)
+}
+
+export const GetPortalSettingsDataFunc = (callback: (data: PortalSettingsDataType) => void) => {
+    return CustomAxiosGet(GetPortalSettingsDataApi, callback)
+}
+
+export const UpdatePortalSettingsDataFunc = (params: PortalSettingsDataType, callback: () => void) => {
+    return CustomAxiosPut(UpdatePortalSettingsDataApi, callback, params)
 }

@@ -1,8 +1,11 @@
-import arrowIcon from '../../assets/arrow.png'
+import afterUserIcon from '../../assets/afterUserIcon.png'
+import beforeUserIcon from '../../assets/beforeUserIcon.png'
+import transferLeftIcon from '../../assets/transferLeftIcon.png'
+import transferRightIcon from '../../assets/transferRightIcon.png'
+import searchIconBlue from '../../assets/searchIconBlue.png'
 import './CustomUserTransfer.css'
 import { SetStateType } from 'Types/PropsTypes'
-import { useState } from 'react'
-import { UserDataType } from 'Functions/ApiFunctions'
+import { useEffect, useState } from 'react'
 
 export type UserTransferDataType = {
     before: UserDataType[]
@@ -14,7 +17,13 @@ type CustomUserTransferProps = {
     setData: SetStateType<UserTransferDataType>
 }
 
+const getFullNameByUserData = (data: UserDataType) => {
+    return `${data.username}(${data.name.firstName + data.name.lastName})`
+}
+
 const CustomUserTransfer = ({ data, setData }: CustomUserTransferProps) => {
+    const [filteredDatas, setFilteredDatas] = useState(data)
+    const [searchInput, setSearchInput] = useState("")
     const [selected, setSelected] = useState<{
         before: string[]
         after: string[]
@@ -22,71 +31,91 @@ const CustomUserTransfer = ({ data, setData }: CustomUserTransferProps) => {
         before: [],
         after: []
     })
+    
+    useEffect(() => {
+        setFilteredDatas({
+            before: data.before.filter(_ => getFullNameByUserData(_).includes(searchInput)),
+            after: data.after
+        })
+    },[searchInput, data])
+
     return <div className="custom-transfer-user-container">
         <div className='custom-transfer-user-content-box before'>
             <div className='custom-transfer-user-content-header'>
-                {data.before.length} 사용자
-                <button disabled={data.before.length === 0} onClick={() => {
-                    if (selected.before.length > 0 && data.before.every(_ => selected.before.includes(_.userId))) {
+                <span>사용자 <b>{filteredDatas.before.length}</b></span>
+                <button disabled={filteredDatas.before.length === 0} onClick={() => {
+                    if (selected.before.length > 0 && filteredDatas.before.every(_ => selected.before.includes(_.userId))) {
                         setSelected({
                             before: [],
                             after: selected.after
                         })
                     } else {
                         setSelected({
-                            before: data.before.map(_ => _.userId),
+                            before: filteredDatas.before.map(_ => _.userId),
                             after: selected.after
                         })
                     }
                 }}>
-                    전체{(selected.before.length > 0 && data.before.every(_ => selected.before.includes(_.userId))) ? '해제' : '선택'}
+                    전체{(selected.before.length > 0 && filteredDatas.before.every(_ => selected.before.includes(_.userId))) ? '해제' : '선택'}
                 </button>
             </div>
             <div className='custom-transfer-user-list-container'>
                 {
-                    data.before.map((_, ind) => <div key={ind} aria-selected={selected.before.includes(_.userId)} className='custom-transfer-user-row' onClick={() => {
-                        if (selected.before.includes(_.userId)) {
-                            setSelected({
-                                before: selected.before.filter(__ => __ !== _.userId),
-                                after: selected.after
-                            })
-                        } else {
-                            setSelected({
-                                before: selected.before.concat(_.userId),
-                                after: selected.after
-                            })
-                        }
-                    }}>
-                        {_.username}({_.name.firstName + _.name.lastName})
+                    filteredDatas.before.map((_, ind) => <div
+                        key={ind}
+                        aria-selected={selected.before.includes(_.userId)}
+                        className='custom-transfer-user-row' onClick={() => {
+                            if (selected.before.includes(_.userId)) {
+                                setSelected({
+                                    before: selected.before.filter(__ => __ !== _.userId),
+                                    after: selected.after
+                                })
+                            } else {
+                                setSelected({
+                                    before: selected.before.concat(_.userId),
+                                    after: selected.after
+                                })
+                            }
+                        }}>
+                            <img src={selected.before.includes(_.userId) ? afterUserIcon : beforeUserIcon}/>
+                        {getFullNameByUserData(_)}
                     </div>)
                 }
             </div>
+            <div className='custom-transfer-user-list-search-container'>
+                <div>
+                    <input value={searchInput} onChange={e => {
+                        setSearchInput(e.target.value)
+                    }}/>
+                    <img src={searchIconBlue}/>
+                </div>
+            </div>
         </div>
         <div className='custom-transfer-buttons-container'>
-            <img src={arrowIcon} onClick={() => {
+            <img src={transferRightIcon} onClick={() => {
                 setData({
-                    before: data.before.filter(_ => !selected.before.includes(_.userId)),
-                    after: data.after.concat(data.before.filter(_ => selected.before.includes(_.userId)))
+                    before: filteredDatas.before.filter(_ => !selected.before.includes(_.userId)),
+                    after: data.after.concat(filteredDatas.before.filter(_ => selected.before.includes(_.userId)))
                 })
                 setSelected({
                     before: [],
                     after: selected.after
                 })
             }} />
-            <img src={arrowIcon} onClick={() => {
+            <img src={transferLeftIcon} onClick={() => {
                 setData({
-                    before: data.before.concat(data.after.filter(_ => selected.after.includes(_.userId))),
+                    before: filteredDatas.before.concat(data.after.filter(_ => selected.after.includes(_.userId))),
                     after: data.after.filter(_ => !selected.after.includes(_.userId))
                 })
                 setSelected({
                     before: selected.before,
                     after: []
                 })
-            }}/>
+            }} />
         </div>
         <div className='custom-transfer-user-content-box after'>
             <div className='custom-transfer-user-content-header'>
-                {data.after.length} 사용자
+                <span>사용자 <b>{data.after.length}</b></span>
                 <button disabled={data.after.length === 0} onClick={() => {
                     if (selected.after.length > 0 && data.after.every(_ => selected.after.includes(_.userId))) {
                         setSelected({
@@ -118,7 +147,8 @@ const CustomUserTransfer = ({ data, setData }: CustomUserTransferProps) => {
                             })
                         }
                     }}>
-                        {_.username}({_.name.firstName + _.name.lastName})
+                        <img src={selected.after.includes(_.userId) ? afterUserIcon : beforeUserIcon}/>
+                        {getFullNameByUserData(_)}
                     </div>)
                 }
             </div>

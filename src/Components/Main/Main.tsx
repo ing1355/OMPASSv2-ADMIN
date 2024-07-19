@@ -1,10 +1,8 @@
-import { useWindowHeightHeader } from 'Components/CommonCustomComponents/useWindowHeight';
 import './Main.css';
 import { useNavigate } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { ReduxStateType } from 'Types/ReduxStateTypes';
 import { menuDatas } from 'Constants/ConstantValues';
 import { Col, Row } from 'antd';
 import Contents from 'Components/Layout/Contents';
@@ -15,12 +13,11 @@ const Main = () => {
     userInfo: state.userInfo!,
     lang: state.lang,
   }))
-  const height = useWindowHeightHeader();
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(-1)
 
-  const { role } = userInfo
-
+  const { role} = userInfo
+  
   const handleHoverd = (ind: number) => {
     setIsHovered(ind);
   };
@@ -39,11 +36,11 @@ const Main = () => {
         {
           menuDatas(role).map((data, index: number) => (
             <Col
-              xs={{flex: '100%'}}
-              sm={{flex: '50%'}}
-              md={{flex: '33%'}}
-              lg={{flex: '25%'}}
-              xl={{flex: '20%'}}
+              xs={{ flex: '100%' }}
+              sm={{ flex: '50%' }}
+              md={{ flex: '33%' }}
+              lg={{ flex: '25%' }}
+              xl={{ flex: '20%' }}
               key={index}
             >
               <div
@@ -69,7 +66,7 @@ const Main = () => {
   return (
     <>
       <Contents copyRightStyle={{ marginTop: '70px' }} containerStyle={{
-        justifyContent:'center'
+        justifyContent: 'center'
       }}>
         {menuInfoFun()}
       </Contents>

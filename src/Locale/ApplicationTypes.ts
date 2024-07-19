@@ -1,6 +1,6 @@
 const ApplicationTypes = {
     'KR': {
-        APPLICATION_TYPE_DEFAULT: '기본 타입(브라우저)',
+        APPLICATION_TYPE_DEFAULT: '기본 유형(브라우저)',
         APPLICATION_TYPE_WINDOWS_LOGIN: '윈도우즈 로그온',
         APPLICATION_TYPE_LINUX_LOGIN: '리눅스 PAM',
         APPLICATION_TYPE_MAC_LOGIN: 'Mac OS 로그온',

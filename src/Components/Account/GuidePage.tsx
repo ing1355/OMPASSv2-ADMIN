@@ -5,7 +5,6 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Col, Row } from 'antd';
-import { ReduxStateType } from 'Types/ReduxStateTypes';
 import { useWindowHeight } from 'Components/CommonCustomComponents/useWindowHeight';
 import { CopyRightText } from 'Constants/ConstantValues';
 import { AgentFileDownload } from 'Components/CommonCustomComponents/AgentFileDownload';
@@ -50,13 +49,11 @@ const GuidePage = () => {
           justify='center'
         >
           <Col
-            style={{
-              height: '100%'
-            }}
+            className='guide-buttons-container'
           >
             {/* windows 다운로드 */}
             <button
-              className={'button-st3 common_button guide_page_windows_download'}
+              className={'button-st5'}
               onClick={() => {
                 AgentFileDownload(setIsFileDownloadDisable, formatMessage({ id: 'DOWNLOAD_FAILED' }));
               }}
@@ -65,12 +62,12 @@ const GuidePage = () => {
                 width='25px'
                 style={{ position: 'relative', top: '1px', marginLeft: '9px' }}
               />
-              <span style={{ position: 'relative', top: '-4px', margin: '0 12px 0 6px' }}>{isFileDownloadDisable ? <FormattedMessage id='DOWNLOADING' /> : <FormattedMessage id='DOWNLOAD_FOR_WINDOWS' />}</span>
+              <div>{isFileDownloadDisable ? <FormattedMessage id='DOWNLOADING' /> : <FormattedMessage id='DOWNLOAD_FOR_WINDOWS' />}</div>
             </button>
 
             {/* 사용자 매뉴얼 다운로드 */}
             <button
-              className='button-st6 common_button guide_page_manual_download'
+              className='button-st6'
               onClick={() => {
                 const downloadLink = document.createElement('a');
                 downloadLink.href = '/OMPASS_Portal_User_Manual.pdf'
@@ -85,13 +82,11 @@ const GuidePage = () => {
                 width="25px"
                 style={{ position: 'relative', top: '2px', marginLeft: '5px' }}
               />
-              <span style={{ position: 'relative', top: '-4px', margin: '0 9px 0 4px' }}><FormattedMessage id='DOWNLOAD_USER_MANUAL' /></span>
+              <div><FormattedMessage id='DOWNLOAD_USER_MANUAL' /></div>
             </button>
 
             {/* 로그인 바로가기 */}
-            <GoToLoginPageButton
-              className='button-st4 common_button guide_page_login'
-            />
+            <GoToLoginPageButton/>
           </Col>
         </Row>
       </div>

@@ -1,4 +1,3 @@
-import { UserDataType } from 'Functions/ApiFunctions';
 import types from '../types';
 
 import { parseJwtToken } from 'Functions/GlobalFunctions';

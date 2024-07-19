@@ -1,6 +1,4 @@
-import { ReduxStateType } from "Types/ReduxStateTypes";
 import jwtDecode from "jwt-decode";
-import { UserDataType } from "./ApiFunctions";
 
 export const slicePrice = (price: string | number) => {
     const _price = price + "";

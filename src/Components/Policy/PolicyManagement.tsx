@@ -1,11 +1,10 @@
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
 import './PolicyManagement.css'
-import arrowIcon from '../../assets/arrow.png'
 import { useState, useEffect, useLayoutEffect, useMemo } from "react"
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import { useNavigate } from "react-router"
-import { GetPoliciesListFunc, GetPolicyDetailDataFunc, PolicyDataType, PolicyListDataType } from "Functions/ApiFunctions"
+import { GetPoliciesListFunc, GetPolicyDetailDataFunc } from "Functions/ApiFunctions"
 import { FormattedMessage } from "react-intl"
 
 // const authTestPolicies: = [
@@ -103,7 +102,7 @@ const TableComponent = ({opened, policyId}: {
 
     return <div className={"policy-select-contents-body" + (opened ? '' : ' close')}>
         <div className={"policy-select-contents-body-inner" + (opened ? '' : ' close')}>
-            <CustomTable<{ policyType: string, selected: boolean, contents: string }>
+            <CustomTable<{ policyType: string, selected: boolean, contents: string }, {}>
                 theme='table-st1'
                 loading={tableLoading}
                 columns={[
@@ -166,16 +165,17 @@ const PolicyManagement = () => {
     }, [])
 
     return <Contents>
-        <ContentsHeader title="POLICY_MANAGEMENT" subTitle="POLICY_MANAGEMENT" />
+        <ContentsHeader title="POLICY_MANAGEMENT" subTitle="POLICY_MANAGEMENT">
+            <button className="button-st1" onClick={() => {
+                navigate('/Policies/auth/detail')
+            }}>
+                추가
+            </button>
+        </ContentsHeader>
         <div className="contents-header-container policy-select-container">
             <div className="policy-select-item">
                 <div className="policy-select-title">
                     인증 정책
-                    <button onClick={() => {
-                        navigate('/Policies/auth/detail')
-                    }}>
-                        추가
-                    </button>
                 </div>
                 {
                     datas.map((_, ind) => <div className={"policy-select-contents"} key={_.id} >
@@ -189,7 +189,7 @@ const PolicyManagement = () => {
                             <div className="policy-select-contents-header-top">
                                 <div>
                                     {_.policyType === 'DEFAULT' ? <FormattedMessage id={_.name} /> : _.name}
-                                    <img src={arrowIcon} />
+                                    {/* <img src={arrowIcon} /> */}
                                 </div>
                                 <button onClick={(e) => {
                                     navigate('/Policies/auth/detail/' + _.id)

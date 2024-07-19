@@ -44,3 +44,10 @@
   color: #0092FA;
   font-weight: 800;
 }
+
+.contents-container {
+  height: calc(100% - var(--header-height));
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}

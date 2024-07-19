@@ -2,7 +2,7 @@ import { CustomAxiosPost } from 'Components/CommonCustomComponents/CustomAxios';
 import { PostTokenVerifyApi } from 'Constants/ApiRoute';
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router';
-import queryString from 'query-string'; 
+import queryString from 'query-string';
 import { useDispatch } from 'react-redux';
 import { userInfoChange } from 'Redux/actions/userChange';
 
@@ -11,34 +11,34 @@ const OMPASSVerify = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const query = queryString.parse(location.search);
-  const { username, access_token } = query;
+  const { username, token, authorization } = query;
 
   useEffect(() => {
     CustomAxiosPost(
       PostTokenVerifyApi,
-      (data:any, header:any) => {
-        const role = data.user.role;
-        const uuid = data.user.id;
+      (data: {
+        username: string
+      }, header: string) => {
         localStorage.setItem('authorization', header);
         dispatch(userInfoChange(header))
-        if(role.includes('ADMIN')) {
-          navigate('/Main')
-        } else {
-          navigate(`/UserManagement/detail/${uuid}`)
-        }
+        navigate('/Main')
       },
       {
         username: username,
-        accessToken: access_token,
-        device: {
-          clientType: 'BROWSER',
-        }
-      },
-      () => {
-        console.log('ompass 인증 실패');
-      }
-    );
-  },[])
+        token,
+        applicationType: "ADMIN"
+      } as {
+        username: string
+        token: string
+        applicationType: ApplicationDataType['type']
+      }, {
+      authorization
+    }
+    ).catch(err => {
+      console.log('ompass 인증 실패');
+      navigate('/Main')
+    });
+  }, [])
   return (
     <>
     </>

@@ -8,8 +8,9 @@
 
 .custom-transfer-user-content-box {
     width: 240px;
-    height: 400px;
+    height: 300px;
     border: 1px solid black;
+    border-radius: 8px;
 }
 
 .custom-transfer-buttons-container {
@@ -22,9 +23,6 @@
         width: 32px;
         height: 32px;
         cursor: pointer;
-        &:last-child {
-            transform: rotate(180deg);
-        }
     }
 }
 
@@ -36,12 +34,43 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    & > span > b {
+        color: var(--main-blue-color);
+    }
 }
 
 .custom-transfer-user-list-container {
-    height: calc(100% - 36px);
+    height: calc(100% - 80px);
     overflow-y: auto;
     overflow-x: hidden;
+}
+
+.custom-transfer-user-list-search-container {
+    height: 44px;
+    border-top: 1px solid black;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    &>div {
+        padding: 6px 8px;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        position: relative;
+        & > input {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            padding-right: 34px;
+        }
+        & > img {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            width: 16px;
+        }
+    }
 }
 
 .custom-transfer-user-row {
@@ -52,10 +81,19 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    color: var(--main-grey-color-2);
+    &>img {
+        height: 60%;
+    }
     &:hover {
-        background-color: rgba(0,0,0,.3);
+        background-color: var(--sub-blue-color-2);
     }
     &[aria-selected="true"] {
-        background-color: rgba(0,0,0,.7);
+        color: black;
+        background-color: var(--sub-blue-color-2);
     }
 }

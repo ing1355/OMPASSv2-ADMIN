@@ -1,12 +1,4 @@
 import { Dispatch, SetStateAction } from "react";
-import { userRoleType } from "./ServerResponseDataTypes";
-
-export type InformationProps = {
-  pageNum: number,
-  setPageNum: Dispatch<SetStateAction<number>>,
-  tableCellSize: number,
-  setTableCellSize: Dispatch<SetStateAction<number>>,
-}
 
 export type listType = 'role' | 'username' | 'osNames' | 'lastLoginDate' | 'enablePasscodeCount' | 'name' | 'all' | null;
 export type sortingType = 'none' | 'asc' | 'desc';

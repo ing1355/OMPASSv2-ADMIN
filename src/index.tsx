@@ -1,5 +1,6 @@
 import * as ReactDOM from 'react-dom/client';
 import './index.css';
+import './GlobalStyles';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';

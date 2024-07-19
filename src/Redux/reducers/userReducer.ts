@@ -1,5 +1,3 @@
-import { UserDataType } from 'Functions/ApiFunctions';
-import { DefaultReduxActionType, ReduxStateType } from '../../Types/ReduxStateTypes';
 import types from '../types';
 import { parseJwtToken } from 'Functions/GlobalFunctions';
 

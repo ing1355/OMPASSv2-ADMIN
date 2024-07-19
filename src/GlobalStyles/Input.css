@@ -1,0 +1,29 @@
+input {
+    font-family: 'NEXON Lv1 Gothic OTF', sans-serif;
+    padding: 2px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--sub-grey-color);
+    outline: none;
+
+    &:focus {
+        border: 1px solid var(--main-blue-color);
+    }
+}
+
+table input {
+    text-align: center;
+}
+
+.input-st1 {
+    text-align: center;
+    border: #CCC 0.5px solid;
+}
+
+.input-st1:focus {
+    border: #0092FA 0.8px solid;
+    outline: none;
+}
+
+.input-st1.red {
+    border-color: red;
+}

@@ -1,6 +1,4 @@
-import { UserDataType } from "Functions/ApiFunctions";
-
-export type DefaultReduxActionType<T> = {
+type DefaultReduxActionType<T> = {
   type: string;
   payload: T;
 };
@@ -16,7 +14,7 @@ type LanguageStateType = "KR" | "EN";
 
 
 
-export type ReduxStateType = {
+type ReduxStateType = {
   lang?: LanguageStateType;
   userInfo?: UserDataType;
 }

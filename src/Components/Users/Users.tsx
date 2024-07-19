@@ -1,10 +1,18 @@
 import { Navigate, Route, Routes } from "react-router"
 import UserManagement from "./UserManagement"
 import UserDetail from "./UserDetail"
+import { useSelector } from "react-redux"
 
 const Users = () => {
-    return <>
+    const { userInfo } = useSelector((state: ReduxStateType) => ({
+        userInfo: state.userInfo!,
+      }))
+    
+      const { role, userId } = userInfo
+
+    return role === "USER" ? <UserDetail/> : <>
         <Routes>
+            <Route path="/detail/*" element={<UserDetail />} />
             <Route path="/detail/:uuid" element={<UserDetail />} />
             <Route
                 path="/"

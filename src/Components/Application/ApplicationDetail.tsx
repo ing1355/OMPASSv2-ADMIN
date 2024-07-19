@@ -2,54 +2,61 @@ import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
 import { useNavigate, useParams } from "react-router"
 import { useLayoutEffect, useState } from "react"
-import testImg from '../../assets/OMPASS_settings.png'
-import { Upload, message } from "antd"
+import { Switch, Upload, message } from "antd"
 import CustomInputRow from "Components/Layout/CustomInputRow"
-import { AddApplicationListFunc, ApplicationDataType, DeleteApplicationListFunc, GetApplicationDetailFunc, GetApplicationListFunc, UpdateApplicationListFunc } from "Functions/ApiFunctions"
+import { AddApplicationDataFunc, DeleteApplicationListFunc, GetApplicationDetailFunc, GetApplicationListFunc, UpdateApplicationDataFunc, UpdateApplicationSecretkeyFunc } from "Functions/ApiFunctions"
 import PolicySelect from "Components/CommonCustomComponents/PolicySelect"
-import { applicationTypes } from "Constants/ConstantValues"
+import { applicationTypes, getApplicationTypeLabel } from "Constants/ConstantValues"
 import { convertBase64FromClientToServerFormat } from "Functions/GlobalFunctions"
+import { FormattedMessage } from "react-intl"
+import CustomModal from "Components/CommonCustomComponents/CustomModal"
+import defaultLogo from '../../assets/ompass_logo_image.png'
+import CustomImageUpload from "Components/Layout/CustomImageUpload"
 
 const ApplicationDetail = () => {
-    const [afterImage, setAfterImage] = useState<typeof testImg>("")
-    const [beforeImage, setBeforeImage] = useState<typeof testImg>("")
+    const [logoImage, setLogoImage] = useState<string>("")
     const [inputName, setInputName] = useState('')
+    const [helpMsg, setHelpMsg] = useState('')
+    const [needPassword, setNeedPassword] = useState(false)
     const [inputSecretKey, setInputSecretKey] = useState('')
     const [inputDomain, setInputDomain] = useState('')
+    const [inputClientId, setInputClientId] = useState('')
     const [inputRedirectUrl, setInputRedirectUrl] = useState('')
     const [selectedPolicy, setSelectedPolicy] = useState('')
     const [inputDescription, setInputDescription] = useState('')
+    const [appId, setAppId] = useState('')
     const [dataLoading, setDataLoading] = useState(false)
     const [hasWindowsLogin, setHasWindowsLogin] = useState(false)
-    const [applicationType, setApplicationType] = useState<ApplicationDataType['applicationType'] | "">("")
+    const [sureDelete, setSureDelete] = useState(false)
+    const [applicationType, setApplicationType] = useState<ApplicationDataType['type']>('DEFAULT')
     const navigate = useNavigate()
     const { uuid } = useParams()
+    const isAdd = !uuid
+    const needDomains: ApplicationDataType['type'][] = ["DEFAULT", "ADMIN", "REDMINE"]
+    const isRedmine = applicationType === 'REDMINE'
 
-    const handleFileSelect = (file: File) => {
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                setAfterImage(event.target!.result)
-            }
-            reader.readAsDataURL(file);
-        }
+    const handleFileSelect = (img: string) => {
+        setLogoImage(img)
     }
 
     const GetDatas = async () => {
         if (uuid) {
             await GetApplicationDetailFunc(uuid, (data) => {
-            setInputName(data.name)
-            setInputSecretKey(data.secretKey)
-            setInputDomain(data.domain)
-            setInputRedirectUrl(data.redirectUri)
-            setBeforeImage(data.logoImage)
-            setInputDescription(data.description)
-            setSelectedPolicy(data.policyId || "")
-            setApplicationType(data.applicationType)
-        })
-     } else {
-            await GetApplicationListFunc({applicationType: 'WINDOWS_LOGIN'}, ({results}) => {
-                if(results.length > 0) setHasWindowsLogin(true)
+                setAppId(data.id)
+                setInputName(data.name)
+                setInputSecretKey(data.secretKey)
+                setInputDomain(data.domain ?? "")
+                setInputRedirectUrl(data.redirectUri ?? "")
+                setLogoImage(data.logoImage ?? "")
+                setInputDescription(data.description)
+                setInputClientId(data.clientId)
+                // setSelectedPolicy(data.policy. || "")
+                setApplicationType(data.type)
+                setHelpMsg(data.helpDeskMessage || "")
+            })
+        } else {
+            await GetApplicationListFunc({ type: 'WINDOWS_LOGIN' }, ({ results }) => {
+                if (results.length > 0) setHasWindowsLogin(true)
             })
         }
     }
@@ -62,161 +69,170 @@ const ApplicationDetail = () => {
     }, [])
 
     return <Contents loading={dataLoading}>
-        <ContentsHeader title="APPLICATION_MANAGEMENT" subTitle="APPLICATION_ADD">
+        <ContentsHeader title="APPLICATION_MANAGEMENT" subTitle={isAdd ? "APPLICATION_ADD" : "APPLICATION_MODIFY"}>
             <div className="custom-detail-header-items-container">
-                <div>
-                    어플리케이션 문서 이동
-                </div>
+                <button className="button-st2">
+                    문서 보기
+                </button>
                 {uuid && <>
-                    |
+                    {/* | */}
                     {/* <div>
                         어플리케이션 로그 확인
                     </div>
                     | */}
-                    <div onClick={() => {
-                        DeleteApplicationListFunc(uuid, () => {
-                            message.success('삭제 성공!')
-                            navigate('/Applications')
-                        })
+                    {applicationType !== 'ADMIN' && <button className="button-st3" onClick={() => {
+                        setSureDelete(true)
                     }}>
                         어플리케이션 삭제
-                    </div>
+                    </button>}
                 </>}
             </div>
         </ContentsHeader>
         <div className="contents-header-container">
-            <CustomInputRow title="어플리케이션 타입 설정">
-                <select value={applicationType} disabled={uuid ? true : false} onChange={e => {
-                    setApplicationType(e.target.value as ApplicationDataType['applicationType'])
-                    console.log(e.target.value)
+            <CustomInputRow title="유형">
+                {isAdd ? <select value={applicationType} disabled={uuid ? true : false} onChange={e => {
+                    setApplicationType(e.target.value as ApplicationDataType['type'])
                 }}>
                     <option value="">
                         선택 안함
                     </option>
                     {
-                        applicationTypes(hasWindowsLogin).map((_, ind) => <option key={ind} value={_}>{_}</option>)
+                        applicationType === 'ADMIN' && <option value="ADMIN">
+                            ADMIN
+                        </option>
                     }
-                </select>
+                    {
+                        applicationTypes(hasWindowsLogin).map((_, ind) => <option key={ind} value={_}>{getApplicationTypeLabel(_)}</option>)
+                    }
+                </select> : getApplicationTypeLabel(applicationType)}
             </CustomInputRow>
             {
                 applicationType && <>
-                    <CustomInputRow title="어플리케이션명">
+                    <CustomInputRow title="이름">
                         <input value={inputName} onChange={e => {
                             setInputName(e.target.value)
-                        }} />
+                        }} placeholder="ex) 테스트 어플리케이션"/>
                     </CustomInputRow>
-                    <CustomInputRow title="비고">
+                    <CustomInputRow title="설명">
                         <input value={inputDescription} onChange={e => {
                             setInputDescription(e.target.value)
                         }} />
                     </CustomInputRow>
-                    {uuid && <CustomInputRow title="비밀 키">
+                    <CustomInputRow title="공지사항">
+                        <input value={helpMsg} onChange={e => {
+                            setHelpMsg(e.target.value)
+                        }} />
+                    </CustomInputRow>
+                    {applicationType === 'WINDOWS_LOGIN' && <CustomInputRow title="패스워드 입력 필요">
+                        <Switch checked={needPassword} onChange={check => {
+                            setNeedPassword(check)
+                        }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
+                    </CustomInputRow>}
+                    <CustomInputRow title="API 서버 주소">
+                        {isAdd ? <input defaultValue={appId} disabled /> : appId}
+                    </CustomInputRow>
+                    {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title="클라이언트 아이디">
+                        {isAdd ? <input defaultValue={inputClientId} disabled /> : inputClientId}
+                    </CustomInputRow>}
+                    {!isAdd && <CustomInputRow title="시크릿 키">
+                        {/* <div className="with-button-input-row">
+                            <input value={inputSecretKey} onChange={e => {
+                                setInputSecretKey(e.target.value)
+                            }} readOnly />
+
+                        </div> */}
                         <input value={inputSecretKey} onChange={e => {
                             setInputSecretKey(e.target.value)
-                        }} />
-                        <button className="application-detail-input-sub-btn">비밀키 재발급</button>
+                        }} readOnly />
+                        <button className="button-st2 application-detail-input-sub-btn" onClick={() => {
+                            UpdateApplicationSecretkeyFunc(uuid, (appData) => {
+                                setInputSecretKey(appData.secretKey)
+                            })
+                        }}>비밀키 재발급</button>
                     </CustomInputRow>}
                     {
-                        applicationType === "DEFAULT" && <>
-                            <CustomInputRow title="도메인 주소">
+                        needDomains.includes(applicationType) && <>
+                            <CustomInputRow title="도메인">
                                 <input value={inputDomain} onChange={e => {
                                     setInputDomain(e.target.value)
-                                }} />
+                                }} placeholder="ex) https://omsecurity.kr:1234"/>
                             </CustomInputRow>
-                            <CustomInputRow title="리다이렉트 URL">
+                            {!(isAdd && applicationType ==='REDMINE') && ((!isAdd && applicationType === 'REDMINE') ? inputRedirectUrl : <CustomInputRow title="리다이렉트 URL">
                                 <input value={inputRedirectUrl} onChange={e => {
                                     setInputRedirectUrl(e.target.value)
-                                }} />
-                            </CustomInputRow>
+                                }} placeholder="ex) https://omsecurity.kr:1234/ompass"/>
+                            </CustomInputRow>)}
                         </>
                     }
                     <CustomInputRow title="정책 설정">
-                        <PolicySelect selectedPolicy={selectedPolicy} setSelectedPolicy={setSelectedPolicy} />
+                        <PolicySelect selectedPolicy={selectedPolicy} setSelectedPolicy={setSelectedPolicy} needSelect />
                     </CustomInputRow>
                     <CustomInputRow title="로고 설정">
-                        <div className="application-detail-logo-change-contents">
-                            <div className="applicaiton-detail-logo-change-image-container">
-                                <div className="applicaiton-detail-logo-change-image-box" onDragOver={(event) => {
-                                    event.stopPropagation();
-                                    event.preventDefault();
-                                    event.dataTransfer.dropEffect = 'copy';
-                                }} onDrop={(event) => {
-                                    event.stopPropagation();
-                                    event.preventDefault();
-                                    const file = event.dataTransfer.files[0];
-                                    if (file) {
-                                        handleFileSelect(file);
-                                    }
-                                }}>
-                                    <img src={afterImage || testImg} />
-                                </div>
-                                <div className="application-detail-logo-change-text">
-                                    변경 이미지(드래그 가능)
-                                    <Upload
-                                        showUploadList={false}
-                                        customRequest={() => {
-
-                                        }}
-                                        onChange={e => {
-                                            if (e.file) handleFileSelect(e.file.originFileObj as File)
-                                        }} >
-                                        <button>
-                                            업로드
-                                        </button>
-                                    </Upload>
-                                </div>
-                            </div>
-                            {uuid && <div>
-                                으로
-                            </div>}
-                            {uuid && <div className="applicaiton-detail-logo-change-image-container">
-                                <div className="applicaiton-detail-logo-change-image-box">
-                                    <img src={beforeImage || testImg} />
-                                </div>
-                                <div className="application-detail-logo-change-text">
-                                    기존 이미지
-                                </div>
-                            </div>}
-                        </div>
+                        <CustomImageUpload src={logoImage} callback={handleFileSelect}/>
                     </CustomInputRow>
                 </>
             }
         </div>
-        {applicationType && <button style={{
-            marginTop: '32px'
-        }} onClick={() => {
-            if (uuid) {
-                UpdateApplicationListFunc(uuid!, {
-                    policyId: selectedPolicy,
-                    name: inputName,
-                    domain: inputDomain,
-                    redirectUri: inputRedirectUrl,
-                    helpDeskMessage: "",
-                    logoImage: convertBase64FromClientToServerFormat(afterImage || beforeImage),
-                    description: inputDescription,
-                    applicationType: applicationType as ApplicationDataType['applicationType']
-                }, () => {
-                    message.success('수정 성공!')
+        {applicationType && <div className="application-detail-bottom-buttons-container">
+            <button className="button-st1" onClick={() => {
+                if (uuid) {
+                    UpdateApplicationDataFunc(uuid!, {
+                        policyId: selectedPolicy,
+                        name: inputName,
+                        domain: inputDomain ?? "",
+                        redirectUri: isRedmine ? inputDomain + '/ompass' : inputRedirectUrl,
+                        helpDeskMessage: helpMsg,
+                        logoImage: convertBase64FromClientToServerFormat(logoImage),
+                        description: inputDescription,
+                        type: applicationType,
+                        isTwoFactorAuthEnabled: needPassword
+                    }, () => {
+                        message.success('수정 성공!')
+                        navigate('/Applications')
+                    })
+                } else {
+                    AddApplicationDataFunc({
+                        policyId: selectedPolicy,
+                        name: inputName,
+                        domain: inputDomain,
+                        redirectUri: isRedmine ? inputDomain + '/ompass' : inputRedirectUrl,
+                        helpDeskMessage: helpMsg,
+                        logoImage: convertBase64FromClientToServerFormat(logoImage),
+                        description: inputDescription,
+                        type: applicationType,
+                        isTwoFactorAuthEnabled: needPassword
+                    }, () => {
+                        message.success('추가 성공!')
+                        navigate('/Applications')
+                    })
+                }
+            }}>
+                저장
+            </button>
+            <button className="button-st2" onClick={() => {
+                navigate('/Applications')
+            }}>
+                취소
+            </button>
+        </div>}
+        <CustomModal
+            open={sureDelete}
+            onCancel={() => {
+                setSureDelete(false);
+            }}
+            type="warning"
+            typeTitle='정말로 삭제하시겠습니까?'
+            typeContent='삭제 후, 어플리케이션 정보가 삭제되며 모든 데이터는 복구되지 않습니다.'
+            okText={"삭제"}
+            okCallback={() => {
+                return DeleteApplicationListFunc(uuid!, () => {
+                    setSureDelete(false)
+                    message.success('삭제 성공!')
                     navigate('/Applications')
+                }).catch(err => {
+                    message.error("삭제 실패")
                 })
-            } else {
-                AddApplicationListFunc({
-                    policyId: selectedPolicy,
-                    name: inputName,
-                    domain: inputDomain,
-                    redirectUri: inputRedirectUrl,
-                    helpDeskMessage: "",
-                    logoImage: convertBase64FromClientToServerFormat(afterImage || beforeImage),
-                    description: inputDescription,
-                    applicationType: applicationType as ApplicationDataType['applicationType']
-                }, () => {
-                    message.success('추가 성공!')
-                    navigate('/Applications')
-                })
-            }
-        }}>
-            {uuid ? '저장하기' : '추가하기'}
-        </button>}
+            }} buttonLoading />
     </Contents>
     //미번
 }

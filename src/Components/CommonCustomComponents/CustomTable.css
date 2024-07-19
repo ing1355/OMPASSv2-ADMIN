@@ -4,3 +4,26 @@
     border-bottom: none;
     border-top: none;
 }
+
+.custom-search-container {
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: var(--main-width);
+    gap: 12px;
+    height: 40px;
+    & > button {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        & > img {
+            height: 16px;
+        }
+    }
+}
+
+.table-st1 tr.hover {
+    background-color: var(--sub-blue-color);
+}

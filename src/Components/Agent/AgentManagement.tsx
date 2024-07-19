@@ -4,17 +4,14 @@ import { useWindowHeightHeader } from 'Components/CommonCustomComponents/useWind
 import { useNavigate } from 'react-router-dom';
 import { Pagination, PaginationProps, Popconfirm, message } from 'antd';
 import { useEffect, useState } from 'react';
-import { GetAgentApiArrayType, GetAgentApiDataType, GetAgentApiType } from 'Types/ServerResponseDataTypes';
-import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosGetFile, CustomAxiosPatch } from 'Components/CommonCustomComponents/CustomAxios';
-import { DeleteAgentInstallerApi, GetAgentInstallerApi, GetAgentInstallerDownloadApi, PatchAgentInstallerApi } from 'Constants/ApiRoute';
 
 import delete_icon from '../../assets/delete_icon.png';
 import list_download from '../../assets/list_download.png';
 import download_installer_icon from '../../assets/download_installer_icon.png';
-import { InformationProps } from 'Types/PropsTypes';
 import ContentsHeader from 'Components/Layout/ContentsHeader';
 import Contents from 'Components/Layout/Contents';
 import CustomTable from 'Components/CommonCustomComponents/CustomTable';
+import { CurrentAgentVersionChangeFunc, DeleteAgentInstallerFunc, DownloadAgentInstallerFunc, GetAgentInstallerListFunc } from 'Functions/ApiFunctions';
 
 interface Checkbox {
   id: number;
@@ -22,10 +19,12 @@ interface Checkbox {
   checked: boolean;
 }
 
-const AgentManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize }: InformationProps) => {
+const AgentManagement = () => {
   const height = useWindowHeightHeader();
+  const [tableCellSize, setTableCellSize] = useState<number>(10);
+  const [pageNum, setPageNum] = useState<number>(1);
   const [totalCount, setTotalCount] = useState<number>(0);
-  const [agentData, setAgentData] = useState<GetAgentApiArrayType>([]);
+  const [agentData, setAgentData] = useState<AgentInstallerListDataType>([]);
   const [checkAll, setCheckAll] = useState(false);
   const [checkboxes, setCheckboxes] = useState<Checkbox[]>([]);
   const [hoveredRow, setHoveredRow] = useState<number>(-1);
@@ -34,7 +33,7 @@ const AgentManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
   const [openFilesDelete, setOpenFilesDelete] = useState(false);
   const [isAgentDataLoading, setIsAgentDataLoading] = useState<boolean>(true);
   const [isAgentFileDisable, setIsAgentFileDisable] = useState<boolean[]>(new Array(agentData.length).fill(false));
-  
+
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
 
@@ -68,29 +67,13 @@ const AgentManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
     setCheckAll(updatedCheckboxes.every((checkbox) => checkbox.checked));
   };
 
-  // 행 호버 이벤트 핸들러
-  const handleRowHover = (index: number) => {
-    setHoveredRow(index);
-  };
-
   useEffect(() => {
     setIsAgentDataLoading(true);
-    CustomAxiosGet(
-      GetAgentInstallerApi,
-      (data: GetAgentApiDataType) => {
-        setAgentData(data.agentProgramHistories);
-        setTotalCount(data.queryTotalCount);
-        setIsAgentFileDisable(new Array(data.agentProgramHistories.length).fill(false));
-      },
-      {
-        page_size: tableCellSize,
-        page: pageNum - 1
-      },
-      (err: any) => {
-        console.log('agent data get 실패');
-      },
-      {}
-      ).finally(() => {
+    GetAgentInstallerListFunc({}, ({ agentProgramHistories, queryTotalCount }: GetAgentInstallerApiResponseType) => {
+      setAgentData(agentProgramHistories);
+      setTotalCount(queryTotalCount);
+      setIsAgentFileDisable(new Array(agentProgramHistories.length).fill(false));
+    }).finally(() => {
       setIsAgentDataLoading(false);
     })
   }, [tableCellSize, pageNum, rendering]);
@@ -105,243 +88,212 @@ const AgentManagement = ({ pageNum, setPageNum, tableCellSize, setTableCellSize 
     setCheckboxes(updatedCheckboxes);
   }, [agentData]);
 
+  const handleRowHover = (index: number) => {
+    setHoveredRow(index);
+  };
+
   return (
     <>
       <Contents>
-        <ContentsHeader title="VERSION_MANAGEMENT" subTitle='VERSION_LIST' />
-
-        <div
-          style={{ width: '1200px', marginTop: '1.8%' }}
-        >
-          <div
-            style={{ float: 'right' }}
-            className='mb20'
+        <ContentsHeader title="VERSION_MANAGEMENT" subTitle='VERSION_LIST'>
+          <button className="button-st1"
+            onClick={(e) => {
+              navigate('/AgentManagement/upload');
+            }}
           >
-            <button className='admins_management_button'
-              type='button'
-              onClick={(e) => {
-                e.preventDefault();
-                navigate('/AgentManagement/upload');
-              }}
-            >
-              <span><FormattedMessage id='UPLOAD_VERSION' /></span>
-            </button>
-
-          </div>
-          <CustomTable<GetAgentApiType>
-            theme='table-st1'
-            datas={agentData}
-            columns={[
-              {
-                key: 'check',
-                title: <input
-                  type='checkbox'
-                  checked={checkAll}
-                  onChange={handleCheckAll}
-                />,
-                render: (data, index, row) => <input
-                  type='checkbox'
-                  value={row.fileId}
-                  id={index.toString()}
-                  checked={checkboxes[index]?.checked || false}
-                  onChange={handleCheckboxChange}
+            <FormattedMessage id='FILE_UPLOAD' />
+          </button>
+        </ContentsHeader>
+        <CustomTable<AgentInstallerDataType, {}>
+          theme='table-st1'
+          className="contents-header-container"
+          onBodyRowHover={(_, index) => {
+            handleRowHover(index)
+          }}
+          onBodyRowMouseLeave={() => {
+            handleRowHover(-1)
+          }}
+          bodyRowStyle={(_, index) => ({
+            background: hoveredRow === index ? 'var(--sub-blue-color-2)' : 'transparent'
+          })}
+          datas={agentData}
+          columns={[
+            // {
+            //   key: 'check',
+            //   title: <input
+            //     type='checkbox'
+            //     checked={checkAll}
+            //     onChange={handleCheckAll}
+            //   />,
+            //   render: (data, index, row) => <input
+            //     type='checkbox'
+            //     value={row.fileId}
+            //     id={index.toString()}
+            //     checked={checkboxes[index]?.checked || false}
+            //     onChange={handleCheckboxChange}
+            //   />
+            // },
+            {
+              key: 'currentTarget',
+              title: '',
+              width: '80px',
+              render: (data, index, row) => row.downloadTarget && <span className='manager-mark'>
+                <FormattedMessage id='CURRENT' />
+              </span>
+            },
+            {
+              key: 'version',
+              title: <FormattedMessage id='VERSION' />,
+            },
+            {
+              key: 'os',
+              title: 'os'
+            },
+            {
+              key: 'fileName',
+              title: <FormattedMessage id='FILE_NAME' />
+            },
+            {
+              key: 'uploadDate',
+              title: <FormattedMessage id='UPLOAD_DATE' />
+            },
+            {
+              key: 'uploader',
+              title: <FormattedMessage id='UPLOADER' />
+            },
+            {
+              key: 'download',
+              width: '100px',
+              title: <FormattedMessage id='DOWNLOAD' />,
+              render: (_, index, data) => isAgentFileDisable[index] ?
+                <img
+                  src={download_installer_icon}
+                  style={{ cursor: 'default', pointerEvents: 'none' }}
+                  width='20px'
                 />
-              },
-              {
-                key: 'currentTarget',
-                title: '',
-                width: '80px',
-                render: (data, index, row) => row.downloadTarget && <span className='manager-mark'><FormattedMessage id='CURRENT' /></span>
-              },
-              {
-                key: 'version',
-                title: <FormattedMessage id='VERSION' />,
-              },
-              {
-                key: 'os',
-                title: 'os'
-              },
-              {
-                key: 'fileName',
-                title: <FormattedMessage id='FILE_NAME' />
-              },
-              {
-                key: 'uploadDate',
-                title: <FormattedMessage id='UPLOAD_DATE' />
-              },
-              {
-                key: 'uploader',
-                title: <FormattedMessage id='UPLOADER' />
-              },
-              {
-                key: 'download',
-                width: '100px',
-                title: <FormattedMessage id='DOWNLOAD' />,
-                render: (_, index, data) => isAgentFileDisable[index] ?
-                  <img
-                    src={download_installer_icon}
-                    style={{ cursor: 'default', pointerEvents: 'none' }}
-                    width='20px'
-                  />
-                  :
-                  <img
-                    src={list_download}
-                    style={{ cursor: 'pointer' }}
-                    width='18px'
-                    onClick={() => {
-                      const updatedIsAgentFileDisable = [...isAgentFileDisable];
-                      updatedIsAgentFileDisable[index] = true;
-                      setIsAgentFileDisable(updatedIsAgentFileDisable);
-                      const versionName = data.fileName;
-                      CustomAxiosGetFile(
-                        GetAgentInstallerDownloadApi,
-                        (res: any) => {
-                          const fileDownlaoadUrl = URL.createObjectURL(res.data);
-                          const downloadLink = document.createElement('a');
-                          downloadLink.href = fileDownlaoadUrl;
-                          downloadLink.download = versionName;
-                          document.body.appendChild(downloadLink);
-                          downloadLink.click();
-                          document.body.removeChild(downloadLink);
-                          URL.revokeObjectURL(fileDownlaoadUrl);
-                        },
-                        {
-                          file_id: data.fileId
-                        },
-                        (err: any) => {
-                          message.error(formatMessage({ id: 'DOWNLOAD_FAILED' }));
-                        }
-                      ).finally(() => {
-                        const updatedIsAgentFileDisable = [...isAgentFileDisable];
-                        updatedIsAgentFileDisable[index] = false;
-                        setIsAgentFileDisable(updatedIsAgentFileDisable);
-                      })
-                    }}
-                  />
-              }, {
-                key: 'currentVersionSetting',
-                title: <FormattedMessage id='CURRENT_VERSION_SETTING' />,
-                width: '140px',
-                render: (_, index, data) => <button
-                  className={'button-st4 agent_management_target_version_btn ' + (data.downloadTarget ? 'disable' : '')}
-                  disabled={data.downloadTarget ? true : false}
+                :
+                <img
+                  src={list_download}
+                  style={{ cursor: 'pointer' }}
+                  width='18px'
                   onClick={() => {
-                    CustomAxiosPatch(
-                      PatchAgentInstallerApi(data.fileId),
-                      () => {
-                        message.success(formatMessage({ id: 'CURRENT_VERSION_CHANGE_COMPLETE' }));
+                    const updatedIsAgentFileDisable = [...isAgentFileDisable];
+                    updatedIsAgentFileDisable[index] = true;
+                    setIsAgentFileDisable(updatedIsAgentFileDisable);
+                    DownloadAgentInstallerFunc({ file_id: data.fileId }).catch(err => {
+                      message.error(formatMessage({ id: 'DOWNLOAD_FAILED' }));
+                    }).finally(() => {
+                      const updatedIsAgentFileDisable = [...isAgentFileDisable];
+                      updatedIsAgentFileDisable[index] = false;
+                      setIsAgentFileDisable(updatedIsAgentFileDisable);
+                    })
+                  }}
+                />
+            }, {
+              key: 'currentVersionSetting',
+              title: <FormattedMessage id='CURRENT_VERSION_SETTING' />,
+              width: '140px',
+              render: (_, index, data) => <button
+                className={'button-st4 agent_management_target_version_btn ' + (data.downloadTarget ? 'disable' : '')}
+                disabled={data.downloadTarget ? true : false}
+                onClick={() => {
+                  CurrentAgentVersionChangeFunc(data.fileId, () => {
+                    message.success(formatMessage({ id: 'CURRENT_VERSION_CHANGE_COMPLETE' }));
+                    const render = rendering;
+                    const renderTemp = render.concat(true);
+                    setRendering(renderTemp);
+                  })
+                }}
+              ><FormattedMessage id='APPLY' /></button>
+            },
+            {
+              key: 'delete',
+              title: (_, index) => <Popconfirm
+                title={formatMessage({ id: 'DELETE_A_FILE' })}
+                description={formatMessage({ id: 'CONFIRM_DELETE_FILE' })}
+                okText={formatMessage({ id: 'DELETE' })}
+                cancelText={formatMessage({ id: 'CANCEL' })}
+                open={openFilesDelete}
+                onConfirm={() => {
+                  const versionIds = checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.userId).join(',');
+                  const target = agentData.find((data) => data.downloadTarget === true);
+                  const targetVersion = checkboxes.filter((checkbox) => checkbox.userId === target?.fileId);
+
+                  if (targetVersion[0]?.checked) {
+                    message.error(formatMessage({ id: 'CURRENT_VERSION_CANNOT_BE_DELETED' }));
+                  } else {
+                    if (versionIds) {
+                      DeleteAgentInstallerFunc(versionIds, () => {
+                        setOpenFilesDelete(false);
+
+                        message.success(formatMessage({ id: 'VERSION_DELETE' }));
+
                         const render = rendering;
                         const renderTemp = render.concat(true);
                         setRendering(renderTemp);
-                      }, {},
-                      (err: any) => {
-
-                      }
-                    )
-                  }}
-                ><FormattedMessage id='APPLY' /></button>
-              },
-              {
-                key: 'delete',
-                title: (_,index) => <Popconfirm
-                  title={formatMessage({ id: 'DELETE_A_FILE' })}
-                  description={formatMessage({ id: 'CONFIRM_DELETE_FILE' })}
-                  okText={formatMessage({ id: 'DELETE' })}
-                  cancelText={formatMessage({ id: 'CANCEL' })}
-                  open={openFilesDelete}
-                  onConfirm={() => {
-                    const versionIds = checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.userId).join(',');
-                    const target = agentData.find((data) => data.downloadTarget === true);
-                    const targetVersion = checkboxes.filter((checkbox) => checkbox.userId === target?.fileId);
-
-                    if (targetVersion[0]?.checked) {
-                      message.error(formatMessage({ id: 'CURRENT_VERSION_CANNOT_BE_DELETED' }));
+                      })
                     } else {
-                      if (versionIds) {
-                        CustomAxiosDelete(
-                          DeleteAgentInstallerApi(versionIds),
-                          () => {
-                            setOpenFilesDelete(false);
-
-                            message.success(formatMessage({ id: 'VERSION_DELETE' }));
-
-                            const render = rendering;
-                            const renderTemp = render.concat(true);
-                            setRendering(renderTemp);
-                          }, {},
-                          (err: any) => {
-                          }
-                        )
-                      } else {
-                        message.error(formatMessage({ id: 'NO_ITEM_SELECTED' }));
-                      }
+                      message.error(formatMessage({ id: 'NO_ITEM_SELECTED' }));
                     }
+                  }
+                }}
+                onCancel={() => {
+                  setOpenFilesDelete(false);
+                }}
+              >
+                <img src={delete_icon} width='25px' style={{ opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer' }}
+                  onClick={() => {
+                    setOpenFilesDelete(true);
                   }}
-                  onCancel={() => {
-                    setOpenFilesDelete(false);
-                  }}
-                >
-                  <img src={delete_icon} width='25px' style={{ opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer' }}
-                    onClick={() => {
-                      setOpenFilesDelete(true);
-                    }}
-                  />
-                </Popconfirm>,
-                render: (_, index) => <Popconfirm
-                  title={formatMessage({ id: 'DELETE_A_FILE' })}
-                  description={formatMessage({ id: 'CONFIRM_DELETE_FILE' })}
-                  okText={formatMessage({ id: 'DELETE' })}
-                  cancelText={formatMessage({ id: 'CANCEL' })}
-                  open={openFileDelete === index}
-                  onConfirm={() => {
-                    const versionIds = checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.userId).join(',');
-                    const target = agentData.find((data) => data.downloadTarget === true);
-                    const targetVersion = checkboxes.filter((checkbox) => checkbox.userId === target?.fileId);
+                />
+              </Popconfirm>,
+              render: (_, index) => <Popconfirm
+                title={formatMessage({ id: 'DELETE_A_FILE' })}
+                description={formatMessage({ id: 'CONFIRM_DELETE_FILE' })}
+                okText={formatMessage({ id: 'DELETE' })}
+                cancelText={formatMessage({ id: 'CANCEL' })}
+                open={openFileDelete === index}
+                onConfirm={() => {
+                  const versionIds = checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.userId).join(',');
+                  const target = agentData.find((data) => data.downloadTarget === true);
+                  const targetVersion = checkboxes.filter((checkbox) => checkbox.userId === target?.fileId);
 
-                    if (targetVersion[0]?.checked) {
-                      message.error(formatMessage({ id: 'CURRENT_VERSION_CANNOT_BE_DELETED' }));
+                  if (targetVersion[0]?.checked) {
+                    message.error(formatMessage({ id: 'CURRENT_VERSION_CANNOT_BE_DELETED' }));
+                  } else {
+                    if (versionIds) {
+                      DeleteAgentInstallerFunc(versionIds, () => {
+                        setOpenFileDelete(-1);
+
+                        message.success(formatMessage({ id: 'VERSION_DELETE' }));
+
+                        const render = rendering;
+                        const renderTemp = render.concat(true);
+                        setRendering(renderTemp);
+                      })
                     } else {
-                      if (versionIds) {
-                        CustomAxiosDelete(
-                          DeleteAgentInstallerApi(versionIds),
-                          () => {
-                            setOpenFileDelete(-1);
-
-                            message.success(formatMessage({ id: 'VERSION_DELETE' }));
-
-                            const render = rendering;
-                            const renderTemp = render.concat(true);
-                            setRendering(renderTemp);
-                          }, {},
-                          (err: any) => {
-                          }
-                        )
-                      } else {
-                        message.error(formatMessage({ id: 'NO_ITEM_SELECTED' }));
-                      }
+                      message.error(formatMessage({ id: 'NO_ITEM_SELECTED' }));
                     }
+                  }
+                }}
+                onCancel={() => {
+                  setOpenFileDelete(-1);
+                }}
+              >
+                <img src={delete_icon} width='25px' style={{ opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer' }}
+                  onClick={() => {
+                    setOpenFileDelete(index);
                   }}
-                  onCancel={() => {
-                    setOpenFileDelete(-1);
-                  }}
-                >
-                  <img src={delete_icon} width='25px' style={{ opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer' }}
-                    onClick={() => {
-                      setOpenFileDelete(index);
-                    }}
-                  />
-                </Popconfirm>
-              }
-            ]}
-
-          />
-          
-            <div
-              className="mt50 mb40"
-              style={{ textAlign: 'center' }}
-            >
-              <Pagination showQuickJumper showSizeChanger current={pageNum} pageSize={tableCellSize} total={totalCount} onChange={onChangePage} />
-            </div>
+                />
+              </Popconfirm>
+            }
+          ]}
+        />
+        <div
+          className="mt30 mb40"
+          style={{ textAlign: 'center' }}
+        >
+          <Pagination showQuickJumper showSizeChanger current={pageNum} pageSize={tableCellSize} total={totalCount} onChange={onChangePage} />
         </div>
       </Contents>
     </>

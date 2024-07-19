@@ -1,5 +1,5 @@
 .main_menu_card {
-  border: 1.2px solid #ccc;
+  box-shadow: 0 0 6px 3px #eee;
   padding: 2.5rem;
   text-align: center;
   border-radius: 15px;
@@ -7,7 +7,7 @@
 }
 
 .main_menu_hovered {
-  background-color: #3880e8;
+  background-color: var(--main-blue-color);
   color: white;
 }
 
@@ -20,12 +20,13 @@
 }
 
 .main_menu_card_img {
-  max-width: 100%;
+  width: 80%;
 }
 
 .main_menu_card_title {
   font-size: 1.6em;
   height: 4vh;
+  word-break: keep-all;
 }
 
 .main_menu_card_title.en {

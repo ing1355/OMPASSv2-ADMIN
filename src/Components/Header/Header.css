@@ -17,13 +17,12 @@
   color: #0092FA;
 }
 
-.header_container {
+.header-container {
   padding-top: 8px;
-  height: 72px;
+  height: var(--header-height);
   border-bottom: 1px solid #ccc;
-  /* display: flex; */
+  width: 100%;
   box-shadow: 10px 0px 20px #ccc;
-  /* justify-content: center; */
 }
 
 .header_nav_container {

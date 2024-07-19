@@ -4,6 +4,14 @@
     padding: 5px 25px 25px;
     min-width: 840px;
     width: 1100px;
+    overflow: hidden;
+    transition: height .5s ease-out;
+    &:not(:first-child).closed {
+        height: 42px;
+        & > .user-detail-header {
+            border-bottom: none;
+        }
+    }
 }
 
 .user-detail-header {
@@ -15,6 +23,7 @@
     height: 60px;
     border-bottom: 1px solid rgba(123,123,123,.5);
     margin-bottom: 12px;
+    cursor: pointer;
     & h4 {
         margin: 0;
     }   
@@ -74,6 +83,12 @@
 }
 
 .user-detail-content-passcode-container {
+    & > div:first-child {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
     & > table {
         width: 100%;
     }
@@ -87,35 +102,77 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    & > img {
+        max-height: 32px;
+        border-radius: 6px;
+    }
+    & > h3 {
+        margin: 0;
+    }
 }
 
 .user-detail-info-device-info-title {
     height: 60px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     & > h3,h5 {
         margin: 8px 0;
     }
 }
 
 .user-detail-info-device-info-content {
-    padding: 0 12px;
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 24px;
+    gap: 1%;
+    height: 200px;
+    padding-top: 12px;
+    position: relative;
+}
+
+.authenticators-container-inner {
+    position: relative;
+}
+
+.authenticators-container {
+    &>div:first-child {
+        height: 0px;
+        padding: 0;
+    }
+}
+
+.authenticators-container .user-detail-info-device-info-content {
+    border-bottom: 1px solid black;
+    &:not(:last-child) {
+        margin-bottom: 12px;
+    }
 }
 
 .user-detail-info-device-info-content-item {
-    flex: 0 0 20%;
-    padding: 24px 12px;
+    height: 100%;
+    flex: 0 0 16%;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     gap: 20px;
     & > img {
-        width: 40%;
-        max-width: 40%;
+        width: 60px;
+        height: 60px;
+        max-height: 60px;
+        max-width: 60px;
     }
     & > div {
+        &:nth-child(2) {
+            flex: 0 0 26px;
+        }
+        &:nth-child(3) {
+            flex: 1;
+            font-size: 1rem;
+            letter-spacing: -1px;
+        }
         text-align: center;
     }
 }
@@ -126,11 +183,56 @@
 }
 
 .passcode-add {
-    text-align: end;
-    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 32px;
+    width: 32px;
+    cursor: pointer;
     & > img {
-        width: 48px;
+        width: 100%;
         height: 100%;
+    }
+}
+
+.button-in-passcode {
+    /* padding: 8px 12px; */
+}
+
+.user-detail-info-device-info-delete-btn {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}
+
+.number-of-authenticator {
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding-left: 16px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    & > h5 {
+        margin: 0;
+    }
+}
+
+.user-detail-info-passcode-view-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    & > div:first-child {
+        flex: 1;
+    }
+    & > div:nth-child(2) {
         cursor: pointer;
+        height: 24px;
+        width: 24px;
+        & > img {
+            width: 100%;
+            height: 100%;
+            
+        }
     }
 }

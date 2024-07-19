@@ -1,5 +1,5 @@
 .agent_management_header {
-  width: 1350px;
+  width: var(--main-width);
 }
 
 .agent_management_target_version_btn {
@@ -13,10 +13,41 @@
   cursor: default;
 }
 
-.agent_management_file_btn {
+.agent-upload-btn {
   padding: 10px;
   border-radius: 10px;
   cursor: pointer;
   font-size: 0.9rem;
   width: 200px;
+}
+
+.agent-input-row-container {
+  margin-bottom: 24px;
+  &>div {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: center;
+
+    &>label {
+      flex: 0 0 200px;
+    }
+
+    &>input {
+      height: 50px;
+      flex: 1 1 400px;
+    }
+  }
+}
+
+.version-name.regex-alert {
+  &.visible {
+    padding-left: 212px;
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+  }
+  &:not(.visible) {
+    height: 0;
+  }
 }

@@ -1,6 +1,5 @@
 import './Header.css';
 import { useEffect, useRef, useState } from 'react';
-import { ReduxStateType } from 'Types/ReduxStateTypes';
 import { useDispatch, useSelector } from 'react-redux';
 import { langChange } from 'Redux/actions/langChange';
 import { Link, useNavigate } from 'react-router-dom';
@@ -90,7 +89,7 @@ const Header = () => {
 
   return (
     <div
-      className='header_container'
+      className='header-container'
     >
       <Row
         className='header_nav_container'

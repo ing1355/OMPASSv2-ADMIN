@@ -1,29 +1,33 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
-import { GetUserDataListFunc, UserDataType } from "Functions/ApiFunctions"
+import { GetUserDataListFunc } from "Functions/ApiFunctions"
 import { useNavigate } from "react-router"
-import browser_icon from '../../assets/browser_icon.png';
-import os_windows from '../../assets/os_windows.png';
-import os_mac from '../../assets/os_mac.png';
 import { FormattedMessage } from "react-intl";
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import Contents from "Components/Layout/Contents";
 import ContentsHeader from "Components/Layout/ContentsHeader";
 import { Pagination, PaginationProps } from "antd";
+import searchIcon from './../../assets/searchIcon.png'
+import resetIcon from './../../assets/resetIcon.png'
+import './UserManagement.css'
 
 const UserManagement = () => {
     const [pageNum, setPageNum] = useState(1);
     const [tableData, setTableData] = useState<UserDataType[]>([])
     const [tableCellSize, setTableCellSize] = useState(10);
     const [totalCount, setTotalCount] = useState<number>(0);
-    const [hoveredRow, setHoveredRow] = useState<number>(-1);
     const [dataLoading, setDataLoading] = useState(false)
-    
+    const [searchType, setSearchType] = useState("username")
+    const [searchInput, setSearchInput] = useState("")
+    const searchInputRef = useRef<HTMLInputElement>(null)
+
+    const searchParams: UserListParamsType = useMemo(() => ({
+        page_size: tableCellSize,
+        page: pageNum,
+        [searchType]: searchInput
+    }), [tableCellSize, pageNum, searchType, searchInput])
+
     const navigate = useNavigate()
     const createHeaderColumn = (formattedId: string) => <FormattedMessage id={formattedId} />
-
-    const handleRowHover = (index: number) => {
-        setHoveredRow(index);
-    };
 
     const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
         setPageNum(pageNumber);
@@ -31,33 +35,67 @@ const UserManagement = () => {
     };
 
     const GetDatas = async () => {
-        await GetUserDataListFunc({
-            page_size: tableCellSize,
-            page: pageNum - 1
-        }, ({ results, totalCount }) => {
+        setDataLoading(true)
+        await GetUserDataListFunc(searchParams, ({ results, totalCount }) => {
             setTableData(results)
             setTotalCount(totalCount)
         })
+        setDataLoading(false)
     }
 
     useLayoutEffect(() => {
-        setDataLoading(true)
-        GetDatas().finally(() => {
-            setDataLoading(false)
-        })
-    }, [])
+        GetDatas()
+    }, [searchParams])
 
     return <Contents loading={dataLoading}>
-        <ContentsHeader title="USER_LIST" subTitle="USER_MANAGEMENT" />
+        <ContentsHeader title="USER_LIST" subTitle="USER_MANAGEMENT">
+            <button className="button-st1" onClick={() => {
+                navigate('/UserManagement/detail')
+            }}>
+                추가
+            </button>
+        </ContentsHeader>
+        <form onSubmit={e => {
+            e.preventDefault()
+            const { type, searchValue } = (e.currentTarget.elements as any);
+            setPageNum(1)
+            setSearchType(type.value)
+            setSearchInput(searchValue.value)
+        }} className="custom-search-container">
+            <select defaultValue={searchType} name="type" onChange={e => {
+                if(searchInputRef.current) searchInputRef.current.value = "";
+            }}>
+                <option value="username">
+                    사용자 아이디
+                </option>
+                <option value="name">
+                    이름
+                </option>
+            </select>
+            <input name="searchValue" ref={searchInputRef} defaultValue={searchInput}/>
+            <button className="button-st1" type="submit">
+                <img src={searchIcon} />
+                검색
+            </button>
+            <button className="button-st1" type="button" onClick={() => {
+                setSearchType("username")
+                setSearchInput("")
+            }}>
+                <img src={resetIcon} />
+                초기화
+            </button>
+        </form>
         <div className="contents-header-container">
-            <CustomTable<UserDataType>
+            <CustomTable<UserDataType, UserListParamsType>
                 className='tab_table_list'
                 theme='table-st1'
                 datas={tableData}
+                hover
                 columns={[
                     {
                         key: 'role',
-                        title: createHeaderColumn('RANK')
+                        title: createHeaderColumn('USER_ROLE'),
+                        render: (data) => <FormattedMessage id={data+'_ROLE_VALUE'}/>
                     },
                     {
                         key: 'username',
@@ -80,15 +118,6 @@ const UserManagement = () => {
                 onBodyRowClick={(row, index, arr) => {
                     navigate(`/UserManagement/detail/${row.userId}`);
                 }}
-                onBodyRowHover={(_, index) => {
-                    handleRowHover(index)
-                }}
-                onBodyRowMouseLeave={() => {
-                    handleRowHover(-1)
-                }}
-                bodyRowStyle={(_, index) => ({
-                    background: hoveredRow === index ? '#D6EAF5' : 'transparent'
-                })}
             />
         </div>
         <div

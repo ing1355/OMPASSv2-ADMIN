@@ -2,9 +2,6 @@ import './PermissionComponent.css';
 
 import { FormattedMessage } from 'react-intl';
 import { useEffect, useState, ChangeEvent } from 'react';
-import { CustomAxiosGet } from 'Components/CommonCustomComponents/CustomAxios';
-import { GetPatchPermissionsSettingApi } from 'Constants/ApiRoute';
-import { GetPermissionsSettingApiType, userRoleType } from 'Types/ServerResponseDataTypes';
 
 type menuType = 'userMgmt' | 'adminMgmt' | 'versionMgmt' | 'passcodeMgmt' | 'settingMgmt';
 
@@ -250,15 +247,6 @@ const PermissionComponent = ({ roleType }: { roleType: userRoleType }) => {
       </>
     )
   }
-
-  useEffect(() => {
-    // CustomAxiosGet(
-    //   GetPatchPermissionsSettingApi,
-    //   (data: GetPermissionsSettingApiType) => {
-
-    //   }
-    // )
-  },[]);
 
   return (
     <div className='mt10' style={{border: '1px solid #ccc', borderRadius: '8px', padding: '2px 20px'}}>

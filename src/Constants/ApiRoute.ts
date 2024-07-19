@@ -1,14 +1,11 @@
-import { ApplicationDataType, PasscodeHistoryDataType, PolicyDataType, RPUserDetailAuthDataType, UserDataType, UserGroupDataType } from "Functions/ApiFunctions";
-
 // OMPASS API
 export const GetPutSecretKeyApi = '/v1/ompass/secretkey';
 
 // 로그인
-// export const PostLoginApi = '/v1/login';
 export const PostLoginApi = '/v2/login';
-export const PostTokenVerifyApi = '/v1/ompass/token-verification';
+export const PostTokenVerifyApi = '/v2/login/token-verification';
 
-// OMPASS admin 사용자
+// 사용자
 export const PostSignUpApi = '/v1/signup';
 export const PostExcelUploadApi = '/v1/signup/excel-upload';
 export const GetPutUsersApi = '/v1/users';
@@ -16,16 +13,14 @@ export const GetUsersDetailsApi = (id: string) => `/v1/users/${id}/details`;
 export const DeleteUsersApi = (id: string) => `/v1/users/${id}`;
 export const GetUsersCountApi = '/v1/users/count';
 export const PatchUsersResetPasswordApi = '/v1/users/reset-password';
-export const GetUsernameCheckApi = (username: string) => `/v1/users/username/${username}`;
-
-// RP 사용자
+export const DuplicateUserNameCheckApi = (username: string) => `/v2/users/username/${username}/existence`;
 
 // Windows agent 파일
-export const GetAgentInstallerApi = `/v1/agent-installer`;
-export const PatchAgentInstallerApi = (fileId: number) => `/v1/agent-installer/${fileId}/target`
-export const DeleteAgentInstallerApi = (fileIds: string) => `/v1/agent-installer/${fileIds}`;
-export const GetAgentInstallerDownloadApi = '/v1/agent-installer/download';
-export const PostAgentInstallerUploadApi = `/v1/agent-installer/upload`;
+export const GetAgentInstallerListApi = `/v2/agent-installer`;
+export const CurrentAgentInstallerVersionChangeApi = (fileId: AgentInstallerDataType['fileId']) => `/v2/agent-installer/${fileId}/target`
+export const DeleteAgentInstallerApi = (fileIds: string) => `/v2/agent-installer/${fileIds}`;
+export const DownloadAgentInstallerApi = '/v2/agent-installer/download';
+export const UploadAgentInstallerApi = `/v2/agent-installer/upload`;
 
 // 장치(pc)
 export const DeleteAccessUserApi = (deviceId: number, accessUserId: number) => `/v1/device/${deviceId}/access-user/${accessUserId}`;
@@ -43,17 +38,17 @@ export const GetPasscodeHistoriesApi = '/v2/passcode-histories';
 
 // 패스코드 관리
 export const AddPasscodeApi = '/v2/rp/users/passcode'
-export const DeletePasscodeApi = (authDataId: RPUserDetailAuthDataType['id'], passcodeId: PasscodeHistoryDataType['passcode']['id']) => `/v2/rp/users/${authDataId}/passcode/${passcodeId}`
 
 // 권한 설정
 export const GetPatchPermissionsSettingApi = '/v1/permissions';
 
 // 어플리케이션
 export const GetApplicationListApi = '/v2/applications'
-export const GetApplicationDetailApi = (applicationId: ApplicationDataType['applicationId']) => `/v2/applications/${applicationId}/detail`
+export const GetApplicationDetailApi = (applicationId: ApplicationDataType['id']) => `/v2/applications/${applicationId}/detail`
 export const AddApplicationListApi = '/v2/applications'
-export const UpdateApplicationListApi = (applicationId: ApplicationDataType['applicationId']) => `/v2/applications/${applicationId}`
-export const DeleteApplicationListApi = (applicationId: ApplicationDataType['applicationId']) => `/v2/applications/${applicationId}`
+export const UpdateApplicationListApi = (applicationId: ApplicationDataType['id']) => `/v2/applications/${applicationId}`
+export const DeleteApplicationListApi = (applicationId: ApplicationDataType['id']) => `/v2/applications/${applicationId}`
+export const UpdateApplicationSecretkeyApi = (applicationId: ApplicationDataType['id']) => `/v2/applications/${applicationId}/reissuance`
 
 // 정책 관리
 export const GetPoliciesListApi = '/v2/policies'
@@ -76,7 +71,15 @@ export const AddUserDataApi = '/v2/users'
 export const UpdateUserDataApi = (userId: UserDataType['userId']) => `/v2/users/${userId}`
 export const DeleteUserDataApi = (userId: UserDataType['userId']) => `/v2/users/${userId}`
 export const GetUserDetailDataApi = (userId: UserDataType['userId']) => `/v2/users/${userId}/rp/details`
+export const DeleteAuthenticatorData = (authenticatorId: AuthenticatorDataType['id']) => `/v2/authenticators/${authenticatorId}`
 
 // 로그 관리
 export const GetAuthLogDataListApi = '/v2/logs/auth'
 export const GetPortalLogDataListApi = '/v2/logs/admin-behavior'
+
+// 서브도메인 정보
+export const GetSubDomainInfoApi = (subdomain: string) => `/v2/tenant/sub-domain/${subdomain}`
+
+// 포탈 설정
+export const GetPortalSettingsDataApi = '/v2/setting'
+export const UpdatePortalSettingsDataApi = '/v2/setting'

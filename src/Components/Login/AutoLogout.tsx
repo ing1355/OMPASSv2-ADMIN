@@ -31,7 +31,7 @@ const AutoLogout = () => {
 
         {/* 로그인 바로가기 */}
         <GoToLoginPageButton 
-          className='button-st4 common_button guide_page_login' 
+          className='button-st4' 
         />
       </div>
     </div>

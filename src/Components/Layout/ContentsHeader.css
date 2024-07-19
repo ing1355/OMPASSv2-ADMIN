@@ -1,5 +1,5 @@
 .contents-header-container { 
-    width: 1350px;
+    width: var(--main-width);
 }
 
 .contents-header-content {

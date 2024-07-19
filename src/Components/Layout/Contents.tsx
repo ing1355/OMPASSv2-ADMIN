@@ -12,7 +12,7 @@ type ContentsProps = PropsWithChildren & {
 const Contents = ({ children, containerStyle, copyRightStyle, loading }: ContentsProps) => {
     const height = useWindowHeightHeader();
 
-    return <div style={{ overflowY: 'auto', height: height }}>
+    return <div style={{height: height }}>
         {
             loading ? <div className='loading-center'>
                 데이터 불러오는 중...

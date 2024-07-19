@@ -1,13 +1,11 @@
-import { PasscodeHistoryDataType } from "Functions/ApiFunctions"
-
-export type GetPutUsersApiDataType = {
+type GetPutUsersApiDataType = {
   queryTotalCount: number,
   users: GetPutUsersApiArrayType
 }
 
-export type GetPutUsersApiArrayType = Array<GetPutUsersApiType>
+type GetPutUsersApiArrayType = Array<GetPutUsersApiType>
 
-export type GetPutUsersApiType = {
+type GetPutUsersApiType = {
   enablePasscodeCount: number,
   id: string,
   lastLoginDate: string,
@@ -19,14 +17,14 @@ export type GetPutUsersApiType = {
   phoneNumber: string,
 }
 
-export type GetAgentApiDataType = {
+type GetAgentInstallerApiResponseType = {
   queryTotalCount: number,
-  agentProgramHistories: GetAgentApiArrayType
+  agentProgramHistories: AgentInstallerListDataType
 }
 
-export type GetAgentApiArrayType = Array<GetAgentApiType>
+type AgentInstallerListDataType = Array<AgentInstallerDataType>
 
-export type GetAgentApiType = {
+type AgentInstallerDataType = {
   fileId: number,
   uploader: string,
   version: string,
@@ -37,20 +35,20 @@ export type GetAgentApiType = {
 }
 
 // export type userRoleType = "USER" | "ADMIN" | "SUPER_ADMIN" | null;
-export type userRoleType = "USER" | "ADMIN" | "ROOT";
+type userRoleType = "USER" | "ADMIN" | "ROOT";
 
-export type UserInfoType = {
+type UserInfoType = {
   userId: string,
   userRole: userRoleType,
   uuid: string,
 }
 
-export type GetUsersDetailsApiType = {
+type GetUsersDetailsApiType = {
   user: UserType,
   devices: DevicesType[],
 }
 
-export type UserType = {
+type UserType = {
   id: string,
   username: string,
   role: userRoleType,
@@ -60,7 +58,7 @@ export type UserType = {
   osNames: OsNamesType[],
 }
 
-export type DevicesType = {
+type DevicesType = {
   deviceType: 'BROWSER' | null,
   id: number,
   os: OsNamesType,
@@ -75,14 +73,14 @@ export type DevicesType = {
   deviceIdentifier: string,
 }
 
-export type AllowedAccessUsersType = {
+type AllowedAccessUsersType = {
   id: number,
   username: string,
   adminUsername: string,
   createdAt: string,
 }
 
-export type OmpassInfoType = {
+type OmpassInfoType = {
   appVersion: string,
   model: string,
   os: string,
@@ -93,23 +91,23 @@ export type OmpassInfoType = {
   alias: string,
 }
 
-type OsNamesType = "WINDOWS" | "MAC";
+type OsNamesType = "WINDOWS" | "MAC" | "GOOROOM";
 
-export type GetPutSecretKeyApiType = {
+type GetPutSecretKeyApiType = {
   secretKey: string,
   interfaceApiServer: string,
   interfaceSocketServer: string,
   ompassPortalServer: string,
 }
 
-export type GetUsersCountApiType = {
+type GetUsersCountApiType = {
   passcodeUserCount: number,
   registeredOmpassUserCount: number,
   totalUserCount: number,
   ubRegisteredOmpassUserCount: number,
 }
 
-export type GetPermissionsSettingApiType = {
+type GetPermissionsSettingApiType = {
   SUPER_ADMIN: SUPER_AND_ADMIN_Type,
   ADMIN: SUPER_AND_ADMIN_Type,
   USER: USER_Type,
@@ -156,4 +154,15 @@ type settingMgmtType = {
   accessSettingPage: boolean,
   modifySecretKey: boolean,
   modifyUrl: boolean,
+}
+
+type SubDomainInfoDataType = {
+  logoImage: string
+}
+
+type PortalSettingsDataType = {
+  userSignupMethod: string
+  logoImage: string
+  noticeMessage: string
+  timeZone: string
 }

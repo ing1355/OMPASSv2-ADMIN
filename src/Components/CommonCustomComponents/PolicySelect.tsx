@@ -1,4 +1,4 @@
-import { GetPoliciesListFunc, PolicyListDataType } from "Functions/ApiFunctions"
+import { GetPoliciesListFunc } from "Functions/ApiFunctions"
 import { SetStateType } from "Types/PropsTypes"
 import { useLayoutEffect, useState } from "react"
 import './PolicySelect.css'
@@ -7,22 +7,24 @@ import { FormattedMessage } from "react-intl"
 type PolicySelectProps = {
     selectedPolicy: PolicyListDataType['id']
     setSelectedPolicy: SetStateType<PolicyListDataType['id']>
+    needSelect?: boolean
 }
 
-const PolicySelect = ({ selectedPolicy, setSelectedPolicy }: PolicySelectProps) => {
+const PolicySelect = ({ selectedPolicy, setSelectedPolicy, needSelect }: PolicySelectProps) => {
     const [policiesData, setPoliciesData] = useState<PolicyListDataType[]>([])
 
     useLayoutEffect(() => {
         GetPoliciesListFunc({}, ({ results, totalCount }) => {
             setPoliciesData(results)
+            if(results.length > 0 && needSelect && !selectedPolicy) setSelectedPolicy(results[0].id)
         })
     }, [])
     
     return <>
-        <select value={selectedPolicy} onChange={e => {
+        <select className="custom-select-box" value={selectedPolicy} onChange={e => {
             setSelectedPolicy(e.target.value)
         }}>
-            <option value="">선택 안함</option>
+            {!needSelect && <option value=""><FormattedMessage id="NO_POLICY"/></option>}
             {
                 policiesData.map((_, ind) => <option key={ind} value={_.id}>{_.policyType === 'DEFAULT' ? <FormattedMessage id={_.name}/> : _.name}</option>)
             }

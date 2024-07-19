@@ -3,7 +3,6 @@ import { useLayoutEffect } from "react";
 import { useIntl } from "react-intl";
 import { useDispatch, useSelector } from "react-redux";
 import { message } from 'antd';
-import { ReduxStateType } from 'Types/ReduxStateTypes';
 import { userInfoClear } from "Redux/actions/userChange";
 import { useNavigate } from "react-router";
 import { controller } from "Components/CommonCustomComponents/CustomAxios";
@@ -24,6 +23,7 @@ const AxiosController = () => {
     oldInterceptorId = axios.interceptors.response.use(res => {
       return res;
     }, (err) => {
+      console.log(err)
       if (err && err.response && err.response) {
         const { data, status } = err.response
         console.log(data, status)

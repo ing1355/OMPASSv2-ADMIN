@@ -4,7 +4,6 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { useEffect, useState } from 'react';
 import { CustomAxiosGet, CustomAxiosPut } from "Components/CommonCustomComponents/CustomAxios";
 import { GetPutSecretKeyApi } from "Constants/ApiRoute";
-import { GetPutSecretKeyApiType } from "Types/ServerResponseDataTypes";
 import { Col, Row, message } from "antd";
 import { useNavigate } from 'react-router';
 import Contents from 'Components/Layout/Contents';
@@ -99,11 +98,10 @@ const SecretKey = () => {
                     },
                     {
                       secretKey: secretKey.value
-                    },
-                    (err: any) => {
-                      message.error(formatMessage({ id: 'SECRET_KEY_MODIFY_Fail' }));
                     }
-                  )
+                  ).catch(err => {
+                    message.error(formatMessage({ id: 'SECRET_KEY_MODIFY_Fail' }));
+                  })
                 }
               }}
             >
@@ -187,11 +185,10 @@ const SecretKey = () => {
                     },
                     {
                       interfaceApiServer: apiServer.value
-                    },
-                    (err: any) => {
-                      message.error(formatMessage({ id: 'API_SERVER_URL_MODIFY_Fail' }));
                     }
-                  )
+                  ).catch(err => {
+                    message.error(formatMessage({ id: 'API_SERVER_URL_MODIFY_Fail' }));
+                  })
                 }
               }}
             >
@@ -276,10 +273,9 @@ const SecretKey = () => {
                     {
                       interfaceSocketServer: socketServer.value
                     },
-                    (err: any) => {
-                      message.error(formatMessage({ id: 'SOCKET_SERVER_URL_MODIFY_Fail' }));
-                    }
-                  )
+                  ).catch(err => {
+                    message.error(formatMessage({ id: 'SOCKET_SERVER_URL_MODIFY_Fail' }));
+                  })
                 }
               }}
             >
@@ -363,11 +359,10 @@ const SecretKey = () => {
                     },
                     {
                       ompassPortalServer: portalServer.value
-                    },
-                    (err: any) => {
-                      message.error(formatMessage({ id: 'PORTAL_SERVER_URL_MODIFY_Fail' }));
                     }
-                  )
+                  ).catch(err => {
+                    message.error(formatMessage({ id: 'PORTAL_SERVER_URL_MODIFY_Fail' }));
+                  })
                 }
               }}
             >

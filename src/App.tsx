@@ -1,11 +1,9 @@
 import './App.css';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { ReduxStateType } from 'Types/ReduxStateTypes';
 import Login from 'Components/Login/Login';
-import CreateAccount from 'Components/Account/CreateAccount';
 import OMPASSVerify from 'Components/OMPASS/OMPASSVerify';
 import SecretKey from 'Components/SecretKey/SecretKey';
 import Main from 'Components/Main/Main';
@@ -24,6 +22,7 @@ import Groups from 'Components/Group/Groups';
 import Users from 'Components/Users/Users';
 import AuthLog from 'Components/Log/AuthLog';
 import PortalLog from 'Components/Log/PortalLog';
+import Settings from 'Components/Settings';
 
 const convertLangToIntlVer = (lang: ReduxStateType['lang']) => {
   return lang === 'EN' ? 'en-us' : 'ko-kr'
@@ -34,10 +33,23 @@ const App: React.FC = () => {
     lang: state.lang!,
     userInfo: state.userInfo
   }));
-  
+
   return <IntlProvider locale={convertLangToIntlVer(lang)} messages={Locale[lang]}>
-      <AxiosController />
-      {userInfo && <Header />}
+    <AxiosController />
+    {/* <button onClick={() => {
+      const bluetooth = (navigator as any).bluetooth
+      bluetooth.requestDevice({acceptAllDevices: true}).then((device: any) => {
+        return device.gatt.connect()
+      }).then((server: any) => {
+        console.log(server)
+      })
+      .catch((err: any) => {
+        console.log(err)
+      })
+    }}>
+    </button> */}
+    {userInfo && <Header />}
+    <div className={userInfo ? 'contents-container' : ""}>
       <Routes>
         <Route path='/ompass/*' element={<OMPASSVerify />} />
         <Route path='/GuidePage' element={<GuidePage />} />
@@ -57,20 +69,22 @@ const App: React.FC = () => {
               <Route path='/Groups/*' element={<Groups />} />
               <Route path='/AuthLogs' element={<AuthLog />} />
               <Route path='/PortalLogs' element={<PortalLog />} />
+              <Route path='/Settings' element={<Settings />} />
               <Route path='/*' element={<Navigate to='/Main' replace={true} />} />
             </>
               : <>
-              <Route path='/UserManagement/*' element={<Users />} />
+                <Route path='/Main' element={<Users />} />
+                <Route path='/*' element={<Navigate to='/Main' replace={true} />} />
               </>
           ) :
             <>
               <Route path='/*' element={<Navigate to='/' replace={true} />} />
-              <Route path='/CreateAccount' element={<CreateAccount />} />
               <Route path='/' element={<Login />} />
             </>
         }
       </Routes>
-    </IntlProvider>;
+    </div>
+  </IntlProvider>;
 }
 
 export default App;

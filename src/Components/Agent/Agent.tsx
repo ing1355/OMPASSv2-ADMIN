@@ -5,8 +5,7 @@ import VersionUpload from "./VersionUpload";
 
 
 const Agent = () => {
-  const [tableCellSize, setTableCellSize] = useState<number>(10);
-  const [pageNum, setPageNum] = useState<number>(1);
+  
 
   return (
     <>
@@ -14,24 +13,14 @@ const Agent = () => {
         <Route
           path="/"
           element={
-            <AgentManagement 
-              pageNum={pageNum} 
-              setPageNum={setPageNum} 
-              tableCellSize={tableCellSize}
-              setTableCellSize={setTableCellSize}            
-            />
+            <AgentManagement/>
           }
         />
 
         <Route 
           path="/upload" 
           element={
-            <VersionUpload
-              pageNum={pageNum} 
-              setPageNum={setPageNum} 
-              tableCellSize={tableCellSize}
-              setTableCellSize={setTableCellSize}                
-            />
+            <VersionUpload/>
           }
         />
       </Routes>

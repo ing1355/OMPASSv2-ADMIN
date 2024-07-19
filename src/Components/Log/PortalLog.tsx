@@ -1,7 +1,7 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
-import { AuthLogDataType, GetAuthLogDataListFunc, GetPortalLogDataListFunc, PortalLogDataType } from "Functions/ApiFunctions"
+import { GetPortalLogDataListFunc } from "Functions/ApiFunctions"
 import { useLayoutEffect, useState } from "react"
 
 const PortalLog = () => {
@@ -25,8 +25,12 @@ const PortalLog = () => {
         <ContentsHeader title="PORTAL_LOG_MANAGEMENT" subTitle="PORTAL_LOG_MANAGEMENT">
         </ContentsHeader>
         <div className="contents-header-container">
-            <CustomTable<PortalLogDataType>
+            <CustomTable<PortalLogDataType, {}>
                 columns={[
+                    {
+                        key: 'id',
+                        title: '#'
+                    },
                     {
                         key: 'username',
                         title: '아이디',

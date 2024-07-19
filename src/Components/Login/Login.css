@@ -1,96 +1,113 @@
 /* Common */
-.dis_flex {
-  display: flex;
-  justify-content: space-between;
+
+.create-account-input {
+  width: 496px;
+  height: 50px;
 }
 
-/*  */
-.login_container {
-  padding: 2% 2% 0%;
-  flex-direction: column;
-}
-
-.login_header {
-  align-self: flex-start;
-}
-
-.login_ompass_log_img {
-  width: 15%;
-}
-
-.login_logo_title {
-  font-weight: bold;
-  font-size: 2.9rem;
-  margin-left: 15px;
-  position: relative;
-  top: -2px;
-}
-
-.login-main-img {
-  max-width: 77%;
-}
-
-.login_img_download {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.login_agent_download_loading {
-  position: relative;
-}
-
-.login_agent_download_button_container {
-  width: 280px;
-  text-align: center;
-}
-
-.login_agent_download_button {
+.login-agent-download-button {
   font-size: 1rem;
   border-radius: 1.2rem;
-  position: relative;
-  padding: 8px 12px;
-  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   gap: 8px;
+  height: 42px;
+  margin-top: 48px;
   & > img {
-    width: 24px;
-    height: 24px;
+    height: 80%;
   }
 }
 
-.login_form_container { 
-  background-color: white;
-  border: none;
-  flex: 0.3;
-  padding: 5.3%;
-  margin: 10%;
-  width: 50%;
-  font-size: 1rem;
+.login-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 36px;
 }
 
-.login_form_title {
+.login-form-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  height: 60px;
+  & > img {
+    max-width: 60%;
+    height: 100%;
+  }
+}
+
+.login-logo-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+  gap: 12px;
+  & > img {
+    height: 55%
+  }
+}
+
+.login-body {
+  border: none;
+  width: 800px;
+  padding: 48px;
+  font-size: 1rem;
+  border-radius: 8px;
+  box-shadow: 0px 0px 5px 3px var(--sub-grey-color);
+
+  display: flex;
+  flex-direction: row;
+  gap: 64px;
+
+  & > div, & > form {
+    flex: 1;
+  }
+  & > div {
+    display: flex;
+    flex-direction: column;
+    & > div:nth-child(2) {
+      flex: 1;
+      padding: 32px;
+      & > img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+  & > form {
+
+  }
+}
+
+.login-form-title {
   font-weight: 900;
   font-size: 2.1rem;
 }
 
-.login_input_container {
+.login-input-container {
   display: flex;
   flex-direction: column;
 }
 
-.login_input {
-  /* width: 443px; */
+.login-input {
   height: 50px;
   font-size: 1rem;
   border-radius: 8px;
   padding-left: 67px;
+  &:focus {
+    border-color: rgba(128, 0, 128, 0.636);
+    background-color: rgba(128, 0, 128, 0.336);
+  }
 }
 
-.login_input_img {
+.login-input-img {
   width: 30px;
   position: relative;
   top: -41px;
@@ -105,19 +122,19 @@
   margin-bottom: 2vh;
 }
 
-.login_footer {
+.login-footer {
   flex-direction: column;
   margin-bottom: 1%;
 }
 
-.login_footer_locale_img {
+.login-footer-locale-img {
   position: relative;
   top: 2px;
   margin-right: 2px;
   width: 14px;
 }
 
-.login_footer_manual_download_img {
+.login-footer-manual-download-img {
   position: relative;
   top: 4px;
   width: 19px;
@@ -131,113 +148,21 @@
 /* 반응형 */
 @media (max-width:1799px) {
   /* 데스크탑 */
-  .login_form_container {
-    font-size: 0.4rem;
-  }
-  .login_container {
-    padding: 2% 2% 0%;
-    flex-direction: column;
-  }
-  .login_ompass_log_img {
-    width: 12.7%;
-  }
-  .login_logo_title {
-    font-size: 1.9rem;
-  }
-  .login-main-img {
-    max-width: 63%;
-  }
-  .login_agent_download_button_container {
-    width: 240px;
-  }
-  .login_agent_download_button {
-    font-size: 0.95rem;
-  }
-  .login_form_container {
-    width: 47%;
-    padding: 4.3%;
-  }
-  .login_form_title {
-    font-size: 1.2rem;
-    margin-top: 0px;
-  }
-  .login_input {
-    height: 28px;
-  }
-  .login_input_img {
-    width: 17px;
-    position: relative;
-    top: -24.5px;
-    left: 11.5px;
-  }
-  .login-button {
-    height: 40px;
-    font-size: 0.78rem;
-  }
-  .login_footer_locale_img {
-    width: 10.8px;
-  }
-  .login_footer_manual_download_img {
-    width: 14px;
-    position: relative;
-    top: 3.4px;
-  }
-  .login_footer_font {
-    font-size: 0.5rem;
-  }
-  .login-copyright {
-    font-size: 0.1rem;
-  }
+  
 }
   
 @media (min-width:1024px) and (max-width:1279px) {
   /* 타블렛 가로 */
-  .login_form_container { 
-    margin: 5%;
-  }
-  .login_agent_download_button_container {
-    width: 190px;
-  }
-  .login_agent_download_button {
-    font-size: 0.7rem;
-  }
-  .login_footer_locale_img {
-    width: 13.1px;
-  }
-  .login_footer_manual_download_img {
-    width: 17.7px;
-  }
-  .login_footer_font {
-    font-size: 0.85rem;
-  }
+ 
 }
 @media (min-width:768px) and (max-width:1023px) {
   /* 모바일 가로, 타블렛 세로 */
-  .login_agent_download_button_container {
-    width: 180px;
-  }
-  .login_agent_download_button {
-    top: 0;
-    font-size: 0.65rem;
-    padding: 4px 8px;
-  }
-  .login_agent_download_loading {
-    top: 0;
-  }
 }
 
 @media (min-width:480px) and (max-width:767px) {
   /* 모바일 세로 */
-  .login_form_container { 
-    width: 60%;
-    margin: auto;
-  }
 }
 
 @media (max-width:479px) {
   /* 모바일 세로 */
-  .login_form_container { 
-    width: 60%;
-    margin: auto;
-  }
 }

@@ -4,14 +4,15 @@ import ContentsHeader from "Components/Layout/ContentsHeader"
 import { Pagination, PaginationProps } from "antd"
 import { useLayoutEffect, useState } from "react"
 import { useNavigate } from "react-router"
-import { GetUserGroupDataListFunc, UserGroupDataType } from "Functions/ApiFunctions"
+import { GetUserGroupDataListFunc } from "Functions/ApiFunctions"
+import { FormattedMessage } from "react-intl"
 
 const GroupManagement = () => {
     const [pageNum, setPageNum] = useState(1);
     const [tableCellSize, setTableCellSize] = useState(10);
     const [totalCount, setTotalCount] = useState(10);
-    const [tableData, setTableData] = useState<UserGroupDataType[]>([])
-    const [dataLoading, setDataLoading] = useState(false) 
+    const [tableData, setTableData] = useState<UserGroupListDataType[]>([])
+    const [dataLoading, setDataLoading] = useState(false)
     const navigate = useNavigate()
 
     const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
@@ -22,7 +23,7 @@ const GroupManagement = () => {
     const GetDatas = async () => {
         await GetUserGroupDataListFunc({
             page_size: tableCellSize,
-            page: pageNum - 1,
+            page: pageNum,
         }, ({ results, totalCount }) => {
             setTableData(results)
             setTotalCount(totalCount)
@@ -37,8 +38,14 @@ const GroupManagement = () => {
     }, [])
 
     return <Contents loading={dataLoading}>
-        <ContentsHeader title="GROUP_MANAGEMENT" subTitle="GROUP_MANAGEMENT" />
-        <CustomTable<UserGroupDataType>
+        <ContentsHeader title="GROUP_MANAGEMENT" subTitle="GROUP_MANAGEMENT">
+            <button className="button-st1" onClick={() => {
+                navigate('/Groups/detail')
+            }}>
+                추가
+            </button>
+        </ContentsHeader>
+        <CustomTable<UserGroupListDataType, {}>
             theme='table-st1'
             className="contents-header-container"
             onBodyRowClick={(row, index, arr) => {
@@ -51,7 +58,10 @@ const GroupManagement = () => {
                 },
                 {
                     key: 'policy',
-                    title: '정책'
+                    title: '정책',
+                    render: (data, ind, row) => {
+                        return data.name === 'default policy' ? <FormattedMessage id={data.name} /> : data.name
+                    }
                 },
                 // {
                 //     key: 'users',
@@ -68,16 +78,6 @@ const GroupManagement = () => {
             ]}
             datas={tableData}
         />
-        <div className="contents-header-container mt10"
-            style={{
-                textAlign: 'end'
-            }}>
-            <button onClick={() => {
-                navigate('/Groups/detail')
-            }}>
-                추가
-            </button>
-        </div>
         <div
             className="mt30 mb40"
             style={{ textAlign: 'center' }}
