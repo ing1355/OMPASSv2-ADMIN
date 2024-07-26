@@ -59,17 +59,15 @@ const defaultTimePolicyData: AccessTimeRestrictionValueType = {
 const AuthPolicyDetail = () => {
     const [authenticatorPolicies, setAuthenticatorPolicies] = useState<PolicyDataType['enableAuthenticators']>(['OMPASS'])
     const [locationChecked, setLocationChecked] = useState(false)
-    const [etcLocationData, setEtcLocationData] = useState<PolicyRestrictionItemType>({
+    const [etcLocationData, setEtcLocationData] = useState<LocationPolicyRestrictionItemType>({
         isEnabled: true,
-        value: 'ETC'
-    })
-    const [etcIpAddressData, setEtcIpAddressData] = useState<PolicyRestrictionItemType>({
-        isEnabled: true,
-        value: 'ETC'
+        countryCode: "",
+        address: "",
+        radius: 0
     })
     const [locationDatas, setLocationDatas] = useState<PolicyDataType['location']['locations']>([])
     const [browserChecked, setBrowserChecked] = useState<BrowserPolicyType[]>([])
-    const [ompassControl, setOmpassControl] = useState<PolicyDataType['accessControl']>()
+    const [ompassControl, setOmpassControl] = useState<PolicyDataType['accessControl']>('ACTIVE')
     const [ipAddressChecked, setIpAddressChecked] = useState(false)
     const [ipAddressValues, setIpAddressValues] = useState<PolicyDataType['ipRestriction']['ips']>([])
     const [accessTimeChecked, setAccessTimeChecked] = useState(false)
@@ -84,15 +82,9 @@ const AuthPolicyDetail = () => {
     }));
     const conutryCodes: CountryCodesType = lang === 'KR' ? countryCodes_KR : countryCodes_EN
     const countryCodeKeys = Object.keys(conutryCodes)
-    const locationDataKeys = locationDatas.map(_ => _.value)
+    const locationDataKeys = locationDatas.map(_ => _.countryCode)
     const filteredCountryCodeKeys = (key: string) => countryCodeKeys.filter(_ => (key === _ && locationDataKeys.includes(_)) || !locationDataKeys.includes(_))
     const navigate = useNavigate()
-
-    useLayoutEffect(() => {
-        if (authenticatorPolicies.includes("OMPASS")) {
-            setOmpassControl('ACTIVE')
-        }
-    }, [authenticatorPolicies])
 
     useLayoutEffect(() => {
         if (uuid) {
@@ -101,10 +93,10 @@ const AuthPolicyDetail = () => {
                 if (descriptionRef.current) descriptionRef.current.value = data.description || ""
                 setOmpassControl(data.accessControl)
                 setBrowserChecked(data.enableBrowsers)
-                setLocationChecked(data.location.locationEnabled)
+                setLocationChecked(data.location.isEnabled)
                 setLocationDatas(data.location.locations)
-                // setIpAddressChecked(data.ipAddress.ipAddressEnabled)
-                // setIpAddressValues(data.ipAddress.ipAddresss)
+                setIpAddressChecked(data.ipRestriction.isEnabled)
+                setIpAddressValues(data.ipRestriction.ips)
                 setDetailData(data)
                 setAuthenticatorPolicies(data.enableAuthenticators)
             })
@@ -119,11 +111,11 @@ const AuthPolicyDetail = () => {
             accessControl: ompassControl,
             ipRestriction: {
                 isEnabled: ipAddressChecked,
-                ips: Object.assign(ipAddressValues, etcIpAddressData)
+                ips: ipAddressValues
             },
             enableBrowsers: browserChecked,
             location: {
-                locationEnabled: locationChecked,
+                isEnabled: locationChecked,
                 locations: Object.assign(locationDatas, etcLocationData)
             },
             enableAuthenticators: authenticatorPolicies,
@@ -138,7 +130,7 @@ const AuthPolicyDetail = () => {
     }
 
     const LocationRowController = ({ data, index }: {
-        data: PolicyRestrictionItemType
+        data: LocationPolicyRestrictionItemType
         index: number
     }) => {
         return <>
@@ -192,7 +184,7 @@ const AuthPolicyDetail = () => {
                                 ips: ipAddressValues
                             },
                             location: {
-                                locationEnabled: locationChecked,
+                                isEnabled: locationChecked,
                                 locations: Object.assign(locationDatas, etcLocationData)
                             },
                             enableAuthenticators: authenticatorPolicies,
@@ -300,22 +292,22 @@ const AuthPolicyDetail = () => {
                     <div className="policy-input-container" aria-hidden={!locationChecked}>
                         <div>
                             <button className="button-st2" onClick={() => {
-                                setLocationDatas([{
-                                    isEnabled: true,
-                                    value: countryCodeKeys.find(_ => !locationDataKeys.includes(_))!
-                                }, ...locationDatas])
+                                // setLocationDatas([{
+                                //     isEnabled: true,
+                                //     value: countryCodeKeys.find(_ => !locationDataKeys.includes(_))!
+                                // }, ...locationDatas])
                             }}>추가</button>
                         </div>
                         <div className="location-policy-container">
                             {
                                 locationDatas.map((l, lInd) => <div key={lInd} className="location-item-container">
-                                    <select value={l.value} onChange={e => {
+                                    <select value={l.countryCode} onChange={e => {
                                         setLocationDatas(locationDatas.map((_l, _lInd) => lInd === _lInd ? ({
                                             ..._l,
                                             location: e.target.value
                                         }) : _l))
                                     }}>
-                                        {filteredCountryCodeKeys(l.value).map((_, ind) => <option key={ind} value={_}>
+                                        {filteredCountryCodeKeys(l.countryCode).map((_, ind) => <option key={ind} value={_}>
                                             {conutryCodes[_]}
                                         </option>)}
                                     </select>
@@ -374,18 +366,6 @@ const AuthPolicyDetail = () => {
                                 </div>
                                 )
                             }
-                            {/* <div className="location-item-container">
-                                <input className="policy-ip-address-input" placeholder="ip 주소를 입력해주세요." defaultValue="그 외 다른 IP들" disabled />
-                                <select value={etcIpAddressData.isEnabled ? "true" : "false"} onChange={e => {
-                                    setEtcIpAddressData({
-                                        isEnabled: e.target.value === "true" ? true : false,
-                                        value: 'ETC'
-                                    })
-                                }}>
-                                    <option value="true">허용</option>
-                                    <option value="false">차단</option>
-                                </select>
-                            </div> */}
                         </div>
                     </div>
                 </div>

@@ -19,12 +19,12 @@ const Contents = ({ children, containerStyle, copyRightStyle, loading }: Content
             </div> : <>
                 <div
                     className='content-center'
-                    style={{ flexDirection: 'column', paddingTop: '70px', minHeight: `${height - 130}px`, justifyContent: 'start', ...containerStyle }}
+                    style={{ minHeight: `${height - 130}px`, justifyContent: 'start', ...containerStyle }}
                 >
                     {children}
                 </div>
                 <div
-                    className='copyRight-style mb30'
+                    className='copyRight-style'
                     style={copyRightStyle}
                 >
                     {CopyRightText}

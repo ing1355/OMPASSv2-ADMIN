@@ -24,7 +24,7 @@ const ApplicationDetail = () => {
     const [inputRedirectUrl, setInputRedirectUrl] = useState('')
     const [selectedPolicy, setSelectedPolicy] = useState('')
     const [inputDescription, setInputDescription] = useState('')
-    const [appId, setAppId] = useState('')
+    const [inputApiServerHost, setInputApiServerHost] = useState('')
     const [dataLoading, setDataLoading] = useState(false)
     const [hasWindowsLogin, setHasWindowsLogin] = useState(false)
     const [sureDelete, setSureDelete] = useState(false)
@@ -42,14 +42,14 @@ const ApplicationDetail = () => {
     const GetDatas = async () => {
         if (uuid) {
             await GetApplicationDetailFunc(uuid, (data) => {
-                setAppId(data.id)
                 setInputName(data.name)
                 setInputSecretKey(data.secretKey)
                 setInputDomain(data.domain ?? "")
                 setInputRedirectUrl(data.redirectUri ?? "")
                 setLogoImage(data.logoImage ?? "")
-                setInputDescription(data.description)
+                setInputDescription(data.description ?? "")
                 setInputClientId(data.clientId)
+                setInputApiServerHost(data.apiServerHost)
                 // setSelectedPolicy(data.policy. || "")
                 setApplicationType(data.type)
                 setHelpMsg(data.helpDeskMessage || "")
@@ -129,7 +129,7 @@ const ApplicationDetail = () => {
                         }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
                     </CustomInputRow>}
                     <CustomInputRow title="API 서버 주소">
-                        {isAdd ? <input defaultValue={appId} disabled /> : appId}
+                        {isAdd ? <input defaultValue={inputApiServerHost} disabled /> : inputApiServerHost}
                     </CustomInputRow>
                     {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title="클라이언트 아이디">
                         {isAdd ? <input defaultValue={inputClientId} disabled /> : inputClientId}

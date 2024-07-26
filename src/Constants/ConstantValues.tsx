@@ -17,8 +17,8 @@ import versionManagementMenuIconBlack from '../assets/versionManagementMenuIconB
 import versionManagementMenuIconWhite from '../assets/versionManagementMenuIconWhite.png';
 import passcodeHistoryMenuIconBlack from '../assets/passcodeHistoryMenuIconBlack.png';
 import passcodeHistoryMenuIconWhite from '../assets/passcodeHistoryMenuIconWhite.png';
-import OMPASS_settings from '../assets/OMPASS_settings.png';
-import OMPASS_settings_white from '../assets/OMPASS_settings_white.png';
+import settingsMenuIconBlack from '../assets/settingsMenuIconBlack.png';
+import SettingsMenuIconWhite from '../assets/settingsMenuIconWhite.png';
 
 export const isDev = process.env.NODE_ENV === 'development'
 export const CopyRightText = `OMPASS Portal v${process.env.REACT_APP_VERSION} © 2023. OneMoreSecurity Inc. All Rights Reserved.`
@@ -90,8 +90,8 @@ export const menuDatas = (role: userRoleType): menuDataType[] => {
         {
             label: 'SETTINGS_MANAGEMENT',
             route: '/Settings',
-            whiteImg: billingMenuIconWhite,
-            blackImg: billingMenuIconBlack
+            whiteImg: SettingsMenuIconWhite,
+            blackImg: settingsMenuIconBlack
         },
         // {
         //     label: 'USER_MANAGEMENT',

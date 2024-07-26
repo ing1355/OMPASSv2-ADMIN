@@ -135,7 +135,7 @@ const AgentManagement = () => {
             // },
             {
               key: 'currentTarget',
-              title: '',
+              title: '#',
               width: '80px',
               render: (data, index, row) => row.downloadTarget && <span className='manager-mark'>
                 <FormattedMessage id='CURRENT' />
@@ -208,53 +208,55 @@ const AgentManagement = () => {
             },
             {
               key: 'delete',
-              title: (_, index) => <Popconfirm
-                title={formatMessage({ id: 'DELETE_A_FILE' })}
-                description={formatMessage({ id: 'CONFIRM_DELETE_FILE' })}
-                okText={formatMessage({ id: 'DELETE' })}
-                cancelText={formatMessage({ id: 'CANCEL' })}
-                open={openFilesDelete}
-                onConfirm={() => {
-                  const versionIds = checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.userId).join(',');
-                  const target = agentData.find((data) => data.downloadTarget === true);
-                  const targetVersion = checkboxes.filter((checkbox) => checkbox.userId === target?.fileId);
+              title: '',
+              // title: (_, index) => <Popconfirm
+              //   title={formatMessage({ id: 'DELETE_A_FILE' })}
+              //   description={formatMessage({ id: 'CONFIRM_DELETE_FILE' })}
+              //   okText={formatMessage({ id: 'DELETE' })}
+              //   cancelText={formatMessage({ id: 'CANCEL' })}
+              //   open={openFilesDelete}
+              //   onConfirm={() => {
+              //     const versionIds = checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.userId).join(',');
+              //     const target = agentData.find((data) => data.downloadTarget === true);
+              //     const targetVersion = checkboxes.filter((checkbox) => checkbox.userId === target?.fileId);
 
-                  if (targetVersion[0]?.checked) {
-                    message.error(formatMessage({ id: 'CURRENT_VERSION_CANNOT_BE_DELETED' }));
-                  } else {
-                    if (versionIds) {
-                      DeleteAgentInstallerFunc(versionIds, () => {
-                        setOpenFilesDelete(false);
+              //     if (targetVersion[0]?.checked) {
+              //       message.error(formatMessage({ id: 'CURRENT_VERSION_CANNOT_BE_DELETED' }));
+              //     } else {
+              //       DeleteAgentInstallerFunc(versionIds, () => {
+              //         setOpenFilesDelete(false);
 
-                        message.success(formatMessage({ id: 'VERSION_DELETE' }));
+              //         message.success(formatMessage({ id: 'VERSION_DELETE' }));
 
-                        const render = rendering;
-                        const renderTemp = render.concat(true);
-                        setRendering(renderTemp);
-                      })
-                    } else {
-                      message.error(formatMessage({ id: 'NO_ITEM_SELECTED' }));
-                    }
-                  }
-                }}
-                onCancel={() => {
-                  setOpenFilesDelete(false);
-                }}
-              >
-                <img src={delete_icon} width='25px' style={{ opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer' }}
-                  onClick={() => {
-                    setOpenFilesDelete(true);
-                  }}
-                />
-              </Popconfirm>,
-              render: (_, index) => <Popconfirm
+              //         const render = rendering;
+              //         const renderTemp = render.concat(true);
+              //         setRendering(renderTemp);
+              //       })
+              //       // if (versionIds) {
+              //       // } else {
+              //       //   message.error(formatMessage({ id: 'NO_ITEM_SELECTED' }));
+              //       // }
+              //     }
+              //   }}
+              //   onCancel={() => {
+              //     setOpenFilesDelete(false);
+              //   }}
+              // >
+              //   <img src={delete_icon} width='25px' style={{ opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer' }}
+              //     onClick={() => {
+              //       setOpenFilesDelete(true);
+              //     }}
+              //   />
+              // </Popconfirm>,
+              render: (_, index, row) => <Popconfirm
                 title={formatMessage({ id: 'DELETE_A_FILE' })}
                 description={formatMessage({ id: 'CONFIRM_DELETE_FILE' })}
                 okText={formatMessage({ id: 'DELETE' })}
                 cancelText={formatMessage({ id: 'CANCEL' })}
                 open={openFileDelete === index}
                 onConfirm={() => {
-                  const versionIds = checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.userId).join(',');
+                  // const versionIds = checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.userId).join(',');
+                  const versionIds = `${row.fileId}`
                   const target = agentData.find((data) => data.downloadTarget === true);
                   const targetVersion = checkboxes.filter((checkbox) => checkbox.userId === target?.fileId);
 

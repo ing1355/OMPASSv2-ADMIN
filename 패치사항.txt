@@ -232,7 +232,6 @@ user
 
 * v2.0.0(5)
   * 패스코드 사용자가 볼 수 있게 원복
-  * 레드마인일 때 리다이렉트 url 강제
   * 어플리케이션 데이터 인터페이스 키값들 변경
   * 어플리케이션 테이블 데이터 변경
   * 어플리케이션 수정 시 수정 불가한 항목들은 input이 아니라 text 형태로 출력
@@ -245,3 +244,17 @@ user
   * rpUserType에 id 값 추가
   * 설정 페이지 api 연동 완료
   * 패스코드 이력에 portaluser 및 application 정보 추가
+
+* v2.0.0(6)
+  * 한 row 버전 삭제 시 versionIds checkbox 기준으로 되어있던 로직 해당 row 타겟으로 수정
+  * 버전관리 th 삭제 제거
+  * 회원 관리 - 패스코드 authenticationInfo 레벨 중복으로 보이던 이슈 수정
+  * 패스코드 이력 만료 시각 수정
+  * 패스코드 이력 viewPassword 로직 수정
+  * 회원 관리 detail 정보에서 rpUser 단위 -> authenticationInfo 단위로 변경
+  * CustomTable noSearch 키값 추가(search 토글 가능)
+
+* v2.0.0(7)
+  * clientMetadata -> loginDeviceInfo, serverMetadata -> serverInfo 키값 변경
+  * 설정 페이지 회사명 input 추가
+  * passcode history id 추가

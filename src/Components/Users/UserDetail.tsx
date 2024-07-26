@@ -9,33 +9,14 @@ import { useNavigate, useParams } from "react-router"
 import { useDispatch, useSelector } from "react-redux"
 import alias_img from '../../assets/afterUserIcon.png';
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
-import deleteModalIcon from '../../assets/deleteModalIcon.png';
-import device_image1 from '../../assets/device_image1.png';
-import device_image2_android from '../../assets/device_image2_android.png';
-import device_image2_ios from '../../assets/device_image2_ios.png';
-import device_image3 from '../../assets/device_image3.png';
-import device_image4 from '../../assets/device_image4.png';
 import delete_icon from '../../assets/delete_icon.png';
-import passcodeVisibleIcon from '../../assets/passwordVisibleIcon.png';
-import passcodeHiddenIcon from '../../assets/passwordHiddenIcon.png';
-import os_windows from '../../assets/os_windows.png';
-import os_mac from '../../assets/os_mac.png';
-import browser_icon from '../../assets/browser_icon.png';
-import no_device from '../../assets/no_device.png';
-import uuid_img from '../../assets/uuid_img.png';
-import chrome_img from '../../assets/chrome_img.png';
-import chrome_mobile_img from '../../assets/chrome_mobile_img.png';
-import firefox_img from '../../assets/firefox_img.png';
-import microsoft_edge_img from '../../assets/microsoft_edge_img.png';
-import safari_img from '../../assets/safari_img.png';
-import safari_mobile_img from '../../assets/safari_mobile_img.png';
-import samsung_browser_mobile_img from '../../assets/samsung_browser_mobile_img.png';
 import addIcon from '../../assets/addIcon.png';
 import GroupSelect from "Components/CommonCustomComponents/GroupSelect"
 import RoleSelect from "Components/CommonCustomComponents/RoleSelect"
 import CustomModal from "Components/CommonCustomComponents/CustomModal"
 import Button from 'Components/CommonCustomComponents/Button'
 import { userInfoClear } from 'Redux/actions/userChange'
+import { UserDetailInfoAuthenticatorContent, UserDetailInfoDeviceInfoContent, UserInfoInputrow, UserInfoRow, ViewPasscode } from './UserDetailComponents'
 
 const initModifyValues: UserDataModifyLocalValuesType = {
     name: {
@@ -62,171 +43,6 @@ const initAddValues: UserDataAddLocalValuesType = {
     phone: ''
 }
 
-const ViewPasscode = ({ code }: {
-    code: string
-}) => {
-    const [isView, setIsView] = useState(false)
-    return <div className='user-detail-info-passcode-view-container'>
-        <div>
-            {isView ? code : '●●●●●●'}
-        </div>
-        <div onMouseEnter={() => {
-            setIsView(!isView)
-        }} onMouseLeave={() => {
-            setIsView(!isView)
-        }}>
-            <img src={isView ? passcodeVisibleIcon : passcodeHiddenIcon} />
-        </div>
-    </div>
-}
-
-const UserInfoRow = ({ title, value }: {
-    title: string
-    value: string
-}) => {
-    return <div className="user-detail-info-row">
-        <div className="user-detail-info-col">
-            <FormattedMessage id={title} />
-        </div>
-        <div className="user-detail-info-col">
-            {value}
-        </div>
-    </div>
-}
-
-const UserInfoInputrow = ({ title, children }: PropsWithChildren<{
-    title: string
-}>) => {
-    return <div className="user-detail-info-row">
-        <div className="user-detail-info-col">
-            <FormattedMessage id={title} />
-        </div>
-        <div className="user-detail-info-col">
-            {children}
-        </div>
-    </div>
-}
-
-const imgSrcByOS = (os: OsNamesType) => {
-    switch (os) {
-        case 'MAC':
-            return os_mac
-        case 'WINDOWS':
-            return os_windows
-        case 'GOOROOM':
-            return "https://gooroom.kr/includes/images/default/gooroom-4.0-bi-small.png"
-    }
-}
-
-const UserDetailInfoDeviceInfoContent = ({ data }: {
-    data: RPUserDetailAuthDataType
-}) => {
-    const clientData = data.clientMetadata
-    const { os } = clientData
-    return <>
-        <UserDetailInfoContentItem imgSrc={imgSrcByOS(os?.name.toUpperCase() as OsNamesType)} title="OS" content={`${os?.name} ${os?.version}`} />
-        {/* <UserDetailInfoContentItem imgSrc={imgSrcByOS(os?.name.toUpperCase() as OsNamesType)} title="OS" content={"Gooroom v3.4"} /> */}
-        {/* <div className="user-detail-info-device-info-content-item">
-            <img src={device_image1} />
-            <div className="user-detail-info-device-info-content-title">
-                Mac Address
-            </div>
-            <div>
-                {clientData.macAddress}
-            </div>
-        </div>
-        <div className="user-detail-info-device-info-content-item">
-            <img src={device_image1} />
-            <div className="user-detail-info-device-info-content-title">
-                Agent Version
-            </div>
-            <div>
-                {clientData.agentVersion}
-            </div>
-        </div> */}
-    </>
-}
-
-const UserDetailInfoAuthenticatorDeleteButton = ({ authenticatorId, callback }: {
-    authenticatorId: AuthenticatorDataType['id']
-    callback: (id: string) => void
-}) => {
-    return <button className="button-st3 user-detail-info-device-info-delete-btn" onClick={async () => {
-        callback(authenticatorId)
-    }}>
-        삭제
-    </button>
-}
-
-const UserDetailInfoContentItem = ({ imgSrc, title, content }: {
-    imgSrc: string
-    title: string
-    content: string
-}) => {
-    return <div className="user-detail-info-device-info-content-item">
-        <img src={imgSrc} />
-        <div className="user-detail-info-device-info-content-title">
-            {title}
-        </div>
-        <div>
-            {content}
-        </div>
-    </div>
-}
-
-const AuthenticatorInfoContentsOMPASSType = ({ data, deleteCallback }: {
-    data: OMPASSAuthenticatorDataType
-    deleteCallback: (id: string) => void
-}) => {
-    const { mobile, id, lastAuthenticatedAt } = data as OMPASSAuthenticatorDataType
-    const { os, deviceId, model, ompassAppVersion } = mobile
-    return <>
-        <div className="user-detail-info-device-info-content">
-            <UserDetailInfoContentItem imgSrc={device_image1} title="Type" content={`OMPASS v${ompassAppVersion}`} />
-            <UserDetailInfoContentItem imgSrc={uuid_img} title="Device UUID" content={deviceId} />
-            <UserDetailInfoContentItem imgSrc={os.name.includes("iOS") ? device_image2_ios : device_image2_android} title="OS" content={`${os.name} ${os.version}`} />
-            <UserDetailInfoContentItem imgSrc={device_image3} title="Model" content={model} />
-            <UserDetailInfoContentItem imgSrc={device_image4} title="Last Login" content={lastAuthenticatedAt} />
-        </div>
-        <UserDetailInfoAuthenticatorDeleteButton authenticatorId={id} callback={deleteCallback} />
-    </>
-}
-
-const AuthenticatorInfoContentsWEBAUTHNType = ({ data, deleteCallback }: {
-    data: WebAuthnAuthenticatorDataType
-    deleteCallback: (id: string) => void
-}) => {
-    const { lastAuthenticatedAt, id } = data
-    return <>
-        <div className="user-detail-info-device-info-content">
-            <UserDetailInfoContentItem imgSrc={device_image1} title="Type" content={"WEBAUTHN"} />
-            <UserDetailInfoContentItem imgSrc={device_image3} title="Last Login" content={lastAuthenticatedAt} />
-        </div>
-        <UserDetailInfoAuthenticatorDeleteButton authenticatorId={id} callback={deleteCallback} />
-    </>
-}
-
-const UserDetailInfoAuthenticatorContent = ({ data, deleteCallback }: {
-    data: RPUserDetailAuthDataType['authenticators']
-    deleteCallback: (id: string) => void
-}) => {
-    return <div className="authenticators-container">
-        <div className="user-detail-info-device-info-content" />
-        {data.filter(_ => _.type !== 'PASSCODE').map((_, ind) => <div className='authenticators-container-inner' key={ind}>
-            <div className='number-of-authenticator'>
-                #{ind + 1}<h5>&nbsp;- {_.createdAt} 등록됨</h5>
-            </div>
-            {
-                _.type === 'OMPASS' ? <AuthenticatorInfoContentsOMPASSType data={_ as OMPASSAuthenticatorDataType} key={ind} deleteCallback={deleteCallback} />
-                    : _.type === 'WEBAUTHN' ? <AuthenticatorInfoContentsWEBAUTHNType data={_ as WebAuthnAuthenticatorDataType} key={ind} deleteCallback={deleteCallback} />
-                        : <div key={ind}>
-                        </div>
-            }
-        </div>
-        )}
-    </div>
-}
-
 const UserDetail = ({ }) => {
     const { lang, userInfo } = useSelector((state: ReduxStateType) => ({
         lang: state.lang,
@@ -250,11 +66,20 @@ const UserDetail = ({ }) => {
     const isAdd = !uuid
     const targetValue = isAdd ? addValues : modifyValues
     const isAdmin = userInfo.role !== 'USER'
-    const passcodeData = useCallback((index: number) => {
-        const temp1 = userDetailDatas[index].authenticationInfo.find(_ => _.authenticators.find(__ => __.type === 'PASSCODE'))
-        if (!temp1) return []
-        else return [temp1.authenticators.find(_ => _.type === 'PASSCODE')] as PasscodeAuthenticatorDataType[]
+    const authInfoDatas = useMemo(() => {
+        return userDetailDatas.flatMap(_ => _.authenticationInfo.map(__ => ({
+            id: _.id,
+            username: _.username,
+            application: _.application,
+            authInfo: __
+        }) as UserDetailAuthInfoRowType))
     }, [userDetailDatas])
+    console.log(authInfoDatas)
+    const passcodeData = useCallback((authInfoId: UserDetailAuthInfoRowType['authInfo']['id']) => {
+        const temp1 = authInfoDatas.find(_ => _.authInfo.id === authInfoId)?.authInfo.authenticators.find(_ => _.type === 'PASSCODE') as PasscodeAuthenticatorDataType
+        if (!temp1) return []
+        else return [temp1]
+    }, [authInfoDatas])
     const { formatMessage } = useIntl()
 
     const GetDatas = async () => {
@@ -268,7 +93,7 @@ const UserDetail = ({ }) => {
                 })
                 await GetUserDetailDataFunc(uuid, (data) => {
                     setUserDetailDatas(data)
-                    if(data.length === 1) {
+                    if (data.length === 1) {
                         setUserDetailOpened(data.map((_, ind) => ind))
                     }
                     // setUserDetailDatas(testDetailDatas)
@@ -349,8 +174,10 @@ const UserDetail = ({ }) => {
                     회원탈퇴
                 </button>}
             </ContentsHeader>
-            <div className="user-detail-section mb30">
-                <div className="user-detail-header">
+            <div className="user-detail-section mb20">
+                <div className="user-detail-header" style={{
+                    cursor: 'default'
+                }}>
                     <h2><FormattedMessage id='USER_INFORMATION' /></h2>
                     <div className="user-detail-header-btns">
                         {
@@ -557,9 +384,9 @@ const UserDetail = ({ }) => {
                     }
                 </div>
             </div>
-            {userDetailDatas.map((_, index) => <Fragment key={index}>
+            {authInfoDatas.map((_, index) => <Fragment key={index}>
                 <div
-                    className={`user-detail-section mb30${!userDetailOpened.includes(index) ? ' closed' : ''}`}
+                    className={`user-detail-section mb20${!userDetailOpened.includes(index) ? ' closed' : ''}`}
                 >
                     <div className="user-detail-header" onClick={() => {
                         setUserDetailOpened(userDetailOpened.includes(index) ? userDetailOpened.filter(uOpened => uOpened !== index) : userDetailOpened.concat(index))
@@ -575,158 +402,153 @@ const UserDetail = ({ }) => {
                         </div>
                     </div>
 
-                    {
-                        <>
-                            {_.authenticationInfo.map((__, _ind) => {
-                                return <div className="user-detail-info-container" key={_ind}>
-                                    <div className="user-detail-info-device-info-title">
-                                        <h3>
-                                            접속 장치
-                                        </h3>
-                                        <h5>
-                                            {__.clientMetadata.updatedAt} 업데이트됨
-                                        </h5>
-                                    </div>
-                                    <div className="user-detail-info-device-info-content">
-                                        <UserDetailInfoDeviceInfoContent data={__} />
-                                    </div>
-                                    <div className="user-detail-info-device-info-title">
-                                        <h3>
-                                            인증 수단
-                                        </h3>
-                                    </div>
-                                    <UserDetailInfoAuthenticatorContent data={__.authenticators} deleteCallback={(id) => {
-                                        setAuthenticatorDelete(id)
-                                    }} />
+                    <div className="user-detail-info-container">
+                        <div className="user-detail-info-device-info-title">
+                            <h3>
+                                접속 장치
+                            </h3>
+                            <h5>
+                                {_.authInfo.loginDeviceInfo.updatedAt} 업데이트됨
+                            </h5>
+                        </div>
+                        <div className="user-detail-info-device-info-content">
+                            <UserDetailInfoDeviceInfoContent data={_} />
+                        </div>
+                        <div className="user-detail-info-device-info-title">
+                            <h3>
+                                인증 수단
+                            </h3>
+                        </div>
+                        <UserDetailInfoAuthenticatorContent data={_.authInfo.authenticators} deleteCallback={(id) => {
+                            setAuthenticatorDelete(id)
+                        }} />
 
-                                    <div className="user-detail-content-passcode-container">
-                                        <div>
-                                            <h3>PASSCODE</h3>
-                                            {userInfo.role !== "USER" && !passcodeData(index)[0] && <div className="passcode-add" onClick={() => {
-                                                setUserDetailDatas(userDetailDatas.map((ud, ud_ind) => ud_ind === index ? ({
-                                                    ...ud,
-                                                    authenticationInfo: ud.authenticationInfo.map((aInfo, aInd) => aInd === _ind ? ({
-                                                        ...aInfo,
-                                                        authenticators: aInfo.authenticators.concat({
-                                                            id: '',
-                                                            type: 'PASSCODE',
-                                                            status: 'MODIFIED',
-                                                            number: '',
-                                                            validTime: 0,
-                                                            recycleCount: 0,
-                                                            expirationTime: '',
-                                                            issuerUsername: '',
-                                                            lastAuthenticatedAt: '',
-                                                            createdAt: ''
-                                                        })
-                                                    }) : aInfo)
-                                                }) : ud))
-                                            }}>
-                                                <img src={addIcon} />
-                                            </div>}
+                        <div className="user-detail-content-passcode-container">
+                            <div>
+                                <h3>PASSCODE</h3>
+                                {userInfo.role !== "USER" && <div className="passcode-add" onClick={() => {
+                                    setUserDetailDatas(userDetailDatas.map((ud, ud_ind) => ud.id === _.id ? ({
+                                        ...ud,
+                                        authenticationInfo: ud.authenticationInfo.map((aInfo) => aInfo.id === _.authInfo.id ? ({
+                                            ...aInfo,
+                                            authenticators: aInfo.authenticators.concat({
+                                                id: '',
+                                                type: 'PASSCODE',
+                                                status: 'MODIFIED',
+                                                number: '',
+                                                validTime: 0,
+                                                recycleCount: 0,
+                                                expirationTime: '',
+                                                issuerUsername: '',
+                                                lastAuthenticatedAt: '',
+                                                createdAt: ''
+                                            })
+                                        }) : aInfo)
+                                    }) : ud))
+                                }}>
+                                    <img src={addIcon} />
+                                </div>}
+                            </div>
+                        </div>
+                        <CustomTable<PasscodeAuthenticatorDataType, {}>
+                            noSearch
+                            columns={
+                                [
+                                    {
+                                        key: "number",
+                                        width: 180,
+                                        title: <FormattedMessage id="PASSCODE" />,
+                                        render: (data, index, row) => row.status === 'MODIFIED' ? <input onInput={e => {
+                                            e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')
+                                        }} value={data} onChange={e => {
+                                            passcodeValueChangeCallback(_.id, _.authInfo.id, row.id, "number", e.target.value || "0")
+                                        }} maxLength={6} /> : <ViewPasscode code={data} />
+                                    },
+                                    {
+                                        key: "issuerUsername",
+                                        title: <FormattedMessage id="ISSUE_PASSCODE_ADMIN_ID" />,
+                                        render: (data, index, row) => row.status === 'MODIFIED' ? userData!.username : data
+                                    },
+                                    {
+                                        key: "createdAt",
+                                        title: <FormattedMessage id="CREATION_ON" />,
+                                        render: (data, index, row) => row.status === 'MODIFIED' ? "-" : data
+                                    },
+                                    {
+                                        key: "validTime",
+                                        title: <FormattedMessage id="VALID_TIME" />,
+                                        render: (data, index, row) => row.status === 'MODIFIED' ? <DatePicker format="YYYY-MM-DD HH:mm:ss" showTime={{ use12Hours: false }} onChange={(date, dateString) => {
+                                            const now = new Date()
+                                            passcodeValueChangeCallback(_.id, _.authInfo.id, row.id, "validTime", Math.floor((date.diff(now) / 1000) / 60))
+                                        }} />
+                                            // <input maxLength={5} value={data} onChange={e => {
+                                            //     passcodeValueChangeCallback(_.id, __.id, row.id, "validTime", parseInt(e.target.value || "0"))
+                                            // }} /> 
+                                            : row.expirationTime
+                                    },
+                                    {
+                                        key: "recycleCount",
+                                        title: <FormattedMessage id="REMAINING_USES" />,
+                                        render: (data, index, row) => row.status === 'MODIFIED' ? <input maxLength={3} value={data} onChange={e => {
+                                            passcodeValueChangeCallback(_.id, _.authInfo.id, row.id, "recycleCount", parseInt(e.target.value || "0"))
+                                        }} /> : data
+                                    },
+                                    {
+                                        key: "complete",
+                                        title: "",
+                                        render: (data, index, row) => row.status === 'MODIFIED' ? <button className="button-st1 button-in-passcode" onClick={() => {
+                                            if (row.number.length !== 6) {
+                                                return message.error("패스코드는 6자리여야 합니다.")
+                                            }
+                                            AddPasscodeFunc({
+                                                authenticationDataId: _.authInfo.id,
+                                                passcodeNumber: row.number,
+                                                validTime: row.validTime,
+                                                recycleCount: row.recycleCount
+                                            }, (data) => {
+                                                message.success('패스코드 생성 성공!')
+                                                passcodeCompleteChangeCallbak(_.id, _.authInfo.id, row.id, data)
+                                            })
+                                        }}>
+                                            저장
+                                        </button> : null
+                                    },
+                                    {
+                                        key: 'cancel',
+                                        title: "",
+                                        render: (data, index, row) => row.status === 'MODIFIED' ? <button className="button-st2 button-in-passcode" onClick={() => {
+                                            passcodeDeleteCallback(_.id, _.authInfo.id, row.id)
+                                        }}>
+                                            취소
+                                        </button> : null
+                                    },
+                                    {
+                                        key: "etc",
+                                        title: "",
+                                        render: (data, index, row) => row.createdAt && <div style={{
+                                            cursor: 'pointer',
+                                            width: '32px',
+                                            height: '32px'
+                                        }} onClick={() => {
+                                            DeleteAuthenticatorDataFunc(row.id, () => {
+                                                message.success("패스코드 삭제 성공!")
+                                                GetDatas()
+                                            })
+                                        }}>
+                                            <img style={{
+                                                cursor: 'pointer',
+                                                width: '100%',
+                                                height: '100%'
+                                            }} src={delete_icon} />
                                         </div>
-                                    </div>
-                                    <CustomTable<PasscodeAuthenticatorDataType, {}>
-                                        columns={
-                                            [
-                                                {
-                                                    key: "number",
-                                                    width: 180,
-                                                    title: <FormattedMessage id="PASSCODE" />,
-                                                    render: (data, index, row) => row.status === 'MODIFIED' ? <input onInput={e => {
-                                                        e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')
-                                                    }} value={data} onChange={e => {
-                                                        passcodeValueChangeCallback(_.id, __.id, row.id, "number", e.target.value || "0")
-                                                    }} maxLength={6} /> : <ViewPasscode code={data} />
-                                                },
-                                                {
-                                                    key: "issuerUsername",
-                                                    title: <FormattedMessage id="ISSUE_PASSCODE_ADMIN_ID" />,
-                                                    render: (data, index, row) => row.status === 'MODIFIED' ? userData!.username : data
-                                                },
-                                                {
-                                                    key: "createdAt",
-                                                    title: <FormattedMessage id="CREATION_ON" />,
-                                                    render: (data, index, row) => row.status === 'MODIFIED' ? "-" : data
-                                                },
-                                                {
-                                                    key: "validTime",
-                                                    title: <FormattedMessage id="VALID_TIME" />,
-                                                    render: (data, index, row) => row.status === 'MODIFIED' ? <DatePicker format="YYYY-MM-DD HH:mm:ss" showTime={{ use12Hours: false }} onChange={(date, dateString) => {
-                                                        const now = new Date()
-                                                        passcodeValueChangeCallback(_.id, __.id, row.id, "validTime", Math.floor((date.diff(now) / 1000) / 60))
-                                                    }} />
-                                                        // <input maxLength={5} value={data} onChange={e => {
-                                                        //     passcodeValueChangeCallback(_.id, __.id, row.id, "validTime", parseInt(e.target.value || "0"))
-                                                        // }} /> 
-                                                        : row.expirationTime
-                                                },
-                                                {
-                                                    key: "recycleCount",
-                                                    title: <FormattedMessage id="REMAINING_USES" />,
-                                                    render: (data, index, row) => row.status === 'MODIFIED' ? <input maxLength={3} value={data} onChange={e => {
-                                                        passcodeValueChangeCallback(_.id, __.id, row.id, "recycleCount", parseInt(e.target.value || "0"))
-                                                    }} /> : data
-                                                },
-                                                {
-                                                    key: "complete",
-                                                    title: "",
-                                                    render: (data, index, row) => row.status === 'MODIFIED' ? <button className="button-st1 button-in-passcode" onClick={() => {
-                                                        if (row.number.length !== 6) {
-                                                            return message.error("패스코드는 6자리여야 합니다.")
-                                                        }
-                                                        AddPasscodeFunc({
-                                                            authenticationDataId: __.id,
-                                                            passcodeNumber: row.number,
-                                                            validTime: row.validTime,
-                                                            recycleCount: row.recycleCount
-                                                        }, (data) => {
-                                                            message.success('패스코드 생성 성공!')
-                                                            passcodeCompleteChangeCallbak(_.id, __.id, row.id, data)
-                                                        })
-                                                    }}>
-                                                        저장
-                                                    </button> : null
-                                                },
-                                                {
-                                                    key: 'cancel',
-                                                    title: "",
-                                                    render: (data, index, row) => row.status === 'MODIFIED' ? <button className="button-st2 button-in-passcode" onClick={() => {
-                                                        passcodeDeleteCallback(_.id, __.id, row.id)
-                                                    }}>
-                                                        취소
-                                                    </button> : null
-                                                },
-                                                {
-                                                    key: "etc",
-                                                    title: "",
-                                                    render: (data, index, row) => row.createdAt && <div style={{
-                                                        cursor: 'pointer',
-                                                        width: '32px',
-                                                        height: '32px'
-                                                    }} onClick={() => {
-                                                        DeleteAuthenticatorDataFunc(row.id, () => {
-                                                            message.success("패스코드 삭제 성공!")
-                                                            GetDatas()
-                                                        })
-                                                    }}>
-                                                        <img style={{
-                                                            cursor: 'pointer',
-                                                            width: '100%',
-                                                            height: '100%'
-                                                        }} src={delete_icon} />
-                                                    </div>
-                                                }
-                                            ]
-                                        }
-                                        noDataHeight="30px"
-                                        datas={passcodeData(index)}
-                                        theme="table-st1"
-                                    />
-                                </div>
-                            })}
-                        </>
-                    }
+                                    }
+                                ]
+                            }
+                            noDataHeight="30px"
+                            datas={passcodeData(_.authInfo.id)}
+                            theme="table-st1"
+                        />
+                    </div>
                 </div>
             </Fragment>
             )}

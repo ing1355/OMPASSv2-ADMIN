@@ -19,8 +19,8 @@ const PasscodeManagement = () => {
   const [tableCellSize, setTableCellSize] = useState<number>(10);
   const [pageNum, setPageNum] = useState<number>(1);
   const [tableData, setTableData] = useState<PasscodeHistoryDataType[]>([]);
-  const [viewPasscodes, setViewPasscodes] = useState<PasscodeHistoryDataType['passcode']['id'][]>([]);
-
+  const [viewPasscodes, setViewPasscodes] = useState<PasscodeHistoryDataType['id'][]>([]);
+  
   const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
     setPageNum(pageNumber);
     setTableCellSize(pageSizeOptions);
@@ -58,8 +58,7 @@ const PasscodeManagement = () => {
             theme='table-st1'
             datas={tableData}
             onBodyRowClick={(data) => {
-              console.log(data)
-              navigate(`/UserManagement/detail/${data.rpUser.id}`)
+              navigate(`/UserManagement/detail/${data.portalUser.id}`)
             }}
             hover
             columns={[
@@ -93,8 +92,8 @@ const PasscodeManagement = () => {
               {
                 key: 'number',
                 title: 'PASSCODE',
-                render: (data, index) => viewPasscodes[index] ?
-                  <span>{data}</span>
+                render: (data, index, row) => viewPasscodes.includes(row.id) ?
+                <span>{row.passcode.number}</span>
                   :
                   <span>⦁⦁⦁⦁⦁⦁</span>
               },
@@ -102,18 +101,22 @@ const PasscodeManagement = () => {
                 key: 'viewPsscodes',
                 title: '',
                 render: (_, index, row) => <img
-                  src={viewPasscodes[index] ? view_password : dont_look_password}
+                  src={viewPasscodes.includes(row.id) ? view_password : dont_look_password}
                   width='20px'
                   style={{ opacity: 0.5, position: 'relative', top: '4px' }}
-                  onClick={() => {
-                    setViewPasscodes(viewPasscodes.includes(row.passcode.id) ? viewPasscodes.filter(p => p !== row.passcode.id) : viewPasscodes.concat(row.passcode.id))
+                  onMouseEnter={() => {
+                    setViewPasscodes(viewPasscodes.concat(row.id))
+                  }}
+                  onMouseLeave={() => {
+                    setViewPasscodes(viewPasscodes.filter(p => p !== row.id))
                   }}
                 />
               },
               {
                 key: 'expirationTime',
                 title: <FormattedMessage id="VALID_TIME" />,
-                render: (data) => data ? data : <FormattedMessage id='UNLIMITED' />
+                render: (data, ind, row) => row.passcode.expirationTime
+                // render: (data, ind, row) => row.passcode.expirationTime === -1 ? <FormattedMessage id='UNLIMITED' /> : row.passcode.expirationTime
               },
               {
                 key: 'recycleCount',

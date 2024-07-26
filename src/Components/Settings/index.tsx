@@ -17,16 +17,19 @@ const Settings = () => {
     const [timeZoneValue, setTimeZoneValue] = useState('Asia/Seoul')
     const [welcomeText, setWelcomeText] = useState('')
     const [dataLoading, setDataLoading] = useState(false)
-    const [signupMethod, setSignupMethod] = useState(UserSignupMethod.ONLY_BY_ADMIN)
+    const [signupMethod, setSignupMethod] = useState(UserSignupMethod.USER_SELF_ADMIN_PASS)
+    const [inputAlias, setInputAlias] = useState('회사명');
     const [logoImg, setLogoImg] = useState('')
 
     const getDatas = async () => {
+        setDataLoading(true)
         GetPortalSettingsDataFunc(({ userSignupMethod, logoImage, noticeMessage, timeZone }) => {
             setSignupMethod(userSignupMethod)
             setLogoImg(logoImage)
             setWelcomeText(noticeMessage)
             setTimeZoneValue(timeZone)
-            console.log(tzNames.find(_ => _ === timeZone))
+        }).finally(() => {
+            setDataLoading(false)
         })
     }
     useLayoutEffect(() => {
@@ -51,6 +54,11 @@ const Settings = () => {
             </button>
         </ContentsHeader>
         <div className="contents-header-container">
+            <CustomInputRow title="회사명">
+                <input value={inputAlias} onChange={e => {
+                    setInputAlias(e.target.value)
+                }} />
+            </CustomInputRow>
             <CustomInputRow title="타임존">
                 <select value={timeZoneValue} onChange={e => {
                     setTimeZoneValue(e.target.value)

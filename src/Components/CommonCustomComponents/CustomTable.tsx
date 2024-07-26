@@ -35,6 +35,7 @@ type CustomTableProps<T extends {
     totalCount?: number
     paramsChange?: (params: P) => void
     hover?: boolean
+    noSearch?: boolean
 }
 
 const CustomTable = <T extends {
@@ -57,6 +58,7 @@ const CustomTable = <T extends {
     loading,
     noDataHeight,
     selectedColor,
+    noSearch,
     hover }: CustomTableProps<T, P>) => {
     const [pageNum, setPageNum] = useState(0)
     const [searchType, setSearchType] = useState('')
@@ -64,11 +66,11 @@ const CustomTable = <T extends {
     const [hoverId, setHoverId] = useState(-1)
     const searchInputRef = useRef<HTMLInputElement>(null)
 
-    return <>
-        <form onSubmit={e => {
+    return <div>
+        {!noSearch && <form onSubmit={e => {
             e.preventDefault()
 
-        }} className="custom-search-container">
+        }} className="table-search-container">
             <select defaultValue={searchType} name="type" onChange={e => {
                 if (searchInputRef.current) searchInputRef.current.value = "";
             }}>
@@ -91,7 +93,7 @@ const CustomTable = <T extends {
                 <img src={resetIcon} />
                 초기화
             </button>
-        </form>
+        </form>}
         <table className={`${className ? className + ' ' : ''}${theme}`}>
             <colgroup>
                 {columns.map((_, ind) => <col
@@ -159,7 +161,7 @@ const CustomTable = <T extends {
         >
             <Pagination showQuickJumper showSizeChanger current={pageNum} pageSize={pageSize} total={totalCount || 1} onChange={onPageChange} />
         </div>}
-    </>
+    </div>
 }
 
 export default CustomTable

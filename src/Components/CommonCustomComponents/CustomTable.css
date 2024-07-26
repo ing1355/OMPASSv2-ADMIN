@@ -5,12 +5,11 @@
     border-top: none;
 }
 
-.custom-search-container {
+.table-search-container {
     margin-bottom: 12px;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
-    width: var(--main-width);
     gap: 12px;
     height: 40px;
     & > button {

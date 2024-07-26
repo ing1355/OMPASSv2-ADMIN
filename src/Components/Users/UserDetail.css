@@ -5,9 +5,11 @@
     min-width: 840px;
     width: 1100px;
     overflow: hidden;
-    transition: height .5s ease-out;
+    max-height: 2000px;
+    transition: all .5s ease-out;
     &:not(:first-child).closed {
-        height: 42px;
+        max-height: 42px;
+        transition: all .001s ease-out;
         & > .user-detail-header {
             border-bottom: none;
         }
@@ -15,6 +17,7 @@
 }
 
 .user-detail-header {
+    cursor: pointer;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -23,7 +26,6 @@
     height: 60px;
     border-bottom: 1px solid rgba(123,123,123,.5);
     margin-bottom: 12px;
-    cursor: pointer;
     & h4 {
         margin: 0;
     }   

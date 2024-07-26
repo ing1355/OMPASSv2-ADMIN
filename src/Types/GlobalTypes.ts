@@ -14,6 +14,16 @@ type ClientMetaDataType = {
     agentVersion?: string
     updatedAt: string
 }
+type ServerMetaDataType = {
+    os?: OSInfoType
+    id?: string
+    name?: string
+    ip?: string
+    macAddress?: string
+    agentVersion?: string
+    createdAt?: string
+    updatedAt?: string
+}
 type UserNameType = {
     name: {
         lastName: string
@@ -107,6 +117,7 @@ type PasscodeParamsType = {
 }
 
 type PasscodeHistoryDataType = {
+    id: number
     action: "CREATE" | "UPDATE" | "DELETE",
     createdAt: string
     passcode: PasscodeDataType
@@ -119,15 +130,15 @@ type DefaultApplicationDataType = {
     id: string
     type: "DEFAULT" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "ADMIN" | "RADIUS" | "GOOROOM_LOGIN" | "REDMINE"
     name: string
-    domain: string
-    description: string
+    domain?: string
+    description?: string
     logoImage?: string
-    clientId: string
     policyId: string
     createdAt: string
 }
 
 type ApplicationDataType = DefaultApplicationDataType & {
+    clientId: string
     apiServerHost: string
     redirectUri?: string
     helpDeskMessage: string
@@ -166,13 +177,15 @@ type ApplicationListParamsType = GeneralParamsType & {
     sortDirection?: DirectionType
 }
 
-type PolicyRestrictionItemType = {
+type LocationPolicyRestrictionItemType = {
     isEnabled: boolean
-    value: string | "ETC"
+    countryCode: string
+    address: string
+    radius: number
 }
 type LocationPolicyType = {
-    locationEnabled: boolean
-    locations: PolicyRestrictionItemType[]
+    isEnabled: boolean
+    locations: LocationPolicyRestrictionItemType[]
 }
 type IpAddressPolicyType = {
     isEnabled: boolean
@@ -271,7 +284,11 @@ type UserListParamsType = GeneralParamsType & {
 
 type RPUserDetailAuthDataType = {
     id: string
-    clientMetadata: ClientMetaDataType
+    createdAt: string
+    username: string
+    policy: any
+    loginDeviceInfo: ClientMetaDataType
+    serverInfo: ServerMetaDataType
     authenticators: AuthenticatorDataType[]
 }
 
@@ -285,14 +302,7 @@ type RPUserDetailDataType = {
 
 type UserDetailDataType = RPUserDetailDataType & {
     id: string
-    application: {
-        id: ApplicationDataType['id']
-        type: ApplicationDataType['id']
-        createdAt: string
-        description: ApplicationDataType['description']
-        logoImage?: ApplicationDataType['logoImage']
-        name: ApplicationDataType['name']
-    }
+    application: DefaultApplicationDataType
     username: string
 }
 
@@ -389,4 +399,11 @@ type AgentInstallerUploadParamsType = {
     "metaData.hash": string
     "metaData.version": string
     "metaData.os": OsNamesType
+}
+
+type UserDetailAuthInfoRowType = {
+    application: ApplicationDataType
+    id: UserDetailDataType['id']
+    username: UserDetailDataType['username']
+    authInfo: RPUserDetailAuthDataType
 }

@@ -19,9 +19,12 @@
   font-style: normal;
 }
 
+* {
+  font-family: 'NEXON Lv1 Gothic OTF' !important;
+}
+
 body {
   margin: 0;
-  font-family: 'NEXON Lv1 Gothic OTF' !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100vh;
@@ -63,11 +66,6 @@ select {
   text-align: center;
 }
 
-.ant-col,
-.ant-row {
-  font-family: 'NEXON Lv1 Gothic OTF', sans-serif;
-}
-
 ul {
   list-style: none;
   padding-inline-start: 0px;
@@ -83,6 +81,9 @@ a[download] {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+  padding-top: 40px;
+  overflow-y: auto;
 }
 
 .absolute-center {
@@ -172,6 +173,8 @@ a[download] {
   font-size: 0.8rem;
   font-weight: 400;
   text-align: center;
+  height: 40px;
+  margin-top: 20px;
 }
 
 /* circle number */
