@@ -5,7 +5,7 @@ import planDatas from "./PlanDatas";
 import './Billing.css'
 import planIcon from '../../assets/plan_icon.png'
 import checkIcon from '../../assets/blue_check.png'
-import userIcon from '../../assets/user_blue_icon.png'
+import userIcon from '../../assets/userIcon.png'
 import { slicePrice } from "Functions/GlobalFunctions";
 import CustomTable from "Components/CommonCustomComponents/CustomTable";
 

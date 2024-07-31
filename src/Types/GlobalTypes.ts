@@ -5,9 +5,12 @@ type OSInfoType = {
     version: string
 }
 
-type ClientMetaDataType = {
+type LoginDeviceInfoDataType = {
     os?: OSInfoType
+    ip?: string
     id?: string
+    browser?: string
+    location?: string
     name?: string
     craetedAt: string
     macAddress?: string
@@ -87,7 +90,6 @@ type LoginApiParamsType = {
     username: string,
     password: string,
     loginClientType?: ApplicationDataType['type'],
-    clientMetadata?: ClientMetaDataType
     language: LanguageType
 }
 type LoginApiResponseType = {
@@ -106,7 +108,7 @@ type PasscodeDataType = {
     number: string
     id: string
     recycleCount: number
-    validTime: number
+    validTime: string
 }
 
 type PasscodeParamsType = {
@@ -287,7 +289,7 @@ type RPUserDetailAuthDataType = {
     createdAt: string
     username: string
     policy: any
-    loginDeviceInfo: ClientMetaDataType
+    loginDeviceInfo: LoginDeviceInfoDataType
     serverInfo: ServerMetaDataType
     authenticators: AuthenticatorDataType[]
 }

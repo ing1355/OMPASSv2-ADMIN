@@ -121,7 +121,7 @@ const PasscodeManagement = () => {
               {
                 key: 'recycleCount',
                 title: <FormattedMessage id="REMAINING_USES" />,
-                render: (data, ind, row) => row.passcode.recycleCount === -1 ? <FormattedMessage id='UNLIMITED' /> : row.passcode.recycleCount
+                render: (data, ind, row) => row.passcode.recycleCount === -1 ? <FormattedMessage id='UNLIMITED' /> : `${row.passcode.recycleCount} 회`
               },
               {
                 key: 'createdAt',

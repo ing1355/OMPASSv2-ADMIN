@@ -1,12 +1,19 @@
-import React, { CSSProperties, useMemo, useRef, useState } from "react"
+import React, { CSSProperties, useEffect, useMemo, useRef, useState } from "react"
 import './CustomTable.css'
 import { Pagination, PaginationProps } from "antd"
 import searchIcon from './../../assets/searchIcon.png'
+import searchIconHover from './../../assets/searchIconHover.png'
 import resetIcon from './../../assets/resetIcon.png'
+import resetIconHover from './../../assets/resetIconHover.png'
+import deleteIcon from './../../assets/deleteIcon.png'
+import Button from "./Button"
+import CustomSelect from "./CustomSelect"
+import Input from "./Input"
 
 export type CustomTableColumnType<T> = {
     key: keyof T | string
-    title: React.ReactNode | ((data: any, index: number, row?: T) => React.ReactNode)
+    // title: React.ReactNode | ((data: any, index: number, row?: T) => React.ReactNode)
+    title: React.ReactNode
     width?: CSSProperties['width']
     onClick?: () => void
     render?: (data: any, index: number, row: T) => React.ReactNode
@@ -36,6 +43,8 @@ type CustomTableProps<T extends {
     paramsChange?: (params: P) => void
     hover?: boolean
     noSearch?: boolean
+    searchOptions?: string[]
+    onSearchChange?: (val: string[]) => void
 }
 
 const CustomTable = <T extends {
@@ -47,7 +56,7 @@ const CustomTable = <T extends {
     theme,
     className,
     columns,
-    datas,
+    datas=[],
     onHeaderRowHover,
     onBodyRowHover,
     onBodyRowMouseLeave,
@@ -59,40 +68,60 @@ const CustomTable = <T extends {
     noDataHeight,
     selectedColor,
     noSearch,
+    searchOptions,
+    onSearchChange,
     hover }: CustomTableProps<T, P>) => {
     const [pageNum, setPageNum] = useState(0)
-    const [searchType, setSearchType] = useState('')
+    const [searchType, setSearchType] = useState((searchOptions && searchOptions[0]) || "")
     const [searchValue, setSearchValue] = useState('')
     const [hoverId, setHoverId] = useState(-1)
-    const searchInputRef = useRef<HTMLInputElement>(null)
 
+    useEffect(() => {
+        setSearchValue('')
+    },[searchType])
+    
     return <div>
-        {!noSearch && <form onSubmit={e => {
+        {!noSearch && searchOptions && <form onSubmit={e => {
             e.preventDefault()
-
+            console.log('submit : ', searchType, searchValue)
+            if(onSearchChange) onSearchChange([searchType, searchValue]);
         }} className="table-search-container">
-            <select defaultValue={searchType} name="type" onChange={e => {
-                if (searchInputRef.current) searchInputRef.current.value = "";
+            <CustomSelect items={columns.filter(_ => searchOptions.includes(_.key as string)).map(_ => ({
+                key: _.key as string,
+                label: _.title as string
+            }))} value={searchType!} onChange={type => {
+                setSearchType(type)
+            }}/>
+            {/* <div className="table-search-select" onClick={() => {
+                setShowSelect(!showSelect)
             }}>
-                <option value="username">
-                    사용자 아이디
-                </option>
-                <option value="name">
-                    이름
-                </option>
-            </select>
-            <input name="searchValue" ref={searchInputRef} defaultValue={searchValue} />
-            <button className="button-st1" type="submit">
-                <img src={searchIcon} />
+                {columns.find(_ => (_.key as string) === searchType)?.title}
+                {
+                    showSelect && <div className="search-select-option-container">
+                            {
+                                searchOptions && columns.filter(_ => searchOptions.includes(_.key as string)).map((_, ind) => {
+                                    return <div className="search-select-option-item" onClick={() => {
+                                        setSearchType(_.key as string)
+                                    }}>
+                                    {_.title}
+                                    </div>
+                                })
+                            }
+                        </div>
+                }
+            </div> */}
+            <Input className="table-search-input" name="searchValue" value={searchValue} placeholder="검색명" valueChange={value => {
+                setSearchValue(value)
+            }}/>
+            <Button className="st1" icon={searchIcon} hoverIcon={searchIconHover} type="submit">
                 검색
-            </button>
-            <button className="button-st1" type="button" onClick={() => {
-                // setSearchType("username")
-                // setSearchValue("")
-            }}>
-                <img src={resetIcon} />
+            </Button>
+            <Button className="st1" onClick={() => {
+                setSearchType("username")
+                setSearchValue("")
+            }} icon={resetIcon} hoverIcon={resetIconHover}>
                 초기화
-            </button>
+            </Button>
         </form>}
         <table className={`${className ? className + ' ' : ''}${theme}`}>
             <colgroup>
@@ -108,7 +137,8 @@ const CustomTable = <T extends {
                             e.preventDefault()
                             if (onHeaderColClick) onHeaderColClick(_, e.currentTarget)
                         }} className={`${onHeaderColClick ? 'pointer' : ''}`}>
-                            {_.title instanceof Function ? _.title(datas && datas[ind] && datas[ind][_.key], ind, datas ? datas[ind] : undefined) : _.title}
+                            {/* {_.title instanceof Function ? _.title(datas && datas[ind] && datas[ind][_.key], ind, datas ? datas[ind] : undefined) : _.title} */}
+                            {_.title}
                         </th>)
                     }
                 </tr>

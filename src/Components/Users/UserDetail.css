@@ -1,5 +1,4 @@
 .user-detail-section {
-    border: 1px solid #b7b7b7;
     border-radius: 10px;
     padding: 5px 25px 25px;
     min-width: 840px;
@@ -7,12 +6,13 @@
     overflow: hidden;
     max-height: 2000px;
     transition: all .5s ease-out;
+    box-shadow: 0 0 10px rgba(0,0,0,.15);
     &:not(:first-child).closed {
         max-height: 42px;
         transition: all .001s ease-out;
-        & > .user-detail-header {
+        /* & > .user-detail-header {
             border-bottom: none;
-        }
+        } */
     }
 }
 
@@ -24,8 +24,8 @@
     align-items: center;
     gap: 12px;
     height: 60px;
-    border-bottom: 1px solid rgba(123,123,123,.5);
-    margin-bottom: 12px;
+    /* border-bottom: 1px solid rgba(123,123,123,.5); */
+    /* margin-bottom: 12px; */
     & h4 {
         margin: 0;
     }   
@@ -54,6 +54,7 @@
 }
 
 .user-detail-info-container {
+    position: relative;
     padding: 0 16px;
     &:not(:last-child) {
         border-bottom: 1px solid rgba(123,123,123,.5);
@@ -82,6 +83,9 @@
     &:last-child {
         flex: 1;
     }
+    & > input {
+        height: 80%;
+    }
 }
 
 .user-detail-content-passcode-container {
@@ -105,7 +109,7 @@
     align-items: center;
     gap: 12px;
     & > img {
-        max-height: 32px;
+        max-height: 28px;
         border-radius: 6px;
     }
     & > h3 {
@@ -146,10 +150,10 @@
 }
 
 .authenticators-container .user-detail-info-device-info-content {
-    border-bottom: 1px solid black;
-    &:not(:last-child) {
+    /* border-bottom: 1px solid black; */
+    /* &:not(:last-child) {
         margin-bottom: 12px;
-    }
+    } */
 }
 
 .user-detail-info-device-info-content-item {
@@ -204,7 +208,7 @@
 .user-detail-info-device-info-delete-btn {
     position: absolute;
     right: 0px;
-    top: 0px;
+    top: 16px;
 }
 
 .number-of-authenticator {

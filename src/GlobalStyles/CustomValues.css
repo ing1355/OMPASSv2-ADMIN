@@ -3,10 +3,21 @@
     --sub-blue-color: #ebf3fe;
     --sub-blue-color-2: #e9f3ff;
     --sub-blue-color-3: #f8fbff;
+    --main-font-color: #333333;
+    --main-width: 1350px;
+    --main-white-color: white;
+    --main-grey-color: #636363;
+    --main-grey-color2: #999999;
+    --sub-grey-color: #f4f4f4;
+    --sub-grey-color2: #dddddd;
+    --sub-grey-color3: #cccccc;
+    --sub-grey-color4: #777777;
     --main-red-color: #e02828;
     --sub-red-color: #ffe1e1;
-    --main-grey-color: #636363;
-    --main-grey-color-2: #999999;
-    --sub-grey-color: #eeeeee;
-    --main-width: 1350px;
+    --main-purple-color: #4a3ec1;
+    --main-purple-color2: #6464d8;
+    --sub-purple-color: #f1eeff;
+    --sub-purple-color2: #eae9ff;
+    --sub-purple-color3: #f8f7ff;
+    
   }

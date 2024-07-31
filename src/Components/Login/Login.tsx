@@ -15,8 +15,6 @@ import ompass_logo_image from '../../assets/ompass_logo_image.png';
 import login_main_image from '../../assets/login_main_image.png';
 import locale_image from '../../assets/locale_image.png';
 import download_icon from '../../assets/download_icon.png';
-import login_id from '../../assets/login_id.png';
-import login_password from '../../assets/login_password.png';
 import view_password from '../../assets/passwordVisibleIcon.png';
 import dont_look_password from '../../assets/passwordHiddenIcon.png';
 import manunal_download from '../../assets/manunal_download.png'
@@ -26,6 +24,7 @@ import { passwordRegex } from 'Components/CommonCustomComponents/CommonRegex';
 import { AgentFileDownload } from 'Components/CommonCustomComponents/AgentFileDownload';
 import { GetSubDomainInfoFunc, LoginFunc } from 'Functions/ApiFunctions';
 import { saveLocaleToLocalStorage } from 'Functions/GlobalFunctions';
+import Button from 'Components/CommonCustomComponents/Button';
 
 const devUrl = "https://ompass.kr:54006"
 
@@ -46,6 +45,7 @@ const Login = () => {
   const [isRemember, setIsRemember] = useState(false); // 아이디 저장 체크박스 체크 유무
   const [isAgentFileDisable, setIsAgentFileDisable] = useState(false);
   const [logoImg, setLogoImg] = useState('')
+  const [helloText, setHelloText] = useState('')
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -64,8 +64,11 @@ const Login = () => {
   }, []);
 
   const getDomainInfo = () => {
-    GetSubDomainInfoFunc(subDomain, ({ logoImage }) => {
+    GetSubDomainInfoFunc(subDomain, ({ logoImage, noticeMessage }) => {
       setLogoImg(logoImage)
+      setHelloText(noticeMessage)
+    }).catch(e => {
+      setLogoImg(login_main_image)
     })
   }
 
@@ -159,13 +162,12 @@ const Login = () => {
       className='login-container'
     >
       <div className='login-body'>
-        <div>
-          <div className='login-logo-header'>
-            <img src={ompass_logo_image} alt='logo' />
-            <h1 className='login-form-title'>OMPASS</h1>
+        <div className='login-hello-container'>
+          <div className='login-logo-img'>
+            {logoImg && <img src={logoImg}/>}
           </div>
-          <div>
-            <img src="" alt="img" />
+          <div className='login-hello-text'>
+            {helloText}
           </div>
         </div>
         <form
@@ -173,14 +175,13 @@ const Login = () => {
         >
           <div className='login-form-header'>
             <h1 className='login-form-title'><FormattedMessage id='LOGIN' /></h1>
-            {logoImg && <img src={logoImg} />}
           </div>
           <div
             className='login-input-container'
           >
             <label htmlFor='userId'><FormattedMessage id='ID' /></label>
             <input
-              className='input-st1 login-input mt5'
+              className='input-st1 login-input mt5 userId'
               type='text'
               id='userId'
               maxLength={16}
@@ -189,27 +190,19 @@ const Login = () => {
                 setIdChange(e.currentTarget.value);
               }}
             />
-            <img
-              src={login_id}
-              className='login-input-img'
-            />
           </div>
           <div
             className='login-input-container'
           >
             <label htmlFor='userPassword'><FormattedMessage id='PASSWORD' /></label>
             <input
-              className='input-st1 login-input mt5'
+              className='input-st1 login-input mt5 password'
               type='password'
               id='userPassword'
               maxLength={16}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setPasswordChange(e.currentTarget.value);
               }}
-            />
-            <img
-              src={login_password}
-              className='login-input-img'
             />
           </div>
           <div>
@@ -218,13 +211,13 @@ const Login = () => {
               <label htmlFor='saveId' style={{ cursor: 'pointer', userSelect: 'none' }}><FormattedMessage id='SAVE_ID' /></label>
             </div>
           </div>
-          <button
-            className={'button-st1 login-button ' + ((idChange !== '' && passwordChange !== '') ? 'active' : '')}
+          <Button
+            className="st2 login-button"
             type='submit'
-            disabled={!(idChange !== '' && passwordChange !== '')}
+            // disabled={!(idChange !== '' && passwordChange !== '')}
           >
             <FormattedMessage id='LOGIN' />
-          </button>
+          </Button>
           <Link to='/GuidePage'>
             <div className='main-color1'>
               <FormattedMessage id='GO_TO_QUICK_GUIDE' />

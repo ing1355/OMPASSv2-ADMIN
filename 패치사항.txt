@@ -258,3 +258,10 @@ user
   * clientMetadata -> loginDeviceInfo, serverMetadata -> serverInfo 키값 변경
   * 설정 페이지 회사명 input 추가
   * passcode history id 추가
+
+* v2.0.0(8)
+  * 회원 관리 Detail Icon 및 레이아웃(시안대로) 수정
+  * 로그인 페이지 레이아웃 수정
+  * header fixed로 변경
+  * 메인 페이지 메뉴 버튼들 레이아웃 수정
+  * 패스코드 생성 시 utc 타임으로 고정

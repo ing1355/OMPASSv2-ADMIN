@@ -48,6 +48,7 @@ const PortalLog = () => {
                         title: '일시'
                     }
                 ]}
+                searchOptions={['username', 'apiUri']}
                 theme="table-st1"
                 datas={tableData}
             />

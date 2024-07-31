@@ -21,6 +21,7 @@
 
 * {
   font-family: 'NEXON Lv1 Gothic OTF' !important;
+  color: var(--main-font-color);
 }
 
 body {
@@ -42,6 +43,8 @@ img {
   justify-content: center;
   align-items: center;
   --header-height: 72px;
+  --main-background-color: #ededf4;
+  background-color: var(--main-background-color);
 }
 
 .pointer {
@@ -82,7 +85,8 @@ a[download] {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  padding-top: 40px;
+  padding: 24px 0;
+  padding-top: 64px;
   overflow-y: auto;
 }
 
@@ -121,43 +125,6 @@ a[download] {
   /* border: 5px solid white; */
 }
 
-/* table style */
-.table-st1,
-.table-st1 table {
-  width: 100%;
-  border-top: 1px solid #b7b7b7;
-  border-collapse: collapse;
-}
-
-.table-st1 thead tr {
-  border: 1px solid #b7b7b7;
-}
-
-.table-st1 th {
-  padding: 10px;
-  background-color: #e8e8e8;
-  color: rgba(0, 0, 0, .44);
-}
-
-.table-st1 td {
-  border-bottom: 1px solid #b7b7b7;
-  padding: 10px;
-  text-align: center;
-}
-
-.table-st1 a th {
-  border-bottom: 1px solid #b7b7b7;
-  padding: 10px;
-  background-color: #e8e8e8;
-  color: rgba(0, 0, 0, .44);
-}
-
-.table-st1 a td {
-  border-bottom: 1px solid #b7b7b7;
-  padding: 10px;
-  text-align: center;
-}
-
 /* locale */
 .locale-toggle,
 .locale-toggle:hover {
@@ -176,18 +143,6 @@ a[download] {
   height: 40px;
   margin-top: 20px;
 }
-
-/* circle number */
-.circleNumber {
-  background-color: rgb(69, 69, 69);
-  border-radius: 50%;
-  width: 13px;
-  height: 13px;
-  color: white;
-  text-align: center;
-  font-size: 0.05rem;
-}
-
 /* manager mark */
 .manager-mark {
   border: none;
@@ -206,11 +161,6 @@ a[download] {
 
 .regex-alert.visible {
   visibility: visible;
-}
-
-/* cursor pointer */
-.cursor-pointer {
-  cursor: pointer;
 }
 
 /* margin bottom */
@@ -294,9 +244,4 @@ a[download] {
 
 .mr30 {
   margin-right: 30px;
-}
-
-/* bold */
-.title_bold {
-  font-weight: 900;
 }

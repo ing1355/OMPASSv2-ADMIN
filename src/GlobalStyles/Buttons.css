@@ -1,13 +1,20 @@
 button {
-    padding: 8px 18px;
-    border-radius: 6px;
+    padding: 2px 10px;
+    border-radius: 8px;
+    height: 36px;
     font-weight: bold;
     border: none;
-    /* box-shadow: 1.5px 3px 3px 1px #ccc; */
-    /* box-shadow: .5px .5px 5px rgba(0,0,0,.5); */
     box-shadow: none;
     cursor: pointer;
     position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    font-size: 1rem;
+    & > .button-icon {
+        height: 18px;
+    }
     &[aria-loading="true"] {
         cursor: not-allowed;
         &::before {
@@ -38,46 +45,32 @@ button {
             animation: rotate 1s linear infinite;
         }
     }
-    &:hover:not([aria-loading="true"]):not(:disabled) {
+    /* &:hover:not([aria-loading="true"]):not(:disabled) {
         transform: translateY(-2px);
         transition: all .2s ease-in-out;
-    }
+    } */
     &:disabled {
         background-color: var(--sub-grey-color);
         color: var(--main-grey-color-2);
     }
 }
 
-.button-st1 {
-    background-color: var(--main-blue-color);
-    color: white;
-    font-weight: bold;
+button.st1 {
+    border: 1px solid var(--main-purple-color);
+    background-color: var(--main-white-color);
+    color: var(--main-purple-color);
+
+    &:hover {
+        border: 1px solid var(--main-purple-color);
+        background-color: var(--main-purple-color2);
+        color: var(--main-white-color);
+    }
 }
 
-.button-st2 {
-    background-color: var(--sub-blue-color);
-    color: var(--main-blue-color);
-    font-weight: bold;
-}
-
-.button-st3 {
-    background-color: var(--main-red-color);
-    color: white;
-    font-weight: bold;
-}
-
-.button-st4 {
-    background-color: var(--sub-grey-color);
-    color: var(--main-grey-color-2);
-}
-
-.button-st5 {
-    background-color: black;
-    color: white;
-}
-
-.button-st6 {
-    background-color: white;
-    color: var(--main-blue-color);
-    border: 1px solid var(--main-blue-color);
+button.st2 {
+    background-color: var(--main-purple-color2);
+    color: var(--main-white-color);
+    &:hover {
+        background-color: var(--main-purple-color);
+    }
 }

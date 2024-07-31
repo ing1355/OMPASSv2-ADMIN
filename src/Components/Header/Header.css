@@ -18,9 +18,11 @@
 }
 
 .header-container {
-  padding-top: 8px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  background-color: white;
   height: var(--header-height);
-  border-bottom: 1px solid #ccc;
   width: 100%;
   box-shadow: 10px 0px 20px #ccc;
 }

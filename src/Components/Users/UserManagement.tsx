@@ -6,9 +6,9 @@ import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import Contents from "Components/Layout/Contents";
 import ContentsHeader from "Components/Layout/ContentsHeader";
 import { Pagination, PaginationProps } from "antd";
-import searchIcon from './../../assets/searchIcon.png'
-import resetIcon from './../../assets/resetIcon.png'
+import userAddIcon from './../../assets/userAddIcon.png'
 import './UserManagement.css'
+import Button from "Components/CommonCustomComponents/Button";
 
 const UserManagement = () => {
     const [pageNum, setPageNum] = useState(1);
@@ -49,13 +49,13 @@ const UserManagement = () => {
 
     return <Contents loading={dataLoading}>
         <ContentsHeader title="USER_LIST" subTitle="USER_MANAGEMENT">
-            <button className="button-st1" onClick={() => {
+            <Button className="st1" onClick={() => {
                 navigate('/UserManagement/detail')
-            }}>
+            }} icon={userAddIcon}>
                 추가
-            </button>
+            </Button>
         </ContentsHeader>
-        <form onSubmit={e => {
+        {/* <form onSubmit={e => {
             e.preventDefault()
             const { type, searchValue } = (e.currentTarget.elements as any);
             setPageNum(1)
@@ -84,13 +84,14 @@ const UserManagement = () => {
                 <img src={resetIcon} />
                 초기화
             </button>
-        </form>
+        </form> */}
         <div className="contents-header-container">
             <CustomTable<UserDataType, UserListParamsType>
                 className='tab_table_list'
                 theme='table-st1'
                 datas={tableData}
                 hover
+                searchOptions={['username', 'name', 'email']}
                 columns={[
                     {
                         key: 'role',
@@ -107,12 +108,13 @@ const UserManagement = () => {
                         render: (data) => data.firstName + data.lastName
                     },
                     {
-                        key: 'phone',
-                        title: createHeaderColumn('PHONE_NUMBER'),
-                    },
-                    {
                         key: 'email',
                         title: createHeaderColumn('EMAIL'),
+                    },
+                    {
+                        key: 'phone',
+                        title: createHeaderColumn('PHONE_NUMBER'),
+                        render: data => data || "전화번호 없음"
                     }
                 ]}
                 onBodyRowClick={(row, index, arr) => {

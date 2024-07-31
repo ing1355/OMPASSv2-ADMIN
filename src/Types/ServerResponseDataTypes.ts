@@ -157,7 +157,9 @@ type settingMgmtType = {
 }
 
 type SubDomainInfoDataType = {
-  logoImage: string
+  logoImage: PortalSettingsDataType['logoImage']
+  noticeMessage: PortalSettingsDataType['noticeMessage']
+  userSignupMethod: PortalSettingsDataType['userSignupMethod']
 }
 
 type PortalSettingsDataType = {

@@ -23,6 +23,7 @@ import SettingsMenuIconWhite from '../assets/settingsMenuIconWhite.png';
 export const isDev = process.env.NODE_ENV === 'development'
 export const CopyRightText = `OMPASS Portal v${process.env.REACT_APP_VERSION} © 2023. OneMoreSecurity Inc. All Rights Reserved.`
 export const INT_MAX_VALUE = Math.pow(2, 31) - 1
+export const DateTimeFormat = "YYYY-MM-DD HH:mm:ss"
 
 type menuDataType = {
     label: string

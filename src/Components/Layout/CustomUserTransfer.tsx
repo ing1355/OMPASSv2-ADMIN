@@ -1,4 +1,4 @@
-import afterUserIcon from '../../assets/afterUserIcon.png'
+import userIcon from '../../assets/userIcon.png'
 import beforeUserIcon from '../../assets/beforeUserIcon.png'
 import transferLeftIcon from '../../assets/transferLeftIcon.png'
 import transferRightIcon from '../../assets/transferRightIcon.png'
@@ -77,7 +77,7 @@ const CustomUserTransfer = ({ data, setData }: CustomUserTransferProps) => {
                                 })
                             }
                         }}>
-                            <img src={selected.before.includes(_.userId) ? afterUserIcon : beforeUserIcon}/>
+                            <img src={selected.before.includes(_.userId) ? userIcon : beforeUserIcon}/>
                         {getFullNameByUserData(_)}
                     </div>)
                 }
@@ -147,7 +147,7 @@ const CustomUserTransfer = ({ data, setData }: CustomUserTransferProps) => {
                             })
                         }
                     }}>
-                        <img src={selected.after.includes(_.userId) ? afterUserIcon : beforeUserIcon}/>
+                        <img src={selected.after.includes(_.userId) ? userIcon : beforeUserIcon}/>
                         {getFullNameByUserData(_)}
                     </div>)
                 }

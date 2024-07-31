@@ -1,5 +1,32 @@
 import jwtDecode from "jwt-decode";
 
+export const getDateTimeString = (date: Date) => {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+
+    const hour = date.getHours().toString().padStart(2, '0');
+    const minute = date.getMinutes().toString().padStart(2, '0');
+    const second = date.getSeconds().toString().padStart(2, '0');
+
+    const datetimeString = `${year}-${month}-${day} ${hour}:${minute}:${second}`
+
+    return datetimeString;
+}
+
+export const convertKSTToUTC = (date: Date) => {
+    var temp = new Date(date);
+    temp.setDate(date.getDate() - 1);
+    temp.setHours(date.getHours() + 15);
+    return temp;
+}
+
+export const dateFormatKST = (date: Date) => {
+    var temp = new Date(date);
+    temp.setHours(date.getHours() + 9);
+    return temp;
+}
+
 export const slicePrice = (price: string | number) => {
     const _price = price + "";
     if (_price.length < 4) return _price;
@@ -34,7 +61,7 @@ export const parseJwtToken = (token: string) => {
 }
 
 export const saveLocaleToLocalStorage = (locale: ReduxStateType['lang'] = "KR") => {
-    localStorage.setItem('locale',locale);
+    localStorage.setItem('locale', locale);
 }
 
 export const autoHypenPhoneFun = (phone: string) => {

@@ -10,6 +10,7 @@ import { UserSignupMethod } from "Constants/ConstantValues"
 import { useNavigate } from "react-router"
 import { message } from "antd"
 import { convertBase64FromClientToServerFormat } from "Functions/GlobalFunctions"
+import CustomSelect from "Components/CommonCustomComponents/CustomSelect"
 
 const tzNames = tz.names()
 
@@ -60,11 +61,12 @@ const Settings = () => {
                 }} />
             </CustomInputRow>
             <CustomInputRow title="타임존">
-                <select value={timeZoneValue} onChange={e => {
-                    setTimeZoneValue(e.target.value)
-                }}>
-                    {tzNames.map((_, ind) => <option key={ind} value={_}>{_}</option>)}
-                </select>
+                <CustomSelect value={timeZoneValue} onChange={e => {
+                    setTimeZoneValue(e)
+                }} items={tzNames.map(_ => ({
+                    key: _,
+                    label: _
+                }))}/>
             </CustomInputRow>
             <CustomInputRow title="회원가입 방식">
                 <fieldset className="signup-field-container" id="signupMethod" onChange={e => {

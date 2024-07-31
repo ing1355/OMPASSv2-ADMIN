@@ -24,6 +24,6 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    color: var(--main-blue-color);
+    color: var(--main-purple-color);
     font-size: .8rem;
 }

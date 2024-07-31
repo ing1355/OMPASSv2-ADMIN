@@ -7,16 +7,19 @@ import { Fragment, PropsWithChildren, useCallback, useEffect, useLayoutEffect, u
 import { FormattedMessage, useIntl } from "react-intl"
 import { useNavigate, useParams } from "react-router"
 import { useDispatch, useSelector } from "react-redux"
-import alias_img from '../../assets/afterUserIcon.png';
+import userIcon from '../../assets/userIcon.png';
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import delete_icon from '../../assets/delete_icon.png';
-import addIcon from '../../assets/addIcon.png';
+import passcodeAddIcon from '../../assets/passcodeAddIcon.png';
 import GroupSelect from "Components/CommonCustomComponents/GroupSelect"
 import RoleSelect from "Components/CommonCustomComponents/RoleSelect"
 import CustomModal from "Components/CommonCustomComponents/CustomModal"
 import Button from 'Components/CommonCustomComponents/Button'
 import { userInfoClear } from 'Redux/actions/userChange'
-import { UserDetailInfoAuthenticatorContent, UserDetailInfoDeviceInfoContent, UserInfoInputrow, UserInfoRow, ViewPasscode } from './UserDetailComponents'
+import { UserDetailInfoAuthenticatorContent, UserDetailInfoAuthenticatorDeleteButton, UserDetailInfoDeviceInfoContent, UserInfoInputrow, UserInfoRow, ViewPasscode } from './UserDetailComponents'
+import { DateTimeFormat } from 'Constants/ConstantValues'
+import dayjs from 'dayjs';
+import { convertKSTToUTC, getDateTimeString } from 'Functions/GlobalFunctions'
 
 const initModifyValues: UserDataModifyLocalValuesType = {
     name: {
@@ -74,7 +77,7 @@ const UserDetail = ({ }) => {
             authInfo: __
         }) as UserDetailAuthInfoRowType))
     }, [userDetailDatas])
-    console.log(authInfoDatas)
+    
     const passcodeData = useCallback((authInfoId: UserDetailAuthInfoRowType['authInfo']['id']) => {
         const temp1 = authInfoDatas.find(_ => _.authInfo.id === authInfoId)?.authInfo.authenticators.find(_ => _.type === 'PASSCODE') as PasscodeAuthenticatorDataType
         if (!temp1) return []
@@ -181,7 +184,7 @@ const UserDetail = ({ }) => {
                     <h2><FormattedMessage id='USER_INFORMATION' /></h2>
                     <div className="user-detail-header-btns">
                         {
-                            ((!isAdd && isModify) || isAdd) && <button className="button-st1" onClick={() => {
+                            ((!isAdd && isModify) || isAdd) && <Button className="st1" onClick={() => {
                                 if (isAdd && !addValues.username) return message.error("아이디를 입력해주세요.");
                                 if (!targetValue.name.firstName) return message.error("성을 입력해주세요.");
                                 if (!targetValue.name.lastName) return message.error("이름을 입력해주세요.");
@@ -205,8 +208,8 @@ const UserDetail = ({ }) => {
                                     })
                                 }
                             }}>
-                                {isAdd ? "등록하기" : "저장"}
-                            </button>
+                                {isAdd ? "등록" : "저장"}
+                            </Button>
                         }
                         {userData && !isAdd && <button className={isModify ? "button-st2" : "button-st1"} onClick={() => {
                             setIsModify(!isModify)
@@ -395,21 +398,24 @@ const UserDetail = ({ }) => {
                             <img src={_.application.logoImage} />
                             {/* <h3>#{index + 1} {_.application.name}</h3> */}
                             <h3>{_.application.name}</h3>
-                            -
                             <div className="user-detail-alias-container">
-                                <img className="user-alias-image" src={alias_img} /><h4>{_.username}</h4>
+                                <img className="user-alias-image" src={userIcon} /><h4>{_.username}</h4>
                             </div>
                         </div>
+                            <h5>
+                                {_.authInfo.loginDeviceInfo.updatedAt} 업데이트됨
+                            </h5>
                     </div>
 
                     <div className="user-detail-info-container">
+
+                        <UserDetailInfoAuthenticatorDeleteButton authenticatorId={_.id} callback={(id) => {
+                            setAuthenticatorDelete(id)
+                        }} />
                         <div className="user-detail-info-device-info-title">
                             <h3>
                                 접속 장치
                             </h3>
-                            <h5>
-                                {_.authInfo.loginDeviceInfo.updatedAt} 업데이트됨
-                            </h5>
                         </div>
                         <div className="user-detail-info-device-info-content">
                             <UserDetailInfoDeviceInfoContent data={_} />
@@ -419,9 +425,7 @@ const UserDetail = ({ }) => {
                                 인증 수단
                             </h3>
                         </div>
-                        <UserDetailInfoAuthenticatorContent data={_.authInfo.authenticators} deleteCallback={(id) => {
-                            setAuthenticatorDelete(id)
-                        }} />
+                        <UserDetailInfoAuthenticatorContent data={_.authInfo.authenticators} />
 
                         <div className="user-detail-content-passcode-container">
                             <div>
@@ -436,7 +440,7 @@ const UserDetail = ({ }) => {
                                                 type: 'PASSCODE',
                                                 status: 'MODIFIED',
                                                 number: '',
-                                                validTime: 0,
+                                                validTime: '',
                                                 recycleCount: 0,
                                                 expirationTime: '',
                                                 issuerUsername: '',
@@ -446,7 +450,7 @@ const UserDetail = ({ }) => {
                                         }) : aInfo)
                                     }) : ud))
                                 }}>
-                                    <img src={addIcon} />
+                                    <img src={passcodeAddIcon} />
                                 </div>}
                             </div>
                         </div>
@@ -477,9 +481,13 @@ const UserDetail = ({ }) => {
                                     {
                                         key: "validTime",
                                         title: <FormattedMessage id="VALID_TIME" />,
-                                        render: (data, index, row) => row.status === 'MODIFIED' ? <DatePicker format="YYYY-MM-DD HH:mm:ss" showTime={{ use12Hours: false }} onChange={(date, dateString) => {
-                                            const now = new Date()
-                                            passcodeValueChangeCallback(_.id, _.authInfo.id, row.id, "validTime", Math.floor((date.diff(now) / 1000) / 60))
+                                        render: (data, index, row) => row.status === 'MODIFIED' ? <DatePicker 
+                                        format={DateTimeFormat} 
+                                        minDate={dayjs(getDateTimeString(new Date()), DateTimeFormat)} 
+                                        defaultValue={dayjs(getDateTimeString(new Date()), DateTimeFormat)} 
+                                        showTime={{ use12Hours: false }} 
+                                        onChange={(date, dateString) => {
+                                            passcodeValueChangeCallback(_.id, _.authInfo.id, row.id, "validTime", dateString)
                                         }} />
                                             // <input maxLength={5} value={data} onChange={e => {
                                             //     passcodeValueChangeCallback(_.id, __.id, row.id, "validTime", parseInt(e.target.value || "0"))
@@ -491,7 +499,7 @@ const UserDetail = ({ }) => {
                                         title: <FormattedMessage id="REMAINING_USES" />,
                                         render: (data, index, row) => row.status === 'MODIFIED' ? <input maxLength={3} value={data} onChange={e => {
                                             passcodeValueChangeCallback(_.id, _.authInfo.id, row.id, "recycleCount", parseInt(e.target.value || "0"))
-                                        }} /> : data
+                                        }} /> : `${data} 회`
                                     },
                                     {
                                         key: "complete",
@@ -503,7 +511,7 @@ const UserDetail = ({ }) => {
                                             AddPasscodeFunc({
                                                 authenticationDataId: _.authInfo.id,
                                                 passcodeNumber: row.number,
-                                                validTime: row.validTime,
+                                                validTime: new Date(row.validTime).getTime(),
                                                 recycleCount: row.recycleCount
                                             }, (data) => {
                                                 message.success('패스코드 생성 성공!')

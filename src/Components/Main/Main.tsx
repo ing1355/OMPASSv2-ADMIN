@@ -44,7 +44,7 @@ const Main = () => {
               key={index}
             >
               <div
-                className={'main_menu_card ' + (index === isHovered ? 'main_menu_hovered' : '')}
+                className={'main_menu_card' + (index === isHovered ? ' hovered' : '')}
                 onMouseEnter={() => {
                   handleHoverd(index)
                 }}
