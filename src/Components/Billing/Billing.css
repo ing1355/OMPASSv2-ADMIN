@@ -16,7 +16,7 @@
 
 .plan-box {
     padding: 12px;
-    border: 1px solid #1D8EFF;
+    border: 2px solid var(--main-purple-color);
     border-radius: 16px;
     width: 300px;
     position: relative;
@@ -45,7 +45,7 @@
     width: 70%;
     height: 20px;
     line-height: 20px;
-    background-color: #1D8EFF;
+    background-color: var(--main-purple-color);
     color: white;
     padding: 1px 8px;
     border-radius: 12px;
@@ -60,7 +60,7 @@
 .plan-price-container {
     width: 100%;
     flex: 0 0 80px;
-    background-color: #F0F8FF;
+    background-color: var(--sub-purple-color3);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -120,12 +120,12 @@
     flex-direction: row;
     justify-content: center;
     gap: 8px;
-    font-size: 2rem;
+    font-size: 1.6rem;
     font-weight: 700;
 }
 
 .billing-current-user-nums {
-    color: #1D8EFF;
+    color: var(--main-purple-color);
 }
 
 .billing-current-user-gauge-container {
@@ -134,12 +134,16 @@
     align-items: center;
     padding-right: 44px;
     margin-top: 12px;
+    gap: 12px;
+    & > img {
+        height: 30px;
+    }
 }
 
 .billing-current-plan-user-gauge {
-    background-color: #E1F1FF;
+    background-color: var(--sub-purple-color2);
     width: 340px;
-    height: 28px;
+    height: 20px;
     border-radius: 20px;
     overflow: hidden;
     position: relative;
@@ -152,7 +156,7 @@
     top: 0;
     height: 100%;
     z-index: 1;
-    background-color: #1D8EFF;
+    background-color: var(--main-purple-color);
     border-radius: 20px;
     transition: width .2s ease-out;
 }
@@ -173,4 +177,19 @@
     flex: 1;
     align-self: center;
     min-height: 30px;
+}
+
+.billing-a-tag {
+    color: var(--main-purple-color);
+    text-decoration: none;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.billing-agree-text {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
 }

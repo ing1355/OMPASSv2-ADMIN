@@ -12,7 +12,4 @@
             margin: 0;
         }
     }
-    & input[type="radio"] {
-        accent-color: var(--main-purple-color);
-    }
 }

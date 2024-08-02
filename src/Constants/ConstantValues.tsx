@@ -19,9 +19,12 @@ import passcodeHistoryMenuIconBlack from '../assets/passcodeHistoryMenuIconBlack
 import passcodeHistoryMenuIconWhite from '../assets/passcodeHistoryMenuIconWhite.png';
 import settingsMenuIconBlack from '../assets/settingsMenuIconBlack.png';
 import SettingsMenuIconWhite from '../assets/settingsMenuIconWhite.png';
+import { tz } from 'moment-timezone'
+
+export const timeZoneNames = tz.names()
 
 export const isDev = process.env.NODE_ENV === 'development'
-export const CopyRightText = `OMPASS Portal v${process.env.REACT_APP_VERSION} © 2023. OneMoreSecurity Inc. All Rights Reserved.`
+export const CopyRightText = `OMPASS Portal v${process.env.REACT_APP_VERSION} © 2024. OneMoreSecurity Inc. All Rights Reserved.`
 export const INT_MAX_VALUE = Math.pow(2, 31) - 1
 export const DateTimeFormat = "YYYY-MM-DD HH:mm:ss"
 
@@ -116,13 +119,18 @@ export const menuDatas = (role: userRoleType): menuDataType[] => {
 
 // export const applicationTypes: ApplicationDataType['applicationType'][] = ["DEFAULT", "WINDOWS_LOGIN", "LINUX_LOGIN", "MAC_LOGIN", "ADMIN"]
 const appTypes: ApplicationDataType['type'][] = ["DEFAULT", "WINDOWS_LOGIN", "LINUX_LOGIN", "RADIUS", "REDMINE", "GOOROOM_LOGIN"]
-export const applicationTypes = (hasWindowsLogin: boolean): ApplicationDataType['type'][] => hasWindowsLogin ? appTypes : appTypes.filter(_ => _ !== 'WINDOWS_LOGIN')
+export const applicationTypes = (hasWindowsLogin: boolean): ApplicationDataType['type'][] => !hasWindowsLogin ? appTypes : appTypes.filter(_ => _ !== 'WINDOWS_LOGIN')
 // 어플리케이션 타입 다국어 매칭해놨으나 타입 지정은 불가능하므로 값 바뀌면 다국어 키값도 바뀌어야함
 
 export const getApplicationTypeLabel = (type: ApplicationDataType['type']) => <FormattedMessage id={type + '_APPLICATION_TYPE'} />
 
-export const UserSignupMethod = {
+export const UserSignupMethod: {
+    [key in UserSignUpMethodType]: UserSignUpMethodType
+} = {
     USER_SELF_ADMIN_PASS: "USER_SELF_ADMIN_PASS",
     USER_SELF_ADMIN_ACCEPT: "USER_SELF_ADMIN_ACCEPT",
     ONLY_BY_ADMIN: "ONLY_BY_ADMIN"
 }
+
+export const devUrl = process.env['REACT_APP_DEV_URL'] as string
+export const subDomain = isDev ? devUrl.replace('https://', '') : window.location.host.replace('www.', '');

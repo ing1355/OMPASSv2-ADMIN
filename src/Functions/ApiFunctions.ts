@@ -1,5 +1,5 @@
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosGetFile, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from "Components/CommonCustomComponents/CustomAxios";
-import { AddApplicationListApi, AddPasscodeApi, AddPoliciesListApi, AddUserDataApi, AddUserGroupApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DownloadAgentInstallerApi, DuplicateUserNameCheckApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetPasscodeHistoriesApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, PostLoginApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi } from "Constants/ApiRoute";
+import { AddApplicationListApi, AddPasscodeApi, AddPoliciesListApi, AddUserDataApi, AddUserGroupApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DownloadAgentInstallerApi, DuplicateUserNameCheckApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetPasscodeHistoriesApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, PostLoginApi, SignUpRequestApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi } from "Constants/ApiRoute";
 import { INT_MAX_VALUE } from "Constants/ConstantValues";
 import { AxiosResponse } from "axios";
 
@@ -259,12 +259,14 @@ export const GetAgentInstallerListFunc = ({
     page_size = 10,
     page = 1,
     sortDirection = "DESC"
-}: GeneralParamsType, callback: (data: GetAgentInstallerApiResponseType) => void) => {
-    return CustomAxiosGet(GetAgentInstallerListApi, callback, {
+}: GeneralParamsType, callback: ((data: GetListDataGeneralType<AgentInstallerDataType>) => void)) => {
+    return CustomAxiosGet(GetAgentInstallerListApi, (data: GetListDataGeneralType<AgentInstallerDataType>) => {
+        callback(data)
+    }, {
         page_size,
         page,
         sortDirection
-    })
+    } as GroupListParamsType)
 }
 
 export const DownloadAgentInstallerFunc = (params?: {
@@ -291,7 +293,7 @@ export const UploadAgentInstallerFunc = (params: AgentInstallerUploadParamsType,
     })
 }
 
-export const CurrentAgentVersionChangeFunc = (fileId: AgentInstallerDataType['fileId'], callback: () => void) => {
+export const CurrentAgentVersionChangeFunc = (fileId: AgentInstallerDataType['fileId'], callback: (newData: AgentInstallerDataType) => void) => {
     return CustomAxiosPatch(CurrentAgentInstallerVersionChangeApi(fileId), callback)
 }
 
@@ -309,4 +311,8 @@ export const GetPortalSettingsDataFunc = (callback: (data: PortalSettingsDataTyp
 
 export const UpdatePortalSettingsDataFunc = (params: PortalSettingsDataType, callback: () => void) => {
     return CustomAxiosPut(UpdatePortalSettingsDataApi, callback, params)
+}
+
+export const SignUpRequestFunc = (params: UserDataAddLocalValuesType, callback: () => void) => {
+    return CustomAxiosPost(SignUpRequestApi, callback, params)
 }

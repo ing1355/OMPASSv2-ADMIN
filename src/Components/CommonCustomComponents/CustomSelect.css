@@ -1,19 +1,23 @@
 .custom-select-container {
+  display: inline-block;
     background-image: url(../../assets/arrowDownIcon.png);
     background-repeat: no-repeat;
     background-position: right 10px center;
     background-size: 18px 18px;
-    padding: 4px 12px;
+    padding: 0px 12px;
     padding-right: 40px;
     position: relative;
-    height: 32px;
-    line-height: 32px;
+    height: 36px;
+    box-sizing: border-box;
+    line-height: 36px;
     min-width: 200px;
-    border: 1px solid var(--sub-grey-color3);
+    color: var(--sub-grey-color4);
+    border: 1px solid var(--sub-grey-color5);
     border-radius: 6px;
     user-select: none;
     text-align: center;
     cursor: pointer;
+    z-index: 9998;
     & > select {
       display: none;
     }
@@ -29,7 +33,7 @@
     padding: 2px 4px;
     background-color: var(--main-white-color);
     border-radius: 4px;
-    top: calc(100% + 8px);
+    top: calc(100% + 4px);
     left: 0;
     box-shadow: 0 0 10px 1px rgba(0,0,0,.2);
     max-height: 200px;

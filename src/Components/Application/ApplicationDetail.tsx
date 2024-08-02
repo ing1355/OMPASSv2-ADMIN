@@ -1,17 +1,24 @@
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
 import { useNavigate, useParams } from "react-router"
-import { useLayoutEffect, useState } from "react"
+import { useLayoutEffect, useMemo, useState } from "react"
 import { Switch, Upload, message } from "antd"
 import CustomInputRow from "Components/Layout/CustomInputRow"
 import { AddApplicationDataFunc, DeleteApplicationListFunc, GetApplicationDetailFunc, GetApplicationListFunc, UpdateApplicationDataFunc, UpdateApplicationSecretkeyFunc } from "Functions/ApiFunctions"
 import PolicySelect from "Components/CommonCustomComponents/PolicySelect"
 import { applicationTypes, getApplicationTypeLabel } from "Constants/ConstantValues"
 import { convertBase64FromClientToServerFormat } from "Functions/GlobalFunctions"
-import { FormattedMessage } from "react-intl"
 import CustomModal from "Components/CommonCustomComponents/CustomModal"
-import defaultLogo from '../../assets/ompass_logo_image.png'
 import CustomImageUpload from "Components/Layout/CustomImageUpload"
+import CustomSelect from "Components/CommonCustomComponents/CustomSelect"
+import Button from "Components/CommonCustomComponents/Button"
+import Input from "Components/CommonCustomComponents/Input"
+import { CopyToClipboard } from "react-copy-to-clipboard"
+import documentIcon from '../../assets/documentIcon.png'
+import documentIconHover from '../../assets/documentIconHover.png'
+import deleteIcon from '../../assets/deleteIcon.png'
+import deleteIconHover from '../../assets/deleteIconHover.png'
+import './ApplicationDetail.css'
 
 const ApplicationDetail = () => {
     const [logoImage, setLogoImage] = useState<string>("")
@@ -34,6 +41,10 @@ const ApplicationDetail = () => {
     const isAdd = !uuid
     const needDomains: ApplicationDataType['type'][] = ["DEFAULT", "ADMIN", "REDMINE"]
     const isRedmine = applicationType === 'REDMINE'
+    const typeItems = applicationTypes(hasWindowsLogin).map(_ => ({
+        key: _,
+        label: getApplicationTypeLabel(_)
+    }))
 
     const handleFileSelect = (img: string) => {
         setLogoImage(img)
@@ -50,7 +61,7 @@ const ApplicationDetail = () => {
                 setInputDescription(data.description ?? "")
                 setInputClientId(data.clientId)
                 setInputApiServerHost(data.apiServerHost)
-                // setSelectedPolicy(data.policy. || "")
+                setSelectedPolicy(data.policyId)
                 setApplicationType(data.type)
                 setHelpMsg(data.helpDeskMessage || "")
             })
@@ -71,55 +82,43 @@ const ApplicationDetail = () => {
     return <Contents loading={dataLoading}>
         <ContentsHeader title="APPLICATION_MANAGEMENT" subTitle={isAdd ? "APPLICATION_ADD" : "APPLICATION_MODIFY"}>
             <div className="custom-detail-header-items-container">
-                <button className="button-st2">
+                <Button className="st5" icon={documentIcon} hoverIcon={documentIconHover}>
                     문서 보기
-                </button>
+                </Button>
                 {uuid && <>
                     {/* | */}
                     {/* <div>
                         어플리케이션 로그 확인
                     </div>
                     | */}
-                    {applicationType !== 'ADMIN' && <button className="button-st3" onClick={() => {
+                    {applicationType !== 'ADMIN' && <Button icon={deleteIcon} hoverIcon={deleteIconHover} className="st2" onClick={() => {
                         setSureDelete(true)
                     }}>
                         어플리케이션 삭제
-                    </button>}
+                    </Button>}
                 </>}
             </div>
         </ContentsHeader>
         <div className="contents-header-container">
             <CustomInputRow title="유형">
-                {isAdd ? <select value={applicationType} disabled={uuid ? true : false} onChange={e => {
-                    setApplicationType(e.target.value as ApplicationDataType['type'])
-                }}>
-                    <option value="">
-                        선택 안함
-                    </option>
-                    {
-                        applicationType === 'ADMIN' && <option value="ADMIN">
-                            ADMIN
-                        </option>
-                    }
-                    {
-                        applicationTypes(hasWindowsLogin).map((_, ind) => <option key={ind} value={_}>{getApplicationTypeLabel(_)}</option>)
-                    }
-                </select> : getApplicationTypeLabel(applicationType)}
+                {isAdd ? <CustomSelect value={applicationType} onChange={value => {
+                    setApplicationType(value as ApplicationDataType['type'])
+                }} items={typeItems} /> : getApplicationTypeLabel(applicationType)}
             </CustomInputRow>
             {
                 applicationType && <>
                     <CustomInputRow title="이름">
-                        <input value={inputName} onChange={e => {
+                        <Input className="st1" value={inputName} onChange={e => {
                             setInputName(e.target.value)
-                        }} placeholder="ex) 테스트 어플리케이션"/>
+                        }} placeholder="ex) 테스트 어플리케이션" />
                     </CustomInputRow>
                     <CustomInputRow title="설명">
-                        <input value={inputDescription} onChange={e => {
+                        <Input className="st1" value={inputDescription} onChange={e => {
                             setInputDescription(e.target.value)
                         }} />
                     </CustomInputRow>
                     <CustomInputRow title="공지사항">
-                        <input value={helpMsg} onChange={e => {
+                        <Input className="st1" value={helpMsg} onChange={e => {
                             setHelpMsg(e.target.value)
                         }} />
                     </CustomInputRow>
@@ -129,38 +128,40 @@ const ApplicationDetail = () => {
                         }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
                     </CustomInputRow>}
                     <CustomInputRow title="API 서버 주소">
-                        {isAdd ? <input defaultValue={inputApiServerHost} disabled /> : inputApiServerHost}
+                        {isAdd ? <Input className="st1" defaultValue={inputApiServerHost} disabled /> : inputApiServerHost}
                     </CustomInputRow>
                     {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title="클라이언트 아이디">
-                        {isAdd ? <input defaultValue={inputClientId} disabled /> : inputClientId}
+                        {isAdd ? <Input className="st1" defaultValue={inputClientId} disabled /> : inputClientId}
                     </CustomInputRow>}
-                    {!isAdd && <CustomInputRow title="시크릿 키">
-                        {/* <div className="with-button-input-row">
-                            <input value={inputSecretKey} onChange={e => {
+                    {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title="시크릿 키">
+                        <CopyToClipboard text={inputSecretKey} onCopy={(value, result) => {
+                            if (result) {
+                                message.success("시크릿 키가 복사되었습니다.")
+                            } else {
+                                message.error("시크릿 복사에 실패하였습니다.")
+                            }
+                        }}>
+                            <Input className="st1 hover-st1 pointer secret-key" value={inputSecretKey} onChange={e => {
                                 setInputSecretKey(e.target.value)
                             }} readOnly />
-
-                        </div> */}
-                        <input value={inputSecretKey} onChange={e => {
-                            setInputSecretKey(e.target.value)
-                        }} readOnly />
-                        <button className="button-st2 application-detail-input-sub-btn" onClick={() => {
+                        </CopyToClipboard>
+                        <Button className="st9 application-detail-input-sub-btn" onClick={() => {
                             UpdateApplicationSecretkeyFunc(uuid, (appData) => {
                                 setInputSecretKey(appData.secretKey)
                             })
-                        }}>비밀키 재발급</button>
+                        }}>비밀키 재발급</Button>
                     </CustomInputRow>}
                     {
                         needDomains.includes(applicationType) && <>
                             <CustomInputRow title="도메인">
-                                <input value={inputDomain} onChange={e => {
+                                <Input className="st1" value={inputDomain} onChange={e => {
                                     setInputDomain(e.target.value)
-                                }} placeholder="ex) https://omsecurity.kr:1234"/>
+                                }} placeholder="ex) https://omsecurity.kr:1234" />
                             </CustomInputRow>
-                            {!(isAdd && applicationType ==='REDMINE') && ((!isAdd && applicationType === 'REDMINE') ? inputRedirectUrl : <CustomInputRow title="리다이렉트 URL">
-                                <input value={inputRedirectUrl} onChange={e => {
+                            {!(isAdd && applicationType === 'REDMINE') && ((!isAdd && applicationType === 'REDMINE') ? inputRedirectUrl : <CustomInputRow title="리다이렉트 URL">
+                                <Input className="st1" value={inputRedirectUrl} onChange={e => {
                                     setInputRedirectUrl(e.target.value)
-                                }} placeholder="ex) https://omsecurity.kr:1234/ompass"/>
+                                }} placeholder="ex) https://omsecurity.kr:1234/ompass" />
                             </CustomInputRow>)}
                         </>
                     }
@@ -168,13 +169,13 @@ const ApplicationDetail = () => {
                         <PolicySelect selectedPolicy={selectedPolicy} setSelectedPolicy={setSelectedPolicy} needSelect />
                     </CustomInputRow>
                     <CustomInputRow title="로고 설정">
-                        <CustomImageUpload src={logoImage} callback={handleFileSelect}/>
+                        <CustomImageUpload src={logoImage} callback={handleFileSelect} />
                     </CustomInputRow>
                 </>
             }
         </div>
         {applicationType && <div className="application-detail-bottom-buttons-container">
-            <button className="button-st1" onClick={() => {
+            <Button className="st3" onClick={() => {
                 if (uuid) {
                     UpdateApplicationDataFunc(uuid!, {
                         policyId: selectedPolicy,
@@ -208,12 +209,12 @@ const ApplicationDetail = () => {
                 }
             }}>
                 저장
-            </button>
-            <button className="button-st2" onClick={() => {
+            </Button>
+            <Button className="st7" onClick={() => {
                 navigate('/Applications')
             }}>
                 취소
-            </button>
+            </Button>
         </div>}
         <CustomModal
             open={sureDelete}

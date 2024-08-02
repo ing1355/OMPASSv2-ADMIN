@@ -2,9 +2,7 @@ import React, { CSSProperties, useEffect, useMemo, useRef, useState } from "reac
 import './CustomTable.css'
 import { Pagination, PaginationProps } from "antd"
 import searchIcon from './../../assets/searchIcon.png'
-import searchIconHover from './../../assets/searchIconHover.png'
 import resetIcon from './../../assets/resetIcon.png'
-import resetIconHover from './../../assets/resetIconHover.png'
 import deleteIcon from './../../assets/deleteIcon.png'
 import Button from "./Button"
 import CustomSelect from "./CustomSelect"
@@ -17,6 +15,14 @@ export type CustomTableColumnType<T> = {
     width?: CSSProperties['width']
     onClick?: () => void
     render?: (data: any, index: number, row: T) => React.ReactNode
+}
+
+type CustomTableButtonType = {
+    icon?: string
+    hoverIcon?: string
+    label: string | React.ReactNode
+    style?: string
+    callback?: (data: any) => void
 }
 
 type CustomTableProps<T extends {
@@ -37,26 +43,26 @@ type CustomTableProps<T extends {
     noDataHeight?: CSSProperties['height']
     selectedColor?: CSSProperties['color']
     pagination?: boolean
-    onPageChange?: PaginationProps['onChange']
     pageSize?: number
     totalCount?: number
     paramsChange?: (params: P) => void
     hover?: boolean
     noSearch?: boolean
     searchOptions?: string[]
-    onSearchChange?: (val: string[]) => void
+    onSearchChange?: (val: CustomTableSearchParams) => void
+    addBtn?: CustomTableButtonType
+    deleteBtn?: CustomTableButtonType
 }
 
 const CustomTable = <T extends {
     [key: string]: any
 }, P>({ pagination,
-    onPageChange,
     pageSize,
     totalCount,
     theme,
     className,
     columns,
-    datas=[],
+    datas = [],
     onHeaderRowHover,
     onBodyRowHover,
     onBodyRowMouseLeave,
@@ -70,59 +76,76 @@ const CustomTable = <T extends {
     noSearch,
     searchOptions,
     onSearchChange,
+    addBtn,
+    deleteBtn,
     hover }: CustomTableProps<T, P>) => {
     const [pageNum, setPageNum] = useState(0)
+    const [tableSize, setTableSize] = useState(10);
     const [searchType, setSearchType] = useState((searchOptions && searchOptions[0]) || "")
     const [searchValue, setSearchValue] = useState('')
     const [hoverId, setHoverId] = useState(-1)
 
+    const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
+        setPageNum(pageNumber);
+        setTableSize(pageSizeOptions);
+        if(onSearchChange) onSearchChange({
+            type: searchType,
+            value: searchValue,
+            page: pageNumber,
+            size: pageSizeOptions
+        })
+    };
     useEffect(() => {
         setSearchValue('')
-    },[searchType])
-    
+    }, [searchType])
+
     return <div>
-        {!noSearch && searchOptions && <form onSubmit={e => {
-            e.preventDefault()
-            console.log('submit : ', searchType, searchValue)
-            if(onSearchChange) onSearchChange([searchType, searchValue]);
-        }} className="table-search-container">
-            <CustomSelect items={columns.filter(_ => searchOptions.includes(_.key as string)).map(_ => ({
-                key: _.key as string,
-                label: _.title as string
-            }))} value={searchType!} onChange={type => {
-                setSearchType(type)
-            }}/>
-            {/* <div className="table-search-select" onClick={() => {
-                setShowSelect(!showSelect)
-            }}>
-                {columns.find(_ => (_.key as string) === searchType)?.title}
-                {
-                    showSelect && <div className="search-select-option-container">
-                            {
-                                searchOptions && columns.filter(_ => searchOptions.includes(_.key as string)).map((_, ind) => {
-                                    return <div className="search-select-option-item" onClick={() => {
-                                        setSearchType(_.key as string)
-                                    }}>
-                                    {_.title}
-                                    </div>
-                                })
-                            }
-                        </div>
-                }
-            </div> */}
-            <Input className="table-search-input" name="searchValue" value={searchValue} placeholder="검색명" valueChange={value => {
-                setSearchValue(value)
-            }}/>
-            <Button className="st1" icon={searchIcon} hoverIcon={searchIconHover} type="submit">
-                검색
-            </Button>
-            <Button className="st1" onClick={() => {
-                setSearchType("username")
-                setSearchValue("")
-            }} icon={resetIcon} hoverIcon={resetIconHover}>
-                초기화
-            </Button>
-        </form>}
+        <div className={`custom-table-header${(noSearch || !searchOptions) ? ' no-search' : ''}${(noSearch && !addBtn && deleteBtn) ? ' no-margin' : ''}`}>
+            {!noSearch && searchOptions && <form onSubmit={e => {
+                e.preventDefault()
+                if(onSearchChange) onSearchChange({
+                    type: searchType,
+                    value: searchValue,
+                    page: pageNum,
+                    size: tableSize
+                })
+            }} className="table-search-container">
+                <CustomSelect items={columns.filter(_ => searchOptions.includes(_.key as string)).map(_ => ({
+                    key: _.key as string,
+                    label: _.title as string
+                }))} value={searchType!} onChange={type => {
+                    setSearchType(type)
+                }} />
+                <Input className="st1 table-search-input" name="searchValue" value={searchValue} placeholder="검색명" valueChange={value => {
+                    setSearchValue(value)
+                }} />
+                <Button className="st3" icon={searchIcon} type="submit">
+                    검색
+                </Button>
+                <Button className="st4" onClick={() => {
+                    setSearchType(searchOptions[0])
+                    setSearchValue("")
+                    setPageNum(1)
+                    setTableSize(10)
+                    if(onSearchChange) onSearchChange({
+                        type: searchOptions[0],
+                        value: "",
+                        page: 1,
+                        size: 10
+                    })
+                }} icon={resetIcon}>
+                    초기화
+                </Button>
+            </form>}
+            <div className="custom-table-header-buttons">
+            {addBtn && <Button className={addBtn.style || "st1"} icon={addBtn.icon} hoverIcon={addBtn.hoverIcon} onClick={addBtn.callback}>
+                {addBtn.label}
+            </Button>}
+            {deleteBtn && <Button className="st3" icon={deleteBtn.icon} hoverIcon={deleteBtn.hoverIcon} onClick={deleteBtn.callback}>
+                {deleteBtn.label}
+            </Button>}
+            </div>
+        </div>
         <table className={`${className ? className + ' ' : ''}${theme}`}>
             <colgroup>
                 {columns.map((_, ind) => <col
@@ -189,7 +212,7 @@ const CustomTable = <T extends {
             className="mt30 mb40"
             style={{ textAlign: 'center' }}
         >
-            <Pagination showQuickJumper showSizeChanger current={pageNum} pageSize={pageSize} total={totalCount || 1} onChange={onPageChange} />
+            <Pagination showQuickJumper showSizeChanger current={pageNum} pageSize={tableSize} total={totalCount || 1} onChange={onChangePage} className="custom-pagination"/>
         </div>}
     </div>
 }

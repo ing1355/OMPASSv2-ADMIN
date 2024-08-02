@@ -8,19 +8,6 @@
   border-radius: 3px;
 }
 
-.agent_management_target_version_btn.disable {
-  background-color: #ccc;
-  cursor: default;
-}
-
-.agent-upload-btn {
-  padding: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  width: 200px;
-}
-
 .agent-input-row-container {
   margin-bottom: 24px;
   &>div {

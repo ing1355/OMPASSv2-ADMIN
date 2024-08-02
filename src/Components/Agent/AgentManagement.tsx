@@ -1,17 +1,20 @@
 import './AgentManagement.css';
 import { FormattedMessage, useIntl } from "react-intl";
-import { useWindowHeightHeader } from 'Components/CommonCustomComponents/useWindowHeight';
 import { useNavigate } from 'react-router-dom';
-import { Pagination, PaginationProps, Popconfirm, message } from 'antd';
+import { Popconfirm, message } from 'antd';
 import { useEffect, useState } from 'react';
 
-import delete_icon from '../../assets/delete_icon.png';
-import list_download from '../../assets/list_download.png';
+import tableDeleteIcon from '../../assets/tableDeleteIcon.png';
+import tableDeleteIconHover from '../../assets/tableDeleteIconHover.png';
+import downloadIcon from '../../assets/downloadIcon.png';
+import uploadIcon from '../../assets/uploadIcon.png';
+import uploadIconHover from '../../assets/uploadIconHover.png';
 import download_installer_icon from '../../assets/download_installer_icon.png';
 import ContentsHeader from 'Components/Layout/ContentsHeader';
 import Contents from 'Components/Layout/Contents';
 import CustomTable from 'Components/CommonCustomComponents/CustomTable';
 import { CurrentAgentVersionChangeFunc, DeleteAgentInstallerFunc, DownloadAgentInstallerFunc, GetAgentInstallerListFunc } from 'Functions/ApiFunctions';
+import Button from 'Components/CommonCustomComponents/Button';
 
 interface Checkbox {
   id: number;
@@ -20,27 +23,18 @@ interface Checkbox {
 }
 
 const AgentManagement = () => {
-  const height = useWindowHeightHeader();
-  const [tableCellSize, setTableCellSize] = useState<number>(10);
-  const [pageNum, setPageNum] = useState<number>(1);
+  const [dataLoading, setDataLoading] = useState(false)
   const [totalCount, setTotalCount] = useState<number>(0);
-  const [agentData, setAgentData] = useState<AgentInstallerListDataType>([]);
+  const [tableData, setTableData] = useState<AgentInstallerListDataType>([]);
   const [checkAll, setCheckAll] = useState(false);
   const [checkboxes, setCheckboxes] = useState<Checkbox[]>([]);
-  const [hoveredRow, setHoveredRow] = useState<number>(-1);
-  const [rendering, setRendering] = useState<boolean[]>([]);
   const [openFileDelete, setOpenFileDelete] = useState(-1);
+  const [deleteHover, setDeleteHover] = useState(-1)
   const [openFilesDelete, setOpenFilesDelete] = useState(false);
-  const [isAgentDataLoading, setIsAgentDataLoading] = useState<boolean>(true);
-  const [isAgentFileDisable, setIsAgentFileDisable] = useState<boolean[]>(new Array(agentData.length).fill(false));
+  const [isAgentFileDisable, setIsAgentFileDisable] = useState<boolean[]>(new Array(tableData.length).fill(false));
 
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
-
-  const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
-    setPageNum(pageNumber);
-    setTableCellSize(pageSizeOptions);
-  };
 
   // 전체 선택/해제 핸들러
   const handleCheckAll = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,56 +61,63 @@ const AgentManagement = () => {
     setCheckAll(updatedCheckboxes.every((checkbox) => checkbox.checked));
   };
 
-  useEffect(() => {
-    setIsAgentDataLoading(true);
-    GetAgentInstallerListFunc({}, ({ agentProgramHistories, queryTotalCount }: GetAgentInstallerApiResponseType) => {
-      setAgentData(agentProgramHistories);
-      setTotalCount(queryTotalCount);
-      setIsAgentFileDisable(new Array(agentProgramHistories.length).fill(false));
+  const GetDatas = async (params: CustomTableSearchParams) => {
+    setDataLoading(true)
+    const _params: GeneralParamsType = {
+      page_size: params.size,
+      page: params.page
+    }
+    if (params.type) {
+      _params[params.type] = params.value
+    }
+    await GetAgentInstallerListFunc(_params, ({ results, totalCount }) => {
+      setTableData(results)
+      setTotalCount(totalCount)
     }).finally(() => {
-      setIsAgentDataLoading(false);
+      setDataLoading(false)
     })
-  }, [tableCellSize, pageNum, rendering]);
+  }
+
+  useEffect(() => {
+    GetDatas({
+      page: 1,
+      size: 10
+    })
+  }, [])
 
   // agentData가 변경되면 checkboxes 초기화
-  useEffect(() => {
-    const updatedCheckboxes = agentData.map((data, index) => ({
-      id: index,
-      userId: data.fileId,
-      checked: false,
-    }));
-    setCheckboxes(updatedCheckboxes);
-  }, [agentData]);
-
-  const handleRowHover = (index: number) => {
-    setHoveredRow(index);
-  };
+  // useEffect(() => {
+  //   const updatedCheckboxes = agentData.map((data, index) => ({
+  //     id: index,
+  //     userId: data.fileId,
+  //     checked: false,
+  //   }));
+  //   setCheckboxes(updatedCheckboxes);
+  // }, [agentData]);
 
   return (
     <>
-      <Contents>
+      <Contents loading={dataLoading}>
         <ContentsHeader title="VERSION_MANAGEMENT" subTitle='VERSION_LIST'>
-          <button className="button-st1"
-            onClick={(e) => {
-              navigate('/AgentManagement/upload');
-            }}
-          >
-            <FormattedMessage id='FILE_UPLOAD' />
-          </button>
         </ContentsHeader>
         <CustomTable<AgentInstallerDataType, {}>
           theme='table-st1'
           className="contents-header-container"
-          onBodyRowHover={(_, index) => {
-            handleRowHover(index)
+          onSearchChange={(data) => {
+            GetDatas(data)
           }}
-          onBodyRowMouseLeave={() => {
-            handleRowHover(-1)
+          addBtn={{
+            label: <FormattedMessage id='FILE_UPLOAD' />,
+            icon: uploadIcon,
+            hoverIcon: uploadIconHover,
+            style: 'st5',
+            callback: () => {
+              navigate('/AgentManagement/upload');
+            }
           }}
-          bodyRowStyle={(_, index) => ({
-            background: hoveredRow === index ? 'var(--sub-blue-color-2)' : 'transparent'
-          })}
-          datas={agentData}
+          pagination
+          totalCount={totalCount}
+          datas={tableData}
           columns={[
             // {
             //   key: 'check',
@@ -134,10 +135,10 @@ const AgentManagement = () => {
             //   />
             // },
             {
-              key: 'currentTarget',
+              key: 'downloadTarget',
               title: '#',
               width: '80px',
-              render: (data, index, row) => row.downloadTarget && <span className='manager-mark'>
+              render: (data) => data && <span className='manager-mark'>
                 <FormattedMessage id='CURRENT' />
               </span>
             },
@@ -173,7 +174,7 @@ const AgentManagement = () => {
                 />
                 :
                 <img
-                  src={list_download}
+                  src={downloadIcon}
                   style={{ cursor: 'pointer' }}
                   width='18px'
                   onClick={() => {
@@ -193,18 +194,17 @@ const AgentManagement = () => {
               key: 'currentVersionSetting',
               title: <FormattedMessage id='CURRENT_VERSION_SETTING' />,
               width: '140px',
-              render: (_, index, data) => <button
-                className={'button-st4 agent_management_target_version_btn ' + (data.downloadTarget ? 'disable' : '')}
+              render: (_, index, data) => <Button
+                className={'st1' + (data.downloadTarget ? ' disable' : '')}
                 disabled={data.downloadTarget ? true : false}
                 onClick={() => {
-                  CurrentAgentVersionChangeFunc(data.fileId, () => {
+                  CurrentAgentVersionChangeFunc(data.fileId, (newData) => {
+                    setTableData(tableData.map(t => t.fileId === newData.fileId ? newData : ({...t, downloadTarget: false})))
                     message.success(formatMessage({ id: 'CURRENT_VERSION_CHANGE_COMPLETE' }));
-                    const render = rendering;
-                    const renderTemp = render.concat(true);
-                    setRendering(renderTemp);
                   })
                 }}
-              ><FormattedMessage id='APPLY' /></button>
+              ><FormattedMessage id='APPLY' />
+              </Button>
             },
             {
               key: 'delete',
@@ -257,7 +257,7 @@ const AgentManagement = () => {
                 onConfirm={() => {
                   // const versionIds = checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.userId).join(',');
                   const versionIds = `${row.fileId}`
-                  const target = agentData.find((data) => data.downloadTarget === true);
+                  const target = tableData.find((data) => data.downloadTarget === true);
                   const targetVersion = checkboxes.filter((checkbox) => checkbox.userId === target?.fileId);
 
                   if (targetVersion[0]?.checked) {
@@ -266,12 +266,7 @@ const AgentManagement = () => {
                     if (versionIds) {
                       DeleteAgentInstallerFunc(versionIds, () => {
                         setOpenFileDelete(-1);
-
                         message.success(formatMessage({ id: 'VERSION_DELETE' }));
-
-                        const render = rendering;
-                        const renderTemp = render.concat(true);
-                        setRendering(renderTemp);
                       })
                     } else {
                       message.error(formatMessage({ id: 'NO_ITEM_SELECTED' }));
@@ -282,21 +277,21 @@ const AgentManagement = () => {
                   setOpenFileDelete(-1);
                 }}
               >
-                <img src={delete_icon} width='25px' style={{ opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer' }}
+                <img src={deleteHover === row.fileId ? tableDeleteIconHover : tableDeleteIcon} width='25px' style={{ opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer' }}
                   onClick={() => {
                     setOpenFileDelete(index);
+                  }}
+                  onMouseEnter={() => {
+                    setDeleteHover(row.fileId)
+                  }}
+                  onMouseLeave={() => {
+                    setDeleteHover(-1)
                   }}
                 />
               </Popconfirm>
             }
           ]}
         />
-        <div
-          className="mt30 mb40"
-          style={{ textAlign: 'center' }}
-        >
-          <Pagination showQuickJumper showSizeChanger current={pageNum} pageSize={tableCellSize} total={totalCount} onChange={onChangePage} />
-        </div>
       </Contents>
     </>
   )

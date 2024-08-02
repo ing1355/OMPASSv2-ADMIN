@@ -2,7 +2,7 @@ import './App.css';
 import React, { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Login from 'Components/Login/Login';
 import OMPASSVerify from 'Components/OMPASS/OMPASSVerify';
 import SecretKey from 'Components/SecretKey/SecretKey';
@@ -23,16 +23,41 @@ import Users from 'Components/Users/Users';
 import AuthLog from 'Components/Log/AuthLog';
 import PortalLog from 'Components/Log/PortalLog';
 import Settings from 'Components/Settings';
+import { GetSubDomainInfoFunc } from 'Functions/ApiFunctions';
+import { subDomain, UserSignupMethod } from 'Constants/ConstantValues';
+import { subdomainInfoChange } from 'Redux/actions/subdomainInfoChange';
+import loginMainImage from './assets/loginMainImage.png'
+import SignUp from 'Components/SignUp/SignUp';
 
 const convertLangToIntlVer = (lang: ReduxStateType['lang']) => {
   return lang === 'EN' ? 'en-us' : 'ko-kr'
 }
 
 const App: React.FC = () => {
-  const { lang, userInfo } = useSelector((state: ReduxStateType) => ({
+  const dispatch = useDispatch();
+  const { lang, userInfo, subdomainInfo } = useSelector((state: ReduxStateType) => ({
     lang: state.lang!,
-    userInfo: state.userInfo
+    userInfo: state.userInfo,
+    subdomainInfo: state.subdomainInfo
   }));
+
+  const { userSignupMethod } = subdomainInfo || {}
+
+  const getDomainInfo = () => {
+    GetSubDomainInfoFunc(subDomain, (data) => {
+      dispatch(subdomainInfoChange(data))
+    }).catch(() => {
+      dispatch(subdomainInfoChange({
+        noticeMessage: '',
+        logoImage: loginMainImage,
+        userSignupMethod: UserSignupMethod.ONLY_BY_ADMIN
+      }))
+    })
+  }
+
+  useEffect(() => {
+    getDomainInfo()
+  },[])
 
   return <IntlProvider locale={convertLangToIntlVer(lang)} messages={Locale[lang]}>
     <AxiosController />
@@ -76,8 +101,12 @@ const App: React.FC = () => {
                 <Route path='/Main' element={<Users />} />
                 <Route path='/*' element={<Navigate to='/Main' replace={true} />} />
               </>
-          ) :
+          ) : userSignupMethod !== UserSignupMethod.ONLY_BY_ADMIN ?
             <>
+              <Route path='/*' element={<Navigate to='/' replace={true} />} />
+              <Route path='/signup' element={<SignUp />} />
+              <Route path='/' element={<Login />} />
+            </> : <>
               <Route path='/*' element={<Navigate to='/' replace={true} />} />
               <Route path='/' element={<Login />} />
             </>

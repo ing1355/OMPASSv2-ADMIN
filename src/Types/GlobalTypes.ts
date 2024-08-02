@@ -70,11 +70,11 @@ type GetListDataGeneralType<T> = {
     results: T[]
 }
 type GeneralParamsType = {
+    [key:string]: any
     page_size?: number
     page?: number,
     sortDirection?: DirectionType
 }
-
 type DirectionType = "DESC" | "ASC"
 type RPUserType = {
     username: string
@@ -83,6 +83,7 @@ type RPUserType = {
 type PortalUserType = {
     id: string
     username: string
+    name: UserNameType
 }
 
 type LoginApiParamsType = {
@@ -103,7 +104,7 @@ type PasscodeHistoriesParamsType = GeneralParamsType & {
 }
 
 type PasscodeDataType = {
-    expirationTime: string
+    expiredAt: string
     issuerUsername: string
     number: string
     id: string
@@ -126,6 +127,7 @@ type PasscodeHistoryDataType = {
     rpUser: RPUserType
     portalUser: PortalUserType
     applicationName: ApplicationDataType['name']
+    authenticationInfoId: RPUserDetailAuthDataType['id']
 }
 
 type DefaultApplicationDataType = {
@@ -179,11 +181,15 @@ type ApplicationListParamsType = GeneralParamsType & {
     sortDirection?: DirectionType
 }
 
+type CoordinateType = {
+    latitude: number
+    longitude: number
+}
+
 type LocationPolicyRestrictionItemType = {
-    isEnabled: boolean
-    countryCode: string
-    address: string
+    coordinate: CoordinateType
     radius: number
+    alias: string
 }
 type LocationPolicyType = {
     isEnabled: boolean
@@ -194,7 +200,7 @@ type IpAddressPolicyType = {
     // ips: PolicyRestrictionItemType[]
     ips: string[]
 }
-type BrowserPolicyType = "FireFox" | "Safari" | "Chrome Mobile" | "Chrome" | "Microsoft Edge" | "Mobile Safari" | "Samsung Browser Mobile" | "Whale Browser" | "All other browsers"
+type BrowserPolicyType = "FireFox" | "Safari" | "Chrome Mobile" | "Chrome" | "Microsoft Edge" | "Mobile Safari" | "Samsung Browser" | "Whale Browser" | "All other browsers"
 type AuthenticatorPolicyType = "WEBAUTHN" | "PASSCODE" | "OMPASS" | "OTP"
 type DayOfWeeksType = "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY"
 type AccessTimeRestrictionTimeRangeTypeType = "SPECIFIC_TIME" | "ALL_TIME"
@@ -202,11 +208,11 @@ type AccessTimeRestrictionOptionsNoticeToAdminNoticeMethodsType = "EMAIL" | "PUS
 type AccessTimeRestrictionValueType = {
     selectedDayOfWeeks: DayOfWeeksType[],
     timeZone: string
-    dateRange: {
-        type: AccessTimeRestrictionTimeRangeTypeType,
-        startTime: string,
-        endTime: string
-    }
+    // dateRange: {
+    //     type: AccessTimeRestrictionTimeRangeTypeType,
+    //     startTime: string,
+    //     endTime: string
+    // }
     timeRange: {
         startTime: string,
         endTime: string,
@@ -371,21 +377,17 @@ type ProtalLogListParamsType = GeneralParamsType & {
 
 type AuthLogDataType = {
     id: number
-    username: string
-    name: {
-        lastName: string
-        firstName: string
-    }
-    timeRange: {
+    rpUser: RPUserType
+    portalUser: PortalUserType
+    timeRange?: {
         startTime: string
         endTime: string
     }
     processType: ProcessTypeType
     application: ApplicationDataType
-    isProcessSuccess: boolean
     authenticationTime: string
     authenticatorType: string
-    authenticationLogType: string
+    authenticationLogType: "ALLOW" | "DENY" | "ALLOW_OUT_OF_SCHEDULE"
 }
 
 type PortalLogDataType = {
@@ -408,4 +410,11 @@ type UserDetailAuthInfoRowType = {
     id: UserDetailDataType['id']
     username: UserDetailDataType['username']
     authInfo: RPUserDetailAuthDataType
+}
+
+type CustomTableSearchParams = {
+    page: number
+    size: number
+    type?: string
+    value?: string
 }

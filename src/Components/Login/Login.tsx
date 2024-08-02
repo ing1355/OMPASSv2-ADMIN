@@ -2,35 +2,31 @@ import './Login.css';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Link, useNavigate } from 'react-router-dom';
 import { OMPASS } from 'ompass';
-import { message, Modal, Col, Row, Spin } from 'antd';
+import { message, Modal } from 'antd';
 import { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { langChange } from 'Redux/actions/langChange';
-import { useWindowHeight } from 'Components/CommonCustomComponents/useWindowHeight';
 import { CustomAxiosPatch } from 'Components/CommonCustomComponents/CustomAxios';
 import { PatchUsersResetPasswordApi } from 'Constants/ApiRoute';
 
-import { CopyRightText, isDev } from '../../Constants/ConstantValues';
-import ompass_logo_image from '../../assets/ompass_logo_image.png';
-import login_main_image from '../../assets/login_main_image.png';
+import { CopyRightText, isDev, subDomain, UserSignupMethod } from '../../Constants/ConstantValues';
 import locale_image from '../../assets/locale_image.png';
-import download_icon from '../../assets/download_icon.png';
+import downloadIconWhite from '../../assets/downloadIconWhite.png';
 import view_password from '../../assets/passwordVisibleIcon.png';
 import dont_look_password from '../../assets/passwordHiddenIcon.png';
-import manunal_download from '../../assets/manunal_download.png'
+import manualDownloadIcon from '../../assets/manualDownloadIcon.png'
 import { useCookies } from 'react-cookie';
-import { LoadingOutlined } from '@ant-design/icons';
 import { passwordRegex } from 'Components/CommonCustomComponents/CommonRegex';
 import { AgentFileDownload } from 'Components/CommonCustomComponents/AgentFileDownload';
-import { GetSubDomainInfoFunc, LoginFunc } from 'Functions/ApiFunctions';
+import { LoginFunc } from 'Functions/ApiFunctions';
 import { saveLocaleToLocalStorage } from 'Functions/GlobalFunctions';
 import Button from 'Components/CommonCustomComponents/Button';
-
-const devUrl = "https://ompass.kr:54006"
+import Input from 'Components/CommonCustomComponents/Input';
 
 const Login = () => {
-  const { lang } = useSelector((state: ReduxStateType) => ({
+  const { lang, subdomainInfo } = useSelector((state: ReduxStateType) => ({
     lang: state.lang,
+    subdomainInfo: state.subdomainInfo
   }));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPasswordAlert, setIsPasswordAlert] = useState(false);
@@ -44,14 +40,11 @@ const Login = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["rememberUserId"]); // Cookies 이름
   const [isRemember, setIsRemember] = useState(false); // 아이디 저장 체크박스 체크 유무
   const [isAgentFileDisable, setIsAgentFileDisable] = useState(false);
-  const [logoImg, setLogoImg] = useState('')
-  const [helloText, setHelloText] = useState('')
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const passwordRef = useRef<HTMLInputElement>(null);
-  const subDomain = isDev ? devUrl.replace('https://', '') : window.location.host.replace('www.', '');
-
-  const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
+  const navigate = useNavigate()
+  const { noticeMessage, logoImage, userSignupMethod } = subdomainInfo || {}
 
   // 아이디 저장
   // 첫 렌더링
@@ -60,17 +53,7 @@ const Login = () => {
       setIdChange(cookies.rememberUserId);
       setIsRemember(true);
     }
-    getDomainInfo();
   }, []);
-
-  const getDomainInfo = () => {
-    GetSubDomainInfoFunc(subDomain, ({ logoImage, noticeMessage }) => {
-      setLogoImg(logoImage)
-      setHelloText(noticeMessage)
-    }).catch(e => {
-      setLogoImg(login_main_image)
-    })
-  }
 
   const saveIdCookieFun = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsRemember(e.target.checked);
@@ -164,10 +147,10 @@ const Login = () => {
       <div className='login-body'>
         <div className='login-hello-container'>
           <div className='login-logo-img'>
-            {logoImg && <img src={logoImg}/>}
+            {logoImage && <img src={logoImage} />}
           </div>
           <div className='login-hello-text'>
-            {helloText}
+            {noticeMessage}
           </div>
         </div>
         <form
@@ -180,14 +163,14 @@ const Login = () => {
             className='login-input-container'
           >
             <label htmlFor='userId'><FormattedMessage id='ID' /></label>
-            <input
-              className='input-st1 login-input mt5 userId'
+            <Input
+              className='st1 login-input mt5 userId'
               type='text'
               id='userId'
               maxLength={16}
               value={idChange ? idChange : ''}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setIdChange(e.currentTarget.value);
+              valueChange={value => {
+                setIdChange(value);
               }}
             />
           </div>
@@ -195,48 +178,51 @@ const Login = () => {
             className='login-input-container'
           >
             <label htmlFor='userPassword'><FormattedMessage id='PASSWORD' /></label>
-            <input
-              className='input-st1 login-input mt5 password'
+            <Input
+              className='st1 login-input mt5 password'
               type='password'
               id='userPassword'
               maxLength={16}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setPasswordChange(e.currentTarget.value);
+              valueChange={value => {
+                setPasswordChange(value);
               }}
             />
           </div>
-          <div>
-            <div>
-              <input id='saveId' type='checkbox' className='mr10' onChange={saveIdCookieFun} checked={isRemember} />
+          <div className='login-action-row-container'>
+            <div className='login-action-row'>
+              <Input id='saveId' type='checkbox' className='mr10' onChange={saveIdCookieFun} checked={isRemember} />
               <label htmlFor='saveId' style={{ cursor: 'pointer', userSelect: 'none' }}><FormattedMessage id='SAVE_ID' /></label>
             </div>
+            {userSignupMethod !== UserSignupMethod.ONLY_BY_ADMIN && <div className='login-action-row signup' onClick={() => {
+              navigate("/signup")
+            }}>
+              회원가입
+            </div>}
           </div>
           <Button
-            className="st2 login-button"
+            className="st3 login-button"
             type='submit'
-            // disabled={!(idChange !== '' && passwordChange !== '')}
+          // disabled={!(idChange !== '' && passwordChange !== '')}
           >
             <FormattedMessage id='LOGIN' />
           </Button>
-          <Link to='/GuidePage'>
-            <div className='main-color1'>
-              <FormattedMessage id='GO_TO_QUICK_GUIDE' />
-            </div>
+          <Link to='/GuidePage' className='quick-start-guide-text'>
+            <FormattedMessage id='GO_TO_QUICK_GUIDE' />
           </Link>
         </form>
       </div>
-      <button
-        className='button-st5 login-agent-download-button'
-        style={(isAgentFileDisable ? { cursor: 'default', pointerEvents: 'none' } : {})}
+      <Button
+        className='login-agent-download-button st10'
+        disabled={isAgentFileDisable}
+        icon={downloadIconWhite}
         onClick={() => {
           if (!isAgentFileDisable) {
             AgentFileDownload(setIsAgentFileDisable, formatMessage({ id: 'DOWNLOAD_FAILED' }));
           }
         }}
       >
-        <img src={download_icon} />
-        <span><FormattedMessage id='DOWNLOAD_FOR_WINDOWS' /></span>
-      </button>
+        <FormattedMessage id='DOWNLOAD_FOR_WINDOWS' />
+      </Button>
 
       <div
         className='login-footer content-center'
@@ -265,7 +251,7 @@ const Login = () => {
             download
           >
             <img
-              src={manunal_download}
+              src={manualDownloadIcon}
               className='login-footer-manual-download-img'
             />
           </a>
@@ -289,15 +275,14 @@ const Login = () => {
               setIsPasswordLook(!isPasswordLook);
             }}
           />
-          <input
+          <Input
             ref={passwordRef}
             id='userPassword'
             type={isPasswordLook ? 'text' : 'password'}
-            className={'input-st1 create-account-input mt8 ' + (isPasswordAlert ? 'red' : '')}
+            className={'st1 create-account-input mt8 ' + (isPasswordAlert ? 'red' : '')}
             maxLength={16}
             autoComplete='off'
-            onChange={(e) => {
-              const value = e.currentTarget.value;
+            valueChange={value => {
               const passwordRgx: RegExp = passwordRegex;
               if (passwordRgx.test(value)) {
                 setIsPasswordAlert(false);
@@ -322,14 +307,13 @@ const Login = () => {
               setIsPasswordConfirmLook(!isPasswordConfirmLook);
             }}
           />
-          <input
+          <Input
             id='userPasswordConfirm'
             type={isPasswordConfirmLook ? 'text' : 'password'}
-            className={'input-st1 create-account-input mt8 ' + (isPasswordConfirmAlert ? 'red' : '')}
+            className={'st1 create-account-input mt8 ' + (isPasswordConfirmAlert ? 'red' : '')}
             maxLength={16}
             autoComplete='off'
-            onChange={(e) => {
-              const value = e.currentTarget.value;
+            valueChange={value => {
               if (value === passwordRef.current?.value) {
                 setPassword(value);
                 setIsPasswordConfirmAlert(false);

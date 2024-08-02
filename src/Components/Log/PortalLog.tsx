@@ -6,18 +6,30 @@ import { useLayoutEffect, useState } from "react"
 
 const PortalLog = () => {
     const [tableData, setTableData] = useState<PortalLogDataType[]>([])
+    const [totalCount, setTotalCount] = useState<number>(0);
     const [dataLoading, setDataLoading] = useState(false)
 
-    const GetDatas = async () => {
-        await GetPortalLogDataListFunc({}, ({ results }) => {
+    const GetDatas = async (params: CustomTableSearchParams) => {
+        setDataLoading(true)
+        const _params: GeneralParamsType = {
+            page_size: params.size,
+            page: params.page
+        }
+        if(params.type) {
+            _params[params.type] = params.value
+        }
+        GetPortalLogDataListFunc(_params, ({ results, totalCount }) => {
             setTableData(results)
+            setTotalCount(totalCount)
+        }).finally(() => {
+            setDataLoading(false)
         })
     }
 
     useLayoutEffect(() => {
-        setDataLoading(true)
-        GetDatas().finally(() => {
-            setDataLoading(false)
+        GetDatas({
+            page:1,
+            size: 10
         })
     }, [])
 
@@ -48,7 +60,12 @@ const PortalLog = () => {
                         title: '일시'
                     }
                 ]}
+                pagination
                 searchOptions={['username', 'apiUri']}
+                onSearchChange={(data) => {
+                    GetDatas(data)
+                }}
+                totalCount={totalCount}
                 theme="table-st1"
                 datas={tableData}
             />

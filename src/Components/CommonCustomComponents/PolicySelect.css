@@ -5,7 +5,7 @@
     height: 24px;
     font-size: .8rem;
     & > a {
-        color: var(--main-blue-color);
+        color: var(--main-purple-color);
         text-decoration: none;
         font-weight: bold;
         &:hover {

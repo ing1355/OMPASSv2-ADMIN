@@ -7,12 +7,12 @@ import { PaginationProps } from "antd"
 import { useLayoutEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { useNavigate } from "react-router";
+import applicationAddIcon from '../../assets/applicationAddIcon.png'
+import applicationAddIconHover from '../../assets/applicationAddIconHover.png'
 
 const ApplicationManagement = () => {
-    const [pageNum, setPageNum] = useState(1);
     const [tableData, setTableData] = useState<ApplicationListDataType[]>([])
     const [policiesData, setPoliciesData] = useState<PolicyListDataType[]>([])
-    const [tableCellSize, setTableCellSize] = useState(10);
     const [totalCount, setTotalCount] = useState<number>(0);
     const [dataLoading, setDataLoading] = useState(false)
     const [hoveredRow, setHoveredRow] = useState<number>(-1)
@@ -22,47 +22,60 @@ const ApplicationManagement = () => {
         setHoveredRow(index);
     };
 
-    const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
-        setPageNum(pageNumber);
-        setTableCellSize(pageSizeOptions);
-    };
-
-    const GetDatas = async () => {
-        await GetApplicationListFunc({
-            page_size: tableCellSize,
-            page: pageNum
-        }, ({ results, totalCount }) => {
+    const GetDatas = async (params: CustomTableSearchParams) => {
+        setDataLoading(true)
+        const _params: GeneralParamsType = {
+            page_size: params.size,
+            page: params.page
+        }
+        if(params.type) {
+            _params[params.type] = params.value
+        }
+        await GetApplicationListFunc(_params, ({ results, totalCount }) => {
             setTableData(results)
             setTotalCount(totalCount)
+        }).finally(() => {
+            setDataLoading(false)
         })
     }
 
     const getPolicyDatas = async () => {
+        setDataLoading(true)
         GetPoliciesListFunc({}, ({ results, totalCount }) => {
             setPoliciesData(results)
+        }).finally(() => {
+            setDataLoading(false)
         })
     }
 
     useLayoutEffect(() => {
-        setDataLoading(true)
         getPolicyDatas().then(async () => {
-            await GetDatas()
-        }).finally(() => {
-            setDataLoading(false)
+            await GetDatas({
+                page: 1,
+                size: 10
+            })
         })
     }, [])
 
     return <Contents loading={dataLoading}>
         <ContentsHeader title="APPLICATION_MANAGEMENT" subTitle="APPLICATION_MANAGEMENT">
-            <button className="button-st1" onClick={() => {
-                navigate('/Applications/detail')
-            }}>
-                추가
-            </button>
         </ContentsHeader>
         <CustomTable<ApplicationListDataType, ApplicationListParamsType>
             theme='table-st1'
             className="contents-header-container"
+            searchOptions={["name"]}
+            onSearchChange={(data) => {
+                GetDatas(data)
+                console.log(data)
+            }}
+            addBtn={{
+                label: "추가",
+                icon: applicationAddIcon,
+                hoverIcon: applicationAddIconHover,
+                callback: () => {
+                    navigate('/Applications/detail')
+                }
+            }}
             onBodyRowClick={(row, index, arr) => {
                 navigate('/Applications/detail/' + row.id)
             }}
@@ -110,9 +123,7 @@ const ApplicationManagement = () => {
             ]}
             datas={tableData}
             pagination
-            pageSize={tableCellSize}
             totalCount={totalCount}
-            onPageChange={onChangePage}
         />
         {/* <div
             className="mt30 mb40"

@@ -1,7 +1,8 @@
-button {
-    padding: 2px 10px;
+.custom-button {
+    background-color: transparent;
+    padding: 2px 16px;
     border-radius: 8px;
-    height: 36px;
+    min-height: 32px;
     font-weight: bold;
     border: none;
     box-shadow: none;
@@ -12,11 +13,14 @@ button {
     align-items: center;
     gap: 6px;
     font-size: 1rem;
-    & > .button-icon {
+
+    &>.button-icon {
         height: 18px;
     }
+
     &[aria-loading="true"] {
         cursor: not-allowed;
+
         &::before {
             content: "";
             z-index: 1;
@@ -26,8 +30,9 @@ button {
             left: 0;
             top: 0;
             border-radius: 6px;
-            background-color: rgba(255,255,255,.8);
+            background-color: rgba(255, 255, 255, .8);
         }
+
         &::after {
             content: "";
             background-image: url("/src/assets/loading.png");
@@ -45,32 +50,158 @@ button {
             animation: rotate 1s linear infinite;
         }
     }
+
     /* &:hover:not([aria-loading="true"]):not(:disabled) {
         transform: translateY(-2px);
         transition: all .2s ease-in-out;
     } */
     &:disabled {
-        background-color: var(--sub-grey-color);
-        color: var(--main-grey-color-2);
+        background-color: var(--main-grey-color2) !important;
+        color: var(--sub-grey-color3) !important;
+        cursor: not-allowed;
     }
 }
 
-button.st1 {
-    border: 1px solid var(--main-purple-color);
-    background-color: var(--main-white-color);
-    color: var(--main-purple-color);
+/* 테이블 데이터 추가 버튼 */
+.custom-button.st1 {
+    border: 1px solid var(--sub-grey-color3);
+    background-color: var(--sub-grey-color7);
+    color: var(--main-grey-color2);
 
-    &:hover {
-        border: 1px solid var(--main-purple-color);
-        background-color: var(--main-purple-color2);
+    &:not(:disabled):hover {
+        background-color: var(--main-purple-color);
         color: var(--main-white-color);
     }
+
+    &:disabled {
+        border: none;
+    }
 }
 
-button.st2 {
+/* 테이블 데이터 삭제 버튼 */
+.custom-button.st2 {
+    border: 1px solid var(--sub-grey-color3);
+    background-color: var(--sub-grey-color7);
+    color: var(--main-grey-color2);
+
+    &:not(:disabled):hover {
+        background-color: var(--main-red-color3);
+        color: var(--main-white-color);
+    }
+
+    &:disabled {
+        border: none;
+    }
+}
+
+/* 테이블 검색 버튼 */
+.custom-button.st3 {
     background-color: var(--main-purple-color2);
     color: var(--main-white-color);
-    &:hover {
+
+    &:not(:disabled):hover {
         background-color: var(--main-purple-color);
+    }
+
+    &:disabled {
+        border: none;
+    }
+}
+
+/* 테이블 검색 옆 초기화 버튼 */
+.custom-button.st4 {
+    background-color: var(--sub-grey-color3);
+    color: var(--main-white-color);
+
+    &:not(:disabled):hover {
+        background-color: var(--main-purple-color);
+    }
+
+    &:disabled {
+        border: none;
+    }
+}
+
+/* 문서보기, 업로드, 전체 선택 등 액션 버튼 1 */
+.custom-button.st5 {
+    background-color: var(--main-white-color);
+    border: 1px solid var(--main-purple-color);
+    color: var(--main-purple-color);
+
+    &:not(:disabled):hover {
+        background-color: var(--main-purple-color);
+        color: var(--main-white-color);
+    }
+
+    &:disabled {
+        border: none;
+    }
+}
+
+/* 중복 확인 버튼 */
+.custom-button.st6 {
+    background-color: var(--sub-purple-color);
+    color: var(--main-purple-color);
+
+    &:not(:disabled):hover {
+        background-color: var(--sub-purple-color2);
+    }
+
+    &:disabled {
+        border: none;
+    }
+}
+
+/* 취소 버튼 */
+.custom-button.st7 {
+    background-color: var(--sub-grey-color2);
+    color: var(--main-white-color);
+
+    &:not(:disabled):hover {
+        background-color: var(--sub-grey-color3);
+    }
+
+    &:disabled {
+        border: none;
+    }
+}
+
+/* 회원 탈퇴 버튼 */
+.custom-button.st8 {
+    border: 1px solid var(--main-red-color3);
+    color: var(--main-red-color3);
+
+    &:not(:disabled):hover {
+        background-color: var(--main-red-color3);
+
+        color: var(--main-white-color);
+    }
+
+    &:disabled {
+        border: none;
+    }
+}
+
+/* 비밀키 재발급 버튼 */
+.custom-button.st9 {
+    border: 1px solid var(--sub-grey-color3);
+    color: var(--sub-grey-color3);
+
+    &:not(:disabled):hover {
+        border-color: var(--main-purple-color);
+        color: var(--main-purple-color);
+    }
+
+    &:disabled {
+        border: none;
+    }
+}
+
+/* 윈도우즈 다운로드 버튼 */
+.custom-button.st10 {
+    background-color: var(--main-black-color);
+    color: var(--main-white-color);
+    &:disabled {
+        border: none;
     }
 }

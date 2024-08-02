@@ -17,11 +17,6 @@ type GetPutUsersApiType = {
   phoneNumber: string,
 }
 
-type GetAgentInstallerApiResponseType = {
-  queryTotalCount: number,
-  agentProgramHistories: AgentInstallerListDataType
-}
-
 type AgentInstallerListDataType = Array<AgentInstallerDataType>
 
 type AgentInstallerDataType = {
@@ -91,7 +86,7 @@ type OmpassInfoType = {
   alias: string,
 }
 
-type OsNamesType = "WINDOWS" | "MAC" | "GOOROOM";
+type OsNamesType = "Windows" | "Mac" | "Gooroom" | "Ubuntu" | "CentOS" | 'Android' | 'iOS';
 
 type GetPutSecretKeyApiType = {
   secretKey: string,
@@ -156,6 +151,8 @@ type settingMgmtType = {
   modifyUrl: boolean,
 }
 
+type UserSignUpMethodType = "USER_SELF_ADMIN_PASS" | "USER_SELF_ADMIN_ACCEPT" | "ONLY_BY_ADMIN"
+
 type SubDomainInfoDataType = {
   logoImage: PortalSettingsDataType['logoImage']
   noticeMessage: PortalSettingsDataType['noticeMessage']
@@ -163,7 +160,8 @@ type SubDomainInfoDataType = {
 }
 
 type PortalSettingsDataType = {
-  userSignupMethod: string
+  companyName: string
+  userSignupMethod: UserSignUpMethodType
   logoImage: string
   noticeMessage: string
   timeZone: string

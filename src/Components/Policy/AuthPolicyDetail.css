@@ -17,9 +17,11 @@
 
 .policy-browser-label {
     white-space: pre;
-    & > input {
-        margin-right: 8px;
-    }
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
 }
 
 .policy-input-container {
@@ -49,7 +51,8 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
+    /* justify-content: space-between; */
+    justify-content: flex-end;
     & > div {
         height: 28px;
         cursor: help;
@@ -64,7 +67,7 @@
             height: 54px;
             width: 240px;
             line-height: 18px;
-            color: rgba(83, 2, 83, 0.534);
+            color: var(--main-purple-color);
         }
         & > img {
             height: 100%;
@@ -96,6 +99,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    cursor: pointer;
     color: var(--main-grey-color);
 }
 
@@ -159,10 +163,50 @@ div[aria-hidden="true"] {
 }
 
 .time-policy-container {
-    border: 1px solid red;
+    border: 1px solid var(--sub-grey-color5);
     border-radius: 8px;
     padding: 4px 8px;
     display: flex;
     flex-direction: column;
     gap: 8px;
+}
+
+.custom-current-position-check {
+    background-color: var(--main-white-color);
+    top: 8px;
+    position: relative;
+    right: 8px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 6px;
+    box-sizing: border-box;
+    & > img {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.policy-location-input-row {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    & > input {
+        height: 32px;
+    }
+}
+
+.policy-input-map-container {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    & > .map-layout {
+        width: 400px;
+        height: 400px;
+    }   
 }

@@ -11,18 +11,35 @@ const imgSize = "16px"
 
 const AuthLog = () => {
     const [tableData, setTableData] = useState<AuthLogDataType[]>([])
+    const [totalCount, setTotalCount] = useState(1)
     const [dataLoading, setDataLoading] = useState(false)
 
-    const GetDatas = async () => {
-        await GetAuthLogDataListFunc({}, ({ results }) => {
-            setTableData(results)
+    const GetDatas = async (params: CustomTableSearchParams) => {
+        setDataLoading(true)
+        const _params: GeneralParamsType = {
+            page_size: params.size,
+            page: params.page
+        }
+        if(params.type) {
+            _params[params.type] = params.value
+        }
+        GetAuthLogDataListFunc({}, ({ results, totalCount }) => {
+            setTableData(results.map(_ => ({
+                ..._,
+                portalUsername: _.portalUser.username,
+                rpUsername: _.rpUser.username,
+                applicationName: _.application.name
+            })))
+            setTotalCount(totalCount)
+        }).finally(() => {
+            setDataLoading(false)
         })
     }
 
     useLayoutEffect(() => {
-        setDataLoading(true)
-        GetDatas().finally(() => {
-            setDataLoading(false)
+        GetDatas({
+            page: 1,
+            size: 10
         })
     }, [])
 
@@ -31,25 +48,28 @@ const AuthLog = () => {
         </ContentsHeader>
         <div className="contents-header-container">
             <CustomTable<AuthLogDataType, {}>
+                onSearchChange={(data) => {
+                    GetDatas(data)
+                }}
+                totalCount={totalCount}
+                pagination
+                searchOptions={["portalUsername", "rpUsername", "applicationName"]}
                 columns={[
                     {
                         key: 'id',
                         title: '#'
                     },
                     {
-                        key: 'portalUser',
-                        title: 'PORTAL 아이디',
-                        render: (data) => data.username
+                        key: 'portalUsername',
+                        title: 'PORTAL 아이디'
                     },
                     {
-                        key: 'rpUser',
-                        title: 'RP 아이디',
-                        render: (data) => data.username
+                        key: 'rpUsername',
+                        title: 'RP 아이디'
                     },
                     {
-                        key: 'application',
-                        title: '어플리케이션명',
-                        render: (data) => data.name
+                        key: 'applicationName',
+                        title: '어플리케이션명'
                     },
                     {
                         key: 'processType',
@@ -59,7 +79,7 @@ const AuthLog = () => {
                     {
                         key: 'authenticationLogType',
                         title: '성공 여부',
-                        render: (data) => <img src={data === 'ALLOW' ? successIcon : failIcon} width={imgSize} height={imgSize} />
+                        render: (data) => <img src={data !== 'DENY' ? successIcon : failIcon} width={imgSize} height={imgSize} />
                     },
                     {
                         key: 'authenticationTime',

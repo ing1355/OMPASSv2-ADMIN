@@ -1,24 +1,37 @@
 import deleteModalIcon from '../../assets/deleteModalIcon.png';
-import authenticatorTypeIcon from '../../assets/authenticatorTypeIcon.png';
-import device_image2_android from '../../assets/device_image2_android.png';
-import device_image2_ios from '../../assets/device_image2_ios.png';
+import ompassLogoIcon from '../../assets/ompassLogoIcon.png';
 import deviceModelIcon from '../../assets/deviceModelIcon.png';
 import lastLoginTimeIcon from '../../assets/lastLoginTimeIcon.png'
 import passcodeVisibleIcon from '../../assets/passwordVisibleIcon.png';
 import passcodeHiddenIcon from '../../assets/passwordHiddenIcon.png';
-import os_windows from '../../assets/os_windows.png';
-import os_mac from '../../assets/os_mac.png';
-import browser_icon from '../../assets/browser_icon.png';
+import windowsOSIcon from '../../assets/windowsOSIcon.png';
+import macOSIcon from '../../assets/macOSIcon.png';
+import androidOSIcon from '../../assets/androidOSIcon.png';
+import iOSIcon from '../../assets/iOSIcon.png';
+import ubuntuOSIcon from '../../assets/ubuntuOSIcon.png';
+import gooroomOSIcon from '../../assets/gooroomOSIcon.png';
+import centOSIcon from '../../assets/centOSIcon.png';
 import uuid_img from '../../assets/uuid_img.png';
+import locationIcon from '../../assets/locationIcon.png';
+import browserIcon from '../../assets/browserIcon.png';
+import ipAddressIcon from '../../assets/ipAddressIcon.png';
+import macAddressIcon from '../../assets/macAddressIcon.png';
+import pcNameIcon from '../../assets/pcNameIcon.png';
+import agentVersionIcon from '../../assets/agentVersionIcon.png';
 import chrome_img from '../../assets/chrome_img.png';
 import chrome_mobile_img from '../../assets/chrome_mobile_img.png';
 import firefox_img from '../../assets/firefox_img.png';
 import microsoft_edge_img from '../../assets/microsoft_edge_img.png';
 import safari_img from '../../assets/safari_img.png';
+import sshIcon from '../../assets/sshIcon.png';
 import safari_mobile_img from '../../assets/safari_mobile_img.png';
+import clientIcon from '../../assets/clientIcon.png';
 import samsung_browser_mobile_img from '../../assets/samsung_browser_mobile_img.png';
 import { FormattedMessage } from 'react-intl';
 import { PropsWithChildren, useState } from 'react';
+import './UserDetailComponents.css'
+import { createOSInfo } from 'Functions/GlobalFunctions';
+import Button from 'Components/CommonCustomComponents/Button';
 
 const UserDetailInfoContentItem = ({ imgSrc, title, content }: {
     imgSrc: string
@@ -43,8 +56,8 @@ const AuthenticatorInfoContentsOMPASSType = ({ data }: {
     const { os, deviceId, model, ompassAppVersion } = mobile
     return <>
         <div className="user-detail-info-device-info-content">
-            <UserDetailInfoContentItem imgSrc={os.name.includes("iOS") ? device_image2_ios : device_image2_android} title="OS" content={`${os.name} ${os.version}`} />
-            <UserDetailInfoContentItem imgSrc={authenticatorTypeIcon} title="Type" content={`OMPASS v${ompassAppVersion}`} />
+            <UserDetailInfoContentItem imgSrc={imgSrcByOS(os.name)} title="OS" content={`${os.name} ${os.version}`} />
+            <UserDetailInfoContentItem imgSrc={ompassLogoIcon} title="Type" content={`OMPASS v${ompassAppVersion}`} />
             <UserDetailInfoContentItem imgSrc={uuid_img} title="Device UUID" content={deviceId} />
             <UserDetailInfoContentItem imgSrc={deviceModelIcon} title="Model" content={model} />
             <UserDetailInfoContentItem imgSrc={lastLoginTimeIcon} title="Last Login" content={lastAuthenticatedAt} />
@@ -58,7 +71,7 @@ const AuthenticatorInfoContentsWEBAUTHNType = ({ data }: {
     const { lastAuthenticatedAt, id } = data
     return <>
         <div className="user-detail-info-device-info-content">
-            <UserDetailInfoContentItem imgSrc={authenticatorTypeIcon} title="Type" content={"WEBAUTHN"} />
+            <UserDetailInfoContentItem imgSrc={ompassLogoIcon} title="Type" content={"WEBAUTHN"} />
             <UserDetailInfoContentItem imgSrc={lastLoginTimeIcon} title="Last Login" content={lastAuthenticatedAt} />
         </div>
     </>
@@ -70,9 +83,6 @@ export const UserDetailInfoAuthenticatorContent = ({ data }: {
     return <div className="authenticators-container">
         <div className="user-detail-info-device-info-content" />
         {data.filter(_ => _.type !== 'PASSCODE').map((_, ind) => <div className='authenticators-container-inner' key={ind}>
-            {/* <div className='number-of-authenticator'>
-                #{ind + 1}<h5>&nbsp;- {_.createdAt} 등록됨</h5>
-            </div> */}
             {
                 _.type === 'OMPASS' ? <AuthenticatorInfoContentsOMPASSType data={_ as OMPASSAuthenticatorDataType} key={ind} />
                     : _.type === 'WEBAUTHN' ? <AuthenticatorInfoContentsWEBAUTHNType data={_ as WebAuthnAuthenticatorDataType} key={ind} />
@@ -87,10 +97,11 @@ export const UserDetailInfoAuthenticatorContent = ({ data }: {
 export const ViewPasscode = ({ code }: {
     code: string
 }) => {
+    console.log(code)
     const [isView, setIsView] = useState(false)
     return <div className='user-detail-info-passcode-view-container'>
         <div>
-            {isView ? code : '●●●●●●'}
+            {isView ? code : "⦁⦁⦁⦁⦁⦁⦁⦁⦁"}
         </div>
         <div onMouseEnter={() => {
             setIsView(!isView)
@@ -131,12 +142,20 @@ export const UserInfoInputrow = ({ title, children }: PropsWithChildren<{
 
 const imgSrcByOS = (os: OsNamesType) => {
     switch (os) {
-        case 'MAC':
-            return os_mac
-        case 'WINDOWS':
-            return os_windows
-        case 'GOOROOM':
-            return "https://gooroom.kr/includes/images/default/gooroom-4.0-bi-small.png"
+        case 'Mac':
+            return macOSIcon
+        case 'Windows':
+            return windowsOSIcon
+        case 'Android':
+            return androidOSIcon
+        case 'iOS':
+            return iOSIcon
+        case 'Ubuntu':
+            return ubuntuOSIcon
+        case 'CentOS':
+            return centOSIcon
+        case 'Gooroom':
+            return gooroomOSIcon
     }
 }
 
@@ -146,11 +165,11 @@ export const UserDetailInfoAuthenticatorDeleteButton = ({ authenticatorId, callb
     authenticatorId: AuthenticatorDataType['id']
     callback: (id: string) => void
 }) => {
-    return <button className="button-st3 user-detail-info-device-info-delete-btn" onClick={async () => {
+    return <Button className="st2 user-detail-info-device-info-delete-btn" onClick={async () => {
         callback(authenticatorId)
     }}>
         삭제
-    </button>
+    </Button>
 }
 
 export const UserDetailInfoDeviceInfoContent = ({ data }: {
@@ -158,14 +177,40 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
 }) => {
     const { application } = data
     const clientData = data.authInfo.loginDeviceInfo
+    const { serverInfo } = data.authInfo
     const { os } = clientData
     const isBrowser = application.type === 'DEFAULT' || application.type === 'ADMIN'
     return <>
-        <UserDetailInfoContentItem imgSrc={imgSrcByOS(os?.name.toUpperCase() as OsNamesType)} title="OS" content={`${os?.name} ${os?.version}`} />
+        { application.type !== 'LINUX_LOGIN' && <UserDetailInfoContentItem imgSrc={imgSrcByOS(os?.name!)} title="OS" content={`${os?.name} ${os?.version}`} />}
+        { application.type === 'LINUX_LOGIN' && <>
+            <div className="user-detail-info-device-info-content-item linux">
+                <div className='linux-target-text'>Client</div>
+                <img src={clientIcon} />
+                <div className="user-detail-info-device-info-content-title">
+                    IP Address
+                </div>
+                <div>
+                    {clientData.ip}
+                </div>
+            </div>
+            <div className='ssh-icon-container'>
+                <img src={sshIcon}/>
+            </div>
+            <div className="user-detail-info-device-info-content-item linux">
+                <div className='linux-target-text'>Server</div>
+                <img src={imgSrcByOS(serverInfo.os?.name!)} />
+                <div className="user-detail-info-device-info-content-title">
+                    OS
+                </div>
+                <div>
+                    {createOSInfo(serverInfo.os)}
+                </div>
+            </div>
+        </>}
         {/* <UserDetailInfoContentItem imgSrc={imgSrcByOS(os?.name.toUpperCase() as OsNamesType)} title="OS" content={"Gooroom v3.4"} /> */}
         {
             isBrowser && <div className="user-detail-info-device-info-content-item">
-                <img src={authenticatorTypeIcon} />
+                <img src={browserIcon} />
                 <div className="user-detail-info-device-info-content-title">
                     Browser
                 </div>
@@ -176,7 +221,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
         }
         {
             isBrowser && <div className="user-detail-info-device-info-content-item">
-                <img src={authenticatorTypeIcon} />
+                <img src={locationIcon} />
                 <div className="user-detail-info-device-info-content-title">
                     Location
                 </div>
@@ -187,7 +232,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
         }
         {
             isBrowser && <div className="user-detail-info-device-info-content-item">
-                <img src={authenticatorTypeIcon} />
+                <img src={ipAddressIcon} />
                 <div className="user-detail-info-device-info-content-title">
                     IP Address
                 </div>
@@ -198,7 +243,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
         }
         {
             application.type === 'WINDOWS_LOGIN' && <div className="user-detail-info-device-info-content-item">
-                <img src={authenticatorTypeIcon} />
+                <img src={pcNameIcon} />
                 <div className="user-detail-info-device-info-content-title">
                     PC Name
                 </div>
@@ -209,18 +254,18 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
         }
         {
             application.type === 'WINDOWS_LOGIN' && <div className="user-detail-info-device-info-content-item">
-                <img src={authenticatorTypeIcon} />
+                <img src={macAddressIcon} />
                 <div className="user-detail-info-device-info-content-title">
                     Mac Address
                 </div>
                 <div>
-                    {clientData.macAddress}
+                    {clientData.macAddress?.split("").map((_, ind, arr) => (ind !== arr.length - 1) && ind % 2 === 1 ? `${_}:` : _).join('')}
                 </div>
             </div>
         }
         {
             application.type === 'WINDOWS_LOGIN' && <div className="user-detail-info-device-info-content-item">
-                <img src={authenticatorTypeIcon} />
+                <img src={agentVersionIcon} />
                 <div className="user-detail-info-device-info-content-title">
                     Agent Version
                 </div>

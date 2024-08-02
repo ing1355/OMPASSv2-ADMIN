@@ -21,7 +21,7 @@ export const convertKSTToUTC = (date: Date) => {
     return temp;
 }
 
-export const dateFormatKST = (date: Date) => {
+export const convertUTCToKST = (date: Date) => {
     var temp = new Date(date);
     temp.setHours(date.getHours() + 9);
     return temp;
@@ -93,4 +93,8 @@ export const autoHypenPhoneFun = (phone: string) => {
 
 export const convertBase64FromClientToServerFormat = (b64str: string) => {
     return b64str.startsWith('data:image') ? b64str.split(',')[1] : b64str
+}
+
+export const createOSInfo = (os?: OSInfoType) => {
+    return os ? `${os.name} ${os.version}` : 'Unknown'
 }

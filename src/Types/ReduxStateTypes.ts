@@ -17,4 +17,5 @@ type LanguageStateType = "KR" | "EN";
 type ReduxStateType = {
   lang?: LanguageStateType;
   userInfo?: UserDataType;
+  subdomainInfo?: SubDomainInfoDataType
 }

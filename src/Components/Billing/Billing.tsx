@@ -3,15 +3,19 @@ import Contents from 'Components/Layout/Contents';
 import { CSSProperties, PropsWithChildren, useMemo, useState } from "react";
 import planDatas from "./PlanDatas";
 import './Billing.css'
-import planIcon from '../../assets/plan_icon.png'
-import checkIcon from '../../assets/blue_check.png'
-import userIcon from '../../assets/userIcon.png'
+import planIcon from '../../assets/planIcon.png'
+import checkIcon from '../../assets/checkIcon.png'
+import userIconColor from '../../assets/userIconColor.png'
 import { slicePrice } from "Functions/GlobalFunctions";
 import CustomTable from "Components/CommonCustomComponents/CustomTable";
+import CustomSelect from "Components/CommonCustomComponents/CustomSelect";
+import Button from "Components/CommonCustomComponents/Button";
+import Input from "Components/CommonCustomComponents/Input";
+import { FormattedMessage } from "react-intl";
 
 type ItemContainerProps = PropsWithChildren<{
     border?: boolean
-    title?: string
+    title?: string | React.ReactNode
     bodyStyle?: CSSProperties
 }>
 
@@ -30,15 +34,16 @@ const ItemContainer = ({ border, title, children, bodyStyle }: ItemContainerProp
     </>
 }
 
-const BillingInputRow = ({ label, children, labelStyle }: PropsWithChildren<{
+const BillingInputRow = ({ label, children, labelStyle, contentStyle }: PropsWithChildren<{
     label: string
     labelStyle?: CSSProperties
+    contentStyle?: CSSProperties
 }>) => {
     return <div className="billing-input-row">
         <div className="billing-input-label" style={labelStyle}>
             {label}
         </div>
-        <div className="billing-input-contents">
+        <div className="billing-input-contents" style={contentStyle}>
             {children}
         </div>
     </div>
@@ -51,7 +56,7 @@ const Billing = () => {
         <Contents>
             <ContentsHeader title="BILLING_MANAGEMENT" subTitle="BILLING_MANAGEMENT" />
             <div className="billing-contents-container">
-                <ItemContainer title="요금" border>
+                <ItemContainer title={<FormattedMessage id="BILLING_PLAN"/>} border>
                     <div className="plans-description-container">
                         {planDatas.map((_, ind) => <div className={"plan-box" + (ind === 0 ? ' selected' : '')} key={ind}>
                             {_.status === 'USED' && <div className="plan-selected">
@@ -76,9 +81,9 @@ const Billing = () => {
                                     </div>)
                                 }
                             </div>
-                            {ind !== 0 && _.status === 'USED' && <button className="button-st1">
+                            {ind !== 0 && _.status === 'USED' && <Button className="st3">
                                 구독 취소
-                            </button>}
+                            </Button>}
                         </div>)}
                     </div>
                 </ItemContainer>
@@ -89,7 +94,7 @@ const Billing = () => {
                         <div className="billing-all-user-nums">10명</div>
                     </div>
                     <div className="billing-current-user-gauge-container">
-                        <img src={userIcon} />
+                        <img src={userIconColor} />
                         <div className="billing-current-plan-user-gauge">
                             <div className="billing-current-plan-user-gauge-inner" style={{
                                 width: '50%'
@@ -102,18 +107,15 @@ const Billing = () => {
                 }}>
                     <BillingInputRow label="최대 사용자 수" labelStyle={{
                         lineHeight: '30px'
+                    }} contentStyle={{
+                        flex: '0 0 200px'
                     }}>
-                        <select
-                            value={inputUserNum}
-                            onChange={(e) => {
-                                setInputUserNum(parseInt(e.target.value));
-                            }}>
-                            {userNumList.map((item, ind) => (
-                                <option key={ind + 11} value={ind + 11}>
-                                    {ind + 11}
-                                </option>
-                            ))}
-                        </select>
+                        <CustomSelect value={inputUserNum} items={userNumList.map((_, ind) => ({
+                            key: ind + 11,
+                            label: ind + 11
+                        }))} onChange={value => {
+                            setInputUserNum(parseInt(value))
+                        }}/>
                     </BillingInputRow>
                 </ItemContainer>
                 <ItemContainer title="" border bodyStyle={{
@@ -127,14 +129,14 @@ const Billing = () => {
                     width: '90%'
                 }}>
                     <BillingInputRow label="이용 동의">
-                        <div>
-                            <input type="checkbox" name="check" />&nbsp;<a href="#test">구매조건 및 환불 규정</a>에 동의
+                        <div className="billing-agree-text">
+                            <Input type="checkbox" name="check" /> <a className="billing-a-tag" href="#test">구매조건 및 환불 규정</a>에 동의
                         </div>
                         <br />
                         결제일로 부터 30일 간격으로 24,200원(이)가 자동으로 결제됩니다.
                         <br />
                         <br />
-                        <button>결제하기</button>
+                        <Button className="st3">결제하기</Button>
                     </BillingInputRow>
                 </ItemContainer>
                 <ItemContainer title="결제 내역" border bodyStyle={{

@@ -10,13 +10,14 @@ import { CopyRightText } from 'Constants/ConstantValues';
 import { AgentFileDownload } from 'Components/CommonCustomComponents/AgentFileDownload';
 import GoToLoginPageButton from 'Components/CommonCustomComponents/goToLoginPageButton';
 
-import manunal_download_blue from '../../assets/manunal_download_blue.png';
-import download_icon from '../../assets/download_icon.png';
+import manualDownloadIcon from '../../assets/manualDownloadIcon.png';
+import downloadIcon from '../../assets/downloadIconWhite.png';
 import quick_start_guide_en from '../../assets/quick_start_guide_en.png';
 import quick_start_guide_ko from '../../assets/quick_start_guide_ko.png';
 import locale_image from '../../assets/locale_image.png';
 import { langChange } from 'Redux/actions/langChange';
 import { saveLocaleToLocalStorage } from 'Functions/GlobalFunctions';
+import Button from 'Components/CommonCustomComponents/Button';
 
 const GuidePage = () => {
   const { lang } = useSelector((state: ReduxStateType) => ({
@@ -52,22 +53,22 @@ const GuidePage = () => {
             className='guide-buttons-container'
           >
             {/* windows 다운로드 */}
-            <button
-              className={'button-st5'}
+            <Button
+              className={'st10'}
               onClick={() => {
                 AgentFileDownload(setIsFileDownloadDisable, formatMessage({ id: 'DOWNLOAD_FAILED' }));
               }}
             >
-              <img src={download_icon}
+              <img src={downloadIcon}
                 width='25px'
                 style={{ position: 'relative', top: '1px', marginLeft: '9px' }}
               />
-              <div>{isFileDownloadDisable ? <FormattedMessage id='DOWNLOADING' /> : <FormattedMessage id='DOWNLOAD_FOR_WINDOWS' />}</div>
-            </button>
+              {isFileDownloadDisable ? <FormattedMessage id='DOWNLOADING' /> : <FormattedMessage id='DOWNLOAD_FOR_WINDOWS' />}
+            </Button>
 
             {/* 사용자 매뉴얼 다운로드 */}
-            <button
-              className='button-st6'
+            <Button
+              className='st5'
               onClick={() => {
                 const downloadLink = document.createElement('a');
                 downloadLink.href = '/OMPASS_Portal_User_Manual.pdf'
@@ -78,12 +79,12 @@ const GuidePage = () => {
               }}
             >
               <img
-                src={manunal_download_blue}
+                src={manualDownloadIcon}
                 width="25px"
                 style={{ position: 'relative', top: '2px', marginLeft: '5px' }}
               />
-              <div><FormattedMessage id='DOWNLOAD_USER_MANUAL' /></div>
-            </button>
+              <FormattedMessage id='DOWNLOAD_USER_MANUAL' />
+            </Button>
 
             {/* 로그인 바로가기 */}
             <GoToLoginPageButton/>

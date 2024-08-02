@@ -1,20 +1,22 @@
 import './AgentManagement.css';
 import { FormattedMessage, useIntl } from "react-intl";
 import { message } from 'antd';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import Contents from 'Components/Layout/Contents';
 import ContentsHeader from 'Components/Layout/ContentsHeader';
 import { UploadAgentInstallerFunc } from 'Functions/ApiFunctions';
+import Button from 'Components/CommonCustomComponents/Button';
+import Input from 'Components/CommonCustomComponents/Input';
+import uploadIconHover from '../../assets/uploadIconHover.png'
 
 const VersionUpload = () => {
   const [isVersionAlert, setIsVersionAlert] = useState<boolean>(false);
   const [fileName, setFileName] = useState('');
   const [isUploadingFile, setIsUploadingFile] = useState<boolean>(false);
-
+  const inputRef = useRef<HTMLInputElement>(null)
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
-
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileInput = event.target;
     if (fileInput.files && fileInput.files[0]) {
@@ -27,14 +29,14 @@ const VersionUpload = () => {
     <>
       <Contents>
         <ContentsHeader title="VERSION_MANAGEMENT" subTitle='VERSION_LIST'>
-          <button className='button-st1'
+          <Button className='st2'
             type={!isUploadingFile ? "submit" : "button"}
             form={!isUploadingFile ? 'addVersionForm' : ''}
             aria-loading={isUploadingFile}
           >
             <span><FormattedMessage id={isUploadingFile ? 'LOADING' : 'CONFIRM'} /></span>
-          </button>
-          <button className='button-st2'
+          </Button>
+          <Button className='st3'
             type='button'
             disabled={isUploadingFile}
             onClick={() => {
@@ -44,7 +46,7 @@ const VersionUpload = () => {
             }}
           >
             <span><FormattedMessage id='GO_BACK' /></span>
-          </button>
+          </Button>
         </ContentsHeader>
         <div className="contents-header-container">
           <form
@@ -57,11 +59,11 @@ const VersionUpload = () => {
               const multipartFile = uploadFile.files[0];
               const maxFileSize = 200 * 1024 * 1024;
               const fileExtension = multipartFile?.name.split('.').pop();
-
-              if (metaDataVersion) {
-                setIsVersionAlert(false);
-              } else {
-                setIsVersionAlert(true);
+              if (!metaDataVersion) {
+                return message.error(formatMessage({ id: "PLEASE_ENTER_A_VERSION" }))
+              }
+              if (!(/^v[0-9]+.[0-9]+.[0-9]+.[0-9]+/g.test(metaDataVersion))) {
+                return message.error("버전명이 올바르지 않습니다.")
               }
 
               if (metaDataVersion && multipartFile && hashValue && !isVersionAlert && !isUploadingFile) {
@@ -73,7 +75,7 @@ const VersionUpload = () => {
                   setIsUploadingFile(true);
                   UploadAgentInstallerFunc({
                     "metaData.hash": hashValue,
-                    "metaData.os": "WINDOWS",
+                    "metaData.os": "Windows",
                     "metaData.version": metaDataVersion,
                     multipartFile: multipartFile,
                   }, () => {
@@ -90,11 +92,12 @@ const VersionUpload = () => {
             <div className='agent-input-row-container'>
               <div>
                 <label><FormattedMessage id='VERSION_NAME' /></label>
-                <input
+                <Input
                   id='version'
                   type='text'
-                  className={'input-st1 ' + (isVersionAlert ? 'red' : '')}
+                  className={'st1 ' + (isVersionAlert ? 'red' : '')}
                   maxLength={16}
+                  placeholder='ex) v1.x.x.x'
                   autoComplete='off'
                   onChange={(e) => {
                     const value = e.currentTarget.value;
@@ -106,19 +109,14 @@ const VersionUpload = () => {
                   }}
                 />
               </div>
-              <div
-                className={'version-name regex-alert' + (isVersionAlert ? 'visible' : '')}
-              >
-                <FormattedMessage id='PLEASE_ENTER_A_VERSION' />
-              </div>
             </div>
             <div className='agent-input-row-container'>
               <div>
                 <label><FormattedMessage id='HASH' /></label>
-                <input
+                <Input
+                  className="st1"
                   id='hash'
                   type='text'
-                  className={'input-st1'}
                   autoComplete='off'
                 />
               </div>
@@ -129,18 +127,19 @@ const VersionUpload = () => {
                 style={{ marginTop: '22px' }}
               >
                 <div>
-                  <label
-                    htmlFor="uploadFile"
-                    className='button-st1 agent-upload-btn'>
-                    <FormattedMessage id='SELECT_FILE' />
+                  <label htmlFor="uploadFile">
+                    <Button className='st2' icon={uploadIconHover}>
+                      <FormattedMessage id='SELECT_FILE' />
+                    </Button>
                   </label>
-                  <input
+                  <Input
                     id="uploadFile"
+                    name="uploadFile"
                     type="file"
                     accept=".zip"
                     hidden
-                    onChange={handleFileChange}
-                  />
+                    ref={inputRef}
+                    onChange={handleFileChange} />
                 </div>
                 <div style={{ marginTop: '22px', width: '620px', wordWrap: 'break-word' }}>
                   {fileName}

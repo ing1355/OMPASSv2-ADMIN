@@ -1,6 +1,9 @@
 import './CustomImageUpload.css'
-import defaultLogo from '../../assets/ompass_logo_image.png'
+import ompassLogoIcon from '../../assets/ompassLogoIcon.png'
+import uploadIcon from '../../assets/uploadIcon.png'
+import uploadIconHover from '../../assets/uploadIconHover.png'
 import { message, Upload } from 'antd'
+import Button from 'Components/CommonCustomComponents/Button'
 
 type CustomImageUploadProps = {
     src: string
@@ -35,7 +38,7 @@ const CustomImageUpload = ({ callback, src }: CustomImageUploadProps) => {
                 fileUploadCallback(file);
             }
         }}>
-            <img src={src || defaultLogo} />
+            <img src={src || ompassLogoIcon} />
         </div>
         <div className="custom-image-upload-text">
             이미지 업로드(드래그 가능)
@@ -47,9 +50,9 @@ const CustomImageUpload = ({ callback, src }: CustomImageUploadProps) => {
                 onChange={e => {
                     if (e.file) fileUploadCallback(e.file.originFileObj as File)
                 }} >
-                <button className="button-st4">
+                <Button className="st5" icon={uploadIcon} hoverIcon={uploadIconHover}>
                     업로드
-                </button>
+                </Button>
             </Upload>
         </div>
     </div>

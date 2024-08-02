@@ -1,18 +1,16 @@
 import { useState } from "react"
 
-type ButtonProps = React.DOMAttributes<HTMLButtonElement> & {
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
     loading?: boolean
-    className?: string
     icon?: string
     hoverIcon?: string
-    type?: "button" | "submit"
 }
 
-const Button = ({ className, loading, onClick, icon, hoverIcon, children, type, ...props }: ButtonProps) => {
+const Button = ({ className, loading, onClick, icon, hoverIcon, children, type, disabled, ...props }: ButtonProps) => {
     const [hover, setHover] = useState(false)
-    return <button aria-loading={loading} onClick={(e) => {
+    return <button disabled={disabled} aria-loading={loading} onClick={(e) => {
         if (!loading && onClick) onClick(e)
-    }} className={className} type={type || "button"} {...props} onMouseEnter={() => {
+    }} className={`custom-button${className ? ` ${className}` : ""}`} type={type || "button"} {...props} onMouseEnter={() => {
         setHover(true)
     }} onMouseLeave={() => {
         setHover(false)

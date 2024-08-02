@@ -3,10 +3,10 @@ import './CustomSelect.css'
 
 type CustomSelectProps = {
     items: {
-        key: string
-        label: string
+        key: any
+        label: React.ReactNode
     }[]
-    value: string
+    value: any
     onChange: (val: string) => void
 }
 
@@ -26,6 +26,14 @@ const CustomSelect = ({ items, value, onChange }: CustomSelectProps) => {
           document.removeEventListener('mousedown', handleMouseDown);
         };
       }, [showSelect]);
+
+      useEffect(() => {
+        if(showSelect) {
+            // document.createElement.
+        } else {
+
+        }
+      },[showSelect])
 
     return <div className={`custom-select-container${showSelect ? ' opened' : ''}`} onClick={() => {
         setShowSelect(!showSelect)

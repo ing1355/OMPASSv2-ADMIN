@@ -6,6 +6,9 @@ import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import { useNavigate } from "react-router"
 import { GetPoliciesListFunc, GetPolicyDetailDataFunc } from "Functions/ApiFunctions"
 import { FormattedMessage } from "react-intl"
+import policyAddIcon from '../../assets/policyAddIcon.png'
+import policyAddIconHover from '../../assets/policyAddIconHover.png'
+import { convertUTCToKST, getDateTimeString } from "Functions/GlobalFunctions"
 
 // const authTestPolicies: = [
 //     {
@@ -153,27 +156,85 @@ const TableComponent = ({opened, policyId}: {
 }
 
 const PolicyManagement = () => {
-    const [datas, setDatas] = useState<PolicyListDataType[]>([])
+    const [tableData, setTableData] = useState<PolicyListDataType[]>([])
+    const [totalCount, setTotalCount] = useState<number>(0);
     const [opened, setOpened] = useState<string[]>([])
+    const [dataLoading, setDataLoading] = useState(false)
 
     const navigate = useNavigate()
+    
+    const GetDatas = async (params: CustomTableSearchParams) => {
+        setDataLoading(true)
+        const _params: GeneralParamsType = {
+            page_size: params.size,
+            page: params.page
+        }
+        if(params.type) {
+            _params[params.type] = params.value
+        }
+        GetPoliciesListFunc(_params, ({ results, totalCount }) => {
+            setTableData(results)
+            setTotalCount(totalCount)
+        }).finally(() => {
+            setDataLoading(false)
+        })
+    }
 
     useEffect(() => {
-        GetPoliciesListFunc({}, ({ results, totalCount }) => {
-            setDatas(results)
+        GetDatas({
+            page: 1,
+            size: 10
         })
-    }, [])
+    },[])
 
     return <Contents>
         <ContentsHeader title="POLICY_MANAGEMENT" subTitle="POLICY_MANAGEMENT">
-            <button className="button-st1" onClick={() => {
-                navigate('/Policies/auth/detail')
-            }}>
-                추가
-            </button>
         </ContentsHeader>
-        <div className="contents-header-container policy-select-container">
-            <div className="policy-select-item">
+        <div className="contents-header-container">
+        <CustomTable<PolicyListDataType, PoliciesListParamsType>
+                className='tab_table_list'
+                theme='table-st1'
+                datas={tableData}
+                hover
+                searchOptions={['username', 'name', 'email']}
+                onSearchChange={(data) => {
+                    GetDatas(data)
+                }}
+                addBtn={{
+                    label: "추가",
+                    icon: policyAddIcon,
+                    hoverIcon: policyAddIconHover,
+                    callback: () => {
+                        navigate('/Policies/auth/detail')
+                    }
+                }}
+                // deleteBtn={{
+                //     label: "삭제",
+                //     icon: deleteIcon
+                // }}
+                pagination
+                columns={[
+                    {
+                        key: 'name',
+                        title: '정책명',
+                        render: (data, ind, row) => row.policyType === 'DEFAULT' ? "기본 정책" : data
+                    },
+                    {
+                        key: 'description',
+                        title: '설명',
+                    },
+                    {
+                        key: 'createdAt',
+                        title: '생성일',
+                        render: (data) => getDateTimeString(convertUTCToKST(new Date(data)))
+                    }
+                ]}
+                onBodyRowClick={(row, index, arr) => {
+                    navigate(`/Policies/auth/detail/${row.id}`);
+                }}
+                totalCount={totalCount}
+            />
+            {/* <div className="policy-select-item">
                 <div className="policy-select-title">
                     인증 정책
                 </div>
@@ -189,7 +250,7 @@ const PolicyManagement = () => {
                             <div className="policy-select-contents-header-top">
                                 <div>
                                     {_.policyType === 'DEFAULT' ? <FormattedMessage id={_.name} /> : _.name}
-                                    {/* <img src={arrowIcon} /> */}
+                                    <img src={arrowIcon} />
                                 </div>
                                 <button onClick={(e) => {
                                     navigate('/Policies/auth/detail/' + _.id)
@@ -199,16 +260,16 @@ const PolicyManagement = () => {
                             </div>
                             <div className="policy-select-contents-header-bottom">
                                 설명 - {_.description || "없음"}
-                                {/* 적용 대상 - {_.targets.map((__,_ind, arr) => <Fragment key={_ind}><a href="#">
+                                적용 대상 - {_.targets.map((__,_ind, arr) => <Fragment key={_ind}><a href="#">
                                     {__}
                                 </a>
-                                {_ind !== arr.length ? ', ' : ''}</Fragment>)} */}
+                                {_ind !== arr.length ? ', ' : ''}</Fragment>)}
                             </div>
                         </div>
                         <TableComponent opened={opened.includes(_.id)} policyId={_.id}/>
                     </div>)
                 }
-            </div>
+            </div> */}
             {/* <div className="policy-select-item">
                 <div className="policy-select-title">
                     사용자 권한 정책

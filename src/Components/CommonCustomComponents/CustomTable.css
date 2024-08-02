@@ -1,17 +1,28 @@
+.custom-table-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  &:not(.no-margin) {
+    margin-bottom: 12px;
+  }
+  &.no-search {
+    justify-content: flex-end;
+  }
+}
+
 .table-no-data {
     height: 200px;
-    border: 1px solid #b7b7b7;
     border-bottom: none;
     border-top: none;
 }
 
 .table-search-container {
-    margin-bottom: 12px;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     gap: 12px;
-    height: 40px;
+    height: 36px;
     & > button {
         display: flex;
         flex-direction: row;
@@ -27,13 +38,12 @@
 }
 
 .table-st1 thead tr {
-  border: 1px solid #b7b7b7;
-}
-
-.table-st1 th {
-  padding: 10px;
-  background-color: var(--sub-grey-color4);
-  color: var(--main-grey-color2);
+  background-color: var(--sub-grey-color);
+  & > th {
+    font-weight: 200;
+    padding: 10px;
+    color: var(--main-grey-color2);
+  }
 }
 
 .table-st1 td {
@@ -41,8 +51,8 @@
   text-align: center;
 }
 
-.table-st1 tr {
-    border-bottom: .1px solid var(--main-grey-color2);
+.table-st1 tbody tr {
+    border-bottom: .1px solid var(--sub-grey-color6);
 }
 
 .table-st1 a th {
@@ -64,4 +74,32 @@
   text-align: center;
   border: 1px solid var(--sub-grey-color3);
   width: 300px;
+}
+
+.custom-table-header-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.custom-pagination {
+  & .ant-pagination-item {
+    border-radius: 100%;
+    margin-inline-end: 4px;
+    /* min-width: 24px;
+    height: 24px;
+    line-height: 24px;
+    font-size: .7rem; */
+  }
+  & .ant-pagination-item-link-icon {
+    color: var(--main-purple-color) !important;
+  }
+  & .ant-pagination-item-active {
+    border: none;
+    background-color: var(--main-purple-color);
+    & > a {
+      color: var(--main-white-color) !important;
+    }
+  }
 }

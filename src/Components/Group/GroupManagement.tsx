@@ -1,56 +1,67 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
-import { Pagination, PaginationProps } from "antd"
 import { useLayoutEffect, useState } from "react"
 import { useNavigate } from "react-router"
 import { GetUserGroupDataListFunc } from "Functions/ApiFunctions"
 import { FormattedMessage } from "react-intl"
+import groupAddIcon from './../../assets/groupAddIcon.png'
+import groupAddIconHover from './../../assets/groupAddIconHover.png'
 
 const GroupManagement = () => {
-    const [pageNum, setPageNum] = useState(1);
-    const [tableCellSize, setTableCellSize] = useState(10);
     const [totalCount, setTotalCount] = useState(10);
     const [tableData, setTableData] = useState<UserGroupListDataType[]>([])
     const [dataLoading, setDataLoading] = useState(false)
     const navigate = useNavigate()
 
-    const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
-        setPageNum(pageNumber);
-        setTableCellSize(pageSizeOptions);
-    };
-
-    const GetDatas = async () => {
-        await GetUserGroupDataListFunc({
-            page_size: tableCellSize,
-            page: pageNum,
-        }, ({ results, totalCount }) => {
+    const GetDatas = async (params: CustomTableSearchParams) => {
+        setDataLoading(true)
+        const _params: GeneralParamsType = {
+            page_size: params.size,
+            page: params.page
+        }
+        if(params.type) {
+            _params[params.type] = params.value
+        }
+        await GetUserGroupDataListFunc(_params, ({ results, totalCount }) => {
             setTableData(results)
             setTotalCount(totalCount)
+        }).finally(() => {
+            setDataLoading(false)
         })
     }
 
     useLayoutEffect(() => {
-        setDataLoading(true)
-        GetDatas().finally(() => {
-            setDataLoading(false)
+        GetDatas({
+            page: 1,
+            size: 10
         })
     }, [])
 
     return <Contents loading={dataLoading}>
         <ContentsHeader title="GROUP_MANAGEMENT" subTitle="GROUP_MANAGEMENT">
-            <button className="button-st1" onClick={() => {
-                navigate('/Groups/detail')
-            }}>
-                추가
-            </button>
         </ContentsHeader>
         <CustomTable<UserGroupListDataType, {}>
             theme='table-st1'
+            hover
+            addBtn={{
+                label: "추가",
+                icon: groupAddIcon,
+                hoverIcon: groupAddIconHover,
+                callback: () => {
+                    navigate('/Groups/detail')
+                }
+            }}
+            searchOptions={["name"]}
             className="contents-header-container"
             onBodyRowClick={(row, index, arr) => {
                 navigate('/Groups/detail/' + row.id)
             }}
+            onSearchChange={(data) => {
+                GetDatas(data)
+            }}
+            pagination
+            totalCount={totalCount}
             columns={[
                 {
                     key: 'name',
@@ -60,11 +71,11 @@ const GroupManagement = () => {
                     key: 'policy',
                     title: '정책',
                     render: (data, ind, row) => {
-                        return data.name === 'default policy' ? <FormattedMessage id={data.name} /> : data.name
+                        return data ? (data.name === 'default policy' ? <FormattedMessage id={data.name} /> : data.name) : "정책 없음"
                     }
                 },
                 // {
-                //     key: 'users',
+                //     key: 'userNum',
                 //     title: '사용자 수',
                 //     render: (data) => {
                 //         console.log(data)
@@ -78,12 +89,6 @@ const GroupManagement = () => {
             ]}
             datas={tableData}
         />
-        <div
-            className="mt30 mb40"
-            style={{ textAlign: 'center' }}
-        >
-            <Pagination showQuickJumper showSizeChanger current={pageNum} pageSize={tableCellSize} total={totalCount} onChange={onChangePage} />
-        </div>
     </Contents>
 }
 //미번

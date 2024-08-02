@@ -21,14 +21,23 @@ type CustomModalProps = ModalProps & {
 const CustomModal = ({ buttonLoading, typeTitle, typeContent, type, children, okText, cancelText, okCallback, cancelCallback, okClassName, cancelClassName, onCancel, ...props }: CustomModalProps) => {
     const [okLoading, setOkLoading] = useState(false)
 
-    return <Modal footer={null} closeIcon={null} mask maskClosable centered keyboard styles={{
+    return <Modal 
+    footer={null} 
+    closeIcon={null} 
+    mask 
+    maskClosable 
+    centered 
+    keyboard 
+    destroyOnClose
+    styles={{
         mask: {
-            backdropFilter: 'blur(3px)'
+            backdropFilter: 'blur(2px)',
+            backgroundColor: 'rgba(0,0,0,.2)'
         },
         body: {
             padding: '20px'
         }
-    }} {...props} onCancel={onCancel}>
+    }} {...props} onCancel={onCancel} className="custom-modal-container">
         {
             type ? <div className='type-modal-body-contaienr'>
                 <img src={type === "info" ? infoModalIcon : deleteModalIcon} />
@@ -40,10 +49,10 @@ const CustomModal = ({ buttonLoading, typeTitle, typeContent, type, children, ok
                     {typeContent}
                 </div>
                 <div className='type-modal-body-buttons'>
-                    <button className='button-st4' onClick={onCancel}>
+                    <Button className={`cancel-button ${type}`} onClick={onCancel}>
                         {cancelText || "닫기"}
-                    </button>
-                    <Button className='button-st3' loading={okLoading} onClick={async () => {
+                    </Button>
+                    <Button className={`ok-button ${type}`} loading={okLoading} onClick={async () => {
                         if(buttonLoading) setOkLoading(true)
                         if(okCallback) {
                             await okCallback()

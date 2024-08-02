@@ -1,3 +1,5 @@
+import Button from "Components/CommonCustomComponents/Button"
+import Input from "Components/CommonCustomComponents/Input"
 import PolicySelect from "Components/CommonCustomComponents/PolicySelect"
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
@@ -58,7 +60,7 @@ const GroupDetail = () => {
 
     return <Contents loading={dataLoading}>
         <ContentsHeader title="GROUP_MANAGEMENT" subTitle={isAdd ? "GROUP_ADD" : "GROUP_DETAIL"}>
-            <button className="button-st1" onClick={() => {
+            <Button className="st3" onClick={() => {
                 const params = {
                     name: inputName,
                     description: inputDescription,
@@ -78,8 +80,8 @@ const GroupDetail = () => {
                 }
             }}>
                 저장
-            </button>
-            <button className={isAdd ? "button-st1" : "button-st3"} onClick={() => {
+            </Button>
+            {!isAdd && <Button className="st2" onClick={() => {
                 if (isAdd) {
                     navigate('/Groups')
                 } else {
@@ -89,19 +91,19 @@ const GroupDetail = () => {
                     })
                 }
             }}>
-                {isAdd ? '이전으로' : '삭제'}
-            </button>
+                삭제
+            </Button>}
         </ContentsHeader>
         <div className="contents-header-container">
             <CustomInputRow title="그룹명">
-                <input value={inputName} onChange={e => {
-                    setInputName(e.target.value)
-                }} placeholder="그룹명을 입력해주세요" />
+                <Input value={inputName} valueChange={value => {
+                    setInputName(value)
+                }} placeholder="그룹명을 입력해주세요" className="st1"/>
             </CustomInputRow>
             <CustomInputRow title="설명">
-                <input value={inputDescription} onChange={e => {
-                    setInputDescription(e.target.value)
-                }} placeholder="설명을 입력해주세요" />
+                <Input value={inputDescription} valueChange={value => {
+                    setInputDescription(value)
+                }} placeholder="설명을 입력해주세요" className="st1"/>
             </CustomInputRow>
             <CustomInputRow title="정책 설정">
                 <PolicySelect selectedPolicy={selectedPolicy} setSelectedPolicy={setSelectedPolicy} />

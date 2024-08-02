@@ -83,3 +83,6 @@ export const GetSubDomainInfoApi = (subdomain: string) => `/v2/tenant/sub-domain
 // 포탈 설정
 export const GetPortalSettingsDataApi = '/v2/setting'
 export const UpdatePortalSettingsDataApi = '/v2/setting'
+
+// 회원가입
+export const SignUpRequestApi = '/v2/users/signup'

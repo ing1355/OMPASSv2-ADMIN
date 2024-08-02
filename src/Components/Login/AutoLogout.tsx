@@ -1,7 +1,7 @@
 import './AutoLogout.css';
 import { FormattedMessage } from "react-intl";
 
-import ompass_logo_image from '../../assets/ompass_logo_image.png';
+import ompassLogoIcon from '../../assets/ompassLogoIcon.png';
 import { Link } from 'react-router-dom';
 import GoToLoginPageButton from 'Components/CommonCustomComponents/goToLoginPageButton';
 
@@ -16,12 +16,12 @@ const AutoLogout = () => {
           className='auto_logout_header mb60'
         >
           <img 
-            src={ompass_logo_image} 
+            src={ompassLogoIcon} 
             width="4.2%"
             style={{position: 'relative', top: '3px', right: '6px'}}
           />
           <span 
-            className='main-color1 mlr5 auto_logout_title'
+            className='mlr5 auto_logout_title'
           >OMPASS portal</span>
         </div>
       </Link>

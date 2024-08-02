@@ -21,7 +21,16 @@
 
 * {
   font-family: 'NEXON Lv1 Gothic OTF' !important;
+}
+
+div {
   color: var(--main-font-color);
+}
+
+label {
+  &:has(input[type="radio"]) {
+    cursor: pointer;
+  }
 }
 
 body {
@@ -88,6 +97,9 @@ a[download] {
   padding: 24px 0;
   padding-top: 64px;
   overflow-y: auto;
+  &.hidden {
+    display: none;
+  }
 }
 
 .absolute-center {
@@ -95,34 +107,6 @@ a[download] {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-}
-
-/* color */
-.main-bg1 {
-  background-color: #E4EBEF;
-}
-
-.main-color1 {
-  color: #008DED;
-}
-
-/* input style */
-
-/* text box style */
-.text-box-st1 {
-  border: 0.5px solid #bbb;
-  overflow-y: scroll;
-}
-
-.text-box-st1::-webkit-scrollbar {
-  width: 20px;
-}
-
-.text-box-st1::-webkit-scrollbar-thumb {
-  background: #0092FA;
-  border-radius: 6px;
-  height: 20%;
-  /* border: 5px solid white; */
 }
 
 /* locale */
@@ -146,17 +130,19 @@ a[download] {
 /* manager mark */
 .manager-mark {
   border: none;
-  background-color: #0092FA;
-  color: white;
+  background-color: var(--main-purple-color);
+  color: var(--main-white-color);
   border-radius: 15px;
-  padding: 7px;
-  font-size: 0.7rem;
+  padding: 4px 12px;
+  font-size: .8rem;
 }
 
 /* regex alert */
 .regex-alert {
   visibility: hidden;
   color: red;
+  font-size: .85rem;
+  padding-left: 8px;
 }
 
 .regex-alert.visible {
