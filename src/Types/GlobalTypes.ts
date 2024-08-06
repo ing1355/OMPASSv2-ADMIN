@@ -34,7 +34,7 @@ type UserNameType = {
     }
 }
 type HttpMethodType = "GET" | "POST" | "PUT" | "DELETE"
-type ProcessTypeType = "REGISTRATION" | "AUTHENTICATION"
+type ProcessTypeType = "REGISTRATION" | "AUTHENTICATION" | "NONE"
 type AuthenticatorStatusType = "REGISTERED" | "ENABLED" | "DISABLED" | "MODIFIED"
 type AuthenticatorTypeType = "OMPASS" | "WEBAUTHN" | "PASSCODE"
 type DefaultAuthenticatorDataType = {
@@ -239,7 +239,7 @@ type DefaultPolicyDataType = {
     enableBrowsers: BrowserPolicyType[]
     ipRestriction: IpAddressPolicyType
     enableAuthenticators: AuthenticatorPolicyType[]
-    description?: string
+    description: string
     accessTimeRestriction: AccessTimeRestrictionType
 }
 

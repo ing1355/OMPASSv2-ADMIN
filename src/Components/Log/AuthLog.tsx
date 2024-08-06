@@ -6,6 +6,7 @@ import { useLayoutEffect, useState } from "react"
 import { FormattedMessage } from "react-intl"
 import successIcon from '../../assets/successIcon.png'
 import failIcon from '../../assets/failIcon.png'
+import { AuthenticationProcessTypes } from "Constants/ConstantValues"
 
 const imgSize = "16px"
 
@@ -23,12 +24,12 @@ const AuthLog = () => {
         if(params.type) {
             _params[params.type] = params.value
         }
-        GetAuthLogDataListFunc({}, ({ results, totalCount }) => {
+        GetAuthLogDataListFunc(_params, ({ results, totalCount }) => {
             setTableData(results.map(_ => ({
                 ..._,
                 portalUsername: _.portalUser.username,
                 rpUsername: _.rpUser.username,
-                applicationName: _.application.name
+                applicationName: _.application.name,
             })))
             setTotalCount(totalCount)
         }).finally(() => {
@@ -53,7 +54,23 @@ const AuthLog = () => {
                 }}
                 totalCount={totalCount}
                 pagination
-                searchOptions={["portalUsername", "rpUsername", "applicationName"]}
+                searchOptions={[{
+                    key: 'portalUsername',
+                    type: 'string'
+                }, {
+                    key: 'rpUsername',
+                    type: 'string'
+                }, {
+                    key: 'applicationName',
+                    type: 'string'
+                }, {
+                    key: 'processType',
+                    type: 'select',
+                    selectOptions: AuthenticationProcessTypes.map(_ => ({
+                        key: _,
+                        label: <FormattedMessage id={_ + '_VALUE'} />
+                    }))
+                }]}
                 columns={[
                     {
                         key: 'id',
@@ -80,6 +97,10 @@ const AuthLog = () => {
                         key: 'authenticationLogType',
                         title: '성공 여부',
                         render: (data) => <img src={data !== 'DENY' ? successIcon : failIcon} width={imgSize} height={imgSize} />
+                    },
+                    {
+                        key: 'authenticatorType',
+                        title: '인증 수단'
                     },
                     {
                         key: 'authenticationTime',

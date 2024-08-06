@@ -25,6 +25,15 @@ type CustomTableButtonType = {
     callback?: (data: any) => void
 }
 
+type SearchOptionType = {
+    key: string
+    type: 'string' | 'select'
+    selectOptions?: {
+        key: string
+        label: string | React.ReactNode
+    }[]
+}
+
 type CustomTableProps<T extends {
     [key: string]: any
 }, P> = {
@@ -48,7 +57,7 @@ type CustomTableProps<T extends {
     paramsChange?: (params: P) => void
     hover?: boolean
     noSearch?: boolean
-    searchOptions?: string[]
+    searchOptions?: SearchOptionType[]
     onSearchChange?: (val: CustomTableSearchParams) => void
     addBtn?: CustomTableButtonType
     deleteBtn?: CustomTableButtonType
@@ -79,56 +88,86 @@ const CustomTable = <T extends {
     addBtn,
     deleteBtn,
     hover }: CustomTableProps<T, P>) => {
+        
     const [pageNum, setPageNum] = useState(0)
     const [tableSize, setTableSize] = useState(10);
-    const [searchType, setSearchType] = useState((searchOptions && searchOptions[0]) || "")
+    const [searchType, setSearchType] = useState((searchOptions && searchOptions[0].key) || "")
     const [searchValue, setSearchValue] = useState('')
     const [hoverId, setHoverId] = useState(-1)
+    const searchTarget = useMemo(() => {
+        if(searchOptions) {
+            const target = searchOptions.find(_ => _.key === searchType)
+            return target
+        } 
+        return null
+    },[searchType])
 
     const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
-        setPageNum(pageNumber);
-        setTableSize(pageSizeOptions);
-        if(onSearchChange) onSearchChange({
-            type: searchType,
-            value: searchValue,
-            page: pageNumber,
-            size: pageSizeOptions
-        })
+        if(tableSize !== pageSizeOptions) {
+            setPageNum(1);
+            setTableSize(pageSizeOptions);
+            if (onSearchChange) onSearchChange({
+                type: searchType,
+                value: searchValue,
+                page: 1,
+                size: pageSizeOptions
+            })
+        } else {
+            setPageNum(pageNumber);
+            setTableSize(pageSizeOptions);
+            if (onSearchChange) onSearchChange({
+                type: searchType,
+                value: searchValue,
+                page: pageNumber,
+                size: pageSizeOptions
+            })
+        }
     };
     useEffect(() => {
         setSearchValue('')
     }, [searchType])
 
+    useEffect(() => {
+        if(searchTarget && searchTarget.type === 'select') {
+            setSearchValue(searchTarget.selectOptions![0].key)
+        }
+    },[searchTarget])
+    
     return <div>
         <div className={`custom-table-header${(noSearch || !searchOptions) ? ' no-search' : ''}${(noSearch && !addBtn && deleteBtn) ? ' no-margin' : ''}`}>
             {!noSearch && searchOptions && <form onSubmit={e => {
                 e.preventDefault()
-                if(onSearchChange) onSearchChange({
+                if (onSearchChange) onSearchChange({
                     type: searchType,
                     value: searchValue,
                     page: pageNum,
                     size: tableSize
                 })
             }} className="table-search-container">
-                <CustomSelect items={columns.filter(_ => searchOptions.includes(_.key as string)).map(_ => ({
-                    key: _.key as string,
-                    label: _.title as string
+                <CustomSelect items={searchOptions.map(_ => ({
+                    key: _.key,
+                    label: columns.find(__ => _.key === __.key)?.title
                 }))} value={searchType!} onChange={type => {
                     setSearchType(type)
                 }} />
-                <Input className="st1 table-search-input" name="searchValue" value={searchValue} placeholder="검색명" valueChange={value => {
-                    setSearchValue(value)
-                }} />
+                {
+                    searchTarget?.type === 'string' ? <Input containerClassName="table-search-input" className="st1" name="searchValue" value={searchValue} placeholder="검색명" valueChange={value => {
+                        setSearchValue(value)
+                    }} /> : <CustomSelect value={searchValue} onChange={value => {
+                        setSearchValue(value)
+                    }} items={searchTarget?.selectOptions!}/>
+                }
+
                 <Button className="st3" icon={searchIcon} type="submit">
                     검색
                 </Button>
                 <Button className="st4" onClick={() => {
-                    setSearchType(searchOptions[0])
+                    setSearchType(searchOptions[0].key)
                     setSearchValue("")
                     setPageNum(1)
                     setTableSize(10)
-                    if(onSearchChange) onSearchChange({
-                        type: searchOptions[0],
+                    if (onSearchChange) onSearchChange({
+                        type: searchOptions[0].key,
                         value: "",
                         page: 1,
                         size: 10
@@ -138,12 +177,12 @@ const CustomTable = <T extends {
                 </Button>
             </form>}
             <div className="custom-table-header-buttons">
-            {addBtn && <Button className={addBtn.style || "st1"} icon={addBtn.icon} hoverIcon={addBtn.hoverIcon} onClick={addBtn.callback}>
-                {addBtn.label}
-            </Button>}
-            {deleteBtn && <Button className="st3" icon={deleteBtn.icon} hoverIcon={deleteBtn.hoverIcon} onClick={deleteBtn.callback}>
-                {deleteBtn.label}
-            </Button>}
+                {addBtn && <Button className={addBtn.style || "st1"} icon={addBtn.icon} hoverIcon={addBtn.hoverIcon} onClick={addBtn.callback}>
+                    {addBtn.label}
+                </Button>}
+                {deleteBtn && <Button className="st3" icon={deleteBtn.icon} hoverIcon={deleteBtn.hoverIcon} onClick={deleteBtn.callback}>
+                    {deleteBtn.label}
+                </Button>}
             </div>
         </div>
         <table className={`${className ? className + ' ' : ''}${theme}`}>
@@ -212,7 +251,7 @@ const CustomTable = <T extends {
             className="mt30 mb40"
             style={{ textAlign: 'center' }}
         >
-            <Pagination showQuickJumper showSizeChanger current={pageNum} pageSize={tableSize} total={totalCount || 1} onChange={onChangePage} className="custom-pagination"/>
+            <Pagination showQuickJumper showSizeChanger current={pageNum} pageSize={tableSize} total={totalCount || 1} onChange={onChangePage} className="custom-pagination" />
         </div>}
     </div>
 }

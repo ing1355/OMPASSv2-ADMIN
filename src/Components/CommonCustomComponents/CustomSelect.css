@@ -17,12 +17,13 @@
     user-select: none;
     text-align: center;
     cursor: pointer;
-    z-index: 9998;
+    z-index: 90;
     & > select {
       display: none;
     }
     &.opened {
       background-image: url(../../assets/arrowUpIcon.png);
+      z-index: 98;
     }
   }
   
@@ -35,10 +36,10 @@
     border-radius: 4px;
     top: calc(100% + 4px);
     left: 0;
-    box-shadow: 0 0 10px 1px rgba(0,0,0,.2);
+    box-shadow: 0 0 10px 3px rgba(0,0,0,.2);
     max-height: 200px;
     overflow-y: auto;
-    z-index: 9999;
+    z-index: 99;
   }
   
   .custom-select-option-item {
@@ -46,5 +47,8 @@
     cursor: pointer;
     &:hover {
       background-color: var(--sub-purple-color2);
+    }
+    &.selected {
+      background-color: var(--sub-purple-color);
     }
   }

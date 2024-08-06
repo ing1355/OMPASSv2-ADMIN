@@ -66,7 +66,19 @@ const PasscodeManagement = () => {
             datas={tableData}
             pagination
             totalCount={totalCount}
-            searchOptions={["applicationName"]}
+            searchOptions={[{
+              key: 'applicationName',
+              type: 'string'
+            }, {
+              key: 'issuerUsername',
+              type: 'string'
+            }, {
+              key: 'portalUsername',
+              type: 'string'
+            }, {
+              key: 'rpUsername',
+              type: 'string'
+            }]}
             onSearchChange={(data) => {
               GetDatas(data)
             }}

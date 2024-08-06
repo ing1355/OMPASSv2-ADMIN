@@ -118,7 +118,7 @@ div[aria-hidden="true"] {
 .authenticator-ompass-auth {
     height: 200px;
     padding: 12px 24px;
-    background-color: var(--sub-blue-color);
+    background-color: var(--sub-grey-color);
     border-radius: 8px;
     transition: height .25s ease-out;
     position: relative;
@@ -137,7 +137,7 @@ div[aria-hidden="true"] {
             width: 0px;
             height: 0px;
             content: "";
-            border-bottom: 12.5px solid var(--sub-blue-color);
+            border-bottom: 12.5px solid var(--sub-gery-color);
             border-top: 12.5px solid transparent;
             border-left: 12.5px solid transparent;
             border-right: 12.5px solid transparent;

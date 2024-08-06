@@ -5,7 +5,6 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Login from 'Components/Login/Login';
 import OMPASSVerify from 'Components/OMPASS/OMPASSVerify';
-import SecretKey from 'Components/SecretKey/SecretKey';
 import Main from 'Components/Main/Main';
 import AxiosController from 'AxiosController';
 import Locale from './Locale/index';
@@ -86,7 +85,6 @@ const App: React.FC = () => {
               <Route path='/AgentManagement/*' element={<Agent />} />
               <Route path='/UserManagement/*' element={<Users />} />
               <Route path='/PasscodeManagement' element={<PasscodeManagement />} />
-              <Route path='/SecretKey' element={<SecretKey />} />
               <Route path='/PermissionSettings' element={<PermissionSettings />} />
               <Route path='/Billing' element={<Billing />} />
               <Route path='/Applications/*' element={<Application />} />

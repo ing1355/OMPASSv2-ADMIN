@@ -7,7 +7,7 @@ const LocaleTexts = {
     ID: 'Id',
     SAVE_ID: 'Save Id',
     PASSWORD: 'Password',
-    RECONFIRM_PASSWORD: 'Reconfirm Password',
+    PASSWORD_CONFIRM: 'Confirm Password',
     PHONE_NUMBER: 'Phone Number',
     GROUP: 'Group',
     EMAIL: 'E-Mail',
@@ -266,7 +266,7 @@ const LocaleTexts = {
     ROOT_ROLE_VALUE: "Super admin role",
     POLICY_TEXT: "Policy",
     ADMIN_APPLICATION_TYPE: "Portal",
-    DEFAULT_APPLICATION_TYPE: "Default type",
+    DEFAULT_APPLICATION_TYPE: "Browser",
     WINDOWS_LOGIN_APPLICATION_TYPE: "Windows login",
     LINUX_LOGIN_APPLICATION_TYPE: "Linux login",
     RADIUS_APPLICATION_TYPE: "Radius",
@@ -282,7 +282,8 @@ const LocaleTexts = {
     DAY_OF_WEEKS_FRIDAY: 'Friday',
     DAY_OF_WEEKS_SATURDAY: 'Saturday',
     DAY_OF_WEEKS_SUNDAY: 'Sunday',
-    BILLING_PLAN: "Plan by billing"
+    BILLING_PLAN: "Plan by billing",
+    NONE_VALUE: "None"
   },
   'ko': {
     LOGIN: '로그인',
@@ -292,7 +293,7 @@ const LocaleTexts = {
     ID: '아이디',
     SAVE_ID: '아이디 저장',
     PASSWORD: '비밀번호',
-    RECONFIRM_PASSWORD: '비밀번호 재확인',
+    PASSWORD_CONFIRM: '비밀번호 확인',
     PHONE_NUMBER: '전화 번호',
     GROUP: '그룹',
     EMAIL: '이메일',
@@ -552,7 +553,7 @@ const LocaleTexts = {
     ROOT_ROLE_VALUE: "최고 관리자 역할",
     POLICY_TEXT: "정책",
     ADMIN_APPLICATION_TYPE: "포탈",
-    DEFAULT_APPLICATION_TYPE: "기본 유형",
+    DEFAULT_APPLICATION_TYPE: "브라우저",
     WINDOWS_LOGIN_APPLICATION_TYPE: "윈도우즈 로그인",
     LINUX_LOGIN_APPLICATION_TYPE: "리눅스 로그인",
     RADIUS_APPLICATION_TYPE: "Radius",
@@ -568,7 +569,8 @@ const LocaleTexts = {
     DAY_OF_WEEKS_FRIDAY: '금요일',
     DAY_OF_WEEKS_SATURDAY: '토요일',
     DAY_OF_WEEKS_SUNDAY: '일요일',
-    BILLING_PLAN: "요금 별 플랜"
+    BILLING_PLAN: "요금 별 플랜",
+    NONE_VALUE: "없음"
   }
 }
 

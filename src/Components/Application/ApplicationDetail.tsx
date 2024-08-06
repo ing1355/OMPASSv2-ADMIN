@@ -64,6 +64,7 @@ const ApplicationDetail = () => {
                 setSelectedPolicy(data.policyId)
                 setApplicationType(data.type)
                 setHelpMsg(data.helpDeskMessage || "")
+                setInputApiServerHost(data.apiServerHost)
             })
         } else {
             await GetApplicationListFunc({ type: 'WINDOWS_LOGIN' }, ({ results }) => {
@@ -122,16 +123,30 @@ const ApplicationDetail = () => {
                             setHelpMsg(e.target.value)
                         }} />
                     </CustomInputRow>
+                    {
+                        needDomains.includes(applicationType) && <>
+                            <CustomInputRow title="도메인">
+                                <Input className="st1" value={inputDomain} onChange={e => {
+                                    setInputDomain(e.target.value)
+                                }} placeholder="ex) https://omsecurity.kr:1234" readOnly={applicationType === 'ADMIN'}/>
+                            </CustomInputRow>
+                            {!(isAdd && applicationType === 'REDMINE') && ((!isAdd && applicationType === 'REDMINE') ? inputRedirectUrl : <CustomInputRow title="리다이렉트 URL">
+                                <Input className="st1" value={inputRedirectUrl} onChange={e => {
+                                    setInputRedirectUrl(e.target.value)
+                                }} placeholder="ex) https://omsecurity.kr:1234/ompass" readOnly={applicationType === 'ADMIN'}/>
+                            </CustomInputRow>)}
+                        </>
+                    }
                     {applicationType === 'WINDOWS_LOGIN' && <CustomInputRow title="패스워드 입력 필요">
                         <Switch checked={needPassword} onChange={check => {
                             setNeedPassword(check)
                         }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
                     </CustomInputRow>}
                     <CustomInputRow title="API 서버 주소">
-                        {isAdd ? <Input className="st1" defaultValue={inputApiServerHost} disabled /> : inputApiServerHost}
+                        <Input className="st1" value={inputApiServerHost} disabled={isAdd} readOnly={!isAdd} />
                     </CustomInputRow>
                     {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title="클라이언트 아이디">
-                        {isAdd ? <Input className="st1" defaultValue={inputClientId} disabled /> : inputClientId}
+                        <Input className="st1" value={inputClientId} disabled={isAdd} readOnly={!isAdd} />
                     </CustomInputRow>}
                     {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title="시크릿 키">
                         <CopyToClipboard text={inputSecretKey} onCopy={(value, result) => {
@@ -151,20 +166,6 @@ const ApplicationDetail = () => {
                             })
                         }}>비밀키 재발급</Button>
                     </CustomInputRow>}
-                    {
-                        needDomains.includes(applicationType) && <>
-                            <CustomInputRow title="도메인">
-                                <Input className="st1" value={inputDomain} onChange={e => {
-                                    setInputDomain(e.target.value)
-                                }} placeholder="ex) https://omsecurity.kr:1234" />
-                            </CustomInputRow>
-                            {!(isAdd && applicationType === 'REDMINE') && ((!isAdd && applicationType === 'REDMINE') ? inputRedirectUrl : <CustomInputRow title="리다이렉트 URL">
-                                <Input className="st1" value={inputRedirectUrl} onChange={e => {
-                                    setInputRedirectUrl(e.target.value)
-                                }} placeholder="ex) https://omsecurity.kr:1234/ompass" />
-                            </CustomInputRow>)}
-                        </>
-                    }
                     <CustomInputRow title="정책 설정">
                         <PolicySelect selectedPolicy={selectedPolicy} setSelectedPolicy={setSelectedPolicy} needSelect />
                     </CustomInputRow>

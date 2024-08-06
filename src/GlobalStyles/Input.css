@@ -21,10 +21,6 @@ label:has(.checkbox-label) {
     margin-left: 4px;
 }
 
-.checkbox-label {
-
-}
-
 .checkbox-label:has(input[type="checkbox"]:checked) {
     &::before {
         content: '';
@@ -55,6 +51,17 @@ label:has(.checkbox-label) {
     }
 }
 
+.custom-input-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    & > input {
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+    }
+}
+
 input {
     padding: 2px 12px;
     outline: none;
@@ -79,5 +86,8 @@ input.st1 {
     } */
     &:disabled {
         background-color: var(--main-grey-color2);
+    }
+    &:read-only {
+        background-color: var(--sub-grey-color);
     }
 }

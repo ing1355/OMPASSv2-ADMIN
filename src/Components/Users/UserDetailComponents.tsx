@@ -78,26 +78,26 @@ const AuthenticatorInfoContentsWEBAUTHNType = ({ data }: {
 }
 
 export const UserDetailInfoAuthenticatorContent = ({ data }: {
-    data: RPUserDetailAuthDataType['authenticators']
+    data?: AuthenticatorDataType
 }) => {
     return <div className="authenticators-container">
         <div className="user-detail-info-device-info-content" />
-        {data.filter(_ => _.type !== 'PASSCODE').map((_, ind) => <div className='authenticators-container-inner' key={ind}>
+        <div className='authenticators-container-inner'>
             {
-                _.type === 'OMPASS' ? <AuthenticatorInfoContentsOMPASSType data={_ as OMPASSAuthenticatorDataType} key={ind} />
-                    : _.type === 'WEBAUTHN' ? <AuthenticatorInfoContentsWEBAUTHNType data={_ as WebAuthnAuthenticatorDataType} key={ind} />
-                        : <div key={ind}>
+                data ? (data.type === 'OMPASS' ? <AuthenticatorInfoContentsOMPASSType data={data as OMPASSAuthenticatorDataType}/>
+                    : data.type === 'WEBAUTHN' ? <AuthenticatorInfoContentsWEBAUTHNType data={data as WebAuthnAuthenticatorDataType}/>
+                        : <div>
+                        </div>) : <div className='user-detail-info-device-info-no-contents'>
+                            No Contents
                         </div>
             }
         </div>
-        )}
     </div>
 }
 
 export const ViewPasscode = ({ code }: {
     code: string
 }) => {
-    console.log(code)
     const [isView, setIsView] = useState(false)
     return <div className='user-detail-info-passcode-view-container'>
         <div>
@@ -162,14 +162,14 @@ const imgSrcByOS = (os: OsNamesType) => {
 
 
 export const UserDetailInfoAuthenticatorDeleteButton = ({ authenticatorId, callback }: {
-    authenticatorId: AuthenticatorDataType['id']
+    authenticatorId?: AuthenticatorDataType['id']
     callback: (id: string) => void
 }) => {
-    return <Button className="st2 user-detail-info-device-info-delete-btn" onClick={async () => {
+    return authenticatorId ? <Button className="st2 user-detail-info-device-info-delete-btn" onClick={async () => {
         callback(authenticatorId)
     }}>
         삭제
-    </Button>
+    </Button> : <></>
 }
 
 export const UserDetailInfoDeviceInfoContent = ({ data }: {
@@ -181,8 +181,8 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
     const { os } = clientData
     const isBrowser = application.type === 'DEFAULT' || application.type === 'ADMIN'
     return <>
-        { application.type !== 'LINUX_LOGIN' && <UserDetailInfoContentItem imgSrc={imgSrcByOS(os?.name!)} title="OS" content={`${os?.name} ${os?.version}`} />}
-        { application.type === 'LINUX_LOGIN' && <>
+        {application.type !== 'LINUX_LOGIN' && <UserDetailInfoContentItem imgSrc={imgSrcByOS(os?.name!)} title="OS" content={`${os?.name} ${os?.version}`} />}
+        {application.type === 'LINUX_LOGIN' && <>
             <div className="user-detail-info-device-info-content-item linux">
                 <div className='linux-target-text'>Client</div>
                 <img src={clientIcon} />
@@ -194,7 +194,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
                 </div>
             </div>
             <div className='ssh-icon-container'>
-                <img src={sshIcon}/>
+                <img src={sshIcon} />
             </div>
             <div className="user-detail-info-device-info-content-item linux">
                 <div className='linux-target-text'>Server</div>

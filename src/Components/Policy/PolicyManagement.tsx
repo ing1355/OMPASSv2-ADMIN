@@ -196,7 +196,10 @@ const PolicyManagement = () => {
                 theme='table-st1'
                 datas={tableData}
                 hover
-                searchOptions={['username', 'name', 'email']}
+                searchOptions={[{
+                    key: 'name',
+                    type: 'string'
+                }]}
                 onSearchChange={(data) => {
                     GetDatas(data)
                 }}

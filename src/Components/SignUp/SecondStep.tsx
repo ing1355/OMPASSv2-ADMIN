@@ -1,5 +1,5 @@
 import { DuplicateUserNameCheckFunc, SignUpRequestFunc } from "Functions/ApiFunctions";
-import { emailRegex, idRegex, nameRegex } from "Components/CommonCustomComponents/CommonRegex";
+import { emailRegex, idRegex, nameRegex, passwordRegex } from "Components/CommonCustomComponents/CommonRegex";
 import { autoHypenPhoneFun } from "Functions/GlobalFunctions";
 import Button from "Components/CommonCustomComponents/Button";
 import { PropsWithChildren, useState } from "react";
@@ -28,12 +28,16 @@ const InputRow = ({ label, alert, children }: PropsWithChildren<{
 }
 
 const SecondStep = () => {
-    const [isIdAlert, setIsIdAlert] = useState(false);
-    const [isNameAlert1, setIsNameAlert1] = useState(false);
-    const [isNameAlert2, setIsNameAlert2] = useState(false);
+    const [isIdAlert, setIsIdAlert] = useState(false)
+    const [isPasswordAlert, setIsPasswordAlert] = useState(false)
+    const [isPasswordConfirmAlert, setIsPasswordConfirmAlert] = useState(false)
+    const [isNameAlert1, setIsNameAlert1] = useState(false)
+    const [isNameAlert2, setIsNameAlert2] = useState(false)
     const [isEmailAlert, setIsEmailAlert] = useState(false)
-    const [isPhoneAlert, setIsPhoneAlert] = useState(false);
-    const [idExist, setIdExist] = useState<boolean>(true);
+    const [isPhoneAlert, setIsPhoneAlert] = useState(false)
+    const [idExist, setIdExist] = useState<boolean>(true)
+    const [inputPassword, setInputPassword] = useState('')
+    const [inputPasswordConfirm, setInputPasswordConfirm] = useState('')
     const [inputUsername, setInputUsername] = useState('')
     const [inputName1, setInputName1] = useState('')
     const [inputName2, setInputName2] = useState('')
@@ -42,7 +46,7 @@ const SecondStep = () => {
 
     const navigate = useNavigate();
     const { formatMessage } = useIntl();
-    
+
     return <div className="signup-content second">
         <form
             onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
@@ -71,23 +75,23 @@ const SecondStep = () => {
             }}
         >
             <InputRow label="ID" alert={isIdAlert}>
-                <div className="signup-userId-input-row">
-                    <Input
-                        className={'st1 signup-input'}
-                        maxLength={16}
-                        value={inputUsername}
-                        valueChange={value => {
-                            setInputUsername(value)
-                            const idRgx: RegExp = idRegex;
-                            if(value) {
-                                if (idRgx.test(value)) {
-                                    setIsIdAlert(false);
-                                } else {
-                                    setIsIdAlert(true);
-                                }   
+                <Input
+                    className={'st1 signup-input'}
+                    containerClassName="signup-userId-input-row"
+                    maxLength={16}
+                    value={inputUsername}
+                    valueChange={value => {
+                        setInputUsername(value)
+                        const idRgx: RegExp = idRegex;
+                        if (value) {
+                            if (idRgx.test(value)) {
+                                setIsIdAlert(false);
+                            } else {
+                                setIsIdAlert(true);
                             }
-                        }}
-                    />
+                        }
+                    }}
+                >
                     <Button
                         type='button'
                         className={'st6 signup-duplicate-check'}
@@ -106,7 +110,45 @@ const SecondStep = () => {
                         }}
                     ><FormattedMessage id='DUPLICATE_CHECK' />
                     </Button>
-                </div>
+                </Input>
+            </InputRow>
+            <InputRow label="PASSWORD" alert={isPasswordAlert}>
+                <Input
+                    className={'st1 signup-input'}
+                    maxLength={16}
+                    type="password"
+                    value={inputPassword}
+                    valueChange={value => {
+                        setInputPassword(value)
+                        const passwordRgx: RegExp = passwordRegex;
+                        if (value) {
+                            if (passwordRgx.test(value)) {
+                                setIsPasswordAlert(false);
+                            } else {
+                                setIsPasswordAlert(true);
+                            }
+                        }
+                    }}
+                />
+            </InputRow>
+            <InputRow label="PASSWORD_CONFIRM" alert={isPasswordConfirmAlert}>
+                <Input
+                    className={'st1 signup-input'}
+                    maxLength={16}
+                    type="password"
+                    value={inputPasswordConfirm}
+                    valueChange={value => {
+                        setInputPasswordConfirm(value)
+                        const passwordRgx: RegExp = passwordRegex;
+                        if (value) {
+                            if (passwordRgx.test(value)) {
+                                setIsPasswordConfirmAlert(false);
+                            } else {
+                                setIsPasswordConfirmAlert(true);
+                            }
+                        }
+                    }}
+                />
             </InputRow>
             <InputRow label="FIRST_NAME" alert={isNameAlert1}>
                 <Input

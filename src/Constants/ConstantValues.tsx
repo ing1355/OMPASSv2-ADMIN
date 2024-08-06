@@ -121,6 +121,8 @@ export const menuDatas = (role: userRoleType): menuDataType[] => {
 const appTypes: ApplicationDataType['type'][] = ["DEFAULT", "WINDOWS_LOGIN", "LINUX_LOGIN", "RADIUS", "REDMINE", "GOOROOM_LOGIN"]
 export const applicationTypes = (hasWindowsLogin: boolean): ApplicationDataType['type'][] => !hasWindowsLogin ? appTypes : appTypes.filter(_ => _ !== 'WINDOWS_LOGIN')
 // 어플리케이션 타입 다국어 매칭해놨으나 타입 지정은 불가능하므로 값 바뀌면 다국어 키값도 바뀌어야함
+export const AuthenticationProcessTypes: ProcessTypeType[] = ["AUTHENTICATION", "REGISTRATION", "NONE"]
+export const HttpMethodTypes: HttpMethodType[] = ["POST", "PUT", "DELETE"]
 
 export const getApplicationTypeLabel = (type: ApplicationDataType['type']) => <FormattedMessage id={type + '_APPLICATION_TYPE'} />
 

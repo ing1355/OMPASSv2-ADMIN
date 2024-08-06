@@ -12,24 +12,23 @@ type ContentsProps = PropsWithChildren & {
 const Contents = ({ children, containerStyle, copyRightStyle, loading }: ContentsProps) => {
     const height = useWindowHeightHeader();
 
-    return <div style={{ height: height }}>
+    return <>
         <div className={`loading-center${loading ? '' : ' hidden'}`}>
             데이터 불러오는 중...
         </div>
         <div
             className={`content-center${loading ? ' hidden' : ''}`}
-            style={{ minHeight: `${height - 130}px`, justifyContent: 'start', ...containerStyle }}
+            style={{ ...containerStyle }}
         >
             {children}
         </div>
         <div
-            className='copyRight-style'
+            className='copyRight-style content'
             style={copyRightStyle}
         >
             {CopyRightText}
         </div>
-
-    </div>
+    </>
 }
 
 export default Contents

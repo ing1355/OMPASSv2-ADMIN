@@ -71,9 +71,13 @@
 }
 
 .table-search-input {
-  text-align: center;
-  border: 1px solid var(--sub-grey-color3);
-  width: 300px;
+  & > input {
+    text-align: center;
+    border: 1px solid var(--sub-grey-color3);
+    width: 300px;
+    height: 36px;
+    box-sizing: border-box;
+  }
 }
 
 .custom-table-header-buttons {

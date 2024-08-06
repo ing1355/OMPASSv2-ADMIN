@@ -50,7 +50,29 @@ const UserManagement = () => {
                 theme='table-st1'
                 datas={tableData}
                 hover
-                searchOptions={['username', 'name', 'email']}
+                searchOptions={[{
+                    key: 'role',
+                    type: 'select',
+                    selectOptions: [
+                        {
+                            key: 'USER',
+                            label: <FormattedMessage id={'USER_ROLE_VALUE'}/>
+                        },
+                        {
+                            key: 'ADMIN',
+                            label: <FormattedMessage id={'ADMIN_ROLE_VALUE'}/>
+                        },
+                    ]
+                }, {
+                    key: 'username',
+                    type: 'string'
+                }, {
+                    key: 'name',
+                    type: 'string',
+                }, {
+                    key: 'email',
+                    type: 'string'
+                }]}
                 onSearchChange={(data) => {
                     GetDatas(data)
                 }}

@@ -52,7 +52,10 @@ const GroupManagement = () => {
                     navigate('/Groups/detail')
                 }
             }}
-            searchOptions={["name"]}
+            searchOptions={[{
+                key: 'name',
+                type: 'string'
+            }]}
             className="contents-header-container"
             onBodyRowClick={(row, index, arr) => {
                 navigate('/Groups/detail/' + row.id)

@@ -14,7 +14,6 @@ const VersionUpload = () => {
   const [isVersionAlert, setIsVersionAlert] = useState<boolean>(false);
   const [fileName, setFileName] = useState('');
   const [isUploadingFile, setIsUploadingFile] = useState<boolean>(false);
-  const inputRef = useRef<HTMLInputElement>(null)
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,14 +28,14 @@ const VersionUpload = () => {
     <>
       <Contents>
         <ContentsHeader title="VERSION_MANAGEMENT" subTitle='VERSION_LIST'>
-          <Button className='st2'
+          <Button className='st3'
             type={!isUploadingFile ? "submit" : "button"}
             form={!isUploadingFile ? 'addVersionForm' : ''}
             aria-loading={isUploadingFile}
           >
             <span><FormattedMessage id={isUploadingFile ? 'LOADING' : 'CONFIRM'} /></span>
           </Button>
-          <Button className='st3'
+          <Button className='st1'
             type='button'
             disabled={isUploadingFile}
             onClick={() => {
@@ -127,18 +126,17 @@ const VersionUpload = () => {
                 style={{ marginTop: '22px' }}
               >
                 <div>
-                  <label htmlFor="uploadFile">
-                    <Button className='st2' icon={uploadIconHover}>
-                      <FormattedMessage id='SELECT_FILE' />
-                    </Button>
-                  </label>
+                  <Button className='st1' icon={uploadIconHover} onClick={() => {
+                    document.getElementById("uploadFile")?.click()
+                  }}>
+                    <FormattedMessage id='SELECT_FILE' />
+                  </Button>
                   <Input
                     id="uploadFile"
                     name="uploadFile"
                     type="file"
                     accept=".zip"
                     hidden
-                    ref={inputRef}
                     onChange={handleFileChange} />
                 </div>
                 <div style={{ marginTop: '22px', width: '620px', wordWrap: 'break-word' }}>

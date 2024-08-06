@@ -74,6 +74,15 @@ const UserDetail = ({ }) => {
         time: 'infinity',
         count: 'one'
     })
+    const [addPasscodeValues, setAddPasscodeValues] = useState<{
+        code: string
+        time: number
+        count: number
+    }>({
+        code: '',
+        time: 1,
+        count: 1
+    })
     const [addPasscodeLoading, setAddPasscodeLoading] = useState(false)
     const navigate = useNavigate()
     const location = useLocation()
@@ -99,7 +108,7 @@ const UserDetail = ({ }) => {
         temp = temp.sort((a, b) => new Date(a.authInfo.createdAt).getTime() - new Date(b.authInfo.createdAt).getTime())
         return temp;
     }, [userDetailDatas])
-    
+
     const passcodeData = useCallback((authInfoId: UserDetailAuthInfoRowType['authInfo']['id']) => {
         const temp1 = authInfoDatas.find(_ => _.authInfo.id === authInfoId)?.authInfo.authenticators.find(_ => _.type === 'PASSCODE') as PasscodeAuthenticatorDataType
         if (!temp1) return []
@@ -132,19 +141,18 @@ const UserDetail = ({ }) => {
 
     useLayoutEffect(() => {
         if (uuid) {
-            console.log(targetId, authInfoDatas)
             GetDatas()
         }
     }, [])
 
     useEffect(() => {
-        if(authInfoDatas.length > 0 && targetId && !targeting) {
+        if (authInfoDatas.length > 0 && targetId && !targeting) {
             setTimeout(() => {
                 authInfoRef.current[targetId].scrollIntoView({ block: 'start', behavior: 'smooth' })
             }, 250);
             setUserDetailOpened(userDetailOpened.concat(targetId))
         }
-    },[targetId, authInfoDatas])
+    }, [targetId, authInfoDatas])
 
     useEffect(() => {
         if (isModify && userData) {
@@ -264,7 +272,7 @@ const UserDetail = ({ }) => {
                                 if (isExist) {
                                     message.error("이미 사용중인 아이디 입니다.")
                                 } else {
-                                    message.success("사용 가능한 아이디 입니다.", 999999)
+                                    message.success("사용 가능한 아이디 입니다.")
                                 }
                             })
                         }}>
@@ -325,8 +333,9 @@ const UserDetail = ({ }) => {
                                     email: e.target.value
                                 })
                             }
-                        }} />
-                    </UserInfoInputrow> : <UserInfoRow title="EMAIL" value={userData ? userData.email : ""} />}
+                        }} maxLength={48} />
+                    </UserInfoInputrow> : <UserInfoRow title="EMAIL" value={userData?.email || "이메일 없음"} />}
+
                     {(isModify || isAdd) ? <UserInfoInputrow title="PHONE_NUMBER">
                         <Input className='st1' value={isAdd ? addValues.phone : modifyValues.phone} onChange={e => {
                             if (isAdd) {
@@ -341,7 +350,8 @@ const UserDetail = ({ }) => {
                                 })
                             }
                         }} />
-                    </UserInfoInputrow> : <UserInfoRow title="PHONE_NUMBER" value={userData ? userData.phone : ""} />}
+                    </UserInfoInputrow> : <UserInfoRow title="PHONE_NUMBER" value={userData?.phone || "전화번호 없음"} />}
+
                     {(isModify || isAdd) ? <UserInfoInputrow title="GROUP">
                         <GroupSelect selectedGroup={targetValue.groupId} setSelectedGroup={(groupId) => {
                             if (isAdd) {
@@ -356,7 +366,8 @@ const UserDetail = ({ }) => {
                                 })
                             }
                         }} />
-                    </UserInfoInputrow> : <UserInfoRow title="GROUP" value={(userData && userData.group) ? userData.group.name : "정보 없음"} />}
+                    </UserInfoInputrow> : <UserInfoRow title="GROUP" value={userData?.group?.name || "정보 없음"} />}
+
                     {(isModify || isAdd) ? <UserInfoInputrow title="USER_ROLE">
                         <RoleSelect selectedGroup={isAdd ? addValues.role : modifyValues.role} setSelectedGroup={(role) => {
                             if (isAdd) {
@@ -389,22 +400,22 @@ const UserDetail = ({ }) => {
                     </UserInfoInputrow> : <UserInfoRow title="USER_ROLE" value={(userData && userData.role) ? formatMessage({id: userData.role + '_ROLE_VALUE'}) : "정보 없음"} />} */}
                     {
                         isModify && <UserInfoInputrow title="PASSWORD">
-                            <input value={modifyValues.password} onChange={e => {
+                            <Input className='st1' value={modifyValues.password} onChange={e => {
                                 setModifyValues({
                                     ...modifyValues,
                                     password: e.target.value
                                 })
-                            }} />
+                            }} type='password' maxLength={16} />
                         </UserInfoInputrow>
                     }
                     {
-                        isModify && <UserInfoInputrow title="RECONFIRM_PASSWORD">
-                            <input value={modifyValues.passwordConfirm} onChange={e => {
+                        isModify && <UserInfoInputrow title="PASSWORD_CONFIRM">
+                            <Input className='st1' value={modifyValues.passwordConfirm} onChange={e => {
                                 setModifyValues({
                                     ...modifyValues,
                                     passwordConfirm: e.target.value
                                 })
-                            }} />
+                            }} type='password' maxLength={16} />
                         </UserInfoInputrow>
                     }
                 </div>
@@ -431,10 +442,6 @@ const UserDetail = ({ }) => {
                     </div>
 
                     <div className="user-detail-info-container">
-
-                        <UserDetailInfoAuthenticatorDeleteButton authenticatorId={_.authInfo.authenticators.find(auth => auth.type !== 'PASSCODE')!.id} callback={(id) => {
-                            setAuthenticatorDelete(id)
-                        }} />
                         <div className="user-detail-info-device-info-title">
                             <h3>
                                 접속 장치
@@ -445,10 +452,23 @@ const UserDetail = ({ }) => {
                         </div>
                         <div className="user-detail-info-device-info-title">
                             <h3>
-                                인증 수단
+                                OMPASS
                             </h3>
+                            <UserDetailInfoAuthenticatorDeleteButton authenticatorId={_.authInfo.authenticators.find(auth => auth.type === 'OMPASS')?.id} callback={(id) => {
+                                setAuthenticatorDelete(id)
+                            }} />
                         </div>
-                        <UserDetailInfoAuthenticatorContent data={_.authInfo.authenticators} />
+                        <UserDetailInfoAuthenticatorContent data={_.authInfo.authenticators.find(auth => auth.type === 'OMPASS')} />
+
+                        <div className="user-detail-info-device-info-title">
+                            <h3>
+                                WEBAUTHN
+                            </h3>
+                            <UserDetailInfoAuthenticatorDeleteButton authenticatorId={_.authInfo.authenticators.find(auth => auth.type === 'WEBAUTHN')?.id} callback={(id) => {
+                                setAuthenticatorDelete(id)
+                            }} />
+                        </div>
+                        <UserDetailInfoAuthenticatorContent data={_.authInfo.authenticators.find(auth => auth.type === 'WEBAUTHN')} />
 
                         <div className="user-detail-content-passcode-container">
                             <div>
@@ -572,7 +592,7 @@ const UserDetail = ({ }) => {
                 setAddPasscode("")
             }}
             afterOpenChange={opened => {
-                console.log(opened)
+                
             }}
             okCallback={async () => {
                 return DeleteAuthenticatorDataFunc(authenticatorDelete, () => {
@@ -624,15 +644,20 @@ const UserDetail = ({ }) => {
                         <div>
                             <PasscodeRadioButton title="랜덤 생성" name="method" value="random" checked={addPasscodeMethod.method === 'random'} />
                             <PasscodeRadioButton title="지정 생성" name="method" value="target" checked={addPasscodeMethod.method === 'target'}>
-                                <label>
-                                    <Input
-                                        disabled={addPasscodeMethod.method !== 'target'}
-                                        className='st1'
-                                        name="codeValue"
-                                        maxLength={9}
-                                        onlyNumber
-                                        /> (9자리)
-                                </label>
+                                <Input
+                                    disabled={addPasscodeMethod.method !== 'target'}
+                                    className='st1'
+                                    name="codeValue"
+                                    value={addPasscodeValues.code}
+                                    valueChange={value => {
+                                        setAddPasscodeValues({
+                                            ...addPasscodeValues,
+                                            code: value
+                                        })
+                                    }}
+                                    maxLength={9}
+                                    onlyNumber
+                                /> (9자리)
                             </PasscodeRadioButton>
                         </div>
                     </div>
@@ -643,15 +668,19 @@ const UserDetail = ({ }) => {
                         <div>
                             <PasscodeRadioButton title="무제한" name="time" value='infinity' checked={addPasscodeMethod.time === 'infinity'} />
                             <PasscodeRadioButton title="제한" name="time" value='select' checked={addPasscodeMethod.time === 'select'}>
-                                <label>
-                                    <Input
-                                        disabled={addPasscodeMethod.time !== 'select'}
-                                        className='st1'
-                                        defaultValue={1}
-                                        name="timeValue"
-                                        onlyNumber 
-                                        /> 분 후 만료
-                                </label>
+                                <Input
+                                    disabled={addPasscodeMethod.time !== 'select'}
+                                    className='st1'
+                                    value={addPasscodeValues.code}
+                                    valueChange={value => {
+                                        setAddPasscodeValues({
+                                            ...addPasscodeValues,
+                                            time: parseInt(value)
+                                        })
+                                    }}
+                                    name="timeValue"
+                                    onlyNumber
+                                /> 분 후 만료
                             </PasscodeRadioButton>
                         </div>
                     </div>
@@ -663,15 +692,19 @@ const UserDetail = ({ }) => {
                             <PasscodeRadioButton title="한번만" name="count" value='one' checked={addPasscodeMethod.count === 'one'} />
                             <PasscodeRadioButton title="무제한" name="count" value='infinity' checked={addPasscodeMethod.count === 'infinity'} />
                             <PasscodeRadioButton title="지정 횟수" name="count" value='select' checked={addPasscodeMethod.count === 'select'}>
-                                <label>
-                                    <Input
-                                        disabled={addPasscodeMethod.count !== 'select'}
-                                        className='st1'
-                                        name="countValue"
-                                        defaultValue={1}
-                                        onlyNumber 
-                                        /> 회
-                                </label>
+                                <Input
+                                    disabled={addPasscodeMethod.count !== 'select'}
+                                    className='st1'
+                                    name="countValue"
+                                    value={addPasscodeValues.code}
+                                    valueChange={value => {
+                                        setAddPasscodeValues({
+                                            ...addPasscodeValues,
+                                            count: parseInt(value)
+                                        })
+                                    }}
+                                    onlyNumber
+                                /> 회
                             </PasscodeRadioButton>
                         </div>
                     </div>

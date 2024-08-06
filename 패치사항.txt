@@ -283,3 +283,19 @@ user
   * 회원가입 페이지 재구성
   * st10 windows 다운로드 스타일 추가
   * 패스코드 로그 row 클릭 시 회원관리 페이지 이동 후 해당 authinfo 펼치기 및 스크롤 구현
+
+* v2.0.0(10)
+  * footer fixed로 수정
+  * 회원 detail OMPASS, WEBAUTN 항시 표시 및 삭제 버튼 둘다 적용
+  * OMPASS 라이브러리 버전 업데이트(사이즈 변경)
+  * 이용약관 circle number 색상 main2로 변경
+  * header 메뉴 틀어짐 이슈 수정
+  * 시크릿 키 hover 시 purple로 수정
+  * api 서버 주소 및 client Id input 형태로 변경
+  * menu와 select box z-index 안맞던 이슈 수정
+  * v1 api 다 제거 및 SecretKey 페이지 삭제
+  * select box 겹칠 시 z-index 값 우선순위 조정
+  * 정책 셋팅 시 설명(description) 값 빠져서 가던 이슈 수정
+  * table search 에 select box도 추가
+  * 인증 로그 검색 안되던 이슈 수정
+  * agent 버전 업로드 파일 선택 안되던 이슈 수정

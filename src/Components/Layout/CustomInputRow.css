@@ -36,9 +36,9 @@
     row-gap: 12px;
     column-gap: 24px;
 
-    &>input {
+    &>.custom-input-wrapper {
         flex: 0 0 80%;
-        height: 36px;
+        height: 42px;
     }
 
     &>textarea {
@@ -46,8 +46,6 @@
         height: 36px;
         padding: 20px 12px;
     }
-
-    &>button {}
 }
 
 .with-button-input-row {

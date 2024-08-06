@@ -16,8 +16,8 @@ const Main = () => {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(-1)
 
-  const { role} = userInfo
-  
+  const { role } = userInfo
+
   const handleHoverd = (ind: number) => {
     setIsHovered(ind);
   };
@@ -65,7 +65,7 @@ const Main = () => {
 
   return (
     <>
-      <Contents copyRightStyle={{ marginTop: '70px' }} containerStyle={{
+      <Contents containerStyle={{
         justifyContent: 'center'
       }}>
         {menuInfoFun()}

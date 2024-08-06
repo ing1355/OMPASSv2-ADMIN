@@ -1,7 +1,7 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable";
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
-import { getApplicationTypeLabel } from "Constants/ConstantValues";
+import { applicationTypes, getApplicationTypeLabel } from "Constants/ConstantValues";
 import { GetApplicationListFunc, GetPoliciesListFunc } from "Functions/ApiFunctions";
 import { PaginationProps } from "antd"
 import { useLayoutEffect, useState } from "react";
@@ -63,10 +63,19 @@ const ApplicationManagement = () => {
         <CustomTable<ApplicationListDataType, ApplicationListParamsType>
             theme='table-st1'
             className="contents-header-container"
-            searchOptions={["name"]}
+            searchOptions={[{
+                key: 'name',
+                type: 'string'
+            }, {
+                key: 'type',
+                type: 'select',
+                selectOptions: applicationTypes(true).map(_ => ({
+                    key: _,
+                    label: getApplicationTypeLabel(_)
+                }))
+            }]}
             onSearchChange={(data) => {
                 GetDatas(data)
-                console.log(data)
             }}
             addBtn={{
                 label: "추가",

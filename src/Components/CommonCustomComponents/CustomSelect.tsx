@@ -43,7 +43,7 @@ const CustomSelect = ({ items, value, onChange }: CustomSelectProps) => {
             showSelect && <div className="custom-select-option-container">
                 {
                     items.map((_, ind) => {
-                        return <div key={ind} className="custom-select-option-item" onClick={() => {
+                        return <div key={ind} className={`custom-select-option-item${_.key === value ? ' selected' : ''}`} onClick={() => {
                             onChange(_.key)
                         }}>
                             {_.label}

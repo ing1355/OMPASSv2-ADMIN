@@ -66,6 +66,7 @@ const AuthPolicyDetail = () => {
     const [policyName, setPolicyName] = useState('')
     const [currentRadius, setCurrentRadius] = useState(1)
     const [currentLocationName, setCurrentLocationName] = useState('')
+    const [inputDescription, setInputDescription] = useState('')
     const [locationDatas, setLocationDatas] = useState<PolicyDataType['location']['locations']>([])
     const [browserChecked, setBrowserChecked] = useState<(BrowserPolicyType)[]>([])
     const [ompassControl, setOmpassControl] = useState<PolicyDataType['accessControl']>('ACTIVE')
@@ -97,7 +98,7 @@ const AuthPolicyDetail = () => {
         if (uuid) {
             GetPolicyDetailDataFunc(uuid).then(data => {
                 setPolicyName(data.name)
-                if (descriptionRef.current) descriptionRef.current.value = data.description || ""
+                setInputDescription(data.description)
                 setOmpassControl(data.accessControl)
                 setBrowserChecked(data.enableBrowsers)
                 setLocationChecked(data.location.isEnabled)
@@ -113,7 +114,7 @@ const AuthPolicyDetail = () => {
     const addAuthPolicyFunc = () => {
         AddPoliciesListFunc({
             policyType: detailData?.policyType || "CUSTOM",
-            description: descriptionRef.current?.value,
+            description: inputDescription,
             name: policyName,
             accessControl: ompassControl,
             ipRestriction: {
@@ -160,7 +161,7 @@ const AuthPolicyDetail = () => {
                     if (uuid) {
                         UpdatePoliciesListFunc(uuid, {
                             policyType: detailData?.policyType || "CUSTOM",
-                            description: descriptionRef.current?.value,
+                            description: inputDescription,
                             name: policyName,
                             accessControl: ompassControl,
                             enableBrowsers: browserChecked,
@@ -209,7 +210,9 @@ const AuthPolicyDetail = () => {
                 
             </CustomInputRow>
             <CustomInputRow title="설명">
-                <Input className="st1" ref={descriptionRef} placeholder="설명을 입력해주세요.(선택)" />
+                <Input className="st1" value={inputDescription} placeholder="설명을 입력해주세요.(선택)" valueChange={value => {
+                    setInputDescription(value)
+                }}/>
             </CustomInputRow>
             <CustomInputRow title="브라우저 허용">
                 <label className="policy-browser-label">
@@ -332,16 +335,16 @@ const AuthPolicyDetail = () => {
                             </div>
                             <div>
                                 <div className="policy-location-input-row">
-                                    위도: <Input className="st1" value={currentLocation.lat} readOnly />
-                                    경도: <Input className="st1" value={currentLocation.lng} readOnly />
+                                    위도 <Input className="st1" value={currentLocation.lat} readOnly />
+                                    경도 <Input className="st1" value={currentLocation.lng} readOnly />
                                 </div>
                                 <div className="policy-location-input-row">
-                                    반경: <Input className="st1" onlyNumber value={currentRadius} valueChange={value => {
+                                    반경 <Input className="st1" onlyNumber value={currentRadius} valueChange={value => {
                                         setCurrentRadius(parseInt(value))
                                     }} maxLength={10} /> m
                                 </div>
                                 <div className="policy-location-input-row">
-                                    위치명: <Input className="st1" value={currentLocationName} valueChange={value => {
+                                    위치명 <Input className="st1" value={currentLocationName} valueChange={value => {
                                         setCurrentLocationName(value)
                                     }} placeholder="" />
                                 </div>

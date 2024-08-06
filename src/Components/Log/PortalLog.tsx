@@ -1,6 +1,7 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
+import { HttpMethodTypes } from "Constants/ConstantValues"
 import { GetPortalLogDataListFunc } from "Functions/ApiFunctions"
 import { useLayoutEffect, useState } from "react"
 
@@ -61,7 +62,20 @@ const PortalLog = () => {
                     }
                 ]}
                 pagination
-                searchOptions={['username', 'apiUri']}
+                searchOptions={[{
+                    key: 'username',
+                    type: 'string'
+                }, {
+                    key: "httpMethod",
+                    type: 'select',
+                    selectOptions: HttpMethodTypes.map(_ => ({
+                        key: _,
+                        label: _
+                    }))
+                }, {
+                    key: 'apiUri',
+                    type: 'string'
+                }]}
                 onSearchChange={(data) => {
                     GetDatas(data)
                 }}

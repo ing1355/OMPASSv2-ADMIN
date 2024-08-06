@@ -7,7 +7,6 @@ import { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { langChange } from 'Redux/actions/langChange';
 import { CustomAxiosPatch } from 'Components/CommonCustomComponents/CustomAxios';
-import { PatchUsersResetPasswordApi } from 'Constants/ApiRoute';
 
 import { CopyRightText, isDev, subDomain, UserSignupMethod } from '../../Constants/ConstantValues';
 import locale_image from '../../assets/locale_image.png';
@@ -62,22 +61,22 @@ const Login = () => {
     }
   };
 
-  const handleOk = () => {
-    if (!isPasswordAlert && !isPasswordConfirmAlert) {
-      CustomAxiosPatch(
-        PatchUsersResetPasswordApi,
-        () => {
-          setIsModalOpen(false);
-        },
-        {
-          newPassword: password,
-          username: userId
-        }
-      )
-    } else {
-      message.error(formatMessage({ id: 'PLEASE_REENTER_A_PASSWORD' }))
-    }
-  };
+  // const handleOk = () => {
+  //   if (!isPasswordAlert && !isPasswordConfirmAlert) {
+  //     CustomAxiosPatch(
+  //       PatchUsersResetPasswordApi,
+  //       () => {
+  //         setIsModalOpen(false);
+  //       },
+  //       {
+  //         newPassword: password,
+  //         username: userId
+  //       }
+  //     )
+  //   } else {
+  //     message.error(formatMessage({ id: 'PLEASE_REENTER_A_PASSWORD' }))
+  //   }
+  // };
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -265,7 +264,7 @@ const Login = () => {
     </div>
 
     {/* 관리자 첫 로그인 시 패스워드 변경 모달 */}
-    <Modal title={formatMessage({ id: 'CHANGE_PASSWORD' })} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} cancelText={formatMessage({ id: 'CANCEL' })} okText={formatMessage({ id: 'EDIT_' })} width='570px' centered>
+    {/* <Modal title={formatMessage({ id: 'CHANGE_PASSWORD' })} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} cancelText={formatMessage({ id: 'CANCEL' })} okText={formatMessage({ id: 'EDIT_' })} width='570px' centered>
       <form>
         <div>
           <label><FormattedMessage id='PASSWORD' /></label>
@@ -300,7 +299,7 @@ const Login = () => {
         <div
           style={{ marginBottom: '15px' }}
         >
-          <label><FormattedMessage id='RECONFIRM_PASSWORD' /></label>
+          <label><FormattedMessage id='PASSWORD_CONFIRM' /></label>
           <img
             src={isPasswordConfirmLook ? view_password : dont_look_password} width='30px' style={{ position: 'relative', top: '55px', left: '360px' }}
             onClick={() => {
@@ -329,7 +328,7 @@ const Login = () => {
           </div>
         </div>
       </form>
-    </Modal>
+    </Modal> */}
   </>
 }
 

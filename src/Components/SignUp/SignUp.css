@@ -34,7 +34,7 @@
     height: 650px;
   }
   &.second {
-    height: 560px;
+    height: 720px;
   }
 }
 
@@ -92,7 +92,7 @@
 }
 
 .signup-input-row {
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .signup-input-row-inner {
@@ -123,7 +123,7 @@
 
 .circleNumber {
   margin: 0 6px;
-  background-color: var(--main-purple-color);
+  background-color: var(--main-purple-color2);
   color: var(--main-white-color);
   width: 14px;
   height: 14px;

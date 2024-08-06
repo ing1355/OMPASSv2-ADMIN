@@ -4,49 +4,14 @@ input.secret-key {
     background-repeat: no-repeat;
     background-position: right 10px center;
     background-size: 18px 18px;
-}
-
-.application-detail-input-sub-btn {
-    height: 40px;
-}
-
-.application-detail-logo-change-contents {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 16px;
-    padding-top: 16px;
-}
-
-.applicaiton-detail-logo-change-image-container {
-    height: 264px;
-    width: 200px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.applicaiton-detail-logo-change-image-box {
-    border: 1px solid black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex: 1 auto;
-    & > img {
-        max-width: 95%;
-        max-height: 95%;
+    &:hover {
+        background-color: var(--sub-purple-color);
     }
 }
 
-.application-detail-logo-change-text {
-    text-align: center;
-    height: 64px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    color: var(--main-blue-color);
-    font-size: .8rem;
+.application-detail-input-sub-btn {
+    flex: 1;
+    height: 40px;
 }
 
 .application-detail-bottom-buttons-container {
