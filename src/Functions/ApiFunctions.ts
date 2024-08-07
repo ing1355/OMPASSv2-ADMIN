@@ -7,7 +7,6 @@ export const LoginFunc = (params: LoginApiParamsType, callback: (res: LoginApiRe
     return CustomAxiosPost(
         PostLoginApi,
         (res: LoginApiResponseType, token: string) => {
-            console.log(res)
             callback(res, token)
         }, params
     )

@@ -48,6 +48,8 @@ label:has(.checkbox-label) {
         width: 16px;
         height: 16px;
         position: absolute;
+        left: 0;
+        top: 0;
     }
 }
 
@@ -55,10 +57,12 @@ label:has(.checkbox-label) {
     display: flex;
     flex-direction: row;
     align-items: center;
+    height: 100%;
     & > input {
         box-sizing: border-box;
         width: 100%;
         height: 100%;
+        flex: 1;
     }
 }
 

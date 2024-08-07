@@ -10,20 +10,17 @@
 
 .agent-input-row-container {
   margin-bottom: 24px;
-  &>div {
-    display: flex;
-    flex-direction: row;
-    gap: 12px;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: center;
+  &>label {
+    flex: 0 0 200px;
+  }
 
-    &>label {
-      flex: 0 0 200px;
-    }
-
-    &>.custom-input-wrapper {
-      height: 50px;
-      flex: 1 1 400px;
-    }
+  &>.custom-input-wrapper {
+    height: 50px;
+    flex: 1 1 400px;
   }
 }
 

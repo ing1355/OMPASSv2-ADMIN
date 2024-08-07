@@ -14,6 +14,8 @@ const VersionUpload = () => {
   const [isVersionAlert, setIsVersionAlert] = useState<boolean>(false);
   const [fileName, setFileName] = useState('');
   const [isUploadingFile, setIsUploadingFile] = useState<boolean>(false);
+  const [inputVersion, setInputVersion] = useState('')
+  const [inputHash, setInputHash] = useState('')
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,20 +54,18 @@ const VersionUpload = () => {
             id='addVersionForm'
             onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
               e.preventDefault();
-              const { version, uploadFile, hash } = (e.currentTarget.elements as any);
-              const metaDataVersion = version.value;
-              const hashValue = hash.value;
+              const { uploadFile } = (e.currentTarget.elements as any);
               const multipartFile = uploadFile.files[0];
               const maxFileSize = 200 * 1024 * 1024;
               const fileExtension = multipartFile?.name.split('.').pop();
-              if (!metaDataVersion) {
+              if (!inputVersion) {
                 return message.error(formatMessage({ id: "PLEASE_ENTER_A_VERSION" }))
               }
-              if (!(/^v[0-9]+.[0-9]+.[0-9]+.[0-9]+/g.test(metaDataVersion))) {
+              if (!(/^v[0-9]+.[0-9]+.[0-9]+.[0-9]+/g.test(inputVersion))) {
                 return message.error("버전명이 올바르지 않습니다.")
               }
 
-              if (metaDataVersion && multipartFile && hashValue && !isVersionAlert && !isUploadingFile) {
+              if (inputVersion && multipartFile && inputHash && !isVersionAlert && !isUploadingFile) {
                 if (multipartFile.size > maxFileSize) {
                   message.error(formatMessage({ id: 'THE_FILE_SIZE_EXCEEDS_200MB' }));
                 } else if (fileExtension !== 'zip') {
@@ -73,9 +73,9 @@ const VersionUpload = () => {
                 } else {
                   setIsUploadingFile(true);
                   UploadAgentInstallerFunc({
-                    "metaData.hash": hashValue,
+                    "metaData.hash": inputHash,
                     "metaData.os": "Windows",
-                    "metaData.version": metaDataVersion,
+                    "metaData.version": inputVersion,
                     multipartFile: multipartFile,
                   }, () => {
                     navigate('/AgentManagement');
@@ -89,59 +89,45 @@ const VersionUpload = () => {
             }}
           >
             <div className='agent-input-row-container'>
-              <div>
-                <label><FormattedMessage id='VERSION_NAME' /></label>
-                <Input
-                  id='version'
-                  type='text'
-                  className={'st1 ' + (isVersionAlert ? 'red' : '')}
-                  maxLength={16}
-                  placeholder='ex) v1.x.x.x'
-                  autoComplete='off'
-                  onChange={(e) => {
-                    const value = e.currentTarget.value;
-                    if (value) {
-                      setIsVersionAlert(false);
-                    } else {
-                      setIsVersionAlert(true);
-                    }
-                  }}
-                />
-              </div>
+              <label><FormattedMessage id='VERSION_NAME' /></label>
+              <Input
+                className={'st1 ' + (isVersionAlert ? 'red' : '')}
+                maxLength={16}
+                placeholder='ex) v1.x.x.x'
+                value={inputVersion}
+                valueChange={value => {
+                  setInputVersion(value)
+                }}
+                autoComplete='off'
+              />
             </div>
             <div className='agent-input-row-container'>
-              <div>
-                <label><FormattedMessage id='HASH' /></label>
-                <Input
-                  className="st1"
-                  id='hash'
-                  type='text'
-                  autoComplete='off'
-                />
-              </div>
+              <label><FormattedMessage id='HASH' /></label>
+              <Input
+                className="st1"
+                autoComplete='off'
+                value={inputHash}
+                valueChange={value => {
+                  setInputHash(value)
+                }}
+              />
             </div>
             <div>
               <label><FormattedMessage id='FILE_UPLOAD' /></label>
-              <div
-                style={{ marginTop: '22px' }}
-              >
-                <div>
-                  <Button className='st1' icon={uploadIconHover} onClick={() => {
-                    document.getElementById("uploadFile")?.click()
-                  }}>
-                    <FormattedMessage id='SELECT_FILE' />
-                  </Button>
-                  <Input
-                    id="uploadFile"
-                    name="uploadFile"
-                    type="file"
-                    accept=".zip"
-                    hidden
-                    onChange={handleFileChange} />
-                </div>
-                <div style={{ marginTop: '22px', width: '620px', wordWrap: 'break-word' }}>
-                  {fileName}
-                </div>
+              <div className='agent-input-row-container'>
+                <Button className='st1' icon={uploadIconHover} onClick={() => {
+                  document.getElementById("uploadFile")?.click()
+                }}>
+                  <FormattedMessage id='SELECT_FILE' />
+                </Button>
+                {fileName}
+                <Input
+                  id="uploadFile"
+                  name="uploadFile"
+                  type="file"
+                  accept=".zip"
+                  hidden
+                  onChange={handleFileChange} />
               </div>
             </div>
           </form>

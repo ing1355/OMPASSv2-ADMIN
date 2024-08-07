@@ -31,7 +31,6 @@ const GroupDetail = () => {
             page: 1,
             hasGroup: false
         }, ({ results }) => {
-            console.log(results)
             setUsers((u) => ({
                 ...u,
                 before: results
@@ -39,7 +38,6 @@ const GroupDetail = () => {
         })
         if (uuid) {
             await GetUserGroupDetailDataFunc(uuid, data => {
-                console.log(data)
                 setInputName(data.name)
                 setInputDescription(data.description)
                 setSelectedPolicy(data.policy.id)

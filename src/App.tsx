@@ -60,18 +60,6 @@ const App: React.FC = () => {
 
   return <IntlProvider locale={convertLangToIntlVer(lang)} messages={Locale[lang]}>
     <AxiosController />
-    {/* <button onClick={() => {
-      const bluetooth = (navigator as any).bluetooth
-      bluetooth.requestDevice({acceptAllDevices: true}).then((device: any) => {
-        return device.gatt.connect()
-      }).then((server: any) => {
-        console.log(server)
-      })
-      .catch((err: any) => {
-        console.log(err)
-      })
-    }}>
-    </button> */}
     {userInfo && <Header />}
     <div className={userInfo ? 'contents-container' : ""}>
       <Routes>

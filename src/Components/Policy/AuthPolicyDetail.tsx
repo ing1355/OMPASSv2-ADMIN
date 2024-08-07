@@ -207,12 +207,12 @@ const AuthPolicyDetail = () => {
                         setPolicyName(value)
                     }} placeholder="정책명을 입력해주세요." />
                 }
-                
+
             </CustomInputRow>
             <CustomInputRow title="설명">
                 <Input className="st1" value={inputDescription} placeholder="설명을 입력해주세요.(선택)" valueChange={value => {
                     setInputDescription(value)
-                }}/>
+                }} />
             </CustomInputRow>
             <CustomInputRow title="브라우저 허용">
                 <label className="policy-browser-label">
@@ -253,30 +253,21 @@ const AuthPolicyDetail = () => {
                         <div className="disabled-background" />
                         <div>
                             <div className="ompass-control-row">
-                                <label>
-                                    <Input type="radio" value={"ACTIVE"} checked={ompassControl === 'ACTIVE'} onChange={e => {
-                                        if (e.target.checked) setOmpassControl('ACTIVE')
-                                    }} />
-                                    OMPASS 인증 필수
-                                </label>
+                                <Input type="radio" value={"ACTIVE"} checked={ompassControl === 'ACTIVE'} onChange={e => {
+                                    if (e.target.checked) setOmpassControl('ACTIVE')
+                                }} label="OMPASS 인증 필수"/>
                                 <p>대체 정책이 구성되어 있지 않은 한 OMPASS 인증이 필요합니다. (없을 경우 OMPASS 인증 등록)</p>
                             </div>
                             <div className="ompass-control-row">
-                                <label>
-                                    <Input type="radio" value={"INACTIVE"} checked={ompassControl === 'INACTIVE'} onChange={e => {
-                                        if (e.target.checked) setOmpassControl('INACTIVE')
-                                    }} />
-                                    OMPASS 인증 패스
-                                </label>
+                                <Input type="radio" value={"INACTIVE"} checked={ompassControl === 'INACTIVE'} onChange={e => {
+                                    if (e.target.checked) setOmpassControl('INACTIVE')
+                                }} label="OMPASS 인증 패스"/>
                                 <p>OMPASS 등록 및 인증을 패스합니다.</p>
                             </div>
                             <div className="ompass-control-row">
-                                <label>
-                                    <Input type="radio" value={"DENY"} checked={ompassControl === 'DENY'} onChange={e => {
-                                        if (e.target.checked) setOmpassControl('DENY')
-                                    }} />
-                                    OMPASS 인증 거부
-                                </label>
+                                <Input type="radio" value={"DENY"} checked={ompassControl === 'DENY'} onChange={e => {
+                                    if (e.target.checked) setOmpassControl('DENY')
+                                }} label="OMPASS 인증 거부"/>
                                 <p>모든 사용자에 대한 OMPASS 인증을 거부합니다.</p>
                             </div>
                         </div>
@@ -313,7 +304,6 @@ const AuthPolicyDetail = () => {
                                         defaultCenter={{ lat: 36.713889964770544, lng: 127.88793971566751 }}
                                         onCameraChanged={(ev) => {
                                             setCurrentLocation(ev.detail.center)
-                                            console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
                                         }}
                                     >
                                         <MapControl position={ControlPosition.TOP_RIGHT}>
@@ -422,7 +412,7 @@ const AuthPolicyDetail = () => {
                                 ipAddressValues.map((ip, ipInd) => <div key={ipInd} className="location-item-container">
                                     <Input className="st1 policy-ip-address-input" placeholder="ip 주소를 입력해주세요." value={ip} onChange={e => {
                                         setIpAddressValues(ipAddressValues.map((_ip, _ipInd) => _ipInd === ipInd ? e.target.value : _ip))
-                                    }} onInput={ipAddressRestriction} maxLength={15} readOnly/>
+                                    }} onInput={ipAddressRestriction} maxLength={15} readOnly />
                                     <Button className="st2">
                                         삭제
                                     </Button>

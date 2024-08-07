@@ -24,11 +24,12 @@ const Settings = () => {
 
     const getDatas = async () => {
         setDataLoading(true)
-        GetPortalSettingsDataFunc(({ userSignupMethod, logoImage, noticeMessage, timeZone }) => {
+        GetPortalSettingsDataFunc(({ userSignupMethod, logoImage, noticeMessage, timeZone, companyName }) => {
             setSignupMethod(userSignupMethod)
             setLogoImg(logoImage || ompassLogoIcon)
             setWelcomeText(noticeMessage)
             setTimeZoneValue(timeZone)
+            setInputAlias(companyName)
         }).finally(() => {
             setDataLoading(false)
         })
@@ -67,7 +68,7 @@ const Settings = () => {
                 }} items={timeZoneNames.map(_ => ({
                     key: _,
                     label: _
-                }))}/>
+                }))} needSelect/>
             </CustomInputRow>
             <CustomInputRow title="회원가입 방식">
                 <fieldset className="signup-field-container" id="signupMethod" onChange={e => {

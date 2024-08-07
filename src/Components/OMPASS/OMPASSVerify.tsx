@@ -35,7 +35,6 @@ const OMPASSVerify = () => {
       authorization
     }
     ).catch(err => {
-      console.log('ompass 인증 실패');
       navigate('/Main')
     });
   }, [])

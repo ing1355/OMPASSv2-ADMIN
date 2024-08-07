@@ -49,10 +49,8 @@ export function CustomAxiosPost(url: string, callback?: Function, params?: any, 
         authorization: config.authorization ? config.authorization : localStorage.getItem('authorization'),
         ...config.headers
     } : defaultHeaders()
-    console.log('headers : ', headers)
     return axios.post(url, params, { headers }).then(res => {
         // if (callback) callback(res.data.data, res.headers.authorization);
-        console.log(res)
         if (callback) callback(res.data, res.headers.authorization);
         return res.data
     })
@@ -99,7 +97,6 @@ export async function CustomAxiosGetAll(url: string[], callback?: Function[], pa
     } : defaultHeaders()
     axios.all(url.map((_, ind) => axios.get(_, { headers, signal: controller.signal, params: params && params[ind] })))
         .then(axios.spread((...res) => {
-            console.log(res)
             res.forEach((_, ind) => {
                 if (callback && callback[ind]) callback[ind](_.data)
             })

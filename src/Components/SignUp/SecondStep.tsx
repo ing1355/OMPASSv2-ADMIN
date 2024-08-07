@@ -51,12 +51,22 @@ const SecondStep = () => {
         <form
             onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
                 e.preventDefault();
-                if (inputUsername && inputName1 && inputName2 && inputEmail && inputPhone && !isIdAlert && !isNameAlert1 && !isNameAlert2 && !isEmailAlert && !isPhoneAlert && !idExist) {
+                if(inputPassword !== inputPasswordConfirm) {
+                    return message.error("비밀번호가 일치하지 않습니다.")
+                }
+                if(isIdAlert || isNameAlert1 || isNameAlert2 || isEmailAlert || isPhoneAlert) {
+                    return message.error("에러를 처리해주세요")
+                }
+                if(idExist) {
+                    return message.error("아이디 중복확인은 필수입니다")
+                }
+                if (inputUsername && inputName1 && inputName2 && inputEmail && inputPhone) {
                     SignUpRequestFunc({
                         name: {
                             firstName: inputName1,
                             lastName: inputName2
                         },
+                        password: inputPassword,
                         username: inputUsername,
                         email: inputEmail,
                         phone: inputPhone,
@@ -76,7 +86,7 @@ const SecondStep = () => {
         >
             <InputRow label="ID" alert={isIdAlert}>
                 <Input
-                    className={'st1 signup-input'}
+                    className='st1'
                     containerClassName="signup-userId-input-row"
                     maxLength={16}
                     value={inputUsername}
@@ -114,7 +124,7 @@ const SecondStep = () => {
             </InputRow>
             <InputRow label="PASSWORD" alert={isPasswordAlert}>
                 <Input
-                    className={'st1 signup-input'}
+                    className='st1'
                     maxLength={16}
                     type="password"
                     value={inputPassword}
@@ -133,7 +143,7 @@ const SecondStep = () => {
             </InputRow>
             <InputRow label="PASSWORD_CONFIRM" alert={isPasswordConfirmAlert}>
                 <Input
-                    className={'st1 signup-input'}
+                    className='st1'
                     maxLength={16}
                     type="password"
                     value={inputPasswordConfirm}
@@ -152,7 +162,7 @@ const SecondStep = () => {
             </InputRow>
             <InputRow label="FIRST_NAME" alert={isNameAlert1}>
                 <Input
-                    className={'st1 signup-input'}
+                    className='st1'
                     maxLength={16}
                     value={inputName1}
                     valueChange={value => {
@@ -168,7 +178,7 @@ const SecondStep = () => {
             </InputRow>
             <InputRow label="LAST_NAME" alert={isNameAlert2}>
                 <Input
-                    className={'st1 signup-input'}
+                    className='st1'
                     maxLength={16}
                     value={inputName2}
                     valueChange={value => {
@@ -184,7 +194,7 @@ const SecondStep = () => {
             </InputRow>
             <InputRow label="EMAIL" alert={isEmailAlert}>
                 <Input
-                    className={'st1 signup-input'}
+                    className='st1'
                     maxLength={48}
                     value={inputEmail}
                     valueChange={value => {
@@ -200,7 +210,7 @@ const SecondStep = () => {
             </InputRow>
             <InputRow label="PHONE_NUMBER" alert={isPhoneAlert}>
                 <Input
-                    className={'st1 signup-input'}
+                    className='st1'
                     maxLength={13}
                     value={inputPhone}
                     valueChange={value => {

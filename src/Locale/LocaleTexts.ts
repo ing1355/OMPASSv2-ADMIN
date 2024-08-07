@@ -283,7 +283,8 @@ const LocaleTexts = {
     DAY_OF_WEEKS_SATURDAY: 'Saturday',
     DAY_OF_WEEKS_SUNDAY: 'Sunday',
     BILLING_PLAN: "Plan by billing",
-    NONE_VALUE: "None"
+    NONE_VALUE: "None",
+    NO_SELECT_VALUE: "No Select"
   },
   'ko': {
     LOGIN: '로그인',
@@ -570,7 +571,8 @@ const LocaleTexts = {
     DAY_OF_WEEKS_SATURDAY: '토요일',
     DAY_OF_WEEKS_SUNDAY: '일요일',
     BILLING_PLAN: "요금 별 플랜",
-    NONE_VALUE: "없음"
+    NONE_VALUE: "알 수 없음",
+    NO_SELECT_VALUE: "선택 안함"
   }
 }
 

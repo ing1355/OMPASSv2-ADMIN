@@ -333,6 +333,7 @@ type UserDataAddLocalValuesType = {
     email: UserDataType['email']
     phone: UserDataType['phone']
     role: UserDataType['role']
+    password?: string
     groupId?: UserDataType['group']['id']
 }
 

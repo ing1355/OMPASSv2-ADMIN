@@ -5,7 +5,7 @@
     & input {
         margin-right: 8px;
     }
-    & label {
+    & > .custom-input-wrapper {
         color: var(--main-blue-color);
         font-weight: 700;
     }
@@ -196,9 +196,7 @@ div[aria-hidden="true"] {
     flex-direction: row;
     align-items: center;
     gap: 8px;
-    & > input {
-        height: 32px;
-    }
+    height: 32px;
 }
 
 .policy-input-map-container {

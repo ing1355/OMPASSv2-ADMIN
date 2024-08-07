@@ -5,9 +5,10 @@ import { FormattedMessage } from "react-intl"
 type RoleSelectProps = {
     selectedGroup?: userRoleType
     setSelectedGroup: (data: userRoleType) => void
+    needSelect?: boolean
 }
 
-const RoleSelect = ({ selectedGroup, setSelectedGroup }: RoleSelectProps) => {
+const RoleSelect = ({ selectedGroup, setSelectedGroup, needSelect }: RoleSelectProps) => {
     const userRoles: userRoleType[] = ["USER", "ADMIN"]
     return <>
         <CustomSelect
@@ -16,7 +17,7 @@ const RoleSelect = ({ selectedGroup, setSelectedGroup }: RoleSelectProps) => {
                 label: <FormattedMessage id={_ + '_ROLE_VALUE'} />
             }))} value={selectedGroup as string} onChange={id => {
                 setSelectedGroup(id as userRoleType)
-            }} />
+            }} needSelect={needSelect}/>
     </>
 }
 

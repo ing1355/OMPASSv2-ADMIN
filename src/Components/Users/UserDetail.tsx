@@ -65,25 +65,6 @@ const UserDetail = ({ }) => {
     const [addValues, setAddValues] = useState<UserDataAddLocalValuesType>(initAddValues)
     const [addPasscode, setAddPasscode] = useState<RPUserDetailAuthDataType['id']>("")
     const [targeting, setTargeting] = useState(false)
-    const [addPasscodeMethod, setAddPasscodeMethod] = useState<{
-        method: 'target' | 'random'
-        time: 'infinity' | 'select'
-        count: 'infinity' | 'one' | 'select'
-    }>({
-        method: 'random',
-        time: 'infinity',
-        count: 'one'
-    })
-    const [addPasscodeValues, setAddPasscodeValues] = useState<{
-        code: string
-        time: number
-        count: number
-    }>({
-        code: '',
-        time: 1,
-        count: 1
-    })
-    const [addPasscodeLoading, setAddPasscodeLoading] = useState(false)
     const navigate = useNavigate()
     const location = useLocation()
     const dispatch = useDispatch()
@@ -172,37 +153,6 @@ const UserDetail = ({ }) => {
             setModifyValues(initModifyValues)
         }
     }, [isModify, userData])
-
-    const passcodeCompleteChangeCallbak = (id1: RPUserDetailAuthDataType['id'], data: PasscodeAuthenticatorDataType) => {
-        setUserDetailDatas(userDetailDatas.map((ud, ud_ind) => ({
-            ...ud,
-            authenticationInfo: ud.authenticationInfo.map((aInfo, aInd) => aInfo.id === id1 ? ({
-                ...aInfo,
-                authenticators: aInfo.authenticators.concat(data)
-            }) : aInfo)
-        })))
-    }
-
-    const PasscodeRadioButton = ({ title, name, defaultChecked, children, value, checked }: {
-        title: string
-        name: string
-        defaultChecked?: boolean
-        checked?: boolean
-        children?: React.ReactNode
-        value?: string
-    }) => {
-        return <div className='passcode-add-item'>
-            <label className='passcode-add-label'>
-                <input type="radio" value={value} name={name} defaultChecked={defaultChecked} checked={checked} onChange={e => {
-                    setAddPasscodeMethod({
-                        ...addPasscodeMethod,
-                        [name]: e.target.value
-                    })
-                }} /> {title}
-            </label>
-            {children}
-        </div>
-    }
 
     return <>
         <Contents loading={dataLoading}>
@@ -381,7 +331,7 @@ const UserDetail = ({ }) => {
                                     role
                                 })
                             }
-                        }} />
+                        }} needSelect />
                     </UserInfoInputrow> : <UserInfoRow title="USER_ROLE" value={(userData && userData.role) ? formatMessage({ id: userData.role + '_ROLE_VALUE' }) : "정보 없음"} />}
                     {/* {(isModify || isAdd) ? <UserInfoInputrow title="POLICY_TEXT">
                         <RoleSelect selectedGroup={isAdd ? addValues.role : modifyValues.role} setSelectedGroup={(role) => {
@@ -592,7 +542,7 @@ const UserDetail = ({ }) => {
                 setAddPasscode("")
             }}
             afterOpenChange={opened => {
-                
+
             }}
             okCallback={async () => {
                 return DeleteAuthenticatorDataFunc(authenticatorDelete, () => {
@@ -606,126 +556,183 @@ const UserDetail = ({ }) => {
             <div className='passcode-add-title'>
                 패스코드 추가
             </div>
-            <form onSubmit={(e) => {
-                e.preventDefault();
-                const target = e.target as HTMLFormElement
-                const { method, time, count, codeValue, timeValue, countValue } = target.elements as any
-                if (method.value === "target" && codeValue.value.length !== 9) {
-                    return message.error("코드 지정 생성은 9자리 필수 입니다.")
-                }
-                if (time.value === "select" && parseInt(timeValue.value) < 1) {
-                    return message.error("기한은 1분 이상 입력해야 합니다.")
-                }
-                if (count.value === "select" && parseInt(countValue.value) < 1) {
-                    return message.error("횟수는 1회 이상 입력해야 합니다.")
-                }
-                setAddPasscodeLoading(true)
-                AddPasscodeFunc({
-                    authenticationDataId: addPasscode,
-                    passcodeNumber: method.value === 'target' ? codeValue.value : Math.floor(Math.random() * 1000000000),
-                    validTime: time.value === 'select' ? timeValue.value : -1,
-                    recycleCount: count.value === 'one' ? 1 : (count.value === 'select' ? countValue.value : -1)
-                }, (data) => {
-                    message.success('패스코드 생성 성공!')
-                    passcodeCompleteChangeCallbak(addPasscode, data)
-                    setAddPasscode("")
-                }).finally(() => {
-                    setAddPasscodeLoading(false)
-                })
-            }} onChange={e => {
-                const target = e.target as HTMLInputElement
-                // if (target.name === 'method') setAddPasscodeMethod(target.value)
-            }}>
-                <div className='passcode-add-contents'>
-                    <div className='passcode-add-content-row'>
-                        <div>
-                            코드 생성 방법
-                        </div>
-                        <div>
-                            <PasscodeRadioButton title="랜덤 생성" name="method" value="random" checked={addPasscodeMethod.method === 'random'} />
-                            <PasscodeRadioButton title="지정 생성" name="method" value="target" checked={addPasscodeMethod.method === 'target'}>
-                                <Input
-                                    disabled={addPasscodeMethod.method !== 'target'}
-                                    className='st1'
-                                    name="codeValue"
-                                    value={addPasscodeValues.code}
-                                    valueChange={value => {
-                                        setAddPasscodeValues({
-                                            ...addPasscodeValues,
-                                            code: value
-                                        })
-                                    }}
-                                    maxLength={9}
-                                    onlyNumber
-                                /> (9자리)
-                            </PasscodeRadioButton>
-                        </div>
-                    </div>
-                    <div className='passcode-add-content-row'>
-                        <div>
-                            기한
-                        </div>
-                        <div>
-                            <PasscodeRadioButton title="무제한" name="time" value='infinity' checked={addPasscodeMethod.time === 'infinity'} />
-                            <PasscodeRadioButton title="제한" name="time" value='select' checked={addPasscodeMethod.time === 'select'}>
-                                <Input
-                                    disabled={addPasscodeMethod.time !== 'select'}
-                                    className='st1'
-                                    value={addPasscodeValues.code}
-                                    valueChange={value => {
-                                        setAddPasscodeValues({
-                                            ...addPasscodeValues,
-                                            time: parseInt(value)
-                                        })
-                                    }}
-                                    name="timeValue"
-                                    onlyNumber
-                                /> 분 후 만료
-                            </PasscodeRadioButton>
-                        </div>
-                    </div>
-                    <div className='passcode-add-content-row'>
-                        <div>
-                            사용 횟수
-                        </div>
-                        <div>
-                            <PasscodeRadioButton title="한번만" name="count" value='one' checked={addPasscodeMethod.count === 'one'} />
-                            <PasscodeRadioButton title="무제한" name="count" value='infinity' checked={addPasscodeMethod.count === 'infinity'} />
-                            <PasscodeRadioButton title="지정 횟수" name="count" value='select' checked={addPasscodeMethod.count === 'select'}>
-                                <Input
-                                    disabled={addPasscodeMethod.count !== 'select'}
-                                    className='st1'
-                                    name="countValue"
-                                    value={addPasscodeValues.code}
-                                    valueChange={value => {
-                                        setAddPasscodeValues({
-                                            ...addPasscodeValues,
-                                            count: parseInt(value)
-                                        })
-                                    }}
-                                    onlyNumber
-                                /> 회
-                            </PasscodeRadioButton>
-                        </div>
-                    </div>
-                    <div className='passcode-add-buttons'>
-                        <Button className='st7' onClick={() => {
-                            setAddPasscode("")
-                        }}>
-                            닫기
-                        </Button>
-                        <Button className='st3' type='submit' loading={addPasscodeLoading}>
-                            추가
-                        </Button>
-                    </div>
-                </div>
-            </form>
+            <PasscodeAddComponent authId={addPasscode} cancelCallback={() => {
+                setAddPasscode("")
+            }} okCallback={(newData) => {
+                message.success('패스코드 생성 성공!')
+                setUserDetailDatas(userDetailDatas.map((ud, ud_ind) => ({
+                    ...ud,
+                    authenticationInfo: ud.authenticationInfo.map((aInfo, aInd) => aInfo.id === addPasscode ? ({
+                        ...aInfo,
+                        authenticators: aInfo.authenticators.concat(newData)
+                    }) : aInfo)
+                })))
+                setAddPasscode("")
+            }} />
         </CustomModal>
     </>
 }
 
-const UserAuthenticationInfoRow = () => {
+const PasscodeRadioButton = ({ title, name, defaultChecked, children, value, checked, onChange }: {
+    title: string
+    name: string
+    defaultChecked?: boolean
+    checked?: boolean
+    children?: React.ReactNode
+    value?: string
+    onChange: (name: string, val: string) => void
+}) => {
+    return <div className='passcode-add-item'>
+        <label className='passcode-add-label'>
+            <input type="radio" value={value} name={name} defaultChecked={defaultChecked} checked={checked} onChange={e => {
+                onChange(name, e.target.value)
+            }} /> {title}
+        </label>
+        {children}
+    </div>
+}
 
+const PasscodeAddComponent = ({ okCallback, cancelCallback, authId }: {
+    cancelCallback: Function
+    okCallback: (data: PasscodeAuthenticatorDataType) => void
+    authId: string
+}) => {
+    const [addPasscodeMethod, setAddPasscodeMethod] = useState<{
+        method: 'target' | 'random'
+        time: 'infinity' | 'select'
+        count: 'infinity' | 'one' | 'select'
+    }>({
+        method: 'random',
+        time: 'infinity',
+        count: 'one'
+    })
+    const [inputCurrentPasscodeValue, setInputCurrentPasscodeValue] = useState('')
+    const [inputCurrentPasscodeTime, setInputCurrentPasscodeTime] = useState(1)
+    const [inputCurrentPasscodeCount, setInputCurrentPasscodeCount] = useState(1)
+
+    const [addPasscodeLoading, setAddPasscodeLoading] = useState(false)
+
+    const radioChangeCallback = (name: string, value: string) => {
+        setAddPasscodeMethod({
+            ...addPasscodeMethod,
+            [name]: value
+        })
+    }
+
+    return <form onSubmit={(e) => {
+        e.preventDefault();
+        const target = e.target as HTMLFormElement
+        const { method, time, count, codeValue, timeValue, countValue } = target.elements as any
+        if (method.value === "target" && codeValue.value.length !== 9) {
+            return message.error("코드 지정 생성은 9자리 필수 입니다.")
+        }
+        if (time.value === "select" && parseInt(timeValue.value) < 1) {
+            return message.error("기한은 1분 이상 입력해야 합니다.")
+        }
+        if (count.value === "select" && parseInt(countValue.value) < 1) {
+            return message.error("횟수는 1회 이상 입력해야 합니다.")
+        }
+        setAddPasscodeLoading(true)
+        AddPasscodeFunc({
+            authenticationDataId: authId,
+            passcodeNumber: method.value === 'target' ? codeValue.value : Math.floor(Math.random() * 1000000000),
+            validTime: time.value === 'select' ? timeValue.value : -1,
+            recycleCount: count.value === 'one' ? 1 : (count.value === 'select' ? countValue.value : -1)
+        }, (data) => {
+            okCallback(data)
+        }).finally(() => {
+            setAddPasscodeLoading(false)
+        })
+    }} onChange={e => {
+        const target = e.target as HTMLInputElement
+        // if (target.name === 'method') setAddPasscodeMethod(target.value)
+    }}>
+        <div className='passcode-add-contents'>
+            <div className='passcode-add-content-row'>
+                <div>
+                    코드 생성 방법
+                </div>
+                <div>
+                    <PasscodeRadioButton title="랜덤 생성" name="method" value="random" checked={addPasscodeMethod.method === 'random'} onChange={radioChangeCallback} />
+                    <PasscodeRadioButton title="지정 생성" name="method" value="target" checked={addPasscodeMethod.method === 'target'} onChange={radioChangeCallback}>
+                        <Input
+                            disabled={addPasscodeMethod.method !== 'target'}
+                            className='st1'
+                            name="codeValue"
+                            value={inputCurrentPasscodeValue}
+                            valueChange={value => {
+                                setInputCurrentPasscodeValue(value)
+                            }}
+                            zeroOk
+                            maxLength={9}
+                            onlyNumber
+                        /> (9자리)
+                    </PasscodeRadioButton>
+                </div>
+            </div>
+            <div className='passcode-add-content-row'>
+                <div>
+                    기한
+                </div>
+                <div>
+                    <PasscodeRadioButton title="무제한" name="time" value='infinity' checked={addPasscodeMethod.time === 'infinity'} onChange={radioChangeCallback} />
+                    <PasscodeRadioButton title="제한" name="time" value='select' checked={addPasscodeMethod.time === 'select'} onChange={radioChangeCallback}>
+                        <Input
+                            disabled={addPasscodeMethod.time !== 'select'}
+                            className='st1'
+                            value={inputCurrentPasscodeTime}
+                            valueChange={value => {
+                                setInputCurrentPasscodeTime(parseInt(value))
+                            }}
+                            onInput={(e) => {
+                                if(parseInt(e.currentTarget.value) > 525600) e.currentTarget.value = "525600"
+                            }}
+                            nonZero
+                            maxLength={7}
+                            name="timeValue"
+                            onlyNumber
+                        /> 분 후 만료
+                    </PasscodeRadioButton>
+                </div>
+            </div>
+            <div className='passcode-add-content-row'>
+                <div>
+                    사용 횟수
+                </div>
+                <div>
+                    <PasscodeRadioButton title="한번만" name="count" value='one' checked={addPasscodeMethod.count === 'one'} onChange={radioChangeCallback} />
+                    <PasscodeRadioButton title="무제한" name="count" value='infinity' checked={addPasscodeMethod.count === 'infinity'} onChange={radioChangeCallback} />
+                    <PasscodeRadioButton title="지정 횟수" name="count" value='select' checked={addPasscodeMethod.count === 'select'} onChange={radioChangeCallback}>
+                        <Input
+                            disabled={addPasscodeMethod.count !== 'select'}
+                            className='st1'
+                            name="countValue"
+                            value={inputCurrentPasscodeCount}
+                            valueChange={value => {
+                                setInputCurrentPasscodeCount(parseInt(value))
+                            }}
+                            onInput={(e) => {
+                                if(parseInt(e.currentTarget.value) > 9999) e.currentTarget.value = "9999"
+                            }}
+                            nonZero
+                            maxLength={5}
+                            onlyNumber
+                        /> 회
+                    </PasscodeRadioButton>
+                </div>
+            </div>
+            <div className='passcode-add-buttons'>
+                <Button className='st7' onClick={() => {
+                    cancelCallback()
+                }}>
+                    닫기
+                </Button>
+                <Button className='st3' type='submit' loading={addPasscodeLoading}>
+                    추가
+                </Button>
+            </div>
+        </div>
+    </form>
 }
 
 export default UserDetail

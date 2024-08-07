@@ -69,7 +69,7 @@ const AuthLog = () => {
                     selectOptions: AuthenticationProcessTypes.map(_ => ({
                         key: _,
                         label: <FormattedMessage id={_ + '_VALUE'} />
-                    }))
+                    })),
                 }]}
                 columns={[
                     {

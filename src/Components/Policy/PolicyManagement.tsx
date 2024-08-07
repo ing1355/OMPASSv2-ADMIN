@@ -96,7 +96,6 @@ const TableComponent = ({opened, policyId}: {
             setTableLoading(true)
             GetPolicyDetailDataFunc(policyId).then(_ => {
                 setData(_)
-                console.log(_)
             }).finally(() => {
                 setTableLoading(false)
             })

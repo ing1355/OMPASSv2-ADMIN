@@ -27,15 +27,12 @@ const PolicySelect = ({ selectedPolicy, setSelectedPolicy, needSelect }: PolicyS
 
     return <>
         <CustomSelect
-            items={[{
-                key: "",
-                label: <FormattedMessage id="NO_POLICY" />
-            }, ...policiesData.map(_ => ({
+            items={policiesData.map(_ => ({
                 key: _.id,
                 label: _.policyType === 'DEFAULT' ? <FormattedMessage id={_.name} /> : _.name
-            }))]} value={selectedPolicy} onChange={id => {
+            }))} value={selectedPolicy} onChange={id => {
                 setSelectedPolicy(id)
-            }} />
+            }} needSelect={needSelect}/>
         {policiesData.length > 0 && selectedPolicy && <div className="custom-detail-policy-navigate-text">
             <a target="_blank" href={`/Policies/auth/detail/${selectedPolicy}`}>여기</a>를 눌러 정책을 편집할 수 있습니다.
         </div>}

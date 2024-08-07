@@ -28,6 +28,7 @@ type CustomTableButtonType = {
 type SearchOptionType = {
     key: string
     type: 'string' | 'select'
+    needSelect?: boolean
     selectOptions?: {
         key: string
         label: string | React.ReactNode
@@ -128,7 +129,7 @@ const CustomTable = <T extends {
     }, [searchType])
 
     useEffect(() => {
-        if(searchTarget && searchTarget.type === 'select') {
+        if(searchTarget && searchTarget.type === 'select' && searchTarget.needSelect) {
             setSearchValue(searchTarget.selectOptions![0].key)
         }
     },[searchTarget])
@@ -149,13 +150,13 @@ const CustomTable = <T extends {
                     label: columns.find(__ => _.key === __.key)?.title
                 }))} value={searchType!} onChange={type => {
                     setSearchType(type)
-                }} />
+                }} needSelect/>
                 {
                     searchTarget?.type === 'string' ? <Input containerClassName="table-search-input" className="st1" name="searchValue" value={searchValue} placeholder="검색명" valueChange={value => {
                         setSearchValue(value)
                     }} /> : <CustomSelect value={searchValue} onChange={value => {
                         setSearchValue(value)
-                    }} items={searchTarget?.selectOptions!}/>
+                    }} items={searchTarget?.selectOptions!} needSelect={searchTarget?.needSelect}/>
                 }
 
                 <Button className="st3" icon={searchIcon} type="submit">

@@ -1,30 +1,56 @@
-import { forwardRef } from "react"
+import React, { forwardRef } from "react"
 
-const Input = forwardRef(({ valueChange, children, onlyNumber, label, value, containerClassName, ...props }: React.InputHTMLAttributes<HTMLInputElement> & {
+type CustomInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
     valueChange?: (value: string) => void
     onlyNumber?: boolean
     label?: string | React.ReactNode
     containerClassName?: string
-}, ref) => {
+    zeroOk?: boolean
+    nonZero?: boolean
+}
 
-    const defaultRender = <div className={`custom-input-wrapper${containerClassName ? (' ' + containerClassName) : ''}`}>
-        <input onChange={e => {
-            if (valueChange) {
-                valueChange(e.target.value)
-            }
-        }} onInput={(e) => {
-            if (onlyNumber) {
-                if (!e.currentTarget.value) e.currentTarget.value = "0"
-                else e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')
-            }
-        }} {...props} value={props.disabled ? "" : value} />
+const HasLabel = ({ children, label }: {
+    children: React.ReactNode
+    label: string | React.ReactNode
+}) => label ? <label>
+    {children}
+    {label}
+</label> : <>
         {children}
-    </div>
-
-    return props.type === 'checkbox' ? <label className="checkbox-label">
-        {defaultRender}
         {label}
-    </label> : defaultRender
+    </>
+
+const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyNumber, label, value, containerClassName, onInput, ...props }: CustomInputProps, ref) => {
+    return <div className={`custom-input-wrapper${containerClassName ? (' ' + containerClassName) : ''}`}>
+        <HasLabel label={label}>
+            <input onChange={e => {
+                if (valueChange) {
+                    valueChange(e.target.value)
+                }
+            }} onInput={(e) => {
+                if (onlyNumber) {
+                    if (!e.currentTarget.value) e.currentTarget.value = "0"
+                    else e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')
+                    if(!zeroOk) {
+                        while(e.currentTarget.value.startsWith('0') && e.currentTarget.value !== '0') {
+                            e.currentTarget.value = e.currentTarget.value.slice(1,)
+                        }
+                    }
+                    if(nonZero && e.currentTarget.value === '0') {
+                        e.currentTarget.value = '1'
+                    }
+                }
+                if(onInput) onInput(e)
+            }} {...props} value={props.disabled ? "" : value} />
+        </HasLabel>
+    </div>
+})
+
+const Input = forwardRef((props: CustomInputProps, ref) => {
+    const { type } = props
+    return type === 'checkbox' ? <label className="checkbox-label">
+        <DefaultInput {...props} ref={ref} />
+    </label> : <DefaultInput {...props} ref={ref} />
 })
 
 export default Input

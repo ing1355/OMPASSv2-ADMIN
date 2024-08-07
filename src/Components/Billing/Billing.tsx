@@ -115,7 +115,7 @@ const Billing = () => {
                             label: ind + 11
                         }))} onChange={value => {
                             setInputUserNum(parseInt(value))
-                        }}/>
+                        }} needSelect/>
                     </BillingInputRow>
                 </ItemContainer>
                 <ItemContainer title="" border bodyStyle={{

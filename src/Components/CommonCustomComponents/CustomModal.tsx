@@ -20,14 +20,14 @@ type CustomModalProps = ModalProps & {
 
 const CustomModal = ({ buttonLoading, typeTitle, typeContent, type, children, okText, cancelText, okCallback, cancelCallback, okClassName, cancelClassName, onCancel, ...props }: CustomModalProps) => {
     const [okLoading, setOkLoading] = useState(false)
-
+    
     return <Modal 
     footer={null} 
     closeIcon={null} 
     mask 
     maskClosable 
-    centered 
-    keyboard 
+    centered
+    keyboard
     destroyOnClose
     styles={{
         mask: {

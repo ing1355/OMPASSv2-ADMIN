@@ -248,14 +248,13 @@ const AgentManagement = () => {
               //     }}
               //   />
               // </Popconfirm>,
-              render: (_, index, row) => <Popconfirm
+              render: (_, index, row) => !row.downloadTarget && <Popconfirm
                 title={formatMessage({ id: 'DELETE_A_FILE' })}
                 description={formatMessage({ id: 'CONFIRM_DELETE_FILE' })}
                 okText={formatMessage({ id: 'DELETE' })}
                 cancelText={formatMessage({ id: 'CANCEL' })}
                 open={openFileDelete === index}
                 onConfirm={() => {
-                  // const versionIds = checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.userId).join(',');
                   const versionIds = `${row.fileId}`
                   const target = tableData.find((data) => data.downloadTarget === true);
                   const targetVersion = checkboxes.filter((checkbox) => checkbox.userId === target?.fileId);

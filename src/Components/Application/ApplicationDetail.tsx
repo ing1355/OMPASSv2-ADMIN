@@ -104,7 +104,7 @@ const ApplicationDetail = () => {
             <CustomInputRow title="유형">
                 {isAdd ? <CustomSelect value={applicationType} onChange={value => {
                     setApplicationType(value as ApplicationDataType['type'])
-                }} items={typeItems} /> : getApplicationTypeLabel(applicationType)}
+                }} items={typeItems} needSelect /> : getApplicationTypeLabel(applicationType)}
             </CustomInputRow>
             {
                 applicationType && <>
