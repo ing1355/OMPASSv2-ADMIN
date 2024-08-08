@@ -96,7 +96,6 @@ a[download] {
   justify-content: start;
   flex-direction: column;
   padding-top: 48px;
-  overflow-y: auto;
   box-sizing: border-box;
   &.hidden {
     display: none;

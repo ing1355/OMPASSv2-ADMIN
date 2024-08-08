@@ -1,4 +1,5 @@
 input.secret-key {
+    cursor: pointer;
     padding-right: 28px;
     background-image: url('../../assets/copyIcon.png');
     background-repeat: no-repeat;

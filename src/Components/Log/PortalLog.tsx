@@ -1,7 +1,7 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
-import { HttpMethodTypes } from "Constants/ConstantValues"
+import { HttpMethodTypes, userSelectPageSize } from "Constants/ConstantValues"
 import { GetPortalLogDataListFunc } from "Functions/ApiFunctions"
 import { useLayoutEffect, useState } from "react"
 
@@ -30,7 +30,7 @@ const PortalLog = () => {
     useLayoutEffect(() => {
         GetDatas({
             page:1,
-            size: 10
+            size: userSelectPageSize()
         })
     }, [])
 

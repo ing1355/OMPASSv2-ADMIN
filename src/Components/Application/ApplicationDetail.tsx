@@ -65,6 +65,7 @@ const ApplicationDetail = () => {
                 setApplicationType(data.type)
                 setHelpMsg(data.helpDeskMessage || "")
                 setInputApiServerHost(data.apiServerHost)
+                setNeedPassword(data.isTwoFactorAuthEnabled ?? false)
             })
         } else {
             await GetApplicationListFunc({ type: 'WINDOWS_LOGIN' }, ({ results }) => {
@@ -143,10 +144,27 @@ const ApplicationDetail = () => {
                         }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
                     </CustomInputRow>}
                     <CustomInputRow title="API 서버 주소">
-                        <Input className="st1" value={inputApiServerHost} disabled={isAdd} readOnly={!isAdd} />
+                    <CopyToClipboard text={inputApiServerHost} onCopy={(value, result) => {
+                            if (result) {
+                                message.success("API 서버 주소가 복사되었습니다.")
+                            } else {
+                                message.error("API 서버 주소 복사에 실패하였습니다.")
+                            }
+                        }}>
+                            <Input className="st1 secret-key" value={inputApiServerHost} disabled={isAdd} readOnly={!isAdd} />
+                        </CopyToClipboard>
+                        
                     </CustomInputRow>
                     {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title="클라이언트 아이디">
-                        <Input className="st1" value={inputClientId} disabled={isAdd} readOnly={!isAdd} />
+                        <CopyToClipboard text={inputClientId} onCopy={(value, result) => {
+                            if (result) {
+                                message.success("클라이언트 아이디가 복사되었습니다.")
+                            } else {
+                                message.error("클라이언트 아이디 복사에 실패하였습니다.")
+                            }
+                        }}>
+                            <Input className="st1 secret-key" value={inputClientId} disabled={isAdd} readOnly={!isAdd} />
+                        </CopyToClipboard>                        
                     </CustomInputRow>}
                     {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title="시크릿 키">
                         <CopyToClipboard text={inputSecretKey} onCopy={(value, result) => {
@@ -156,7 +174,7 @@ const ApplicationDetail = () => {
                                 message.error("시크릿 복사에 실패하였습니다.")
                             }
                         }}>
-                            <Input className="st1 hover-st1 pointer secret-key" value={inputSecretKey} onChange={e => {
+                            <Input className="st1 secret-key" value={inputSecretKey} onChange={e => {
                                 setInputSecretKey(e.target.value)
                             }} readOnly />
                         </CopyToClipboard>

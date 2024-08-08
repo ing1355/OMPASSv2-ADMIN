@@ -405,7 +405,7 @@ const AuthPolicyDetail = () => {
                                     setIpAddressValues([...ipAddressValues, currentIpAddress])
                                     setCurrentIpAddress("")
                                 }}>
-                                    저장
+                                    등록
                                 </Button>
                             </div>
                             {
@@ -438,7 +438,7 @@ const AuthPolicyDetail = () => {
                         <div className="ip-address-policy-input-header">
                             <Button className="st3" onClick={() => {
                                 setAccessTimeValues([defaultTimePolicyData, ...accessTimeValues])
-                            }}>추가</Button>
+                            }}>등록</Button>
                         </div>
                         {accessTimeValues.map((_, ind) => <div key={ind} className="time-policy-container">
                             <div>

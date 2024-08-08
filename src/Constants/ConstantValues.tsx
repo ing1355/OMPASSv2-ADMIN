@@ -23,10 +23,12 @@ import { tz } from 'moment-timezone'
 
 export const timeZoneNames = tz.names()
 
+
 export const isDev = process.env.NODE_ENV === 'development'
 export const CopyRightText = `OMPASS Portal v${process.env.REACT_APP_VERSION} © 2024. OneMoreSecurity Inc. All Rights Reserved.`
 export const INT_MAX_VALUE = Math.pow(2, 31) - 1
 export const DateTimeFormat = "YYYY-MM-DD HH:mm:ss"
+export const userSelectPageSize = () => parseInt(localStorage.getItem('user_select_size') || "10")
 
 type menuDataType = {
     label: string

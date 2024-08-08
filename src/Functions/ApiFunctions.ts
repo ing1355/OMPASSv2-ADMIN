@@ -1,5 +1,5 @@
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosGetFile, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from "Components/CommonCustomComponents/CustomAxios";
-import { AddApplicationListApi, AddPasscodeApi, AddPoliciesListApi, AddUserDataApi, AddUserGroupApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DownloadAgentInstallerApi, DuplicateUserNameCheckApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetPasscodeHistoriesApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, PostLoginApi, SignUpRequestApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi } from "Constants/ApiRoute";
+import { AddApplicationListApi, AddPasscodeApi, AddPoliciesListApi, AddUserDataApi, AddUserGroupApi, ApprovalUserApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DownloadAgentInstallerApi, DuplicateUserNameCheckApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetPasscodeHistoriesApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, PostLoginApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi } from "Constants/ApiRoute";
 import { INT_MAX_VALUE } from "Constants/ConstantValues";
 import { AxiosResponse } from "axios";
 
@@ -314,4 +314,22 @@ export const UpdatePortalSettingsDataFunc = (params: PortalSettingsDataType, cal
 
 export const SignUpRequestFunc = (params: UserDataAddLocalValuesType, callback: () => void) => {
     return CustomAxiosPost(SignUpRequestApi, callback, params)
+}
+
+export const SignUpVerificationCodeSendFunc = (email: string, callback: () => void) => {
+    return CustomAxiosPost(SignUpVerificationCodeSendApi, callback, {
+        email
+    })
+}
+
+export const SignUpVerificationCodeVerifyFunc = (params: {
+    username: string
+    email: string
+    code: string
+}, callback: () => void) => {
+    return CustomAxiosPost(SignUpVerificationCodeVerifyApi, callback, params)
+}
+
+export const ApprovalUserFunc = (userId: UserDataType['userId'], callback: () => void) => {
+    return CustomAxiosPatch(ApprovalUserApi(userId), callback)
 }

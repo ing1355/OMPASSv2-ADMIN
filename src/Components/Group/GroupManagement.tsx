@@ -7,6 +7,7 @@ import { GetUserGroupDataListFunc } from "Functions/ApiFunctions"
 import { FormattedMessage } from "react-intl"
 import groupAddIcon from './../../assets/groupAddIcon.png'
 import groupAddIconHover from './../../assets/groupAddIconHover.png'
+import { userSelectPageSize } from "Constants/ConstantValues"
 
 const GroupManagement = () => {
     const [totalCount, setTotalCount] = useState(10);
@@ -34,7 +35,7 @@ const GroupManagement = () => {
     useLayoutEffect(() => {
         GetDatas({
             page: 1,
-            size: 10
+            size: userSelectPageSize()
         })
     }, [])
 

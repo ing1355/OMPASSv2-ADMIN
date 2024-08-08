@@ -8,6 +8,7 @@ import ContentsHeader from "Components/Layout/ContentsHeader";
 import userAddIcon from './../../assets/userAddIcon.png'
 import userAddIconHover from './../../assets/userAddIconHover.png'
 import './UserManagement.css'
+import { userSelectPageSize } from "Constants/ConstantValues";
 
 const UserManagement = () => {
     const [tableData, setTableData] = useState<UserDataType[]>([])
@@ -37,7 +38,7 @@ const UserManagement = () => {
     useEffect(() => {
         GetDatas({
             page: 1,
-            size: 10
+            size: userSelectPageSize()
         })
     },[])
 
@@ -112,6 +113,11 @@ const UserManagement = () => {
                         key: 'phone',
                         title: createHeaderColumn('PHONE_NUMBER'),
                         render: data => data || "전화번호 없음"
+                    },
+                    {
+                        key: 'status',
+                        title: '상태',
+                        render: data => <FormattedMessage id={`USER_STATUS_${data}`}/>
                     }
                 ]}
                 onBodyRowClick={(row, index, arr) => {

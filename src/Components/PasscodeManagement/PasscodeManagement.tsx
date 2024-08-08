@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
-
-import viewPasscodeIcon from '../../assets/passwordVisibleIcon.png';
-import dont_look_password from '../../assets/passwordHiddenIcon.png';
 import { useSelector } from "react-redux";
 import Contents from "Components/Layout/Contents";
 import CustomTable from "Components/CommonCustomComponents/CustomTable";
@@ -10,6 +7,7 @@ import { GetPasscodeHistoriesFunc } from "Functions/ApiFunctions";
 import { useNavigate } from "react-router";
 import { convertUTCToKST, getDateTimeString } from "Functions/GlobalFunctions";
 import { ViewPasscode } from "Components/Users/UserDetailComponents";
+import { userSelectPageSize } from "Constants/ConstantValues";
 
 const PasscodeManagement = () => {
   const { lang } = useSelector((state: ReduxStateType) => ({
@@ -18,7 +16,6 @@ const PasscodeManagement = () => {
   const navigate = useNavigate();
   const [totalCount, setTotalCount] = useState<number>(0);
   const [tableData, setTableData] = useState<PasscodeHistoryDataType[]>([]);
-  const [viewPasscodes, setViewPasscodes] = useState<PasscodeHistoryDataType['id'][]>([]);
   const [dataLoading, setDataLoading] = useState(false)
 
   const GetDatas = async (params: CustomTableSearchParams) => {
@@ -41,7 +38,7 @@ const PasscodeManagement = () => {
   useEffect(() => {
     GetDatas({
       page: 1,
-      size: 10
+      size: userSelectPageSize()
     })
   }, [])
 
@@ -126,7 +123,7 @@ const PasscodeManagement = () => {
               },
               {
                 key: 'recycleCount',
-                title: <FormattedMessage id="REMAINING_USES" />,
+                title: <FormattedMessage id="USES_COUNT" />,
                 render: (data, ind, row) => row.passcode.recycleCount === -1 ? "∞" : `${row.passcode.recycleCount} 회`
               },
               {

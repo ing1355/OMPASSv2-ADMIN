@@ -1,6 +1,0 @@
-.hover-st1 {
-    &:hover {
-        background-color: var(--sub-purple-color4);
-        border-color: var(--main-purple-color);
-    }
-}

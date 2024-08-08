@@ -6,7 +6,7 @@ import { useLayoutEffect, useState } from "react"
 import { FormattedMessage } from "react-intl"
 import successIcon from '../../assets/successIcon.png'
 import failIcon from '../../assets/failIcon.png'
-import { AuthenticationProcessTypes } from "Constants/ConstantValues"
+import { AuthenticationProcessTypes, userSelectPageSize } from "Constants/ConstantValues"
 
 const imgSize = "16px"
 
@@ -40,7 +40,7 @@ const AuthLog = () => {
     useLayoutEffect(() => {
         GetDatas({
             page: 1,
-            size: 10
+            size: userSelectPageSize()
         })
     }, [])
 

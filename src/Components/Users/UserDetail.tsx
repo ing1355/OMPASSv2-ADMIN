@@ -2,7 +2,7 @@ import './UserDetail.css'
 import { DatePicker, message } from "antd"
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
-import { AddPasscodeFunc, AddUserDataFunc, DeleteAuthenticatorDataFunc, GetUserDataListFunc, GetUserDetailDataFunc, UpdateUserDataFunc, DeleteUserDataFunc, DuplicateUserNameCheckFunc } from "Functions/ApiFunctions"
+import { AddPasscodeFunc, AddUserDataFunc, DeleteAuthenticatorDataFunc, GetUserDataListFunc, GetUserDetailDataFunc, UpdateUserDataFunc, DeleteUserDataFunc, DuplicateUserNameCheckFunc, ApprovalUserFunc } from "Functions/ApiFunctions"
 import { Fragment, PropsWithChildren, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 import { useLocation, useNavigate, useParams } from "react-router"
@@ -19,7 +19,7 @@ import CustomModal from "Components/CommonCustomComponents/CustomModal"
 import Button from 'Components/CommonCustomComponents/Button'
 import { userInfoClear } from 'Redux/actions/userChange'
 import { UserDetailInfoAuthenticatorContent, UserDetailInfoAuthenticatorDeleteButton, UserDetailInfoDeviceInfoContent, UserInfoInputrow, UserInfoRow, ViewPasscode } from './UserDetailComponents'
-import { convertUTCToKST, getDateTimeString } from 'Functions/GlobalFunctions'
+import { autoHypenPhoneFun, convertUTCToKST, getDateTimeString } from 'Functions/GlobalFunctions'
 import Input from 'Components/CommonCustomComponents/Input'
 
 const initModifyValues: UserDataModifyLocalValuesType = {
@@ -153,12 +153,22 @@ const UserDetail = ({ }) => {
             setModifyValues(initModifyValues)
         }
     }, [isModify, userData])
-
+    
     return <>
         <Contents loading={dataLoading}>
             <ContentsHeader title='USER_MANAGEMENT' subTitle={isAdd ? 'USER_REGISTRATION' : 'USER_REGISTRATION_INFO'} style={{
                 width: '1100px'
             }}>
+                {
+                    userData?.status === 'WAIT_ADMIN_APPROVAL' && <Button className='st6' onClick={() => {
+                        ApprovalUserFunc(userData.userId, () => {
+                            message.success('회원가입 승인!')
+                        })
+                        navigate('/UserManagement')
+                    }}>
+                        활성화
+                    </Button>
+                }
                 {isSelf || (!isSelf && isAdmin && !isAdd) && <Button className='st8' onClick={() => {
                     setSureDelete(true)
                 }}>
@@ -287,16 +297,17 @@ const UserDetail = ({ }) => {
                     </UserInfoInputrow> : <UserInfoRow title="EMAIL" value={userData?.email || "이메일 없음"} />}
 
                     {(isModify || isAdd) ? <UserInfoInputrow title="PHONE_NUMBER">
-                        <Input className='st1' value={isAdd ? addValues.phone : modifyValues.phone} onChange={e => {
+                        <Input className='st1' value={isAdd ? addValues.phone : modifyValues.phone} valueChange={value => {
+                            value = autoHypenPhoneFun(value);
                             if (isAdd) {
                                 setAddValues({
                                     ...addValues,
-                                    phone: e.target.value
+                                    phone: value
                                 })
                             } else {
                                 setModifyValues({
                                     ...modifyValues,
-                                    phone: e.target.value
+                                    phone: value
                                 })
                             }
                         }} />
@@ -410,15 +421,19 @@ const UserDetail = ({ }) => {
                         </div>
                         <UserDetailInfoAuthenticatorContent data={_.authInfo.authenticators.find(auth => auth.type === 'OMPASS')} />
 
-                        <div className="user-detail-info-device-info-title">
-                            <h3>
-                                WEBAUTHN
-                            </h3>
-                            <UserDetailInfoAuthenticatorDeleteButton authenticatorId={_.authInfo.authenticators.find(auth => auth.type === 'WEBAUTHN')?.id} callback={(id) => {
-                                setAuthenticatorDelete(id)
-                            }} />
-                        </div>
-                        <UserDetailInfoAuthenticatorContent data={_.authInfo.authenticators.find(auth => auth.type === 'WEBAUTHN')} />
+                        {
+                            (_.application.type === 'ADMIN' || _.application.type === 'DEFAULT') && <>
+                                <div className="user-detail-info-device-info-title">
+                                    <h3>
+                                        WEBAUTHN
+                                    </h3>
+                                    <UserDetailInfoAuthenticatorDeleteButton authenticatorId={_.authInfo.authenticators.find(auth => auth.type === 'WEBAUTHN')?.id} callback={(id) => {
+                                        setAuthenticatorDelete(id)
+                                    }} />
+                                </div>
+                                <UserDetailInfoAuthenticatorContent data={_.authInfo.authenticators.find(auth => auth.type === 'WEBAUTHN')} />
+                            </>
+                        }
 
                         <div className="user-detail-content-passcode-container">
                             <div>
@@ -685,7 +700,7 @@ const PasscodeAddComponent = ({ okCallback, cancelCallback, authId }: {
                                 setInputCurrentPasscodeTime(parseInt(value))
                             }}
                             onInput={(e) => {
-                                if(parseInt(e.currentTarget.value) > 525600) e.currentTarget.value = "525600"
+                                if (parseInt(e.currentTarget.value) > 525600) e.currentTarget.value = "525600"
                             }}
                             nonZero
                             maxLength={7}
@@ -712,7 +727,7 @@ const PasscodeAddComponent = ({ okCallback, cancelCallback, authId }: {
                                 setInputCurrentPasscodeCount(parseInt(value))
                             }}
                             onInput={(e) => {
-                                if(parseInt(e.currentTarget.value) > 9999) e.currentTarget.value = "9999"
+                                if (parseInt(e.currentTarget.value) > 9999) e.currentTarget.value = "9999"
                             }}
                             nonZero
                             maxLength={5}

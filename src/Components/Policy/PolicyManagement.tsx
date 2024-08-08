@@ -9,6 +9,7 @@ import { FormattedMessage } from "react-intl"
 import policyAddIcon from '../../assets/policyAddIcon.png'
 import policyAddIconHover from '../../assets/policyAddIconHover.png'
 import { convertUTCToKST, getDateTimeString } from "Functions/GlobalFunctions"
+import { userSelectPageSize } from "Constants/ConstantValues"
 
 // const authTestPolicies: = [
 //     {
@@ -182,7 +183,7 @@ const PolicyManagement = () => {
     useEffect(() => {
         GetDatas({
             page: 1,
-            size: 10
+            size: userSelectPageSize()
         })
     },[])
 
@@ -224,6 +225,7 @@ const PolicyManagement = () => {
                     {
                         key: 'description',
                         title: '설명',
+                        render: (data) => data || "설명 없음"
                     },
                     {
                         key: 'createdAt',

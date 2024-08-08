@@ -88,7 +88,7 @@ export const UserDetailInfoAuthenticatorContent = ({ data }: {
                     : data.type === 'WEBAUTHN' ? <AuthenticatorInfoContentsWEBAUTHNType data={data as WebAuthnAuthenticatorDataType}/>
                         : <div>
                         </div>) : <div className='user-detail-info-device-info-no-contents'>
-                            No Contents
+                            <FormattedMessage id="NO_DATA_TEXT"/>
                         </div>
             }
         </div>
@@ -103,11 +103,18 @@ export const ViewPasscode = ({ code }: {
         <div>
             {isView ? code : "⦁⦁⦁⦁⦁⦁⦁⦁⦁"}
         </div>
-        <div onMouseEnter={() => {
+        <div 
+        onClick={(e) => {
+            e.stopPropagation()
+            e.preventDefault()
             setIsView(!isView)
-        }} onMouseLeave={() => {
-            setIsView(!isView)
-        }}>
+        }}
+        // onMouseEnter={() => {
+        //     setIsView(!isView)
+        // }} onMouseLeave={() => {
+        //     setIsView(!isView)
+        // }}
+        >
             <img src={isView ? passcodeVisibleIcon : passcodeHiddenIcon} />
         </div>
     </div>

@@ -44,6 +44,7 @@ export const DeleteUserGroupApi = (groupId: UserGroupDataType['id']) => `/v2/gro
 // 관리자 페이지 사용자 관리
 export const GetUserDataListApi = '/v2/users'
 export const AddUserDataApi = '/v2/users'
+export const ApprovalUserApi = (userId: UserDataType['userId']) => `/v2/users/${userId}/approval`
 export const UpdateUserDataApi = (userId: UserDataType['userId']) => `/v2/users/${userId}`
 export const DeleteUserDataApi = (userId: UserDataType['userId']) => `/v2/users/${userId}`
 export const GetUserDetailDataApi = (userId: UserDataType['userId']) => `/v2/users/${userId}/rp/details`
@@ -62,3 +63,5 @@ export const UpdatePortalSettingsDataApi = '/v2/setting'
 
 // 회원가입
 export const SignUpRequestApi = '/v2/users/signup'
+export const SignUpVerificationCodeSendApi = '/v2/users/verification-code'
+export const SignUpVerificationCodeVerifyApi = '/v2/users/verification-code/verify'

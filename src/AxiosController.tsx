@@ -2,7 +2,7 @@ import axios from "axios";
 import { useLayoutEffect } from "react";
 import { useIntl } from "react-intl";
 import { useDispatch, useSelector } from "react-redux";
-import { message } from 'antd';
+import { message as _message } from 'antd';
 import { userInfoClear } from "Redux/actions/userChange";
 import { useNavigate } from "react-router";
 import { controller } from "Components/CommonCustomComponents/CustomAxios";
@@ -26,19 +26,21 @@ const AxiosController = () => {
       console.log(err)
       if (err && err.response && err.response) {
         const { data, status } = err.response
-        console.log(data, status)
-        if(status === 401 && localStorage.getItem('authorization')) {
+        if(data && data.code === 'ERR_B009') {
           dispatch(userInfoClear());
-          navigate('/AutoLogout');
-          
+          navigate('/');
           if(data) {
             const { code } = err.response.data;
-            message.error(formatMessage({id: code}))
+            _message.error(formatMessage({id: code}))
           }
         } else {
           if(data) {
-            const { code } = err.response.data;
-            message.error(formatMessage({id: code}))
+            const { code, message } = err.response.data;
+            if(code.startsWith("ERR_C")) {
+              _message.error(formatMessage({id: `${code} - ${message}`}))
+            } else {
+              _message.error(formatMessage({id: code}))
+            }
             controller.abort()
           }
         }

@@ -31,17 +31,18 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                 if (onlyNumber) {
                     if (!e.currentTarget.value) e.currentTarget.value = "0"
                     else e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')
-                    if(!zeroOk) {
-                        while(e.currentTarget.value.startsWith('0') && e.currentTarget.value !== '0') {
+                    if (!zeroOk) {
+                        while (e.currentTarget.value.startsWith('0') && e.currentTarget.value !== '0') {
                             e.currentTarget.value = e.currentTarget.value.slice(1,)
                         }
                     }
-                    if(nonZero && e.currentTarget.value === '0') {
+                    if (nonZero && e.currentTarget.value === '0') {
                         e.currentTarget.value = '1'
                     }
                 }
-                if(onInput) onInput(e)
+                if (onInput) onInput(e)
             }} {...props} value={props.disabled ? "" : value} />
+            {children}
         </HasLabel>
     </div>
 })

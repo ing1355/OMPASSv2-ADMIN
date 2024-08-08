@@ -269,9 +269,12 @@ type DefaultUserDataParamsType = {
 
 type DefaultUserDataType = UserNameType & DefaultUserDataParamsType
 
+type UserStatusType = "WAIT_EMAIL_VERIFICATION" | "WAIT_ADMIN_APPROVAL" | "RUN" | "WITHDRAWAL"
+
 type UserDataType = DefaultUserDataType & {
     userId: string
     group: UserGroupListDataType
+    status: UserStatusType
 }
 
 type UserDataParamsType = UserNameType & {

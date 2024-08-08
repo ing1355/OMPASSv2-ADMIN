@@ -4,6 +4,7 @@ import { PropsWithChildren, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import RefundImg from '../../assets/refunded_img.png';
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 
 type FirstStepProps = {
     checkedChange: (checked: boolean) => void
@@ -31,6 +32,7 @@ const FirstStep = ({ checkedChange }: FirstStepProps) => {
     const { lang } = useSelector((state: ReduxStateType) => ({
         lang: state.lang,
     }));
+    const navigate = useNavigate()
 
     const AgreePolicyList = (isService: boolean, number: number, count: number, innerNumber?: number[], innerCount?: number[]) => {
         const subList = Array.from(Array(count), (_, index) => index + 1);
@@ -232,6 +234,13 @@ const FirstStep = ({ checkedChange }: FirstStepProps) => {
                 checkedChange(true)
             }}
         ><FormattedMessage id='CONFIRM' />
+        </Button>
+        <Button
+            className={'st1 agree-button'}
+            onClick={() => {
+                navigate('/')
+            }}
+        ><FormattedMessage id='GO_BACK' />
         </Button>
     </div>
 }

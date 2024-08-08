@@ -15,6 +15,7 @@ import Contents from 'Components/Layout/Contents';
 import CustomTable from 'Components/CommonCustomComponents/CustomTable';
 import { CurrentAgentVersionChangeFunc, DeleteAgentInstallerFunc, DownloadAgentInstallerFunc, GetAgentInstallerListFunc } from 'Functions/ApiFunctions';
 import Button from 'Components/CommonCustomComponents/Button';
+import { userSelectPageSize } from 'Constants/ConstantValues';
 
 interface Checkbox {
   id: number;
@@ -81,7 +82,7 @@ const AgentManagement = () => {
   useEffect(() => {
     GetDatas({
       page: 1,
-      size: 10
+      size: userSelectPageSize()
     })
   }, [])
 

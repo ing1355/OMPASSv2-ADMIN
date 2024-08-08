@@ -1,4 +1,4 @@
-import { DuplicateUserNameCheckFunc, SignUpRequestFunc } from "Functions/ApiFunctions";
+import { DuplicateUserNameCheckFunc, SignUpRequestFunc, SignUpVerificationCodeSendFunc, SignUpVerificationCodeVerifyFunc } from "Functions/ApiFunctions";
 import { emailRegex, idRegex, nameRegex, passwordRegex } from "Components/CommonCustomComponents/CommonRegex";
 import { autoHypenPhoneFun } from "Functions/GlobalFunctions";
 import Button from "Components/CommonCustomComponents/Button";
@@ -36,6 +36,9 @@ const SecondStep = () => {
     const [isEmailAlert, setIsEmailAlert] = useState(false)
     const [isPhoneAlert, setIsPhoneAlert] = useState(false)
     const [idExist, setIdExist] = useState<boolean>(true)
+    const [emailVerify, setEmailVerify] = useState(false)
+    const [verifyCode, setVerifyCode] = useState('')
+    const [emailCodeSend, setEmailCodeSend] = useState(false)
     const [inputPassword, setInputPassword] = useState('')
     const [inputPasswordConfirm, setInputPasswordConfirm] = useState('')
     const [inputUsername, setInputUsername] = useState('')
@@ -51,14 +54,20 @@ const SecondStep = () => {
         <form
             onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
                 e.preventDefault();
-                if(inputPassword !== inputPasswordConfirm) {
+                if (inputPassword !== inputPasswordConfirm) {
                     return message.error("비밀번호가 일치하지 않습니다.")
                 }
-                if(isIdAlert || isNameAlert1 || isNameAlert2 || isEmailAlert || isPhoneAlert) {
+                if (isIdAlert || isNameAlert1 || isNameAlert2 || isEmailAlert || isPhoneAlert) {
                     return message.error("에러를 처리해주세요")
                 }
-                if(idExist) {
+                if (idExist) {
                     return message.error("아이디 중복확인은 필수입니다")
+                }
+                if (!emailCodeSend) {
+                    return message.error("이메일을 입력한 뒤 인증 코드를 발송해주세요.")
+                }
+                if (!emailVerify) {
+                    return message.error("이메일을 입력한 뒤 인증 코드를 발송해주세요.")
                 }
                 if (inputUsername && inputName1 && inputName2 && inputEmail && inputPhone) {
                     SignUpRequestFunc({
@@ -92,6 +101,7 @@ const SecondStep = () => {
                     value={inputUsername}
                     valueChange={value => {
                         setInputUsername(value)
+                        setIdExist(true)
                         const idRgx: RegExp = idRegex;
                         if (value) {
                             if (idRgx.test(value)) {
@@ -105,7 +115,7 @@ const SecondStep = () => {
                     <Button
                         type='button'
                         className={'st6 signup-duplicate-check'}
-                        disabled={inputUsername.length === 0}
+                        disabled={inputUsername.length === 0 || !idExist}
                         onClick={() => {
                             if (inputUsername && !isIdAlert) {
                                 DuplicateUserNameCheckFunc(inputUsername, ({ isExist }) => {
@@ -149,14 +159,17 @@ const SecondStep = () => {
                     value={inputPasswordConfirm}
                     valueChange={value => {
                         setInputPasswordConfirm(value)
-                        const passwordRgx: RegExp = passwordRegex;
-                        if (value) {
-                            if (passwordRgx.test(value)) {
-                                setIsPasswordConfirmAlert(false);
-                            } else {
-                                setIsPasswordConfirmAlert(true);
-                            }
-                        }
+                        if (inputPassword !== value) setIsPasswordConfirmAlert(true)
+                        else setIsPasswordConfirmAlert(false)
+                        console.log(inputPassword, value)
+                        // const passwordRgx: RegExp = passwordRegex;
+                        // if (value) {
+                        //     if (passwordRgx.test(value)) {
+                        //         setIsPasswordConfirmAlert(false);
+                        //     } else {
+                        //         setIsPasswordConfirmAlert(true);
+                        //     }
+                        // }
                     }}
                 />
             </InputRow>
@@ -206,7 +219,48 @@ const SecondStep = () => {
                             setIsEmailAlert(true);
                         }
                     }}
-                />
+                    readOnly={emailCodeSend}
+                >
+                    <Button
+                        type='button'
+                        className={'st6 signup-duplicate-check'}
+                        disabled={inputEmail.length === 0}
+                        onClick={() => {
+                            SignUpVerificationCodeSendFunc(inputEmail, () => {
+                                setEmailCodeSend(true)
+                                message.success("인증 코드 발송 성공!")
+                            })
+                        }}
+                    ><FormattedMessage id={emailCodeSend ? 'EMAIL_VERIFY_RE' : 'EMAIL_VERIFY'} />
+                    </Button>
+                </Input>
+            </InputRow>
+            <InputRow label="EMAIL_CODE" alert={false}>
+                <Input
+                    className='st1'
+                    value={verifyCode}
+                    readOnly={emailVerify}
+                    valueChange={value => {
+                        setVerifyCode(value)
+                    }}
+                >
+                    <Button
+                        type='button'
+                        className={'st6 signup-duplicate-check'}
+                        disabled={verifyCode.length === 0 || emailVerify}
+                        onClick={() => {
+                            SignUpVerificationCodeVerifyFunc({
+                                username: inputUsername,
+                                email: inputEmail,
+                                code: verifyCode
+                            }, () => {
+                                setEmailVerify(true)
+                                message.success("인증 코드 검증 성공!")
+                            })
+                        }}
+                    ><FormattedMessage id='EMAIL_CODE_VERIFY' />
+                    </Button>
+                </Input>
             </InputRow>
             <InputRow label="PHONE_NUMBER" alert={isPhoneAlert}>
                 <Input
@@ -227,11 +281,15 @@ const SecondStep = () => {
             <Button
                 type='submit'
                 className={'st3 agree-button signup-complete'}
-                // disabled={!isActive}
-                onClick={() => {
-                    // setIsStepOne(true);
-                }}
             ><FormattedMessage id='SIGN_UP' />
+            </Button>
+            <Button
+                type='submit'
+                className={'st1 agree-button signup-complete'}
+                onClick={() => {
+                    navigate('/')
+                }}
+            ><FormattedMessage id='GO_BACK' />
             </Button>
         </form>
     </div>

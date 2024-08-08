@@ -7,6 +7,8 @@ import deleteIcon from './../../assets/deleteIcon.png'
 import Button from "./Button"
 import CustomSelect from "./CustomSelect"
 import Input from "./Input"
+import { userSelectPageSize } from "Constants/ConstantValues"
+import { FormattedMessage } from "react-intl"
 
 export type CustomTableColumnType<T> = {
     key: keyof T | string
@@ -91,7 +93,7 @@ const CustomTable = <T extends {
     hover }: CustomTableProps<T, P>) => {
         
     const [pageNum, setPageNum] = useState(0)
-    const [tableSize, setTableSize] = useState(10);
+    const [tableSize, setTableSize] = useState<number>(userSelectPageSize());
     const [searchType, setSearchType] = useState((searchOptions && searchOptions[0].key) || "")
     const [searchValue, setSearchValue] = useState('')
     const [hoverId, setHoverId] = useState(-1)
@@ -123,6 +125,7 @@ const CustomTable = <T extends {
                 size: pageSizeOptions
             })
         }
+        localStorage.setItem('user_select_size', pageSizeOptions.toString())
     };
     useEffect(() => {
         setSearchValue('')
@@ -242,7 +245,7 @@ const CustomTable = <T extends {
                         <td className="table-no-data" colSpan={columns.length} style={{
                             height: noDataHeight
                         }}>
-                            {loading ? 'loading...' : 'No Data'}
+                            {loading ? 'loading...' : <FormattedMessage id="NO_DATA_TEXT"/>}
                         </td>
                     </tr>
                 }

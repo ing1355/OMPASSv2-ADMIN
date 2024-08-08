@@ -1,7 +1,7 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable";
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
-import { applicationTypes, getApplicationTypeLabel } from "Constants/ConstantValues";
+import { applicationTypes, getApplicationTypeLabel, userSelectPageSize } from "Constants/ConstantValues";
 import { GetApplicationListFunc, GetPoliciesListFunc } from "Functions/ApiFunctions";
 import { PaginationProps } from "antd"
 import { useLayoutEffect, useState } from "react";
@@ -52,7 +52,7 @@ const ApplicationManagement = () => {
         getPolicyDatas().then(async () => {
             await GetDatas({
                 page: 1,
-                size: 10
+                size: userSelectPageSize()
             })
         })
     }, [])
@@ -125,7 +125,7 @@ const ApplicationManagement = () => {
                     render: (data, ind, row) => {
                         const target = policiesData.find(_ => _.id === data);
                         if(target) {
-                            return target.policyType === 'DEFAULT' ? <FormattedMessage id='default policy' /> : data.name
+                            return target.policyType === 'DEFAULT' ? <FormattedMessage id='default policy' /> : target.name
                         } else return ""
                     }
                 }

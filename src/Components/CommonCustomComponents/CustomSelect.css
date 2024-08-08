@@ -45,10 +45,14 @@
   .custom-select-option-item {
     color: var(--main-grey-color2);
     cursor: pointer;
+    border-radius: 6px;
+    margin: 2px 0;
     &:hover {
-      background-color: var(--sub-purple-color2);
+      color: var(--sub-grey-color4);
+      background-color: var(--sub-grey-color8);
     }
     &.selected {
-      background-color: var(--sub-purple-color);
+      color: var(--main-purple-color2);
+      background-color: var(--sub-purple-color5);
     }
   }
