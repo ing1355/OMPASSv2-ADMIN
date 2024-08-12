@@ -137,18 +137,6 @@ a[download] {
   font-size: .8rem;
 }
 
-/* regex alert */
-.regex-alert {
-  visibility: hidden;
-  color: red;
-  font-size: .85rem;
-  padding-left: 8px;
-}
-
-.regex-alert.visible {
-  visibility: visible;
-}
-
 /* margin bottom */
 .mb5 {
   margin-bottom: 5px;

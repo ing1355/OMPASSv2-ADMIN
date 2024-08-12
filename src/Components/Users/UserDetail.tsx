@@ -5,7 +5,7 @@ import ContentsHeader from "Components/Layout/ContentsHeader"
 import { AddPasscodeFunc, AddUserDataFunc, DeleteAuthenticatorDataFunc, GetUserDataListFunc, GetUserDetailDataFunc, UpdateUserDataFunc, DeleteUserDataFunc, DuplicateUserNameCheckFunc, ApprovalUserFunc } from "Functions/ApiFunctions"
 import { Fragment, PropsWithChildren, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
-import { useLocation, useNavigate, useParams } from "react-router"
+import { useLocation, useNavigate, useNavigation, useParams } from "react-router"
 import { useDispatch, useSelector } from "react-redux"
 import userIcon from '../../assets/userIcon.png';
 import editIcon from '../../assets/editIcon.png';
@@ -19,7 +19,7 @@ import CustomModal from "Components/CommonCustomComponents/CustomModal"
 import Button from 'Components/CommonCustomComponents/Button'
 import { userInfoClear } from 'Redux/actions/userChange'
 import { UserDetailInfoAuthenticatorContent, UserDetailInfoAuthenticatorDeleteButton, UserDetailInfoDeviceInfoContent, UserInfoInputrow, UserInfoRow, ViewPasscode } from './UserDetailComponents'
-import { autoHypenPhoneFun, convertUTCToKST, getDateTimeString } from 'Functions/GlobalFunctions'
+import { autoHypenPhoneFun, convertUTCToKST, createRandom1Digit, getDateTimeString } from 'Functions/GlobalFunctions'
 import Input from 'Components/CommonCustomComponents/Input'
 
 const initModifyValues: UserDataModifyLocalValuesType = {
@@ -114,7 +114,8 @@ const UserDetail = ({ }) => {
                     // setUserDetailDatas(testDetailDatas)
                 })
             } catch (e) {
-                navigate('/UserManagement')
+                navigate(-1)
+                // navigate('/UserManagement')
             }
             setDataLoading(false)
         }
@@ -127,7 +128,8 @@ const UserDetail = ({ }) => {
     }, [])
 
     useEffect(() => {
-        if (authInfoDatas.length > 0 && targetId && !targeting) {
+        console.log(targetId)
+        if (authInfoDatas.length > 0 && targetId && !targeting && authInfoRef.current[targetId]) {
             setTimeout(() => {
                 authInfoRef.current[targetId].scrollIntoView({ block: 'start', behavior: 'smooth' })
             }, 250);
@@ -650,7 +652,7 @@ const PasscodeAddComponent = ({ okCallback, cancelCallback, authId }: {
         setAddPasscodeLoading(true)
         AddPasscodeFunc({
             authenticationDataId: authId,
-            passcodeNumber: method.value === 'target' ? codeValue.value : Math.floor(Math.random() * 1000000000),
+            passcodeNumber: method.value === 'target' ? codeValue.value : Array.from({length: 9}).map(_ => createRandom1Digit()).join(''),
             validTime: time.value === 'select' ? timeValue.value : -1,
             recycleCount: count.value === 'one' ? 1 : (count.value === 'select' ? countValue.value : -1)
         }, (data) => {

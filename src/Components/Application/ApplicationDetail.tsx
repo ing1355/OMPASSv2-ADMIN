@@ -129,12 +129,12 @@ const ApplicationDetail = () => {
                             <CustomInputRow title="도메인">
                                 <Input className="st1" value={inputDomain} onChange={e => {
                                     setInputDomain(e.target.value)
-                                }} placeholder="ex) https://omsecurity.kr:1234" readOnly={applicationType === 'ADMIN'}/>
+                                }} placeholder="ex) https://omsecurity.kr:1234" readOnly={applicationType === 'ADMIN'} />
                             </CustomInputRow>
                             {!(isAdd && applicationType === 'REDMINE') && ((!isAdd && applicationType === 'REDMINE') ? inputRedirectUrl : <CustomInputRow title="리다이렉트 URL">
                                 <Input className="st1" value={inputRedirectUrl} onChange={e => {
                                     setInputRedirectUrl(e.target.value)
-                                }} placeholder="ex) https://omsecurity.kr:1234/ompass" readOnly={applicationType === 'ADMIN'}/>
+                                }} placeholder="ex) https://omsecurity.kr:1234/ompass" readOnly={applicationType === 'ADMIN'} />
                             </CustomInputRow>)}
                         </>
                     }
@@ -143,8 +143,8 @@ const ApplicationDetail = () => {
                             setNeedPassword(check)
                         }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
                     </CustomInputRow>}
-                    <CustomInputRow title="API 서버 주소">
-                    <CopyToClipboard text={inputApiServerHost} onCopy={(value, result) => {
+                    {!isAdd && <CustomInputRow title="API 서버 주소">
+                        <CopyToClipboard text={inputApiServerHost} onCopy={(value, result) => {
                             if (result) {
                                 message.success("API 서버 주소가 복사되었습니다.")
                             } else {
@@ -153,8 +153,8 @@ const ApplicationDetail = () => {
                         }}>
                             <Input className="st1 secret-key" value={inputApiServerHost} disabled={isAdd} readOnly={!isAdd} />
                         </CopyToClipboard>
-                        
-                    </CustomInputRow>
+
+                    </CustomInputRow>}
                     {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title="클라이언트 아이디">
                         <CopyToClipboard text={inputClientId} onCopy={(value, result) => {
                             if (result) {
@@ -164,7 +164,7 @@ const ApplicationDetail = () => {
                             }
                         }}>
                             <Input className="st1 secret-key" value={inputClientId} disabled={isAdd} readOnly={!isAdd} />
-                        </CopyToClipboard>                        
+                        </CopyToClipboard>
                     </CustomInputRow>}
                     {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title="시크릿 키">
                         <CopyToClipboard text={inputSecretKey} onCopy={(value, result) => {

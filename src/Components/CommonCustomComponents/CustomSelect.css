@@ -47,7 +47,7 @@
     cursor: pointer;
     border-radius: 6px;
     margin: 2px 0;
-    &:hover {
+    &.activate {
       color: var(--sub-grey-color4);
       background-color: var(--sub-grey-color8);
     }

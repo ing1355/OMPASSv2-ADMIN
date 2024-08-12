@@ -27,13 +27,13 @@ const Login = () => {
     lang: state.lang,
     subdomainInfo: state.subdomainInfo
   }));
+  const [inputUsername, setInputUsername] = useState('')
+  const [inputPassword, setInputPassword] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPasswordAlert, setIsPasswordAlert] = useState(false);
   const [isPasswordConfirmAlert, setIsPasswordConfirmAlert] = useState(false);
   const [isPasswordLook, setIsPasswordLook] = useState(false);
   const [isPasswordConfirmLook, setIsPasswordConfirmLook] = useState(false);
-  const [userId, setUserId] = useState('');
-  const [password, setPassword] = useState('');
   const [idChange, setIdChange] = useState('');
   const [passwordChange, setPasswordChange] = useState('');
   const [cookies, setCookie, removeCookie] = useCookies(["rememberUserId"]); // Cookies 이름
@@ -84,16 +84,11 @@ const Login = () => {
 
   const loginRequest = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { userId, userPassword } = (e.currentTarget.elements as any);
-    const username = userId.value;
-    const password = userPassword.value;
-
-    setUserId(username);
     LoginFunc({
       domain: subDomain,
       // username: username,
-      username: username,
-      password: password,
+      username: inputUsername,
+      password: inputPassword,
       language: lang!,
       loginClientType: "ADMIN"
     }, ({ popupUri }, token) => {
@@ -164,9 +159,8 @@ const Login = () => {
             <label htmlFor='userId'><FormattedMessage id='ID' /></label>
             <Input
               className='st1 login-input mt5 userId'
-              type='text'
-              id='userId'
-              maxLength={16}
+              customType='username'
+              noAlert
               value={idChange ? idChange : ''}
               valueChange={value => {
                 setIdChange(value);
@@ -180,8 +174,8 @@ const Login = () => {
             <Input
               className='st1 login-input mt5 password'
               type='password'
-              id='userPassword'
-              maxLength={16}
+              noAlert
+              customType='password'
               valueChange={value => {
                 setPasswordChange(value);
               }}

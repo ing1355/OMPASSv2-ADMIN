@@ -2,12 +2,13 @@
     from {
         scale: 0;
     }
+
     to {
         scale: 1;
     }
 }
 
-label.checkbox-label + label {
+label.checkbox-label+label {
     cursor: pointer;
     user-select: none;
 }
@@ -39,6 +40,7 @@ label:has(.checkbox-label) {
     border: 1.4px solid var(--sub-grey-color5);
     cursor: pointer;
     position: relative;
+
     &::after {
         background-image: url('../assets/checkIconWhite.png');
         background-repeat: no-repeat;
@@ -58,7 +60,8 @@ label:has(.checkbox-label) {
     flex-direction: row;
     align-items: center;
     height: 100%;
-    & > input {
+
+    &>input {
         box-sizing: border-box;
         width: 100%;
         height: 100%;
@@ -70,9 +73,11 @@ input {
     padding: 2px 12px;
     outline: none;
     text-align: center;
+
     &[type="checkbox"] {
         display: none;
     }
+
     &[type="radio"] {
         accent-color: var(--main-purple-color);
     }
@@ -81,9 +86,11 @@ input {
 input.st1 {
     border-radius: 8px;
     border: 1.4px solid var(--sub-grey-color5);
+
     &::placeholder {
         color: var(--sub-grey-color3);
     }
+
     /* &:focus {
         border-color:  var(--main-purple-color);
         color: var(--main-purple-color);
@@ -91,7 +98,18 @@ input.st1 {
     &:disabled {
         background-color: var(--main-grey-color2);
     }
+
     &:read-only {
         background-color: var(--sub-grey-color);
     }
+}
+
+.custom-type-alert-text {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    color: red;
+    font-size: .85rem;
+    padding-left: 8px;
+    padding-top: 4px;
 }
