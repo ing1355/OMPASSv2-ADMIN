@@ -31,6 +31,11 @@ export const convertUTCToKST = (date: Date) => {
     return temp;
 }
 
+export const convertUTCStringToKSTString = (date: string) => {
+    return getDateTimeString(convertUTCToKST(new Date(date)))
+
+}
+
 export const slicePrice = (price: string | number) => {
     const _price = price + "";
     if (_price.length < 4) return _price;

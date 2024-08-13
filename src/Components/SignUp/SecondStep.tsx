@@ -48,14 +48,23 @@ const SecondStep = () => {
         <form
             onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
                 e.preventDefault();
+                if (isIdAlert) {
+                    return message.error(formatMessage({id:'USERNAME_CHECK'}))
+                }
+                if (idExist) {
+                    return message.error(formatMessage({id: 'ID_CHECK'}))
+                }
+                if (isNameAlert1) {
+                    return message.error(formatMessage({id: 'NAME_CHECK'}))
+                }
+                if (isNameAlert2) {
+                    return message.error(formatMessage({id: 'NAME_CHECK'}))
+                }
                 if (inputPassword !== inputPasswordConfirm) {
                     return message.error("비밀번호가 일치하지 않습니다.")
                 }
                 if (isIdAlert || isNameAlert1 || isNameAlert2 || isEmailAlert || isPhoneAlert) {
                     return message.error("에러를 처리해주세요")
-                }
-                if (idExist) {
-                    return message.error("아이디 중복확인은 필수입니다")
                 }
                 if (!emailCodeSend) {
                     return message.error("이메일을 입력한 뒤 인증 코드를 발송해주세요.")
@@ -81,7 +90,7 @@ const SecondStep = () => {
                         message.error(formatMessage({ id: 'FAIL_REGISTER' }));
                     })
                 } else if (inputUsername && idExist) {
-                    message.error(formatMessage({ id: 'PLEASE_CHECK_THE_ID' }));
+                    message.error(formatMessage({ id: 'ID_CHECK' }));
                 } else {
                     message.error(formatMessage({ id: 'PLEASE_ENTER_ALL_THE_ITEMS' }));
                 }
@@ -102,9 +111,10 @@ const SecondStep = () => {
                     <Button
                         type='button'
                         className={'st11 signup-duplicate-check'}
-                        disabled={inputUsername.length === 0 || !idExist}
+                        disabled={inputUsername.length < 4 || !idExist || isIdAlert}
                         onClick={() => {
-                            if (inputUsername && !isIdAlert) {
+                            if (!isIdAlert) {
+                                console.log('test?')
                                 DuplicateUserNameCheckFunc(inputUsername, ({ isExist }) => {
                                     setIdExist(isExist);
                                     if (isExist) {
@@ -241,6 +251,9 @@ const SecondStep = () => {
             </InputRow>
             <Button
                 type='submit'
+                style={{
+                    marginTop: '24px'
+                }}
                 className={'st3 agree-button signup-complete'}
             ><FormattedMessage id='SIGN_UP' />
             </Button>

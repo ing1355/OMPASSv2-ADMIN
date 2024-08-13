@@ -23,6 +23,7 @@ import chrome_mobile_img from '../../assets/chrome_mobile_img.png';
 import firefox_img from '../../assets/firefox_img.png';
 import microsoft_edge_img from '../../assets/microsoft_edge_img.png';
 import safari_img from '../../assets/safari_img.png';
+import noDataIcon from '../../assets/noDataIcon.png';
 import sshIcon from '../../assets/sshIcon.png';
 import safari_mobile_img from '../../assets/safari_mobile_img.png';
 import clientIcon from '../../assets/clientIcon.png';
@@ -88,6 +89,9 @@ export const UserDetailInfoAuthenticatorContent = ({ data }: {
                     : data.type === 'WEBAUTHN' ? <AuthenticatorInfoContentsWEBAUTHNType data={data as WebAuthnAuthenticatorDataType}/>
                         : <div>
                         </div>) : <div className='user-detail-info-device-info-no-contents'>
+                            <div>
+                                <img src={noDataIcon}/>
+                            </div>
                             <FormattedMessage id="NO_DATA_TEXT"/>
                         </div>
             }

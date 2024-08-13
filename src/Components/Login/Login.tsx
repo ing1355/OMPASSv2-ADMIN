@@ -2,20 +2,15 @@ import './Login.css';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Link, useNavigate } from 'react-router-dom';
 import { OMPASS } from 'ompass';
-import { message, Modal } from 'antd';
 import { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { langChange } from 'Redux/actions/langChange';
-import { CustomAxiosPatch } from 'Components/CommonCustomComponents/CustomAxios';
 
 import { CopyRightText, isDev, subDomain, UserSignupMethod } from '../../Constants/ConstantValues';
 import locale_image from '../../assets/locale_image.png';
 import downloadIconWhite from '../../assets/downloadIconWhite.png';
-import view_password from '../../assets/passwordVisibleIcon.png';
-import dont_look_password from '../../assets/passwordHiddenIcon.png';
 import manualDownloadIcon from '../../assets/manualDownloadIcon.png'
 import { useCookies } from 'react-cookie';
-import { passwordRegex } from 'Components/CommonCustomComponents/CommonRegex';
 import { AgentFileDownload } from 'Components/CommonCustomComponents/AgentFileDownload';
 import { LoginFunc } from 'Functions/ApiFunctions';
 import { saveLocaleToLocalStorage } from 'Functions/GlobalFunctions';
@@ -30,18 +25,11 @@ const Login = () => {
   const [inputUsername, setInputUsername] = useState('')
   const [inputPassword, setInputPassword] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isPasswordAlert, setIsPasswordAlert] = useState(false);
-  const [isPasswordConfirmAlert, setIsPasswordConfirmAlert] = useState(false);
-  const [isPasswordLook, setIsPasswordLook] = useState(false);
-  const [isPasswordConfirmLook, setIsPasswordConfirmLook] = useState(false);
-  const [idChange, setIdChange] = useState('');
-  const [passwordChange, setPasswordChange] = useState('');
   const [cookies, setCookie, removeCookie] = useCookies(["rememberUserId"]); // Cookies 이름
   const [isRemember, setIsRemember] = useState(false); // 아이디 저장 체크박스 체크 유무
   const [isAgentFileDisable, setIsAgentFileDisable] = useState(false);
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
-  const passwordRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate()
   const { noticeMessage, logoImage, userSignupMethod } = subdomainInfo || {}
 
@@ -49,7 +37,7 @@ const Login = () => {
   // 첫 렌더링
   useEffect(() => {
     if (cookies.rememberUserId !== undefined) {
-      setIdChange(cookies.rememberUserId);
+      setInputUsername(cookies.rememberUserId);
       setIsRemember(true);
     }
   }, []);
@@ -61,78 +49,24 @@ const Login = () => {
     }
   };
 
-  // const handleOk = () => {
-  //   if (!isPasswordAlert && !isPasswordConfirmAlert) {
-  //     CustomAxiosPatch(
-  //       PatchUsersResetPasswordApi,
-  //       () => {
-  //         setIsModalOpen(false);
-  //       },
-  //       {
-  //         newPassword: password,
-  //         username: userId
-  //       }
-  //     )
-  //   } else {
-  //     message.error(formatMessage({ id: 'PLEASE_REENTER_A_PASSWORD' }))
-  //   }
-  // };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
   const loginRequest = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     LoginFunc({
       domain: subDomain,
-      // username: username,
       username: inputUsername,
       password: inputPassword,
       language: lang!,
       loginClientType: "ADMIN"
     }, ({ popupUri }, token) => {
-      // localStorage.setItem('authorization', token);
-      // dispatch(userInfoChange(token))
-      // navigate('/Main')
       const resultUri = popupUri + `&authorization=${token}`
       if (isDev) {
         const targetUrl = "192.168.182.120:9002"
-        // OMPASS(resultUri.replace("https://www.ompass.kr:54007", "https://localhost:9002"));
-        // OMPASS(resultUri.replace("https://www.ompass.kr:54007", "https://192.168.182.120:9002"));
-        // OMPASS(resultUri.replace(/(http|https):\/\/[a-zA-Z]{1,}\./g, "https://192.168.182.120:9002"));
         OMPASS(resultUri.replace("www.ompass.kr:54007", targetUrl).replace("www.ompass.kr:54012", targetUrl).replace("192.168.182.75:9001", targetUrl).replace("ompass.kr:59001", targetUrl));
-        // OMPASS(resultUri.replace("www.ompass.kr:54012", "ompass.kr:59002"));
       } else {
         OMPASS(resultUri);
       }
-      // if(isRemember) {
-      //   setCookie('rememberUserId', username, {maxAge: 60*60*24*7});
-      // }
-      // if(loginType === 'PW_CHANGE_USER') {
-      //   setIsModalOpen(true)
-      // } else {
-      //   // console.log(ompassUri)
-      //   // console.log('https://localhost:9002/' + ompassUri.split('/').slice(3,).join('/'))
-      //   // OMPASS('https://localhost:9002/' + ompassUri.split('/').slice(3,).join('/'))
-      // }
     })
   }
-
-  // 화면 너비
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
 
   return <>
     <div
@@ -159,11 +93,9 @@ const Login = () => {
             <label htmlFor='userId'><FormattedMessage id='ID' /></label>
             <Input
               className='st1 login-input mt5 userId'
-              customType='username'
-              noAlert
-              value={idChange ? idChange : ''}
+              value={inputUsername}
               valueChange={value => {
-                setIdChange(value);
+                setInputUsername(value);
               }}
             />
           </div>
@@ -174,10 +106,9 @@ const Login = () => {
             <Input
               className='st1 login-input mt5 password'
               type='password'
-              noAlert
-              customType='password'
+              value={inputPassword}
               valueChange={value => {
-                setPasswordChange(value);
+                setInputPassword(value);
               }}
             />
           </div>
@@ -195,7 +126,6 @@ const Login = () => {
           <Button
             className="st3 login-button"
             type='submit'
-          // disabled={!(idChange !== '' && passwordChange !== '')}
           >
             <FormattedMessage id='LOGIN' />
           </Button>

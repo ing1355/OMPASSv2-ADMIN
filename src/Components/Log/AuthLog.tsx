@@ -7,6 +7,7 @@ import { FormattedMessage } from "react-intl"
 import successIcon from '../../assets/successIcon.png'
 import failIcon from '../../assets/failIcon.png'
 import { AuthenticationProcessTypes, userSelectPageSize } from "Constants/ConstantValues"
+import { convertUTCStringToKSTString } from "Functions/GlobalFunctions"
 
 const imgSize = "16px"
 
@@ -30,6 +31,7 @@ const AuthLog = () => {
                 portalUsername: _.portalUser.username,
                 rpUsername: _.rpUser.username,
                 applicationName: _.application.name,
+                authenticationTime: convertUTCStringToKSTString(_.authenticationTime)
             })))
             setTotalCount(totalCount)
         }).finally(() => {

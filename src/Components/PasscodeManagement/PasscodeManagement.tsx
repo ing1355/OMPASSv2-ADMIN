@@ -5,7 +5,7 @@ import Contents from "Components/Layout/Contents";
 import CustomTable from "Components/CommonCustomComponents/CustomTable";
 import { GetPasscodeHistoriesFunc } from "Functions/ApiFunctions";
 import { useNavigate } from "react-router";
-import { convertUTCToKST, getDateTimeString } from "Functions/GlobalFunctions";
+import { convertUTCStringToKSTString } from "Functions/GlobalFunctions";
 import { ViewPasscode } from "Components/Users/UserDetailComponents";
 import { userSelectPageSize } from "Constants/ConstantValues";
 
@@ -129,7 +129,7 @@ const PasscodeManagement = () => {
               {
                 key: 'createdAt',
                 title: <FormattedMessage id="ACTION_DATE" />,
-                render: (data) => getDateTimeString(convertUTCToKST(new Date(data)))
+                render: (data) => convertUTCStringToKSTString(data)
               },
               {
                 key: 'expirationTime',
@@ -137,7 +137,7 @@ const PasscodeManagement = () => {
                 render: (_, ind, row) => {
                   const data = row.passcode.expiredAt
                   if (!data) return "∞"
-                  return getDateTimeString(convertUTCToKST(new Date(data)))
+                  return convertUTCStringToKSTString(data)
                 }
               },
             ]}

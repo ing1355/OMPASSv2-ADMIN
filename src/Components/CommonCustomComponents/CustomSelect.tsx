@@ -14,7 +14,7 @@ type CustomSelectProps = {
 
 const CustomSelect = ({ items, value, onChange, needSelect }: CustomSelectProps) => {
     const [showSelect, setShowSelect] = useState(false)
-    const [active, setActive] = useState<any>(items.find(_ => _.key === value)?.key || items[0].key)
+    const [active, setActive] = useState<any>(items.length > 0 ? items.find(_ => _.key === value)?.key || items[0].key : '')
     const selectRef = useRef<HTMLDivElement>(null)
     const activeRef = useRef(active)
     const _items = needSelect ? items : [{

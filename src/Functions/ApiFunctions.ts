@@ -2,6 +2,7 @@ import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosGetFile, CustomAxiosPatch
 import { AddApplicationListApi, AddPasscodeApi, AddPoliciesListApi, AddUserDataApi, AddUserGroupApi, ApprovalUserApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DownloadAgentInstallerApi, DuplicateUserNameCheckApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetPasscodeHistoriesApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, PostLoginApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi } from "Constants/ApiRoute";
 import { INT_MAX_VALUE } from "Constants/ConstantValues";
 import { AxiosResponse } from "axios";
+import { convertUTCStringToKSTString } from "./GlobalFunctions";
 
 export const LoginFunc = (params: LoginApiParamsType, callback: (res: LoginApiResponseType, token: string) => void) => {
     return CustomAxiosPost(
@@ -154,7 +155,22 @@ export const DeleteUserDataFunc = (userId: UserDataType['userId'], callback: () 
 
 export const GetUserDetailDataFunc = (userId: UserDataType['userId'], callback: (data: UserDetailDataType[]) => void) => {
     return CustomAxiosGet(GetUserDetailDataApi(userId), (data: UserDetailDataType[]) => {
-        callback(data)
+        callback(data.map(_ => ({
+            ..._,
+            authenticationInfo: _.authenticationInfo.map(__ => ({
+                ...__,
+                loginDeviceInfo: {
+                    ...__.loginDeviceInfo,
+                    updatedAt: convertUTCStringToKSTString(__.loginDeviceInfo.updatedAt)
+                },
+                createdAt: convertUTCStringToKSTString(__.createdAt),
+                authenticators: __.authenticators.map(___ => ({
+                    ...___,
+                    createdAt: convertUTCStringToKSTString(___.createdAt),
+                    lastAuthenticatedAt: convertUTCStringToKSTString(___.lastAuthenticatedAt)
+                }))
+            }))
+        })))
     }, {
         page: 1,
         page_size: INT_MAX_VALUE,

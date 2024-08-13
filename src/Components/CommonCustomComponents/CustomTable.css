@@ -15,6 +15,7 @@
     height: 200px;
     border-bottom: none;
     border-top: none;
+    color: var(--sub-grey-color3);
 }
 
 .table-search-container {

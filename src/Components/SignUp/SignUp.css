@@ -105,12 +105,6 @@
   margin-bottom: 4px;
 }
 
-.signup-userId-input-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
 .signup-complete {
   margin-top: 0px;
 }

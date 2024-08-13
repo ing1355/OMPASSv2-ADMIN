@@ -1,6 +1,6 @@
 {
   "name": "ompass_rp_admin",
-  "version": "2.0.0(13)",
+  "version": "2.0.0(15)",
   "proxy": "https://ompass.kr:54006",
   "private": true,
   "dependencies": {
@@ -38,6 +38,7 @@
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5"
+    
   },
   "scripts": {
     "start": "cross-env HTTPS=true react-scripts start",

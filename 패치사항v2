@@ -1,0 +1,128 @@
+* v2.0.0(15)
+  * webauthn 및 passcode 레이아웃 수정
+  * input alert 체크 ref로 변경
+  * 시간 UTC to KST 변경
+
+* v2.0.0(14)
+  * 어플리케이션 들어가면 튕기는 이슈 수정
+  * input alert 재정의
+  * 회원가입 레이아웃 정리
+
+* v2.0.0(13)
+  * user detail get fail 시 뒤로가기 이벤트로 변경
+  * windows agent 다운로드 문구 변경
+  * passcode 생성 시 각 자리수 string으로 변경(0이 맨 앞인 경우 짤리는 이슈)
+  * input 컴포넌트 alert 로직 추가
+  * input 컴포넌트 custom Type 추가
+
+* v2.0.0(12)
+  * 사용자 추가/수정 시 전화번호 - 자동입력
+  * ip 아이콘 변경
+  * 회원가입 시 인증 메일 발송 및 코드 입력 추가
+  * select box item radius 적용
+  * 회원가입 돌아가기 버튼 추가
+  * No data 수정
+  * 테이블 페이지 사이즈 로컬 저장
+  * 패스코드 view on/off hover -> click 변경
+  * 자동 로그아웃 401 -> ERR_B009 로 수정
+  * message error 중복 처리 확인
+
+* v2.0.0(11)
+  * select 시 선택 안함 항목 추가
+  * 설정 - 회사명 적용 안되던 이슈 수정
+  * 패스코드 관련하여 input들 onlyNumber 유효성 검사 추가
+  * 패스코드 무한 리렌더링 이슈 수정
+
+* v2.0.0(10)
+  * footer fixed로 수정
+  * 회원 detail OMPASS, WEBAUTN 항시 표시 및 삭제 버튼 둘다 적용
+  * OMPASS 라이브러리 버전 업데이트(사이즈 변경)
+  * 이용약관 circle number 색상 main2로 변경
+  * header 메뉴 틀어짐 이슈 수정
+  * 시크릿 키 hover 시 purple로 수정
+  * api 서버 주소 및 client Id input 형태로 변경
+  * menu와 select box z-index 안맞던 이슈 수정
+  * v1 api 다 제거 및 SecretKey 페이지 삭제
+  * select box 겹칠 시 z-index 값 우선순위 조정
+  * 정책 셋팅 시 설명(description) 값 빠져서 가던 이슈 수정
+  * table search 에 select box도 추가
+  * 인증 로그 검색 안되던 이슈 수정
+  * agent 버전 업로드 파일 선택 안되던 이슈 수정
+  * 인증 방식 제어 input 레이아웃 틀어짐 이슈 수정
+  * agent 버전 관리 현재 설정된 버전 삭제 불가능하게 수정
+
+* v2.0.0(9)
+  * 로그인 페이지 일부 수정
+  * 사용자 등록 정보 authenticationInfo createdAt 기준으로 정렬
+  * PAM 접속장치 정보 레이아웃 수정
+  * 접혀있을 때 Windows 경우 Pc name 추가
+  * 시안 1차 적용 완료
+  * 어플리케이션 수정에서 윈도우즈 로그인 시크릿 키 감춤
+  * 기본 정책 삭제 안되게 수정
+  * 위치 제한 정책 구글 맵 추가
+  * 정책 제한 리스트 등록 및 제거 기능 구현
+  * checkbox 디자인 및 기능 변경
+  * 브라우저 정책 전체 선택 추가
+  * subdomainInfo redux로 변경
+  * 로고 이미지 submit 시 null 처리
+  * 회원가입 페이지 재구성
+  * st10 windows 다운로드 스타일 추가
+  * 패스코드 로그 row 클릭 시 회원관리 페이지 이동 후 해당 authinfo 펼치기 및 스크롤 구현
+
+* v2.0.0(8)
+  * 회원 관리 Detail Icon 및 레이아웃(시안대로) 수정
+  * 로그인 페이지 레이아웃 수정
+  * header fixed로 변경
+  * 메인 페이지 메뉴 버튼들 레이아웃 수정
+  * 패스코드 생성 시 utc 타임으로 고정
+
+
+* v2.0.0(7)
+  * clientMetadata -> loginDeviceInfo, serverMetadata -> serverInfo 키값 변경
+  * 설정 페이지 회사명 input 추가
+  * passcode history id 추가
+
+* v2.0.0(6)
+  * 한 row 버전 삭제 시 versionIds checkbox 기준으로 되어있던 로직 해당 row 타겟으로 수정
+  * 버전관리 th 삭제 제거
+  * 회원 관리 - 패스코드 authenticationInfo 레벨 중복으로 보이던 이슈 수정
+  * 패스코드 이력 만료 시각 수정
+  * 패스코드 이력 viewPassword 로직 수정
+  * 회원 관리 detail 정보에서 rpUser 단위 -> authenticationInfo 단위로 변경
+  * CustomTable noSearch 키값 추가(search 토글 가능)
+
+* v2.0.0(5)
+  * 패스코드 사용자가 볼 수 있게 원복
+  * 어플리케이션 데이터 인터페이스 키값들 변경
+  * 어플리케이션 테이블 데이터 변경
+  * 어플리케이션 수정 시 수정 불가한 항목들은 input이 아니라 text 형태로 출력
+  * 회원 관리 어플리케이션 접고 펼치기 기능 추가
+  * 각 어플리케이션에서 유저 아이콘 변경
+  * 이미지 업로드 공통 컴포넌트로 제작 및 사이즈, 확장자 유효성 검사 추가
+  * 인증로그 키 값 수정
+  * 각 어플리케이션 데이터에서 application 키값 제거
+  * 설정 페이지 input 구현
+  * rpUserType에 id 값 추가
+  * 설정 페이지 api 연동 완료
+  * 패스코드 이력에 portaluser 및 application 정보 추가
+
+* v2.0.0(4)
+  * 유저 상세 정보 os 아이콘 변경(구름 -> 원래대로)
+  * 패스코드 일반 사용자는 못보게 변경
+  * 인증 정책 ip 접근 제한 설명 추가
+  * 시간 접근 제한 구현 및 인터페이스 일부 수정
+
+* v2.0.0(3)
+  * IP 접근 제한 Input 제한 추가
+  * login 화면 application logo 사이즈 제한 수정
+  * clientMetaData type에서 client 키값 제거 및 nullable 처리
+  * contents overflow 영역 수정
+
+* v2.0.0(2)
+  * 사용자 로그인 시 패스코드 추가 안보이게 수정
+  * 인증 정책 Type 정의
+  * 구름 로그인 어플리케이션 타입 추가
+  
+* v2.0.0(1)
+  * Windows login 패스워드 입력 필요 추가
+  * 어플리케이션 비밀키 재할당 구현

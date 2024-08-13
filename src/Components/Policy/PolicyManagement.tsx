@@ -5,10 +5,9 @@ import { useState, useEffect, useLayoutEffect, useMemo } from "react"
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import { useNavigate } from "react-router"
 import { GetPoliciesListFunc, GetPolicyDetailDataFunc } from "Functions/ApiFunctions"
-import { FormattedMessage } from "react-intl"
 import policyAddIcon from '../../assets/policyAddIcon.png'
 import policyAddIconHover from '../../assets/policyAddIconHover.png'
-import { convertUTCToKST, getDateTimeString } from "Functions/GlobalFunctions"
+import { convertUTCStringToKSTString } from "Functions/GlobalFunctions"
 import { userSelectPageSize } from "Constants/ConstantValues"
 
 // const authTestPolicies: = [
@@ -230,7 +229,7 @@ const PolicyManagement = () => {
                     {
                         key: 'createdAt',
                         title: '생성일',
-                        render: (data) => getDateTimeString(convertUTCToKST(new Date(data)))
+                        render: (data) => convertUTCStringToKSTString(data)
                     }
                 ]}
                 onBodyRowClick={(row, index, arr) => {

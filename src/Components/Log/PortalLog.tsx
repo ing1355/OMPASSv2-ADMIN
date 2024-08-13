@@ -3,6 +3,7 @@ import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
 import { HttpMethodTypes, userSelectPageSize } from "Constants/ConstantValues"
 import { GetPortalLogDataListFunc } from "Functions/ApiFunctions"
+import { convertUTCStringToKSTString } from "Functions/GlobalFunctions"
 import { useLayoutEffect, useState } from "react"
 
 const PortalLog = () => {
@@ -20,7 +21,10 @@ const PortalLog = () => {
             _params[params.type] = params.value
         }
         GetPortalLogDataListFunc(_params, ({ results, totalCount }) => {
-            setTableData(results)
+            setTableData(results.map(_ => ({
+                ..._,
+                createdAt: convertUTCStringToKSTString(_.createdAt)
+            })))
             setTotalCount(totalCount)
         }).finally(() => {
             setDataLoading(false)

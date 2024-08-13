@@ -19,7 +19,7 @@ import CustomModal from "Components/CommonCustomComponents/CustomModal"
 import Button from 'Components/CommonCustomComponents/Button'
 import { userInfoClear } from 'Redux/actions/userChange'
 import { UserDetailInfoAuthenticatorContent, UserDetailInfoAuthenticatorDeleteButton, UserDetailInfoDeviceInfoContent, UserInfoInputrow, UserInfoRow, ViewPasscode } from './UserDetailComponents'
-import { autoHypenPhoneFun, convertUTCToKST, createRandom1Digit, getDateTimeString } from 'Functions/GlobalFunctions'
+import { autoHypenPhoneFun, convertUTCStringToKSTString, createRandom1Digit } from 'Functions/GlobalFunctions'
 import Input from 'Components/CommonCustomComponents/Input'
 
 const initModifyValues: UserDataModifyLocalValuesType = {
@@ -470,7 +470,7 @@ const UserDetail = ({ }) => {
                                         title: <FormattedMessage id="VALID_TIME" />,
                                         render: (data) => {
                                             if (data === "-1") return "∞"
-                                            return getDateTimeString(convertUTCToKST(new Date(data)))
+                                            return data
                                         }
                                     },
                                     {
@@ -581,7 +581,10 @@ const UserDetail = ({ }) => {
                     ...ud,
                     authenticationInfo: ud.authenticationInfo.map((aInfo, aInd) => aInfo.id === addPasscode ? ({
                         ...aInfo,
-                        authenticators: aInfo.authenticators.concat(newData)
+                        authenticators: aInfo.authenticators.concat({
+                            ...newData,
+                            createdAt: convertUTCStringToKSTString(newData.createdAt)
+                        })
                     }) : aInfo)
                 })))
                 setAddPasscode("")

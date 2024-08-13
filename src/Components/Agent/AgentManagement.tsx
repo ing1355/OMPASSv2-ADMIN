@@ -16,6 +16,7 @@ import CustomTable from 'Components/CommonCustomComponents/CustomTable';
 import { CurrentAgentVersionChangeFunc, DeleteAgentInstallerFunc, DownloadAgentInstallerFunc, GetAgentInstallerListFunc } from 'Functions/ApiFunctions';
 import Button from 'Components/CommonCustomComponents/Button';
 import { userSelectPageSize } from 'Constants/ConstantValues';
+import { convertUTCStringToKSTString } from 'Functions/GlobalFunctions';
 
 interface Checkbox {
   id: number;
@@ -72,7 +73,10 @@ const AgentManagement = () => {
       _params[params.type] = params.value
     }
     await GetAgentInstallerListFunc(_params, ({ results, totalCount }) => {
-      setTableData(results)
+      setTableData(results.map(_ => ({
+        ..._,
+        uploadDate: convertUTCStringToKSTString(_.uploadDate)
+      })))
       setTotalCount(totalCount)
     }).finally(() => {
       setDataLoading(false)
