@@ -33,6 +33,7 @@ import { PropsWithChildren, useState } from 'react';
 import './UserDetailComponents.css'
 import { createOSInfo } from 'Functions/GlobalFunctions';
 import Button from 'Components/CommonCustomComponents/Button';
+import RequiredLabel from 'Components/CommonCustomComponents/RequiredLabel';
 
 const UserDetailInfoContentItem = ({ imgSrc, title, content }: {
     imgSrc: string
@@ -85,15 +86,15 @@ export const UserDetailInfoAuthenticatorContent = ({ data }: {
         <div className="user-detail-info-device-info-content" />
         <div className='authenticators-container-inner'>
             {
-                data ? (data.type === 'OMPASS' ? <AuthenticatorInfoContentsOMPASSType data={data as OMPASSAuthenticatorDataType}/>
-                    : data.type === 'WEBAUTHN' ? <AuthenticatorInfoContentsWEBAUTHNType data={data as WebAuthnAuthenticatorDataType}/>
+                data ? (data.type === 'OMPASS' ? <AuthenticatorInfoContentsOMPASSType data={data as OMPASSAuthenticatorDataType} />
+                    : data.type === 'WEBAUTHN' ? <AuthenticatorInfoContentsWEBAUTHNType data={data as WebAuthnAuthenticatorDataType} />
                         : <div>
                         </div>) : <div className='user-detail-info-device-info-no-contents'>
-                            <div>
-                                <img src={noDataIcon}/>
-                            </div>
-                            <FormattedMessage id="NO_DATA_TEXT"/>
-                        </div>
+                    <div>
+                        <img src={noDataIcon} />
+                    </div>
+                    <FormattedMessage id="NO_DATA_TEXT" />
+                </div>
             }
         </div>
     </div>
@@ -107,12 +108,12 @@ export const ViewPasscode = ({ code }: {
         <div>
             {isView ? code : "⦁⦁⦁⦁⦁⦁⦁⦁⦁"}
         </div>
-        <div 
-        onClick={(e) => {
-            e.stopPropagation()
-            e.preventDefault()
-            setIsView(!isView)
-        }}
+        <div
+            onClick={(e) => {
+                e.stopPropagation()
+                e.preventDefault()
+                setIsView(!isView)
+            }}
         // onMouseEnter={() => {
         //     setIsView(!isView)
         // }} onMouseLeave={() => {
@@ -138,12 +139,16 @@ export const UserInfoRow = ({ title, value }: {
     </div>
 }
 
-export const UserInfoInputrow = ({ title, children }: PropsWithChildren<{
+export const UserInfoInputrow = ({ title, children, required }: PropsWithChildren<{
     title: string
+    required?: boolean
 }>) => {
     return <div className="user-detail-info-row">
         <div className="user-detail-info-col">
-            <FormattedMessage id={title} />
+            <RequiredLabel required={required}/>
+            <span>
+                <FormattedMessage id={title} />
+            </span>
         </div>
         <div className="user-detail-info-col">
             {children}

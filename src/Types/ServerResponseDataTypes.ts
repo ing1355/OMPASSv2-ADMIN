@@ -166,3 +166,7 @@ type PortalSettingsDataType = {
   noticeMessage: string
   timeZone: string
 }
+
+type GlobalDatasType = {
+  googleApiKey: string
+}

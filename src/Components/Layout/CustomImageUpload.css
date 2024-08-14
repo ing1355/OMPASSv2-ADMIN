@@ -1,6 +1,6 @@
 .custom-image-upload-container {
-    height: 264px;
-    width: 200px;
+    height: 314px;
+    width: 250px;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -13,9 +13,31 @@
     justify-content: center;
     align-items: center;
     flex: 1 auto;
+    position: relative;
+    padding: 12px;
+    overflow: hidden;
+    user-select: none;
     & > img {
         max-width: 95%;
         max-height: 95%;
+    }
+}
+
+.custom-image-delete-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255,255,255,.7);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    color: var(--main-grey-color);
+    cursor: pointer;
+    & > img {
+        width: 36px;
+        height: 36px;
     }
 }
 

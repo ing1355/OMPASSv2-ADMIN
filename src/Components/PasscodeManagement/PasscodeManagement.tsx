@@ -35,13 +35,6 @@ const PasscodeManagement = () => {
     })
   }
 
-  useEffect(() => {
-    GetDatas({
-      page: 1,
-      size: userSelectPageSize()
-    })
-  }, [])
-
   return (
     <>
       <Contents loading={dataLoading}>

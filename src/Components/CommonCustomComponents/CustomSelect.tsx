@@ -73,6 +73,8 @@ const CustomSelect = ({ items, value, onChange, needSelect }: CustomSelectProps)
                     _items.map((_, ind) => {
                         return <div key={ind} className={`custom-select-option-item${_.key === active ? ' activate' : ''}${_.key === value ? ' selected' : ''}`} onClick={() => {
                             onChange(_.key)
+                        }} onMouseMove={() => {
+                            setActive(_.key)
                         }}>
                             {_.label}
                         </div>

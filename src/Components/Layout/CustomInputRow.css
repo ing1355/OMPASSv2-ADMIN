@@ -1,8 +1,8 @@
 .custom-detail-label-input-row {
     display: flex;
     flex-direction: row;
-    align-items: center;
-    /* align-items: baseline; */
+    /* align-items: center; */
+    align-items: baseline;
     justify-content: center;
     gap: 48px;
     padding: 12px 0;
@@ -19,10 +19,6 @@
     align-items: center;
     justify-content: flex-end;
     gap: 6px;
-    & > div.essential-label {
-        color: var(--main-red-color);
-        padding-top: 3px;
-    }
 }
 
 .custom-detail-contents {
@@ -34,7 +30,7 @@
     justify-content: flex-start;
     align-items: center;
     row-gap: 12px;
-    column-gap: 24px;
+    column-gap: 16px;
 
     &>.custom-input-wrapper {
         flex: 0 0 80%;

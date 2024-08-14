@@ -28,6 +28,7 @@ const AgentManagement = () => {
   const [dataLoading, setDataLoading] = useState(false)
   const [totalCount, setTotalCount] = useState<number>(0);
   const [tableData, setTableData] = useState<AgentInstallerListDataType>([]);
+  const [refresh, setRefresh] = useState(false)
   const [checkAll, setCheckAll] = useState(false);
   const [checkboxes, setCheckboxes] = useState<Checkbox[]>([]);
   const [openFileDelete, setOpenFileDelete] = useState(-1);
@@ -84,11 +85,10 @@ const AgentManagement = () => {
   }
 
   useEffect(() => {
-    GetDatas({
-      page: 1,
-      size: userSelectPageSize()
-    })
-  }, [])
+    if(refresh) {
+      setRefresh(false)
+    }
+  },[refresh])
 
   // agentData가 변경되면 checkboxes 초기화
   // useEffect(() => {
@@ -111,6 +111,7 @@ const AgentManagement = () => {
           onSearchChange={(data) => {
             GetDatas(data)
           }}
+          refresh={refresh}
           addBtn={{
             label: <FormattedMessage id='FILE_UPLOAD' />,
             icon: uploadIcon,
@@ -270,6 +271,7 @@ const AgentManagement = () => {
                     if (versionIds) {
                       DeleteAgentInstallerFunc(versionIds, () => {
                         setOpenFileDelete(-1);
+                        setRefresh(true)
                         message.success(formatMessage({ id: 'VERSION_DELETE' }));
                       })
                     } else {

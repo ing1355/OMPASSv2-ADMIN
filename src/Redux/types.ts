@@ -3,6 +3,7 @@ const types = {
   userUuidChange: 'USERUUIDCHANGE',
   userInfoChange: 'USERINFOCHANGE',
   userInfoClear: 'USERINFOCLEAR',
-  subdomainInfoChange: 'SUBDOMAININFOCHANGE'
+  subdomainInfoChange: 'SUBDOMAININFOCHANGE',
+  globalDatasChange: 'GLOBALDATASCHANGE'
 };
 export default types;

@@ -1,0 +1,11 @@
+.required-label {
+    color: var(--main-red-color);
+    padding-top: 3px;
+    margin-right: 3px;
+    width: 8px;
+    opacity: 0;
+    display: inline-block;
+    &.visible {
+        opacity: 1;
+    }
+}

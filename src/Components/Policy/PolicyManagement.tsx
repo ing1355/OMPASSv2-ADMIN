@@ -179,14 +179,7 @@ const PolicyManagement = () => {
         })
     }
 
-    useEffect(() => {
-        GetDatas({
-            page: 1,
-            size: userSelectPageSize()
-        })
-    },[])
-
-    return <Contents>
+    return <Contents loading={dataLoading}>
         <ContentsHeader title="POLICY_MANAGEMENT" subTitle="POLICY_MANAGEMENT">
         </ContentsHeader>
         <div className="contents-header-container">

@@ -31,13 +31,6 @@ const PortalLog = () => {
         })
     }
 
-    useLayoutEffect(() => {
-        GetDatas({
-            page:1,
-            size: userSelectPageSize()
-        })
-    }, [])
-
     return <Contents loading={dataLoading}>
         <ContentsHeader title="PORTAL_LOG_MANAGEMENT" subTitle="PORTAL_LOG_MANAGEMENT">
         </ContentsHeader>

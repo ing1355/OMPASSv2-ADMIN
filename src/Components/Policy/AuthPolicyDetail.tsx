@@ -79,10 +79,6 @@ const AuthPolicyDetail = () => {
     const [detailData, setDetailData] = useState<PolicyDataType>()
     const { uuid } = useParams()
     const isAdd = !uuid
-    const descriptionRef = useRef<HTMLInputElement>(null)
-    const { lang } = useSelector((state: ReduxStateType) => ({
-        lang: state.lang!
-    }));
     const [adminDatas, setAdminDatas] = useState<UserDataType[]>([])
     const navigate = useNavigate()
     const [currentLocation, setCurrentLocation] = useState<google.maps.LatLngLiteral>({ lat: 36.713889964770544, lng: 127.88793971566751 })
@@ -132,7 +128,7 @@ const AuthPolicyDetail = () => {
                 accessTimeRestrictions: accessTimeValues
             }
         }, () => {
-            message.success('수정 성공!')
+            message.success('추가 성공!')
             navigate('/Policies')
         })
     }
@@ -150,7 +146,22 @@ const AuthPolicyDetail = () => {
                         setAuthenticatorPolicies(authenticatorPolicies.filter(_ => _ !== type))
                     }
                 }
-            }} checkedChildren={type === 'OMPASS' ? '필수' : '허용'} unCheckedChildren={'차단'} style={{ backgroundColor: authenticatorPolicies.includes(type) ? "var(--main-purple-color)" : '' }} />
+            }} checkedChildren={type === 'OMPASS' ? '필수' : '허용'} unCheckedChildren={'차단'} />
+        </label>
+    }
+
+    const BrowserController = ({ type }: {
+        type: BrowserPolicyType
+    }) => {
+        return <label className="browser-controller">
+            {type}
+            <Switch checked={browserChecked.includes(type)} onChange={check => {
+                if (check) {
+                    setBrowserChecked(browserChecked.concat(type))
+                } else {
+                    setBrowserChecked(browserChecked.filter(_ => _ !== type))
+                }
+            }} checkedChildren={'허용'} unCheckedChildren={'차단'} />
         </label>
     }
 
@@ -180,7 +191,7 @@ const AuthPolicyDetail = () => {
                             }
                         }, () => {
                             message.success('수정 성공!')
-                            navigate('/Policies')
+                            // navigate('/Policies')
                         })
                     } else {
                         addAuthPolicyFunc()
@@ -201,7 +212,7 @@ const AuthPolicyDetail = () => {
             </div>
         </ContentsHeader>
         <div className="contents-header-container">
-            <CustomInputRow title="정책명" essential>
+            <CustomInputRow title="정책명" required>
                 {
                     detailData?.policyType === 'DEFAULT' ? <Input className="st1" value={"DEFAULT POLICY"} readOnly /> : <Input className="st1" value={policyName} valueChange={value => {
                         setPolicyName(value)
@@ -216,29 +227,25 @@ const AuthPolicyDetail = () => {
             </CustomInputRow>
             <CustomInputRow title="브라우저 허용">
                 <label className="policy-browser-label">
-                    <Input type="checkbox" checked={PolicyBrowsersList.every(_ => browserChecked.includes(_))} onChange={e => {
-                        if (e.currentTarget.checked) {
-                            setBrowserChecked(PolicyBrowsersList)
-                        } else {
-                            setBrowserChecked([])
-                        }
-                    }} />
-                    전체 선택
+                    <label className="authenticator-controller">
+                        전체 선택
+                        <Switch checked={browserChecked.length === PolicyBrowsersList.length} onChange={check => {
+                            if (check) {
+                                setBrowserChecked(PolicyBrowsersList)
+                            } else {
+                                setBrowserChecked([])
+                            }
+                        }} checkedChildren={'허용'} unCheckedChildren={'차단'} />
+                    </label>
                 </label>
                 {
-                    PolicyBrowsersList.map((_, ind) => <label key={ind} className="policy-browser-label">
-                        <Input type="checkbox" checked={browserChecked.includes(_)} onChange={e => {
-                            if (e.currentTarget.checked) {
-                                setBrowserChecked(browserChecked.concat(_))
-                            } else {
-                                setBrowserChecked(browserChecked.filter(__ => __ !== _))
-                            }
-                        }} />
-                        <FormattedMessage id={_} />
-                    </label>)
+                    // PolicyBrowsersList.map((_, ind) => <label key={ind} className="policy-browser-label">
+                    //     <BrowserController type={_} />
+                    // </label>)
+                    PolicyBrowsersList.map((_, ind) => <BrowserController type={_} key={ind}/> )
                 }
             </CustomInputRow>
-            <CustomInputRow title="인증 방식 제어" essential>
+            <CustomInputRow title="인증 방식 제어" required>
                 <div className="authenticator-controller-policy-container">
                     <div className="authenticator-controller-container">
                         <AuthenticatorController type={"OMPASS"} />
@@ -255,19 +262,19 @@ const AuthPolicyDetail = () => {
                             <div className="ompass-control-row">
                                 <Input type="radio" value={"ACTIVE"} checked={ompassControl === 'ACTIVE'} onChange={e => {
                                     if (e.target.checked) setOmpassControl('ACTIVE')
-                                }} label="OMPASS 인증 필수"/>
+                                }} label="OMPASS 인증 필수" />
                                 <p>대체 정책이 구성되어 있지 않은 한 OMPASS 인증이 필요합니다. (없을 경우 OMPASS 인증 등록)</p>
                             </div>
                             <div className="ompass-control-row">
                                 <Input type="radio" value={"INACTIVE"} checked={ompassControl === 'INACTIVE'} onChange={e => {
                                     if (e.target.checked) setOmpassControl('INACTIVE')
-                                }} label="OMPASS 인증 패스"/>
+                                }} label="OMPASS 인증 패스" />
                                 <p>OMPASS 등록 및 인증을 패스합니다.</p>
                             </div>
                             <div className="ompass-control-row">
                                 <Input type="radio" value={"DENY"} checked={ompassControl === 'DENY'} onChange={e => {
                                     if (e.target.checked) setOmpassControl('DENY')
-                                }} label="OMPASS 인증 거부"/>
+                                }} label="OMPASS 인증 거부" />
                                 <p>모든 사용자에 대한 OMPASS 인증을 거부합니다.</p>
                             </div>
                         </div>
@@ -276,11 +283,10 @@ const AuthPolicyDetail = () => {
                     </div>
                 </div>
             </CustomInputRow>
-            <CustomInputRow title="사용자 위치 제한">
+            <CustomInputRow title="사용자 위치 허용">
                 <div>
                     <Switch style={{
                         marginBottom: !locationChecked ? 0 : '8px',
-                        backgroundColor: locationChecked ? "var(--main-purple-color)" : ''
                     }} checked={locationChecked} onChange={check => {
                         setLocationChecked(check)
                     }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
@@ -374,11 +380,10 @@ const AuthPolicyDetail = () => {
                     </div>
                 </div>
             </CustomInputRow>
-            <CustomInputRow title="IP 접근 제한">
+            <CustomInputRow title="IP 접근 허용">
                 <div>
                     <Switch style={{
                         marginBottom: !ipAddressChecked ? 0 : '8px',
-                        backgroundColor: ipAddressChecked ? "var(--main-purple-color)" : ''
                     }} checked={ipAddressChecked} onChange={check => {
                         setIpAddressChecked(check)
                         if (ipAddressValues.length === 0) {
@@ -423,11 +428,10 @@ const AuthPolicyDetail = () => {
                     </div>
                 </div>
             </CustomInputRow>
-            <CustomInputRow title="시간 접근 제한">
+            <CustomInputRow title="시간 접근 허용">
                 <div>
                     <Switch style={{
                         marginBottom: !accessTimeChecked ? 0 : '8px',
-                        backgroundColor: accessTimeChecked ? "var(--main-purple-color)" : ''
                     }} checked={accessTimeChecked} onChange={check => {
                         setAccessTimeChecked(check)
                         if (accessTimeValues.length === 0) {
@@ -539,9 +543,7 @@ const AuthPolicyDetail = () => {
                                         ...timeValue,
                                         options: { ...timeValue.options, loginDenyEnable: check }
                                     }) : timeValue))
-                                }} checkedChildren={'ON'} unCheckedChildren={'OFF'} style={{
-                                    backgroundColor: _.options.loginDenyEnable ? 'var(--main-purple-color)' : ''
-                                }} />
+                                }} checkedChildren={'ON'} unCheckedChildren={'OFF'}/>
                             </div>
                             <div style={{
                                 display: 'flex',

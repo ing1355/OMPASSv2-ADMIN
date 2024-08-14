@@ -1,13 +1,18 @@
 .ompass-control-row {
     & p {
+        color: var(--main-grey-color);
         margin: 8px 0 16px 1.8rem;
     }
     & input {
         margin-right: 8px;
     }
     & > .custom-input-wrapper {
-        color: var(--main-blue-color);
         font-weight: 700;
+        & > .custom-label-wrapper {
+            & > label {
+                color: var(--main-purple-color);
+            }
+        }
     }
     & p {
         font-weight: lighter;
@@ -16,7 +21,7 @@
 }
 
 .policy-browser-label {
-    white-space: pre;
+    white-space: pre-wrap;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -91,7 +96,7 @@
 
 .authenticator-controller-container {
     display: flex;
-    gap: 8px;
+    gap: 16px;
     margin-bottom: 16px;
 }
 
@@ -99,6 +104,14 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    cursor: pointer;
+    color: var(--main-grey-color);
+}
+
+.browser-controller {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
     cursor: pointer;
     color: var(--main-grey-color);
 }
@@ -204,6 +217,8 @@ div[aria-hidden="true"] {
     flex-direction: row;
     gap: 24px;
     & > .map-layout {
+        overflow: hidden;
+        border-radius: 12px;
         width: 400px;
         height: 400px;
     }   

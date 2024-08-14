@@ -70,7 +70,7 @@ export const parseJwtToken = (token: string) => {
 }
 
 export const saveLocaleToLocalStorage = (locale: ReduxStateType['lang'] = "KR") => {
-    localStorage.setItem('locale', locale);
+    sessionStorage.setItem('locale', locale);
 }
 
 export const autoHypenPhoneFun = (phone: string) => {

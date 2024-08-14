@@ -52,6 +52,7 @@ const UserDetail = ({ }) => {
         lang: state.lang,
         userInfo: state.userInfo!,
     }));
+    const [usernameAlert, setUsernameAlert] = useState(false)
     const [passcodeHover, setPasscodeHover] = useState("")
     const [duplicateIdCheck, setDuplicateIdCheck] = useState(false)
     const [userDetailDatas, setUserDetailDatas] = useState<UserDetailDataType[]>([])
@@ -220,14 +221,14 @@ const UserDetail = ({ }) => {
                 </div>
 
                 <div className="user-detail-info-container">
-                    {isAdd ? <UserInfoInputrow title="ID">
+                    {isAdd ? <UserInfoInputrow title="ID" required>
                         <Input className='st1' value={addValues.username} onChange={e => {
                             setDuplicateIdCheck(false)
                             setAddValues({
                                 ...addValues,
                                 username: e.target.value
                             })
-                        }} />
+                        }} customType='username'/>
                         <Button className='st6' disabled={duplicateIdCheck || addValues.username.length === 0} onClick={() => {
                             DuplicateUserNameCheckFunc(addValues.username, ({ isExist }) => {
                                 setDuplicateIdCheck(!isExist)
@@ -241,7 +242,7 @@ const UserDetail = ({ }) => {
                             중복 확인
                         </Button>
                     </UserInfoInputrow> : <UserInfoRow title="ID" value={userData ? userData.username : ""} />}
-                    {(isModify || isAdd) ? <UserInfoInputrow title="NAME">
+                    {(isModify || isAdd) ? <UserInfoInputrow title="NAME" required>
                         <Input className='st1' value={targetValue.name.firstName} placeholder="성" onChange={e => {
                             if (isAdd) {
                                 setAddValues({
@@ -282,7 +283,7 @@ const UserDetail = ({ }) => {
                         }} />
                     </UserInfoInputrow> :
                         <UserInfoRow title="NAME" value={userData ? (userData.name.firstName + userData.name.lastName) : ""} />}
-                    {(isModify || isAdd) ? <UserInfoInputrow title="EMAIL">
+                    {(isModify || isAdd) ? <UserInfoInputrow title="EMAIL" required>
                         <Input className='st1' value={isAdd ? addValues.email : modifyValues.email} onChange={e => {
                             if (isAdd) {
                                 setAddValues({
@@ -312,7 +313,7 @@ const UserDetail = ({ }) => {
                                     phone: value
                                 })
                             }
-                        }} />
+                        }} maxLength={13}/>
                     </UserInfoInputrow> : <UserInfoRow title="PHONE_NUMBER" value={userData?.phone || "전화번호 없음"} />}
 
                     {(isModify || isAdd) ? <UserInfoInputrow title="GROUP">

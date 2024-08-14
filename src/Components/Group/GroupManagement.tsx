@@ -32,13 +32,6 @@ const GroupManagement = () => {
         })
     }
 
-    useLayoutEffect(() => {
-        GetDatas({
-            page: 1,
-            size: userSelectPageSize()
-        })
-    }, [])
-
     return <Contents loading={dataLoading}>
         <ContentsHeader title="GROUP_MANAGEMENT" subTitle="GROUP_MANAGEMENT">
         </ContentsHeader>

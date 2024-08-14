@@ -59,10 +59,7 @@ label:has(.checkbox-label) {
     height: 100%;
     display: flex;
     flex-direction: column;
-    
-    &.has-alert {
-        margin-bottom: 20px;
-    }
+    position: relative;
 }
 
 .custom-label-wrapper {
@@ -71,11 +68,24 @@ label:has(.checkbox-label) {
     display: flex;
     flex-direction: row;
     align-items: center;
-    &>input {
-        box-sizing: border-box;
+    & > label {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+    & > div {
+        position: relative;
         width: 100%;
         height: 40px;
         flex: 1;
+        & > input:focus + .custom-type-alert-text {
+            display: flex;
+        }
+        & > input {
+            box-sizing: border-box;
+            width: 100%;
+            height: 100%;
+        }
     }
 }
 
@@ -115,11 +125,30 @@ input.st1 {
 }
 
 .custom-type-alert-text {
-    display: flex;
+    position: absolute;
     align-items: center;
     justify-content: flex-start;
-    color: red;
-    font-size: .85rem;
-    padding-left: 8px;
-    padding-top: 4px;
+    font-size: .75rem;
+    left: 50%;
+    top: 120%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    background-color: var(--main-black-color);
+    color: var(--main-white-color);
+    border-radius: 4px;
+    padding: 8px 12px;
+    text-align: center;
+    white-space: nowrap;
+    user-select: none;
+    display: none;
+    &::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: -5px;
+        border-bottom: 10px solid black;
+        border-right: 10px solid black;
+        transform: rotate(45deg);
+    }
 }

@@ -14,7 +14,7 @@ type CustomModalProps = ModalProps & {
     okClassName?: string
     cancelClassName?: string
     typeTitle?: string
-    typeContent?: string
+    typeContent?: string | React.ReactNode
     buttonLoading?: boolean
 }
 

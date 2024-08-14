@@ -1,4 +1,3 @@
-import { UserSignupMethod } from 'Constants/ConstantValues';
 import types from '../types';
 
 const subdomainInfo: ReduxStateType['subdomainInfo']|null = null

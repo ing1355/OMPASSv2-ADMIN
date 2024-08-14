@@ -19,7 +19,7 @@ const OMPASSVerify = () => {
       (data: {
         username: string
       }, header: string) => {
-        localStorage.setItem('authorization', header);
+        sessionStorage.setItem('authorization', header);
         dispatch(userInfoChange(header))
         navigate('/Main')
       },

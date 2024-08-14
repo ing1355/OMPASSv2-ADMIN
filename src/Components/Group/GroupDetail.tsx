@@ -26,7 +26,8 @@ const GroupDetail = () => {
     const isAdd = !uuid
 
     const GetDatas = async () => {
-        await GetUserDataListFunc({
+        setDataLoading(true)
+        GetUserDataListFunc({
             page_size: INT_MAX_VALUE,
             page: 1,
             hasGroup: false
@@ -35,30 +36,33 @@ const GroupDetail = () => {
                 ...u,
                 before: results
             }))
+        }).then(() => {
+            if (uuid) {
+                GetUserGroupDetailDataFunc(uuid, data => {
+                    setInputName(data.name)
+                    setInputDescription(data.description)
+                    setSelectedPolicy(data.policy ? data.policy.id : '')
+                    setUsers((u) => ({
+                        ...u,
+                        after: data.users
+                    }))
+                })
+            }
+        }).finally(() => {
+            setDataLoading(false)
         })
-        if (uuid) {
-            await GetUserGroupDetailDataFunc(uuid, data => {
-                setInputName(data.name)
-                setInputDescription(data.description)
-                setSelectedPolicy(data.policy.id)
-                setUsers((u) => ({
-                    ...u,
-                    after: data.users
-                }))
-            })
-        }
     }
 
     useLayoutEffect(() => {
-        setDataLoading(true)
-        GetDatas().finally(() => {
-            setDataLoading(false)
-        })
+        GetDatas()
     }, [])
 
     return <Contents loading={dataLoading}>
         <ContentsHeader title="GROUP_MANAGEMENT" subTitle={isAdd ? "GROUP_ADD" : "GROUP_DETAIL"}>
             <Button className="st3" onClick={() => {
+                if(!inputName) {
+                    return message.error("그룹명을 입력해주세요")
+                }
                 const params = {
                     name: inputName,
                     description: inputDescription,
@@ -73,27 +77,23 @@ const GroupDetail = () => {
                 } else {
                     UpdateUserGroupDataFunc(uuid, params, () => {
                         message.success('수정 성공!')
-                        navigate('/Groups')
+                        // navigate('/Groups')
                     })
                 }
             }}>
                 저장
             </Button>
             {!isAdd && <Button className="st2" onClick={() => {
-                if (isAdd) {
+                DeleteUserGroupDataFunc(uuid, () => {
+                    message.success('그룹 삭제 성공!')
                     navigate('/Groups')
-                } else {
-                    DeleteUserGroupDataFunc(uuid, () => {
-                        message.success('그룹 삭제 성공!')
-                        navigate('/Groups')
-                    })
-                }
+                })
             }}>
                 삭제
             </Button>}
         </ContentsHeader>
         <div className="contents-header-container">
-            <CustomInputRow title="그룹명">
+            <CustomInputRow title="그룹명" required>
                 <Input value={inputName} valueChange={value => {
                     setInputName(value)
                 }} placeholder="그룹명을 입력해주세요" className="st1"/>

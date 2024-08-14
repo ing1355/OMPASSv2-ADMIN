@@ -1,8 +1,9 @@
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
 import { useNavigate, useParams } from "react-router"
-import { useLayoutEffect, useMemo, useState } from "react"
-import { Switch, Upload, message } from "antd"
+import { useLayoutEffect, useState } from "react"
+import { Switch, message } from "antd"
+import ompassLogoIcon from '../../assets/ompassLogoIcon.png'
 import CustomInputRow from "Components/Layout/CustomInputRow"
 import { AddApplicationDataFunc, DeleteApplicationListFunc, GetApplicationDetailFunc, GetApplicationListFunc, UpdateApplicationDataFunc, UpdateApplicationSecretkeyFunc } from "Functions/ApiFunctions"
 import PolicySelect from "Components/CommonCustomComponents/PolicySelect"
@@ -19,9 +20,10 @@ import documentIconHover from '../../assets/documentIconHover.png'
 import deleteIcon from '../../assets/deleteIcon.png'
 import deleteIconHover from '../../assets/deleteIconHover.png'
 import './ApplicationDetail.css'
+import { FormattedMessage } from "react-intl"
 
 const ApplicationDetail = () => {
-    const [logoImage, setLogoImage] = useState<string>("")
+    const [logoImage, setLogoImage] = useState<string>(ompassLogoIcon)
     const [inputName, setInputName] = useState('')
     const [helpMsg, setHelpMsg] = useState('')
     const [needPassword, setNeedPassword] = useState(false)
@@ -57,7 +59,7 @@ const ApplicationDetail = () => {
                 setInputSecretKey(data.secretKey)
                 setInputDomain(data.domain ?? "")
                 setInputRedirectUrl(data.redirectUri ?? "")
-                setLogoImage(data.logoImage ?? "")
+                setLogoImage(data.logoImage ?? ompassLogoIcon)
                 setInputDescription(data.description ?? "")
                 setInputClientId(data.clientId)
                 setInputApiServerHost(data.apiServerHost)
@@ -88,11 +90,6 @@ const ApplicationDetail = () => {
                     문서 보기
                 </Button>
                 {uuid && <>
-                    {/* | */}
-                    {/* <div>
-                        어플리케이션 로그 확인
-                    </div>
-                    | */}
                     {applicationType !== 'ADMIN' && <Button icon={deleteIcon} hoverIcon={deleteIconHover} className="st2" onClick={() => {
                         setSureDelete(true)
                     }}>
@@ -109,7 +106,7 @@ const ApplicationDetail = () => {
             </CustomInputRow>
             {
                 applicationType && <>
-                    <CustomInputRow title="이름">
+                    <CustomInputRow title="이름" required>
                         <Input className="st1" value={inputName} onChange={e => {
                             setInputName(e.target.value)
                         }} placeholder="ex) 테스트 어플리케이션" />
@@ -126,15 +123,15 @@ const ApplicationDetail = () => {
                     </CustomInputRow>
                     {
                         needDomains.includes(applicationType) && <>
-                            <CustomInputRow title="도메인">
+                            <CustomInputRow title="도메인" required>
                                 <Input className="st1" value={inputDomain} onChange={e => {
                                     setInputDomain(e.target.value)
                                 }} placeholder="ex) https://omsecurity.kr:1234" readOnly={applicationType === 'ADMIN'} />
                             </CustomInputRow>
-                            {!(isAdd && applicationType === 'REDMINE') && ((!isAdd && applicationType === 'REDMINE') ? inputRedirectUrl : <CustomInputRow title="리다이렉트 URL">
+                            {!(isAdd && applicationType === 'REDMINE') && ((!isAdd && applicationType === 'REDMINE') ? inputRedirectUrl : <CustomInputRow title="리다이렉트 URI" required>
                                 <Input className="st1" value={inputRedirectUrl} onChange={e => {
                                     setInputRedirectUrl(e.target.value)
-                                }} placeholder="ex) https://omsecurity.kr:1234/ompass" readOnly={applicationType === 'ADMIN'} />
+                                }} placeholder="ex) /ompass" readOnly={applicationType === 'ADMIN'} />
                             </CustomInputRow>)}
                         </>
                     }
@@ -184,10 +181,12 @@ const ApplicationDetail = () => {
                             })
                         }}>비밀키 재발급</Button>
                     </CustomInputRow>}
-                    <CustomInputRow title="정책 설정">
+                    <CustomInputRow title="정책 설정" required>
                         <PolicySelect selectedPolicy={selectedPolicy} setSelectedPolicy={setSelectedPolicy} needSelect />
                     </CustomInputRow>
-                    <CustomInputRow title="로고 설정">
+                    <CustomInputRow title="로고 설정" containerStyle={{
+                        alignItems: 'flex-start'
+                    }}>
                         <CustomImageUpload src={logoImage} callback={handleFileSelect} />
                     </CustomInputRow>
                 </>
@@ -195,6 +194,15 @@ const ApplicationDetail = () => {
         </div>
         {applicationType && <div className="application-detail-bottom-buttons-container">
             <Button className="st3" onClick={() => {
+                if(!inputName) {
+                    return message.error("이름을 입력해주세요")
+                }
+                if(!inputDomain && needDomains.includes(applicationType)) {
+                    return message.error("도메인을 입력해주세요")
+                }                
+                if(!inputRedirectUrl && needDomains.includes(applicationType)) {
+                    return message.error("리다이렉트 URI을 입력해주세요")
+                }                
                 if (uuid) {
                     UpdateApplicationDataFunc(uuid!, {
                         policyId: selectedPolicy,
@@ -208,7 +216,7 @@ const ApplicationDetail = () => {
                         isTwoFactorAuthEnabled: needPassword
                     }, () => {
                         message.success('수정 성공!')
-                        navigate('/Applications')
+                        // navigate('/Applications')
                     })
                 } else {
                     AddApplicationDataFunc({
@@ -242,7 +250,7 @@ const ApplicationDetail = () => {
             }}
             type="warning"
             typeTitle='정말로 삭제하시겠습니까?'
-            typeContent='삭제 후, 어플리케이션 정보가 삭제되며 모든 데이터는 복구되지 않습니다.'
+            typeContent={<FormattedMessage id="APPLICATION_DELETE_CONFIRM_MSG"/>}
             okText={"삭제"}
             okCallback={() => {
                 return DeleteApplicationListFunc(uuid!, () => {

@@ -2,8 +2,8 @@ import axios, { AxiosError } from 'axios';
 
 export const controller = new AbortController()
 
-const defaultHeaders = () => ({
-    authorization: localStorage.getItem('authorization'),
+const defaultHeaders = () => ({    
+    authorization: sessionStorage.getItem('authorization'),
     'Content-Type': 'application/json'
 })
 
@@ -46,7 +46,7 @@ export function CustomAxiosPost(url: string, callback?: Function, params?: any, 
     
     const headers = config ? {
         ...defaultHeaders(),
-        authorization: config.authorization ? config.authorization : localStorage.getItem('authorization'),
+        authorization: config.authorization ? config.authorization : sessionStorage.getItem('authorization'),
         ...config.headers
     } : defaultHeaders()
     return axios.post(url, params, { headers }).then(res => {
@@ -68,7 +68,7 @@ export function CustomAxiosDelete(url: string, callback?: Function, params?: any
 export function CustomAxiosPut(url: string, callback?: Function, params?: any, config?: any) {
     const headers = config ? {
         ...defaultHeaders(),
-        authorization: config.authorization ? config.authorization : localStorage.getItem('authorization'),
+        authorization: config.authorization ? config.authorization : sessionStorage.getItem('authorization'),
         ...config.headers
     } : defaultHeaders()
     return axios.put(url, params, { headers }).then(res => {
@@ -80,7 +80,7 @@ export function CustomAxiosPut(url: string, callback?: Function, params?: any, c
 export function CustomAxiosPatch(url: string, callback?: Function, params?: any, config?: any) {
     const headers = config ? {
         ...defaultHeaders(),
-        authorization: config.authorization ? config.authorization : localStorage.getItem('authorization'),
+        authorization: config.authorization ? config.authorization : sessionStorage.getItem('authorization'),
         ...config.headers
     } : defaultHeaders()
     return axios.patch(url, params, { headers }).then(res => {
@@ -92,7 +92,7 @@ export function CustomAxiosPatch(url: string, callback?: Function, params?: any,
 export async function CustomAxiosGetAll(url: string[], callback?: Function[], params?: any[], config?: any) {
     const headers = config ? {
         ...defaultHeaders(),
-        authorization: config.authorization ? config.authorization : localStorage.getItem('authorization'),
+        authorization: config.authorization ? config.authorization : sessionStorage.getItem('authorization'),
         ...config.headers
     } : defaultHeaders()
     axios.all(url.map((_, ind) => axios.get(_, { headers, signal: controller.signal, params: params && params[ind] })))

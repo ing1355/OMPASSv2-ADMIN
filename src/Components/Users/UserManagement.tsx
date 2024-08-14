@@ -35,13 +35,6 @@ const UserManagement = () => {
         })
     }
 
-    useEffect(() => {
-        GetDatas({
-            page: 1,
-            size: userSelectPageSize()
-        })
-    },[])
-
     return <Contents loading={dataLoading}>
         <ContentsHeader title="USER_LIST" subTitle="USER_MANAGEMENT">
         </ContentsHeader>
@@ -99,6 +92,11 @@ const UserManagement = () => {
                     {
                         key: 'username',
                         title: createHeaderColumn('USER_ID')
+                    },
+                    {
+                        key: 'group',
+                        title: createHeaderColumn('GROUP'),
+                        render: (data) => data ? data.name : <FormattedMessage id="NONE_GROUP"/>
                     },
                     {
                         key: 'name',

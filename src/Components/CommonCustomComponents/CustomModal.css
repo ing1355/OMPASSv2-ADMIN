@@ -27,6 +27,8 @@
     font-size: 1rem;
     letter-spacing: -.8px;
     color: var(--main-grey-color);
+    text-align: center;
+    white-space: pre-wrap;
 }
 
 .type-modal-body-buttons {

@@ -41,7 +41,9 @@ const ApplicationManagement = () => {
 
     const getPolicyDatas = async () => {
         setDataLoading(true)
-        GetPoliciesListFunc({}, ({ results, totalCount }) => {
+        GetPoliciesListFunc({
+            page_size: 9999
+        }, ({ results, totalCount }) => {
             setPoliciesData(results)
         }).finally(() => {
             setDataLoading(false)
@@ -49,12 +51,7 @@ const ApplicationManagement = () => {
     }
 
     useLayoutEffect(() => {
-        getPolicyDatas().then(async () => {
-            await GetDatas({
-                page: 1,
-                size: userSelectPageSize()
-            })
-        })
+        getPolicyDatas()
     }, [])
 
     return <Contents loading={dataLoading}>

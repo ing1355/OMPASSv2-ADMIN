@@ -39,13 +39,6 @@ const AuthLog = () => {
         })
     }
 
-    useLayoutEffect(() => {
-        GetDatas({
-            page: 1,
-            size: userSelectPageSize()
-        })
-    }, [])
-
     return <Contents loading={dataLoading}>
         <ContentsHeader title="AUTH_LOG_MANAGEMENT" subTitle="AUTH_LOG_MANAGEMENT">
         </ContentsHeader>

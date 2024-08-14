@@ -56,9 +56,6 @@
   height: 205px;
   border: 1px solid var(--main-grey-color);
   margin-bottom: 24px;
-  & h3 {
-    
-  }
 }
 
 .agree-inner {
@@ -85,11 +82,8 @@
   cursor: pointer;
 }
 
-.signup-input {
-}
-
 .signup-input-row {
-  margin-bottom: 8px;
+  margin-bottom: 20px;
 }
 
 .signup-input-row-inner {

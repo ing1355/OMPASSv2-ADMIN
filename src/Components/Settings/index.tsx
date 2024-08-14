@@ -3,24 +3,27 @@ import ContentsHeader from "Components/Layout/ContentsHeader"
 import CustomImageUpload from "Components/Layout/CustomImageUpload"
 import CustomInputRow from "Components/Layout/CustomInputRow"
 import { GetPortalSettingsDataFunc, UpdatePortalSettingsDataFunc } from "Functions/ApiFunctions"
-import { useEffect, useLayoutEffect, useState } from "react"
+import { useLayoutEffect, useState } from "react"
 import './Settings.css'
 import { timeZoneNames, UserSignupMethod } from "Constants/ConstantValues"
-import { useNavigate } from "react-router"
-import { message } from "antd"
+import { message, Switch } from "antd"
 import { convertBase64FromClientToServerFormat } from "Functions/GlobalFunctions"
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect"
 import Button from "Components/CommonCustomComponents/Button"
 import Input from "Components/CommonCustomComponents/Input"
 import ompassLogoIcon from '../../assets/ompassLogoIcon.png'
+import { useDispatch } from "react-redux"
+import { subdomainInfoChange } from "Redux/actions/subdomainInfoChange"
 
 const Settings = () => {
     const [timeZoneValue, setTimeZoneValue] = useState('Asia/Seoul')
     const [welcomeText, setWelcomeText] = useState('')
     const [dataLoading, setDataLoading] = useState(false)
     const [signupMethod, setSignupMethod] = useState(UserSignupMethod.USER_SELF_ADMIN_PASS)
+    const [canDelete, setCanDelete] = useState(false)
     const [inputAlias, setInputAlias] = useState('회사명');
     const [logoImg, setLogoImg] = useState('')
+    const dispatch = useDispatch()
 
     const getDatas = async () => {
         setDataLoading(true)
@@ -49,6 +52,11 @@ const Settings = () => {
                     companyName: inputAlias
                 }, () => {
                     message.success("설정 저장 성공!")
+                    dispatch(subdomainInfoChange({
+                        logoImage: logoImg,
+                        noticeMessage: welcomeText,
+                        userSignupMethod: signupMethod
+                    }))
                 }).catch(err => {
                     message.error("설정 저장 실패!")
                 })
@@ -68,7 +76,7 @@ const Settings = () => {
                 }} items={timeZoneNames.map(_ => ({
                     key: _,
                     label: _
-                }))} needSelect/>
+                }))} needSelect />
             </CustomInputRow>
             <CustomInputRow title="회원가입 방식">
                 <fieldset className="signup-field-container" id="signupMethod" onChange={e => {
@@ -89,12 +97,19 @@ const Settings = () => {
                     </label>
                 </fieldset>
             </CustomInputRow>
+            <CustomInputRow title="사용자 인증장치 삭제 허용">
+                <Switch checked={canDelete} onChange={check => {
+                    setCanDelete(check)
+                }} checkedChildren={'허용'} unCheckedChildren={'거부'} />
+            </CustomInputRow>
             <CustomInputRow title="메인 텍스트 설정">
                 <Input className="st1" value={welcomeText} valueChange={value => {
                     setWelcomeText(value)
                 }} />
             </CustomInputRow>
-            <CustomInputRow title="메인 이미지 설정">
+            <CustomInputRow title="메인 이미지 설정" containerStyle={{
+                        alignItems: 'flex-start'
+                    }}>
                 <CustomImageUpload src={logoImg} callback={(img) => {
                     setLogoImg(img)
                 }} />
