@@ -54,7 +54,7 @@ const Billing = () => {
     const [inputUserNum, setInputUserNum] = useState(11);
     return <>
         <Contents>
-            <ContentsHeader title="BILLING_MANAGEMENT" subTitle="BILLING_MANAGEMENT" />
+            <ContentsHeader title="BILLING_MANAGEMENT" subTitle="BILLING_DETAIL" />
             <div className="billing-contents-container">
                 <ItemContainer title={<FormattedMessage id="BILLING_PLAN"/>} border>
                     <div className="plans-description-container">

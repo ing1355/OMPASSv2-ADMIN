@@ -33,7 +33,7 @@ const GroupManagement = () => {
     }
 
     return <Contents loading={dataLoading}>
-        <ContentsHeader title="GROUP_MANAGEMENT" subTitle="GROUP_MANAGEMENT">
+        <ContentsHeader title="GROUP_MANAGEMENT" subTitle="GROUP_LIST">
         </ContentsHeader>
         <CustomTable<UserGroupListDataType, {}>
             theme='table-st1'

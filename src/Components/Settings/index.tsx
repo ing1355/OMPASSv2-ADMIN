@@ -27,12 +27,13 @@ const Settings = () => {
 
     const getDatas = async () => {
         setDataLoading(true)
-        GetPortalSettingsDataFunc(({ userSignupMethod, logoImage, noticeMessage, timeZone, companyName }) => {
+        GetPortalSettingsDataFunc(({ userSignupMethod, logoImage, noticeMessage, timeZone, companyName, isUserAllowedToRemoveAuthenticator }) => {
             setSignupMethod(userSignupMethod)
             setLogoImg(logoImage || ompassLogoIcon)
             setWelcomeText(noticeMessage)
             setTimeZoneValue(timeZone)
             setInputAlias(companyName)
+            setCanDelete(isUserAllowedToRemoveAuthenticator)
         }).finally(() => {
             setDataLoading(false)
         })
@@ -42,14 +43,15 @@ const Settings = () => {
     }, [])
 
     return <Contents loading={dataLoading}>
-        <ContentsHeader title="SETTINGS_MANAGEMENT" subTitle="SETTINGS_MANAGEMENT">
+        <ContentsHeader title="" subTitle="">
             <Button className="st3" onClick={() => {
                 UpdatePortalSettingsDataFunc({
                     timeZone: timeZoneValue,
                     logoImage: logoImg && convertBase64FromClientToServerFormat(logoImg),
                     noticeMessage: welcomeText,
                     userSignupMethod: signupMethod,
-                    companyName: inputAlias
+                    companyName: inputAlias,
+                    isUserAllowedToRemoveAuthenticator: canDelete
                 }, () => {
                     message.success("설정 저장 성공!")
                     dispatch(subdomainInfoChange({

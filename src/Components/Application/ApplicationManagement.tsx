@@ -55,7 +55,7 @@ const ApplicationManagement = () => {
     }, [])
 
     return <Contents loading={dataLoading}>
-        <ContentsHeader title="APPLICATION_MANAGEMENT" subTitle="APPLICATION_MANAGEMENT">
+        <ContentsHeader title="APPLICATION_MANAGEMENT" subTitle="APPLICATION_LIST">
         </ContentsHeader>
         <CustomTable<ApplicationListDataType, ApplicationListParamsType>
             theme='table-st1'

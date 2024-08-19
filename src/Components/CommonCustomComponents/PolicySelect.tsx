@@ -25,7 +25,7 @@ const PolicySelect = ({ selectedPolicy, setSelectedPolicy, needSelect }: PolicyS
         }
     },[policiesData, selectedPolicy])
 
-    return <>
+    return <div className="custom-select-box-container">
         <CustomSelect
             items={policiesData.map(_ => ({
                 key: _.id,
@@ -36,7 +36,7 @@ const PolicySelect = ({ selectedPolicy, setSelectedPolicy, needSelect }: PolicyS
         {policiesData.length > 0 && selectedPolicy && <div className="custom-detail-policy-navigate-text">
             <a target="_blank" href={`/Policies/auth/detail/${selectedPolicy}`}>여기</a>를 눌러 정책을 편집할 수 있습니다.
         </div>}
-    </>
+    </div>
 }
 
 export default PolicySelect

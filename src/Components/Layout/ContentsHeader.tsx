@@ -13,14 +13,14 @@ const ContentsHeader = ({title, subTitle, style, children}: PropsWithChildren<Co
         className='contents-header-container'
         style={style}
     >
-        <div>
+        {/* <div>
             {typeof title === 'string' ? <FormattedMessage id={title} /> : title}
-        </div>
+        </div> */}
         <div
             className='mb40 contents-header-content'
         >
             <h1>
-                <FormattedMessage id={subTitle} />
+                {subTitle && <FormattedMessage id={subTitle} />}
             </h1>
             <div>
                 {children}

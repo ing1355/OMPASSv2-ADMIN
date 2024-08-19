@@ -40,7 +40,7 @@ const AuthLog = () => {
     }
 
     return <Contents loading={dataLoading}>
-        <ContentsHeader title="AUTH_LOG_MANAGEMENT" subTitle="AUTH_LOG_MANAGEMENT">
+        <ContentsHeader title="AUTH_LOG_MANAGEMENT" subTitle="AUTH_LOG_LIST">
         </ContentsHeader>
         <div className="contents-header-container">
             <CustomTable<AuthLogDataType, {}>

@@ -19,3 +19,12 @@
     padding: .4rem 1.6rem;
     margin-bottom: 6px;
 }
+
+.custom-select-box-container {
+    position: relative;
+    margin-bottom: 8px;
+}
+
+.custom-select-box-container > div {
+    white-space: nowrap;
+}

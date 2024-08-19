@@ -143,29 +143,60 @@
 
 .passcode-add-title {
     text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 32px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    & > div {
+        cursor: pointer;
+        padding: 6px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        & > img {
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
+
+.passcode-add-content-container {
+    padding-left: 4px;
+}
+
+.passcode-add-content-title {
+    color: var(--sub-grey-color4);
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 1rem;
 }
 
 .passcode-add-content-row {
+    width: 100%;
     display: flex;
     flex-direction: row;
     gap: 8px;
-    & > div:nth-child(1) {
-        flex: 0 0 100px;
+    & > div:first-child {
+        flex: 0 0 110px;
     }
-    & > div:nth-child(2) {
-        flex: 1;
+    & > div:not(:first-child) {
+        flex: 1 auto;
     }
 }
 
 .passcode-add-buttons {
+    margin: 0 auto;
     margin-top: 24px;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 12px;
+    width: 140px;
+    justify-self: center;
+    gap: 8px;
     & > button {
         flex: 1;
-        height: 48px;
     }
 }
 
@@ -176,18 +207,34 @@
 }
 
 .passcode-add-label {
-    
+    color: var(--sub-grey-color4);
 }
 
 .passcode-add-item {
-    display: flex;
+    /* display: flex;
     flex-direction: row;
     gap: 12px;
-    align-items: center;
+    align-items: center; */
 }
 
 .user-passcode-delete-btn {
     width: 24px;
     height: 24px;
     cursor: pointer;
+}
+
+.passcode-add-form {
+    padding-top: 40px;
+}
+
+.passcode-add-input-label-container {
+    padding-left: 24px;
+}
+
+.no-portal-signed {
+    background-color: var(--sub-grey-color2);
+    cursor: not-allowed;
+    & .user-detail-header {
+        cursor: not-allowed;
+    }
 }

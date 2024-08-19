@@ -17,10 +17,10 @@ const CustomImageUpload = ({ callback, src }: CustomImageUploadProps) => {
 
     const fileUploadCallback = (file: File) => {
         if (file.size > 1024 * 1024) {
-            return message.error("1MB 초과 불가")
+            return message.error("1MB를 초과하는 파일은 업로드가 불가능합니다.")
         }
         if (!file.type.startsWith('image')) {
-            return message.error("이미지 아님!")
+            return message.error("올바른 이미지 형식이 아닙니다.")
         }
         const reader = new FileReader();
         reader.onload = (event) => {
@@ -64,11 +64,14 @@ const CustomImageUpload = ({ callback, src }: CustomImageUploadProps) => {
             이미지 업로드(드래그 가능)
             <br />
             (최대 1MB)
+            <br />
+            (jpeg, png, webp 가능)
             <Upload
                 showUploadList={false}
                 customRequest={() => {
 
                 }}
+                accept='jpeg,png,webp'
                 onChange={e => {
                     if (e.file) fileUploadCallback(e.file.originFileObj as File)
                 }} >

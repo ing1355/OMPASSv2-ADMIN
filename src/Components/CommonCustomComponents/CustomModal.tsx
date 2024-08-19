@@ -16,9 +16,10 @@ type CustomModalProps = ModalProps & {
     typeTitle?: string
     typeContent?: string | React.ReactNode
     buttonLoading?: boolean
+    noPadding?: boolean
 }
 
-const CustomModal = ({ buttonLoading, typeTitle, typeContent, type, children, okText, cancelText, okCallback, cancelCallback, okClassName, cancelClassName, onCancel, ...props }: CustomModalProps) => {
+const CustomModal = ({ buttonLoading, typeTitle, typeContent, type, children, okText, cancelText, okCallback, cancelCallback, okClassName, cancelClassName, onCancel, noPadding, ...props }: CustomModalProps) => {
     const [okLoading, setOkLoading] = useState(false)
     
     return <Modal 
@@ -35,7 +36,7 @@ const CustomModal = ({ buttonLoading, typeTitle, typeContent, type, children, ok
             backgroundColor: 'rgba(0,0,0,.2)'
         },
         body: {
-            padding: '20px'
+            padding: noPadding ? 0 : '20px'
         }
     }} {...props} onCancel={onCancel} className="custom-modal-container">
         {

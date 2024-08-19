@@ -18,7 +18,7 @@ const GroupSelect = ({ selectedGroup, setSelectedGroup, needSelect }: GroupSelec
         })
     }, [])
 
-    return <>
+    return <div className="custom-select-box-container">
         <CustomSelect
             items={groupsData.map(_ => ({
                 key: _.id,
@@ -27,9 +27,9 @@ const GroupSelect = ({ selectedGroup, setSelectedGroup, needSelect }: GroupSelec
                 setSelectedGroup(groupsData.find(_ => _.id === id as UserGroupListDataType['id'])!.id)
             }} needSelect={needSelect}/>
         {groupsData.length > 0 && selectedGroup && <div className="custom-detail-policy-navigate-text">
-            <a target="_blank" href={`/Groups/detail/${selectedGroup}`}>여기</a>를 눌러 정책을 편집할 수 있습니다.
+            <a target="_blank" href={`/Groups/detail/${selectedGroup}`}>여기</a>를 눌러 그룹을 편집할 수 있습니다.
         </div>}
-    </>
+    </div>
 }
 
 export default GroupSelect

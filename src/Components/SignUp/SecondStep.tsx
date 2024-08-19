@@ -237,7 +237,7 @@ const SecondStep = () => {
                     <Button
                         type='button'
                         className={'st11 signup-duplicate-check'}
-                        disabled={inputEmail.length === 0 || emailVerify}
+                        disabled={inputEmail.length === 0 || emailVerify || isEmailAlert}
                         onClick={() => {
                             SignUpVerificationCodeSendFunc(inputEmail, () => {
                                 setEmailCodeSend(true)
@@ -255,6 +255,7 @@ const SecondStep = () => {
                     ref={codeRef}
                     value={verifyCode}
                     readOnly={emailVerify}
+                    noGap
                     valueChange={value => {
                         setVerifyCode(value)
                     }}

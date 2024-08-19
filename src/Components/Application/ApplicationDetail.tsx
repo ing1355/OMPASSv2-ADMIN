@@ -107,31 +107,34 @@ const ApplicationDetail = () => {
             {
                 applicationType && <>
                     <CustomInputRow title="이름" required>
-                        <Input className="st1" value={inputName} onChange={e => {
-                            setInputName(e.target.value)
+                        <Input className="st1" value={inputName} valueChange={value => {
+                            console.log('name : ', value)
+                            setInputName(value)
                         }} placeholder="ex) 테스트 어플리케이션" />
                     </CustomInputRow>
                     <CustomInputRow title="설명">
-                        <Input className="st1" value={inputDescription} onChange={e => {
-                            setInputDescription(e.target.value)
+                        <Input className="st1" value={inputDescription} valueChange={value => {
+                            console.log('description : ',value)
+                            setInputDescription(value)
                         }} />
                     </CustomInputRow>
                     <CustomInputRow title="공지사항">
-                        <Input className="st1" value={helpMsg} onChange={e => {
-                            setHelpMsg(e.target.value)
+                        <Input className="st1" value={helpMsg} valueChange={value => {
+                            console.log('msg : ',value)
+                            setHelpMsg(value)
                         }} />
                     </CustomInputRow>
                     {
                         needDomains.includes(applicationType) && <>
                             <CustomInputRow title="도메인" required>
-                                <Input className="st1" value={inputDomain} onChange={e => {
-                                    setInputDomain(e.target.value)
-                                }} placeholder="ex) https://omsecurity.kr:1234" readOnly={applicationType === 'ADMIN'} />
+                                <Input className="st1" value={inputDomain} valueChange={value => {
+                                    setInputDomain(value)
+                                }} placeholder="ex) https://omsecurity.kr:1234" readOnly={applicationType === 'ADMIN'} noGap/>
                             </CustomInputRow>
                             {!(isAdd && applicationType === 'REDMINE') && ((!isAdd && applicationType === 'REDMINE') ? inputRedirectUrl : <CustomInputRow title="리다이렉트 URI" required>
-                                <Input className="st1" value={inputRedirectUrl} onChange={e => {
-                                    setInputRedirectUrl(e.target.value)
-                                }} placeholder="ex) /ompass" readOnly={applicationType === 'ADMIN'} />
+                                <Input className="st1" value={inputRedirectUrl} valueChange={value => {
+                                    setInputRedirectUrl(value)
+                                }} placeholder="ex) /ompass" readOnly={applicationType === 'ADMIN'} noGap/>
                             </CustomInputRow>)}
                         </>
                     }
@@ -202,7 +205,7 @@ const ApplicationDetail = () => {
                 }                
                 if(!inputRedirectUrl && needDomains.includes(applicationType)) {
                     return message.error("리다이렉트 URI을 입력해주세요")
-                }                
+                }
                 if (uuid) {
                     UpdateApplicationDataFunc(uuid!, {
                         policyId: selectedPolicy,

@@ -180,7 +180,7 @@ const PolicyManagement = () => {
     }
 
     return <Contents loading={dataLoading}>
-        <ContentsHeader title="POLICY_MANAGEMENT" subTitle="POLICY_MANAGEMENT">
+        <ContentsHeader title="POLICY_MANAGEMENT" subTitle="POLICY_LIST">
         </ContentsHeader>
         <div className="contents-header-container">
         <CustomTable<PolicyListDataType, PoliciesListParamsType>

@@ -10,6 +10,7 @@ type CustomInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
     zeroOk?: boolean
     nonZero?: boolean
     customType?: "username" | "password" | "email" | "name" | "phone"
+    noGap?: boolean
     rules?: {
         regExp: RegExp | ((value: string) => boolean),
         msg: string | React.ReactNode
@@ -28,7 +29,7 @@ const HasLabel = ({ children, label }: {
 </>}
     </div>
 
-const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyNumber, label, value, containerClassName, onInput, customType, rules, maxLength, required, ...props }: CustomInputProps, ref) => {
+const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyNumber, label, value, containerClassName, onInput, customType, rules, maxLength, required, className, noGap, ...props }: CustomInputProps, ref) => {
     const [isAlert, _setIsAlert] = useState(false)
     const [alertMsg, setAlertMsg] = useState<string | React.ReactNode>('')
     const isAlertRef = useRef(isAlert)
@@ -92,13 +93,14 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
         }
         return false
     }
-
+    
     return <>
         <div className={`custom-input-wrapper${containerClassName ? (' ' + containerClassName) : ''}${(customType || rules) ? ' has-alert' : ''}`}>
             <HasLabel label={label}>
                 <div>
                     <input
                         ref={ref as any}
+                        className={"custom-input-inner" + (className ? ` ${className}` : '')}
                         onFocus={e => {
                             if (validateCheck(e.currentTarget.value)) {
                                 setIsAlert(true)
@@ -106,12 +108,14 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                                 setIsAlert(false)
                             }
                         }}
+                        onBlur={e => {
+                            if(noGap && (e.currentTarget.value.startsWith(' ') || e.currentTarget.value.endsWith(' ')) && valueChange) valueChange(e.currentTarget.value.trim())
+                        }}
                         onChange={e => {
                             if (valueChange) {
                                 valueChange(e.target.value, isAlertRef.current)
                             }
                         }} onInput={(e) => {
-                            e.currentTarget.value = e.currentTarget.value.trim()
                             if (onlyNumber) {
                                 if (!e.currentTarget.value) e.currentTarget.value = "0"
                                 else e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')

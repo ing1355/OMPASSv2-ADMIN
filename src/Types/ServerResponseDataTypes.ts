@@ -165,6 +165,7 @@ type PortalSettingsDataType = {
   logoImage: string
   noticeMessage: string
   timeZone: string
+  isUserAllowedToRemoveAuthenticator: boolean
 }
 
 type GlobalDatasType = {

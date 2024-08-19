@@ -37,14 +37,17 @@ label:has(.checkbox-label) {
     display: inline-block;
     width: 16px;
     height: 16px;
-    border: 1.4px solid var(--sub-grey-color5);
+    border: 1.4px solid var(--sub-grey-color3);
     cursor: pointer;
     position: relative;
 
+    border-radius: 2px;
+    
     &::after {
+        /* border-radius: 4px; */
         background-image: url('../assets/checkIconWhite.png');
         background-repeat: no-repeat;
-        background-size: 8px 8px;
+        background-size: 50%;
         background-position: center;
         content: '';
         width: 16px;
@@ -55,11 +58,16 @@ label:has(.checkbox-label) {
     }
 }
 
+.checkbox-label:has(input[type="checkbox"]):has(input:checked) {
+    border-width: 0;
+}
+
 .custom-input-wrapper {
     height: 100%;
     display: flex;
     flex-direction: column;
     position: relative;
+    max-height: 36px;
 }
 
 .custom-label-wrapper {
@@ -68,25 +76,38 @@ label:has(.checkbox-label) {
     display: flex;
     flex-direction: row;
     align-items: center;
-    & > label {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
+}
+
+.custom-label-wrapper > div {
+    position: relative;
+    width: 100%;
+    height: 36px;
+    flex: 1;
+}
+
+.custom-label-wrapper > label {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+    
+    &:not(:has(input[type="radio"])) {
+        height: 36px;
     }
-    & > div {
-        position: relative;
-        width: 100%;
-        height: 40px;
-        flex: 1;
-        & > input:focus + .custom-type-alert-text {
-            display: flex;
-        }
-        & > input {
-            box-sizing: border-box;
-            width: 100%;
-            height: 100%;
-        }
+    &>div {
+        box-sizing: border-box;
+        height: 100%;
     }
+}
+
+.custom-label-wrapper > div > input:focus+.custom-type-alert-text {
+    display: flex;
+}
+
+.custom-input-inner:not([type="radio"]) {
+    height: 100%;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 input {
@@ -141,14 +162,15 @@ input.st1 {
     white-space: nowrap;
     user-select: none;
     display: none;
-    &::after {
-        content: '';
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        top: -5px;
-        border-bottom: 10px solid black;
-        border-right: 10px solid black;
-        transform: rotate(45deg);
-    }
+}
+
+.custom-type-alert-text::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: -5px;
+    border-bottom: 10px solid black;
+    border-right: 10px solid black;
+    transform: rotate(45deg);
 }

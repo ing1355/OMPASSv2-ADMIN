@@ -1,16 +1,13 @@
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
 import CustomInputRow from "Components/Layout/CustomInputRow"
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { useNavigate, useParams } from "react-router"
 import './AuthPolicyDetail.css'
-import { DatePicker, Select, Switch, TimePicker, message } from "antd";
+import { Select, Switch, TimePicker, message } from "antd";
 import { AddPoliciesListFunc, DeletePoliciesListFunc, GetPolicyDetailDataFunc, GetUserDataListFunc, UpdatePoliciesListFunc } from "Functions/ApiFunctions";
-import { useSelector } from "react-redux";
-import { countryCodes_EN, countryCodes_KR } from "./CountryCodes";
 import ompassLogoIcon from '../../assets/ompassLogoIcon.png'
-import resetIcon from '../../assets/resetIcon.png'
 import locationIcon from '../../assets/locationIcon.png'
 import Button from "Components/CommonCustomComponents/Button";
 import Input from "Components/CommonCustomComponents/Input";
@@ -108,6 +105,9 @@ const AuthPolicyDetail = () => {
     }, [])
 
     const addAuthPolicyFunc = () => {
+        if(!policyName) {
+            return message.error("정책명은 필수 입력 항목입니다.")
+        }
         AddPoliciesListFunc({
             policyType: detailData?.policyType || "CUSTOM",
             description: inputDescription,
@@ -407,6 +407,7 @@ const AuthPolicyDetail = () => {
                                     setCurrentIpAddress(value)
                                 }} onInput={ipAddressRestriction} maxLength={16} />
                                 <Button className="st3" onClick={() => {
+                                    if(ipAddressValues.includes(currentIpAddress)) return message.error("동일한 ip가 이미 설정되어 있습니다.") 
                                     setIpAddressValues([...ipAddressValues, currentIpAddress])
                                     setCurrentIpAddress("")
                                 }}>
@@ -418,7 +419,9 @@ const AuthPolicyDetail = () => {
                                     <Input className="st1 policy-ip-address-input" placeholder="ip 주소를 입력해주세요." value={ip} onChange={e => {
                                         setIpAddressValues(ipAddressValues.map((_ip, _ipInd) => _ipInd === ipInd ? e.target.value : _ip))
                                     }} onInput={ipAddressRestriction} maxLength={15} readOnly />
-                                    <Button className="st2">
+                                    <Button className="st2" onClick={() => {
+                                        setIpAddressValues(ipAddressValues.filter((_, _ind) => _ind !== ipInd))
+                                    }}>
                                         삭제
                                     </Button>
                                 </div>

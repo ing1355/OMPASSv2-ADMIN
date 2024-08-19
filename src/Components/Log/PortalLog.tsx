@@ -32,7 +32,7 @@ const PortalLog = () => {
     }
 
     return <Contents loading={dataLoading}>
-        <ContentsHeader title="PORTAL_LOG_MANAGEMENT" subTitle="PORTAL_LOG_MANAGEMENT">
+        <ContentsHeader title="PORTAL_LOG_MANAGEMENT" subTitle="PORTAL_LOG_LIST">
         </ContentsHeader>
         <div className="contents-header-container">
             <CustomTable<PortalLogDataType, {}>

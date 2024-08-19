@@ -36,7 +36,7 @@ const UserManagement = () => {
     }
 
     return <Contents loading={dataLoading}>
-        <ContentsHeader title="USER_LIST" subTitle="USER_MANAGEMENT">
+        <ContentsHeader title="USER_LIST" subTitle="USER_LIST">
         </ContentsHeader>
         <div className="contents-header-container">
             <CustomTable<UserDataType, UserListParamsType>
