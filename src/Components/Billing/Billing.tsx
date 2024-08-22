@@ -130,7 +130,7 @@ const Billing = () => {
                 }}>
                     <BillingInputRow label="이용 동의">
                         <div className="billing-agree-text">
-                            <Input type="checkbox" name="check" /> <a className="billing-a-tag" href="#test">구매조건 및 환불 규정</a>에 동의
+                            <Input type="checkbox" name="check" label={<><a className="billing-a-tag" href="#test">구매조건 및 환불 규정</a>에 동의</>}/>
                         </div>
                         <br />
                         결제일로 부터 30일 간격으로 24,200원(이)가 자동으로 결제됩니다.

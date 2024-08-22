@@ -66,7 +66,7 @@ const ApplicationManagement = () => {
             }, {
                 key: 'type',
                 type: 'select',
-                selectOptions: applicationTypes(true).map(_ => ({
+                selectOptions: applicationTypes(false).map(_ => ({
                     key: _,
                     label: getApplicationTypeLabel(_)
                 }))

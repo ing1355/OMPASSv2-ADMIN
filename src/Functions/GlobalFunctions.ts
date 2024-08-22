@@ -1,5 +1,9 @@
 import jwtDecode from "jwt-decode";
 
+export const getStorageAuth = () => localStorage.getItem('Authorization')
+export const setStorageAuth = (token: string) => localStorage.setItem('Authorization', token)
+export const removeStorageAuth = () => localStorage.removeItem('Authorization')
+
 export const createRandom1Digit = () => {
     return Math.floor(Math.random() * 10).toString()
 }
@@ -70,7 +74,7 @@ export const parseJwtToken = (token: string) => {
 }
 
 export const saveLocaleToLocalStorage = (locale: ReduxStateType['lang'] = "KR") => {
-    sessionStorage.setItem('locale', locale);
+    localStorage.setItem('locale', locale);
 }
 
 export const autoHypenPhoneFun = (phone: string) => {

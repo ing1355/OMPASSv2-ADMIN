@@ -72,16 +72,16 @@ const AuthLog = () => {
                         title: '#'
                     },
                     {
+                        key: 'applicationName',
+                        title: '어플리케이션명'
+                    },
+                    {
                         key: 'portalUsername',
-                        title: 'PORTAL 아이디'
+                        title: '포탈 아이디'
                     },
                     {
                         key: 'rpUsername',
-                        title: 'RP 아이디'
-                    },
-                    {
-                        key: 'applicationName',
-                        title: '어플리케이션명'
+                        title: '사용자 아이디'
                     },
                     {
                         key: 'processType',

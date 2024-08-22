@@ -2,13 +2,13 @@ import { CSSProperties, PropsWithChildren } from "react"
 import './CustomInputRow.css'
 import RequiredLabel from "Components/CommonCustomComponents/RequiredLabel"
 
-const CustomInputRow = ({ title, children, noLabelPadding, style, required, containerStyle }: PropsWithChildren<{
+const CustomInputRow = ({ title, children, noLabelPadding, style, required, containerStyle, contentsStyle }: PropsWithChildren<{
     title: string | React.ReactNode
     noLabelPadding?: boolean
     style?: CSSProperties
     containerStyle?: CSSProperties
     required?: boolean
-    
+    contentsStyle?: CSSProperties
 }>) => {
     const styles = {
         ...style
@@ -21,7 +21,7 @@ const CustomInputRow = ({ title, children, noLabelPadding, style, required, cont
             <RequiredLabel required={required}/>
             {title}
         </div>
-        <div className="custom-detail-contents">
+        <div className="custom-detail-contents" style={contentsStyle}>
             {children}
         </div>
     </div>

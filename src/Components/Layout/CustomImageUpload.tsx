@@ -65,13 +65,13 @@ const CustomImageUpload = ({ callback, src }: CustomImageUploadProps) => {
             <br />
             (최대 1MB)
             <br />
-            (jpeg, png, webp 가능)
+            (jpeg, png, webp, jpg 가능)
             <Upload
                 showUploadList={false}
                 customRequest={() => {
 
                 }}
-                accept='jpeg,png,webp'
+                accept='jpeg,png,webp,jpg'
                 onChange={e => {
                     if (e.file) fileUploadCallback(e.file.originFileObj as File)
                 }} >

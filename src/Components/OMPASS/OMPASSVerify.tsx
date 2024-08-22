@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router';
 import queryString from 'query-string';
 import { useDispatch } from 'react-redux';
 import { userInfoChange } from 'Redux/actions/userChange';
+import { setStorageAuth } from 'Functions/GlobalFunctions';
 
 const OMPASSVerify = () => {
   const location = useLocation();
@@ -18,10 +19,10 @@ const OMPASSVerify = () => {
       PostTokenVerifyApi,
       (data: {
         username: string
-      }, header: string) => {
-        sessionStorage.setItem('authorization', header);
-        dispatch(userInfoChange(header))
-        navigate('/Main')
+      }, token: string) => {
+        setStorageAuth(token)
+        dispatch(userInfoChange(token))
+        navigate('/Main', {replace: true})
       },
       {
         username: username,

@@ -207,6 +207,9 @@
 }
 
 .passcode-add-label {
+    display: flex;
+    align-items: center;
+    gap: 14px;
     color: var(--sub-grey-color4);
 }
 
@@ -228,7 +231,7 @@
 }
 
 .passcode-add-input-label-container {
-    padding-left: 24px;
+    padding-left: 14px;
 }
 
 .no-portal-signed {

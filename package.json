@@ -1,6 +1,6 @@
 {
   "name": "ompass_rp_admin",
-  "version": "2.0.0(17)",
+  "version": "2.0.0(20)",
   "proxy": "https://ompass.kr:54006",
   "private": true,
   "dependencies": {
@@ -20,6 +20,7 @@
     "@vis.gl/react-google-maps": "^1.1.0",
     "antd": "^5.14.1",
     "axios": "^1.4.0",
+    "dayjs": "^1.11.13",
     "jwt-decode": "^3.1.2",
     "moment-timezone": "^0.5.45",
     "ompass": "^0.5.2",
@@ -38,7 +39,6 @@
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5"
-    
   },
   "scripts": {
     "start": "cross-env HTTPS=true react-scripts start",

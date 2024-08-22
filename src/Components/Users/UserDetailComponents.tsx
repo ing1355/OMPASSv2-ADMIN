@@ -184,7 +184,7 @@ export const UserDetailInfoAuthenticatorDeleteButton = ({ authenticatorId, callb
     return authenticatorId ? <Button className="st2 user-detail-info-device-info-delete-btn" onClick={async () => {
         callback(authenticatorId)
     }}>
-        삭제
+        등록 해제
     </Button> : <></>
 }
 

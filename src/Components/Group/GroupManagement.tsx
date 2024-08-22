@@ -62,7 +62,7 @@ const GroupManagement = () => {
             columns={[
                 {
                     key: 'name',
-                    title: '이름'
+                    title: '그룹명'
                 },
                 {
                     key: 'policy',

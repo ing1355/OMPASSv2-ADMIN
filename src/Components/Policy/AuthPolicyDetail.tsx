@@ -2,19 +2,26 @@ import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
 import CustomInputRow from "Components/Layout/CustomInputRow"
 import { useLayoutEffect, useState } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { useNavigate, useParams } from "react-router"
 import './AuthPolicyDetail.css'
 import { Select, Switch, TimePicker, message } from "antd";
 import { AddPoliciesListFunc, DeletePoliciesListFunc, GetPolicyDetailDataFunc, GetUserDataListFunc, UpdatePoliciesListFunc } from "Functions/ApiFunctions";
-import ompassLogoIcon from '../../assets/ompassLogoIcon.png'
 import locationIcon from '../../assets/locationIcon.png'
+import resetIcon from '../../assets/resetIcon.png'
+import resetIconWhite from '../../assets/resetIconWhite.png'
+import ipInfoIcon from '../../assets/ipInfoIcon.png'
+import deleteIcon from '../../assets/deleteIcon.png'
+import deleteIconHover from '../../assets/deleteIconHover.png'
 import Button from "Components/CommonCustomComponents/Button";
 import Input from "Components/CommonCustomComponents/Input";
 import { APIProvider, Map, Marker, MapControl, ControlPosition } from '@vis.gl/react-google-maps';
 import { timeZoneNames } from "Constants/ConstantValues";
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect";
 import { Circle } from './GoogleCircle'
+import dayjs from "dayjs";
+
+const timepickerFormat = 'HH:mm'
 
 export const PolicyBrowsersList: BrowserPolicyType[] = [
     "Chrome",
@@ -28,13 +35,21 @@ export const PolicyBrowsersList: BrowserPolicyType[] = [
     "All other browsers",
 ];
 
+const BrowserController = ({ type, checked, onChange }: {
+    type: BrowserPolicyType
+    checked: boolean
+    onChange: React.InputHTMLAttributes<HTMLInputElement>['onChange']
+}) => {
+    return <Input type="checkbox" label={type} checked={checked} onChange={onChange} />
+}
+
 const TimePolicyDayOfWeeksList: AccessTimeRestrictionValueType['selectedDayOfWeeks'] = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
 
 const ipAddressRestriction: React.FormEventHandler<HTMLInputElement> = (e) => {
     e.currentTarget.value = e.currentTarget.value.replace(/[^0-9.x\/]/g, '')
 }
 
-const defaultTimePolicyData: AccessTimeRestrictionValueType = {
+const defaultTimePolicyData = (): AccessTimeRestrictionValueType => ({
     selectedDayOfWeeks: TimePolicyDayOfWeeksList,
     timeZone: "Asia/Seoul",
     // dateRange: {
@@ -44,18 +59,18 @@ const defaultTimePolicyData: AccessTimeRestrictionValueType = {
     // },
     timeRange: {
         type: 'ALL_TIME',
-        startTime: "",
-        endTime: ""
+        startTime: dayjs().format(timepickerFormat),
+        endTime: dayjs().format(timepickerFormat)
     },
     options: {
-        loginDenyEnable: true,
+        isLoginDenyEnabled: true,
         noticeToAdmin: {
             isEnabled: false,
             admins: [],
             noticeMethods: []
         }
     }
-}
+})
 
 const AuthPolicyDetail = () => {
     const [authenticatorPolicies, setAuthenticatorPolicies] = useState<PolicyDataType['enableAuthenticators']>(['OMPASS'])
@@ -72,13 +87,20 @@ const AuthPolicyDetail = () => {
     const [ipAddressValues, setIpAddressValues] = useState<PolicyDataType['ipRestriction']['ips']>([])
     const [accessTimeChecked, setAccessTimeChecked] = useState(false)
     const [accessTimeValues, setAccessTimeValues] = useState<PolicyDataType['accessTimeRestriction']['accessTimeRestrictions']>([])
-    const [currentAccessTimeValue, setCurrentAccessTimeValue] = useState<AccessTimeRestrictionValueType | null>(null)
+    const [noticeAdminChecked, setNoticeAdminChecked] = useState<boolean>(false)
+    const [noticeAdminValues, setNoticeAdminValues] = useState<RestrictionNoticeDataType[]>([])
+    const [currentNoticeAdmin, setCurrentNoticeAdmin] = useState<RestrictionNoticeDataType>({
+        method: [],
+        admins: []
+    })
+    const [currentAccessTimeValue, setCurrentAccessTimeValue] = useState<AccessTimeRestrictionValueType>(defaultTimePolicyData())
     const [detailData, setDetailData] = useState<PolicyDataType>()
+    const [currentLocation, setCurrentLocation] = useState<google.maps.LatLngLiteral>({ lat: 36.713889964770544, lng: 127.88793971566751 })
+    const { formatMessage } = useIntl()
     const { uuid } = useParams()
     const isAdd = !uuid
     const [adminDatas, setAdminDatas] = useState<UserDataType[]>([])
     const navigate = useNavigate()
-    const [currentLocation, setCurrentLocation] = useState<google.maps.LatLngLiteral>({ lat: 36.713889964770544, lng: 127.88793971566751 })
 
     useLayoutEffect(() => {
         GetUserDataListFunc({
@@ -86,7 +108,13 @@ const AuthPolicyDetail = () => {
             page_size: 9999,
             role: 'ADMIN'
         }, ({ results, totalCount }) => {
-            setAdminDatas(results)
+            GetUserDataListFunc({
+                page: 1,
+                page_size: 9999,
+                role: 'ROOT'
+            }, (root) => {
+                setAdminDatas(root.results.concat(results))
+            })
         })
         if (uuid) {
             GetPolicyDetailDataFunc(uuid).then(data => {
@@ -100,12 +128,37 @@ const AuthPolicyDetail = () => {
                 setIpAddressValues(data.ipRestriction.ips)
                 setDetailData(data)
                 setAuthenticatorPolicies(data.enableAuthenticators)
+                setAccessTimeChecked(data.accessTimeRestriction.isEnabled)
+                setAccessTimeValues(data.accessTimeRestriction.accessTimeRestrictions)
             })
         }
     }, [])
 
+    const dataInit = () => {
+        setBrowserChecked(PolicyBrowsersList)
+        setAuthenticatorPolicies(['OMPASS', 'OTP', 'PASSCODE', 'WEBAUTHN'])
+        setLocationChecked(false)
+        setLocationDatas([])
+        setIpAddressChecked(false)
+        setIpAddressValues([])
+        setAccessTimeChecked(false)
+        setAccessTimeValues([])
+        setNoticeAdminChecked(false)
+        setNoticeAdminValues([])
+        setCurrentAccessTimeValue(defaultTimePolicyData())
+        setCurrentIpAddress('')
+        setCurrentLocationName('')
+        setCurrentRadius(1)
+        navigator.geolocation.getCurrentPosition(function (position) {
+            setCurrentLocation({
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            })
+        })
+    }
+
     const addAuthPolicyFunc = () => {
-        if(!policyName) {
+        if (!policyName) {
             return message.error("정책명은 필수 입력 항목입니다.")
         }
         AddPoliciesListFunc({
@@ -124,7 +177,7 @@ const AuthPolicyDetail = () => {
             },
             enableAuthenticators: authenticatorPolicies,
             accessTimeRestriction: {
-                isEnable: accessTimeChecked,
+                isEnabled: accessTimeChecked,
                 accessTimeRestrictions: accessTimeValues
             }
         }, () => {
@@ -150,21 +203,6 @@ const AuthPolicyDetail = () => {
         </label>
     }
 
-    const BrowserController = ({ type }: {
-        type: BrowserPolicyType
-    }) => {
-        return <label className="browser-controller">
-            {type}
-            <Switch checked={browserChecked.includes(type)} onChange={check => {
-                if (check) {
-                    setBrowserChecked(browserChecked.concat(type))
-                } else {
-                    setBrowserChecked(browserChecked.filter(_ => _ !== type))
-                }
-            }} checkedChildren={'허용'} unCheckedChildren={'차단'} />
-        </label>
-    }
-
     return <Contents>
         <ContentsHeader title="POLICY_MANAGEMENT" subTitle={isAdd ? "AUTH_POLICY_ADD" : "AUTH_POLICY_DETAIL"}>
             <div className="custom-detail-header-items-container">
@@ -186,7 +224,7 @@ const AuthPolicyDetail = () => {
                             },
                             enableAuthenticators: authenticatorPolicies,
                             accessTimeRestriction: {
-                                isEnable: accessTimeChecked,
+                                isEnabled: accessTimeChecked,
                                 accessTimeRestrictions: accessTimeChecked ? accessTimeValues : []
                             }
                         }, () => {
@@ -199,9 +237,11 @@ const AuthPolicyDetail = () => {
                 }}>
                     저장
                 </Button>
-                {/* <Button className="st4" icon={resetIcon}>
+                <Button className="st5" icon={resetIcon} hoverIcon={resetIconWhite} onClick={() => {
+                    dataInit()
+                }}>
                     초기화
-                </Button> */}
+                </Button>
                 {!isAdd && detailData?.policyType !== 'DEFAULT' && <Button className="st8" onClick={() =>
                     DeletePoliciesListFunc(uuid, () => {
                         message.success('삭제 성공!')
@@ -214,7 +254,7 @@ const AuthPolicyDetail = () => {
         <div className="contents-header-container">
             <CustomInputRow title="정책명" required>
                 {
-                    detailData?.policyType === 'DEFAULT' ? <Input className="st1" value={"DEFAULT POLICY"} readOnly /> : <Input className="st1" value={policyName} valueChange={value => {
+                    detailData?.policyType === 'DEFAULT' ? <Input className="st1" value={formatMessage({ id: 'default policy' })} readOnly /> : <Input className="st1" value={policyName} valueChange={value => {
                         setPolicyName(value)
                     }} placeholder="정책명을 입력해주세요." />
                 }
@@ -225,66 +265,113 @@ const AuthPolicyDetail = () => {
                     setInputDescription(value)
                 }} />
             </CustomInputRow>
-            <CustomInputRow title="브라우저 허용">
-                <label className="policy-browser-label">
-                    <label className="authenticator-controller">
-                        전체 선택
-                        <Switch checked={browserChecked.length === PolicyBrowsersList.length} onChange={check => {
-                            if (check) {
+            <CustomInputRow title="인증 방식 제어">
+                <div className="policy-contents-container">
+                    <AuthenticatorController type={"OTP"} />
+                    <AuthenticatorController type={"PASSCODE"} />
+                    <AuthenticatorController type={"WEBAUTHN"} />
+                </div>
+            </CustomInputRow>
+            <CustomInputRow title="OMPASS 인증 제어" required>
+                <div className="policy-contents-container">
+                    <div className="authenticator-ompass-auth">
+                        <div className="ompass-control-row">
+                            <Input type="radio" value={"ACTIVE"} checked={ompassControl === 'ACTIVE'} onChange={e => {
+                                if (e.target.checked) setOmpassControl('ACTIVE')
+                            }} label="OMPASS 인증 필수" />
+                            <p>대체 정책이 구성되어 있지 않은 한 OMPASS 인증이 필요합니다. (없을 경우 OMPASS 인증 등록)</p>
+                        </div>
+                        <div className="ompass-control-row">
+                            <Input type="radio" value={"INACTIVE"} checked={ompassControl === 'INACTIVE'} onChange={e => {
+                                if (e.target.checked) setOmpassControl('INACTIVE')
+                            }} label="OMPASS 인증 패스" />
+                            <p>OMPASS 등록 및 인증을 패스합니다.</p>
+                        </div>
+                        <div className="ompass-control-row">
+                            <Input type="radio" value={"DENY"} checked={ompassControl === 'DENY'} onChange={e => {
+                                if (e.target.checked) setOmpassControl('DENY')
+                            }} label="OMPASS 인증 거부" />
+                            <p>모든 사용자에 대한 OMPASS 인증을 거부합니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </CustomInputRow>
+            <CustomInputRow title="브라우저 허용" contentsStyle={{
+                flexDirection: 'column',
+                alignItems: 'flex-start'
+            }} style={{
+                position: 'relative',
+                top: '8px'
+            }}>
+                <div style={{
+                    width: '80%'
+                }}>
+                    <div style={{
+                        paddingLeft: '8px',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        gap: '16px'
+                    }}>
+                        <Input type="checkbox" label="전체 선택" checked={browserChecked.length === PolicyBrowsersList.length} onChange={e => {
+                            if (e.currentTarget.checked) {
                                 setBrowserChecked(PolicyBrowsersList)
                             } else {
                                 setBrowserChecked([])
                             }
-                        }} checkedChildren={'허용'} unCheckedChildren={'차단'} />
-                    </label>
-                </label>
-                {
-                    // PolicyBrowsersList.map((_, ind) => <label key={ind} className="policy-browser-label">
-                    //     <BrowserController type={_} />
-                    // </label>)
-                    PolicyBrowsersList.map((_, ind) => <BrowserController type={_} key={ind}/> )
-                }
-            </CustomInputRow>
-            <CustomInputRow title="인증 방식 제어" required>
-                <div className="authenticator-controller-policy-container">
-                    <div className="authenticator-controller-container">
-                        <AuthenticatorController type={"OMPASS"} />
-                        <AuthenticatorController type={"OTP"} />
-                        <AuthenticatorController type={"PASSCODE"} />
-                        <AuthenticatorController type={"WEBAUTHN"} />
+                        }} />
+                        <Input type="checkbox" label="그 외 다른 브라우저" checked={browserChecked.includes('All other browsers')} onChange={e => {
+                            if (e.currentTarget.checked) {
+                                setBrowserChecked(browserChecked.concat('All other browsers'))
+                            } else {
+                                setBrowserChecked(browserChecked.filter(_ => _ !== 'All other browsers'))
+                            }
+                        }} />
                     </div>
-                    <div className="authenticator-ompass-auth" aria-hidden={!authenticatorPolicies.includes('OMPASS')}>
-                        <div className="authenticator-ompass-auth-title">
-                            OMPASS 인증 제어
+                    <div className="policy-contents-container" style={{
+                        marginTop: '12px',
+                        width: '100%'
+                    }}>
+                        <div className="browser-policy-row">
+                            {
+                                PolicyBrowsersList.slice(0, 3).map((_, ind) => <BrowserController type={_} key={_} checked={browserChecked.includes(_)} onChange={e => {
+                                    if (e.currentTarget.checked) {
+                                        setBrowserChecked(browserChecked.concat(_))
+                                    } else {
+                                        setBrowserChecked(browserChecked.filter(__ => __ !== _))
+                                    }
+                                }} />)
+                            }
                         </div>
-                        <div className="disabled-background" />
-                        <div>
-                            <div className="ompass-control-row">
-                                <Input type="radio" value={"ACTIVE"} checked={ompassControl === 'ACTIVE'} onChange={e => {
-                                    if (e.target.checked) setOmpassControl('ACTIVE')
-                                }} label="OMPASS 인증 필수" />
-                                <p>대체 정책이 구성되어 있지 않은 한 OMPASS 인증이 필요합니다. (없을 경우 OMPASS 인증 등록)</p>
-                            </div>
-                            <div className="ompass-control-row">
-                                <Input type="radio" value={"INACTIVE"} checked={ompassControl === 'INACTIVE'} onChange={e => {
-                                    if (e.target.checked) setOmpassControl('INACTIVE')
-                                }} label="OMPASS 인증 패스" />
-                                <p>OMPASS 등록 및 인증을 패스합니다.</p>
-                            </div>
-                            <div className="ompass-control-row">
-                                <Input type="radio" value={"DENY"} checked={ompassControl === 'DENY'} onChange={e => {
-                                    if (e.target.checked) setOmpassControl('DENY')
-                                }} label="OMPASS 인증 거부" />
-                                <p>모든 사용자에 대한 OMPASS 인증을 거부합니다.</p>
-                            </div>
+                        <div className="browser-policy-row">
+                            {
+                                PolicyBrowsersList.slice(3, 6).map((_, ind) => <BrowserController type={_} key={_} checked={browserChecked.includes(_)} onChange={e => {
+                                    if (e.currentTarget.checked) {
+                                        setBrowserChecked(browserChecked.concat(_))
+                                    } else {
+                                        setBrowserChecked(browserChecked.filter(__ => __ !== _))
+                                    }
+                                }} />)
+                            }
                         </div>
-                        {/* <CustomInputRow title="OMPASS 인증 제어" noLabelPadding>
-                        </CustomInputRow> */}
+                        <div className="browser-policy-row">
+                            {
+                                PolicyBrowsersList.slice(6, 8).map((_, ind) => <BrowserController type={_} key={_} checked={browserChecked.includes(_)} onChange={e => {
+                                    if (e.currentTarget.checked) {
+                                        setBrowserChecked(browserChecked.concat(_))
+                                    } else {
+                                        setBrowserChecked(browserChecked.filter(__ => __ !== _))
+                                    }
+                                }} />)
+                            }
+                        </div>
                     </div>
                 </div>
             </CustomInputRow>
             <CustomInputRow title="사용자 위치 허용">
-                <div>
+                <div style={{
+                    flex: '0 0 80%'
+                }}>
                     <Switch style={{
                         marginBottom: !locationChecked ? 0 : '8px',
                     }} checked={locationChecked} onChange={check => {
@@ -329,51 +416,47 @@ const AuthPolicyDetail = () => {
                                     </Map>
                                 </APIProvider>
                             </div>
-                            <div>
-                                <div className="policy-location-input-row">
-                                    위도 <Input className="st1" value={currentLocation.lat} readOnly />
-                                    경도 <Input className="st1" value={currentLocation.lng} readOnly />
-                                </div>
-                                <div className="policy-location-input-row">
-                                    반경 <Input className="st1" onlyNumber value={currentRadius} valueChange={value => {
-                                        setCurrentRadius(parseInt(value))
-                                    }} maxLength={10} /> m
-                                </div>
-                                <div className="policy-location-input-row">
-                                    위치명 <Input className="st1" value={currentLocationName} valueChange={value => {
-                                        setCurrentLocationName(value)
-                                    }} placeholder="" />
-                                </div>
-                                <div className="policy-location-input-row">
-                                    <Button className="st3" onClick={() => {
-                                        setLocationDatas([...locationDatas, {
-                                            alias: currentLocationName,
-                                            radius: currentRadius,
-                                            coordinate: {
-                                                latitude: currentLocation.lat,
-                                                longitude: currentLocation.lng
-                                            }
-                                        }])
-                                        setCurrentRadius(1)
-                                        setCurrentLocationName('')
-                                    }}>
-                                        등록
-                                    </Button>
-                                </div>
+                        </div>
+                        <div>
+                            <div className="policy-location-input-row current">
+                                <span className="policy-location-label">위도</span> <Input className="st1" value={currentLocation.lat} readOnly />
+                                <span className="policy-location-label">경도</span> <Input className="st1" value={currentLocation.lng} readOnly />
+                                <span className="policy-location-label">반경</span> <Input className="st1 policy-location-radius-input" onlyNumber value={currentRadius} valueChange={value => {
+                                    setCurrentRadius(parseInt(value))
+                                }} maxLength={10} suffix="m" />
+                                <span className="policy-location-label">위치명</span> <Input className="st1" value={currentLocationName} valueChange={value => {
+                                    setCurrentLocationName(value)
+                                }} placeholder="" />
+                                <Button className="st3" onClick={() => {
+                                    setLocationDatas([{
+                                        alias: currentLocationName,
+                                        radius: currentRadius,
+                                        coordinate: {
+                                            latitude: currentLocation.lat,
+                                            longitude: currentLocation.lng
+                                        }
+                                    }, ...locationDatas])
+                                    setCurrentRadius(1)
+                                    setCurrentLocationName('')
+                                }} style={{
+                                    width: '16px'
+                                }} />
                             </div>
                         </div>
                         {
                             locationDatas.map((_, ind) => <div key={ind}>
                                 <div className="policy-location-input-row">
-                                    위도: <Input className="st1" value={_.coordinate.latitude} readOnly />
-                                    경도: <Input className="st1" value={_.coordinate.longitude} readOnly />
-                                    반경: <Input className="st1" value={_.radius} readOnly />
-                                    위치명: <Input className="st1" value={_.alias} readOnly />
-                                    <Button className="st2" onClick={() => {
+                                    <span className="policy-location-label">위도</span> <Input className="st1" value={_.coordinate.latitude} readOnly />
+                                    <span className="policy-location-label">경도</span> <Input className="st1" value={_.coordinate.longitude} readOnly />
+                                    <span className="policy-location-label">반경</span> <Input className="st1 policy-location-radius-input" value={_.radius} readOnly style={{
+                                        width: '100px'
+                                    }} suffix="m" />
+                                    <span className="policy-location-label">위치명</span> <Input className="st1" value={_.alias} readOnly />
+                                    <Button icon={deleteIcon} hoverIcon={deleteIconHover} className="st2" onClick={() => {
                                         setLocationDatas(locationDatas.filter((__, _ind) => _ind !== ind))
-                                    }}>
-                                        삭제
-                                    </Button>
+                                    }} style={{
+                                        width: '16px'
+                                    }} />
                                 </div>
                             </div>)
                         }
@@ -386,44 +469,37 @@ const AuthPolicyDetail = () => {
                         marginBottom: !ipAddressChecked ? 0 : '8px',
                     }} checked={ipAddressChecked} onChange={check => {
                         setIpAddressChecked(check)
-                        if (ipAddressValues.length === 0) {
-                            setIpAddressValues(["", ...ipAddressValues])
-                        } else {
-                            setIpAddressValues(ipAddressValues.filter(_ => _))
-                        }
                     }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
                     <div className="policy-input-container" aria-hidden={!ipAddressChecked}>
                         <div className="ip-address-policy-input-header">
-                            {/* <Button className="st3" onClick={() => {
-                                setCurrentIpAddress("")
-                            }}>추가</Button> */}
-                            <div aria-valuetext="대역 혹은 범위를 설정하려는 경우 0/24를 입력해주세요. ex)192.168.182.0/24">
-                                <img src={ompassLogoIcon} />
+                            IP 주소<div aria-valuetext="대역 혹은 범위를 설정하려는 경우 0/24를 입력해주세요. ex)192.168.182.0/24">
+                                <img src={ipInfoIcon} />
                             </div>
                         </div>
                         <div className="location-policy-container">
                             <div className="location-item-container">
-                                <Input className="st1 policy-ip-address-input" placeholder="ip 주소를 입력해주세요." value={currentIpAddress} valueChange={value => {
+                                <Input className="st1 policy-ip-address-input" placeholder="IP 주소를 입력해주세요." value={currentIpAddress} valueChange={value => {
                                     setCurrentIpAddress(value)
                                 }} onInput={ipAddressRestriction} maxLength={16} />
                                 <Button className="st3" onClick={() => {
-                                    if(ipAddressValues.includes(currentIpAddress)) return message.error("동일한 ip가 이미 설정되어 있습니다.") 
+                                    if (ipAddressValues.includes(currentIpAddress)) return message.error("동일한 ip가 이미 설정되어 있습니다.")
+                                    if (!currentIpAddress) return message.error("IP 주소를 입력해주세요.")
                                     setIpAddressValues([...ipAddressValues, currentIpAddress])
                                     setCurrentIpAddress("")
-                                }}>
-                                    등록
-                                </Button>
+                                }} style={{
+                                    width: '16px'
+                                }} />
                             </div>
                             {
                                 ipAddressValues.map((ip, ipInd) => <div key={ipInd} className="location-item-container">
-                                    <Input className="st1 policy-ip-address-input" placeholder="ip 주소를 입력해주세요." value={ip} onChange={e => {
+                                    <Input className="st1 policy-ip-address-input" placeholder="IP 주소를 입력해주세요." value={ip} onChange={e => {
                                         setIpAddressValues(ipAddressValues.map((_ip, _ipInd) => _ipInd === ipInd ? e.target.value : _ip))
                                     }} onInput={ipAddressRestriction} maxLength={15} readOnly />
                                     <Button className="st2" onClick={() => {
                                         setIpAddressValues(ipAddressValues.filter((_, _ind) => _ind !== ipInd))
-                                    }}>
-                                        삭제
-                                    </Button>
+                                    }} icon={deleteIcon} hoverIcon={deleteIconHover} style={{
+                                        width: '16px'
+                                    }} />
                                 </div>
                                 )
                             }
@@ -431,59 +507,174 @@ const AuthPolicyDetail = () => {
                     </div>
                 </div>
             </CustomInputRow>
-            <CustomInputRow title="시간 접근 허용">
+            <CustomInputRow title="위반 시 관리자 알림">
                 <div>
+                    <Switch style={{
+                        marginBottom: !noticeAdminChecked ? 0 : '8px',
+                    }} checked={noticeAdminChecked} onChange={check => {
+                        setNoticeAdminChecked(check)
+                    }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
+                    <div className="policy-input-container" aria-hidden={!noticeAdminChecked}>
+                        <div className="policy-contents-container">
+                            <div style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                gap: '16px',
+                                marginBottom: '12px'
+                            }}>
+                                <Input type="checkbox" label="푸시 알림" checked={currentNoticeAdmin.method.includes('PUSH')} onChange={e => {
+                                    if (e.currentTarget.checked) {
+                                        setCurrentNoticeAdmin({
+                                            ...currentNoticeAdmin,
+                                            method: currentNoticeAdmin.method.concat('PUSH')
+                                        })
+                                    } else {
+                                        setCurrentNoticeAdmin({
+                                            ...currentNoticeAdmin,
+                                            method: currentNoticeAdmin.method.filter(_ => _ !== 'PUSH')
+                                        })
+                                    }
+                                }} />
+                                <Input type="checkbox" label="이메일" checked={currentNoticeAdmin.method.includes('EMAIL')} onChange={e => {
+                                    if (e.currentTarget.checked) {
+                                        setCurrentNoticeAdmin({
+                                            ...currentNoticeAdmin,
+                                            method: currentNoticeAdmin.method.concat('EMAIL')
+                                        })
+                                    } else {
+                                        setCurrentNoticeAdmin({
+                                            ...currentNoticeAdmin,
+                                            method: currentNoticeAdmin.method.filter(_ => _ !== 'EMAIL')
+                                        })
+                                    }
+                                }} />
+                            </div>
+                            대상 : <Select mode="multiple" allowClear value={currentNoticeAdmin.admins} onChange={value => {
+                                setCurrentNoticeAdmin({
+                                    ...currentNoticeAdmin,
+                                    admins: value
+                                })
+                            }} options={adminDatas.map(opt => ({
+                                label: opt.username,
+                                value: opt.userId
+                            }))} style={{
+                                width: '600px',
+                            }} />
+                            <div className="notice-admin-buttons">
+                                <Button className="st3" onClick={() => {
+                                    setNoticeAdminValues([currentNoticeAdmin, ...noticeAdminValues])
+                                    setCurrentNoticeAdmin({
+                                        method: [],
+                                        admins: []
+                                    })
+                                }}>
+                                    등록
+                                </Button>
+                            </div>
+                        </div>
+
+                        {
+                            noticeAdminValues.map((_, ind) => <div className="policy-contents-container" key={ind}>
+                                <div style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    gap: '16px',
+                                    marginBottom: '12px'
+                                }}>
+                                    <Input type="checkbox" label="푸시 알림" checked={_.method.includes('PUSH')} onChange={e => {
+                                        if (e.currentTarget.checked) {
+                                            setCurrentNoticeAdmin({
+                                                ..._,
+                                                method: _.method.concat('PUSH')
+                                            })
+                                        } else {
+                                            setCurrentNoticeAdmin({
+                                                ..._,
+                                                method: _.method.filter(_ => _ !== 'PUSH')
+                                            })
+                                        }
+                                    }} />
+                                    <Input type="checkbox" label="이메일" checked={_.method.includes('EMAIL')} onChange={e => {
+                                        if (e.currentTarget.checked) {
+                                            setCurrentNoticeAdmin({
+                                                ..._,
+                                                method: _.method.concat('EMAIL')
+                                            })
+                                        } else {
+                                            setCurrentNoticeAdmin({
+                                                ..._,
+                                                method: _.method.filter(_ => _ !== 'EMAIL')
+                                            })
+                                        }
+                                    }} />
+                                </div>
+                                대상 : <Select mode="multiple" allowClear value={_.admins} onChange={value => {
+                                    setCurrentNoticeAdmin({
+                                        ..._,
+                                        admins: value
+                                    })
+                                }} options={adminDatas.map(opt => ({
+                                    label: opt.username,
+                                    value: opt.userId
+                                }))} style={{
+                                    width: '600px',
+                                }} />
+                                <div className="notice-admin-buttons">
+                                    <Button className="st8" onClick={() => {
+                                        setNoticeAdminValues(noticeAdminValues.filter((__, _ind) => _ind !== ind))
+                                    }}>
+                                        삭제
+                                    </Button>
+                                </div>
+                            </div>)
+                        }
+                    </div>
+                </div>
+            </CustomInputRow>
+            <CustomInputRow title="시간 접근 허용">
+                <div style={{
+                    flex: '0 0 80%'
+                }}>
                     <Switch style={{
                         marginBottom: !accessTimeChecked ? 0 : '8px',
                     }} checked={accessTimeChecked} onChange={check => {
                         setAccessTimeChecked(check)
-                        if (accessTimeValues.length === 0) {
-                            setAccessTimeValues([defaultTimePolicyData, ...accessTimeValues])
-                        }
                     }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
                     <div className="policy-input-container" aria-hidden={!accessTimeChecked}>
-                        <div className="ip-address-policy-input-header">
-                            <Button className="st3" onClick={() => {
-                                setAccessTimeValues([defaultTimePolicyData, ...accessTimeValues])
-                            }}>등록</Button>
-                        </div>
-                        {accessTimeValues.map((_, ind) => <div key={ind} className="time-policy-container">
-                            <div>
-                                요일 선택 :
-                                <label>
-                                    <Input type="checkbox" checked={TimePolicyDayOfWeeksList.every(__ => _.selectedDayOfWeeks.includes(__))} onChange={e => {
+                        <div className="time-policy-container">
+                            <div className="time-policy-inner-container">
+                                <div className="time-policy-days-container">
+                                    요일 선택 : <Input type="checkbox" checked={TimePolicyDayOfWeeksList.every(__ => currentAccessTimeValue.selectedDayOfWeeks.includes(__))} onChange={e => {
                                         if (e.target.checked) {
-                                            setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
-                                                ...timeValue,
+                                            setCurrentAccessTimeValue({
+                                                ...currentAccessTimeValue,
                                                 selectedDayOfWeeks: TimePolicyDayOfWeeksList
-                                            }) : timeValue))
+                                            })
                                         } else {
-                                            setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
-                                                ...timeValue,
+                                            setCurrentAccessTimeValue({
+                                                ...currentAccessTimeValue,
                                                 selectedDayOfWeeks: []
-                                            }) : timeValue))
+                                            })
                                         }
-                                    }} />
-                                    전체 선택
-                                </label>
-                                {TimePolicyDayOfWeeksList.map(__ => <label key={__}>
-                                    <Input type="checkbox" checked={_.selectedDayOfWeeks.includes(__)} onChange={e => {
+                                    }} label="전체 선택" />
+                                    {TimePolicyDayOfWeeksList.map(__ => <Input key={__} type="checkbox" checked={currentAccessTimeValue.selectedDayOfWeeks.includes(__)} onChange={e => {
                                         if (e.target.checked) {
-                                            setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
-                                                ...timeValue,
-                                                selectedDayOfWeeks: timeValue.selectedDayOfWeeks.concat(__)
-                                            }) : timeValue))
+                                            setCurrentAccessTimeValue({
+                                                ...currentAccessTimeValue,
+                                                selectedDayOfWeeks: currentAccessTimeValue.selectedDayOfWeeks.concat(__)
+                                            })
                                         } else {
-                                            setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
-                                                ...timeValue,
-                                                selectedDayOfWeeks: timeValue.selectedDayOfWeeks.filter(day => day !== __)
-                                            }) : timeValue))
+                                            setCurrentAccessTimeValue({
+                                                ...currentAccessTimeValue,
+                                                selectedDayOfWeeks: currentAccessTimeValue.selectedDayOfWeeks.filter(day => day !== __)
+                                            })
                                         }
-                                    }} />
-                                    <FormattedMessage id={`DAY_OF_WEEKS_${__}`} />
-                                </label>)}
-                            </div>
-                            {/* <div>
+                                    }} label={<FormattedMessage id={`DAY_OF_WEEKS_${__}`} />} />
+                                    )}
+                                </div>
+                                {/* <div>
                                 날짜 선택 : <DatePicker size="small" disabled={_.dateRange.type === 'ALL_TIME'} onChange={(date, dateString) => {
                                     setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
                                         ...timeValue,
@@ -513,120 +704,197 @@ const AuthPolicyDetail = () => {
                                     선택 안함
                                 </label>
                             </div> */}
-                            <div>
-                                시간 선택 : <TimePicker size="small" disabled={_.timeRange.type === 'ALL_TIME'} /> <TimePicker size="small" disabled={_.timeRange.type === 'ALL_TIME'} /> <label>
-                                    <Input type="checkbox" checked={_.timeRange.type === 'ALL_TIME'} onChange={e => {
+                                <div style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '12px'
+                                }}>
+                                    시간 선택 : <TimePicker format={timepickerFormat} size="small" disabled={currentAccessTimeValue.timeRange.type === 'ALL_TIME'} value={dayjs(currentAccessTimeValue.timeRange.startTime, timepickerFormat)} onChange={val => {
+                                        setCurrentAccessTimeValue({
+                                            ...currentAccessTimeValue,
+                                            timeRange: {
+                                                ...currentAccessTimeValue.timeRange,
+                                                startTime: val.format(timepickerFormat)
+                                            }
+                                        })
+                                    }}/> 
+                                    <TimePicker format={timepickerFormat} size="small" disabled={currentAccessTimeValue.timeRange.type === 'ALL_TIME'} value={dayjs(currentAccessTimeValue.timeRange.endTime, timepickerFormat)} onChange={val => {
+                                        setCurrentAccessTimeValue({
+                                            ...currentAccessTimeValue,
+                                            timeRange: {
+                                                ...currentAccessTimeValue.timeRange,
+                                                endTime: val.format(timepickerFormat)
+                                            }
+                                        })
+                                    }}/>
+                                    <Input type="checkbox" checked={currentAccessTimeValue.timeRange.type === 'ALL_TIME'} onChange={e => {
+                                        setCurrentAccessTimeValue({
+                                            ...currentAccessTimeValue,
+                                            timeRange: {
+                                                ...currentAccessTimeValue.timeRange,
+                                                type: e.target.checked ? 'ALL_TIME' : 'SPECIFIC_TIME'
+                                            }
+                                        })
+                                    }} label="선택 안함" />
+                                </div>
+                                <div>
+                                    <label>
+                                        타임존 : <CustomSelect value={currentAccessTimeValue.timeZone} onChange={e => {
+                                            setCurrentAccessTimeValue({
+                                                ...currentAccessTimeValue,
+                                                timeZone: e
+                                            })
+                                        }} items={timeZoneNames.map(_ => ({
+                                            key: _,
+                                            label: _
+                                        }))} />
+                                    </label>
+                                </div>
+                                <div>
+                                    위반 시 로그인 막기 : <Switch checked={currentAccessTimeValue.options.isLoginDenyEnabled} onChange={check => {
+                                        setCurrentAccessTimeValue({
+                                            ...currentAccessTimeValue,
+                                            options: {
+                                                ...currentAccessTimeValue.options,
+                                                isLoginDenyEnabled: check
+                                            }
+                                        })
+                                    }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
+                                </div>
+                            </div>
+                            <div className="time-policy-buttons-container">
+                                <Button className="st3" onClick={() => {
+                                setAccessTimeValues([currentAccessTimeValue, ...accessTimeValues])
+                                setCurrentAccessTimeValue(defaultTimePolicyData())
+                            }}/>
+                            </div>
+                        </div>
+                        {/* <div className="ip-address-policy-input-header">
+                            <Button className="st3" onClick={() => {
+                                setAccessTimeValues([defaultTimePolicyData, ...accessTimeValues])
+                            }}>등록</Button>
+                        </div> */}
+                        {accessTimeValues.map((_, ind) => <div key={ind} className="time-policy-container">
+                            <div className="time-policy-inner-container">
+                                <div className="time-policy-days-container">
+                                    요일 선택 : <Input type="checkbox" checked={TimePolicyDayOfWeeksList.every(__ => _.selectedDayOfWeeks.includes(__))} onChange={e => {
+                                        if (e.target.checked) {
+                                            setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
+                                                ...timeValue,
+                                                selectedDayOfWeeks: TimePolicyDayOfWeeksList
+                                            }) : timeValue))
+                                        } else {
+                                            setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
+                                                ...timeValue,
+                                                selectedDayOfWeeks: []
+                                            }) : timeValue))
+                                        }
+                                    }} label="전체 선택" />
+                                    {TimePolicyDayOfWeeksList.map(__ => <Input key={__} type="checkbox" checked={_.selectedDayOfWeeks.includes(__)} onChange={e => {
+                                        if (e.target.checked) {
+                                            setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
+                                                ...timeValue,
+                                                selectedDayOfWeeks: timeValue.selectedDayOfWeeks.concat(__)
+                                            }) : timeValue))
+                                        } else {
+                                            setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
+                                                ...timeValue,
+                                                selectedDayOfWeeks: timeValue.selectedDayOfWeeks.filter(day => day !== __)
+                                            }) : timeValue))
+                                        }
+                                    }} label={<FormattedMessage id={`DAY_OF_WEEKS_${__}`} />} />
+                                    )}
+                                </div>
+                                {/* <div>
+                                날짜 선택 : <DatePicker size="small" disabled={_.dateRange.type === 'ALL_TIME'} onChange={(date, dateString) => {
+                                    setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
+                                        ...timeValue,
+                                        dateRange: {
+                                            ...timeValue.dateRange,
+                                            startTime: dateString as string
+                                        }
+                                    }) : timeValue))
+                                }} /> <DatePicker size="small" disabled={_.dateRange.type === 'ALL_TIME'} onChange={(date, dateString) => {
+                                    setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
+                                        ...timeValue,
+                                        dateRange: {
+                                            ...timeValue.dateRange,
+                                            end: dateString as string
+                                        }
+                                    }) : timeValue))
+                                }} /> <label>
+                                    <Input type="checkbox" checked={_.dateRange.type === 'ALL_TIME'} onChange={e => {
                                         setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
                                             ...timeValue,
-                                            timeRange: {
-                                                ...timeValue.timeRange,
+                                            dateRange: {
+                                                ...timeValue.dateRange,
                                                 type: e.target.checked ? 'ALL_TIME' : 'SPECIFIC_TIME'
                                             }
                                         }) : timeValue))
                                     }} />
                                     선택 안함
                                 </label>
-                            </div>
-                            <div>
-                                <label>
-                                    타임존 : <CustomSelect value={_.timeZone} onChange={e => {
+                            </div> */}
+                                <div style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '12px'
+                                }}>
+                                    시간 선택 : <TimePicker format={timepickerFormat} size="small" disabled={_.timeRange.type === 'ALL_TIME'} value={dayjs(_.timeRange.startTime, timepickerFormat)} onChange={val => {
                                         setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
                                             ...timeValue,
-                                            timeZone: e
-                                        }) : timeValue))
-                                    }} items={timeZoneNames.map(_ => ({
-                                        key: _,
-                                        label: _
-                                    }))} />
-                                </label>
-                            </div>
-                            <div>
-                                위반 시 로그인 막기 : <Switch checked={_.options.loginDenyEnable} onChange={check => {
-                                    setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
-                                        ...timeValue,
-                                        options: { ...timeValue.options, loginDenyEnable: check }
-                                    }) : timeValue))
-                                }} checkedChildren={'ON'} unCheckedChildren={'OFF'}/>
-                            </div>
-                            <div style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                gap: '4px'
-                            }}>
-                                위반 시 관리자 알림 : <Select mode="multiple" allowClear value={_.options.noticeToAdmin.admins} onChange={value => {
-                                    setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
-                                        ...timeValue,
-                                        options: {
-                                            ...timeValue.options, noticeToAdmin: {
-                                                ...timeValue.options.noticeToAdmin,
-                                                admins: value
+                                            timeRange: {
+                                                ...timeValue.timeRange,
+                                                startTime: val.format(timepickerFormat)
                                             }
-                                        }
-                                    }) : timeValue))
-                                }} options={adminDatas.map(opt => ({
-                                    label: opt.username,
-                                    value: opt.userId
-                                }))} />
-                                &nbsp;&nbsp;
-                                알림 방법 : <label>
-                                    <Input type="checkbox" value="PUSH" checked={_.options.noticeToAdmin.noticeMethods.includes("PUSH")} onChange={e => {
-                                        if (e.currentTarget.checked) {
+                                        }) : timeValue))
+                                    }}/>
+                                    <TimePicker format={timepickerFormat} size="small" disabled={_.timeRange.type === 'ALL_TIME'} value={dayjs(_.timeRange.endTime, timepickerFormat)} onChange={val => {
+                                        setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
+                                            ...timeValue,
+                                            timeRange: {
+                                                ...timeValue.timeRange,
+                                                endTime: val.format(timepickerFormat)
+                                            }
+                                        }) : timeValue))
+                                    }}/>
+                                        <Input type="checkbox" checked={_.timeRange.type === 'ALL_TIME'} onChange={e => {
                                             setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
                                                 ...timeValue,
-                                                options: {
-                                                    ...timeValue.options, noticeToAdmin: {
-                                                        ...timeValue.options.noticeToAdmin,
-                                                        noticeMethods: timeValue.options.noticeToAdmin.noticeMethods.concat("PUSH")
-                                                    }
+                                                timeRange: {
+                                                    ...timeValue.timeRange,
+                                                    type: e.target.checked ? 'ALL_TIME' : 'SPECIFIC_TIME'
                                                 }
                                             }) : timeValue))
-                                        } else {
+                                        }} label="선택 안함" />
+                                </div>
+                                <div>
+                                    <label>
+                                        타임존 : <CustomSelect value={_.timeZone} onChange={e => {
                                             setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
                                                 ...timeValue,
-                                                options: {
-                                                    ...timeValue.options, noticeToAdmin: {
-                                                        ...timeValue.options.noticeToAdmin,
-                                                        noticeMethods: timeValue.options.noticeToAdmin.noticeMethods.filter(n => n !== "PUSH")
-                                                    }
-                                                }
+                                                timeZone: e
                                             }) : timeValue))
-                                        }
-                                    }} />
-                                    푸시 알림
-                                </label>
-                                <label>
-                                    <Input type="checkbox" value="EMAIL" checked={_.options.noticeToAdmin.noticeMethods.includes("EMAIL")} onChange={e => {
-                                        if (e.currentTarget.checked) {
-                                            setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
-                                                ...timeValue,
-                                                options: {
-                                                    ...timeValue.options, noticeToAdmin: {
-                                                        ...timeValue.options.noticeToAdmin,
-                                                        noticeMethods: timeValue.options.noticeToAdmin.noticeMethods.concat("EMAIL")
-                                                    }
-                                                }
-                                            }) : timeValue))
-                                        } else {
-                                            setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
-                                                ...timeValue,
-                                                options: {
-                                                    ...timeValue.options, noticeToAdmin: {
-                                                        ...timeValue.options.noticeToAdmin,
-                                                        noticeMethods: timeValue.options.noticeToAdmin.noticeMethods.filter(n => n !== "EMAIL")
-                                                    }
-                                                }
-                                            }) : timeValue))
-                                        }
-                                    }} />
-                                    이메일
-                                </label>
+                                        }} items={timeZoneNames.map(_ => ({
+                                            key: _,
+                                            label: _
+                                        }))} />
+                                    </label>
+                                </div>
+                                <div>
+                                    위반 시 로그인 막기 : <Switch checked={_.options.isLoginDenyEnabled} onChange={check => {
+                                        setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
+                                            ...timeValue,
+                                            options: { ...timeValue.options, isLoginDenyEnabled: check }
+                                        }) : timeValue))
+                                    }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
+                                </div>
                             </div>
-                            <Button className="st2" onClick={() => {
+                            <div className="time-policy-buttons-container">
+                                <Button icon={deleteIcon} hoverIcon={deleteIconHover} className="st2" onClick={() => {
                                 setAccessTimeValues(accessTimeValues.filter((__, _ind) => _ind !== ind))
-                            }}>
-                                삭제
-                            </Button>
+                            }}/>
+                            </div>
                         </div>)}
                     </div>
                 </div>

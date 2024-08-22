@@ -22,35 +22,19 @@ const Login = () => {
     lang: state.lang,
     subdomainInfo: state.subdomainInfo
   }));
-  const [inputUsername, setInputUsername] = useState('')
   const [inputPassword, setInputPassword] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [cookies, setCookie, removeCookie] = useCookies(["rememberUserId"]); // Cookies 이름
-  const [isRemember, setIsRemember] = useState(false); // 아이디 저장 체크박스 체크 유무
+  const [inputUsername, setInputUsername] = useState(cookies.rememberUserId || '')
   const [isAgentFileDisable, setIsAgentFileDisable] = useState(false);
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const navigate = useNavigate()
   const { noticeMessage, logoImage, userSignupMethod } = subdomainInfo || {}
 
-  // 아이디 저장
-  // 첫 렌더링
-  useEffect(() => {
-    if (cookies.rememberUserId !== undefined) {
-      setInputUsername(cookies.rememberUserId);
-      setIsRemember(true);
-    }
-  }, []);
-
-  const saveIdCookieFun = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsRemember(e.target.checked);
-    if (!e.target.checked) {
-      removeCookie("rememberUserId");
-    }
-  };
-
   const loginRequest = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const {saveId} = e.currentTarget.elements as any
     LoginFunc({
       domain: subDomain,
       username: inputUsername,
@@ -64,6 +48,11 @@ const Login = () => {
         OMPASS(resultUri.replace("www.ompass.kr:54007", targetUrl).replace("www.ompass.kr:54012", targetUrl).replace("192.168.182.75:9001", targetUrl).replace("ompass.kr:59001", targetUrl));
       } else {
         OMPASS(resultUri);
+      }
+      if(saveId.checked) {
+        setCookie("rememberUserId", inputUsername)
+      } else {
+        removeCookie("rememberUserId");
       }
     })
   }
@@ -114,8 +103,7 @@ const Login = () => {
           </div>
           <div className='login-action-row-container'>
             <div className='login-action-row'>
-              <Input id='saveId' type='checkbox' className='mr10' onChange={saveIdCookieFun} checked={isRemember} />
-              <label htmlFor='saveId' style={{ cursor: 'pointer', userSelect: 'none' }}><FormattedMessage id='SAVE_ID' /></label>
+              <Input id='saveId' type='checkbox' className='mr10' defaultChecked={cookies.rememberUserId} label={<FormattedMessage id='SAVE_ID' />}/>
             </div>
             {userSignupMethod !== UserSignupMethod.ONLY_BY_ADMIN && <div className='login-action-row signup' onClick={() => {
               navigate("/signup")
@@ -186,73 +174,6 @@ const Login = () => {
         </div>
       </div>
     </div>
-
-    {/* 관리자 첫 로그인 시 패스워드 변경 모달 */}
-    {/* <Modal title={formatMessage({ id: 'CHANGE_PASSWORD' })} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} cancelText={formatMessage({ id: 'CANCEL' })} okText={formatMessage({ id: 'EDIT_' })} width='570px' centered>
-      <form>
-        <div>
-          <label><FormattedMessage id='PASSWORD' /></label>
-          <img
-            src={isPasswordLook ? view_password : dont_look_password} width='30px' style={{ position: 'relative', top: '55px', left: '410px' }}
-            onClick={() => {
-              setIsPasswordLook(!isPasswordLook);
-            }}
-          />
-          <Input
-            ref={passwordRef}
-            id='userPassword'
-            type={isPasswordLook ? 'text' : 'password'}
-            className={'st1 create-account-input mt8 ' + (isPasswordAlert ? 'red' : '')}
-            maxLength={16}
-            autoComplete='off'
-            valueChange={value => {
-              const passwordRgx: RegExp = passwordRegex;
-              if (passwordRgx.test(value)) {
-                setIsPasswordAlert(false);
-              } else {
-                setIsPasswordAlert(true);
-              }
-            }}
-          />
-          <div
-            className={'regex-alert mt5 ' + (isPasswordAlert ? 'visible' : '')}
-          >
-            <FormattedMessage id='PASSWORD_CHECK' />
-          </div>
-        </div>
-        <div
-          style={{ marginBottom: '15px' }}
-        >
-          <label><FormattedMessage id='PASSWORD_CONFIRM' /></label>
-          <img
-            src={isPasswordConfirmLook ? view_password : dont_look_password} width='30px' style={{ position: 'relative', top: '55px', left: '360px' }}
-            onClick={() => {
-              setIsPasswordConfirmLook(!isPasswordConfirmLook);
-            }}
-          />
-          <Input
-            id='userPasswordConfirm'
-            type={isPasswordConfirmLook ? 'text' : 'password'}
-            className={'st1 create-account-input mt8 ' + (isPasswordConfirmAlert ? 'red' : '')}
-            maxLength={16}
-            autoComplete='off'
-            valueChange={value => {
-              if (value === passwordRef.current?.value) {
-                setPassword(value);
-                setIsPasswordConfirmAlert(false);
-              } else {
-                setIsPasswordConfirmAlert(true);
-              }
-            }}
-          />
-          <div
-            className={'regex-alert mt5 ' + (isPasswordConfirmAlert ? 'visible' : '')}
-          >
-            <FormattedMessage id='PASSWORD_NOT_MATCH' />
-          </div>
-        </div>
-      </form>
-    </Modal> */}
   </>
 }
 

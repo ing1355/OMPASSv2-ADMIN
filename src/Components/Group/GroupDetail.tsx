@@ -103,10 +103,10 @@ const GroupDetail = () => {
                     setInputDescription(value)
                 }} placeholder="설명을 입력해주세요" className="st1"/>
             </CustomInputRow>
-            <CustomInputRow title="정책 설정">
+            <CustomInputRow title="정책">
                 <PolicySelect selectedPolicy={selectedPolicy} setSelectedPolicy={setSelectedPolicy} />
             </CustomInputRow>
-            <CustomInputRow title="사용자 선택">
+            <CustomInputRow title="사용자">
                 <CustomUserTransfer data={users} setData={setUsers} />
             </CustomInputRow>
         </div>

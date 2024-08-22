@@ -2,8 +2,7 @@ import React, { CSSProperties, useEffect, useMemo, useRef, useState } from "reac
 import './CustomTable.css'
 import { Pagination, PaginationProps } from "antd"
 import searchIcon from './../../assets/searchIcon.png'
-import resetIcon from './../../assets/resetIcon.png'
-import deleteIcon from './../../assets/deleteIcon.png'
+import resetIcon from './../../assets/resetIconWhite.png'
 import Button from "./Button"
 import CustomSelect from "./CustomSelect"
 import Input from "./Input"

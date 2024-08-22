@@ -131,7 +131,11 @@ const ApplicationDetail = () => {
                                     setInputDomain(value)
                                 }} placeholder="ex) https://omsecurity.kr:1234" readOnly={applicationType === 'ADMIN'} noGap/>
                             </CustomInputRow>
-                            {!(isAdd && applicationType === 'REDMINE') && ((!isAdd && applicationType === 'REDMINE') ? inputRedirectUrl : <CustomInputRow title="리다이렉트 URI" required>
+                            {!(isAdd && applicationType === 'REDMINE') && ((!isAdd && applicationType === 'REDMINE') ? <CustomInputRow title="리다이렉트 URI" required>
+                                <Input className="st1" value={inputRedirectUrl} valueChange={value => {
+                                    setInputRedirectUrl(value)
+                                }} placeholder="ex) /ompass" noGap/>
+                                </CustomInputRow> : <CustomInputRow title="리다이렉트 URI" required>
                                 <Input className="st1" value={inputRedirectUrl} valueChange={value => {
                                     setInputRedirectUrl(value)
                                 }} placeholder="ex) /ompass" readOnly={applicationType === 'ADMIN'} noGap/>

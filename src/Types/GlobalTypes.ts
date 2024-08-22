@@ -219,8 +219,8 @@ type AccessTimeRestrictionValueType = {
         type: AccessTimeRestrictionTimeRangeTypeType
     },
     options: {
-        loginDenyEnable: boolean,
-        noticeToAdmin: {
+        isLoginDenyEnabled: boolean,
+        noticeToAdmin?: {
             isEnabled: boolean,
             admins: string[],
             noticeMethods: AccessTimeRestrictionOptionsNoticeToAdminNoticeMethodsType[]
@@ -228,7 +228,7 @@ type AccessTimeRestrictionValueType = {
     }
 }
 type AccessTimeRestrictionType = {
-    isEnable: boolean,
+    isEnabled: boolean,
     accessTimeRestrictions: AccessTimeRestrictionValueType[]
 }
 type DefaultPolicyDataType = {
@@ -241,6 +241,13 @@ type DefaultPolicyDataType = {
     enableAuthenticators: AuthenticatorPolicyType[]
     description: string
     accessTimeRestriction: AccessTimeRestrictionType
+}
+
+type RestrictionNoticeMethodType = 'EMAIL' | 'PUSH'
+
+type RestrictionNoticeDataType = {
+    method: RestrictionNoticeMethodType[],
+    admins: UserDataType['userId'][]
 }
 
 type PolicyDataType = DefaultPolicyDataType & {

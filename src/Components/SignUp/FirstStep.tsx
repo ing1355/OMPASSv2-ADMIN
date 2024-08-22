@@ -127,8 +127,8 @@ const FirstStep = ({ checkedChange }: FirstStepProps) => {
                 id="allSelect"
                 onChange={handleAllChecked}
                 checked={selectAll}
+                label={<FormattedMessage id='AGREE_POLICY_ALL' />}
             />
-            <label htmlFor='allSelect' className='cursor-pointer'><FormattedMessage id='AGREE_POLICY_ALL' /></label>
         </div>
         <div className="agree-text sub">
             <Input
@@ -137,8 +137,8 @@ const FirstStep = ({ checkedChange }: FirstStepProps) => {
                 id='agreeService'
                 onChange={handleSingleChecked}
                 checked={checkBoxes.find(cb => cb.name === 'agreeService')?.isChecked || false}
+                label={<FormattedMessage id='AGREE_SERVICE' />}
             />
-            <label htmlFor='agreeService' className='cursor-pointer'><FormattedMessage id='AGREE_SERVICE' /></label>
         </div>
         <div className="agree-container">
             <div className="agree-inner">
@@ -195,8 +195,8 @@ const FirstStep = ({ checkedChange }: FirstStepProps) => {
                 id='agreePrivacyPolicy'
                 onChange={handleSingleChecked}
                 checked={checkBoxes.find(cb => cb.name === 'agreePrivacyPolicy')?.isChecked || false}
+                label={<FormattedMessage id='AGREE_PRIVACY_POLICY' />}
             />
-            <label htmlFor='agreePrivacyPolicy'><FormattedMessage id='AGREE_PRIVACY_POLICY' /></label>
         </div>
         <div className='agree-container'>
             <div className="agree-inner">

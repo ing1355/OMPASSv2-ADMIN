@@ -24,12 +24,12 @@ const PolicySelect = ({ selectedPolicy, setSelectedPolicy, needSelect }: PolicyS
             setSelectedPolicy(policiesData[0].id)
         }
     },[policiesData, selectedPolicy])
-
+    
     return <div className="custom-select-box-container">
         <CustomSelect
             items={policiesData.map(_ => ({
                 key: _.id,
-                label: _.policyType === 'DEFAULT' ? <FormattedMessage id={_.name} /> : _.name
+                label: _.policyType === 'DEFAULT' ? <FormattedMessage id="default policy" /> : _.name
             }))} value={selectedPolicy} onChange={id => {
                 setSelectedPolicy(id)
             }} needSelect={needSelect}/>

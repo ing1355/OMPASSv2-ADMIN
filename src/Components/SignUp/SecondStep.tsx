@@ -226,6 +226,7 @@ const SecondStep = () => {
                     className='st1'
                     required
                     ref={emailRef}
+                    disabled={idExist}
                     value={inputEmail}
                     customType="email"
                     valueChange={(value, isAlert) => {
@@ -239,7 +240,10 @@ const SecondStep = () => {
                         className={'st11 signup-duplicate-check'}
                         disabled={inputEmail.length === 0 || emailVerify || isEmailAlert}
                         onClick={() => {
-                            SignUpVerificationCodeSendFunc(inputEmail, () => {
+                            SignUpVerificationCodeSendFunc({
+                                email: inputEmail,
+                                username: inputUsername
+                            }, () => {
                                 setEmailCodeSend(true)
                                 message.success("인증 코드 발송 성공!")
                             })
@@ -253,6 +257,7 @@ const SecondStep = () => {
                     className='st1'
                     required
                     ref={codeRef}
+                    disabled={!emailCodeSend}
                     value={verifyCode}
                     readOnly={emailVerify}
                     noGap

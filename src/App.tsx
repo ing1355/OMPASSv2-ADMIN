@@ -57,6 +57,14 @@ const App: React.FC = () => {
   useEffect(() => {
     getDomainInfo()
   },[])
+  
+  useEffect(() => {
+    if(userInfo) {
+      window.addEventListener('storage', () => {
+          window.location.reload()
+      })
+    }
+  },[userInfo])
 
   return <IntlProvider locale={convertLangToIntlVer(lang)} messages={Locale[lang]}>
     <AxiosController />

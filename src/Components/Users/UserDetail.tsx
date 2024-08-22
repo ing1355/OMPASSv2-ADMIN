@@ -23,6 +23,8 @@ import { UserDetailInfoAuthenticatorContent, UserDetailInfoAuthenticatorDeleteBu
 import { autoHypenPhoneFun, convertUTCStringToKSTString, createRandom1Digit } from 'Functions/GlobalFunctions'
 import Input from 'Components/CommonCustomComponents/Input'
 
+const passcodeInputHeight = '30px'
+
 const initModifyValues: UserDataModifyLocalValuesType = {
     name: {
         firstName: '',
@@ -436,7 +438,7 @@ const UserDetail = ({ }) => {
                         <UserDetailInfoAuthenticatorContent data={_.authInfo.authenticators.find(auth => auth.type === 'OMPASS')} />
 
                         {
-                            (_.application.type === 'ADMIN' || _.application.type === 'DEFAULT') && <>
+                            (_.application.type === 'ADMIN' || _.application.type === 'DEFAULT' || _.application.type === 'REDMINE') && <>
                                 <div className="user-detail-info-device-info-title">
                                     <h3>
                                         WEBAUTHN
@@ -566,7 +568,7 @@ const UserDetail = ({ }) => {
             }} buttonLoading />
         <CustomModal
             open={addPasscode !== ''}
-            width={460}
+            width={520}
             noPadding
             onCancel={() => {
                 setAddPasscode("")
@@ -622,8 +624,8 @@ const PasscodeRadioButton = ({ title, name, defaultChecked, children, value, che
 }) => {
     return <div className='passcode-add-item'>
         <label className='passcode-add-label'>
-            <input type="radio" value={value} name={name} defaultChecked={defaultChecked} checked={checked} onChange={e => {
-                onChange(name, e.target.value)
+            <Input type="radio" value={value} name={name} defaultChecked={defaultChecked} checked={checked} valueChange={value => {
+                onChange(name, value)
             }} /> {title}
         </label>
         {children}
@@ -705,7 +707,8 @@ const PasscodeAddComponent = ({ okCallback, cancelCallback, authId }: {
                                     setInputCurrentPasscodeValue(value)
                                 }}
                                 style={{
-                                    width: '180px'
+                                    width: '180px',
+                                    height: passcodeInputHeight
                                 }}
                                 zeroOk
                                 maxLength={9}
@@ -736,7 +739,8 @@ const PasscodeAddComponent = ({ okCallback, cancelCallback, authId }: {
                                 label="분 후 만료"
                                 nonZero
                                 style={{
-                                    width: '120px'
+                                    width: '120px',
+                                    height: passcodeInputHeight
                                 }}
                                 maxLength={7}
                                 name="timeValue"
@@ -770,7 +774,8 @@ const PasscodeAddComponent = ({ okCallback, cancelCallback, authId }: {
                                 nonZero
                                 maxLength={5}
                                 style={{
-                                    width: '140px'
+                                    width: '140px',
+                                    height: passcodeInputHeight
                                 }}
                                 onlyNumber
                             />

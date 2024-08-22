@@ -332,9 +332,16 @@ export const SignUpRequestFunc = (params: UserDataAddLocalValuesType, callback: 
     return CustomAxiosPost(SignUpRequestApi, callback, params)
 }
 
-export const SignUpVerificationCodeSendFunc = (email: string, callback: () => void) => {
+export const SignUpVerificationCodeSendFunc = ({
+    email,
+    username
+}: {
+    email: string,
+    username: string
+}, callback: () => void) => {
     return CustomAxiosPost(SignUpVerificationCodeSendApi, callback, {
-        email
+        email,
+        username
     })
 }
 
