@@ -1,6 +1,7 @@
 .ompass-control-row {
     & p {
-        color: var(--main-grey-color);
+        /* color: var(--main-grey-color); */
+        color: #000;
         font-size: .9rem;
         margin: 6px 0 0 1.5rem;
     }
@@ -120,7 +121,7 @@
 
 .authenticator-ompass-auth {
     padding: 12px;
-    background-color: var(--sub-purple-color);
+    background-color: var(--sub-purple-color3);
     border-radius: 8px;
     transition: height .25s ease-out;
     position: relative;

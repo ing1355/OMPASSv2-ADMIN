@@ -20,7 +20,8 @@ import passcodeHistoryMenuIconWhite from '../assets/passcodeHistoryMenuIconWhite
 import settingsMenuIconBlack from '../assets/settingsMenuIconBlack.png';
 import SettingsMenuIconWhite from '../assets/settingsMenuIconWhite.png';
 import { tz } from 'moment-timezone'
-
+import tzs from './timezones'
+console.log(tzs)
 export const timeZoneNames = tz.names()
 
 

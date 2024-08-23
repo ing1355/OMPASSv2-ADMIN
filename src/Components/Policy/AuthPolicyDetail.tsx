@@ -13,6 +13,7 @@ import resetIconWhite from '../../assets/resetIconWhite.png'
 import ipInfoIcon from '../../assets/ipInfoIcon.png'
 import deleteIcon from '../../assets/deleteIcon.png'
 import deleteIconHover from '../../assets/deleteIconHover.png'
+import addIconWhite from '../../assets/addIconWhite.png'
 import Button from "Components/CommonCustomComponents/Button";
 import Input from "Components/CommonCustomComponents/Input";
 import { APIProvider, Map, Marker, MapControl, ControlPosition } from '@vis.gl/react-google-maps';
@@ -62,14 +63,7 @@ const defaultTimePolicyData = (): AccessTimeRestrictionValueType => ({
         startTime: dayjs().format(timepickerFormat),
         endTime: dayjs().format(timepickerFormat)
     },
-    options: {
-        isLoginDenyEnabled: true,
-        noticeToAdmin: {
-            isEnabled: false,
-            admins: [],
-            noticeMethods: []
-        }
-    }
+    isLoginDenyEnabled: true,
 })
 
 const AuthPolicyDetail = () => {
@@ -87,10 +81,11 @@ const AuthPolicyDetail = () => {
     const [ipAddressValues, setIpAddressValues] = useState<PolicyDataType['ipRestriction']['ips']>([])
     const [accessTimeChecked, setAccessTimeChecked] = useState(false)
     const [accessTimeValues, setAccessTimeValues] = useState<PolicyDataType['accessTimeRestriction']['accessTimeRestrictions']>([])
-    const [noticeAdminChecked, setNoticeAdminChecked] = useState<boolean>(false)
-    const [noticeAdminValues, setNoticeAdminValues] = useState<RestrictionNoticeDataType[]>([])
+    // const [noticeAdminChecked, setNoticeAdminChecked] = useState<boolean>(false)
+    // const [noticeAdminValues, setNoticeAdminValues] = useState<RestrictionNoticeDataType[]>([])
     const [currentNoticeAdmin, setCurrentNoticeAdmin] = useState<RestrictionNoticeDataType>({
-        method: [],
+        isEnabled: false,
+        methods: [],
         admins: []
     })
     const [currentAccessTimeValue, setCurrentAccessTimeValue] = useState<AccessTimeRestrictionValueType>(defaultTimePolicyData())
@@ -143,8 +138,8 @@ const AuthPolicyDetail = () => {
         setIpAddressValues([])
         setAccessTimeChecked(false)
         setAccessTimeValues([])
-        setNoticeAdminChecked(false)
-        setNoticeAdminValues([])
+        // setNoticeAdminChecked(false)
+        // setNoticeAdminValues([])
         setCurrentAccessTimeValue(defaultTimePolicyData())
         setCurrentIpAddress('')
         setCurrentLocationName('')
@@ -179,7 +174,8 @@ const AuthPolicyDetail = () => {
             accessTimeRestriction: {
                 isEnabled: accessTimeChecked,
                 accessTimeRestrictions: accessTimeValues
-            }
+            },
+            noticeToAdmin: currentNoticeAdmin
         }, () => {
             message.success('추가 성공!')
             navigate('/Policies')
@@ -226,7 +222,8 @@ const AuthPolicyDetail = () => {
                             accessTimeRestriction: {
                                 isEnabled: accessTimeChecked,
                                 accessTimeRestrictions: accessTimeChecked ? accessTimeValues : []
-                            }
+                            },
+                            noticeToAdmin: currentNoticeAdmin
                         }, () => {
                             message.success('수정 성공!')
                             // navigate('/Policies')
@@ -427,7 +424,7 @@ const AuthPolicyDetail = () => {
                                 <span className="policy-location-label">위치명</span> <Input className="st1" value={currentLocationName} valueChange={value => {
                                     setCurrentLocationName(value)
                                 }} placeholder="" />
-                                <Button className="st3" onClick={() => {
+                                <Button icon={addIconWhite} className="st3" onClick={() => {
                                     setLocationDatas([{
                                         alias: currentLocationName,
                                         radius: currentRadius,
@@ -481,7 +478,7 @@ const AuthPolicyDetail = () => {
                                 <Input className="st1 policy-ip-address-input" placeholder="IP 주소를 입력해주세요." value={currentIpAddress} valueChange={value => {
                                     setCurrentIpAddress(value)
                                 }} onInput={ipAddressRestriction} maxLength={16} />
-                                <Button className="st3" onClick={() => {
+                                <Button icon={addIconWhite} className="st3" onClick={() => {
                                     if (ipAddressValues.includes(currentIpAddress)) return message.error("동일한 ip가 이미 설정되어 있습니다.")
                                     if (!currentIpAddress) return message.error("IP 주소를 입력해주세요.")
                                     setIpAddressValues([...ipAddressValues, currentIpAddress])
@@ -510,11 +507,16 @@ const AuthPolicyDetail = () => {
             <CustomInputRow title="위반 시 관리자 알림">
                 <div>
                     <Switch style={{
-                        marginBottom: !noticeAdminChecked ? 0 : '8px',
-                    }} checked={noticeAdminChecked} onChange={check => {
-                        setNoticeAdminChecked(check)
+                        // marginBottom: !noticeAdminChecked ? 0 : '8px',
+                        marginBottom: !currentNoticeAdmin.isEnabled ? 0 : '8px',
+                    // }} checked={noticeAdminChecked} onChange={check => {
+                    }} checked={currentNoticeAdmin.isEnabled} onChange={check => {
+                        setCurrentNoticeAdmin({
+                            ...currentNoticeAdmin,
+                            isEnabled: check
+                        })
                     }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
-                    <div className="policy-input-container" aria-hidden={!noticeAdminChecked}>
+                    <div className="policy-input-container" aria-hidden={!currentNoticeAdmin.isEnabled}>
                         <div className="policy-contents-container">
                             <div style={{
                                 display: 'flex',
@@ -523,29 +525,29 @@ const AuthPolicyDetail = () => {
                                 gap: '16px',
                                 marginBottom: '12px'
                             }}>
-                                <Input type="checkbox" label="푸시 알림" checked={currentNoticeAdmin.method.includes('PUSH')} onChange={e => {
+                                <Input type="checkbox" label="푸시 알림" checked={currentNoticeAdmin.methods.includes('PUSH')} onChange={e => {
                                     if (e.currentTarget.checked) {
                                         setCurrentNoticeAdmin({
                                             ...currentNoticeAdmin,
-                                            method: currentNoticeAdmin.method.concat('PUSH')
+                                            methods: currentNoticeAdmin.methods.concat('PUSH')
                                         })
                                     } else {
                                         setCurrentNoticeAdmin({
                                             ...currentNoticeAdmin,
-                                            method: currentNoticeAdmin.method.filter(_ => _ !== 'PUSH')
+                                            methods: currentNoticeAdmin.methods.filter(_ => _ !== 'PUSH')
                                         })
                                     }
                                 }} />
-                                <Input type="checkbox" label="이메일" checked={currentNoticeAdmin.method.includes('EMAIL')} onChange={e => {
+                                <Input type="checkbox" label="이메일" checked={currentNoticeAdmin.methods.includes('EMAIL')} onChange={e => {
                                     if (e.currentTarget.checked) {
                                         setCurrentNoticeAdmin({
                                             ...currentNoticeAdmin,
-                                            method: currentNoticeAdmin.method.concat('EMAIL')
+                                            methods: currentNoticeAdmin.methods.concat('EMAIL')
                                         })
                                     } else {
                                         setCurrentNoticeAdmin({
                                             ...currentNoticeAdmin,
-                                            method: currentNoticeAdmin.method.filter(_ => _ !== 'EMAIL')
+                                            methods: currentNoticeAdmin.methods.filter(_ => _ !== 'EMAIL')
                                         })
                                     }
                                 }} />
@@ -561,7 +563,7 @@ const AuthPolicyDetail = () => {
                             }))} style={{
                                 width: '600px',
                             }} />
-                            <div className="notice-admin-buttons">
+                            {/* <div className="notice-admin-buttons">
                                 <Button className="st3" onClick={() => {
                                     setNoticeAdminValues([currentNoticeAdmin, ...noticeAdminValues])
                                     setCurrentNoticeAdmin({
@@ -571,10 +573,10 @@ const AuthPolicyDetail = () => {
                                 }}>
                                     등록
                                 </Button>
-                            </div>
+                            </div> */}
                         </div>
 
-                        {
+                        {/* {
                             noticeAdminValues.map((_, ind) => <div className="policy-contents-container" key={ind}>
                                 <div style={{
                                     display: 'flex',
@@ -629,7 +631,7 @@ const AuthPolicyDetail = () => {
                                     </Button>
                                 </div>
                             </div>)
-                        }
+                        } */}
                     </div>
                 </div>
             </CustomInputRow>
@@ -751,21 +753,20 @@ const AuthPolicyDetail = () => {
                                     </label>
                                 </div>
                                 <div>
-                                    위반 시 로그인 막기 : <Switch checked={currentAccessTimeValue.options.isLoginDenyEnabled} onChange={check => {
+                                    위반 시 로그인 차단 : <Switch checked={currentAccessTimeValue.isLoginDenyEnabled} onChange={check => {
                                         setCurrentAccessTimeValue({
                                             ...currentAccessTimeValue,
-                                            options: {
-                                                ...currentAccessTimeValue.options,
-                                                isLoginDenyEnabled: check
-                                            }
+                                            isLoginDenyEnabled: check
                                         })
                                     }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
                                 </div>
                             </div>
                             <div className="time-policy-buttons-container">
-                                <Button className="st3" onClick={() => {
+                                <Button icon={addIconWhite} className="st3" onClick={() => {
                                 setAccessTimeValues([currentAccessTimeValue, ...accessTimeValues])
                                 setCurrentAccessTimeValue(defaultTimePolicyData())
+                            }} style={{
+                                width: '16px'
                             }}/>
                             </div>
                         </div>
@@ -882,10 +883,10 @@ const AuthPolicyDetail = () => {
                                     </label>
                                 </div>
                                 <div>
-                                    위반 시 로그인 막기 : <Switch checked={_.options.isLoginDenyEnabled} onChange={check => {
+                                    위반 시 로그인 차단 : <Switch checked={_.isLoginDenyEnabled} onChange={check => {
                                         setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
                                             ...timeValue,
-                                            options: { ...timeValue.options, isLoginDenyEnabled: check }
+                                            isLoginDenyEnabled: check
                                         }) : timeValue))
                                     }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
                                 </div>
@@ -893,6 +894,8 @@ const AuthPolicyDetail = () => {
                             <div className="time-policy-buttons-container">
                                 <Button icon={deleteIcon} hoverIcon={deleteIconHover} className="st2" onClick={() => {
                                 setAccessTimeValues(accessTimeValues.filter((__, _ind) => _ind !== ind))
+                            }} style={{
+                                width: '16px'
                             }}/>
                             </div>
                         </div>)}

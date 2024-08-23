@@ -343,9 +343,9 @@ const UserDetail = ({ }) => {
                                 })
                             }
                         }} />
-                    </UserInfoInputrow> : <UserInfoRow title="GROUP" value={userData?.group?.name || "정보 없음"} />}
+                    </UserInfoInputrow> : <UserInfoRow title="GROUP" value={userData?.group?.name || "선택 안함"} />}
 
-                    {((isModify || isAdd) && isAdmin) ? <UserInfoInputrow title="USER_ROLE">
+                    {((isModify || isAdd) && isAdmin && userData?.role !== 'ROOT') ? <UserInfoInputrow title="USER_ROLE">
                         <RoleSelect selectedGroup={isAdd ? addValues.role : modifyValues.role} setSelectedGroup={(role) => {
                             if (isAdd) {
                                 setAddValues({
@@ -359,7 +359,7 @@ const UserDetail = ({ }) => {
                                 })
                             }
                         }} needSelect />
-                    </UserInfoInputrow> : <UserInfoRow title="USER_ROLE" value={(userData && userData.role) ? formatMessage({ id: userData.role + '_ROLE_VALUE' }) : "정보 없음"} />}
+                    </UserInfoInputrow> : <UserInfoRow title="USER_ROLE" value={(userData && userData.role) ? formatMessage({ id: userData.role + '_ROLE_VALUE' }) : "선택 안함"} />}
                     {/* {(isModify || isAdd) ? <UserInfoInputrow title="POLICY_TEXT">
                         <RoleSelect selectedGroup={isAdd ? addValues.role : modifyValues.role} setSelectedGroup={(role) => {
                             if (isAdd) {
@@ -374,7 +374,7 @@ const UserDetail = ({ }) => {
                                 })
                             }
                         }} />
-                    </UserInfoInputrow> : <UserInfoRow title="USER_ROLE" value={(userData && userData.role) ? formatMessage({id: userData.role + '_ROLE_VALUE'}) : "정보 없음"} />} */}
+                    </UserInfoInputrow> : <UserInfoRow title="USER_ROLE" value={(userData && userData.role) ? formatMessage({id: userData.role + '_ROLE_VALUE'}) : "선택 안함"} />} */}
                     {
                         isModify && <UserInfoInputrow title="PASSWORD">
                             <Input className='st1' value={modifyValues.password} onChange={e => {

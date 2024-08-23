@@ -86,15 +86,15 @@ const Settings = () => {
                     setSignupMethod(target.value as UserSignUpMethodType)
                 }}>
                     <label>
-                        <input type="radio" name="signupMethod" value={UserSignupMethod.USER_SELF_ADMIN_PASS} checked={signupMethod === UserSignupMethod.USER_SELF_ADMIN_PASS} readOnly />
+                        <Input type="radio" name="signupMethod" value={UserSignupMethod.USER_SELF_ADMIN_PASS} checked={signupMethod === UserSignupMethod.USER_SELF_ADMIN_PASS} readOnly />
                         사용자 직접 가입(관리자 승인 불필요)
                     </label>
                     <label>
-                        <input type="radio" name="signupMethod" value={UserSignupMethod.USER_SELF_ADMIN_ACCEPT} checked={signupMethod === UserSignupMethod.USER_SELF_ADMIN_ACCEPT} readOnly />
+                        <Input type="radio" name="signupMethod" value={UserSignupMethod.USER_SELF_ADMIN_ACCEPT} checked={signupMethod === UserSignupMethod.USER_SELF_ADMIN_ACCEPT} readOnly />
                         관리자 승인 가입
                     </label>
                     <label>
-                        <input type="radio" name="signupMethod" value={UserSignupMethod.ONLY_BY_ADMIN} checked={signupMethod === UserSignupMethod.ONLY_BY_ADMIN} readOnly />
+                        <Input type="radio" name="signupMethod" value={UserSignupMethod.ONLY_BY_ADMIN} checked={signupMethod === UserSignupMethod.ONLY_BY_ADMIN} readOnly />
                         관리자 직접 추가(사용자 액션 X)
                     </label>
                 </fieldset>

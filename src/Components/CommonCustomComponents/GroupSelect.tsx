@@ -24,7 +24,7 @@ const GroupSelect = ({ selectedGroup, setSelectedGroup, needSelect }: GroupSelec
                 key: _.id,
                 label: _.name
             }))} value={selectedGroup || ""} onChange={id => {
-                setSelectedGroup(groupsData.find(_ => _.id === id as UserGroupListDataType['id'])!.id)
+                setSelectedGroup(id)
             }} needSelect={needSelect}/>
         {groupsData.length > 0 && selectedGroup && <div className="custom-detail-policy-navigate-text">
             <a target="_blank" href={`/Groups/detail/${selectedGroup}`}>여기</a>를 눌러 그룹을 편집할 수 있습니다.

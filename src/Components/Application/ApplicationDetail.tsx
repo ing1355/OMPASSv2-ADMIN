@@ -110,7 +110,7 @@ const ApplicationDetail = () => {
                         <Input className="st1" value={inputName} valueChange={value => {
                             console.log('name : ', value)
                             setInputName(value)
-                        }} placeholder="ex) 테스트 어플리케이션" />
+                        }} placeholder="ex) 테스트 어플리케이션" readOnly={applicationType === 'ADMIN'}/>
                     </CustomInputRow>
                     <CustomInputRow title="설명">
                         <Input className="st1" value={inputDescription} valueChange={value => {

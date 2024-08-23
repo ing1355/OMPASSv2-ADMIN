@@ -204,7 +204,6 @@ type BrowserPolicyType = "FireFox" | "Safari" | "Chrome Mobile" | "Chrome" | "Mi
 type AuthenticatorPolicyType = "WEBAUTHN" | "PASSCODE" | "OMPASS" | "OTP"
 type DayOfWeeksType = "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY"
 type AccessTimeRestrictionTimeRangeTypeType = "SPECIFIC_TIME" | "ALL_TIME"
-type AccessTimeRestrictionOptionsNoticeToAdminNoticeMethodsType = "EMAIL" | "PUSH"
 type AccessTimeRestrictionValueType = {
     selectedDayOfWeeks: DayOfWeeksType[],
     timeZone: string
@@ -218,19 +217,19 @@ type AccessTimeRestrictionValueType = {
         endTime: string,
         type: AccessTimeRestrictionTimeRangeTypeType
     },
-    options: {
-        isLoginDenyEnabled: boolean,
-        noticeToAdmin?: {
-            isEnabled: boolean,
-            admins: string[],
-            noticeMethods: AccessTimeRestrictionOptionsNoticeToAdminNoticeMethodsType[]
-        }
-    }
+    isLoginDenyEnabled: boolean,
 }
 type AccessTimeRestrictionType = {
     isEnabled: boolean,
     accessTimeRestrictions: AccessTimeRestrictionValueType[]
 }
+
+type RestrictionNoticeDataType = {
+    isEnabled: boolean,
+    admins: string[],
+    methods: RestrictionNoticeMethodType[]
+}
+
 type DefaultPolicyDataType = {
     name: string
     accessControl?: 'ACTIVE' | 'INACTIVE' | 'DENY'
@@ -241,14 +240,10 @@ type DefaultPolicyDataType = {
     enableAuthenticators: AuthenticatorPolicyType[]
     description: string
     accessTimeRestriction: AccessTimeRestrictionType
+    noticeToAdmin: RestrictionNoticeDataType
 }
 
 type RestrictionNoticeMethodType = 'EMAIL' | 'PUSH'
-
-type RestrictionNoticeDataType = {
-    method: RestrictionNoticeMethodType[],
-    admins: UserDataType['userId'][]
-}
 
 type PolicyDataType = DefaultPolicyDataType & {
     id: string
