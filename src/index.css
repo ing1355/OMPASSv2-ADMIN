@@ -29,6 +29,8 @@ div {
 
 label {
   &:has(input[type="radio"]) {
+    display: inline-flex;
+    align-items: center;
     cursor: pointer;
   }
 }
@@ -54,6 +56,13 @@ img {
   --header-height: 72px;
   --main-background-color: #ededf4;
   background-color: var(--main-background-color);
+}
+
+@media (max-width:767px) {
+  /* 모바일 세로 */
+  #root > div {
+    height: 100%;
+  }
 }
 
 .pointer {

@@ -108,6 +108,7 @@ const CustomTable = <T extends {
     },[searchType])
 
     const searchCallback = (page: number, size: number) => {
+        if(page === 1) window.history.replaceState("", "", location.pathname)
         if (onSearchChange) onSearchChange({
             type: searchType,
             value: searchValue,
@@ -115,9 +116,9 @@ const CustomTable = <T extends {
             size
         })
     }
-
+    
     const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
-        navigate(`${location.pathname}#${pageNumber}`)
+        window.history.replaceState("", "", `${location.pathname}#${pageNumber}`)
         if(tableSize !== pageSizeOptions) {
             setPageNum(1);
             setTableSize(pageSizeOptions);
@@ -168,7 +169,8 @@ const CustomTable = <T extends {
         <div className={`custom-table-header${(noSearch || !searchOptions) ? ' no-search' : ''}${(noSearch && !addBtn && deleteBtn) ? ' no-margin' : ''}`}>
             {!noSearch && searchOptions && <form onSubmit={e => {
                 e.preventDefault()
-                searchCallback(pageNum, tableSize)
+                setPageNum(1)
+                searchCallback(1, tableSize)
             }} className="table-search-container">
                 <CustomSelect items={searchOptions.map(_ => ({
                     key: _.key,
@@ -183,7 +185,6 @@ const CustomTable = <T extends {
                         setSearchValue(value)
                     }} items={searchTarget?.selectOptions!} needSelect={searchTarget?.needSelect}/>
                 }
-
                 <Button className="st3" icon={searchIcon} type="submit">
                     검색
                 </Button>

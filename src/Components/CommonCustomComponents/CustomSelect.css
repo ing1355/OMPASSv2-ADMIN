@@ -55,4 +55,9 @@
       color: var(--main-purple-color2);
       background-color: var(--sub-purple-color5);
     }
+    &.disabled {
+      color: var(--sub-grey-color5);
+      background-color: var(--sub-grey-color2);
+      cursor: not-allowed;
+    }
   }

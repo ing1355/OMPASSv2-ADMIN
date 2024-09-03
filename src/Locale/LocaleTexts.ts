@@ -278,6 +278,7 @@ const LocaleTexts = {
     REDMINE_APPLICATION_TYPE: 'Redmine',
     REGISTRATION_VALUE: 'Registration',
     AUTHENTICATION_VALUE: 'Authentication',
+    POLICY_VALUE: 'Policy Restriction',
     GO_BACK: 'Back',
     DAY_OF_WEEKS_MONDAY: 'Monday',
     DAY_OF_WEEKS_TUESDAY: 'Tuesday',
@@ -298,7 +299,14 @@ const LocaleTexts = {
     USER_STATUS_WAIT_ADMIN_APPROVAL: "관리자 인증 대기중",
     USER_STATUS_WITHDRAWAL: "탈퇴",
     USER_STATUS_RUN: "활성화",
-    APPLICATION_DELETE_CONFIRM_MSG: 'After deletion, application information will be deleted and all data will not be recovered'
+    APPLICATION_DELETE_CONFIRM_MSG: 'After deletion, application information will be deleted and all data will not be recovered',
+    IP_ADDRESS_CIDR_INFO: 'Enter an IP address or CIDR block, such as 127.0.0.1 or 127.0.0.1/32, with an optional note.',
+    ACCESS_CONTROL_LABEL: 'OMPASS 인증 제어',
+    ACCESS_TIME_LABEL: '시간 접근',
+    BROWSER_LABEL: '브라우저',
+    COUNTRY_LABEL: '사용자 위치',
+    IP_WHITE_LIST_LABEL: 'IP 접근',
+    LOCATION_LABEL: '사용자 위치'
   },
   'ko': {
     LOGIN: '로그인',
@@ -565,11 +573,11 @@ const LocaleTexts = {
     "Mobile Safari": "사파리 모바일",
     "All other browsers": "그 외 브라우저",
     "default policy": "기본 정책",
-    USER_ROLE: "역할",
-    "NO_POLICY": "정책 없음",
-    USER_ROLE_VALUE: "사용자 역할",
-    ADMIN_ROLE_VALUE: "관리자 역할",
-    ROOT_ROLE_VALUE: "최고 관리자 역할",
+    USER_ROLE: "등급",
+    "NO_POLICY": "선택 안함",
+    USER_ROLE_VALUE: "사용자",
+    ADMIN_ROLE_VALUE: "관리자",
+    ROOT_ROLE_VALUE: "최고 관리자",
     POLICY_TEXT: "정책",
     ADMIN_APPLICATION_TYPE: "포탈",
     DEFAULT_APPLICATION_TYPE: "브라우저",
@@ -580,6 +588,7 @@ const LocaleTexts = {
     REDMINE_APPLICATION_TYPE: 'Redmine',
     REGISTRATION_VALUE: '등록',
     AUTHENTICATION_VALUE: '인증',
+    POLICY_VALUE: '정책 위반',
     GO_BACK: '돌아가기',
     DAY_OF_WEEKS_MONDAY: '월요일',
     DAY_OF_WEEKS_TUESDAY: '화요일',
@@ -600,7 +609,14 @@ const LocaleTexts = {
     USER_STATUS_WAIT_ADMIN_APPROVAL: "관리자 인증 대기중",
     USER_STATUS_WITHDRAWAL: "탈퇴",
     USER_STATUS_RUN: "활성화",
-    APPLICATION_DELETE_CONFIRM_MSG: '삭제 후, 어플리케이션 정보가 삭제되며\n모든 데이터는 복구되지 않습니다.'
+    APPLICATION_DELETE_CONFIRM_MSG: '삭제 후, 어플리케이션 정보가 삭제되며\n모든 데이터는 복구되지 않습니다.',
+    IP_ADDRESS_CIDR_INFO: '127.0.0.1 또는 127.0.0.1/32와 같이 IP 주소나 CIDR 블록을 입력하고, 선택적으로 메모를 추가합니다.',
+    ACCESS_CONTROL_LABEL: 'OMPASS 인증 제어',
+    ACCESS_TIME_LABEL: '시간 접근',
+    BROWSER_LABEL: '브라우저',
+    COUNTRY_LABEL: '사용자 위치',
+    IP_WHITE_LIST_LABEL: 'IP 접근',
+    LOCATION_LABEL: '사용자 위치'
   }
 }
 

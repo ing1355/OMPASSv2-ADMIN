@@ -20,16 +20,17 @@ import passcodeHistoryMenuIconWhite from '../assets/passcodeHistoryMenuIconWhite
 import settingsMenuIconBlack from '../assets/settingsMenuIconBlack.png';
 import SettingsMenuIconWhite from '../assets/settingsMenuIconWhite.png';
 import { tz } from 'moment-timezone'
-import tzs from './timezones'
-console.log(tzs)
+
 export const timeZoneNames = tz.names()
 
-
 export const isDev = process.env.NODE_ENV === 'development'
-export const CopyRightText = `OMPASS Portal v${process.env.REACT_APP_VERSION} © 2024. OneMoreSecurity Inc. All Rights Reserved.`
+export const CopyRightText = (info: SubDomainInfoDataType) => `OMPASS Portal v${process.env.REACT_APP_VERSION} © 2024. OneMoreSecurity Inc. All Rights Reserved. (backend versions : portal - ${info.backendVersion.portalApp}, fido - ${info.backendVersion.fidoApp}, interface - ${info.backendVersion.interfaceApp})`
 export const INT_MAX_VALUE = Math.pow(2, 31) - 1
 export const DateTimeFormat = "YYYY-MM-DD HH:mm:ss"
 export const userSelectPageSize = () => parseInt(localStorage.getItem('user_select_size') || "10")
+
+export const policyNoticeRestrictionTypes: NoticeRestrictionTypes[] = ["ACCESS_CONTROL", "BROWSER", "LOCATION", "IP_WHITE_LIST", "ACCESS_TIME", "COUNTRY"]
+export const userStatusTypes: UserStatusType[] = ["RUN", "WAIT_ADMIN_APPROVAL", "WAIT_EMAIL_VERIFICATION", "WITHDRAWAL"]
 
 type menuDataType = {
     label: string
@@ -121,10 +122,10 @@ export const menuDatas = (role: userRoleType): menuDataType[] => {
 }
 
 // export const applicationTypes: ApplicationDataType['applicationType'][] = ["DEFAULT", "WINDOWS_LOGIN", "LINUX_LOGIN", "MAC_LOGIN", "ADMIN"]
-const appTypes: ApplicationDataType['type'][] = ["DEFAULT", "WINDOWS_LOGIN", "LINUX_LOGIN", "RADIUS", "REDMINE", "GOOROOM_LOGIN"]
+const appTypes: ApplicationDataType['type'][] = ["ADMIN", "WINDOWS_LOGIN", "DEFAULT", "LINUX_LOGIN", "RADIUS", "REDMINE", "GOOROOM_LOGIN"]
 export const applicationTypes = (hasWindowsLogin: boolean): ApplicationDataType['type'][] => !hasWindowsLogin ? appTypes : appTypes.filter(_ => _ !== 'WINDOWS_LOGIN')
 // 어플리케이션 타입 다국어 매칭해놨으나 타입 지정은 불가능하므로 값 바뀌면 다국어 키값도 바뀌어야함
-export const AuthenticationProcessTypes: ProcessTypeType[] = ["NONE", "REGISTRATION", "AUTHENTICATION"]
+export const AuthenticationProcessTypes: ProcessTypeType[] = ["POLICY", "REGISTRATION", "AUTHENTICATION"]
 export const HttpMethodTypes: HttpMethodType[] = ["POST", "PUT", "DELETE"]
 
 export const getApplicationTypeLabel = (type: ApplicationDataType['type']) => <FormattedMessage id={type + '_APPLICATION_TYPE'} />
@@ -134,7 +135,8 @@ export const UserSignupMethod: {
 } = {
     USER_SELF_ADMIN_PASS: "USER_SELF_ADMIN_PASS",
     USER_SELF_ADMIN_ACCEPT: "USER_SELF_ADMIN_ACCEPT",
-    ONLY_BY_ADMIN: "ONLY_BY_ADMIN"
+    ONLY_BY_ADMIN: "ONLY_BY_ADMIN",
+    INPUT_PASSWORD_BY_ADMIN: "INPUT_PASSWORD_BY_ADMIN"
 }
 
 export const devUrl = process.env['REACT_APP_DEV_URL'] as string

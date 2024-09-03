@@ -5,7 +5,7 @@ import { OMPASS } from 'ompass';
 import { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { langChange } from 'Redux/actions/langChange';
-
+import { isMobile } from "react-device-detect";
 import { CopyRightText, isDev, subDomain, UserSignupMethod } from '../../Constants/ConstantValues';
 import locale_image from '../../assets/locale_image.png';
 import downloadIconWhite from '../../assets/downloadIconWhite.png';
@@ -20,7 +20,7 @@ import Input from 'Components/CommonCustomComponents/Input';
 const Login = () => {
   const { lang, subdomainInfo } = useSelector((state: ReduxStateType) => ({
     lang: state.lang,
-    subdomainInfo: state.subdomainInfo
+    subdomainInfo: state.subdomainInfo!
   }));
   const [inputPassword, setInputPassword] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -73,9 +73,9 @@ const Login = () => {
         <form
           onSubmit={loginRequest}
         >
-          <div className='login-form-header'>
+          {!isMobile && <div className='login-form-header'>
             <h1 className='login-form-title'><FormattedMessage id='LOGIN' /></h1>
-          </div>
+          </div>}
           <div
             className='login-input-container'
           >
@@ -122,7 +122,7 @@ const Login = () => {
           </Link>
         </form>
       </div>
-      <Button
+      {!isMobile && <Button
         className='login-agent-download-button st10'
         disabled={isAgentFileDisable}
         icon={downloadIconWhite}
@@ -133,10 +133,10 @@ const Login = () => {
         }}
       >
         <FormattedMessage id='DOWNLOAD_FOR_WINDOWS' />
-      </Button>
+      </Button>}
 
       <div
-        className='login-footer content-center'
+        className='login-footer'
       >
         <div
           className='mb10 login-footer-font'
@@ -170,7 +170,7 @@ const Login = () => {
         <div
           className='copyRight-style login-copyright'
         >
-          {CopyRightText}
+          {CopyRightText(subdomainInfo)}
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import { CSSProperties, PropsWithChildren } from 'react'
 import './Contents.css'
-import { useWindowHeightHeader } from 'Components/CommonCustomComponents/useWindowHeight';
 import { CopyRightText } from 'Constants/ConstantValues';
+import { useSelector } from 'react-redux';
 
 type ContentsProps = PropsWithChildren & {
     copyRightStyle?: CSSProperties
@@ -10,7 +10,9 @@ type ContentsProps = PropsWithChildren & {
 }
 
 const Contents = ({ children, containerStyle, copyRightStyle, loading }: ContentsProps) => {
-    const height = useWindowHeightHeader();
+    const { subdomainInfo } = useSelector((state: ReduxStateType) => ({
+        subdomainInfo: state.subdomainInfo!
+      }));
 
     return <>
         <div className={`loading-center${loading ? '' : ' hidden'}`}>
@@ -26,7 +28,7 @@ const Contents = ({ children, containerStyle, copyRightStyle, loading }: Content
             className='copyRight-style content'
             style={copyRightStyle}
         >
-            {CopyRightText}
+            {CopyRightText(subdomainInfo)}
         </div>
     </>
 }

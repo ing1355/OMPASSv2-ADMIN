@@ -120,6 +120,7 @@ const SecondStep = () => {
                     className='st1'
                     ref={usernameRef}
                     required
+                    noGap
                     containerClassName="signup-userId-input-row"
                     customType="username"
                     value={inputUsername}
@@ -135,7 +136,6 @@ const SecondStep = () => {
                         disabled={inputUsername.length < 4 || !idExist || isIdAlert}
                         onClick={() => {
                             if (!isIdAlert) {
-                                console.log('test?')
                                 DuplicateUserNameCheckFunc(inputUsername, ({ isExist }) => {
                                     setIdExist(isExist);
                                     if (isExist) {
@@ -157,6 +157,7 @@ const SecondStep = () => {
                     type="password"
                     ref={passwordRef}
                     required
+                    noGap
                     customType="password"
                     value={inputPassword}
                     valueChange={(value, isAlert) => {
@@ -171,6 +172,7 @@ const SecondStep = () => {
                     type="password"
                     ref={passwordConfirmRef}
                     required
+                    noGap
                     value={inputPasswordConfirm}
                     rules={[
                         {
@@ -189,6 +191,7 @@ const SecondStep = () => {
                     className='st1'
                     required
                     ref={firstNameRef}
+                    noGap
                     rules={[
                         {
                             regExp: nameRegex,
@@ -207,6 +210,7 @@ const SecondStep = () => {
                     className='st1'
                     required
                     ref={lastNameRef}
+                    noGap
                     rules={[
                         {
                             regExp: nameRegex,
@@ -229,6 +233,7 @@ const SecondStep = () => {
                     disabled={idExist}
                     value={inputEmail}
                     customType="email"
+                    noGap
                     valueChange={(value, isAlert) => {
                         setInputEmail(value)
                         setIsEmailAlert(isAlert || false)
@@ -261,6 +266,7 @@ const SecondStep = () => {
                     value={verifyCode}
                     readOnly={emailVerify}
                     noGap
+                    maxLength={6}
                     valueChange={value => {
                         setVerifyCode(value)
                     }}
@@ -288,6 +294,7 @@ const SecondStep = () => {
                     className='st1'
                     maxLength={13}
                     value={inputPhone}
+                    noGap
                     valueChange={value => {
                         value = autoHypenPhoneFun(value);
                         setInputPhone(value)

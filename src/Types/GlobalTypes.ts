@@ -16,6 +16,7 @@ type LoginDeviceInfoDataType = {
     macAddress?: string
     agentVersion?: string
     updatedAt: string
+    lastLoginTime: string
 }
 type ServerMetaDataType = {
     os?: OSInfoType
@@ -34,7 +35,7 @@ type UserNameType = {
     }
 }
 type HttpMethodType = "GET" | "POST" | "PUT" | "DELETE"
-type ProcessTypeType = "REGISTRATION" | "AUTHENTICATION" | "NONE"
+type ProcessTypeType = "REGISTRATION" | "AUTHENTICATION" | "POLICY"
 type AuthenticatorStatusType = "REGISTERED" | "ENABLED" | "DISABLED" | "MODIFIED"
 type AuthenticatorTypeType = "OMPASS" | "WEBAUTHN" | "PASSCODE"
 type DefaultAuthenticatorDataType = {
@@ -187,6 +188,7 @@ type CoordinateType = {
 }
 
 type LocationPolicyRestrictionItemType = {
+    countryCode?: string
     coordinate: CoordinateType
     radius: number
     alias: string
@@ -198,7 +200,7 @@ type LocationPolicyType = {
 type IpAddressPolicyType = {
     isEnabled: boolean
     // ips: PolicyRestrictionItemType[]
-    ips: string[]
+    networks: string[]
 }
 type BrowserPolicyType = "FireFox" | "Safari" | "Chrome Mobile" | "Chrome" | "Microsoft Edge" | "Mobile Safari" | "Samsung Browser" | "Whale Browser" | "All other browsers"
 type AuthenticatorPolicyType = "WEBAUTHN" | "PASSCODE" | "OMPASS" | "OTP"
@@ -221,25 +223,28 @@ type AccessTimeRestrictionValueType = {
 }
 type AccessTimeRestrictionType = {
     isEnabled: boolean,
-    accessTimeRestrictions: AccessTimeRestrictionValueType[]
+    accessTimes: AccessTimeRestrictionValueType[]
 }
+
+type NoticeRestrictionTypes = "ACCESS_CONTROL" | "BROWSER" | "COUNTRY" | "ACCESS_TIME" | "LOCATION" | "IP_WHITE_LIST"
 
 type RestrictionNoticeDataType = {
     isEnabled: boolean,
     admins: string[],
     methods: RestrictionNoticeMethodType[]
+    targetPolicies: NoticeRestrictionTypes[]
 }
 
 type DefaultPolicyDataType = {
     name: string
     accessControl?: 'ACTIVE' | 'INACTIVE' | 'DENY'
     policyType: 'DEFAULT' | 'CUSTOM'
-    location: LocationPolicyType
+    locationConfig: LocationPolicyType
     enableBrowsers: BrowserPolicyType[]
-    ipRestriction: IpAddressPolicyType
+    networkConfig: IpAddressPolicyType
     enableAuthenticators: AuthenticatorPolicyType[]
     description: string
-    accessTimeRestriction: AccessTimeRestrictionType
+    accessTimeConfig: AccessTimeRestrictionType
     noticeToAdmin: RestrictionNoticeDataType
 }
 
@@ -299,7 +304,7 @@ type RPUserDetailAuthDataType = {
     id: string
     createdAt: string
     username: string
-    policy: any
+    policy: PolicyListDataType
     loginDeviceInfo: LoginDeviceInfoDataType
     serverInfo: ServerMetaDataType
     authenticators: AuthenticatorDataType[]
@@ -383,17 +388,20 @@ type ProtalLogListParamsType = GeneralParamsType & {
 
 type AuthLogDataType = {
     id: number
-    rpUser: RPUserType
     portalUser: PortalUserType
+    rpUser: RPUserType
+    application: ApplicationDataType
+    authenticationLogType: "ALLOW" | "DENY" | "ALLOW_OUT_OF_SCHEDULE"
+    processType: ProcessTypeType
+    authenticatorType: AuthenticatorTypeType
+    authenticationTime: string
+    // policyAtTimeOfEvent: {
+    //     id: string
+    // }
     timeRange?: {
         startTime: string
         endTime: string
     }
-    processType: ProcessTypeType
-    application: ApplicationDataType
-    authenticationTime: string
-    authenticatorType: string
-    authenticationLogType: "ALLOW" | "DENY" | "ALLOW_OUT_OF_SCHEDULE"
 }
 
 type PortalLogDataType = {

@@ -8,7 +8,7 @@ import ContentsHeader from "Components/Layout/ContentsHeader";
 import userAddIcon from './../../assets/userAddIcon.png'
 import userAddIconHover from './../../assets/userAddIconHover.png'
 import './UserManagement.css'
-import { userSelectPageSize } from "Constants/ConstantValues";
+import { userSelectPageSize, userStatusTypes } from "Constants/ConstantValues";
 
 const UserManagement = () => {
     const [tableData, setTableData] = useState<UserDataType[]>([])
@@ -24,7 +24,7 @@ const UserManagement = () => {
             page_size: params.size,
             page: params.page
         }
-        if(params.type) {
+        if (params.type) {
             _params[params.type] = params.value
         }
         GetUserDataListFunc(_params, ({ results, totalCount }) => {
@@ -44,29 +44,45 @@ const UserManagement = () => {
                 theme='table-st1'
                 datas={tableData}
                 hover
-                searchOptions={[{
-                    key: 'role',
-                    type: 'select',
-                    selectOptions: [
-                        {
-                            key: 'USER',
-                            label: <FormattedMessage id={'USER_ROLE_VALUE'}/>
-                        },
-                        {
-                            key: 'ADMIN',
-                            label: <FormattedMessage id={'ADMIN_ROLE_VALUE'}/>
-                        },
-                    ]
-                }, {
-                    key: 'username',
-                    type: 'string'
-                }, {
-                    key: 'name',
-                    type: 'string',
-                }, {
-                    key: 'email',
-                    type: 'string'
-                }]}
+                searchOptions={[
+                    {
+                        key: 'username',
+                        type: 'string'
+                    }, {
+                        key: 'name',
+                        type: 'string',
+                    },
+                    {
+                        key: 'role',
+                        type: 'select',
+                        selectOptions: [
+                            {
+                                key: 'USER',
+                                label: <FormattedMessage id={'USER_ROLE_VALUE'} />
+                            },
+                            {
+                                key: 'ADMIN',
+                                label: <FormattedMessage id={'ADMIN_ROLE_VALUE'} />
+                            },
+                        ]
+                    },
+                    {
+                        key: 'email',
+                        type: 'string'
+                    },
+                    {
+                        key: 'phone',
+                        type: 'string'
+                    },
+                    {
+                        key: 'status',
+                        type: 'select',
+                        selectOptions: userStatusTypes.map(_ => ({
+                            key: _,
+                            label: <FormattedMessage id={`USER_STATUS_${_}`}/>
+                        }))
+                    },
+                ]}
                 onSearchChange={(data) => {
                     GetDatas(data)
                 }}
@@ -85,23 +101,23 @@ const UserManagement = () => {
                 pagination
                 columns={[
                     {
-                        key: 'role',
-                        title: createHeaderColumn('USER_ROLE'),
-                        render: (data) => <FormattedMessage id={data+'_ROLE_VALUE'}/>
-                    },
-                    {
                         key: 'username',
                         title: createHeaderColumn('USER_ID')
-                    },
-                    {
-                        key: 'group',
-                        title: createHeaderColumn('GROUP'),
-                        render: (data) => data ? data.name : <FormattedMessage id="NONE_GROUP"/>
                     },
                     {
                         key: 'name',
                         title: createHeaderColumn('NAME'),
                         render: (data) => data.firstName + data.lastName
+                    },
+                    {
+                        key: 'role',
+                        title: createHeaderColumn('USER_ROLE'),
+                        render: (data) => <FormattedMessage id={data + '_ROLE_VALUE'} />
+                    },
+                    {
+                        key: 'group',
+                        title: createHeaderColumn('GROUP'),
+                        render: (data) => data ? data.name : <FormattedMessage id="NONE_GROUP" />
                     },
                     {
                         key: 'email',
@@ -115,7 +131,7 @@ const UserManagement = () => {
                     {
                         key: 'status',
                         title: '상태',
-                        render: data => <FormattedMessage id={`USER_STATUS_${data}`}/>
+                        render: data => <FormattedMessage id={`USER_STATUS_${data}`} />
                     }
                 ]}
                 onBodyRowClick={(row, index, arr) => {

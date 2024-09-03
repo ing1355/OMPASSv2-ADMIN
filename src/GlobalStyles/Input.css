@@ -103,7 +103,7 @@ label:has(input[type="checkbox"]) {
     }
 }
 
-.custom-label-wrapper > div > input:focus+.custom-type-alert-text {
+.custom-label-wrapper > div > span:has(input:focus)+.custom-type-alert-text {
     display: flex;
 }
 

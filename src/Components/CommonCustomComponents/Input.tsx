@@ -82,7 +82,9 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                 default: break;
             }
             if (rgx) {
-                if (!rgx.test(value) || (required && value.length === 0)) return true
+                if (!rgx.test(value) || (required && value.length === 0)) {
+                    return true
+                }
             }
         }
         if (rules) {
@@ -94,7 +96,7 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
         }
         return false
     }
-
+    
     return <>
         <div className={`custom-input-wrapper${containerClassName ? (' ' + containerClassName) : ''}${(customType || rules) ? ' has-alert' : ''}`}>
             <HasLabel label={label}>
@@ -119,13 +121,6 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                                 }
                             }}
                             onBlur={e => {
-                                if (noGap && (e.currentTarget.value.startsWith(' ') || e.currentTarget.value.endsWith(' ')) && valueChange) valueChange(e.currentTarget.value.trim())
-                            }}
-                            onChange={e => {
-                                if (valueChange) {
-                                    valueChange(e.target.value, isAlertRef.current)
-                                }
-                            }} onInput={(e) => {
                                 if (onlyNumber) {
                                     if (!e.currentTarget.value) e.currentTarget.value = "0"
                                     else e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')
@@ -138,20 +133,27 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                                         e.currentTarget.value = '1'
                                     }
                                 }
+                            }}
+                            onChange={e => {
+                                if (valueChange) {
+                                    valueChange(e.target.value, isAlertRef.current)
+                                }
+                            }} onInput={(e) => {
+                                if (noGap && (e.currentTarget.value.startsWith(' ') || e.currentTarget.value.endsWith(' ')) && valueChange) e.currentTarget.value = e.currentTarget.value.trim()
                                 if (validateCheck(e.currentTarget.value)) {
                                     setIsAlert(true)
                                 } else {
                                     setIsAlert(false)
                                 }
                                 if (onInput) onInput(e)
-                            }} {...props} type={type} value={props.disabled ? "" : value} maxLength={maxLength || maxLengthByCustomType()} 
+                            }} {...props} type={type} value={props.disabled ? "" : value} maxLength={maxLength || maxLengthByCustomType()}
                             style={{
-                                paddingRight: `${suffix ? (11 + suffix.length * 15  + 'px') : ''}`,
+                                paddingRight: `${suffix ? (11 + suffix.length * 15 + 'px') : ''}`,
                                 ...style
-                            }}/>
-                            {suffix && <div className="custom-suffix-text">
-                                {suffix}
-                            </div>}
+                            }} />
+                        {suffix && <div className="custom-suffix-text">
+                            {suffix}
+                        </div>}
                     </span>
                     {((customType || rules) && isAlert) && <div className="custom-type-alert-text">
                         {isAlert ? alertMsg : ''}

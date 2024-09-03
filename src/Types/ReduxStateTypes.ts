@@ -18,4 +18,5 @@ type ReduxStateType = {
   lang?: LanguageStateType;
   userInfo?: UserDataType;
   subdomainInfo?: SubDomainInfoDataType
+  globalDatas?: GlobalDatasType
 }

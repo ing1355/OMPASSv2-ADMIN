@@ -20,8 +20,9 @@ import { saveLocaleToLocalStorage } from 'Functions/GlobalFunctions';
 import Button from 'Components/CommonCustomComponents/Button';
 
 const GuidePage = () => {
-  const { lang } = useSelector((state: ReduxStateType) => ({
+  const { lang, subdomainInfo } = useSelector((state: ReduxStateType) => ({
     lang: state.lang,
+    subdomainInfo: state.subdomainInfo!
   }));
 
   const height = useWindowHeight();
@@ -118,7 +119,7 @@ const GuidePage = () => {
           className='copyRight-style'
           style={{ fontSize: "1.1vh" }}
         >
-          {CopyRightText}
+          {CopyRightText(subdomainInfo)}
         </div>
       </div>
     </div>

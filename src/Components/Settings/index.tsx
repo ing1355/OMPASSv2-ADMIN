@@ -12,10 +12,13 @@ import CustomSelect from "Components/CommonCustomComponents/CustomSelect"
 import Button from "Components/CommonCustomComponents/Button"
 import Input from "Components/CommonCustomComponents/Input"
 import ompassLogoIcon from '../../assets/ompassLogoIcon.png'
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { subdomainInfoChange } from "Redux/actions/subdomainInfoChange"
 
 const Settings = () => {
+    const { subdomainInfo } = useSelector((state: ReduxStateType) => ({
+        subdomainInfo: state.subdomainInfo
+    }));
     const [timeZoneValue, setTimeZoneValue] = useState('Asia/Seoul')
     const [welcomeText, setWelcomeText] = useState('')
     const [dataLoading, setDataLoading] = useState(false)
@@ -55,6 +58,7 @@ const Settings = () => {
                 }, () => {
                     message.success("설정 저장 성공!")
                     dispatch(subdomainInfoChange({
+                        ...subdomainInfo!,
                         logoImage: logoImg,
                         noticeMessage: welcomeText,
                         userSignupMethod: signupMethod
@@ -81,23 +85,20 @@ const Settings = () => {
                 }))} needSelect />
             </CustomInputRow>
             <CustomInputRow title="회원가입 방식">
-                <fieldset className="signup-field-container" id="signupMethod" onChange={e => {
-                    const target = e.target as HTMLInputElement
-                    setSignupMethod(target.value as UserSignUpMethodType)
-                }}>
-                    <label>
-                        <Input type="radio" name="signupMethod" value={UserSignupMethod.USER_SELF_ADMIN_PASS} checked={signupMethod === UserSignupMethod.USER_SELF_ADMIN_PASS} readOnly />
-                        사용자 직접 가입(관리자 승인 불필요)
-                    </label>
-                    <label>
-                        <Input type="radio" name="signupMethod" value={UserSignupMethod.USER_SELF_ADMIN_ACCEPT} checked={signupMethod === UserSignupMethod.USER_SELF_ADMIN_ACCEPT} readOnly />
-                        관리자 승인 가입
-                    </label>
-                    <label>
-                        <Input type="radio" name="signupMethod" value={UserSignupMethod.ONLY_BY_ADMIN} checked={signupMethod === UserSignupMethod.ONLY_BY_ADMIN} readOnly />
-                        관리자 직접 추가(사용자 액션 X)
-                    </label>
-                </fieldset>
+                <div className="signup-field-container">
+                <label>
+                    <Input type="radio" name="signupMethod" value={UserSignupMethod.USER_SELF_ADMIN_PASS} checked={signupMethod === UserSignupMethod.USER_SELF_ADMIN_PASS} readOnly />
+                    사용자 직접 가입(관리자 승인 불필요)
+                </label>
+                <label>
+                    <Input type="radio" name="signupMethod" value={UserSignupMethod.USER_SELF_ADMIN_ACCEPT} checked={signupMethod === UserSignupMethod.USER_SELF_ADMIN_ACCEPT} readOnly />
+                    관리자 승인 가입
+                </label>
+                <label>
+                    <Input type="radio" name="signupMethod" value={UserSignupMethod.ONLY_BY_ADMIN} checked={signupMethod === UserSignupMethod.ONLY_BY_ADMIN} readOnly />
+                    관리자 직접 추가(사용자 액션 X)
+                </label>
+                </div>
             </CustomInputRow>
             <CustomInputRow title="사용자 인증장치 삭제 허용">
                 <Switch checked={canDelete} onChange={check => {
@@ -110,8 +111,8 @@ const Settings = () => {
                 }} />
             </CustomInputRow>
             <CustomInputRow title="메인 이미지 설정" containerStyle={{
-                        alignItems: 'flex-start'
-                    }}>
+                alignItems: 'flex-start'
+            }}>
                 <CustomImageUpload src={logoImg} callback={(img) => {
                     setLogoImg(img)
                 }} />

@@ -22,11 +22,12 @@ import Users from 'Components/Users/Users';
 import AuthLog from 'Components/Log/AuthLog';
 import PortalLog from 'Components/Log/PortalLog';
 import Settings from 'Components/Settings';
-import { GetSubDomainInfoFunc } from 'Functions/ApiFunctions';
+import { GetGlobalConfigFunc, GetSubDomainInfoFunc } from 'Functions/ApiFunctions';
 import { subDomain, UserSignupMethod } from 'Constants/ConstantValues';
 import { subdomainInfoChange } from 'Redux/actions/subdomainInfoChange';
-import loginMainImage from './assets/loginMainImage.png'
 import SignUp from 'Components/SignUp/SignUp';
+import { globalDatasChange } from 'Redux/actions/globalDatasChange';
+import { userInfoChange } from 'Redux/actions/userChange';
 
 const convertLangToIntlVer = (lang: ReduxStateType['lang']) => {
   return lang === 'EN' ? 'en-us' : 'ko-kr'
@@ -34,10 +35,11 @@ const convertLangToIntlVer = (lang: ReduxStateType['lang']) => {
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
-  const { lang, userInfo, subdomainInfo } = useSelector((state: ReduxStateType) => ({
+  const { lang, userInfo, subdomainInfo, globalDatas } = useSelector((state: ReduxStateType) => ({
     lang: state.lang!,
     userInfo: state.userInfo,
-    subdomainInfo: state.subdomainInfo
+    subdomainInfo: state.subdomainInfo,
+    globalDatas: state.globalDatas
   }));
 
   const { userSignupMethod } = subdomainInfo || {}
@@ -45,67 +47,71 @@ const App: React.FC = () => {
   const getDomainInfo = () => {
     GetSubDomainInfoFunc(subDomain, (data) => {
       dispatch(subdomainInfoChange(data))
-    }).catch(() => {
-      dispatch(subdomainInfoChange({
-        noticeMessage: '',
-        logoImage: loginMainImage,
-        userSignupMethod: UserSignupMethod.ONLY_BY_ADMIN
-      }))
     })
   }
 
   useEffect(() => {
     getDomainInfo()
-  },[])
-  
+  }, [])
+
   useEffect(() => {
-    if(userInfo) {
+    if (userInfo) {
       window.addEventListener('storage', () => {
-          window.location.reload()
+        window.location.reload()
+      })
+      GetGlobalConfigFunc((data) => {
+        dispatch(globalDatasChange({ ...globalDatas, ...data, loading: false }))
+      }).catch(err => {
+        dispatch(userInfoChange(''))
       })
     }
-  },[userInfo])
-
+  }, [userInfo])
+  
   return <IntlProvider locale={convertLangToIntlVer(lang)} messages={Locale[lang]}>
     <AxiosController />
     {userInfo && <Header />}
     <div className={userInfo ? 'contents-container' : ""}>
-      <Routes>
-        <Route path='/ompass/*' element={<OMPASSVerify />} />
-        <Route path='/GuidePage' element={<GuidePage />} />
-        <Route path='/AutoLogout' element={<AutoLogout />} />
-        {
-          userInfo ? (
-            userInfo.role! !== 'USER' ? <>
-              <Route path='/Main' element={<Main />} />
-              <Route path='/AgentManagement/*' element={<Agent />} />
-              <Route path='/UserManagement/*' element={<Users />} />
-              <Route path='/PasscodeManagement' element={<PasscodeManagement />} />
-              <Route path='/PermissionSettings' element={<PermissionSettings />} />
-              <Route path='/Billing' element={<Billing />} />
-              <Route path='/Applications/*' element={<Application />} />
-              <Route path='/Policies/*' element={<Policies />} />
-              <Route path='/Groups/*' element={<Groups />} />
-              <Route path='/AuthLogs' element={<AuthLog />} />
-              <Route path='/PortalLogs' element={<PortalLog />} />
-              <Route path='/Settings' element={<Settings />} />
-              <Route path='/*' element={<Navigate to='/Main' replace={true} />} />
-            </>
-              : <>
-                <Route path='/Main' element={<Users />} />
+      {
+        globalDatas?.loading ? <div className={`loading-center`}>
+          데이터 불러오는 중...
+        </div> : <Routes>
+          <Route path='/ompass/*' element={<OMPASSVerify />} />
+          <Route path='/GuidePage' element={<GuidePage />} />
+          <Route path='/AutoLogout' element={<AutoLogout />} />
+          {
+            userInfo ? (
+              userInfo.role! !== 'USER' ? <>
+                <Route path='/Main' element={<Main />} />
+                <Route path='/AgentManagement/*' element={<Agent />} />
+                <Route path='/UserManagement/*' element={<Users />} />
+                <Route path='/PasscodeManagement' element={<PasscodeManagement />} />
+                <Route path='/PermissionSettings' element={<PermissionSettings />} />
+                <Route path='/Billing' element={<Billing />} />
+                <Route path='/Applications/*' element={<Application />} />
+                <Route path='/Policies/*' element={<Policies />} />
+                <Route path='/Groups/*' element={<Groups />} />
+                <Route path='/AuthLogs' element={<AuthLog />} />
+                <Route path='/PortalLogs' element={<PortalLog />} />
+                <Route path='/Settings' element={<Settings />} />
                 <Route path='/*' element={<Navigate to='/Main' replace={true} />} />
               </>
-          ) : userSignupMethod !== UserSignupMethod.ONLY_BY_ADMIN ?
-            <>
-              <Route path='/*' element={<Navigate to='/' replace={true} />} />
-              <Route path='/signup' element={<SignUp />} />
-              <Route path='/' element={<Login />} />
-            </> : <>
-              <Route path='/*' element={<Navigate to='/' replace={true} />} />
-              <Route path='/' element={<Login />} />
-            </>
-        }
-      </Routes>
+                : <>
+                  <Route path='/Main' element={<Users />} />
+                  <Route path='/*' element={<Navigate to='/Main' replace={true} />} />
+                </>
+            ) : userSignupMethod !== UserSignupMethod.ONLY_BY_ADMIN ?
+              <>
+                <Route path='/*' element={<Navigate to='/' replace={true} />} />
+                <Route path='/signup' element={<SignUp />} />
+                <Route path='/' element={<Login />} />
+              </> : <>
+                <Route path='/*' element={<Navigate to='/' replace={true} />} />
+                <Route path='/' element={<Login />} />
+              </>
+          }
+        </Routes>
+      }
+
     </div>
   </IntlProvider>;
 }

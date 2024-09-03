@@ -2,11 +2,14 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import './CustomSelect.css'
 import { FormattedMessage } from "react-intl"
 
+type CustomSelectItemType = {
+    key: any
+    label: React.ReactNode
+    disabled?: boolean
+}
+
 type CustomSelectProps = {
-    items: {
-        key: any
-        label: React.ReactNode
-    }[]
+    items: CustomSelectItemType[]
     value: any
     onChange: (val: string) => void
     needSelect?: boolean
@@ -18,7 +21,7 @@ const CustomSelect = ({ items, value, onChange, needSelect }: CustomSelectProps)
     const selectRef = useRef<HTMLDivElement>(null)
     const scrollRef = useRef<HTMLDivElement>(null)
     const activeRef = useRef(active)
-    const _items = needSelect ? items : [{
+    const _items: CustomSelectProps['items'] = needSelect ? items : [{
         key: '',
         label: <FormattedMessage id="NO_SELECT_VALUE" />
     },...items]
@@ -40,17 +43,21 @@ const CustomSelect = ({ items, value, onChange, needSelect }: CustomSelectProps)
 
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
         const index = itemsRef.current.findIndex(_ => _.key === activeRef.current)
+        let target: CustomSelectItemType | undefined = undefined
         if(event.key === 'ArrowDown') {
             if(index < (itemsRef.current.length - 1)) {
-                setActive(itemsRef.current[index + 1].key)
+                target = itemsRef.current[index + 1]
             }
         } else if(event.key === 'ArrowUp') {
             if(index !== 0) {
-                setActive(itemsRef.current[index - 1].key)
+                target = itemsRef.current[index - 1]
             }
         } else if(event.key === 'Enter') {
             onChange(activeRef.current)
             setShowSelect(false)
+        }
+        if(target && !target.disabled) {
+            setActive(target.key)
         }
     },[])
 
@@ -72,13 +79,13 @@ const CustomSelect = ({ items, value, onChange, needSelect }: CustomSelectProps)
     return <div className={`custom-select-container${showSelect ? ' opened' : ''}`} onClick={() => {
         setShowSelect(!showSelect)
     }} ref={selectRef}>
-        {_items.find(_ => _.key === value)?.label}
+        {value ? _items.find(_ => _.key === value)?.label : '선택 안함'}
         {
             showSelect && <div className="custom-select-option-container" ref={scrollRef}>
                 {
                     _items.map((_, ind) => {
-                        return <div key={ind} className={`custom-select-option-item${_.key === active ? ' activate' : ''}${_.key === value ? ' selected' : ''}`} onClick={() => {
-                            onChange(_.key)
+                        return <div key={ind} className={`custom-select-option-item${_.key === active ? ' activate' : ''}${_.key === value ? ' selected' : ''}${_.disabled ? ' disabled' : ''}`} onClick={() => {
+                            if(!_.disabled) onChange(_.key)
                         }} onMouseMove={() => {
                             setActive(_.key)
                         }}>

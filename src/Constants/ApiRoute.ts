@@ -50,6 +50,9 @@ export const DeleteUserDataApi = (userId: UserDataType['userId']) => `/v2/users/
 export const GetUserDetailDataApi = (userId: UserDataType['userId']) => `/v2/users/${userId}/rp/details`
 export const DeleteAuthenticatorData = (authenticatorId: AuthenticatorDataType['id']) => `/v2/authenticators/${authenticatorId}`
 
+// 인증장치 정책 업데이트
+export const UpdateUserAuthenticatorPolicyApi = (authId: string, policyId: string) => `/v2/rp/authentication-data/${authId}/policy/${policyId}`
+
 // 로그 관리
 export const GetAuthLogDataListApi = '/v2/logs/auth'
 export const GetPortalLogDataListApi = '/v2/logs/admin-behavior'
@@ -65,3 +68,6 @@ export const UpdatePortalSettingsDataApi = '/v2/setting'
 export const SignUpRequestApi = '/v2/users/signup'
 export const SignUpVerificationCodeSendApi = '/v2/users/verification-code'
 export const SignUpVerificationCodeVerifyApi = '/v2/users/verification-code/verify'
+
+// config
+export const GetGlobalConfigApi = '/v2/global-config'

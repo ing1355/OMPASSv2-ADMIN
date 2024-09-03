@@ -1,8 +1,13 @@
+import { getStorageAuth } from 'Functions/GlobalFunctions';
 import types from '../types';
 
-const globalDatas: ReduxStateType['subdomainInfo']|null = null
+const globalDatas: ReduxStateType['globalDatas'] = {
+  isUserAllowedToRemoveAuthenticator: false,
+  googleApiKey: '',
+  loading: getStorageAuth() ? true : false
+}
 
-const globalDatasReducer = (state = globalDatas, action: DefaultReduxActionType<ReduxStateType['subdomainInfo']>) => {
+const globalDatasReducer = (state = globalDatas, action: DefaultReduxActionType<ReduxStateType['globalDatas']>) => {
   switch (action.type) {
     case types.globalDatasChange:
       return action.payload;

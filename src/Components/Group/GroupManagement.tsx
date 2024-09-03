@@ -68,7 +68,7 @@ const GroupManagement = () => {
                     key: 'policy',
                     title: '정책',
                     render: (data, ind, row) => {
-                        return data ? (data.name === 'default policy' ? <FormattedMessage id={data.name} /> : data.name) : "정책 없음"
+                        return data ? (data.name === 'default policy' ? <FormattedMessage id={data.name} /> : data.name) : <FormattedMessage id="NO_POLICY"/>
                     }
                 },
                 // {

@@ -241,3 +241,11 @@
     justify-content: center;
     align-items: center;
 }
+
+.notice-row-container {
+    display: flex;
+    flex-direction: 'row';
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+}

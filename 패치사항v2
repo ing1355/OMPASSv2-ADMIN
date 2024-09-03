@@ -1,3 +1,32 @@
+* v2.0.0(24)
+  * 테이블 진입 시 route 2개씩 쌓이던 이슈 수정
+  * 사용자 정보 last login 추가
+  * custom select에 disabled 추가, 어플리케이션 포탈 타입 추가
+  * 사용자 정보 패스코드 만료 시각 KST 적용
+  * globalConfig 추가
+  * googleApiKey globalConfig로 변경
+  * 사용자 등록 해제 globalConfig 적용 및 자기보다 높은 사용자는 삭제 불가능하게 수정(관리자, 최고 관리자)
+  * 로그인 화면 반응형 적용(Android 기준)
+  
+* v2.0.0(23)
+  * 테이블 search 시 해시 초기화(해시때문에 페이지네이션 꼬임)
+  * 그룹 - 정책 컬럼 그룹 없음 -> 선택 안함으로 수정
+  * 정책 키값 변경
+    [변경] location -> locationConfig 
+    [변경] ipRestriction -> networkConfig
+    [변경] ips -> networks
+    [변경] accessTimeRestriction -> accessTimeConfig
+    [변경] accessTimeRestrictions -> accessTimes
+  * userDetail component 이미지들 변경
+  * noticeToAdmin targetPolices 추가
+
+* v2.0.0(22)
+  * 반경 색상 변경
+  * 역할 -> 등급
+  * 어플리케이션 추가 시 유형 처음에 선택 안함으로 수정
+  * 유효성 검사 출력 안되던 이슈 수정
+  * 인증 정책 디폴트 값 전부 허용으로 수정
+
 * v2.0.0(21)
   * 그룹 선택도 id 값으로만 찾게 수정(find 제거)
   * 정책 페이지 시간 options 제거 및 키값 수정

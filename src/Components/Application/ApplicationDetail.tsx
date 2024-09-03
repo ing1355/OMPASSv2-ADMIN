@@ -35,17 +35,17 @@ const ApplicationDetail = () => {
     const [inputDescription, setInputDescription] = useState('')
     const [inputApiServerHost, setInputApiServerHost] = useState('')
     const [dataLoading, setDataLoading] = useState(false)
-    const [hasWindowsLogin, setHasWindowsLogin] = useState(false)
     const [sureDelete, setSureDelete] = useState(false)
-    const [applicationType, setApplicationType] = useState<ApplicationDataType['type']>('DEFAULT')
+    const [applicationType, setApplicationType] = useState<ApplicationDataType['type'] | ''>('')
     const navigate = useNavigate()
     const { uuid } = useParams()
     const isAdd = !uuid
     const needDomains: ApplicationDataType['type'][] = ["DEFAULT", "ADMIN", "REDMINE"]
     const isRedmine = applicationType === 'REDMINE'
-    const typeItems = applicationTypes(hasWindowsLogin).map(_ => ({
+    const typeItems = applicationTypes(false).map(_ => ({
         key: _,
-        label: getApplicationTypeLabel(_)
+        label: getApplicationTypeLabel(_),
+        disabled: _ === 'ADMIN' || _ === 'WINDOWS_LOGIN'
     }))
 
     const handleFileSelect = (img: string) => {
@@ -71,7 +71,7 @@ const ApplicationDetail = () => {
             })
         } else {
             await GetApplicationListFunc({ type: 'WINDOWS_LOGIN' }, ({ results }) => {
-                if (results.length > 0) setHasWindowsLogin(true)
+                // if (results.length > 0) setHasWindowsLogin(true)
             })
         }
     }
@@ -102,25 +102,22 @@ const ApplicationDetail = () => {
             <CustomInputRow title="유형">
                 {isAdd ? <CustomSelect value={applicationType} onChange={value => {
                     setApplicationType(value as ApplicationDataType['type'])
-                }} items={typeItems} needSelect /> : getApplicationTypeLabel(applicationType)}
+                }} items={typeItems} needSelect /> : getApplicationTypeLabel(applicationType as ApplicationDataType['type'])}
             </CustomInputRow>
             {
                 applicationType && <>
                     <CustomInputRow title="이름" required>
                         <Input className="st1" value={inputName} valueChange={value => {
-                            console.log('name : ', value)
                             setInputName(value)
                         }} placeholder="ex) 테스트 어플리케이션" readOnly={applicationType === 'ADMIN'}/>
                     </CustomInputRow>
                     <CustomInputRow title="설명">
                         <Input className="st1" value={inputDescription} valueChange={value => {
-                            console.log('description : ',value)
                             setInputDescription(value)
                         }} />
                     </CustomInputRow>
                     <CustomInputRow title="공지사항">
                         <Input className="st1" value={helpMsg} valueChange={value => {
-                            console.log('msg : ',value)
                             setHelpMsg(value)
                         }} />
                     </CustomInputRow>

@@ -18,6 +18,7 @@ import ipAddressIcon from '../../assets/ipAddressIcon.png';
 import macAddressIcon from '../../assets/macAddressIcon.png';
 import pcNameIcon from '../../assets/pcNameIcon.png';
 import agentVersionIcon from '../../assets/agentVersionIcon.png';
+import registeredAtIcon from '../../assets/registeredAtIcon.png';
 import chrome_img from '../../assets/chrome_img.png';
 import chrome_mobile_img from '../../assets/chrome_mobile_img.png';
 import firefox_img from '../../assets/firefox_img.png';
@@ -54,7 +55,7 @@ const UserDetailInfoContentItem = ({ imgSrc, title, content }: {
 const AuthenticatorInfoContentsOMPASSType = ({ data }: {
     data: OMPASSAuthenticatorDataType
 }) => {
-    const { mobile, id, lastAuthenticatedAt } = data as OMPASSAuthenticatorDataType
+    const { mobile, id, lastAuthenticatedAt, createdAt} = data as OMPASSAuthenticatorDataType
     const { os, deviceId, model, ompassAppVersion } = mobile
     return <>
         <div className="user-detail-info-device-info-content">
@@ -62,7 +63,8 @@ const AuthenticatorInfoContentsOMPASSType = ({ data }: {
             <UserDetailInfoContentItem imgSrc={ompassLogoIcon} title="Type" content={`OMPASS v${ompassAppVersion}`} />
             <UserDetailInfoContentItem imgSrc={uuid_img} title="Device UUID" content={deviceId} />
             <UserDetailInfoContentItem imgSrc={deviceModelIcon} title="Model" content={model} />
-            <UserDetailInfoContentItem imgSrc={lastLoginTimeIcon} title="Last Login" content={lastAuthenticatedAt} />
+            <UserDetailInfoContentItem imgSrc={registeredAtIcon} title="Registered At" content={createdAt} />
+            <UserDetailInfoContentItem imgSrc={lastLoginTimeIcon} title="Last Auth" content={lastAuthenticatedAt} />
         </div>
     </>
 }
@@ -290,5 +292,14 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
                 </div>
             </div>
         }
+        <div className="user-detail-info-device-info-content-item">
+                <img src={lastLoginTimeIcon} />
+                <div className="user-detail-info-device-info-content-title">
+                    Last Login
+                </div>
+                <div>
+                    {clientData.updatedAt}
+                </div>
+            </div>
     </>
 }

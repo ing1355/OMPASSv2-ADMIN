@@ -22,6 +22,7 @@ import { userInfoClear } from 'Redux/actions/userChange'
 import { UserDetailInfoAuthenticatorContent, UserDetailInfoAuthenticatorDeleteButton, UserDetailInfoDeviceInfoContent, UserInfoInputrow, UserInfoRow, ViewPasscode } from './UserDetailComponents'
 import { autoHypenPhoneFun, convertUTCStringToKSTString, createRandom1Digit } from 'Functions/GlobalFunctions'
 import Input from 'Components/CommonCustomComponents/Input'
+import PolicySelect from 'Components/CommonCustomComponents/PolicySelect'
 
 const passcodeInputHeight = '30px'
 
@@ -51,9 +52,10 @@ const initAddValues: UserDataAddLocalValuesType = {
 }
 
 const UserDetail = ({ }) => {
-    const { userInfo } = useSelector((state: ReduxStateType) => ({
+    const { userInfo, globalDatas } = useSelector((state: ReduxStateType) => ({
         lang: state.lang,
         userInfo: state.userInfo!,
+        globalDatas: state.globalDatas
     }));
     const [passcodeHover, setPasscodeHover] = useState("")
     const [duplicateIdCheck, setDuplicateIdCheck] = useState(false)
@@ -80,6 +82,13 @@ const UserDetail = ({ }) => {
     const targetValue = isAdd ? addValues : modifyValues
     const isAdmin = userInfo.role !== 'USER'
     const deleteText = isSelf ? '탈퇴' : '삭제'
+    const canDeleteAuthenticator = useMemo(() => {
+        if(isSelf && userInfo.role === 'USER') return globalDatas?.isUserAllowedToRemoveAuthenticator
+        else if (userInfo.role === 'ADMIN' && userData?.role === 'ROOT') {
+            return false
+        }
+        return true
+    },[globalDatas, userInfo, userData])
     const authInfoRef = useRef<{
         [key: string]: HTMLDivElement
     }>({})
@@ -115,7 +124,7 @@ const UserDetail = ({ }) => {
                 await GetUserDetailDataFunc(uuid, (data) => {
                     setUserDetailDatas(data)
                     const hasPortal = data.find(_ => _.application.type === 'ADMIN')
-                    if(hasPortal) {
+                    if (hasPortal) {
                         setPortalSigned(true)
                         if (data.length === 1) {
                             setUserDetailOpened(data.map((_, ind) => _.authenticationInfo[0].id))
@@ -375,6 +384,7 @@ const UserDetail = ({ }) => {
                             }
                         }} />
                     </UserInfoInputrow> : <UserInfoRow title="USER_ROLE" value={(userData && userData.role) ? formatMessage({id: userData.role + '_ROLE_VALUE'}) : "선택 안함"} />} */}
+
                     {
                         isModify && <UserInfoInputrow title="PASSWORD">
                             <Input className='st1' value={modifyValues.password} onChange={e => {
@@ -403,7 +413,7 @@ const UserDetail = ({ }) => {
                     ref={_ref => authInfoRef.current[_.authInfo.id] = _ref as HTMLDivElement}
                 >
                     <div className="user-detail-header" onClick={() => {
-                        if(portalSigned) setUserDetailOpened(userDetailOpened.includes(_.authInfo.id) ? userDetailOpened.filter(uOpened => uOpened !== _.authInfo.id) : userDetailOpened.concat(_.authInfo.id))
+                        if (portalSigned) setUserDetailOpened(userDetailOpened.includes(_.authInfo.id) ? userDetailOpened.filter(uOpened => uOpened !== _.authInfo.id) : userDetailOpened.concat(_.authInfo.id))
                     }}>
                         <div className="user-detail-header-application-info">
                             <img src={_.application.logoImage} />
@@ -419,6 +429,21 @@ const UserDetail = ({ }) => {
                     </div>
 
                     <div className="user-detail-info-container">
+                        {/* <div className="user-detail-info-device-info-title">
+                            <div className='user-policy-select-container'>
+                                <h3>
+                                    현재 정책
+                                </h3>
+                                <div>
+                                    <PolicySelect selectedPolicy={_.authInfo.policy} setSelectedPolicy={() => {
+
+                                    }} />
+                                    <Button className='st3' icon={editIcon}>
+                                        수정
+                                    </Button>
+                                </div>
+                            </div>
+                        </div> */}
                         <div className="user-detail-info-device-info-title">
                             <h3>
                                 접속 장치
@@ -431,9 +456,9 @@ const UserDetail = ({ }) => {
                             <h3>
                                 OMPASS
                             </h3>
-                            <UserDetailInfoAuthenticatorDeleteButton authenticatorId={_.authInfo.authenticators.find(auth => auth.type === 'OMPASS')?.id} callback={(id) => {
+                            {canDeleteAuthenticator && <UserDetailInfoAuthenticatorDeleteButton authenticatorId={_.authInfo.authenticators.find(auth => auth.type === 'OMPASS')?.id} callback={(id) => {
                                 setAuthenticatorDelete(id)
-                            }} />
+                            }} />}
                         </div>
                         <UserDetailInfoAuthenticatorContent data={_.authInfo.authenticators.find(auth => auth.type === 'OMPASS')} />
 
@@ -443,9 +468,9 @@ const UserDetail = ({ }) => {
                                     <h3>
                                         WEBAUTHN
                                     </h3>
-                                    <UserDetailInfoAuthenticatorDeleteButton authenticatorId={_.authInfo.authenticators.find(auth => auth.type === 'WEBAUTHN')?.id} callback={(id) => {
+                                    {canDeleteAuthenticator && <UserDetailInfoAuthenticatorDeleteButton authenticatorId={_.authInfo.authenticators.find(auth => auth.type === 'WEBAUTHN')?.id} callback={(id) => {
                                         setAuthenticatorDelete(id)
-                                    }} />
+                                    }} />}
                                 </div>
                                 <UserDetailInfoAuthenticatorContent data={_.authInfo.authenticators.find(auth => auth.type === 'WEBAUTHN')} />
                             </>
@@ -484,7 +509,7 @@ const UserDetail = ({ }) => {
                                         title: <FormattedMessage id="VALID_TIME" />,
                                         render: (data) => {
                                             if (data === "-1") return "∞"
-                                            return data
+                                            return convertUTCStringToKSTString(data)
                                         }
                                     },
                                     {
