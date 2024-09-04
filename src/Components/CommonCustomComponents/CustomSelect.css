@@ -26,6 +26,25 @@
       z-index: 98;
     }
   }
+
+  .custom-select-container.scroll > .custom-select-option-container {
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--main-purple-color);
+      border-radius: 15px;
+      outline: none;
+      border: 1px solid var(--main-purple-color);
+      background-clip: padding-box;
+    }
+    &::-webkit-scrollbar-track {
+      border-radius: 15px;
+      background-color: var(--sub-purple-color);
+      outline: none;
+      background-clip: padding-box;
+    }
+  }
   
   .custom-select-option-container {
     position: absolute;

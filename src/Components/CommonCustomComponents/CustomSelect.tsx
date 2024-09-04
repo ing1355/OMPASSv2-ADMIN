@@ -76,7 +76,7 @@ const CustomSelect = ({ items, value, onChange, needSelect }: CustomSelectProps)
         };
     }, [showSelect]);
 
-    return <div className={`custom-select-container${showSelect ? ' opened' : ''}`} onClick={() => {
+    return <div className={`custom-select-container${showSelect ? ' opened' : ''}${_items.length > 5 ? ' scroll' : ''}`} onClick={() => {
         setShowSelect(!showSelect)
     }} ref={selectRef}>
         {value ? _items.find(_ => _.key === value)?.label : '선택 안함'}

@@ -10,7 +10,7 @@ const subdomainInfo: ReduxStateType['subdomainInfo']|null = {
   },
   noticeMessage: '',
   logoImage: loginMainImage,
-  userSignupMethod: UserSignupMethod.ONLY_BY_ADMIN
+  userSignupMethod: UserSignupMethod.EMAIL_BY_ADMIN
 }
 
 const subdomainInfoReducer = (state = subdomainInfo, action: DefaultReduxActionType<ReduxStateType['subdomainInfo']>) => {

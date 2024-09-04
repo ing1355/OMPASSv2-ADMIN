@@ -130,14 +130,20 @@
 .policy-contents-container {
     border: 1px solid var(--sub-grey-color5);
     margin: 12px 0;
-    padding: 8px 6px;
+    padding: 10px 12px;
     border-radius: 8px;
     flex: 0 0 80%;
     box-sizing: border-box;
+    &.column {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
 }
 
 .policy-ip-address-input {
     height: 32px;
+    
 }
 
 .time-policy-container {
@@ -210,7 +216,7 @@
         flex: 0 0 240px;
     }
     &:not(:last-child) {
-        margin-bottom: 30px;
+        margin-bottom: 16px;
     }
 }
 
@@ -244,8 +250,13 @@
 
 .notice-row-container {
     display: flex;
-    flex-direction: 'row';
+    flex-direction: row;
     align-items: center;
     gap: 16px;
-    margin-bottom: 12px;
+}
+
+.notice-row-container.themselves {
+    &>div:first-child {
+        width: 120px;
+    }
 }

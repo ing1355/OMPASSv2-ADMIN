@@ -99,7 +99,7 @@ const App: React.FC = () => {
                   <Route path='/Main' element={<Users />} />
                   <Route path='/*' element={<Navigate to='/Main' replace={true} />} />
                 </>
-            ) : userSignupMethod !== UserSignupMethod.ONLY_BY_ADMIN ?
+            ) : userSignupMethod !== UserSignupMethod.EMAIL_BY_ADMIN ?
               <>
                 <Route path='/*' element={<Navigate to='/' replace={true} />} />
                 <Route path='/signup' element={<SignUp />} />

@@ -418,7 +418,7 @@ const UserDetail = ({ }) => {
                         <div className="user-detail-header-application-info">
                             <img src={_.application.logoImage} />
                             {/* <h3>#{index + 1} {_.application.name}</h3> */}
-                            <h3>{_.application.name}</h3>
+                            <h4>{_.application.name}</h4>
                             <div className="user-detail-alias-container">
                                 <img className="user-alias-image" src={userIcon} /><h4>{_.username} {_.application.type === 'WINDOWS_LOGIN' ? `(${_.authInfo.loginDeviceInfo.name})` : ''}</h4>
                             </div>
@@ -444,18 +444,27 @@ const UserDetail = ({ }) => {
                                 </div>
                             </div>
                         </div> */}
-                        <div className="user-detail-info-device-info-title">
-                            <h3>
+                        <div className="user-detail-info-device-info-title" style={{
+                            margin: '24px 0'
+                        }}>
+                            <div className='user-detail-info-divider'>
                                 접속 장치
-                            </h3>
+                            </div>
+                            <div/>
                         </div>
                         <div className="user-detail-info-device-info-content">
                             <UserDetailInfoDeviceInfoContent data={_} />
                         </div>
                         <div className="user-detail-info-device-info-title">
-                            <h3>
+                            <div className='user-detail-info-divider'>
+                                인증 장치
+                            </div>
+                            <div/>
+                        </div>
+                        <div className="user-detail-info-device-info-title">
+                            <h4>
                                 OMPASS
-                            </h3>
+                            </h4>
                             {canDeleteAuthenticator && <UserDetailInfoAuthenticatorDeleteButton authenticatorId={_.authInfo.authenticators.find(auth => auth.type === 'OMPASS')?.id} callback={(id) => {
                                 setAuthenticatorDelete(id)
                             }} />}
@@ -465,9 +474,9 @@ const UserDetail = ({ }) => {
                         {
                             (_.application.type === 'ADMIN' || _.application.type === 'DEFAULT' || _.application.type === 'REDMINE') && <>
                                 <div className="user-detail-info-device-info-title">
-                                    <h3>
+                                    <h4>
                                         WEBAUTHN
-                                    </h3>
+                                    </h4>
                                     {canDeleteAuthenticator && <UserDetailInfoAuthenticatorDeleteButton authenticatorId={_.authInfo.authenticators.find(auth => auth.type === 'WEBAUTHN')?.id} callback={(id) => {
                                         setAuthenticatorDelete(id)
                                     }} />}
@@ -478,7 +487,7 @@ const UserDetail = ({ }) => {
 
                         <div className="user-detail-content-passcode-container">
                             <div>
-                                <h3>PASSCODE</h3>
+                                <h4>PASSCODE</h4>
                                 {userInfo.role !== "USER" && !_.authInfo.authenticators.find(__ => __.type === 'PASSCODE') && <div className="passcode-add" onClick={() => {
                                     setAddPasscode(_.authInfo.id)
                                 }}>

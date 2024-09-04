@@ -22,6 +22,7 @@ import CustomSelect from "Components/CommonCustomComponents/CustomSelect";
 import { Circle } from './GoogleCircle'
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
+import { cidrRegex, ipAddressRegex } from "Components/CommonCustomComponents/CommonRegex";
 
 const timepickerFormat = 'HH:mm'
 
@@ -33,6 +34,7 @@ export const PolicyBrowsersList: BrowserPolicyType[] = [
     "Safari",
     "Mobile Safari",
     "Whale Browser",
+    "Whale Browser Mobile",
     "Samsung Browser",
     "All other browsers",
 ];
@@ -42,13 +44,13 @@ const BrowserController = ({ type, checked, onChange }: {
     checked: boolean
     onChange: React.InputHTMLAttributes<HTMLInputElement>['onChange']
 }) => {
-    return <Input type="checkbox" label={type} checked={checked} onChange={onChange} />
+    return <Input type="checkbox" label={<FormattedMessage id={type + "_LABEL"} />} checked={checked} onChange={onChange} />
 }
 
 const TimePolicyDayOfWeeksList: AccessTimeRestrictionValueType['selectedDayOfWeeks'] = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
 
 const ipAddressRestriction: React.FormEventHandler<HTMLInputElement> = (e) => {
-    e.currentTarget.value = e.currentTarget.value.replace(/[^0-9.x\/]/g, '')
+    e.currentTarget.value = e.currentTarget.value.replace(/[^0-9.\/]/g, '')
 }
 
 const defaultTimePolicyData = (): AccessTimeRestrictionValueType => ({
@@ -70,7 +72,7 @@ const defaultTimePolicyData = (): AccessTimeRestrictionValueType => ({
 const AuthPolicyDetail = () => {
     const { globalDatas } = useSelector((state: ReduxStateType) => ({
         globalDatas: state.globalDatas
-      }));
+    }));
     const { uuid } = useParams()
     const isAdd = !uuid
     const [authenticatorPolicies, setAuthenticatorPolicies] = useState<PolicyDataType['enableAuthenticators']>(['OMPASS', 'OTP', 'PASSCODE', 'WEBAUTHN'])
@@ -83,7 +85,11 @@ const AuthPolicyDetail = () => {
     const [browserChecked, setBrowserChecked] = useState<(BrowserPolicyType)[]>(isAdd ? PolicyBrowsersList : [])
     const [ompassControl, setOmpassControl] = useState<PolicyDataType['accessControl']>('ACTIVE')
     const [ipAddressChecked, setIpAddressChecked] = useState(false)
-    const [currentIpAddress, setCurrentIpAddress] = useState<string>("")
+    const [currentIpAddress, setCurrentIpAddress] = useState('')
+    const [currentIpNote, setCurrentIpNote] = useState('')
+    const [currentNoticeThemselves, setCurrentNoticeThemseleves] = useState<RestrictionNoticeThemselvesDataType>({
+        methods: [],
+    })
     const [ipAddressValues, setIpAddressValues] = useState<PolicyDataType['networkConfig']['networks']>([])
     const [accessTimeChecked, setAccessTimeChecked] = useState(false)
     const [accessTimeValues, setAccessTimeValues] = useState<PolicyDataType['accessTimeConfig']['accessTimes']>([])
@@ -130,11 +136,14 @@ const AuthPolicyDetail = () => {
                 setAuthenticatorPolicies(data.enableAuthenticators)
                 setAccessTimeChecked(data.accessTimeConfig.isEnabled)
                 setAccessTimeValues(data.accessTimeConfig.accessTimes)
-                setCurrentNoticeAdmin(({...data.noticeToAdmin, targetPolicies: data.noticeToAdmin.targetPolicies || []}))
+                setCurrentNoticeAdmin(({ ...data.noticeToAdmin, targetPolicies: data.noticeToAdmin.targetPolicies || [] }))
+                setCurrentNoticeThemseleves(data.noticeToThemselves || {
+                    methods: ['PUSH']
+                })
             })
         }
     }, [])
-    
+
     const dataInit = () => {
         setBrowserChecked(PolicyBrowsersList)
         setAuthenticatorPolicies(['OMPASS', 'OTP', 'PASSCODE', 'WEBAUTHN'])
@@ -150,6 +159,9 @@ const AuthPolicyDetail = () => {
         setCurrentIpAddress('')
         setCurrentLocationName('')
         setCurrentRadius(1)
+        setCurrentNoticeThemseleves({
+            methods: []
+        })
         navigator.geolocation.getCurrentPosition(function (position) {
             setCurrentLocation({
                 lat: position.coords.latitude,
@@ -178,7 +190,8 @@ const AuthPolicyDetail = () => {
                 isEnabled: accessTimeChecked,
                 accessTimes: accessTimeValues
             },
-            noticeToAdmin: currentNoticeAdmin
+            noticeToAdmin: currentNoticeAdmin,
+            noticeToThemselves: currentNoticeThemselves
         }, () => {
             message.success('추가 성공!')
             navigate('/Policies')
@@ -209,7 +222,7 @@ const AuthPolicyDetail = () => {
                     if (!policyName) {
                         return message.error("정책명은 필수 입력 항목입니다.")
                     }
-                    // if(browserChecked.length === 0) return message.error("브라우저는 최소 1개 이상 허용해야 합니다.")
+                    if (browserChecked.length === 0) return message.error("브라우저는 최소 1개 이상 허용해야 합니다.")
                     if (uuid) {
                         UpdatePoliciesListFunc(uuid, {
                             policyType: detailData?.policyType || "CUSTOM",
@@ -230,7 +243,8 @@ const AuthPolicyDetail = () => {
                                 isEnabled: accessTimeChecked,
                                 accessTimes: accessTimeChecked ? accessTimeValues : []
                             },
-                            noticeToAdmin: currentNoticeAdmin
+                            noticeToAdmin: currentNoticeAdmin,
+                            noticeToThemselves: currentNoticeThemselves
                         }, () => {
                             message.success('수정 성공!')
                             // navigate('/Policies')
@@ -276,7 +290,7 @@ const AuthPolicyDetail = () => {
                     <AuthenticatorController type={"WEBAUTHN"} />
                 </div>
             </CustomInputRow>
-            <CustomInputRow title={<FormattedMessage id={`${policyNoticeRestrictionTypes[0]}_LABEL`}/>} required noCenter>
+            <CustomInputRow title={<FormattedMessage id={`${policyNoticeRestrictionTypes[0]}_LABEL`} />} required noCenter>
                 <div className="policy-contents-container">
                     <div className="authenticator-ompass-auth">
                         <div className="ompass-control-row">
@@ -300,13 +314,13 @@ const AuthPolicyDetail = () => {
                     </div>
                 </div>
             </CustomInputRow>
-            <CustomInputRow title={<FormattedMessage id={`${policyNoticeRestrictionTypes[1]}_LABEL`}/>} noCenter contentsStyle={{
+            <CustomInputRow title={<FormattedMessage id={`${policyNoticeRestrictionTypes[1]}_LABEL`} />} noCenter contentsStyle={{
                 flexDirection: 'column',
                 alignItems: 'flex-start'
             }} style={{
                 position: 'relative',
                 top: '8px'
-            }}>
+            }} required>
                 <div style={{
                     width: '80%'
                 }}>
@@ -379,7 +393,7 @@ const AuthPolicyDetail = () => {
                     setLocationChecked(check)
                 }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
             </CustomInputRow> */}
-            <CustomInputRow title={<FormattedMessage id={`${policyNoticeRestrictionTypes[2]}_LABEL`}/>} noCenter>
+            <CustomInputRow title={<FormattedMessage id={`${policyNoticeRestrictionTypes[2]}_LABEL`} />} noCenter>
                 <div style={{
                     flex: '0 0 80%'
                 }}>
@@ -474,7 +488,7 @@ const AuthPolicyDetail = () => {
                     </div>
                 </div>
             </CustomInputRow>
-            <CustomInputRow title={<FormattedMessage id={`${policyNoticeRestrictionTypes[3]}_LABEL`}/>} noCenter>
+            <CustomInputRow title={<FormattedMessage id={`${policyNoticeRestrictionTypes[3]}_LABEL`} />} noCenter>
                 <div>
                     <Switch style={{
                         marginBottom: !ipAddressChecked ? 0 : '8px',
@@ -483,29 +497,40 @@ const AuthPolicyDetail = () => {
                     }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
                     <div className="policy-input-container" aria-hidden={!ipAddressChecked}>
                         <div className="ip-address-policy-input-header">
-                            IP 주소<div aria-valuetext={formatMessage({ id: 'IP_ADDRESS_CIDR_INFO' })}>
+                            IP 주소 목록<div aria-valuetext={formatMessage({ id: 'IP_ADDRESS_CIDR_INFO' })}>
                                 <img src={ipInfoIcon} />
                             </div>
                         </div>
                         <div className="location-policy-container">
                             <div className="location-item-container">
-                                <Input className="st1 policy-ip-address-input" placeholder="IP 주소를 입력해주세요." value={currentIpAddress} valueChange={value => {
+                                <Input className="st1 policy-ip-address-input" placeholder="IP 주소 또는 범위" value={currentIpAddress} valueChange={value => {
                                     setCurrentIpAddress(value)
-                                }} onInput={ipAddressRestriction} maxLength={16} />
+                                }} maxLength={16} rules={[
+                                    {
+                                        regExp: (value) => !(RegExp(ipAddressRegex).test(value) || RegExp(cidrRegex).test(value)),
+                                        msg: 'IP 주소 형식(aaa.bbb.ccc.ddd) 혹은 CIDR 형식(aaa.bbb.0.0/24)을 입력해야 합니다.'
+                                    }
+                                ]} onInput={ipAddressRestriction}/>
+                                <Input className="st1 policy-ip-address-input" placeholder="메모" value={currentIpNote} valueChange={value => {
+                                    setCurrentIpNote(value)
+                                }} maxLength={30} />
                                 <Button icon={addIconWhite} className="st3" onClick={() => {
-                                    if (ipAddressValues.includes(currentIpAddress)) return message.error("동일한 ip가 이미 설정되어 있습니다.")
+                                    if (ipAddressValues.find(_ => _.ip === currentIpAddress)) return message.error("동일한 ip가 이미 설정되어 있습니다.")
                                     if (!currentIpAddress) return message.error("IP 주소를 입력해주세요.")
-                                    setIpAddressValues([...ipAddressValues, currentIpAddress])
+                                    setIpAddressValues([...ipAddressValues, {
+                                        ip: currentIpAddress,
+                                        note: currentIpNote
+                                    }])
                                     setCurrentIpAddress("")
+                                    setCurrentIpNote("")
                                 }} style={{
                                     width: '16px'
                                 }} />
                             </div>
                             {
-                                ipAddressValues.map((ip, ipInd) => <div key={ipInd} className="location-item-container">
-                                    <Input className="st1 policy-ip-address-input" placeholder="IP 주소를 입력해주세요." value={ip} onChange={e => {
-                                        setIpAddressValues(ipAddressValues.map((_ip, _ipInd) => _ipInd === ipInd ? e.target.value : _ip))
-                                    }} onInput={ipAddressRestriction} maxLength={15} readOnly />
+                                ipAddressValues.map(({ ip, note }, ipInd) => <div key={ipInd} className="location-item-container">
+                                    <Input className="st1 policy-ip-address-input" placeholder="IP 주소 또는 범위" value={ip} onInput={ipAddressRestriction} maxLength={15} readOnly />
+                                    <Input className="st1 policy-ip-address-input" placeholder="메모" value={note} readOnly />
                                     <Button className="st2" onClick={() => {
                                         setIpAddressValues(ipAddressValues.filter((_, _ind) => _ind !== ipInd))
                                     }} icon={deleteIcon} hoverIcon={deleteIconHover} style={{
@@ -518,7 +543,7 @@ const AuthPolicyDetail = () => {
                     </div>
                 </div>
             </CustomInputRow>
-            <CustomInputRow title={<FormattedMessage id={`${policyNoticeRestrictionTypes[4]}_LABEL`}/>} noCenter>
+            <CustomInputRow title={<FormattedMessage id={`${policyNoticeRestrictionTypes[4]}_LABEL`} />} noCenter>
                 <div style={{
                     flex: '0 0 80%'
                 }}>
@@ -763,8 +788,9 @@ const AuthPolicyDetail = () => {
                         })
                     }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
                     <div className="policy-input-container" aria-hidden={!currentNoticeAdmin.isEnabled}>
-                        <div className="policy-contents-container">
+                        <div className="policy-contents-container column">
                             <div className="notice-row-container">
+                                알림 방식 :
                                 <Input type="checkbox" label="푸시 알림" checked={currentNoticeAdmin.methods.includes('PUSH')} onChange={e => {
                                     if (e.currentTarget.checked) {
                                         setCurrentNoticeAdmin({
@@ -806,22 +832,22 @@ const AuthPolicyDetail = () => {
                                 }} />
                             </div>
                             <div className="notice-row-container">
-                            <Input type="checkbox" checked={policyNoticeRestrictionTypes.length === currentNoticeAdmin.targetPolicies.length} onChange={e => {
-                                        if(e.currentTarget.checked) {
-                                            setCurrentNoticeAdmin({
-                                                ...currentNoticeAdmin,
-                                                targetPolicies: policyNoticeRestrictionTypes
-                                            })
-                                        } else {
-                                            setCurrentNoticeAdmin({
-                                                ...currentNoticeAdmin,
-                                                targetPolicies: []
-                                            })
-                                        }
-                                    }} label={"전체 선택"} />
+                                <Input type="checkbox" checked={policyNoticeRestrictionTypes.length === currentNoticeAdmin.targetPolicies.length} onChange={e => {
+                                    if (e.currentTarget.checked) {
+                                        setCurrentNoticeAdmin({
+                                            ...currentNoticeAdmin,
+                                            targetPolicies: policyNoticeRestrictionTypes
+                                        })
+                                    } else {
+                                        setCurrentNoticeAdmin({
+                                            ...currentNoticeAdmin,
+                                            targetPolicies: []
+                                        })
+                                    }
+                                }} label={"전체 선택"} />
                                 {
-                                    policyNoticeRestrictionTypes.map((_, ind) => <Input type="checkbox" checked={currentNoticeAdmin.targetPolicies.includes(_)} onChange={e => {
-                                        if(e.currentTarget.checked) {
+                                    policyNoticeRestrictionTypes.filter(_ => _ !== 'ACCESS_CONTROL').map((_, ind) => <Input type="checkbox" checked={currentNoticeAdmin.targetPolicies.includes(_)} onChange={e => {
+                                        if (e.currentTarget.checked) {
                                             setCurrentNoticeAdmin({
                                                 ...currentNoticeAdmin,
                                                 targetPolicies: currentNoticeAdmin.targetPolicies.concat(_)
@@ -832,8 +858,38 @@ const AuthPolicyDetail = () => {
                                                 targetPolicies: currentNoticeAdmin.targetPolicies.filter(__ => __ !== _)
                                             })
                                         }
-                                    }} key={ind} label={<FormattedMessage id={`${_}_LABEL`}/>} />)
+                                    }} key={ind} label={<FormattedMessage id={`${_}_LABEL`} />} />)
                                 }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </CustomInputRow>
+            <CustomInputRow title="위반 시 당사자 알림" noCenter>
+                <div>
+                    <div className="policy-input-container">
+                        <div className="policy-contents-container column">
+                            <div className="notice-row-container themselves">
+                                <div>
+                                    푸시 알림(필수)
+                                </div>
+                                <Switch checked={currentNoticeThemselves.methods.includes('PUSH')} disabled checkedChildren={'ON'} unCheckedChildren={'OFF'} />
+                            </div>
+                            <div className="notice-row-container themselves">
+                                <div>
+                                    이메일(선택)
+                                </div>
+                                <Switch checked={currentNoticeThemselves.methods.includes('EMAIL')} checkedChildren={'ON'} unCheckedChildren={'OFF'} onChange={check => {
+                                    if(check) {
+                                        setCurrentNoticeThemseleves({
+                                            methods: currentNoticeThemselves.methods.concat('EMAIL')
+                                        })
+                                    } else {
+                                        setCurrentNoticeThemseleves({
+                                            methods: currentNoticeThemselves.methods.filter(_ => _ !== 'EMAIL')
+                                        })
+                                    }
+                                }}/>
                             </div>
                         </div>
                     </div>

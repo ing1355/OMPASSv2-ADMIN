@@ -93,7 +93,7 @@ const ApplicationDetail = () => {
                     {applicationType !== 'ADMIN' && <Button icon={deleteIcon} hoverIcon={deleteIconHover} className="st2" onClick={() => {
                         setSureDelete(true)
                     }}>
-                        어플리케이션 삭제
+                        <FormattedMessage id="APPLICATION_DELETE"/>
                     </Button>}
                 </>}
             </div>

@@ -25,6 +25,7 @@ import firefox_img from '../../assets/firefox_img.png';
 import microsoft_edge_img from '../../assets/microsoft_edge_img.png';
 import safari_img from '../../assets/safari_img.png';
 import noDataIcon from '../../assets/noDataIcon.png';
+import lastAuthIcon from '../../assets/lastAuthIcon.png';
 import sshIcon from '../../assets/sshIcon.png';
 import safari_mobile_img from '../../assets/safari_mobile_img.png';
 import clientIcon from '../../assets/clientIcon.png';
@@ -64,7 +65,7 @@ const AuthenticatorInfoContentsOMPASSType = ({ data }: {
             <UserDetailInfoContentItem imgSrc={uuid_img} title="Device UUID" content={deviceId} />
             <UserDetailInfoContentItem imgSrc={deviceModelIcon} title="Model" content={model} />
             <UserDetailInfoContentItem imgSrc={registeredAtIcon} title="Registered At" content={createdAt} />
-            <UserDetailInfoContentItem imgSrc={lastLoginTimeIcon} title="Last Auth" content={lastAuthenticatedAt} />
+            <UserDetailInfoContentItem imgSrc={lastAuthIcon} title="Last Auth" content={lastAuthenticatedAt} />
         </div>
     </>
 }
@@ -186,7 +187,7 @@ export const UserDetailInfoAuthenticatorDeleteButton = ({ authenticatorId, callb
     return authenticatorId ? <Button className="st2 user-detail-info-device-info-delete-btn" onClick={async () => {
         callback(authenticatorId)
     }}>
-        등록 해제
+        <FormattedMessage id="CLEAR_DEVICE"/>
     </Button> : <></>
 }
 

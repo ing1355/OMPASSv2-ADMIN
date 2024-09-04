@@ -105,7 +105,7 @@ const Login = () => {
             <div className='login-action-row'>
               <Input id='saveId' type='checkbox' className='mr10' defaultChecked={cookies.rememberUserId} label={<FormattedMessage id='SAVE_ID' />}/>
             </div>
-            {userSignupMethod !== UserSignupMethod.ONLY_BY_ADMIN && <div className='login-action-row signup' onClick={() => {
+            {userSignupMethod !== UserSignupMethod.EMAIL_BY_ADMIN && <div className='login-action-row signup' onClick={() => {
               navigate("/signup")
             }}>
               회원가입

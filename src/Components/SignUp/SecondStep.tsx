@@ -2,7 +2,7 @@ import { DuplicateUserNameCheckFunc, SignUpRequestFunc, SignUpVerificationCodeSe
 import { emailRegex, idRegex, nameRegex, passwordRegex } from "Components/CommonCustomComponents/CommonRegex";
 import { autoHypenPhoneFun } from "Functions/GlobalFunctions";
 import Button from "Components/CommonCustomComponents/Button";
-import { PropsWithChildren, useRef, useState } from "react";
+import { PropsWithChildren, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { FormattedMessage, useIntl } from "react-intl";
 import { message } from "antd";
@@ -55,6 +55,11 @@ const SecondStep = () => {
     const navigate = useNavigate();
     const { formatMessage } = useIntl();
 
+    useEffect(() => {
+        setVerifyCode('')
+        setEmailVerify(false)
+    },[emailCodeSend])
+
     return <div className="signup-content second">
         <form
             onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
@@ -91,7 +96,7 @@ const SecondStep = () => {
                     codeRef.current?.focus()
                     return message.error("인증 코드 확인은 필수입니다.")
                 }
-                if (inputUsername && inputName1 && inputName2 && inputEmail && inputPhone) {
+                if (inputUsername && inputName1 && inputName2 && inputEmail) {
                     SignUpRequestFunc({
                         name: {
                             firstName: inputName1,
@@ -227,10 +232,10 @@ const SecondStep = () => {
             </InputRow>
             <InputRow label="EMAIL" required>
                 <Input
-                    className='st1'
+                    className='st1 sign-up-readonly'
                     required
                     ref={emailRef}
-                    disabled={idExist}
+                    // readonly={idExist}
                     value={inputEmail}
                     customType="email"
                     noGap
@@ -246,8 +251,7 @@ const SecondStep = () => {
                         disabled={inputEmail.length === 0 || emailVerify || isEmailAlert}
                         onClick={() => {
                             SignUpVerificationCodeSendFunc({
-                                email: inputEmail,
-                                username: inputUsername
+                                email: inputEmail
                             }, () => {
                                 setEmailCodeSend(true)
                                 message.success("인증 코드 발송 성공!")
@@ -259,12 +263,13 @@ const SecondStep = () => {
             </InputRow>
             <InputRow label="EMAIL_CODE" required>
                 <Input
-                    className='st1'
+                    className='st1 sign-up-readonly'
                     required
                     ref={codeRef}
-                    disabled={!emailCodeSend}
+                    // disabled={!emailCodeSend}
                     value={verifyCode}
                     readOnly={emailVerify}
+                    onlyNumber
                     noGap
                     maxLength={6}
                     valueChange={value => {

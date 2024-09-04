@@ -121,6 +121,8 @@ export const GetUserDataListFunc = ({
     userId = "",
     username = "",
     name = "",
+    email = "",
+    phone = "",
     role = undefined,
     hasGroup = undefined,
     sortBy = "CREATED_AT",
@@ -134,8 +136,10 @@ export const GetUserDataListFunc = ({
         userId,
         role,
         username,
+        phone,
         name,
         sortBy,
+        email,
         sortDirection,
         hasGroup
     } as PasscodeHistoriesParamsType)
@@ -333,15 +337,12 @@ export const SignUpRequestFunc = (params: UserDataAddLocalValuesType, callback: 
 }
 
 export const SignUpVerificationCodeSendFunc = ({
-    email,
-    username
+    email
 }: {
-    email: string,
-    username: string
+    email: string
 }, callback: () => void) => {
     return CustomAxiosPost(SignUpVerificationCodeSendApi, callback, {
-        email,
-        username
+        email
     })
 }
 

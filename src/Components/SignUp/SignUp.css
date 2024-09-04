@@ -72,6 +72,8 @@
   font-size: 1.12rem;
   font-weight: 900;
   margin-bottom: 12px;
+  background-color: var(--sub-grey-color3);
+  color: var(--main-white-color);
 }
 
 .signup-password-icon {
@@ -122,4 +124,8 @@
   border-radius: 100%;
   font-size: .65rem;
   margin-top: 2px;
+}
+
+.sign-up-readonly:read-only {
+  background-color: var(--main-grey-color2);
 }

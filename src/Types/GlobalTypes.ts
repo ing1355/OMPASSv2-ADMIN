@@ -200,9 +200,13 @@ type LocationPolicyType = {
 type IpAddressPolicyType = {
     isEnabled: boolean
     // ips: PolicyRestrictionItemType[]
-    networks: string[]
+    networks: networkPolicyType[]
 }
-type BrowserPolicyType = "FireFox" | "Safari" | "Chrome Mobile" | "Chrome" | "Microsoft Edge" | "Mobile Safari" | "Samsung Browser" | "Whale Browser" | "All other browsers"
+type networkPolicyType = {
+    ip: string
+    note: string
+}
+type BrowserPolicyType = "FireFox" | "Safari" | "Chrome Mobile" | "Chrome" | "Microsoft Edge" | "Mobile Safari" | "Samsung Browser" | "Whale Browser" | "Whale Browser Mobile" | "All other browsers"
 type AuthenticatorPolicyType = "WEBAUTHN" | "PASSCODE" | "OMPASS" | "OTP"
 type DayOfWeeksType = "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY"
 type AccessTimeRestrictionTimeRangeTypeType = "SPECIFIC_TIME" | "ALL_TIME"
@@ -235,6 +239,10 @@ type RestrictionNoticeDataType = {
     targetPolicies: NoticeRestrictionTypes[]
 }
 
+type RestrictionNoticeThemselvesDataType = {
+    methods: RestrictionNoticeMethodType[]
+}
+
 type DefaultPolicyDataType = {
     name: string
     accessControl?: 'ACTIVE' | 'INACTIVE' | 'DENY'
@@ -246,6 +254,7 @@ type DefaultPolicyDataType = {
     description: string
     accessTimeConfig: AccessTimeRestrictionType
     noticeToAdmin: RestrictionNoticeDataType
+    noticeToThemselves: RestrictionNoticeThemselvesDataType
 }
 
 type RestrictionNoticeMethodType = 'EMAIL' | 'PUSH'
@@ -294,7 +303,9 @@ type UserListParamsType = GeneralParamsType & {
     [key:string]: any
     hasGroup?: boolean
     userId?: UserDataType['userId']
+    email?: UserDataType['email']
     username?: UserDataType['username']
+    phone?: UserDataType['phone']
     role?: UserDataType['role']
     name?: string
     sortBy?: "CREATED_AT" | "USERNAME" | "NAME"

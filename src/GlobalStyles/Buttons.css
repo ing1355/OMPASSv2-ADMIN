@@ -56,8 +56,8 @@
         transition: all .2s ease-in-out;
     } */
     &:disabled {
-        background-color: var(--main-grey-color2) !important;
-        color: var(--sub-grey-color3) !important;
+        background-color: var(--sub-purple-color6) !important;
+        color: var(--main-white-color) !important;
         cursor: not-allowed;
     }
 }

@@ -14,10 +14,12 @@ import Input from "Components/CommonCustomComponents/Input"
 import ompassLogoIcon from '../../assets/ompassLogoIcon.png'
 import { useDispatch, useSelector } from "react-redux"
 import { subdomainInfoChange } from "Redux/actions/subdomainInfoChange"
+import { globalDatasChange } from "Redux/actions/globalDatasChange"
 
 const Settings = () => {
-    const { subdomainInfo } = useSelector((state: ReduxStateType) => ({
-        subdomainInfo: state.subdomainInfo
+    const { subdomainInfo, globalDatas } = useSelector((state: ReduxStateType) => ({
+        subdomainInfo: state.subdomainInfo,
+        globalDatas: state.globalDatas!
     }));
     const [timeZoneValue, setTimeZoneValue] = useState('Asia/Seoul')
     const [welcomeText, setWelcomeText] = useState('')
@@ -57,6 +59,10 @@ const Settings = () => {
                     isUserAllowedToRemoveAuthenticator: canDelete
                 }, () => {
                     message.success("설정 저장 성공!")
+                    dispatch(globalDatasChange({
+                        ...globalDatas,
+                        isUserAllowedToRemoveAuthenticator: canDelete
+                    }))
                     dispatch(subdomainInfoChange({
                         ...subdomainInfo!,
                         logoImage: logoImg,
@@ -86,18 +92,18 @@ const Settings = () => {
             </CustomInputRow>
             <CustomInputRow title="회원가입 방식">
                 <div className="signup-field-container">
-                <label>
-                    <Input type="radio" name="signupMethod" value={UserSignupMethod.USER_SELF_ADMIN_PASS} checked={signupMethod === UserSignupMethod.USER_SELF_ADMIN_PASS} readOnly />
-                    사용자 직접 가입(관리자 승인 불필요)
-                </label>
-                <label>
-                    <Input type="radio" name="signupMethod" value={UserSignupMethod.USER_SELF_ADMIN_ACCEPT} checked={signupMethod === UserSignupMethod.USER_SELF_ADMIN_ACCEPT} readOnly />
-                    관리자 승인 가입
-                </label>
-                <label>
-                    <Input type="radio" name="signupMethod" value={UserSignupMethod.ONLY_BY_ADMIN} checked={signupMethod === UserSignupMethod.ONLY_BY_ADMIN} readOnly />
-                    관리자 직접 추가(사용자 액션 X)
-                </label>
+                    <Input type="radio" name="signupMethod" value={UserSignupMethod.USER_SELF_ADMIN_PASS} checked={signupMethod === UserSignupMethod.USER_SELF_ADMIN_PASS} onChange={e => {
+                        if(e.currentTarget.checked) setSignupMethod(e.currentTarget.value as UserSignUpMethodType)
+                    }} label="사용자 직접 가입"/>
+                    <Input type="radio" name="signupMethod" value={UserSignupMethod.USER_SELF_ADMIN_ACCEPT} checked={signupMethod === UserSignupMethod.USER_SELF_ADMIN_ACCEPT} onChange={e => {
+                        if(e.currentTarget.checked) setSignupMethod(e.currentTarget.value as UserSignUpMethodType)
+                    }} label="관리자 승인 가입"/>
+                    <Input type="radio" name="signupMethod" value={UserSignupMethod.EMAIL_BY_ADMIN} checked={signupMethod === UserSignupMethod.EMAIL_BY_ADMIN} onChange={e => {
+                        if(e.currentTarget.checked) setSignupMethod(e.currentTarget.value as UserSignUpMethodType)
+                    }} label="사용자가 직접 패스워드 설정"/>
+                    <Input type="radio" name="signupMethod" value={UserSignupMethod.INPUT_PASSWORD_BY_ADMIN} checked={signupMethod === UserSignupMethod.INPUT_PASSWORD_BY_ADMIN} onChange={e => {
+                        if(e.currentTarget.checked) setSignupMethod(e.currentTarget.value as UserSignUpMethodType)
+                    }} label="관리자가 직접 패스워드 설정"/>
                 </div>
             </CustomInputRow>
             <CustomInputRow title="사용자 인증장치 삭제 허용">

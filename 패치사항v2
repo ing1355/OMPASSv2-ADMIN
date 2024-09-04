@@ -1,3 +1,18 @@
+* v2.0.0(25)
+  * ONLY_BY_ADMIN -> EMAIL_BY_ADMIN 키값 변경
+  * Input onlyNumber onBlur와 onInput 나눔
+  * windows 시 삭제버튼 다시 있게
+  * 사용자 접속장치, 인증장치 구분자 추가
+  * 회원가입 아이디 수정 시 이메일 사라지던 이슈 수정
+  * last auth 아이콘 변경
+  * ip 유효성 검사 추가
+  * 체크박스 check 시 위치 이동하던 이슈 수정
+  * select box 5개 이상일 시 scrollbar 추가
+  * 사용자 목록 이메일, 전화번호 검색 안되던 이슈 수정
+  * 웨일 모바일 추가
+  * 위반 시 본인 알림 추가
+  * 위반 시 관리자 알림 - 인증 제어 삭제
+
 * v2.0.0(24)
   * 테이블 진입 시 route 2개씩 쌓이던 이슈 수정
   * 사용자 정보 last login 추가

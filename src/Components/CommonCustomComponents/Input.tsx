@@ -122,6 +122,15 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                             }}
                             onBlur={e => {
                                 if (onlyNumber) {
+                                    e.currentTarget.value = parseInt(e.currentTarget.value).toString()
+                                }
+                            }}
+                            onChange={e => {
+                                if (valueChange) {
+                                    valueChange(e.target.value, isAlertRef.current)
+                                }
+                            }} onInput={(e) => {
+                                if (onlyNumber) {
                                     if (!e.currentTarget.value) e.currentTarget.value = "0"
                                     else e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')
                                     if (!zeroOk) {
@@ -133,12 +142,6 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                                         e.currentTarget.value = '1'
                                     }
                                 }
-                            }}
-                            onChange={e => {
-                                if (valueChange) {
-                                    valueChange(e.target.value, isAlertRef.current)
-                                }
-                            }} onInput={(e) => {
                                 if (noGap && (e.currentTarget.value.startsWith(' ') || e.currentTarget.value.endsWith(' ')) && valueChange) e.currentTarget.value = e.currentTarget.value.trim()
                                 if (validateCheck(e.currentTarget.value)) {
                                     setIsAlert(true)

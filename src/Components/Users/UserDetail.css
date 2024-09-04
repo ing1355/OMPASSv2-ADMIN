@@ -5,10 +5,12 @@
     width: 1100px;
     max-height: 2000px;
     transition: all .5s ease-out;
-    box-shadow: 0 0 10px rgba(0,0,0,.15);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .15);
+
     &:not(.first) {
         overflow: hidden;
     }
+
     &:not(:first-child) {
         &.closed {
             max-height: 42px;
@@ -25,9 +27,10 @@
     align-items: center;
     gap: 12px;
     height: 60px;
+
     & h4 {
         margin: 0;
-    }   
+    }
 }
 
 .user-detail-header-btns {
@@ -50,23 +53,26 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+
     &:not(:last-child) {
-        border-bottom: 1px solid rgba(123,123,123,.5);
+        border-bottom: 1px solid rgba(123, 123, 123, .5);
         padding-bottom: 48px;
         margin-bottom: 48px;
     }
 }
 
 .user-detail-content-passcode-container {
-    & > div:first-child {
+    &>div:first-child {
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
     }
-    & > table {
+
+    &>table {
         width: 100%;
     }
+
     & h3 {
         margin-bottom: 0;
     }
@@ -80,25 +86,55 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    & > img {
+
+    &>img {
         max-height: 28px;
         border-radius: 6px;
     }
-    & > h3 {
+
+    &>h3 {
         margin: 0;
     }
 }
 
 .user-detail-info-device-info-title {
-    height: 60px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     position: relative;
-    & > h3,h5 {
-        margin: 8px 0;
+    height: 30px;
+    & > h4 {
+        margin: 0;
     }
+}
+
+.user-detail-info-divider {
+    position: relative;
+    height: 100%;
+    box-sizing: border-box;
+    z-index: 10;
+    font-weight: bold;
+    font-size: 1.2em;
+    &::after {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        left: 0;
+        border: 1.5px solid var(--main-purple-color);
+        border-radius: 2.5px;
+        border-radius: 10px;
+        content: '';
+        z-index: 999;
+    }
+}
+
+.user-detail-info-divider+div {
+    position: absolute;
+    bottom: 0;
+    z-index: 9;
+    width: 100%;
+    border-bottom: 2.5px solid var(--sub-grey-color2);
 }
 
 .user-policy-select-container {
@@ -108,11 +144,11 @@
     gap: 36px;
 }
 
-.user-policy-select-container > h3 {
+.user-policy-select-container>h3 {
     margin: 0;
 }
 
-.user-policy-select-container > div {
+.user-policy-select-container>div {
     display: flex;
     flex-direction: row;
     gap: 8px;
@@ -135,7 +171,8 @@
     height: 32px;
     width: 32px;
     cursor: pointer;
-    & > img {
+
+    &>img {
         width: 100%;
         height: 100%;
     }
@@ -146,17 +183,20 @@
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    & > div:first-child {
+
+    &>div:first-child {
         flex: 1;
     }
-    & > div:nth-child(2) {
+
+    &>div:nth-child(2) {
         cursor: pointer;
         height: 24px;
         width: 24px;
-        & > img {
+
+        &>img {
             width: 100%;
             height: 100%;
-            
+
         }
     }
 }
@@ -169,13 +209,15 @@
     height: 32px;
     font-size: 1.5rem;
     font-weight: bold;
-    & > div {
+
+    &>div {
         cursor: pointer;
         padding: 6px;
         display: flex;
         justify-content: center;
         align-items: center;
-        & > img {
+
+        &>img {
             width: 100%;
             height: 100%;
         }
@@ -198,10 +240,12 @@
     display: flex;
     flex-direction: row;
     gap: 8px;
-    & > div:first-child {
+
+    &>div:first-child {
         flex: 0 0 110px;
     }
-    & > div:not(:first-child) {
+
+    &>div:not(:first-child) {
         flex: 1 auto;
     }
 }
@@ -215,7 +259,8 @@
     width: 140px;
     justify-self: center;
     gap: 8px;
-    & > button {
+
+    &>button {
         flex: 1;
     }
 }
@@ -257,6 +302,7 @@
 .no-portal-signed {
     background-color: var(--sub-grey-color2);
     cursor: not-allowed;
+
     & .user-detail-header {
         cursor: not-allowed;
     }
