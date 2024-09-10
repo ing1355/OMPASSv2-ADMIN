@@ -359,6 +359,7 @@ type UserDataModifyValuesType = {
 type UserDataModifyLocalValuesType = UserDataModifyValuesType & {
     passwordConfirm?: string
     password: string
+    hasPassword?: boolean
 }
 
 type UserDataAddLocalValuesType = UserDataModifyLocalValuesType & {

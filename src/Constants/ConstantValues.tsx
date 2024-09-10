@@ -134,9 +134,7 @@ export const UserSignupMethod: {
     [key in UserSignUpMethodType]: UserSignUpMethodType
 } = {
     USER_SELF_ADMIN_PASS: "USER_SELF_ADMIN_PASS",
-    USER_SELF_ADMIN_ACCEPT: "USER_SELF_ADMIN_ACCEPT",
-    EMAIL_BY_ADMIN: "EMAIL_BY_ADMIN",
-    INPUT_PASSWORD_BY_ADMIN: "INPUT_PASSWORD_BY_ADMIN"
+    USER_SELF_ADMIN_ACCEPT: "USER_SELF_ADMIN_ACCEPT"
 }
 
 export const devUrl = process.env['REACT_APP_DEV_URL'] as string

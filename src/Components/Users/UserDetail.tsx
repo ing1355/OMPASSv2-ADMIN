@@ -36,7 +36,8 @@ const initModifyValues: UserDataModifyLocalValuesType = {
     password: '',
     passwordConfirm: '',
     email: '',
-    phone: ''
+    phone: '',
+    hasPassword: true
 }
 
 const initAddValues: UserDataAddLocalValuesType = {
@@ -50,7 +51,8 @@ const initAddValues: UserDataAddLocalValuesType = {
     groupId: undefined,
     username: '',
     email: '',
-    phone: ''
+    phone: '',
+    hasPassword: true
 }
 
 const UserDetail = ({ }) => {
@@ -170,7 +172,8 @@ const UserDetail = ({ }) => {
                 password: '',
                 passwordConfirm: '',
                 email: userData.email,
-                phone: userData.phone
+                phone: userData.phone,
+                hasPassword: true
             })
         } else {
             setModifyValues(initModifyValues)
@@ -249,7 +252,7 @@ const UserDetail = ({ }) => {
                                 ...addValues,
                                 username: value
                             })
-                        }} customType='username' placeholder='아이디 입력'/>
+                        }} customType='username' placeholder='아이디 입력' />
                         <Button className='st6' disabled={duplicateIdCheck || addValues.username.length === 0 || usernameAlert} onClick={() => {
                             DuplicateUserNameCheckFunc(addValues.username, ({ isExist }) => {
                                 setDuplicateIdCheck(!isExist)
@@ -265,31 +268,40 @@ const UserDetail = ({ }) => {
                             중복 확인
                         </Button>
                     </UserInfoInputrow> : <UserInfoRow title="ID" value={userData ? userData.username : ""} />}
-                    {
-                        isAdd && subdomainInfo.userSignupMethod === 'INPUT_PASSWORD_BY_ADMIN' ? <>
-                            <UserInfoInputrow title='PASSWORD' required>
-                                <Input className='st1' value={targetValue.password} placeholder="비밀번호 입력" valueChange={value => {
-                                    setAddValues({
-                                        ...addValues,
-                                        password: value
-                                    })
-                                }} type="password" customType="password"/>
-                            </UserInfoInputrow>
-                            <UserInfoInputrow title='PASSWORD_CONFIRM' required>
-                                <Input className='st1' value={targetValue.passwordConfirm} placeholder="비밀번호 확인" valueChange={value => {
-                                    setAddValues({
-                                        ...addValues,
-                                        passwordConfirm: value
-                                    })
-                                }} type="password" rules={[
-                                    {
-                                        regExp: (val) => val != addValues.password,
-                                        msg: <FormattedMessage id="PASSWORD_CONFIRM_CHECK"/>
-                                    }
-                                ]}/>
-                            </UserInfoInputrow>
-                        </> : <></>
-                    }
+                    {(isAdd || isModify) && (isSelf || (userData?.role === 'ADMIN' && userInfo.role === 'ROOT') || (userData?.role === 'USER' && isAdmin)) && <><UserInfoInputrow title='PASSWORD' required>
+                        <Input className='st1' value={targetValue.password} placeholder="비밀번호 입력" disabled={!targetValue.hasPassword} valueChange={value => {
+                            setAddValues({
+                                ...addValues,
+                                password: value
+                            })
+                        }} type="password" customType="password" />
+                        <Input containerClassName='has-password-confirm' className='st1' checked={!targetValue.hasPassword} type="checkbox" onChange={e => {
+                            if(isAdd) {
+                                setAddValues({
+                                    ...addValues,
+                                    hasPassword: !e.currentTarget.checked
+                                })
+                            } else {
+                                setModifyValues({
+                                    ...modifyValues,
+                                    hasPassword: !e.currentTarget.checked
+                                })
+                            }
+                        }} label="비밀번호 랜덤 생성" />
+                    </UserInfoInputrow>
+                    <UserInfoInputrow title='PASSWORD_CONFIRM' required>
+                        <Input className='st1' value={targetValue.passwordConfirm} disabled={!targetValue.hasPassword} placeholder="비밀번호 확인" valueChange={value => {
+                            setAddValues({
+                                ...addValues,
+                                passwordConfirm: value
+                            })
+                        }} type="password" rules={[
+                            {
+                                regExp: (val) => val != addValues.password,
+                                msg: <FormattedMessage id="PASSWORD_CONFIRM_CHECK" />
+                            }
+                        ]} />
+                    </UserInfoInputrow></>}
                     {(isModify || isAdd) ? <UserInfoInputrow title="NAME" required>
                         <Input className='st1' value={targetValue.name.firstName} placeholder="성" onChange={e => {
                             if (isAdd) {
@@ -346,7 +358,7 @@ const UserDetail = ({ }) => {
                                     email: e.target.value
                                 })
                             }
-                        }} maxLength={48} placeholder='이메일 입력'/>
+                        }} maxLength={48} placeholder='이메일 입력' />
                     </UserInfoInputrow> : <UserInfoRow title="EMAIL" value={userData?.email || "이메일 없음"} />}
 
                     {(isModify || isAdd) ? <UserInfoInputrow title="PHONE_NUMBER">
@@ -413,7 +425,7 @@ const UserDetail = ({ }) => {
                         }} />
                     </UserInfoInputrow> : <UserInfoRow title="USER_ROLE" value={(userData && userData.role) ? formatMessage({id: userData.role + '_ROLE_VALUE'}) : "선택 안함"} />} */}
 
-                    {
+                    {/* {
                         isModify && <UserInfoInputrow title="PASSWORD">
                             <Input className='st1' value={modifyValues.password} onChange={e => {
                                 setModifyValues({
@@ -432,7 +444,7 @@ const UserDetail = ({ }) => {
                                 })
                             }} type='password' maxLength={16} />
                         </UserInfoInputrow>
-                    }
+                    } */}
                 </div>
             </div>
             {authInfoDatas.map((_, index) => <Fragment key={index}>

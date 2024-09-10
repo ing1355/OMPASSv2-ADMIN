@@ -151,12 +151,13 @@ type settingMgmtType = {
   modifyUrl: boolean,
 }
 
-type UserSignUpMethodType = "USER_SELF_ADMIN_PASS" | "USER_SELF_ADMIN_ACCEPT" | "EMAIL_BY_ADMIN" | "INPUT_PASSWORD_BY_ADMIN"
+type UserSignUpMethodType = "USER_SELF_ADMIN_PASS" | "USER_SELF_ADMIN_ACCEPT"
 
 type SubDomainInfoDataType = {
   logoImage: PortalSettingsDataType['logoImage']
   noticeMessage: PortalSettingsDataType['noticeMessage']
   userSignupMethod: PortalSettingsDataType['userSignupMethod']
+  canSignUp: PortalSettingsDataType['selfSignupEnabled']
   backendVersion: {
     fidoApp: string
     interfaceApp: string
@@ -171,6 +172,7 @@ type PortalSettingsDataType = {
   noticeMessage: string
   timeZone: string
   isUserAllowedToRemoveAuthenticator: boolean
+  selfSignupEnabled: boolean
 }
 
 type GlobalDatasType = {

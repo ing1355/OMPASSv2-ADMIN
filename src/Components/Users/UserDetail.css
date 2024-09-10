@@ -307,3 +307,7 @@
         cursor: not-allowed;
     }
 }
+
+.has-password-confirm {
+    margin-left: 8px;
+}
