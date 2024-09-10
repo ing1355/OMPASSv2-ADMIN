@@ -125,7 +125,7 @@ const AuthPolicyDetail = () => {
         if (uuid) {
             GetPolicyDetailDataFunc(uuid).then(data => {
                 setPolicyName(data.name)
-                setInputDescription(data.description)
+                setInputDescription(data.description ?? "")
                 setOmpassControl(data.accessControl)
                 setBrowserChecked(data.enableBrowsers)
                 setLocationChecked(data.locationConfig.isEnabled)

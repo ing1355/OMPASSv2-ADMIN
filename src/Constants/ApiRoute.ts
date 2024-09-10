@@ -1,6 +1,7 @@
 // 로그인
 export const PostLoginApi = '/v2/login';
 export const PostTokenVerifyApi = '/v2/login/token-verification';
+export const UpdatePasswordApi = '/v2/users/password'
 
 // 사용자
 export const DuplicateUserNameCheckApi = (username: string) => `/v2/users/username/${username}/existence`;

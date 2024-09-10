@@ -67,7 +67,6 @@ label:has(input[type="checkbox"]) {
     display: flex;
     flex-direction: column;
     position: relative;
-    max-height: 36px;
 }
 
 .custom-label-wrapper {
@@ -81,7 +80,7 @@ label:has(input[type="checkbox"]) {
 .custom-label-wrapper > div {
     position: relative;
     width: 100%;
-    height: 36px;
+    height: 100%;
     flex: 1;
 }
 
@@ -120,7 +119,7 @@ input {
     }
 
     &:-webkit-autofill {
-        -webkit-box-shadow: 0 0 0px 1000px var(--main-purple-color4) inset;
+        -webkit-box-shadow: 0 0 0px 1000px var(--sub-purple-color4) inset;
         border: 1.4px solid var(--main-purple-color);
         /* transition: background-color 5000s ease-in-out 0s; */
     }

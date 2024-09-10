@@ -28,9 +28,6 @@ const AuthLog = () => {
         GetAuthLogDataListFunc(_params, ({ results, totalCount }) => {
             setTableData(results.map(_ => ({
                 ..._,
-                portalUsername: _.portalUser.username,
-                rpUsername: _.rpUser.username,
-                applicationName: _.application.name,
                 authenticationTime: convertUTCStringToKSTString(_.authenticationTime)
             })))
             setTotalCount(totalCount)
@@ -50,13 +47,13 @@ const AuthLog = () => {
                 totalCount={totalCount}
                 pagination
                 searchOptions={[{
+                    key: 'applicationName',
+                    type: 'string'
+                }, {
                     key: 'portalUsername',
                     type: 'string'
                 }, {
                     key: 'rpUsername',
-                    type: 'string'
-                }, {
-                    key: 'applicationName',
                     type: 'string'
                 }, {
                     key: 'processType',
@@ -73,15 +70,18 @@ const AuthLog = () => {
                     },
                     {
                         key: 'applicationName',
-                        title: '어플리케이션명'
+                        title: '어플리케이션명',
+                        render: (_, _ind, row) => row.ompassData.application.name
                     },
                     {
                         key: 'portalUsername',
-                        title: '포탈 아이디'
+                        title: '포탈 아이디',
+                        render: (_, _ind, row) => row.portalUser.username
                     },
                     {
                         key: 'rpUsername',
-                        title: '사용자 아이디'
+                        title: '사용자 아이디',
+                        render: (_, _ind, row) => row.ompassData.rpUser.username
                     },
                     {
                         key: 'processType',

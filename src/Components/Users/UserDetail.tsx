@@ -44,6 +44,8 @@ const initAddValues: UserDataAddLocalValuesType = {
         firstName: '',
         lastName: ''
     },
+    password: '',
+    passwordConfirm: '',
     role: 'USER',
     groupId: undefined,
     username: '',
@@ -52,10 +54,11 @@ const initAddValues: UserDataAddLocalValuesType = {
 }
 
 const UserDetail = ({ }) => {
-    const { userInfo, globalDatas } = useSelector((state: ReduxStateType) => ({
+    const { userInfo, globalDatas, subdomainInfo } = useSelector((state: ReduxStateType) => ({
         lang: state.lang,
         userInfo: state.userInfo!,
-        globalDatas: state.globalDatas
+        globalDatas: state.globalDatas,
+        subdomainInfo: state.subdomainInfo!
     }));
     const [passcodeHover, setPasscodeHover] = useState("")
     const [duplicateIdCheck, setDuplicateIdCheck] = useState(false)
@@ -83,12 +86,12 @@ const UserDetail = ({ }) => {
     const isAdmin = userInfo.role !== 'USER'
     const deleteText = isSelf ? '탈퇴' : '삭제'
     const canDeleteAuthenticator = useMemo(() => {
-        if(isSelf && userInfo.role === 'USER') return globalDatas?.isUserAllowedToRemoveAuthenticator
+        if (isSelf && userInfo.role === 'USER') return globalDatas?.isUserAllowedToRemoveAuthenticator
         else if (userInfo.role === 'ADMIN' && userData?.role === 'ROOT') {
             return false
         }
         return true
-    },[globalDatas, userInfo, userData])
+    }, [globalDatas, userInfo, userData])
     const authInfoRef = useRef<{
         [key: string]: HTMLDivElement
     }>({})
@@ -246,7 +249,7 @@ const UserDetail = ({ }) => {
                                 ...addValues,
                                 username: value
                             })
-                        }} customType='username' />
+                        }} customType='username' placeholder='아이디 입력'/>
                         <Button className='st6' disabled={duplicateIdCheck || addValues.username.length === 0 || usernameAlert} onClick={() => {
                             DuplicateUserNameCheckFunc(addValues.username, ({ isExist }) => {
                                 setDuplicateIdCheck(!isExist)
@@ -262,6 +265,31 @@ const UserDetail = ({ }) => {
                             중복 확인
                         </Button>
                     </UserInfoInputrow> : <UserInfoRow title="ID" value={userData ? userData.username : ""} />}
+                    {
+                        isAdd && subdomainInfo.userSignupMethod === 'INPUT_PASSWORD_BY_ADMIN' ? <>
+                            <UserInfoInputrow title='PASSWORD' required>
+                                <Input className='st1' value={targetValue.password} placeholder="비밀번호 입력" valueChange={value => {
+                                    setAddValues({
+                                        ...addValues,
+                                        password: value
+                                    })
+                                }} type="password" customType="password"/>
+                            </UserInfoInputrow>
+                            <UserInfoInputrow title='PASSWORD_CONFIRM' required>
+                                <Input className='st1' value={targetValue.passwordConfirm} placeholder="비밀번호 확인" valueChange={value => {
+                                    setAddValues({
+                                        ...addValues,
+                                        passwordConfirm: value
+                                    })
+                                }} type="password" rules={[
+                                    {
+                                        regExp: (val) => val != addValues.password,
+                                        msg: <FormattedMessage id="PASSWORD_CONFIRM_CHECK"/>
+                                    }
+                                ]}/>
+                            </UserInfoInputrow>
+                        </> : <></>
+                    }
                     {(isModify || isAdd) ? <UserInfoInputrow title="NAME" required>
                         <Input className='st1' value={targetValue.name.firstName} placeholder="성" onChange={e => {
                             if (isAdd) {
@@ -318,7 +346,7 @@ const UserDetail = ({ }) => {
                                     email: e.target.value
                                 })
                             }
-                        }} maxLength={48} />
+                        }} maxLength={48} placeholder='이메일 입력'/>
                     </UserInfoInputrow> : <UserInfoRow title="EMAIL" value={userData?.email || "이메일 없음"} />}
 
                     {(isModify || isAdd) ? <UserInfoInputrow title="PHONE_NUMBER">
@@ -450,7 +478,7 @@ const UserDetail = ({ }) => {
                             <div className='user-detail-info-divider'>
                                 접속 장치
                             </div>
-                            <div/>
+                            <div />
                         </div>
                         <div className="user-detail-info-device-info-content">
                             <UserDetailInfoDeviceInfoContent data={_} />
@@ -459,7 +487,7 @@ const UserDetail = ({ }) => {
                             <div className='user-detail-info-divider'>
                                 인증 장치
                             </div>
-                            <div/>
+                            <div />
                         </div>
                         <div className="user-detail-info-device-info-title">
                             <h4>

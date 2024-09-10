@@ -10,9 +10,11 @@ type ContentsProps = PropsWithChildren & {
 }
 
 const Contents = ({ children, containerStyle, copyRightStyle, loading }: ContentsProps) => {
-    const { subdomainInfo } = useSelector((state: ReduxStateType) => ({
-        subdomainInfo: state.subdomainInfo!
-      }));
+    const { subdomainInfo, globalDatas } = useSelector((state: ReduxStateType) => ({
+        subdomainInfo: state.subdomainInfo!,
+        globalDatas: state.globalDatas
+    }));
+    loading = globalDatas?.loading || loading
 
     return <>
         <div className={`loading-center${loading ? '' : ' hidden'}`}>

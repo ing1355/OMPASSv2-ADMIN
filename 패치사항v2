@@ -1,3 +1,11 @@
+* v2.0.0(27)
+  * input 높이 재조정
+  * 
+  
+* v2.0.0(26)
+  * 사용자 추가 시 비밀번호 입력 추가
+  * 사용자 최초 비밀번호 변경 추가
+
 * v2.0.0(25)
   * ONLY_BY_ADMIN -> EMAIL_BY_ADMIN 키값 변경
   * Input onlyNumber onBlur와 onInput 나눔

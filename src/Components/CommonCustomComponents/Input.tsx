@@ -100,9 +100,7 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
     return <>
         <div className={`custom-input-wrapper${containerClassName ? (' ' + containerClassName) : ''}${(customType || rules) ? ' has-alert' : ''}`}>
             <HasLabel label={label}>
-                <div style={{
-                    position: 'relative'
-                }}>
+                <div>
                     {
                         type === 'radio' && <div className="custom-radio-container">
                             <span className="custom-radio-outer" aria-checked={props.checked}></span>

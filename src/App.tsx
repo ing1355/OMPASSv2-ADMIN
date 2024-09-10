@@ -66,51 +66,47 @@ const App: React.FC = () => {
       })
     }
   }, [userInfo])
-  
+
   return <IntlProvider locale={convertLangToIntlVer(lang)} messages={Locale[lang]}>
     <AxiosController />
     {userInfo && <Header />}
     <div className={userInfo ? 'contents-container' : ""}>
-      {
-        globalDatas?.loading ? <div className={`loading-center`}>
-          데이터 불러오는 중...
-        </div> : <Routes>
-          <Route path='/ompass/*' element={<OMPASSVerify />} />
-          <Route path='/GuidePage' element={<GuidePage />} />
-          <Route path='/AutoLogout' element={<AutoLogout />} />
-          {
-            userInfo ? (
-              userInfo.role! !== 'USER' ? <>
-                <Route path='/Main' element={<Main />} />
-                <Route path='/AgentManagement/*' element={<Agent />} />
-                <Route path='/UserManagement/*' element={<Users />} />
-                <Route path='/PasscodeManagement' element={<PasscodeManagement />} />
-                <Route path='/PermissionSettings' element={<PermissionSettings />} />
-                <Route path='/Billing' element={<Billing />} />
-                <Route path='/Applications/*' element={<Application />} />
-                <Route path='/Policies/*' element={<Policies />} />
-                <Route path='/Groups/*' element={<Groups />} />
-                <Route path='/AuthLogs' element={<AuthLog />} />
-                <Route path='/PortalLogs' element={<PortalLog />} />
-                <Route path='/Settings' element={<Settings />} />
+      <Routes>
+        <Route path='/ompass/*' element={<OMPASSVerify />} />
+        <Route path='/GuidePage' element={<GuidePage />} />
+        <Route path='/AutoLogout' element={<AutoLogout />} />
+        {
+          userInfo ? (
+            userInfo.role! !== 'USER' ? <>
+              <Route path='/Main' element={<Main />} />
+              <Route path='/AgentManagement/*' element={<Agent />} />
+              <Route path='/UserManagement/*' element={<Users />} />
+              <Route path='/PasscodeManagement' element={<PasscodeManagement />} />
+              <Route path='/PermissionSettings' element={<PermissionSettings />} />
+              <Route path='/Billing' element={<Billing />} />
+              <Route path='/Applications/*' element={<Application />} />
+              <Route path='/Policies/*' element={<Policies />} />
+              <Route path='/Groups/*' element={<Groups />} />
+              <Route path='/AuthLogs' element={<AuthLog />} />
+              <Route path='/PortalLogs' element={<PortalLog />} />
+              <Route path='/Settings' element={<Settings />} />
+              <Route path='/*' element={<Navigate to='/Main' replace={true} />} />
+            </>
+              : <>
+                <Route path='/Main' element={<Users />} />
                 <Route path='/*' element={<Navigate to='/Main' replace={true} />} />
               </>
-                : <>
-                  <Route path='/Main' element={<Users />} />
-                  <Route path='/*' element={<Navigate to='/Main' replace={true} />} />
-                </>
-            ) : userSignupMethod !== UserSignupMethod.EMAIL_BY_ADMIN ?
-              <>
-                <Route path='/*' element={<Navigate to='/' replace={true} />} />
-                <Route path='/signup' element={<SignUp />} />
-                <Route path='/' element={<Login />} />
-              </> : <>
-                <Route path='/*' element={<Navigate to='/' replace={true} />} />
-                <Route path='/' element={<Login />} />
-              </>
-          }
-        </Routes>
-      }
+          ) : userSignupMethod !== UserSignupMethod.EMAIL_BY_ADMIN ?
+            <>
+              <Route path='/*' element={<Navigate to='/' replace={true} />} />
+              <Route path='/signup' element={<SignUp />} />
+              <Route path='/' element={<Login />} />
+            </> : <>
+              <Route path='/*' element={<Navigate to='/' replace={true} />} />
+              <Route path='/' element={<Login />} />
+            </>
+        }
+      </Routes>
 
     </div>
   </IntlProvider>;

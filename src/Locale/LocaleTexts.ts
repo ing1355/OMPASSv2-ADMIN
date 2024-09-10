@@ -1,6 +1,7 @@
 const LocaleTexts = {
   'en': {
     LOGIN: 'Login',
+    PASSWORD_CHANGE: 'Password Change',
     FIRST_NAME: 'First name',
     LAST_NAME: 'Last name',
     NAME: 'Name',
@@ -297,6 +298,7 @@ const LocaleTexts = {
     EMAIL_CODE_VERIFY: "Verify",
     NO_DATA_TEXT: "No Data",
     USER_STATUS_WAIT_EMAIL_VERIFICATION: "메일 인증 대기중",
+    USER_STATUS_WAIT_INIT_PASSWORD: "비밀번호 초기화 대기중",
     USER_STATUS_WAIT_ADMIN_APPROVAL: "관리자 인증 대기중",
     USER_STATUS_WITHDRAWAL: "탈퇴",
     USER_STATUS_RUN: "활성화",
@@ -307,10 +309,12 @@ const LocaleTexts = {
     BROWSER_LABEL: '브라우저',
     COUNTRY_LABEL: '사용자 위치',
     IP_WHITE_LIST_LABEL: 'IP 접근',
-    LOCATION_LABEL: '사용자 위치'
+    LOCATION_LABEL: '사용자 위치',
+    LETS_CHANGE: 'Change'
   },
   'ko': {
     LOGIN: '로그인',
+    PASSWORD_CHANGE: '비밀번호 변경',
     FIRST_NAME: '성',
     LAST_NAME: '이름',
     NAME: '이름',
@@ -608,6 +612,7 @@ const LocaleTexts = {
     EMAIL_CODE_VERIFY: "인증 코드 확인",
     NO_DATA_TEXT: "데이터가 존재하지 않습니다.",
     USER_STATUS_WAIT_EMAIL_VERIFICATION: "메일 인증 대기중",
+    USER_STATUS_WAIT_INIT_PASSWORD: "비밀번호 초기화 대기중",
     USER_STATUS_WAIT_ADMIN_APPROVAL: "관리자 인증 대기중",
     USER_STATUS_WITHDRAWAL: "탈퇴",
     USER_STATUS_RUN: "활성화",
@@ -618,7 +623,8 @@ const LocaleTexts = {
     BROWSER_LABEL: '브라우저',
     COUNTRY_LABEL: '사용자 위치',
     IP_WHITE_LIST_LABEL: 'IP 접근',
-    LOCATION_LABEL: '사용자 위치'
+    LOCATION_LABEL: '사용자 위치',
+    LETS_CHANGE: '변경하기'
   }
 }
 

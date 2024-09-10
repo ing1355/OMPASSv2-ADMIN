@@ -6,16 +6,17 @@ import { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { langChange } from 'Redux/actions/langChange';
 import { isMobile } from "react-device-detect";
-import { CopyRightText, isDev, subDomain, UserSignupMethod } from '../../Constants/ConstantValues';
+import { CopyRightText, isDev, subDomain, UserSignupMethod, userStatusTypes } from '../../Constants/ConstantValues';
 import locale_image from '../../assets/locale_image.png';
 import downloadIconWhite from '../../assets/downloadIconWhite.png';
 import manualDownloadIcon from '../../assets/manualDownloadIcon.png'
 import { useCookies } from 'react-cookie';
 import { AgentFileDownload } from 'Components/CommonCustomComponents/AgentFileDownload';
-import { LoginFunc } from 'Functions/ApiFunctions';
+import { LoginFunc, UpdatePasswordFunc } from 'Functions/ApiFunctions';
 import { saveLocaleToLocalStorage } from 'Functions/GlobalFunctions';
 import Button from 'Components/CommonCustomComponents/Button';
 import Input from 'Components/CommonCustomComponents/Input';
+import { message } from 'antd';
 
 const Login = () => {
   const { lang, subdomainInfo } = useSelector((state: ReduxStateType) => ({
@@ -23,103 +24,155 @@ const Login = () => {
     subdomainInfo: state.subdomainInfo!
   }));
   const [inputPassword, setInputPassword] = useState('')
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [tempToken, setTempToken] = useState('')
   const [cookies, setCookie, removeCookie] = useCookies(["rememberUserId"]); // Cookies 이름
   const [inputUsername, setInputUsername] = useState(cookies.rememberUserId || '')
+  const [inputChangePassword, setInputChangePassword] = useState('')
+  const [inputChangePasswordConfirm, setInputChangePasswordConfirm] = useState('')
   const [isAgentFileDisable, setIsAgentFileDisable] = useState(false);
+  const [needPasswordChange, setNeedPasswordChange] = useState(false)
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const navigate = useNavigate()
+  const inputChangePasswordRef = useRef<HTMLInputElement>(null)
   const { noticeMessage, logoImage, userSignupMethod } = subdomainInfo || {}
 
   const loginRequest = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const {saveId} = e.currentTarget.elements as any
-    LoginFunc({
-      domain: subDomain,
-      username: inputUsername,
-      password: inputPassword,
-      language: lang!,
-      loginClientType: "ADMIN"
-    }, ({ popupUri }, token) => {
-      const resultUri = popupUri + `&authorization=${token}`
-      if (isDev) {
-        const targetUrl = "192.168.182.120:9002"
-        OMPASS(resultUri.replace("www.ompass.kr:54007", targetUrl).replace("www.ompass.kr:54012", targetUrl).replace("192.168.182.75:9001", targetUrl).replace("ompass.kr:59001", targetUrl));
-      } else {
-        OMPASS(resultUri);
-      }
-      if(saveId.checked) {
-        setCookie("rememberUserId", inputUsername)
-      } else {
-        removeCookie("rememberUserId");
-      }
-    })
+    const { saveId } = e.currentTarget.elements as any
+    if(needPasswordChange) {
+      if(inputChangePassword !== inputChangePasswordConfirm) return message.error('비밀번호가 일치하지 않습니다.')
+      UpdatePasswordFunc(inputChangePassword, tempToken, () => {
+        setNeedPasswordChange(false)
+        message.success('비밀번호 변경에 성공하였습니다. 다시 로그인해주세요.')
+        setTempToken('')
+      })
+    } else {
+      LoginFunc({
+        domain: subDomain,
+        username: inputUsername,
+        password: inputPassword,
+        language: lang!,
+        loginClientType: "ADMIN"
+      }, ({ popupUri, status }, token) => {
+        if(status === 'WAIT_INIT_PASSWORD') {
+          setInputPassword('')
+          setTempToken(token)
+          return setNeedPasswordChange(true)
+        }
+        const resultUri = popupUri + `&authorization=${token}`
+        if (isDev) {
+          const targetUrl = "192.168.182.120:9002"
+          OMPASS(resultUri.replace("www.ompass.kr:54007", targetUrl).replace("www.ompass.kr:54012", targetUrl).replace("192.168.182.75:9001", targetUrl).replace("ompass.kr:59001", targetUrl));
+        } else {
+          OMPASS(resultUri);
+        }
+        if (saveId.checked) {
+          setCookie("rememberUserId", inputUsername)
+        } else {
+          removeCookie("rememberUserId");
+        }
+      })
+    }
   }
+
+  useEffect(() => {
+    if(needPasswordChange) inputChangePasswordRef.current?.focus()
+  },[needPasswordChange])
 
   return <>
     <div
       className='login-container'
     >
-      <div className='login-body'>
-        <div className='login-hello-container'>
+      <div className={`login-body${needPasswordChange ? ' password-change' : ''}`}>
+        {!needPasswordChange ? <div className='login-hello-container'>
           <div className='login-logo-img'>
             {logoImage && <img src={logoImage} />}
           </div>
           <div className='login-hello-text'>
             {noticeMessage}
           </div>
-        </div>
+        </div> : <></>}
         <form
           onSubmit={loginRequest}
         >
           {!isMobile && <div className='login-form-header'>
-            <h1 className='login-form-title'><FormattedMessage id='LOGIN' /></h1>
+            <h1 className='login-form-title'><FormattedMessage id={needPasswordChange ? 'PASSWORD_CHANGE' : 'LOGIN'} /></h1>
           </div>}
           <div
             className='login-input-container'
           >
-            <label htmlFor='userId'><FormattedMessage id='ID' /></label>
-            <Input
-              className='st1 login-input mt5 userId'
-              value={inputUsername}
+            {needPasswordChange ? <Input
+              className='st1 login-input'
+              value={inputChangePassword}
+              type="password"
+              name="password"
+              customType='password'
+              placeholder='변경할 비밀번호 입력'
+              ref={inputChangePasswordRef}
               valueChange={value => {
-                setInputUsername(value);
+                setInputChangePassword(value);
               }}
-            />
+            /> : <><label htmlFor='userId'><FormattedMessage id='ID' /></label>
+              <Input
+                className='st1 login-input userId'
+                value={inputUsername}
+                name="userId"
+                valueChange={value => {
+                  setInputUsername(value);
+                }}
+              /></>}
           </div>
           <div
             className='login-input-container'
           >
-            <label htmlFor='userPassword'><FormattedMessage id='PASSWORD' /></label>
-            <Input
-              className='st1 login-input mt5 password'
+            {needPasswordChange ? <Input
+              className='st1 login-input'
               type='password'
-              value={inputPassword}
+              rules={[
+                {
+                    regExp: (val) => val != inputChangePassword,
+                    msg: <FormattedMessage id="PASSWORD_CONFIRM_CHECK"/>
+                }
+            ]}
+              value={inputChangePasswordConfirm}
+              name="passwordConfirm"
+              placeholder='비밀번호 재입력'
               valueChange={value => {
-                setInputPassword(value);
+                setInputChangePasswordConfirm(value);
               }}
-            />
+            /> : <>
+              <label htmlFor='userPassword'><FormattedMessage id='PASSWORD' /></label>
+              <Input
+                className='st1 login-input password'
+                type='password'
+                name="password"
+                value={inputPassword}
+                valueChange={value => {
+                  setInputPassword(value);
+                }}
+              />
+            </>}
           </div>
-          <div className='login-action-row-container'>
+          {!needPasswordChange && <div className='login-action-row-container'>
             <div className='login-action-row'>
-              <Input id='saveId' type='checkbox' className='mr10' defaultChecked={cookies.rememberUserId} label={<FormattedMessage id='SAVE_ID' />}/>
+              <Input id='saveId' type='checkbox' className='mr10' defaultChecked={cookies.rememberUserId} label={<FormattedMessage id='SAVE_ID' />} />
             </div>
-            {userSignupMethod !== UserSignupMethod.EMAIL_BY_ADMIN && <div className='login-action-row signup' onClick={() => {
+            {(userSignupMethod === UserSignupMethod.USER_SELF_ADMIN_ACCEPT || userSignupMethod === UserSignupMethod.USER_SELF_ADMIN_PASS) && <div className='login-action-row signup' onClick={() => {
               navigate("/signup")
             }}>
               회원가입
             </div>}
-          </div>
+          </div>}
           <Button
             className="st3 login-button"
             type='submit'
           >
-            <FormattedMessage id='LOGIN' />
+            <FormattedMessage id={needPasswordChange ? 'LETS_CHANGE' : 'LOGIN'} />
           </Button>
-          <Link to='/GuidePage' className='quick-start-guide-text'>
+          {!needPasswordChange && <Link to='/GuidePage' className='quick-start-guide-text'>
             <FormattedMessage id='GO_TO_QUICK_GUIDE' />
-          </Link>
+          </Link>}
         </form>
       </div>
       {!isMobile && <Button

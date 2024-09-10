@@ -30,7 +30,7 @@ export const DateTimeFormat = "YYYY-MM-DD HH:mm:ss"
 export const userSelectPageSize = () => parseInt(localStorage.getItem('user_select_size') || "10")
 
 export const policyNoticeRestrictionTypes: NoticeRestrictionTypes[] = ["ACCESS_CONTROL", "BROWSER", "LOCATION", "IP_WHITE_LIST", "ACCESS_TIME", "COUNTRY"]
-export const userStatusTypes: UserStatusType[] = ["RUN", "WAIT_ADMIN_APPROVAL", "WAIT_EMAIL_VERIFICATION", "WITHDRAWAL"]
+export const userStatusTypes: UserStatusType[] = ["RUN", "WAIT_ADMIN_APPROVAL", "WAIT_EMAIL_VERIFICATION", "WITHDRAWAL", "LOCK", "WAIT_INIT_PASSWORD"]
 
 type menuDataType = {
     label: string

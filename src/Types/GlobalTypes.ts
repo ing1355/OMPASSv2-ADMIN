@@ -1,4 +1,16 @@
 type LanguageType = 'KR' | 'EN'
+type AuthPurposeType = "ADD_OTHER_AUTHENTICATOR" | "AUTH_LOGIN" | "REG_LOGIN"
+type AuthMethodType = "U2F" | 'UAF'
+type OMPASSDataType = {
+    authPurpose: AuthPurposeType
+        method: AuthMethodType
+        application: ApplicationDataType
+        rpUser: RPUserType
+        authenticators: AuthenticatorDataType[]
+        sessionExpiredAt: string
+        ntp: string
+        createdAt: string
+}
 
 type OSInfoType = {
     name: OsNamesType
@@ -97,6 +109,7 @@ type LoginApiParamsType = {
 type LoginApiResponseType = {
     popupUri: string
     username: string
+    status: UserStatusType
 }
 
 type PasscodeHistoriesParamsType = GeneralParamsType & {
@@ -251,7 +264,7 @@ type DefaultPolicyDataType = {
     enableBrowsers: BrowserPolicyType[]
     networkConfig: IpAddressPolicyType
     enableAuthenticators: AuthenticatorPolicyType[]
-    description: string
+    description?: string
     accessTimeConfig: AccessTimeRestrictionType
     noticeToAdmin: RestrictionNoticeDataType
     noticeToThemselves: RestrictionNoticeThemselvesDataType
@@ -285,7 +298,7 @@ type DefaultUserDataParamsType = {
 
 type DefaultUserDataType = UserNameType & DefaultUserDataParamsType
 
-type UserStatusType = "WAIT_EMAIL_VERIFICATION" | "WAIT_ADMIN_APPROVAL" | "RUN" | "WITHDRAWAL"
+type UserStatusType = "WAIT_EMAIL_VERIFICATION" | "WAIT_ADMIN_APPROVAL" | "RUN" | "WITHDRAWAL" | "LOCK" | "WAIT_INIT_PASSWORD"
 
 type UserDataType = DefaultUserDataType & {
     userId: string
@@ -344,18 +357,12 @@ type UserDataModifyValuesType = {
 }
 
 type UserDataModifyLocalValuesType = UserDataModifyValuesType & {
-    passwordConfirm: string
+    passwordConfirm?: string
     password: string
 }
 
-type UserDataAddLocalValuesType = {
+type UserDataAddLocalValuesType = UserDataModifyLocalValuesType & {
     username: UserDataType['username']
-    name: UserDataType['name']
-    email: UserDataType['email']
-    phone: UserDataType['phone']
-    role: UserDataType['role']
-    password?: string
-    groupId?: UserDataType['group']['id']
 }
 
 type DefaultUserGroupDataType = {
@@ -400,19 +407,13 @@ type ProtalLogListParamsType = GeneralParamsType & {
 type AuthLogDataType = {
     id: number
     portalUser: PortalUserType
-    rpUser: RPUserType
-    application: ApplicationDataType
     authenticationLogType: "ALLOW" | "DENY" | "ALLOW_OUT_OF_SCHEDULE"
     processType: ProcessTypeType
     authenticatorType: AuthenticatorTypeType
     authenticationTime: string
-    // policyAtTimeOfEvent: {
-    //     id: string
-    // }
-    timeRange?: {
-        startTime: string
-        endTime: string
-    }
+    ompassData: OMPASSDataType
+    policyAtTimeOfEvent: PolicyDataType
+    reason: any
 }
 
 type PortalLogDataType = {
