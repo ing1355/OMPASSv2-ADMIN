@@ -37,6 +37,11 @@ const Login = () => {
   const inputChangePasswordRef = useRef<HTMLInputElement>(null)
   const { noticeMessage, logoImage, userSignupMethod } = subdomainInfo || {}
 
+  useEffect(() => {
+    setInputChangePassword('')
+    setInputChangePasswordConfirm('')
+  },[needPasswordChange])
+
   const loginRequest = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { saveId } = e.currentTarget.elements as any

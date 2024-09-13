@@ -157,7 +157,7 @@ type SubDomainInfoDataType = {
   logoImage: PortalSettingsDataType['logoImage']
   noticeMessage: PortalSettingsDataType['noticeMessage']
   userSignupMethod: PortalSettingsDataType['userSignupMethod']
-  canSignUp: PortalSettingsDataType['selfSignupEnabled']
+  selfSignupEnabled: PortalSettingsDataType['selfSignupEnabled']
   backendVersion: {
     fidoApp: string
     interfaceApp: string

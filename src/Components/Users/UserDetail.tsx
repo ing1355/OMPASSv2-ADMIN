@@ -268,7 +268,7 @@ const UserDetail = ({ }) => {
                             중복 확인
                         </Button>
                     </UserInfoInputrow> : <UserInfoRow title="ID" value={userData ? userData.username : ""} />}
-                    {(isAdd || isModify) && (isSelf || (userData?.role === 'ADMIN' && userInfo.role === 'ROOT') || (userData?.role === 'USER' && isAdmin)) && <><UserInfoInputrow title='PASSWORD' required>
+                    {(isAdd || (isModify && (isSelf || (userData?.role === 'ADMIN' && userInfo.role === 'ROOT') || (userData?.role === 'USER' && isAdmin)))) && <><UserInfoInputrow title='PASSWORD' required>
                         <Input className='st1' value={targetValue.password} placeholder="비밀번호 입력" disabled={!targetValue.hasPassword} valueChange={value => {
                             setAddValues({
                                 ...addValues,

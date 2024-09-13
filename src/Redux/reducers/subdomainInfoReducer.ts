@@ -11,7 +11,7 @@ const subdomainInfo: ReduxStateType['subdomainInfo']|null = {
   noticeMessage: '',
   logoImage: loginMainImage,
   userSignupMethod: UserSignupMethod.USER_SELF_ADMIN_ACCEPT,
-  canSignUp: false
+  selfSignupEnabled: false
 }
 
 const subdomainInfoReducer = (state = subdomainInfo, action: DefaultReduxActionType<ReduxStateType['subdomainInfo']>) => {
