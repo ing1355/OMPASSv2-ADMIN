@@ -26,7 +26,7 @@ export const timeZoneNames = tz.names()
 export const isDev = process.env.NODE_ENV === 'development'
 export const CopyRightText = (info: SubDomainInfoDataType) => `OMPASS Portal v${process.env.REACT_APP_VERSION} © 2024. OneMoreSecurity Inc. All Rights Reserved. (backend versions : portal - ${info.backendVersion.portalApp}, fido - ${info.backendVersion.fidoApp}, interface - ${info.backendVersion.interfaceApp})`
 export const INT_MAX_VALUE = Math.pow(2, 31) - 1
-export const DateTimeFormat = "YYYY-MM-DD HH:mm:ss"
+export const DateTimeFormat = "yyyy-MM-dd HH:mm:ss"
 export const userSelectPageSize = () => parseInt(localStorage.getItem('user_select_size') || "10")
 
 export const policyNoticeRestrictionTypes: NoticeRestrictionTypes[] = ["ACCESS_CONTROL", "BROWSER", "LOCATION", "IP_WHITE_LIST", "ACCESS_TIME", "COUNTRY"]

@@ -49,6 +49,10 @@ const GroupManagement = () => {
             searchOptions={[{
                 key: 'name',
                 type: 'string'
+            }, {
+                key: 'policyName',
+                type: 'string',
+                label: '정책명'
             }]}
             className="contents-header-container"
             onBodyRowClick={(row, index, arr) => {
@@ -66,7 +70,7 @@ const GroupManagement = () => {
                 },
                 {
                     key: 'policy',
-                    title: '정책',
+                    title: '정책명',
                     render: (data, ind, row) => {
                         return data ? (data.name === 'default policy' ? <FormattedMessage id={data.name} /> : data.name) : <FormattedMessage id="NO_POLICY"/>
                     }

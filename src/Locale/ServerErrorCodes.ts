@@ -20,7 +20,9 @@ const ServerErrorCodes = {
         ERR_B021: "이메일 확인이 필요한 계정입니다.",
         ERR_B022: "잘못된 인증 정보입니다.",
         ERR_B023: "Windows 어플리케이션에 OMPASS가 등록되어 있지 않습니다.",
-        ERR_B024: "OMPASS 포탈에서 삭제된 사용자입니다. 복구 코드를 확인하세요."
+        ERR_B024: "OMPASS 포탈에서 삭제된 사용자입니다. 복구 코드를 확인하세요.",
+
+        ERR_B030: "이미 존재하는 버전입니다."
     },
     'EN': {
         ERR_B002: "User does not exist",
@@ -44,6 +46,8 @@ const ServerErrorCodes = {
         ERR_B022: "Invalid proxy login token",
         ERR_B023: "The rp user is not registered with OMPASS on the Windows application",
         ERR_B024: "This user has been deleted from the OMPASS portal. Please check recovery code",
+
+        ERR_B030: "The file version already exists."
     }
 }
 

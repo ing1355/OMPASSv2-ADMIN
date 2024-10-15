@@ -3,7 +3,7 @@ import { getStorageAuth } from 'Functions/GlobalFunctions';
 
 export const controller = new AbortController()
 
-const defaultHeaders = () => ({    
+const defaultHeaders = () => ({
     authorization: getStorageAuth(),
     'Content-Type': 'application/json'
 })
@@ -22,6 +22,9 @@ export function CustomAxiosGet(url: string, callback?: Function, params?: any, c
         return axios.get(url, _config)
     }
     return axios.get(url, {
+        paramsSerializer: {
+            indexes: null
+        },
         params, headers: defaultHeaders()
     }).then(res => {
         if (callback) callback(res.data);
@@ -44,7 +47,7 @@ export function CustomAxiosGetFile(url: string, callback?: Function, params?: an
 }
 
 export function CustomAxiosPost(url: string, callback?: Function, params?: any, config?: any) {
-    
+
     const headers = config ? {
         ...defaultHeaders(),
         authorization: config.authorization ? config.authorization : getStorageAuth(),

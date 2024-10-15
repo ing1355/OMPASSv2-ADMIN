@@ -12,6 +12,7 @@ export const CurrentAgentInstallerVersionChangeApi = (fileId: AgentInstallerData
 export const DeleteAgentInstallerApi = (fileIds: string) => `/v2/agent-installer/${fileIds}`;
 export const DownloadAgentInstallerApi = '/v2/agent-installer/download';
 export const UploadAgentInstallerApi = `/v2/agent-installer/upload`;
+export const UpdateAgentNoteApi = (fileId: AgentInstallerDataType['fileId']) => `/v2/agent-installer/${fileId}/note`
 
 // 패스코드 이력
 export const GetPasscodeHistoriesApi = '/v2/passcode-histories';
@@ -72,3 +73,9 @@ export const SignUpVerificationCodeVerifyApi = '/v2/users/verification-code/veri
 
 // config
 export const GetGlobalConfigApi = '/v2/global-config'
+
+// 대시보드
+export const GetDashboardTopApi = '/v2/dashboard/user-count'
+export const GetDashboardApplicationRPUserApi = '/v2/dashboard/rp-user-count'
+export const GetDashboardApplicationAuthApi = '/v2/dashboard/auth-req-count'
+export const GetDashboardApplicationAuthSumApi = '/v2/dashboard/auth-req-sum-count'

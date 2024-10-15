@@ -10,11 +10,12 @@ import deleteIcon from '../../assets/deleteIconBlack.png';
 type CustomImageUploadProps = {
     src: string
     callback: (image: string) => void
+    defaultImg?: string
 }
 
-const CustomImageUpload = ({ callback, src }: CustomImageUploadProps) => {
+const CustomImageUpload = ({ callback, src, defaultImg }: CustomImageUploadProps) => {
     const [deleteShow, setDeleteShow] = useState(false)
-
+    
     const fileUploadCallback = (file: File) => {
         if (file.size > 1024 * 1024) {
             return message.error("1MB를 초과하는 파일은 업로드가 불가능합니다.")
@@ -33,13 +34,13 @@ const CustomImageUpload = ({ callback, src }: CustomImageUploadProps) => {
         <div
             className="custom-image-upload-box"
             onMouseEnter={() => {
-                if(src !== ompassLogoIcon) setDeleteShow(true)
+                if(src !== (defaultImg || ompassLogoIcon)) setDeleteShow(true)
             }}
             onMouseLeave={() => {
                 setDeleteShow(false)
             }}
             onClick={() => {
-                callback(ompassLogoIcon)
+                callback(defaultImg || ompassLogoIcon)
                 setDeleteShow(false)
             }}
             onDragOver={(event) => {
@@ -54,7 +55,7 @@ const CustomImageUpload = ({ callback, src }: CustomImageUploadProps) => {
                     fileUploadCallback(file);
                 }
             }}>
-            <img src={src || ompassLogoIcon} />
+            <img src={src || defaultImg || ompassLogoIcon} />
             {deleteShow && <div className='custom-image-delete-container'>
                 <img src={deleteIcon}/>
                 삭제

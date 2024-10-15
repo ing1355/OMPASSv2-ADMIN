@@ -193,6 +193,7 @@ type ApplicationListParamsType = GeneralParamsType & {
     type?: ApplicationDataType['id']|""
     sortBy?: "CREATED_AT" | "NAME"
     sortDirection?: DirectionType
+    policyName?: string
 }
 
 type CoordinateType = {
@@ -386,15 +387,20 @@ type UserGroupParamsType = {
     userIds: UserDataType['userId'][]
 }
 type GroupListParamsType = GeneralParamsType & {
+    policyName?: string
     name?: string
     sortBy?: "CREATED_AT" | "NAME"
 }
 
 type AuthLogListParamsType = GeneralParamsType & {
-    username?: string
+    portalUsername?: string
+    rpUsername?: string
     applicationName?: string
-    processType?: string
-    isProcessSuccesss?: boolean
+    processType?: ProcessTypeType
+    authenticatorType?: AuthenticatorTypeType
+    authenticationLogType?: AuthLogDataType['authenticationLogType']
+    startDate?: string
+    endDate?: string
     sortBy?: "CREATED_AT" | "AUTHENTICATION_TIME" | "USERNAME" | "APPLICATION_NAME" | "IS_PROCESS_SUCCESS"
 }
 
@@ -414,7 +420,7 @@ type AuthLogDataType = {
     authenticationTime: string
     ompassData: OMPASSDataType
     policyAtTimeOfEvent: PolicyDataType
-    reason: any
+    reason: 'INVALID_PASSCODE' | 'BROWSER'
 }
 
 type PortalLogDataType = {
@@ -428,7 +434,8 @@ type PortalLogDataType = {
 type AgentInstallerUploadParamsType = {
     multipartFile: string
     "metaData.hash": string
-    "metaData.version": string
+    // "metaData.version": string
+    "metaData.note": string
     "metaData.os": OsNamesType
 }
 
@@ -444,4 +451,29 @@ type CustomTableSearchParams = {
     size: number
     type?: string
     value?: string
+}
+
+type DateSelectDataType = {
+    startDate: string
+    endDate: string
+}
+
+type DashboardDateSelectType = '6hour' | '12hour' | 'day' | 'week' | 'month' | 'user'
+type DashboardDateSelectDataType = DateSelectDataType & {
+    intervalValue: number
+}
+
+type DashboardChartDataType = DateSelectDataType & {
+    count: number
+}
+type DashboardChartDataEachApplicationType = DateSelectDataType & {
+    applicationCounts: {
+        applicationId: string
+        count: number
+    }[]
+}
+
+type SelectedDateType = {
+    startDate: Date | null
+    endDate: Date | null
 }

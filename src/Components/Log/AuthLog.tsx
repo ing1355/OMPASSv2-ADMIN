@@ -6,7 +6,7 @@ import { useLayoutEffect, useState } from "react"
 import { FormattedMessage } from "react-intl"
 import successIcon from '../../assets/successIcon.png'
 import failIcon from '../../assets/failIcon.png'
-import { AuthenticationProcessTypes, userSelectPageSize } from "Constants/ConstantValues"
+import { AuthenticationProcessTypes } from "Constants/ConstantValues"
 import { convertUTCStringToKSTString } from "Functions/GlobalFunctions"
 
 const imgSize = "16px"

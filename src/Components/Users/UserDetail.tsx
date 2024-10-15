@@ -22,7 +22,6 @@ import { userInfoClear } from 'Redux/actions/userChange'
 import { UserDetailInfoAuthenticatorContent, UserDetailInfoAuthenticatorDeleteButton, UserDetailInfoDeviceInfoContent, UserInfoInputrow, UserInfoRow, ViewPasscode } from './UserDetailComponents'
 import { autoHypenPhoneFun, convertUTCStringToKSTString, createRandom1Digit } from 'Functions/GlobalFunctions'
 import Input from 'Components/CommonCustomComponents/Input'
-import PolicySelect from 'Components/CommonCustomComponents/PolicySelect'
 
 const passcodeInputHeight = '30px'
 
@@ -76,17 +75,18 @@ const UserDetail = ({ }) => {
     const [addValues, setAddValues] = useState<UserDataAddLocalValuesType>(initAddValues)
     const [addPasscode, setAddPasscode] = useState<RPUserDetailAuthDataType['id']>("")
     const [portalSigned, setPortalSigned] = useState(false)
-    const [isDeleted, setIsDeleted] = useState(false)
     const navigate = useNavigate()
     const location = useLocation()
     const dispatch = useDispatch()
     const _uuid = useParams().uuid;
+    const isDeleted = userData?.status === 'WITHDRAWAL'
     const uuid = userInfo.role === 'USER' ? userInfo.userId : _uuid
     const isSelf = userInfo.userId === uuid
     const isAdd = !uuid
     const targetValue = isAdd ? addValues : modifyValues
     const isAdmin = userInfo.role !== 'USER'
     const deleteText = isSelf ? '탈퇴' : '삭제'
+    const isHigherRole = isSelf || (userInfo.role === 'ADMIN' && userData?.role === 'USER') || (userInfo.role === 'ROOT' && userData?.role !== 'ROOT')
     const canDeleteAuthenticator = useMemo(() => {
         if (isSelf && userInfo.role === 'USER') return globalDatas?.isUserAllowedToRemoveAuthenticator
         else if (userInfo.role === 'ADMIN' && userData?.role === 'ROOT') {
@@ -124,7 +124,6 @@ const UserDetail = ({ }) => {
                     userId: uuid
                 }, ({ results }) => {
                     setUserData(results[0])
-                    setIsDeleted(results[0].status === 'WITHDRAWAL')
                 })
                 await GetUserDetailDataFunc(uuid, (data) => {
                     setUserDetailDatas(data)
@@ -195,7 +194,7 @@ const UserDetail = ({ }) => {
                         활성화
                     </Button>
                 }
-                {isSelf || (!isSelf && isAdmin && !isAdd) && !isDeleted && <Button className='st8' onClick={() => {
+                {(isHigherRole && !isAdd) && !isDeleted && <Button className='st8' onClick={() => {
                     setSureDelete(true)
                 }}>
                     {isSelf ? '회원탈퇴' : '삭제'}
@@ -234,7 +233,7 @@ const UserDetail = ({ }) => {
                                 {isAdd ? "등록" : "저장"}
                             </Button>
                         }
-                        {userData && !isAdd && !isDeleted && <Button icon={!isModify && editIcon} className={isModify ? "st7" : "st3"} onClick={() => {
+                        {isHigherRole && !isAdd && !isDeleted && <Button icon={!isModify && editIcon} className={isModify ? "st7" : "st3"} onClick={() => {
                             setIsModify(!isModify)
                         }}>
                             {isModify ? '취소' : '수정'}
@@ -321,7 +320,7 @@ const UserDetail = ({ }) => {
                                     }
                                 })
                             }
-                        }} />
+                        }} maxLength={12}/>
                         <Input className='st1' value={targetValue.name.lastName} placeholder="이름" onChange={e => {
                             if (isAdd) {
                                 setAddValues({
@@ -340,7 +339,7 @@ const UserDetail = ({ }) => {
                                     }
                                 })
                             }
-                        }} />
+                        }} maxLength={12}/>
                     </UserInfoInputrow> :
                         <UserInfoRow title="NAME" value={userData ? (userData.name.firstName + userData.name.lastName) : ""} />}
                     {(isModify || isAdd) ? <UserInfoInputrow title="EMAIL" required>

@@ -4,7 +4,7 @@
 export const idRegex:RegExp = /^[a-z0-9]{4,16}$/;
 
 // userName regex
-export const nameRegex:RegExp = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]{1,16}$/
+export const nameRegex:RegExp = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z]{1,16}$/
 // export const nameRegex:RegExp = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z]{1,16}$/
 
 // password regex

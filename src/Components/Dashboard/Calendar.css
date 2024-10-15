@@ -1,0 +1,225 @@
+.custom-calendar-container {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    width: 240px;
+    height: 340px;
+    background-color: var(--main-white-color);
+    box-shadow: 0 0 5px rgba(0, 0, 0, .2);
+    z-index: 9999;
+    border-radius: 8px;
+    padding: 8px;
+    box-sizing: border-box;
+    cursor: default;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+}
+
+.custom-calendar-header {
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    align-items: center;
+}
+
+.custom-calendar-header-item {
+    flex: 1;
+}
+
+.custom-calendar-header-item.has-data > .custom-calendar-header-contents{
+    border-color: var(--main-purple-color);
+    background-image: url(../../assets//dashboardDateIconPurple.png);
+}
+
+.custom-calendar-header-center {
+    padding-top: 26px;
+}
+
+.custom-calendar-header-title {
+    height: 16px;
+    padding-bottom: 4px;
+}
+
+.custom-calendar-header-contents {
+    height: 24px;
+    border: 1.4px solid var(--sub-grey-color4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .7rem;
+    padding-right: 18px;
+    background-image: url(../../assets//dashboardDateIcon.png);
+    background-repeat: no-repeat;
+    background-size: 18px 18px;
+    background-position: calc(100% - 4px) 50%;
+    border-radius: 4px;
+}
+
+.custom-calendar-contents {
+    flex: 1;
+    border: 1px solid var(--sub-grey-color3);
+    border-radius: 8px;
+    padding: 8px 12px;
+}
+
+.custom-calendar-contents-header {
+    font-weight: bold;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 24px;
+    padding-bottom: 8px;
+    gap: 6px;
+}
+
+.custom-calendar-contents-header-arrow {
+    width: 18px;
+    height: 18px;
+    padding: 4px;
+    cursor: pointer;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-calendar-contents-header-arrow>img {
+    width: 100%;
+    height: 100%;
+}
+
+.custom-calendar-weekend {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-bottom: 12px;
+    border-bottom: 0.5px solid rgba(0, 0, 0, .2);
+}
+
+.custom-calendar-weekend>div {
+    color: var(--main-grey-color);
+
+    &:first-child {
+        color: var(--main-red-color2);
+    }
+
+    &:last-child {
+        color: var(--main-purple-color);
+    }
+}
+
+.custom-calendar-days {
+    padding-top: 12px;
+}
+
+.custom-calendar-day-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    height: 28px;
+}
+
+.custom-calendar-day-item {
+    cursor: pointer;
+    flex: 1;
+    height: 100%;
+}
+
+.custom-calendar-day-item:hover .custom-calendar-day-item-inner {
+    background-color: var(--main-purple-color);
+    color: var(--main-white-color) !important;
+}
+
+.custom-calendar-day-item.in-month {
+    & .custom-calendar-day-item-inner {
+        color: black;
+    }
+}
+
+.custom-calendar-day-item.sunday.in-month {
+    & .custom-calendar-day-item-inner {
+        color: var(--main-red-color2);
+    }
+}
+
+.custom-calendar-day-item.saturday.in-month {
+    & .custom-calendar-day-item-inner {
+        color: var(--main-purple-color);
+    }
+}
+
+.custom-calendar-day-item.is-start {
+    & .custom-calendar-day-item-inner {
+        background-color: var(--main-purple-color);
+        color: var(--main-white-color);
+    }
+}
+
+.custom-calendar-day-item.is-end {
+    & .custom-calendar-day-item-inner {
+        background-color: var(--main-purple-color);
+        color: var(--main-white-color);
+    }
+}
+
+.custom-calendar-day-item.in-boundary {
+    &.is-start .custom-calendar-day-item-inner-background {
+        border-top-left-radius: 50%;
+        border-bottom-left-radius: 50%;
+    }
+    &.is-end .custom-calendar-day-item-inner-background {
+        border-top-right-radius: 50%;
+        border-bottom-right-radius: 50%;
+    }
+    &:not(.is-start):not(.is-end) .custom-calendar-day-item-inner-background {
+        background-color: var(--sub-purple-color4);
+    }
+    &:not(.is-start):not(.is-end) .custom-calendar-day-item-inner {
+        color: var(--sub-grey-color5);
+    }
+}
+
+.custom-calendar-day-item-inner {
+    color: var(--sub-grey-color3);
+    border-radius: 100%;
+    font-size: .7rem;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-calendar-day-item-inner-background {
+    width: 100%;
+    height: 100%;
+}
+
+.custom-calendar-day-item-inner.in-month {
+    color: black;
+
+    &.sunday {
+        color: var(--main-red-color2);
+    }
+
+    &.saturday {
+        color: var(--main-purple-color);
+    }
+}
+
+.custom-calendar-footer-buttons-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.calendar-footer-button {
+    flex: 1;
+    border-radius: 4px;
+}

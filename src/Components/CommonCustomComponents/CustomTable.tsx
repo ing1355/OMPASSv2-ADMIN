@@ -30,6 +30,7 @@ type CustomTableButtonType = {
 type SearchOptionType = {
     key: string
     type: 'string' | 'select'
+    label?: string
     needSelect?: boolean
     selectOptions?: {
         key: string
@@ -40,7 +41,7 @@ type SearchOptionType = {
 type CustomTableProps<T extends {
     [key: string]: any
 }, P> = {
-    theme?: 'table-st1'
+    theme?: 'table-st1' | 'table-st2'
     className?: string
     columns: CustomTableColumnType<T>[]
     datas?: T[]
@@ -174,7 +175,7 @@ const CustomTable = <T extends {
             }} className="table-search-container">
                 <CustomSelect items={searchOptions.map(_ => ({
                     key: _.key,
-                    label: columns.find(__ => _.key === __.key)?.title
+                    label: columns.find(__ => _.key === __.key)?.title || _.label
                 }))} value={searchType!} onChange={type => {
                     setSearchType(type)
                 }} needSelect/>
@@ -207,7 +208,7 @@ const CustomTable = <T extends {
                 </Button>}
             </div>
         </div>
-        <table className={`${className ? className + ' ' : ''}${theme}`}>
+        <table className={`custom-table ${theme}${className ? ' ' + className : ''}`}>
             <colgroup>
                 {columns.map((_, ind) => <col
                     key={ind}

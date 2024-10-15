@@ -6,7 +6,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { langChange } from 'Redux/actions/langChange';
 import { isMobile } from "react-device-detect";
-import { CopyRightText, isDev, subDomain, UserSignupMethod, userStatusTypes } from '../../Constants/ConstantValues';
+import { CopyRightText, isDev, subDomain } from '../../Constants/ConstantValues';
 import locale_image from '../../assets/locale_image.png';
 import downloadIconWhite from '../../assets/downloadIconWhite.png';
 import manualDownloadIcon from '../../assets/manualDownloadIcon.png'
@@ -29,7 +29,6 @@ const Login = () => {
   const [inputUsername, setInputUsername] = useState(cookies.rememberUserId || '')
   const [inputChangePassword, setInputChangePassword] = useState('')
   const [inputChangePasswordConfirm, setInputChangePasswordConfirm] = useState('')
-  const [isAgentFileDisable, setIsAgentFileDisable] = useState(false);
   const [needPasswordChange, setNeedPasswordChange] = useState(false)
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
@@ -40,13 +39,13 @@ const Login = () => {
   useEffect(() => {
     setInputChangePassword('')
     setInputChangePasswordConfirm('')
-  },[needPasswordChange])
+  }, [needPasswordChange])
 
   const loginRequest = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { saveId } = e.currentTarget.elements as any
-    if(needPasswordChange) {
-      if(inputChangePassword !== inputChangePasswordConfirm) return message.error('비밀번호가 일치하지 않습니다.')
+    if (needPasswordChange) {
+      if (inputChangePassword !== inputChangePasswordConfirm) return message.error('비밀번호가 일치하지 않습니다.')
       UpdatePasswordFunc(inputChangePassword, tempToken, () => {
         setNeedPasswordChange(false)
         message.success('비밀번호 변경에 성공하였습니다. 다시 로그인해주세요.')
@@ -60,7 +59,7 @@ const Login = () => {
         language: lang!,
         loginClientType: "ADMIN"
       }, ({ popupUri, status }, token) => {
-        if(status === 'WAIT_INIT_PASSWORD') {
+        if (status === 'WAIT_INIT_PASSWORD') {
           setInputPassword('')
           setTempToken(token)
           return setNeedPasswordChange(true)
@@ -82,8 +81,8 @@ const Login = () => {
   }
 
   useEffect(() => {
-    if(needPasswordChange) inputChangePasswordRef.current?.focus()
-  },[needPasswordChange])
+    if (needPasswordChange) inputChangePasswordRef.current?.focus()
+  }, [needPasswordChange])
 
   return <>
     <div
@@ -136,10 +135,10 @@ const Login = () => {
               type='password'
               rules={[
                 {
-                    regExp: (val) => val != inputChangePassword,
-                    msg: <FormattedMessage id="PASSWORD_CONFIRM_CHECK"/>
+                  regExp: (val) => val != inputChangePassword,
+                  msg: <FormattedMessage id="PASSWORD_CONFIRM_CHECK" />
                 }
-            ]}
+              ]}
               value={inputChangePasswordConfirm}
               name="passwordConfirm"
               placeholder='비밀번호 재입력'
@@ -163,10 +162,10 @@ const Login = () => {
             <div className='login-action-row'>
               <Input id='saveId' type='checkbox' className='mr10' defaultChecked={cookies.rememberUserId} label={<FormattedMessage id='SAVE_ID' />} />
             </div>
-            {(userSignupMethod === UserSignupMethod.USER_SELF_ADMIN_ACCEPT || userSignupMethod === UserSignupMethod.USER_SELF_ADMIN_PASS) && <div className='login-action-row signup' onClick={() => {
+            {subdomainInfo.selfSignupEnabled && <div className='login-action-row signup' onClick={() => {
               navigate("/signup")
             }}>
-              회원가입
+              <FormattedMessage id="CREATE_ACCOUNT" />
             </div>}
           </div>}
           <Button
@@ -180,18 +179,17 @@ const Login = () => {
           </Link>}
         </form>
       </div>
-      {!isMobile && <Button
-        className='login-agent-download-button st10'
-        disabled={isAgentFileDisable}
-        icon={downloadIconWhite}
-        onClick={() => {
-          if (!isAgentFileDisable) {
-            AgentFileDownload(setIsAgentFileDisable, formatMessage({ id: 'DOWNLOAD_FAILED' }));
-          }
-        }}
-      >
-        <FormattedMessage id='DOWNLOAD_FOR_WINDOWS' />
-      </Button>}
+      {!isMobile && <a href={subdomainInfo.windowsAgentUrl} download>
+        <Button
+          className='login-agent-download-button st10'
+          icon={downloadIconWhite}
+          style={{
+            pointerEvents: 'none'
+          }}
+        >
+          <FormattedMessage id='DOWNLOAD_FOR_WINDOWS' />
+        </Button>
+      </a>}
 
       <div
         className='login-footer'

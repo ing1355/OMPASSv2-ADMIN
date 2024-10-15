@@ -5,7 +5,6 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Col, Row } from 'antd';
-import { useWindowHeight } from 'Components/CommonCustomComponents/useWindowHeight';
 import { CopyRightText } from 'Constants/ConstantValues';
 import { AgentFileDownload } from 'Components/CommonCustomComponents/AgentFileDownload';
 import GoToLoginPageButton from 'Components/CommonCustomComponents/goToLoginPageButton';
@@ -18,6 +17,7 @@ import locale_image from '../../assets/locale_image.png';
 import { langChange } from 'Redux/actions/langChange';
 import { saveLocaleToLocalStorage } from 'Functions/GlobalFunctions';
 import Button from 'Components/CommonCustomComponents/Button';
+import { useWindowHeight } from 'hooks/useWindowHeight';
 
 const GuidePage = () => {
   const { lang, subdomainInfo } = useSelector((state: ReduxStateType) => ({

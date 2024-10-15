@@ -14,7 +14,8 @@ const VersionUpload = () => {
   const [isVersionAlert, setIsVersionAlert] = useState<boolean>(false);
   const [fileName, setFileName] = useState('');
   const [isUploadingFile, setIsUploadingFile] = useState<boolean>(false);
-  const [inputVersion, setInputVersion] = useState('')
+  // const [inputVersion, setInputVersion] = useState('')
+  const [inputMemo, setInputMemo] = useState('')
   const [inputHash, setInputHash] = useState('')
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
@@ -58,14 +59,8 @@ const VersionUpload = () => {
               const multipartFile = uploadFile.files[0];
               const maxFileSize = 200 * 1024 * 1024;
               const fileExtension = multipartFile?.name.split('.').pop();
-              if (!inputVersion) {
-                return message.error(formatMessage({ id: "PLEASE_ENTER_A_VERSION" }))
-              }
-              if (!(/^v[0-9]+.[0-9]+.[0-9]+.[0-9]+/g.test(inputVersion))) {
-                return message.error("버전명이 올바르지 않습니다.")
-              }
 
-              if (inputVersion && multipartFile && inputHash && !isVersionAlert && !isUploadingFile) {
+              if (multipartFile && inputHash && !isVersionAlert && !isUploadingFile) {
                 if (multipartFile.size > maxFileSize) {
                   message.error(formatMessage({ id: 'THE_FILE_SIZE_EXCEEDS_200MB' }));
                 } else if (fileExtension !== 'zip') {
@@ -75,7 +70,8 @@ const VersionUpload = () => {
                   UploadAgentInstallerFunc({
                     "metaData.hash": inputHash,
                     "metaData.os": "Windows",
-                    "metaData.version": inputVersion,
+                    // "metaData.version": inputVersion,
+                    "metaData.note": inputMemo,
                     multipartFile: multipartFile,
                   }, () => {
                     navigate('/AgentManagement');
@@ -89,14 +85,13 @@ const VersionUpload = () => {
             }}
           >
             <div className='agent-input-row-container'>
-              <label><FormattedMessage id='VERSION_NAME' /></label>
+              <label><FormattedMessage id='MEMO' /></label>
               <Input
-                className={'st1 ' + (isVersionAlert ? 'red' : '')}
-                maxLength={16}
-                placeholder='ex) v1.x.x.x'
-                value={inputVersion}
+                className={'st1'}
+                maxLength={96}
+                value={inputMemo}
                 valueChange={value => {
-                  setInputVersion(value)
+                  setInputMemo(value)
                 }}
                 autoComplete='off'
               />

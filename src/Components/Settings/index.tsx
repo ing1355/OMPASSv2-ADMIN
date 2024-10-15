@@ -11,10 +11,10 @@ import { convertBase64FromClientToServerFormat } from "Functions/GlobalFunctions
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect"
 import Button from "Components/CommonCustomComponents/Button"
 import Input from "Components/CommonCustomComponents/Input"
-import ompassLogoIcon from '../../assets/ompassLogoIcon.png'
 import { useDispatch, useSelector } from "react-redux"
 import { subdomainInfoChange } from "Redux/actions/subdomainInfoChange"
 import { globalDatasChange } from "Redux/actions/globalDatasChange"
+import loginMainImage from '../../assets/loginMainImage.png'
 
 const Settings = () => {
     const { subdomainInfo, globalDatas } = useSelector((state: ReduxStateType) => ({
@@ -30,12 +30,12 @@ const Settings = () => {
     const [inputAlias, setInputAlias] = useState('회사명');
     const [logoImg, setLogoImg] = useState('')
     const dispatch = useDispatch()
-
+    
     const getDatas = async () => {
         setDataLoading(true)
         GetPortalSettingsDataFunc(({ userSignupMethod, logoImage, noticeMessage, timeZone, companyName, isUserAllowedToRemoveAuthenticator, selfSignupEnabled }) => {
             setSignupMethod(userSignupMethod)
-            setLogoImg(logoImage || ompassLogoIcon)
+            setLogoImg(logoImage)
             setWelcomeText(noticeMessage)
             setTimeZoneValue(timeZone)
             setInputAlias(companyName)
@@ -52,29 +52,46 @@ const Settings = () => {
     return <Contents loading={dataLoading}>
         <ContentsHeader title="" subTitle="">
             <Button className="st3" onClick={() => {
-                UpdatePortalSettingsDataFunc({
-                    timeZone: timeZoneValue,
-                    logoImage: logoImg && convertBase64FromClientToServerFormat(logoImg),
-                    noticeMessage: welcomeText,
-                    userSignupMethod: signupMethod,
-                    companyName: inputAlias,
-                    isUserAllowedToRemoveAuthenticator: canDelete,
-                    selfSignupEnabled: canSignUp
-                }, () => {
-                    message.success("설정 저장 성공!")
-                    dispatch(globalDatasChange({
-                        ...globalDatas,
-                        isUserAllowedToRemoveAuthenticator: canDelete
-                    }))
-                    dispatch(subdomainInfoChange({
-                        ...subdomainInfo!,
-                        logoImage: logoImg,
+                const callback = (img: string) => {
+                    UpdatePortalSettingsDataFunc({
+                        timeZone: timeZoneValue,
+                        logoImage: img && convertBase64FromClientToServerFormat(img),
                         noticeMessage: welcomeText,
-                        userSignupMethod: signupMethod
-                    }))
-                }).catch(err => {
-                    message.error("설정 저장 실패!")
-                })
+                        userSignupMethod: signupMethod,
+                        companyName: inputAlias,
+                        isUserAllowedToRemoveAuthenticator: canDelete,
+                        selfSignupEnabled: canSignUp
+                    }, () => {
+                        message.success("설정 저장 성공!")
+                        dispatch(globalDatasChange({
+                            ...globalDatas,
+                            isUserAllowedToRemoveAuthenticator: canDelete
+                        }))
+                        dispatch(subdomainInfoChange({
+                            ...subdomainInfo!,
+                            logoImage: logoImg,
+                            noticeMessage: welcomeText,
+                            userSignupMethod: signupMethod
+                        }))
+                    }).catch(err => {
+                        message.error("설정 저장 실패!")
+                    })
+                }
+                if(logoImg.startsWith('/static')) {
+                    const img = new Image()
+                    img.onload = () => {
+                        let canvas = document.createElement('canvas');
+                        canvas.width = img.naturalWidth;
+                        canvas.height = img.naturalHeight;
+                        canvas.getContext('2d')!.drawImage(img, 0, 0);
+                        const temp = logoImg.split('.')
+                        let b64Str = canvas.toDataURL(`image/${temp[temp.length - 1]}`);
+                        callback(b64Str)
+                    }
+                    img.src = logoImg
+                } else {
+                    callback(logoImg)
+                }
             }}>
                 저장
             </Button>
@@ -83,7 +100,7 @@ const Settings = () => {
             <CustomInputRow title="회사명">
                 <Input className="st1" value={inputAlias} valueChange={value => {
                     setInputAlias(value)
-                }} />
+                }} maxLength={20}/>
             </CustomInputRow>
             <CustomInputRow title="타임존">
                 <CustomSelect value={timeZoneValue} onChange={e => {
@@ -116,14 +133,14 @@ const Settings = () => {
             <CustomInputRow title="메인 텍스트 설정">
                 <Input className="st1" value={welcomeText} valueChange={value => {
                     setWelcomeText(value)
-                }} />
+                }} maxLength={50}/>
             </CustomInputRow>
             <CustomInputRow title="메인 이미지 설정" containerStyle={{
                 alignItems: 'flex-start'
             }}>
                 <CustomImageUpload src={logoImg} callback={(img) => {
                     setLogoImg(img)
-                }} />
+                }} defaultImg={loginMainImage}/>
             </CustomInputRow>
         </div>
     </Contents>

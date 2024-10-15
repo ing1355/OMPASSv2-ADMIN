@@ -19,4 +19,5 @@ type ReduxStateType = {
   userInfo?: UserDataType;
   subdomainInfo?: SubDomainInfoDataType
   globalDatas?: GlobalDatasType
+  windowsAgentUrl?: string
 }

@@ -40,7 +40,7 @@ const ApplicationDetail = () => {
     const navigate = useNavigate()
     const { uuid } = useParams()
     const isAdd = !uuid
-    const needDomains: ApplicationDataType['type'][] = ["DEFAULT", "ADMIN", "REDMINE"]
+    const needDomains: ApplicationDataType['type'][] = ["DEFAULT", "ADMIN"]
     const isRedmine = applicationType === 'REDMINE'
     const typeItems = applicationTypes(false).map(_ => ({
         key: _,

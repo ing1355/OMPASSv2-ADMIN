@@ -35,3 +35,10 @@
     height: 0;
   }
 }
+
+.version-memo-td {
+  max-width: 300px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}

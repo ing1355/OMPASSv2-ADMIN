@@ -27,6 +27,7 @@ type AgentInstallerDataType = {
   uploadDate: string,
   downloadTarget: boolean,
   fileName: string,
+  note: string
 }
 
 // export type userRoleType = "USER" | "ADMIN" | "SUPER_ADMIN" | null;
@@ -158,6 +159,7 @@ type SubDomainInfoDataType = {
   noticeMessage: PortalSettingsDataType['noticeMessage']
   userSignupMethod: PortalSettingsDataType['userSignupMethod']
   selfSignupEnabled: PortalSettingsDataType['selfSignupEnabled']
+  windowsAgentUrl?: string
   backendVersion: {
     fidoApp: string
     interfaceApp: string
@@ -179,4 +181,20 @@ type GlobalDatasType = {
   isUserAllowedToRemoveAuthenticator: boolean
   googleApiKey: string
   loading: boolean
+}
+
+type DashboardTopDataType = {
+  totalUserCount: number,
+  activeUserCount: number,
+  deActiveUserCount: number,
+  userCountByDeActiveStatus: {
+    count: number
+    status: UserStatusType
+  }[]
+}
+
+type DashboardApplicationRPUserDataType = {
+  applicationId: ApplicationListDataType['id'],
+  registeredRpUserCount: number,
+  unRegisteredRpUserCount: number
 }

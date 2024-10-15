@@ -1,8 +1,9 @@
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosGetFile, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from "Components/CommonCustomComponents/CustomAxios";
-import { AddApplicationListApi, AddPasscodeApi, AddPoliciesListApi, AddUserDataApi, AddUserGroupApi, ApprovalUserApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DownloadAgentInstallerApi, DuplicateUserNameCheckApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetGlobalConfigApi, GetPasscodeHistoriesApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, PostLoginApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi } from "Constants/ApiRoute";
+import { AddApplicationListApi, AddPasscodeApi, AddPoliciesListApi, AddUserDataApi, AddUserGroupApi, ApprovalUserApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DownloadAgentInstallerApi, DuplicateUserNameCheckApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetGlobalConfigApi, GetPasscodeHistoriesApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, PostLoginApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, UpdateAgentNoteApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi } from "Constants/ApiRoute";
 import { INT_MAX_VALUE } from "Constants/ConstantValues";
 import { AxiosResponse } from "axios";
 import { convertUTCStringToKSTString } from "./GlobalFunctions";
+import { convertDashboardDateParamsKSTtoUTC } from "Components/Dashboard/DashboardFunctions";
 
 export const LoginFunc = (params: LoginApiParamsType, callback: (res: LoginApiResponseType, token: string) => void) => {
     return CustomAxiosPost(
@@ -18,9 +19,9 @@ export const UpdatePasswordFunc = (password: string, authorization: string, call
         UpdatePasswordApi,
         () => {
             callback()
-        }, {password}, {
-            authorization
-        }
+        }, { password }, {
+        authorization
+    }
     )
 }
 
@@ -48,6 +49,7 @@ export const GetApplicationListFunc = ({
     page_size = 10,
     page = 1,
     id = "",
+    policyName = "",
     name = "",
     type = "",
     sortBy = "CREATED_AT",
@@ -57,6 +59,7 @@ export const GetApplicationListFunc = ({
         page_size,
         page,
         id,
+        policyName,
         name,
         sortBy,
         type,
@@ -196,6 +199,7 @@ export const GetUserDetailDataFunc = (userId: UserDataType['userId'], callback: 
 export const GetUserGroupDataListFunc = ({
     page_size = 10,
     page = 1,
+    policyName = "",
     name = "",
     sortBy = "CREATED_AT",
     sortDirection = "DESC"
@@ -205,6 +209,7 @@ export const GetUserGroupDataListFunc = ({
     }, {
         page_size,
         page,
+        policyName,
         name,
         sortBy,
         sortDirection
@@ -232,10 +237,12 @@ export const DeleteUserGroupDataFunc = (groupId: UserGroupDataType['id'], callba
 export const GetAuthLogDataListFunc = ({
     page_size = 10,
     page = 1,
-    username = "",
+    rpUsername = "",
+    portalUsername = "",
     applicationName = "",
-    processType = "",
-    isProcessSuccesss = undefined,
+    authenticatorType = undefined,
+    authenticationLogType = undefined,
+    processType = undefined,
     sortBy = "CREATED_AT",
     sortDirection = "DESC"
 }: AuthLogListParamsType, callback: ((data: GetListDataGeneralType<AuthLogDataType>) => void)) => {
@@ -244,10 +251,12 @@ export const GetAuthLogDataListFunc = ({
     }, {
         page_size,
         page,
-        username,
+        rpUsername,
+        portalUsername,
         applicationName,
+        authenticatorType,
+        authenticationLogType,
         processType,
-        isProcessSuccesss,
         sortBy,
         sortDirection
     })
@@ -331,6 +340,12 @@ export const DeleteAgentInstallerFunc = (fileIds: string, callback: () => void) 
     return CustomAxiosDelete(DeleteAgentInstallerApi(fileIds), callback)
 }
 
+export const UpdateAgentInstallerNoteFunc = (fileId: AgentInstallerDataType['fileId'], params: AgentInstallerDataType['note'], callback: () => void) => {
+    return CustomAxiosPatch(UpdateAgentNoteApi(fileId), callback, {
+        note: params
+    })
+}
+
 export const GetSubDomainInfoFunc = (subdomain: string, callback: (data: SubDomainInfoDataType) => void) => {
     return CustomAxiosGet(GetSubDomainInfoApi(subdomain), callback)
 }
@@ -375,4 +390,28 @@ export const UpdateUserAuthenticatorPolicyFunc = (authId: string, policyId: stri
 
 export const GetGlobalConfigFunc = (callback: (data: GlobalDatasType) => void) => {
     return CustomAxiosGet(GetGlobalConfigApi, callback)
+}
+
+export const GetDashboardTopFunc = (callback: (data: DashboardTopDataType) => void) => {
+    return CustomAxiosGet(GetDashboardTopApi, callback)
+}
+
+export const GetDashboardApplicationRPUserFunc = (params: ApplicationListDataType['id'][], callback: (data: DashboardApplicationRPUserDataType[]) => void) => {
+    return CustomAxiosGet(GetDashboardApplicationRPUserApi, callback, { applicationIds: params })
+}
+
+export const GetDashboardApplicationAuthFunc = (params: ApplicationListDataType['id'][], params2: DashboardDateSelectDataType, callback: (data: DashboardChartDataEachApplicationType[]) => void) => {
+    return CustomAxiosGet(GetDashboardApplicationAuthApi, callback, { applicationIds: params, ...convertDashboardDateParamsKSTtoUTC(params2) })
+}
+
+export const GetDashboardApplicationAuthSumFunc = (params: ApplicationListDataType['id'][], params2: DashboardDateSelectDataType, callback: (data: DashboardChartDataType[]) => void) => {
+    return CustomAxiosGet(GetDashboardApplicationAuthSumApi, callback, { applicationIds: params, ...convertDashboardDateParamsKSTtoUTC(params2) })
+}
+
+export const GetDashboardApplicationInvalidAuthFunc = (params: ApplicationListDataType['id'][], params2: DashboardDateSelectDataType, callback: (data: DashboardChartDataEachApplicationType[]) => void) => {
+    return CustomAxiosGet(GetDashboardApplicationAuthApi, callback, { applicationIds: params, ...convertDashboardDateParamsKSTtoUTC(params2), logType: 'DENY' })
+}
+
+export const GetDashboardApplicationInvalidAuthSumFunc = (params: ApplicationListDataType['id'][], params2: DashboardDateSelectDataType, callback: (data: DashboardChartDataType[]) => void) => {
+    return CustomAxiosGet(GetDashboardApplicationAuthSumApi, callback, { applicationIds: params, ...convertDashboardDateParamsKSTtoUTC(params2), logType: 'DENY' })
 }

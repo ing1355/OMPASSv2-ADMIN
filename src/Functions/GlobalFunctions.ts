@@ -4,8 +4,22 @@ export const getStorageAuth = () => localStorage.getItem('Authorization')
 export const setStorageAuth = (token: string) => localStorage.setItem('Authorization', token)
 export const removeStorageAuth = () => localStorage.removeItem('Authorization')
 
+export const pad2Digit = (value: number) => {
+    return value.toString().padStart(2, '0')
+}
+
 export const createRandom1Digit = () => {
     return Math.floor(Math.random() * 10).toString()
+}
+
+export const getDateString = (date: Date) => {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+
+    const dateString = `${year}-${month}-${day}`
+
+    return dateString;
 }
 
 export const getDateTimeString = (date: Date) => {
@@ -37,7 +51,10 @@ export const convertUTCToKST = (date: Date) => {
 
 export const convertUTCStringToKSTString = (date: string) => {
     return getDateTimeString(convertUTCToKST(new Date(date)))
+}
 
+export const convertKSTStringToUTCString = (date: string) => {
+    return getDateTimeString(convertKSTToUTC(new Date(date)))
 }
 
 export const slicePrice = (price: string | number) => {

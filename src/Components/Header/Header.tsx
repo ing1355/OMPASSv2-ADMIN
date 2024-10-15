@@ -104,15 +104,18 @@ const Header = () => {
             {role !== 'USER' &&
               <li ref={dropdownRef}>
                 <input id='dropdown_menu' type='checkbox' readOnly checked={isMenuOpen} />
-                <label htmlFor='dropdown_menu' className='dropdown_menu_label' onClick={() => { setIsMenuOpen(!isMenuOpen) }}>
+                <label htmlFor='dropdown_menu' className='dropdown_menu_label' onClick={() => {
+                  navigate('/Main')
+                  // setIsMenuOpen(!isMenuOpen)
+                }}>
                   <img src={menu_icon} width='30px' style={{ opacity: 0.7, position: 'relative' }} />
                 </label>
-                {windowWidth <= 785 ?
+                {/* {windowWidth <= 785 ?
                   <ul className='dropdown_menu_ul'>
                     {
                       menuDatas(role).map((_, ind) => <li key={ind}><Link to={_.route}><div onClick={() => { setIsMenuOpen(false) }}><FormattedMessage id={_.label} /></div></Link></li>)
                     }
-                    {/* <li>
+                    <li>
                     <div onClick={()=>{setIsMenuOpen(false)}}>
                       <FormattedMessage id='DOWNLOAD_INSTALL_FILE' />
                       <img src={download_icon_blue}
@@ -125,7 +128,7 @@ const Header = () => {
                         }}
                       />
                     </div>
-                  </li> */}
+                  </li>
                     <li>
                       <div onClick={() => { setIsMenuOpen(false) }}>
                         <a
@@ -168,7 +171,7 @@ const Header = () => {
                       menuDatas(role).map((_, ind) => <li key={ind}><Link to={_.route}><div onClick={() => { setIsMenuOpen(false) }}><FormattedMessage id={_.label} /></div></Link></li>)
                     }
                   </ul>
-                }
+                } */}
 
               </li>
             }
@@ -176,7 +179,7 @@ const Header = () => {
               className='header-title-container'
               onClick={() => {
                 if (role !== 'USER') {
-                  navigate('/Main');
+                  navigate('/Dashboard');
                 }
               }}
             >

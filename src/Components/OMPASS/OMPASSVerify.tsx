@@ -22,7 +22,7 @@ const OMPASSVerify = () => {
       }, token: string) => {
         setStorageAuth(token)
         dispatch(userInfoChange(token))
-        navigate('/Main', {replace: true})
+        navigate('/Dashboard', {replace: true})
       },
       {
         username: username,
@@ -36,7 +36,7 @@ const OMPASSVerify = () => {
       authorization
     }
     ).catch(err => {
-      navigate('/Main')
+      navigate('/Dashboard')
     });
   }, [])
   return (

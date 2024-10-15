@@ -3,14 +3,16 @@ import './ContentsHeader.css'
 import { CSSProperties, PropsWithChildren } from "react"
 
 type ContentsHeaderProps = {
-    title: string|React.ReactNode
+    title: string | React.ReactNode
     subTitle: string
     style?: CSSProperties
+    contentStyle?: CSSProperties
+    className?: string
 }
 
-const ContentsHeader = ({title, subTitle, style, children}: PropsWithChildren<ContentsHeaderProps>) => {
+const ContentsHeader = ({ title, subTitle, style, children, contentStyle, className }: PropsWithChildren<ContentsHeaderProps>) => {
     return <div
-        className='contents-header-container'
+        className={'contents-header-container' + `${className ? (' ' + className) : ''}`}
         style={style}
     >
         {/* <div>
@@ -18,6 +20,7 @@ const ContentsHeader = ({title, subTitle, style, children}: PropsWithChildren<Co
         </div> */}
         <div
             className='mb40 contents-header-content'
+            style={contentStyle}
         >
             <h1>
                 {subTitle && <FormattedMessage id={subTitle} />}

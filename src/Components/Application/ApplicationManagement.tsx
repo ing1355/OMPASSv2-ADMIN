@@ -70,6 +70,10 @@ const ApplicationManagement = () => {
                     key: _,
                     label: getApplicationTypeLabel(_)
                 }))
+            }, {
+                key: 'policyName',
+                type: 'string',
+                label: '정책명'
             }]}
             onSearchChange={(data) => {
                 GetDatas(data)
@@ -118,7 +122,7 @@ const ApplicationManagement = () => {
                 },
                 {
                     key: 'policyId',
-                    title: '정책',
+                    title: '정책명',
                     render: (data, ind, row) => {
                         const target = policiesData.find(_ => _.id === data);
                         if(target) {

@@ -28,6 +28,7 @@ import { subdomainInfoChange } from 'Redux/actions/subdomainInfoChange';
 import SignUp from 'Components/SignUp/SignUp';
 import { globalDatasChange } from 'Redux/actions/globalDatasChange';
 import { userInfoChange } from 'Redux/actions/userChange';
+import Dashboard from 'Components/Dashboard/Dashboard';
 
 const convertLangToIntlVer = (lang: ReduxStateType['lang']) => {
   return lang === 'EN' ? 'en-us' : 'ko-kr'
@@ -79,6 +80,7 @@ const App: React.FC = () => {
           userInfo ? (
             userInfo.role! !== 'USER' ? <>
               <Route path='/Main' element={<Main />} />
+              <Route path='/Dashboard' element={<Dashboard />} />
               <Route path='/AgentManagement/*' element={<Agent />} />
               <Route path='/UserManagement/*' element={<Users />} />
               <Route path='/PasscodeManagement' element={<PasscodeManagement />} />
@@ -90,7 +92,7 @@ const App: React.FC = () => {
               <Route path='/AuthLogs' element={<AuthLog />} />
               <Route path='/PortalLogs' element={<PortalLog />} />
               <Route path='/Settings' element={<Settings />} />
-              <Route path='/*' element={<Navigate to='/Main' replace={true} />} />
+              <Route path='/*' element={<Navigate to='/Dashboard' replace={true} />} />
             </>
               : <>
                 <Route path='/Main' element={<Users />} />

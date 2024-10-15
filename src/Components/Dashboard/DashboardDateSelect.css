@@ -1,0 +1,36 @@
+.dashboard-date-select-container {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    width: 100%;
+    justify-content: flex-end;
+    align-items: center;
+    height: 32px;
+    cursor: default;
+}
+
+.dashboard-date-select-fixed-item-container {
+    cursor: pointer;
+    border-radius: 12px;
+    padding: 6px 12px;
+    font-size: .8rem;
+    background-color: var(--sub-grey-color);
+    color: #aaa;
+    position: relative;
+    font-weight: 500;
+}
+
+.dashboard-date-select-fixed-item-container.selected {
+    background-color: var(--main-purple-color);
+    color: var(--main-white-color);
+}
+
+.dashboard-date-select-fixed-item-container.user {
+    background-color: #F6F3FF;
+    color: var(--main-purple-color);
+    padding-left: 28px;
+    background-image: url(../../assets/dashboardDateIconPurple.png);
+    background-position: 8px 50%;
+    background-repeat: no-repeat;
+    background-size: 16px 16px;
+}

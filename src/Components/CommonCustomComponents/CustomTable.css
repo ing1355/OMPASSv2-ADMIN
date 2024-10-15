@@ -15,6 +15,7 @@
     height: 200px;
     border-bottom: none;
     border-top: none;
+    text-align: center;
     color: var(--sub-grey-color3);
 }
 
@@ -32,8 +33,8 @@
     }
 }
 
-.table-st1,
-.table-st1 table {
+.custom-table,
+.custom-table table {
   width: 100%;
   border-collapse: collapse;
 }
@@ -41,9 +42,18 @@
 .table-st1 thead tr {
   background-color: var(--sub-grey-color);
   & > th {
-    font-weight: 200;
+    font-weight: 400;
     padding: 10px;
     color: var(--main-grey-color2);
+  }
+}
+
+.table-st2 thead tr {
+  background-color: var(--sub-grey-color);
+  & > th {
+    font-weight: 400;
+    padding: 10px;
+    color: #aaa;
   }
 }
 

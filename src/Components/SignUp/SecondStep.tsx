@@ -15,7 +15,7 @@ const InputRow = ({ label, children, required }: PropsWithChildren<{
 }>) => {
     return <div className="signup-input-row">
         <div className="signup-input-row-label">
-            <RequiredLabel required={required}/>
+            <RequiredLabel required={required} />
             <label><FormattedMessage id={label} /></label>
         </div>
         <div className="signup-input-row-inner">
@@ -44,6 +44,8 @@ const SecondStep = () => {
     const [inputPhone, setInputPhone] = useState('')
     const [inputEmail, setInputEmail] = useState('')
 
+    const [mailSendLoading, setMailSendLoading] = useState(false)
+
     const usernameRef = useRef<HTMLInputElement>(null)
     const passwordRef = useRef<HTMLInputElement>(null)
     const passwordConfirmRef = useRef<HTMLInputElement>(null)
@@ -52,13 +54,24 @@ const SecondStep = () => {
     const emailRef = useRef<HTMLInputElement>(null)
     const codeRef = useRef<HTMLInputElement>(null)
 
+    const mailTimer = useRef<NodeJS.Timer>()
+    const mailCount = useRef(0)
+
     const navigate = useNavigate();
     const { formatMessage } = useIntl();
 
     useEffect(() => {
         setVerifyCode('')
         setEmailVerify(false)
-    },[emailCodeSend])
+    }, [emailCodeSend])
+
+    useEffect(() => {
+        return () => {
+            if (mailTimer.current) {
+                clearInterval(mailTimer.current)
+            }
+        }
+    }, [])
 
     return <div className="signup-content second">
         <form
@@ -69,9 +82,9 @@ const SecondStep = () => {
                     // return message.error(formatMessage({id:'USERNAME_CHECK'}))
                 }
                 if (idExist) {
-                    return message.error(formatMessage({id: 'ID_CHECK'}))
+                    return message.error(formatMessage({ id: 'ID_CHECK' }))
                 }
-                if(isPasswordAlert) {
+                if (isPasswordAlert) {
                     return passwordRef.current?.focus()
                 }
                 if (inputPassword !== inputPasswordConfirm) {
@@ -182,7 +195,7 @@ const SecondStep = () => {
                     rules={[
                         {
                             regExp: (val) => val != inputPassword,
-                            msg: <FormattedMessage id="PASSWORD_CONFIRM_CHECK"/>
+                            msg: <FormattedMessage id="PASSWORD_CONFIRM_CHECK" />
                         }
                     ]}
                     valueChange={(value, isAlert) => {
@@ -200,7 +213,7 @@ const SecondStep = () => {
                     rules={[
                         {
                             regExp: nameRegex,
-                            msg: <FormattedMessage id="FIRST_NAME_CHECK"/>
+                            msg: <FormattedMessage id="FIRST_NAME_CHECK" />
                         }
                     ]}
                     value={inputName1}
@@ -219,7 +232,7 @@ const SecondStep = () => {
                     rules={[
                         {
                             regExp: nameRegex,
-                            msg: <FormattedMessage id="LAST_NAME_CHECK"/>
+                            msg: <FormattedMessage id="LAST_NAME_CHECK" />
                         }
                     ]}
                     value={inputName2}
@@ -248,13 +261,23 @@ const SecondStep = () => {
                     <Button
                         type='button'
                         className={'st11 signup-duplicate-check'}
-                        disabled={inputEmail.length === 0 || emailVerify || isEmailAlert}
+                        disabled={inputEmail.length === 0 || emailVerify || isEmailAlert || mailSendLoading}
                         onClick={() => {
+                            setMailSendLoading(true)
                             SignUpVerificationCodeSendFunc({
                                 email: inputEmail
                             }, () => {
                                 setEmailCodeSend(true)
                                 message.success("인증 코드 발송 성공!")
+                                mailTimer.current = setInterval(() => {
+                                    mailCount.current += 1
+                                    if (mailCount.current >= 60) {
+                                        clearInterval(mailTimer.current)
+                                        setMailSendLoading(false)
+                                    }
+                                }, 1000);
+                            }).catch(e => {
+                                setMailSendLoading(false)
                             })
                         }}
                     ><FormattedMessage id={emailCodeSend ? 'EMAIL_VERIFY_RE' : 'EMAIL_VERIFY'} />

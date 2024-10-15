@@ -2,6 +2,7 @@ import { useLayoutEffect, useState } from "react"
 import './PolicySelect.css'
 import { GetUserGroupDataListFunc } from "Functions/ApiFunctions"
 import CustomSelect from "./CustomSelect"
+import { FormattedMessage } from "react-intl"
 
 type GroupSelectProps = {
     selectedGroup?: UserGroupListDataType['id']
@@ -25,7 +26,7 @@ const GroupSelect = ({ selectedGroup, setSelectedGroup, needSelect }: GroupSelec
                 label: _.name
             }))} value={selectedGroup || ""} onChange={id => {
                 setSelectedGroup(id)
-            }} needSelect={needSelect}/>
+            }} needSelect={needSelect} noLabel={<FormattedMessage id="NONE_GROUP" />}/>
         {groupsData.length > 0 && selectedGroup && <div className="custom-detail-policy-navigate-text">
             <a target="_blank" href={`/Groups/detail/${selectedGroup}`}>여기</a>를 눌러 그룹을 편집할 수 있습니다.
         </div>}
