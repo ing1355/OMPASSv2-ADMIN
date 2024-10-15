@@ -13,14 +13,14 @@ import downloadIcon from '../../assets/downloadIcon.png';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { userInfoClear } from 'Redux/actions/userChange';
 import { Col, Row, Tooltip, message } from 'antd';
-import { AgentFileDownload } from 'Components/CommonCustomComponents/AgentFileDownload';
 import { menuDatas } from 'Constants/ConstantValues';
 import { saveLocaleToLocalStorage } from 'Functions/GlobalFunctions';
 
 const Header = () => {
-  const { lang, userInfo } = useSelector((state: ReduxStateType) => ({
+  const { lang, userInfo, subdomainInfo } = useSelector((state: ReduxStateType) => ({
     lang: state.lang,
-    userInfo: state.userInfo!
+    userInfo: state.userInfo!,
+    subdomainInfo: state.subdomainInfo!
   }));
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isAgentFileDisable, setIsAgentFileDisable] = useState<boolean>(false);
@@ -60,31 +60,6 @@ const Header = () => {
     };
   }, []);
 
-  // const downloadAgentFileFun = () => {
-  //   CustomAxiosGetFile(
-  //     GetAgentInstallerDownloadApi,
-  //     (res:any) => {
-  //       const versionName = res.headers['content-disposition'].split(';').filter((str:any) => str.includes('filename'))[0].match(/filename="([^"]+)"/)[1];
-  //       const fileDownlaoadUrl = URL.createObjectURL(res.data);
-  //       const downloadLink = document.createElement('a');
-  //       downloadLink.href = fileDownlaoadUrl;
-  //       downloadLink.download = versionName;
-  //       document.body.appendChild(downloadLink);
-  //       downloadLink.click();
-  //       document.body.removeChild(downloadLink);
-  //       URL.revokeObjectURL(fileDownlaoadUrl);
-  //     },
-  //     {
-  //     },
-  //     () => {
-  //       message.error(formatMessage({ id: 'DOWNLOAD_FAILED' }));
-  //     },{},
-  //     (err:any) => {
-  //       setIsAgentFileDisable(false);
-  //     }
-  //   )
-  // }
-
   return (
     <div
       className='header-container'
@@ -106,72 +81,9 @@ const Header = () => {
                 <input id='dropdown_menu' type='checkbox' readOnly checked={isMenuOpen} />
                 <label htmlFor='dropdown_menu' className='dropdown_menu_label' onClick={() => {
                   navigate('/Main')
-                  // setIsMenuOpen(!isMenuOpen)
                 }}>
                   <img src={menu_icon} width='30px' style={{ opacity: 0.7, position: 'relative' }} />
                 </label>
-                {/* {windowWidth <= 785 ?
-                  <ul className='dropdown_menu_ul'>
-                    {
-                      menuDatas(role).map((_, ind) => <li key={ind}><Link to={_.route}><div onClick={() => { setIsMenuOpen(false) }}><FormattedMessage id={_.label} /></div></Link></li>)
-                    }
-                    <li>
-                    <div onClick={()=>{setIsMenuOpen(false)}}>
-                      <FormattedMessage id='DOWNLOAD_INSTALL_FILE' />
-                      <img src={download_icon_blue}
-                        width='25px'
-                        height='25px'
-                        style={{position: 'relative', top: '5px', cursor: 'pointer', marginLeft: '7px'}}
-                        onClick={()=>{
-                          setIsAgentFileDisable(true);
-                          downloadAgentFileFun();
-                        }}
-                      />
-                    </div>
-                  </li>
-                    <li>
-                      <div onClick={() => { setIsMenuOpen(false) }}>
-                        <a
-                          href="/OMPASS_Portal_User_Manual.pdf"
-                          download
-                        >
-                          <FormattedMessage id='DOWNLOAD_USER_MANUAL' />
-                          <img
-                            src={manualDownloadIcon}
-                            width="25px"
-                            className=''
-                            style={{ position: 'relative', top: '5px', marginLeft: '7px' }}
-                          />
-                        </a>
-                      </div>
-                    </li>
-                    <li>
-                      <div onClick={() => { setIsMenuOpen(false) }}>
-                        <img src={locale_image} width='20px' style={{ position: 'relative', top: '3px', marginRight: '2px' }} />
-                        <span
-                          className={'mlr5 locale-toggle' + (lang === 'KR' ? ' active' : '')}
-                          onClick={() => {
-                            dispatch(langChange('KR'));
-                            saveLocaleToLocalStorage('EN')
-                          }}
-                        >KO</span>|
-                        <span
-                          className={'mlr5 locale-toggle' + (lang === 'EN' ? ' active' : '')}
-                          onClick={() => {
-                            dispatch(langChange('EN'));
-                            saveLocaleToLocalStorage('EN')
-                          }}
-                        >EN</span>
-                      </div>
-                    </li>
-                  </ul>
-                  :
-                  <ul className='dropdown_menu_ul'>
-                    {
-                      menuDatas(role).map((_, ind) => <li key={ind}><Link to={_.route}><div onClick={() => { setIsMenuOpen(false) }}><FormattedMessage id={_.label} /></div></Link></li>)
-                    }
-                  </ul>
-                } */}
 
               </li>
             }
@@ -223,18 +135,16 @@ const Header = () => {
                 title={formatMessage({ id: 'DOWNLOAD_FOR_WINDOWS_AGNET_FILE' })}
               >
                 <li>
-                  <img src={downloadIcon}
-                    width='25px'
-                    height='25px'
-                    style={{ position: 'relative', top: '5px', cursor: 'pointer' }}
-                    // onClick={()=>{
-                    //   setIsAgentFileDisable(true);
-                    //   downloadAgentFileFun();
-                    // }}
-                    onClick={() => {
-                      AgentFileDownload(setIsAgentFileDisable, formatMessage({ id: 'DOWNLOAD_FAILED' }));
-                    }}
-                  />
+                  <a style={{
+                    position: 'relative', top: '5px',
+                  }} href={subdomainInfo.windowsAgentUrl} download>
+                    <img src={downloadIcon}
+                      width='25px'
+                      height='25px'
+                      style={{ pointerEvents: 'none' }}
+                    />
+
+                  </a>
                 </li>
               </Tooltip>
             }

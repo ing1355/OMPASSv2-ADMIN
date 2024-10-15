@@ -308,22 +308,6 @@ export const GetAgentInstallerListFunc = ({
     } as GroupListParamsType)
 }
 
-export const DownloadAgentInstallerFunc = (params?: {
-    file_id: number
-}) => {
-    return CustomAxiosGetFile(DownloadAgentInstallerApi, (res: AxiosResponse) => {
-        const versionName = res.headers['content-disposition'].split(';').filter((str: any) => str.includes('filename'))[0].match(/filename="([^"]+)"/)[1];
-        const fileDownlaoadUrl = URL.createObjectURL(res.data);
-        const downloadLink = document.createElement('a');
-        downloadLink.href = fileDownlaoadUrl;
-        downloadLink.download = versionName;
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-        URL.revokeObjectURL(fileDownlaoadUrl);
-    }, params)
-}
-
 export const UploadAgentInstallerFunc = (params: AgentInstallerUploadParamsType, callback: () => void) => {
     return CustomAxiosPost(UploadAgentInstallerApi, callback, params, {
         headers: {

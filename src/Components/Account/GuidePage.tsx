@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { Col, Row } from 'antd';
 import { CopyRightText } from 'Constants/ConstantValues';
-import { AgentFileDownload } from 'Components/CommonCustomComponents/AgentFileDownload';
 import GoToLoginPageButton from 'Components/CommonCustomComponents/goToLoginPageButton';
 
 import manualDownloadIcon from '../../assets/manualDownloadIcon.png';
@@ -57,7 +56,7 @@ const GuidePage = () => {
             <Button
               className={'st10'}
               onClick={() => {
-                AgentFileDownload(setIsFileDownloadDisable, formatMessage({ id: 'DOWNLOAD_FAILED' }));
+                // AgentFileDownload(setIsFileDownloadDisable, formatMessage({ id: 'DOWNLOAD_FAILED' }));
               }}
             >
               <img src={downloadIcon}

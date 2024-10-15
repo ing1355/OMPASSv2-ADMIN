@@ -11,7 +11,6 @@ import locale_image from '../../assets/locale_image.png';
 import downloadIconWhite from '../../assets/downloadIconWhite.png';
 import manualDownloadIcon from '../../assets/manualDownloadIcon.png'
 import { useCookies } from 'react-cookie';
-import { AgentFileDownload } from 'Components/CommonCustomComponents/AgentFileDownload';
 import { LoginFunc, UpdatePasswordFunc } from 'Functions/ApiFunctions';
 import { saveLocaleToLocalStorage } from 'Functions/GlobalFunctions';
 import Button from 'Components/CommonCustomComponents/Button';

@@ -1,7 +1,7 @@
 import './AgentManagement.css';
 import { FormattedMessage, useIntl } from "react-intl";
 import { message } from 'antd';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import Contents from 'Components/Layout/Contents';
 import ContentsHeader from 'Components/Layout/ContentsHeader';
@@ -11,7 +11,6 @@ import Input from 'Components/CommonCustomComponents/Input';
 import uploadIconHover from '../../assets/uploadIconHover.png'
 
 const VersionUpload = () => {
-  const [isVersionAlert, setIsVersionAlert] = useState<boolean>(false);
   const [fileName, setFileName] = useState('');
   const [isUploadingFile, setIsUploadingFile] = useState<boolean>(false);
   // const [inputVersion, setInputVersion] = useState('')
@@ -59,14 +58,14 @@ const VersionUpload = () => {
               const multipartFile = uploadFile.files[0];
               const maxFileSize = 200 * 1024 * 1024;
               const fileExtension = multipartFile?.name.split('.').pop();
-
-              if (multipartFile && inputHash && !isVersionAlert && !isUploadingFile) {
-                if (multipartFile.size > maxFileSize) {
-                  message.error(formatMessage({ id: 'THE_FILE_SIZE_EXCEEDS_200MB' }));
-                } else if (fileExtension !== 'zip') {
-                  message.error(formatMessage({ id: 'ONLY_ZIP_FILES_CAN_BE_UPLOADED' }));
-                } else {
-                  setIsUploadingFile(true);
+              if (!inputHash) {
+                return message.error(formatMessage({ id: 'PLEASE_INPUT_HASH' }));
+              } else if (multipartFile.size > maxFileSize) {
+                return message.error(formatMessage({ id: 'THE_FILE_SIZE_EXCEEDS_200MB' }));
+              } else if (fileExtension !== 'zip') {
+                return message.error(formatMessage({ id: 'ONLY_ZIP_FILES_CAN_BE_UPLOADED' }));
+              }
+              setIsUploadingFile(true);
                   UploadAgentInstallerFunc({
                     "metaData.hash": inputHash,
                     "metaData.os": "Windows",
@@ -75,13 +74,7 @@ const VersionUpload = () => {
                     multipartFile: multipartFile,
                   }, () => {
                     navigate('/AgentManagement');
-                  }).catch(err => {
-                    setIsUploadingFile(false);
-                  });
-                }
-              } else {
-                message.error(formatMessage({ id: 'PLEASE_ENTER_ALL_THE_ITEMS' }))
-              }
+                  })
             }}
           >
             <div className='agent-input-row-container'>

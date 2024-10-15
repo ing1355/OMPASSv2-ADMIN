@@ -9,13 +9,11 @@ import tableDeleteIconHover from '../../assets/tableDeleteIconHover.png';
 import downloadIcon from '../../assets/downloadIcon.png';
 import uploadIcon from '../../assets/uploadIcon.png';
 import uploadIconHover from '../../assets/uploadIconHover.png';
-import download_installer_icon from '../../assets/download_installer_icon.png';
 import ContentsHeader from 'Components/Layout/ContentsHeader';
 import Contents from 'Components/Layout/Contents';
 import CustomTable from 'Components/CommonCustomComponents/CustomTable';
-import { CurrentAgentVersionChangeFunc, DeleteAgentInstallerFunc, DownloadAgentInstallerFunc, GetAgentInstallerListFunc } from 'Functions/ApiFunctions';
+import { CurrentAgentVersionChangeFunc, DeleteAgentInstallerFunc, GetAgentInstallerListFunc } from 'Functions/ApiFunctions';
 import Button from 'Components/CommonCustomComponents/Button';
-import { userSelectPageSize } from 'Constants/ConstantValues';
 import { convertUTCStringToKSTString } from 'Functions/GlobalFunctions';
 
 interface Checkbox {
@@ -136,18 +134,17 @@ const AgentManagement = () => {
               key: 'download',
               width: '100px',
               title: <FormattedMessage id='DOWNLOAD' />,
-              render: (_, index, data) => <img
-                src={downloadIcon}
-                style={{ cursor: 'pointer' }}
-                width='18px'
-                onClick={(e) => {
-                  e.stopPropagation()
-                  DownloadAgentInstallerFunc({ file_id: data.fileId }).catch(err => {
-                    message.error(formatMessage({ id: 'DOWNLOAD_FAILED' }));
-                  }).finally(() => {
-                  })
-                }}
-              />
+              render: (_, index, data) => <a href={data.downloadUrl} download onClick={e => {
+                e.stopPropagation()
+              }} style={{
+                padding: '10px'
+              }}>
+                <img
+                  src={downloadIcon}
+                  style={{ pointerEvents: 'none' }}
+                  width='18px'
+                />
+              </a>
             }, {
               key: 'currentVersionSetting',
               title: <FormattedMessage id='CURRENT_VERSION_SETTING' />,

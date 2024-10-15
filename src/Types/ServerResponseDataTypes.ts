@@ -20,13 +20,14 @@ type GetPutUsersApiType = {
 type AgentInstallerListDataType = Array<AgentInstallerDataType>
 
 type AgentInstallerDataType = {
-  fileId: number,
-  uploader: string,
-  version: string,
-  os: string,
-  uploadDate: string,
-  downloadTarget: boolean,
-  fileName: string,
+  fileId: number
+  uploader: string
+  version: string
+  os: string
+  uploadDate: string
+  downloadTarget: boolean
+  downloadUrl: string
+  fileName: string
   note: string
 }
 
