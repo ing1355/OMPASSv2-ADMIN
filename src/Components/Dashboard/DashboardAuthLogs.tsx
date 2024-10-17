@@ -1,6 +1,6 @@
 import { Tooltip } from "antd"
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
-import { GetAuthLogDataListFunc } from "Functions/ApiFunctions"
+import { GetInvalidAuthLogDataListFunc } from "Functions/ApiFunctions"
 import { convertUTCStringToKSTString } from "Functions/GlobalFunctions"
 import { useEffect, useState } from "react"
 import { FormattedMessage } from "react-intl"
@@ -9,7 +9,7 @@ import { useNavigate } from "react-router"
 const DashboardAuthLogs = ({ applications }: {
     applications: ApplicationListDataType[]
 }) => {
-    const [datas, setDatas] = useState<AuthLogDataType[]>([])
+    const [datas, setDatas] = useState<InvalidAuthLogDataType[]>([])
     const navigate = useNavigate()
 
     const getDatas = () => {
@@ -18,7 +18,7 @@ const DashboardAuthLogs = ({ applications }: {
             page: 1,
             authenticationLogType: 'DENY'
         }
-        GetAuthLogDataListFunc(_params, ({ results, totalCount }) => {
+        GetInvalidAuthLogDataListFunc(_params, ({ results, totalCount }) => {
             setDatas(results.map(_ => ({
                 ..._,
                 authenticationTime: convertUTCStringToKSTString(_.authenticationTime)
@@ -46,14 +46,18 @@ const DashboardAuthLogs = ({ applications }: {
             </div>
             <Tooltip>
             <div className="dashboard-invalid-auth-log-table-more-btn" aria-valuetext="비정상 로그 더보기" onClick={() => {
-                navigate('/AuthLogs')
+                navigate('/AuthLogs', {
+                    state: {
+                        type: 'invalid'
+                    }
+                })
             }}>
                 +
             </div>
             </Tooltip>
         </div>
         <div className="dashboard-middle-invalid-auth-log-table">
-            <CustomTable<AuthLogDataType, {}>
+            <CustomTable<InvalidAuthLogDataType, {}>
                 theme='table-st1'
                 datas={datas}
                 columns={[

@@ -63,9 +63,9 @@ const LocaleTexts = {
     UNAVAILABLE_USERNAME: 'The username is unavailable',
     USERNAME_CHECK: 'Only lowercase letters and numbers are allowed, with a length of 4 to 16 characters',
     EMAIL_CHECK: 'Please enter valid email address',
-    NAME_CHECK: 'Please enter in Korean or English or Numbers',
-    FIRST_NAME_CHECK: 'Please enter in Korean or English or Numbers',
-    LAST_NAME_CHECK: 'Please enter in Korean or English or Numbers',
+    NAME_CHECK: 'Please enter in Korean or English',
+    FIRST_NAME_CHECK: 'Please enter in Korean or English',
+    LAST_NAME_CHECK: 'Please enter in Korean or English',
     PASSWORD_CHECK: 'Password must be 8 characters or more in 3 combinations or 10 characters or more in 2 combinations',
     PASSWORD_CONFIRM_CHECK: 'The passwords do not match',
     PASSWORD_NOT_MATCH: 'The passwords do not match',
@@ -305,6 +305,12 @@ const LocaleTexts = {
     USER_STATUS_RUN: "활성화",
     APPLICATION_DELETE_CONFIRM_MSG: 'After deletion, application information will be deleted and all data will not be recovered',
     IP_ADDRESS_CIDR_INFO: 'Enter an IP address or CIDR block, such as 127.0.0.1 or 127.0.0.1/32, with an optional note.',
+    ACCESS_CONTROL_LABEL: 'OMPASS 인증 제어',
+    ACCESS_TIME_LABEL: '시간 접근 허용',
+    BROWSER_LABEL: '브라우저 접근 허용',
+    COUNTRY_LABEL: '사용자 위치 허용',
+    IP_WHITE_LIST_LABEL: 'IP 접근 허용',
+    LOCATION_LABEL: '사용자 위치 허용',
     INVALID_ACCESS_CONTROL_LABEL: 'OMPASS 인증 제어',
     INVALID_ACCESS_TIME_LABEL: 'Invalid time',
     INVALID_BROWSER_LABEL: 'Invalid browser',
@@ -343,7 +349,8 @@ const LocaleTexts = {
     NOTE_PATCH: '메모 수정',
     POLICY_NAME_LABEL: 'Policy name',
     INVALID_REASON_LABEL: 'Reason for violation',
-    AUTH_LOG_ACCESS_TIME_LABEL: 'Access time'
+    AUTH_LOG_ACCESS_TIME_LABEL: 'Access time',
+    AUTH_COUNT: 'Auth Count'
   },
   'ko': {
     LOGIN: '로그인',
@@ -409,9 +416,9 @@ const LocaleTexts = {
     UNAVAILABLE_USERNAME: '사용 불가능한 아이디입니다.',
     USERNAME_CHECK: '아이디는 4~16자의 영소문자 및 숫자만 사용 가능합니다',
     EMAIL_CHECK: '올바른 이메일 형식이 아닙니다. (영문, 숫자, 일부 특수문자 사용 가능)',
-    NAME_CHECK: '이름은 한글, 영소문자, 숫자만 사용 가능합니다',
-    FIRST_NAME_CHECK: '성은 한글, 영문, 숫자로 입력해주세요',
-    LAST_NAME_CHECK: '이름은 한글, 영문, 숫자로 입력해주세요',
+    NAME_CHECK: '이름은 한글, 영문만 사용 가능합니다',
+    FIRST_NAME_CHECK: '성은 한글, 영문으로 입력해주세요',
+    LAST_NAME_CHECK: '이름은 한글, 영문으로 입력해주세요',
     PASSWORD_CHECK: '비밀번호는 8자 이상 3가지 조합 혹은 10자 이상 2가지 조합이어야 합니다',
     PASSWORD_CONFIRM_CHECK: '비밀번호가 일치하지 않습니다',
     PASSWORD_NOT_MATCH: '비밀번호가 일치하지 않습니다',
@@ -652,6 +659,12 @@ const LocaleTexts = {
     USER_STATUS_RUN: "활성화",
     APPLICATION_DELETE_CONFIRM_MSG: '삭제 후, 어플리케이션 정보가 삭제되며\n모든 데이터는 복구되지 않습니다.',
     IP_ADDRESS_CIDR_INFO: '127.0.0.1 또는 127.0.0.1/32와 같이 IP 주소나 CIDR 블록을 입력하고, 선택적으로 메모를 추가합니다.',
+    ACCESS_CONTROL_LABEL: 'OMPASS 인증 제어',
+    ACCESS_TIME_LABEL: '시간 접근 허용',
+    BROWSER_LABEL: '브라우저 접근 허용',
+    COUNTRY_LABEL: '사용자 위치 허용',
+    IP_WHITE_LIST_LABEL: 'IP 접근 허용',
+    LOCATION_LABEL: '사용자 위치 허용',
     INVALID_ACCESS_CONTROL_LABEL: 'OMPASS 인증 제어',
     INVALID_ACCESS_TIME_LABEL: '시간 접근 허용',
     INVALID_BROWSER_LABEL: '브라우저 접근 허용',
@@ -690,7 +703,8 @@ const LocaleTexts = {
     NOTE_PATCH: '메모 수정',
     POLICY_NAME_LABEL: '정책명',
     INVALID_REASON_LABEL: '위반 사유',
-    AUTH_LOG_ACCESS_TIME_LABEL: '접근 일시'
+    AUTH_LOG_ACCESS_TIME_LABEL: '접근 일시',
+    AUTH_COUNT: '인증 횟수'
   }
 }
 

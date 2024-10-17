@@ -5,7 +5,7 @@ import uploadIconHover from '../../assets/uploadIconHover.png'
 import { message, Upload } from 'antd'
 import Button from 'Components/CommonCustomComponents/Button'
 import { useState } from 'react'
-import deleteIcon from '../../assets/deleteIconBlack.png';
+import deleteIcon from '../../assets/deleteIconRed.png';
 
 type CustomImageUploadProps = {
     src: string

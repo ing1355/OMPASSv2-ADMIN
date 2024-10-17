@@ -81,7 +81,7 @@ const VersionUpload = () => {
               <label><FormattedMessage id='MEMO' /></label>
               <Input
                 className={'st1'}
-                maxLength={96}
+                maxLength={192}
                 value={inputMemo}
                 valueChange={value => {
                   setInputMemo(value)

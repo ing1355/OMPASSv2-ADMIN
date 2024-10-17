@@ -10,7 +10,6 @@ import PolicySelect from "Components/CommonCustomComponents/PolicySelect"
 import { applicationTypes, getApplicationTypeLabel } from "Constants/ConstantValues"
 import { convertBase64FromClientToServerFormat } from "Functions/GlobalFunctions"
 import CustomModal from "Components/CommonCustomComponents/CustomModal"
-import CustomImageUpload from "Components/Layout/CustomImageUpload"
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect"
 import Button from "Components/CommonCustomComponents/Button"
 import Input from "Components/CommonCustomComponents/Input"
@@ -21,6 +20,7 @@ import deleteIcon from '../../assets/deleteIcon.png'
 import deleteIconHover from '../../assets/deleteIconHover.png'
 import './ApplicationDetail.css'
 import { FormattedMessage } from "react-intl"
+import CustomImageUpload from "Components/CommonCustomComponents/CustomImageUpload"
 
 const ApplicationDetail = () => {
     const [logoImage, setLogoImage] = useState<string>(ompassLogoIcon)

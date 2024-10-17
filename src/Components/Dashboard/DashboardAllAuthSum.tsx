@@ -31,7 +31,7 @@ const TooltipContent = (props: any) => {
         <Tooltip.Content
           {...restProps}
           style={tooltipContentTitleStyle}
-          text={"인증 횟수"}
+          text={<FormattedMessage id="AUTH_COUNT"/>}
         />
       </div>
       <div>

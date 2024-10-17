@@ -110,6 +110,7 @@ const Login = () => {
               value={inputChangePassword}
               type="password"
               name="password"
+              maxLength={16}
               customType='password'
               placeholder='변경할 비밀번호 입력'
               ref={inputChangePasswordRef}
@@ -120,6 +121,7 @@ const Login = () => {
               <Input
                 className='st1 login-input userId'
                 value={inputUsername}
+                maxLength={16}
                 name="userId"
                 valueChange={value => {
                   setInputUsername(value);
@@ -140,6 +142,7 @@ const Login = () => {
               ]}
               value={inputChangePasswordConfirm}
               name="passwordConfirm"
+              maxLength={16}
               placeholder='비밀번호 재입력'
               valueChange={value => {
                 setInputChangePasswordConfirm(value);
@@ -150,6 +153,7 @@ const Login = () => {
                 className='st1 login-input password'
                 type='password'
                 name="password"
+                maxLength={16}
                 value={inputPassword}
                 valueChange={value => {
                   setInputPassword(value);

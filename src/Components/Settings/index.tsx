@@ -1,6 +1,5 @@
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
-import CustomImageUpload from "Components/Layout/CustomImageUpload"
 import CustomInputRow from "Components/Layout/CustomInputRow"
 import { GetPortalSettingsDataFunc, UpdatePortalSettingsDataFunc } from "Functions/ApiFunctions"
 import { useLayoutEffect, useState } from "react"
@@ -15,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { subdomainInfoChange } from "Redux/actions/subdomainInfoChange"
 import { globalDatasChange } from "Redux/actions/globalDatasChange"
 import loginMainImage from '../../assets/loginMainImage.png'
+import CustomImageUpload from "Components/CommonCustomComponents/CustomImageUpload"
 
 const Settings = () => {
     const { subdomainInfo, globalDatas } = useSelector((state: ReduxStateType) => ({

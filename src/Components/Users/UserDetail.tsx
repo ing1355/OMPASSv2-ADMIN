@@ -87,13 +87,6 @@ const UserDetail = ({ }) => {
     const isAdmin = userInfo.role !== 'USER'
     const deleteText = isSelf ? '탈퇴' : '삭제'
     const isHigherRole = isSelf || (userInfo.role === 'ADMIN' && userData?.role === 'USER') || (userInfo.role === 'ROOT' && userData?.role !== 'ROOT')
-    const canDeleteAuthenticator = useMemo(() => {
-        if (isSelf && userInfo.role === 'USER') return globalDatas?.isUserAllowedToRemoveAuthenticator
-        else if (userInfo.role === 'ADMIN' && userData?.role === 'ROOT') {
-            return false
-        }
-        return true
-    }, [globalDatas, userInfo, userData])
     const authInfoRef = useRef<{
         [key: string]: HTMLDivElement
     }>({})
@@ -233,7 +226,7 @@ const UserDetail = ({ }) => {
                                 {isAdd ? "등록" : "저장"}
                             </Button>
                         }
-                        {isHigherRole && !isAdd && !isDeleted && <Button icon={!isModify && editIcon} className={isModify ? "st7" : "st3"} onClick={() => {
+                        {userData?.status === 'RUN' && isHigherRole && !isAdd && !isDeleted && <Button icon={!isModify && editIcon} className={isModify ? "st7" : "st3"} onClick={() => {
                             setIsModify(!isModify)
                         }}>
                             {isModify ? '취소' : '수정'}
@@ -269,10 +262,17 @@ const UserDetail = ({ }) => {
                     </UserInfoInputrow> : <UserInfoRow title="ID" value={userData ? userData.username : ""} />}
                     {(isAdd || (isModify && (isSelf || (userData?.role === 'ADMIN' && userInfo.role === 'ROOT') || (userData?.role === 'USER' && isAdmin)))) && <><UserInfoInputrow title='PASSWORD' required>
                         <Input className='st1' value={targetValue.password} placeholder="비밀번호 입력" disabled={!targetValue.hasPassword} valueChange={value => {
-                            setAddValues({
-                                ...addValues,
-                                password: value
-                            })
+                            if(isAdd) {
+                                setAddValues({
+                                    ...addValues,
+                                    password: value
+                                })
+                            } else {
+                                setModifyValues({
+                                    ...modifyValues,
+                                    password: value
+                                })
+                            }
                         }} type="password" customType="password" />
                         <Input containerClassName='has-password-confirm' className='st1' checked={!targetValue.hasPassword} type="checkbox" onChange={e => {
                             if(isAdd) {
@@ -290,16 +290,23 @@ const UserDetail = ({ }) => {
                     </UserInfoInputrow>
                     <UserInfoInputrow title='PASSWORD_CONFIRM' required>
                         <Input className='st1' value={targetValue.passwordConfirm} disabled={!targetValue.hasPassword} placeholder="비밀번호 확인" valueChange={value => {
-                            setAddValues({
-                                ...addValues,
-                                passwordConfirm: value
-                            })
+                            if(isAdd) {
+                                setAddValues({
+                                    ...addValues,
+                                    passwordConfirm: value
+                                })
+                            } else {
+                                setModifyValues({
+                                    ...modifyValues,
+                                    passwordConfirm: value
+                                })
+                            }
                         }} type="password" rules={[
                             {
-                                regExp: (val) => val != addValues.password,
+                                regExp: (val) => isAdd ? val != addValues.password : val != modifyValues.password,
                                 msg: <FormattedMessage id="PASSWORD_CONFIRM_CHECK" />
                             }
-                        ]} />
+                        ]} maxLength={16}/>
                     </UserInfoInputrow></>}
                     {(isModify || isAdd) ? <UserInfoInputrow title="NAME" required>
                         <Input className='st1' value={targetValue.name.firstName} placeholder="성" onChange={e => {
@@ -320,7 +327,7 @@ const UserDetail = ({ }) => {
                                     }
                                 })
                             }
-                        }} maxLength={12}/>
+                        }} customType='name' onlyText/>
                         <Input className='st1' value={targetValue.name.lastName} placeholder="이름" onChange={e => {
                             if (isAdd) {
                                 setAddValues({
@@ -339,9 +346,9 @@ const UserDetail = ({ }) => {
                                     }
                                 })
                             }
-                        }} maxLength={12}/>
+                        }} customType='name' onlyText/>
                     </UserInfoInputrow> :
-                        <UserInfoRow title="NAME" value={userData ? (userData.name.firstName + userData.name.lastName) : ""} />}
+                        <UserInfoRow title="NAME" value={userData ? `${userData.name.firstName} ${userData.name.lastName}` : ""} />}
                     {(isModify || isAdd) ? <UserInfoInputrow title="EMAIL" required>
                         <Input style={{
                             width: '406px'
@@ -504,7 +511,7 @@ const UserDetail = ({ }) => {
                             <h4>
                                 OMPASS
                             </h4>
-                            {canDeleteAuthenticator && <UserDetailInfoAuthenticatorDeleteButton authenticatorId={_.authInfo.authenticators.find(auth => auth.type === 'OMPASS')?.id} callback={(id) => {
+                            {isHigherRole && <UserDetailInfoAuthenticatorDeleteButton authenticatorId={_.authInfo.authenticators.find(auth => auth.type === 'OMPASS')?.id} callback={(id) => {
                                 setAuthenticatorDelete(id)
                             }} />}
                         </div>
@@ -516,7 +523,7 @@ const UserDetail = ({ }) => {
                                     <h4>
                                         WEBAUTHN
                                     </h4>
-                                    {canDeleteAuthenticator && <UserDetailInfoAuthenticatorDeleteButton authenticatorId={_.authInfo.authenticators.find(auth => auth.type === 'WEBAUTHN')?.id} callback={(id) => {
+                                    {isHigherRole && <UserDetailInfoAuthenticatorDeleteButton authenticatorId={_.authInfo.authenticators.find(auth => auth.type === 'WEBAUTHN')?.id} callback={(id) => {
                                         setAuthenticatorDelete(id)
                                     }} />}
                                 </div>

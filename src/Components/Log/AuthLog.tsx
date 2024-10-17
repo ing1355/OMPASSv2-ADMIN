@@ -1,110 +1,46 @@
-import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
-import { GetAuthLogDataListFunc } from "Functions/ApiFunctions"
-import { useLayoutEffect, useState } from "react"
-import { FormattedMessage } from "react-intl"
-import successIcon from '../../assets/successIcon.png'
-import failIcon from '../../assets/failIcon.png'
-import { AuthenticationProcessTypes } from "Constants/ConstantValues"
-import { convertUTCStringToKSTString } from "Functions/GlobalFunctions"
+import { useEffect, useState } from "react"
+import { Tabs } from "antd"
+import ValidAuthLogs from "./ValidAuthLogs"
+import InvalidAuthLogs from "./InvalidAuthLogs"
+import { useLocation, useParams } from "react-router"
 
-const imgSize = "16px"
+
 
 const AuthLog = () => {
-    const [tableData, setTableData] = useState<AuthLogDataType[]>([])
-    const [totalCount, setTotalCount] = useState(1)
-    const [dataLoading, setDataLoading] = useState(false)
-
-    const GetDatas = async (params: CustomTableSearchParams) => {
-        setDataLoading(true)
-        const _params: GeneralParamsType = {
-            page_size: params.size,
-            page: params.page
+    const [active, setActive] = useState('valid')
+    const {type} = useLocation().state || {}
+    
+    useEffect(() => {
+        if(type === 'invalid') {
+            setActive(type)
         }
-        if(params.type) {
-            _params[params.type] = params.value
-        }
-        GetAuthLogDataListFunc(_params, ({ results, totalCount }) => {
-            setTableData(results.map(_ => ({
-                ..._,
-                authenticationTime: convertUTCStringToKSTString(_.authenticationTime)
-            })))
-            setTotalCount(totalCount)
-        }).finally(() => {
-            setDataLoading(false)
-        })
-    }
+    },[])
 
-    return <Contents loading={dataLoading}>
+    return <Contents>
         <ContentsHeader title="AUTH_LOG_MANAGEMENT" subTitle="AUTH_LOG_LIST">
         </ContentsHeader>
         <div className="contents-header-container">
-            <CustomTable<AuthLogDataType, {}>
-                onSearchChange={(data) => {
-                    GetDatas(data)
-                }}
-                totalCount={totalCount}
-                pagination
-                searchOptions={[{
-                    key: 'applicationName',
-                    type: 'string'
-                }, {
-                    key: 'portalUsername',
-                    type: 'string'
-                }, {
-                    key: 'rpUsername',
-                    type: 'string'
-                }, {
-                    key: 'processType',
-                    type: 'select',
-                    selectOptions: AuthenticationProcessTypes.map(_ => ({
-                        key: _,
-                        label: <FormattedMessage id={_ + '_VALUE'} />
-                    })),
-                }]}
-                columns={[
-                    {
-                        key: 'id',
-                        title: '#'
-                    },
-                    {
-                        key: 'applicationName',
-                        title: '어플리케이션명',
-                        render: (_, _ind, row) => row.ompassData.application.name
-                    },
-                    {
-                        key: 'portalUsername',
-                        title: '포탈 아이디',
-                        render: (_, _ind, row) => row.portalUser.username
-                    },
-                    {
-                        key: 'rpUsername',
-                        title: '사용자 아이디',
-                        render: (_, _ind, row) => row.ompassData.rpUser.username
-                    },
-                    {
-                        key: 'processType',
-                        title: '진행 유형',
-                        render: (data) => <FormattedMessage id={data + '_VALUE'} />
-                    },
-                    {
-                        key: 'authenticationLogType',
-                        title: '성공 여부',
-                        render: (data) => <img src={data !== 'DENY' ? successIcon : failIcon} width={imgSize} height={imgSize} />
-                    },
-                    {
-                        key: 'authenticatorType',
-                        title: '인증 수단'
-                    },
-                    {
-                        key: 'authenticationTime',
-                        title: '일시'
-                    }
-                ]}
-                theme="table-st1"
-                datas={tableData}
-            />
+            <Tabs 
+            activeKey={active}
+            onChange={act => {
+                setActive(act)
+            }}
+            centered
+            type="card"
+            items={[
+                {
+                    label: '정상 로그',
+                    key: "valid",
+                    children: <ValidAuthLogs/>
+                },
+                {
+                    label: '비정상 로그',
+                    key: "invalid",
+                    children: <InvalidAuthLogs/>
+                }
+            ]}/>
         </div>
     </Contents>
 }

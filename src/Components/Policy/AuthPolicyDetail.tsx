@@ -405,7 +405,7 @@ const AuthPolicyDetail = () => {
                     <div className="policy-input-container" aria-hidden={!locationChecked}>
                         <div className="policy-input-map-container">
                             <div className="map-layout">
-                                <APIProvider apiKey={globalDatas?.googleApiKey!} onLoad={() => {
+                                {globalDatas?.googleApiKey ? <APIProvider apiKey={globalDatas?.googleApiKey!} onLoad={() => {
                                     navigator.geolocation.getCurrentPosition(function (position) {
                                         setCurrentLocation({
                                             lat: position.coords.latitude,
@@ -439,7 +439,19 @@ const AuthPolicyDetail = () => {
                                         <Marker position={currentLocation} />
                                         <Circle radius={currentRadius} center={currentLocation} strokeOpacity={0} fillColor={'rgba(0,0,0,.5)'} />
                                     </Map>
-                                </APIProvider>
+                                </APIProvider> : <div style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    border: '1px solid black',
+                                    padding: '4px',
+                                    borderRadius: '12px',
+                                    boxSizing: 'border-box'
+                                }}>
+                                    지도 사용 불가
+                                </div>}
                             </div>
                         </div>
                         <div>
@@ -510,7 +522,7 @@ const AuthPolicyDetail = () => {
                                         regExp: (value) => !(RegExp(ipAddressRegex).test(value) || RegExp(cidrRegex).test(value)),
                                         msg: 'IP 주소 형식(aaa.bbb.ccc.ddd) 혹은 CIDR 형식(aaa.bbb.0.0/24)을 입력해야 합니다.'
                                     }
-                                ]} onInput={ipAddressRestriction}/>
+                                ]} onInput={ipAddressRestriction} />
                                 <Input className="st1 policy-ip-address-input" placeholder="메모" value={currentIpNote} valueChange={value => {
                                     setCurrentIpNote(value)
                                 }} maxLength={30} />
@@ -880,7 +892,7 @@ const AuthPolicyDetail = () => {
                                     이메일(선택)
                                 </div>
                                 <Switch checked={currentNoticeThemselves.methods.includes('EMAIL')} checkedChildren={'ON'} unCheckedChildren={'OFF'} onChange={check => {
-                                    if(check) {
+                                    if (check) {
                                         setCurrentNoticeThemseleves({
                                             methods: currentNoticeThemselves.methods.concat('EMAIL')
                                         })
@@ -889,7 +901,7 @@ const AuthPolicyDetail = () => {
                                             methods: currentNoticeThemselves.methods.filter(_ => _ !== 'EMAIL')
                                         })
                                     }
-                                }}/>
+                                }} />
                             </div>
                         </div>
                     </div>

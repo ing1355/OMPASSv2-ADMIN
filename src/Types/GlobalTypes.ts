@@ -1,5 +1,6 @@
 type LanguageType = 'KR' | 'EN'
 type AuthPurposeType = "ADD_OTHER_AUTHENTICATOR" | "AUTH_LOGIN" | "REG_LOGIN"
+type AuthenticationLogType = "ALLOW" | "DENY" | "ALLOW_OUT_OF_SCHEDULE"
 type AuthMethodType = "U2F" | 'UAF'
 type OMPASSDataType = {
     authPurpose: AuthPurposeType
@@ -398,7 +399,7 @@ type AuthLogListParamsType = GeneralParamsType & {
     applicationName?: string
     processType?: ProcessTypeType
     authenticatorType?: AuthenticatorTypeType
-    authenticationLogType?: AuthLogDataType['authenticationLogType']
+    authenticationLogType?: AuthenticationLogType
     startDate?: string
     endDate?: string
     sortBy?: "CREATED_AT" | "AUTHENTICATION_TIME" | "USERNAME" | "APPLICATION_NAME" | "IS_PROCESS_SUCCESS"
@@ -411,12 +412,21 @@ type ProtalLogListParamsType = GeneralParamsType & {
     sortBy?: 'CREATED_AT' | 'USERNAME' | 'API_URI' | 'HTTP_METHOD'
 }
 
-type AuthLogDataType = {
+type ValidAuthLogDataType = {
+    id: number
+    portalUser: PortalUserType
+    processType: ProcessTypeType
+    authenticatorType: AuthenticatorTypeType
+    authenticationTime: string
+    ompassData: OMPASSDataType
+    policyAtTimeOfEvent: PolicyDataType
+}
+
+type InvalidAuthLogDataType = {
     id: number
     portalUser: PortalUserType
     authenticationLogType: "ALLOW" | "DENY" | "ALLOW_OUT_OF_SCHEDULE"
     processType: ProcessTypeType
-    authenticatorType: AuthenticatorTypeType
     authenticationTime: string
     ompassData: OMPASSDataType
     policyAtTimeOfEvent: PolicyDataType

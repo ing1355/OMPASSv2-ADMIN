@@ -210,6 +210,8 @@ const SecondStep = () => {
                     required
                     ref={firstNameRef}
                     noGap
+                    onlyText
+                    customType="name"
                     rules={[
                         {
                             regExp: nameRegex,
@@ -228,6 +230,7 @@ const SecondStep = () => {
                     className='st1'
                     required
                     ref={lastNameRef}
+                    onlyText
                     noGap
                     rules={[
                         {

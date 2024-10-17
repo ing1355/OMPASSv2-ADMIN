@@ -80,7 +80,7 @@ const CustomSelect = ({ items, value, onChange, needSelect, noLabel }: CustomSel
     return <div className={`custom-select-container${showSelect ? ' opened' : ''}${_items.length > 5 ? ' scroll' : ''}`} onClick={() => {
         setShowSelect(!showSelect)
     }} ref={selectRef}>
-        {value ? _items.find(_ => _.key === value)?.label : (noLabel || '선택 안한')}
+        {value ? _items.find(_ => _.key === value)?.label : (noLabel || '선택 안함')}
         {
             showSelect && <div className="custom-select-option-container" ref={scrollRef}>
                 {

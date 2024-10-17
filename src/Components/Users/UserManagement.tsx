@@ -2,13 +2,13 @@ import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import { GetUserDataListFunc } from "Functions/ApiFunctions"
 import { useNavigate } from "react-router"
 import { FormattedMessage } from "react-intl";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Contents from "Components/Layout/Contents";
 import ContentsHeader from "Components/Layout/ContentsHeader";
 import userAddIcon from './../../assets/userAddIcon.png'
 import userAddIconHover from './../../assets/userAddIconHover.png'
 import './UserManagement.css'
-import { userSelectPageSize, userStatusTypes } from "Constants/ConstantValues";
+import { userStatusTypes } from "Constants/ConstantValues";
 
 const UserManagement = () => {
     const [tableData, setTableData] = useState<UserDataType[]>([])
@@ -107,17 +107,19 @@ const UserManagement = () => {
                     {
                         key: 'name',
                         title: createHeaderColumn('NAME'),
-                        render: (data) => data.firstName + data.lastName
+                        render: (data) => `${data.firstName} ${data.lastName}`
                     },
                     {
                         key: 'role',
                         title: createHeaderColumn('USER_ROLE'),
-                        render: (data) => <FormattedMessage id={data + '_ROLE_VALUE'} />
+                        render: (data) => <FormattedMessage id={data + '_ROLE_VALUE'} />,
+                        noWrap: true
                     },
                     {
                         key: 'group',
                         title: createHeaderColumn('GROUP'),
-                        render: (data) => data ? data.name : <FormattedMessage id="NONE_GROUP" />
+                        render: (data) => data ? data.name : <FormattedMessage id="NONE_GROUP" />,
+                        noWrap: true
                     },
                     {
                         key: 'email',
@@ -126,12 +128,14 @@ const UserManagement = () => {
                     {
                         key: 'phone',
                         title: createHeaderColumn('PHONE_NUMBER'),
-                        render: data => data || "전화번호 없음"
+                        render: data => data || "전화번호 없음",
+                        noWrap: true
                     },
                     {
                         key: 'status',
                         title: '상태',
-                        render: data => <FormattedMessage id={`USER_STATUS_${data}`} />
+                        render: data => <FormattedMessage id={`USER_STATUS_${data}`} />,
+                        noWrap: true
                     }
                 ]}
                 onBodyRowClick={(row, index, arr) => {

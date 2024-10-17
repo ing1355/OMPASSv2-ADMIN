@@ -234,19 +234,18 @@ export const DeleteUserGroupDataFunc = (groupId: UserGroupDataType['id'], callba
     return CustomAxiosDelete(DeleteUserGroupApi(groupId), callback)
 }
 
-export const GetAuthLogDataListFunc = ({
+export const GetInvalidAuthLogDataListFunc = ({
     page_size = 10,
     page = 1,
     rpUsername = "",
     portalUsername = "",
     applicationName = "",
     authenticatorType = undefined,
-    authenticationLogType = undefined,
     processType = undefined,
     sortBy = "CREATED_AT",
     sortDirection = "DESC"
-}: AuthLogListParamsType, callback: ((data: GetListDataGeneralType<AuthLogDataType>) => void)) => {
-    return CustomAxiosGet(GetAuthLogDataListApi, (data: GetListDataGeneralType<AuthLogDataType>) => {
+}: AuthLogListParamsType, callback: ((data: GetListDataGeneralType<InvalidAuthLogDataType>) => void)) => {
+    return CustomAxiosGet(GetAuthLogDataListApi, (data: GetListDataGeneralType<InvalidAuthLogDataType>) => {
         callback(data)
     }, {
         page_size,
@@ -255,11 +254,38 @@ export const GetAuthLogDataListFunc = ({
         portalUsername,
         applicationName,
         authenticatorType,
-        authenticationLogType,
+        authenticationLogType: 'DENY',
         processType,
         sortBy,
         sortDirection
-    })
+    } as AuthLogListParamsType)
+}
+
+export const GetValidAuthLogDataListFunc = ({
+    page_size = 10,
+    page = 1,
+    rpUsername = "",
+    portalUsername = "",
+    applicationName = "",
+    authenticatorType = undefined,
+    processType = undefined,
+    sortBy = "CREATED_AT",
+    sortDirection = "DESC"
+}: AuthLogListParamsType, callback: ((data: GetListDataGeneralType<ValidAuthLogDataType>) => void)) => {
+    return CustomAxiosGet(GetAuthLogDataListApi, (data: GetListDataGeneralType<ValidAuthLogDataType>) => {
+        callback(data)
+    }, {
+        page_size,
+        page,
+        rpUsername,
+        portalUsername,
+        applicationName,
+        authenticatorType,
+        authenticationLogType: 'ALLOW',
+        processType,
+        sortBy,
+        sortDirection
+    } as AuthLogListParamsType)
 }
 
 export const GetPortalLogDataListFunc = ({

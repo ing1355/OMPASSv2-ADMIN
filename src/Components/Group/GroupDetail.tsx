@@ -9,6 +9,7 @@ import { INT_MAX_VALUE } from "Constants/ConstantValues"
 import { AddUserGroupDataFunc, DeleteUserGroupDataFunc, GetUserDataListFunc, GetUserGroupDetailDataFunc, UpdateUserGroupDataFunc } from "Functions/ApiFunctions"
 import { message } from "antd"
 import { useLayoutEffect, useState } from "react"
+import { FormattedMessage } from "react-intl"
 import { useNavigate, useParams } from "react-router"
 
 const GroupDetail = () => {
@@ -103,7 +104,7 @@ const GroupDetail = () => {
                     setInputDescription(value)
                 }} placeholder="설명을 입력해주세요" className="st1"/>
             </CustomInputRow>
-            <CustomInputRow title="정책">
+            <CustomInputRow title={<FormattedMessage id="POLICY_NAME_LABEL"/>}>
                 <PolicySelect selectedPolicy={selectedPolicy} setSelectedPolicy={setSelectedPolicy} />
             </CustomInputRow>
             <CustomInputRow title="사용자">

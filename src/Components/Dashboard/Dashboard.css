@@ -28,6 +28,10 @@
     align-items: center;
 }
 
+.dashboard-top-container:lang(en) {
+    width: 1500px;
+}
+
 .dashboard-top-user-num-item {
     display: flex;
     flex-direction: column;
@@ -81,6 +85,7 @@
     color: var(--main-grey-color);
     font-weight: 900;
     font-size: .95rem;
+    text-align: center;
 }
 
 .dashboard-top-disabled-user-num-item-num {

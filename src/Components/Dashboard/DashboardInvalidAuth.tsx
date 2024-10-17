@@ -80,7 +80,7 @@ const DashboardInvalidAuth = ({ applications }: {
                 showTicks={false}
             />
             <ValueAxis
-                showLabels={false}
+                // showLabels={false}
             // showTicks={false}
             />
             {

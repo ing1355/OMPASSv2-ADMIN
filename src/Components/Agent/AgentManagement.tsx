@@ -16,18 +16,11 @@ import { CurrentAgentVersionChangeFunc, DeleteAgentInstallerFunc, GetAgentInstal
 import Button from 'Components/CommonCustomComponents/Button';
 import { convertUTCStringToKSTString } from 'Functions/GlobalFunctions';
 
-interface Checkbox {
-  id: number;
-  userId: number;
-  checked: boolean;
-}
-
 const AgentManagement = () => {
   const [dataLoading, setDataLoading] = useState(false)
   const [totalCount, setTotalCount] = useState<number>(0);
   const [tableData, setTableData] = useState<AgentInstallerListDataType>([]);
   const [refresh, setRefresh] = useState(false)
-  const [checkboxes, setCheckboxes] = useState<Checkbox[]>([]);
   const [openFileDelete, setOpenFileDelete] = useState(-1);
   const [deleteHover, setDeleteHover] = useState(-1)
 
@@ -175,21 +168,14 @@ const AgentManagement = () => {
                   e?.stopPropagation()
                   e?.preventDefault()
                   const versionIds = `${row.fileId}`
-                  const target = tableData.find((data) => data.downloadTarget === true);
-                  const targetVersion = checkboxes.filter((checkbox) => checkbox.userId === target?.fileId);
-
-                  if (targetVersion[0]?.checked) {
-                    message.error(formatMessage({ id: 'CURRENT_VERSION_CANNOT_BE_DELETED' }));
+                  if (versionIds) {
+                    DeleteAgentInstallerFunc(versionIds, () => {
+                      setOpenFileDelete(-1);
+                      setRefresh(true)
+                      message.success(formatMessage({ id: 'VERSION_DELETE' }));
+                    })
                   } else {
-                    if (versionIds) {
-                      DeleteAgentInstallerFunc(versionIds, () => {
-                        setOpenFileDelete(-1);
-                        setRefresh(true)
-                        message.success(formatMessage({ id: 'VERSION_DELETE' }));
-                      })
-                    } else {
-                      message.error(formatMessage({ id: 'NO_ITEM_SELECTED' }));
-                    }
+                    message.error(formatMessage({ id: 'NO_ITEM_SELECTED' }));
                   }
                 }}
                 onCancel={(e) => {

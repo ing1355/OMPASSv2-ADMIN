@@ -2,6 +2,8 @@ import React, { forwardRef, useEffect, useRef, useState } from "react"
 import { emailRegex, idRegex, nameRegex, passwordRegex } from "./CommonRegex"
 import { FormattedMessage } from "react-intl"
 
+type CustomType = "username" | "password" | "email" | "name" | "phone"
+
 type CustomInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
     valueChange?: (value: string, isAlert?: boolean) => void
     onlyNumber?: boolean
@@ -9,7 +11,8 @@ type CustomInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
     containerClassName?: string
     zeroOk?: boolean
     nonZero?: boolean
-    customType?: "username" | "password" | "email" | "name" | "phone"
+    customType?: CustomType
+    onlyText?: boolean
     noGap?: boolean
     suffix?: string
     rules?: {
@@ -30,7 +33,7 @@ const HasLabel = ({ children, label }: {
 </>}
     </div>
 
-const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyNumber, label, value, containerClassName, onInput, customType, rules, maxLength, required, className, noGap, type, suffix, style, ...props }: CustomInputProps, ref) => {
+const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyNumber, label, value, containerClassName, onInput, customType, rules, maxLength, required, className, noGap, type, suffix, style, onlyText, ...props }: CustomInputProps, ref) => {
     const [isAlert, _setIsAlert] = useState(false)
     const [alertMsg, setAlertMsg] = useState<string | React.ReactNode>('')
     const isAlertRef = useRef(isAlert)
@@ -139,6 +142,9 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                                     if (nonZero && e.currentTarget.value === '0') {
                                         e.currentTarget.value = '1'
                                     }
+                                }
+                                if (onlyText) {
+                                    e.currentTarget.value = e.currentTarget.value.replace(/[0-9]/g, '')
                                 }
                                 if (noGap && (e.currentTarget.value.startsWith(' ') || e.currentTarget.value.endsWith(' ')) && valueChange) e.currentTarget.value = e.currentTarget.value.trim()
                                 if (validateCheck(e.currentTarget.value)) {
