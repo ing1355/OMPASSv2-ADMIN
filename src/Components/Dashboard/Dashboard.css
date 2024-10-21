@@ -12,7 +12,7 @@
 
 .dashboard-card-title {
     font-size: 1rem;
-    font-weight: 900;
+    font-weight: bold;
     color: var(--dashboard-purple-color);
     text-align: center;
 }
@@ -37,7 +37,7 @@
     flex-direction: column;
     gap: 8px;
     font-size: 1rem;
-    font-weight: 900;
+    font-weight: bold;
 }
 
 .dashboard-top-user-num-item-contents {
@@ -83,7 +83,7 @@
 
 .dashboard-top-disabled-user-num-item-title {
     color: var(--main-grey-color);
-    font-weight: 900;
+    font-weight: bold;
     font-size: .95rem;
     text-align: center;
 }
@@ -91,7 +91,7 @@
 .dashboard-top-disabled-user-num-item-num {
     color: var(--dashboard-red-color);
     font-size: .9rem;
-    font-weight: 900;
+    font-weight: bold;
 }
 
 .dashboard-top-disabled-container {
@@ -106,7 +106,7 @@
     margin: 20px 0;
     margin-bottom: 12px;
     color: var(--dashboard-purple-color);
-    font-weight: 600;
+    font-weight: bold;
 }
 
 .dashboard-application-select-container {
@@ -332,7 +332,7 @@
         padding: 3px 10px;
         border-radius: 6px;
         font-size: .7rem;
-        font-weight: 600;
+        font-weight: bold;
     }
 }
 

@@ -50,7 +50,7 @@
     padding: 1px 8px;
     border-radius: 12px;
     font-size: .66rem;
-    font-weight: 700;
+    font-weight: bold;
 }
 
 .plan-title {
@@ -121,7 +121,7 @@
     justify-content: center;
     gap: 8px;
     font-size: 1.6rem;
-    font-weight: 700;
+    font-weight: bold;
 }
 
 .billing-current-user-nums {

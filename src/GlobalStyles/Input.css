@@ -5,9 +5,9 @@ input:-webkit-autofill:active {
     -webkit-text-fill-color: #000 !important;
 } */
 
-input[type="password"] {
+/* input[type="password"] {
     font-family: 'NEXON Lv1 Gothic OTF';
-}
+} */
 
 @keyframes backgroundWide {
     from {

@@ -28,14 +28,21 @@ const Settings = () => {
     const [signupMethod, setSignupMethod] = useState(UserSignupMethod.USER_SELF_ADMIN_PASS)
     const [canDelete, setCanDelete] = useState(false)
     const [inputAlias, setInputAlias] = useState('회사명');
-    const [logoImg, setLogoImg] = useState('')
+    const [logoImg, setLogoImg] = useState<updateLogoImageType>({
+        encodedImage: loginMainImage,
+        isDefaultImage: true
+    })
+
     const dispatch = useDispatch()
     
     const getDatas = async () => {
         setDataLoading(true)
         GetPortalSettingsDataFunc(({ userSignupMethod, logoImage, noticeMessage, timeZone, companyName, isUserAllowedToRemoveAuthenticator, selfSignupEnabled }) => {
             setSignupMethod(userSignupMethod)
-            setLogoImg(logoImage)
+            setLogoImg({
+                encodedImage: logoImage.url,
+                isDefaultImage: logoImage.isDefaultImage
+            })
             setWelcomeText(noticeMessage)
             setTimeZoneValue(timeZone)
             setInputAlias(companyName)
@@ -52,10 +59,13 @@ const Settings = () => {
     return <Contents loading={dataLoading}>
         <ContentsHeader title="" subTitle="">
             <Button className="st3" onClick={() => {
-                const callback = (img: string) => {
+                const callback = (data: updateLogoImageType) => {
                     UpdatePortalSettingsDataFunc({
                         timeZone: timeZoneValue,
-                        logoImage: img && convertBase64FromClientToServerFormat(img),
+                        logoImage: {
+                            encodedImage: convertBase64FromClientToServerFormat(data.encodedImage),
+                            isDefaultImage: data.isDefaultImage
+                        },
                         noticeMessage: welcomeText,
                         userSignupMethod: signupMethod,
                         companyName: inputAlias,
@@ -69,7 +79,10 @@ const Settings = () => {
                         }))
                         dispatch(subdomainInfoChange({
                             ...subdomainInfo!,
-                            logoImage: logoImg,
+                            logoImage: {
+                                url: data.encodedImage,
+                                isDefaultImage: data.isDefaultImage
+                            },
                             noticeMessage: welcomeText,
                             userSignupMethod: signupMethod
                         }))
@@ -77,18 +90,21 @@ const Settings = () => {
                         message.error("설정 저장 실패!")
                     })
                 }
-                if(logoImg.startsWith('/static')) {
+                if(logoImg.encodedImage.startsWith('/static')) {
                     const img = new Image()
                     img.onload = () => {
                         let canvas = document.createElement('canvas');
                         canvas.width = img.naturalWidth;
                         canvas.height = img.naturalHeight;
                         canvas.getContext('2d')!.drawImage(img, 0, 0);
-                        const temp = logoImg.split('.')
+                        const temp = logoImg.encodedImage.split('.')
                         let b64Str = canvas.toDataURL(`image/${temp[temp.length - 1]}`);
-                        callback(b64Str)
+                        callback({
+                            encodedImage: b64Str,
+                            isDefaultImage: logoImg.encodedImage === loginMainImage
+                        })
                     }
-                    img.src = logoImg
+                    img.src = logoImg.encodedImage
                 } else {
                     callback(logoImg)
                 }
@@ -138,7 +154,7 @@ const Settings = () => {
             <CustomInputRow title="메인 이미지 설정" containerStyle={{
                 alignItems: 'flex-start'
             }}>
-                <CustomImageUpload src={logoImg} callback={(img) => {
+                <CustomImageUpload data={logoImg} callback={(img) => {
                     setLogoImg(img)
                 }} defaultImg={loginMainImage}/>
             </CustomInputRow>

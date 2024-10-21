@@ -172,6 +172,64 @@ const UserDetail = ({ }) => {
         }
     }, [isModify, userData])
 
+    const columnsByRole = (id: RPUserDetailAuthDataType['id']) => {
+        let columns: CustomTableColumnType<PasscodeAuthenticatorDataType>[] = [
+            {
+                key: "number",
+                width: 180,
+                title: <FormattedMessage id="PASSCODE" />,
+                render: (data) => <ViewPasscode code={data} />
+            },
+            {
+                key: "issuerUsername",
+                title: <FormattedMessage id="ADMIN_ID" />
+            },
+            {
+                key: "createdAt",
+                title: <FormattedMessage id="CREATION_ON" />
+            },
+            {
+                key: "expiredAt",
+                title: <FormattedMessage id="VALID_TIME" />,
+                render: (data) => {
+                    if (data === "-1") return "∞"
+                    return convertUTCStringToKSTString(data)
+                }
+            },
+            {
+                key: "recycleCount",
+                title: <FormattedMessage id="CAN_USES" />,
+                render: (data) => {
+                    return data === -1 ? "∞" : `${data} 회`
+                }
+            },
+        ]
+        if(isHigherRole) {
+            columns.concat({
+                key: "etc",
+                title: "",
+                render: (data, index, row) => row.createdAt && <div className='user-passcode-delete-btn'
+                    onClick={() => {
+                        DeleteAuthenticatorDataFunc(row.id, () => {
+                            message.success("패스코드 삭제 성공!")
+                            GetDatas()
+                        })
+                    }} onMouseEnter={() => {
+                        setPasscodeHover(id)
+                    }} onMouseLeave={() => {
+                        setPasscodeHover("")
+                    }}>
+                    <img style={{
+                        cursor: 'pointer',
+                        width: '100%',
+                        height: '100%'
+                    }} src={id === passcodeHover ? passcodeDeleteIconHover : passcodeDeleteIcon} />
+                </div>
+            })
+        }
+        return columns
+    }
+
     return <>
         <Contents loading={dataLoading}>
             <ContentsHeader title='USER_MANAGEMENT' subTitle={isAdd ? 'USER_REGISTRATION' : 'USER_REGISTRATION_INFO'} style={{
@@ -462,7 +520,7 @@ const UserDetail = ({ }) => {
                         if (portalSigned) setUserDetailOpened(userDetailOpened.includes(_.authInfo.id) ? userDetailOpened.filter(uOpened => uOpened !== _.authInfo.id) : userDetailOpened.concat(_.authInfo.id))
                     }}>
                         <div className="user-detail-header-application-info">
-                            <img src={_.application.logoImage} />
+                            <img src={_.application.logoImage.url} />
                             {/* <h3>#{index + 1} {_.application.name}</h3> */}
                             <h4>{_.application.name}</h4>
                             <div className="user-detail-alias-container">
@@ -543,60 +601,7 @@ const UserDetail = ({ }) => {
                         </div>
                         <CustomTable<PasscodeAuthenticatorDataType, {}>
                             noSearch
-                            columns={
-                                [
-                                    {
-                                        key: "number",
-                                        width: 180,
-                                        title: <FormattedMessage id="PASSCODE" />,
-                                        render: (data) => <ViewPasscode code={data} />
-                                    },
-                                    {
-                                        key: "issuerUsername",
-                                        title: <FormattedMessage id="ADMIN_ID" />
-                                    },
-                                    {
-                                        key: "createdAt",
-                                        title: <FormattedMessage id="CREATION_ON" />
-                                    },
-                                    {
-                                        key: "expiredAt",
-                                        title: <FormattedMessage id="VALID_TIME" />,
-                                        render: (data) => {
-                                            if (data === "-1") return "∞"
-                                            return convertUTCStringToKSTString(data)
-                                        }
-                                    },
-                                    {
-                                        key: "recycleCount",
-                                        title: <FormattedMessage id="CAN_USES" />,
-                                        render: (data) => {
-                                            return data === -1 ? "∞" : `${data} 회`
-                                        }
-                                    },
-                                    {
-                                        key: "etc",
-                                        title: "",
-                                        render: (data, index, row) => row.createdAt && <div className='user-passcode-delete-btn'
-                                            onClick={() => {
-                                                DeleteAuthenticatorDataFunc(row.id, () => {
-                                                    message.success("패스코드 삭제 성공!")
-                                                    GetDatas()
-                                                })
-                                            }} onMouseEnter={() => {
-                                                setPasscodeHover(_.authInfo.id)
-                                            }} onMouseLeave={() => {
-                                                setPasscodeHover("")
-                                            }}>
-                                            <img style={{
-                                                cursor: 'pointer',
-                                                width: '100%',
-                                                height: '100%'
-                                            }} src={_.authInfo.id === passcodeHover ? passcodeDeleteIconHover : passcodeDeleteIcon} />
-                                        </div>
-                                    }
-                                ]
-                            }
+                            columns={columnsByRole(_.authInfo.id)}
                             noDataHeight="30px"
                             datas={passcodeData(_.authInfo.id)}
                             theme="table-st1"

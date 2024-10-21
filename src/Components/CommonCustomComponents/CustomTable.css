@@ -42,7 +42,7 @@
 .table-st1 thead tr {
   background-color: var(--sub-grey-color);
   & > th {
-    font-weight: 400;
+    font-weight: 500;
     padding: 10px;
     color: var(--main-grey-color2);
   }
@@ -51,7 +51,7 @@
 .table-st2 thead tr {
   background-color: var(--sub-grey-color);
   & > th {
-    font-weight: 400;
+    font-weight: 500;
     padding: 10px;
     color: #aaa;
   }
@@ -60,6 +60,7 @@
 .table-st1 td {
   padding: 10px;
   text-align: center;
+  font-weight: 500;
 }
 
 .table-st1 tbody tr {

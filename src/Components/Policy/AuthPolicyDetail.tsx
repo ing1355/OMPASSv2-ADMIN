@@ -11,6 +11,7 @@ import locationIcon from '../../assets/locationIcon.png'
 import resetIcon from '../../assets/resetIcon.png'
 import resetIconWhite from '../../assets/resetIconWhite.png'
 import ipInfoIcon from '../../assets/ipInfoIcon.png'
+import editIcon from '../../assets/editIcon.png'
 import deleteIcon from '../../assets/deleteIcon.png'
 import deleteIconHover from '../../assets/deleteIconHover.png'
 import addIconWhite from '../../assets/addIconWhite.png'
@@ -541,8 +542,18 @@ const AuthPolicyDetail = () => {
                             </div>
                             {
                                 ipAddressValues.map(({ ip, note }, ipInd) => <div key={ipInd} className="location-item-container">
-                                    <Input className="st1 policy-ip-address-input" placeholder="IP 주소 또는 범위" value={ip} onInput={ipAddressRestriction} maxLength={15} readOnly />
-                                    <Input className="st1 policy-ip-address-input" placeholder="메모" value={note} readOnly />
+                                    <Input className="st1 policy-ip-address-input" placeholder="IP 주소 또는 범위" value={ip} onInput={ipAddressRestriction} maxLength={15} valueChange={(val) => {
+                                        setIpAddressValues(ipAddressValues.map((_, _ind) => _ind === ipInd ? ({
+                                            ip: val,
+                                            note
+                                        }) : _))
+                                    }}/>
+                                    <Input className="st1 policy-ip-address-input" placeholder="메모" value={note} valueChange={(val) => {
+                                        setIpAddressValues(ipAddressValues.map((_, _ind) => _ind === ipInd ? ({
+                                            ip,
+                                            note: val
+                                        }) : _))
+                                    }}/>
                                     <Button className="st2" onClick={() => {
                                         setIpAddressValues(ipAddressValues.filter((_, _ind) => _ind !== ipInd))
                                     }} icon={deleteIcon} hoverIcon={deleteIconHover} style={{

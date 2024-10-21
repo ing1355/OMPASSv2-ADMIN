@@ -23,7 +23,10 @@ import { FormattedMessage } from "react-intl"
 import CustomImageUpload from "Components/CommonCustomComponents/CustomImageUpload"
 
 const ApplicationDetail = () => {
-    const [logoImage, setLogoImage] = useState<string>(ompassLogoIcon)
+    const [logoImage, setLogoImage] = useState<updateLogoImageType>({
+        isDefaultImage: true,
+        encodedImage: ompassLogoIcon
+    })
     const [inputName, setInputName] = useState('')
     const [helpMsg, setHelpMsg] = useState('')
     const [needPassword, setNeedPassword] = useState(false)
@@ -48,8 +51,11 @@ const ApplicationDetail = () => {
         disabled: _ === 'ADMIN' || _ === 'WINDOWS_LOGIN'
     }))
 
-    const handleFileSelect = (img: string) => {
-        setLogoImage(img)
+    const handleFileSelect = (data: updateLogoImageType) => {
+        setLogoImage({
+            isDefaultImage: data.isDefaultImage,
+            encodedImage: data.encodedImage
+        })
     }
 
     const GetDatas = async () => {
@@ -59,7 +65,10 @@ const ApplicationDetail = () => {
                 setInputSecretKey(data.secretKey)
                 setInputDomain(data.domain ?? "")
                 setInputRedirectUrl(data.redirectUri ?? "")
-                setLogoImage(data.logoImage ?? ompassLogoIcon)
+                setLogoImage({
+                    encodedImage: data.logoImage.url,
+                    isDefaultImage: data.logoImage.isDefaultImage
+                })
                 setInputDescription(data.description ?? "")
                 setInputClientId(data.clientId)
                 setInputApiServerHost(data.apiServerHost)
@@ -191,7 +200,7 @@ const ApplicationDetail = () => {
                     <CustomInputRow title="로고 설정" containerStyle={{
                         alignItems: 'flex-start'
                     }}>
-                        <CustomImageUpload src={logoImage} callback={handleFileSelect} />
+                        <CustomImageUpload data={logoImage} callback={handleFileSelect} />
                     </CustomInputRow>
                 </>
             }
@@ -214,7 +223,10 @@ const ApplicationDetail = () => {
                         domain: inputDomain ?? "",
                         redirectUri: isRedmine ? inputDomain + '/ompass' : inputRedirectUrl,
                         helpDeskMessage: helpMsg,
-                        logoImage: convertBase64FromClientToServerFormat(logoImage),
+                        logoImage: {
+                            encodedImage: convertBase64FromClientToServerFormat(logoImage.encodedImage),
+                            isDefaultImage: logoImage.isDefaultImage
+                        },
                         description: inputDescription,
                         type: applicationType,
                         isTwoFactorAuthEnabled: needPassword
@@ -229,7 +241,10 @@ const ApplicationDetail = () => {
                         domain: inputDomain,
                         redirectUri: isRedmine ? inputDomain + '/ompass' : inputRedirectUrl,
                         helpDeskMessage: helpMsg,
-                        logoImage: convertBase64FromClientToServerFormat(logoImage),
+                        logoImage: {
+                            encodedImage: convertBase64FromClientToServerFormat(logoImage.encodedImage),
+                            isDefaultImage: logoImage.isDefaultImage
+                        },
                         description: inputDescription,
                         type: applicationType,
                         isTwoFactorAuthEnabled: needPassword

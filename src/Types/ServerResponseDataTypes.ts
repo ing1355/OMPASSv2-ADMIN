@@ -171,7 +171,17 @@ type SubDomainInfoDataType = {
 type PortalSettingsDataType = {
   companyName: string
   userSignupMethod: UserSignUpMethodType
-  logoImage: string
+  logoImage: logoImageType
+  noticeMessage: string
+  timeZone: string
+  isUserAllowedToRemoveAuthenticator: boolean
+  selfSignupEnabled: boolean
+}
+
+type UpdatePortalSettingsDataType = {
+  companyName: string
+  userSignupMethod: UserSignUpMethodType
+  logoImage: updateLogoImageType
   noticeMessage: string
   timeZone: string
   isUserAllowedToRemoveAuthenticator: boolean

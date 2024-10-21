@@ -10,6 +10,7 @@ import { CopyRightText, isDev, subDomain } from '../../Constants/ConstantValues'
 import locale_image from '../../assets/locale_image.png';
 import downloadIconWhite from '../../assets/downloadIconWhite.png';
 import manualDownloadIcon from '../../assets/manualDownloadIcon.png'
+import loginMainImage from '../../assets/loginMainImage.png'
 import { useCookies } from 'react-cookie';
 import { LoginFunc, UpdatePasswordFunc } from 'Functions/ApiFunctions';
 import { saveLocaleToLocalStorage } from 'Functions/GlobalFunctions';
@@ -90,7 +91,7 @@ const Login = () => {
       <div className={`login-body${needPasswordChange ? ' password-change' : ''}`}>
         {!needPasswordChange ? <div className='login-hello-container'>
           <div className='login-logo-img'>
-            {logoImage && <img src={logoImage} />}
+            {logoImage && <img src={logoImage.isDefaultImage ? loginMainImage : logoImage.url} />}
           </div>
           <div className='login-hello-text'>
             {noticeMessage}

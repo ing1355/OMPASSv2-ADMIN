@@ -137,6 +137,7 @@ export const GetUserDataListFunc = ({
     name = "",
     email = "",
     phone = "",
+    status = "",
     role = undefined,
     hasGroup = undefined,
     sortBy = "CREATED_AT",
@@ -153,6 +154,7 @@ export const GetUserDataListFunc = ({
         phone,
         name,
         sortBy,
+        status,
         email,
         sortDirection,
         hasGroup
@@ -364,7 +366,7 @@ export const GetPortalSettingsDataFunc = (callback: (data: PortalSettingsDataTyp
     return CustomAxiosGet(GetPortalSettingsDataApi, callback)
 }
 
-export const UpdatePortalSettingsDataFunc = (params: PortalSettingsDataType, callback: () => void) => {
+export const UpdatePortalSettingsDataFunc = (params: UpdatePortalSettingsDataType, callback: () => void) => {
     return CustomAxiosPut(UpdatePortalSettingsDataApi, callback, params)
 }
 

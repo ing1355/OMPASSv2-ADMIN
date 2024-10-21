@@ -1,6 +1,14 @@
 type LanguageType = 'KR' | 'EN'
 type AuthPurposeType = "ADD_OTHER_AUTHENTICATOR" | "AUTH_LOGIN" | "REG_LOGIN"
 type AuthenticationLogType = "ALLOW" | "DENY" | "ALLOW_OUT_OF_SCHEDULE"
+type logoImageType = {
+    isDefaultImage: boolean
+    url: string
+}
+type updateLogoImageType = {
+    isDefaultImage: boolean
+    encodedImage: string
+}
 type AuthMethodType = "U2F" | 'UAF'
 type OMPASSDataType = {
     authPurpose: AuthPurposeType
@@ -151,7 +159,7 @@ type DefaultApplicationDataType = {
     name: string
     domain?: string
     description?: string
-    logoImage?: string
+    logoImage: logoImageType
     policyId: string
     createdAt: string
 }
@@ -170,7 +178,7 @@ type ApplicationDataParamsType = {
     name: ApplicationDataType['name']
     redirectUri: ApplicationDataType['redirectUri']
     helpDeskMessage: ApplicationDataType['helpDeskMessage']
-    logoImage: ApplicationDataType['logoImage']
+    logoImage: updateLogoImageType
     description: ApplicationDataType['description']
     isTwoFactorAuthEnabled: ApplicationDataType['isTwoFactorAuthEnabled']
     domain?: ApplicationDataType['domain']
@@ -486,4 +494,14 @@ type DashboardChartDataEachApplicationType = DateSelectDataType & {
 type SelectedDateType = {
     startDate: Date | null
     endDate: Date | null
+}
+
+type CustomTableColumnType<T> = {
+    key: keyof T | string
+    // title: React.ReactNode | ((data: any, index: number, row?: T) => React.ReactNode)
+    title: React.ReactNode
+    width?: string | number
+    onClick?: () => void
+    render?: (data: any, index: number, row: T) => React.ReactNode
+    noWrap?: boolean
 }

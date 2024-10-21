@@ -10,16 +10,6 @@ import { userSelectPageSize } from "Constants/ConstantValues"
 import { FormattedMessage } from "react-intl"
 import { useLocation, useNavigate } from "react-router"
 
-export type CustomTableColumnType<T> = {
-    key: keyof T | string
-    // title: React.ReactNode | ((data: any, index: number, row?: T) => React.ReactNode)
-    title: React.ReactNode
-    width?: CSSProperties['width']
-    noWrap?: boolean
-    onClick?: () => void
-    render?: (data: any, index: number, row: T) => React.ReactNode
-}
-
 type CustomTableButtonType = {
     icon?: string
     hoverIcon?: string

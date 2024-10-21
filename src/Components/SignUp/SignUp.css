@@ -70,7 +70,7 @@
   height: 62px;
   border-radius: 12px;
   font-size: 1.12rem;
-  font-weight: 900;
+  font-weight: bold;
   margin-bottom: 12px;
   background-color: var(--sub-grey-color3);
   color: var(--main-white-color);

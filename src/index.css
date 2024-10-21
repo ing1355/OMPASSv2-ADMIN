@@ -19,10 +19,6 @@
   font-style: normal;
 }
 
-* {
-  font-family: 'NEXON Lv1 Gothic OTF' !important;
-}
-
 @font-face {
   font-family: 'NEXON Lv2 Gothic OTF';
   src: url('./fonts/NEXON Lv2 Gothic OTF Light.otf') format('opentype');
@@ -52,8 +48,8 @@
 }
 
 * {
-  font-family: 'NEXON Lv2 Gothic OTF';
-  /* font-weight: 500; */
+  font-family: 'NEXON Lv2 Gothic OTF, NEXON Lv1 Gothic OTF';
+  font-style: normal;
 }
 
 div {
@@ -158,13 +154,13 @@ a[download] {
 }
 
 .locale-toggle.active {
-  font-weight: 600;
+  font-weight: bold;
 }
 
 /* copyright style */
 .copyRight-style {
   font-size: 0.8rem;
-  font-weight: 400;
+  font-weight: 500;
   text-align: center;
   height: 40px;
   margin-top: 20px;

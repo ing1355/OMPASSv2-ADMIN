@@ -45,46 +45,6 @@
   cursor: pointer;
 }
 
-.dropdown_menu_ul {
-  display: none;
-  background-color: white;
-  box-shadow: 0px 5px 10px -1px #ccc;
-  position: absolute;
-  top: 56px;
-  width: 235px;
-  z-index: 999;
-}
-
-.dropdown_menu_ul li {
-  border-bottom: 1px solid #ccc;
-  display: flex;
-  margin-left: 0;
-  position: relative;
-  left: -16px;
-}
-
-.dropdown_menu_ul li div {
-  border: none;
-  background-color: white;
-  color: #999;
-  font-size: 1.1rem;
-  cursor: pointer;
-  padding: 15px 20px;
-  /* border-radius: 3px; */
-  font-weight: 100;
-  width: 195px;
-}
-
-.dropdown_menu_ul li div:hover {
-  background-color: #0092FA;
-  color: white;
-  /* background-color: rgba(0,0,0,0.64); */
-}
-
-#dropdown_menu:checked+label+.dropdown_menu_ul {
-  display: block;
-}
-
 .header_logo_title {
   background: linear-gradient(to bottom, #5840d9, #4715FF);
   background-clip: text;
