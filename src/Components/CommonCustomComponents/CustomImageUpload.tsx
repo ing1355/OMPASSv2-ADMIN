@@ -26,7 +26,7 @@ const CustomImageUpload = ({ callback, data, defaultImg }: CustomImageUploadProp
         const reader = new FileReader();
         reader.onload = (event) => {
             callback({
-                encodedImage: event.target!.result as string,
+                image: event.target!.result as string,
                 isDefaultImage: event.target!.result === (defaultImg || ompassLogoIcon)
             })
         }
@@ -37,14 +37,14 @@ const CustomImageUpload = ({ callback, data, defaultImg }: CustomImageUploadProp
         <div
             className="custom-image-upload-box"
             onMouseEnter={() => {
-                if(data.encodedImage !== (defaultImg || ompassLogoIcon)) setDeleteShow(true)
+                if(data.image !== (defaultImg || ompassLogoIcon)) setDeleteShow(true)
             }}
             onMouseLeave={() => {
                 setDeleteShow(false)
             }}
             onClick={() => {
                 callback({
-                    encodedImage: defaultImg || ompassLogoIcon,
+                    image: defaultImg || ompassLogoIcon,
                     isDefaultImage: true
                 })
                 setDeleteShow(false)
@@ -61,7 +61,7 @@ const CustomImageUpload = ({ callback, data, defaultImg }: CustomImageUploadProp
                     fileUploadCallback(file);
                 }
             }}>
-            <img src={data.encodedImage || defaultImg || ompassLogoIcon} />
+            <img src={data.image || defaultImg || ompassLogoIcon} />
             {deleteShow && <div className='custom-image-delete-container'>
                 <img src={deleteIcon}/>
                 삭제

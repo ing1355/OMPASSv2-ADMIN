@@ -1,3 +1,7 @@
+* v2.0.0(42)
+  - ssh 아이콘 사이즈 및 ui 조정
+  - 폰트 조정
+
 * v2.0.0(41)
   - ip 정책 각 row readOnly 제거
   - logoImage 객체 변경

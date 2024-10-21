@@ -25,7 +25,7 @@ import CustomImageUpload from "Components/CommonCustomComponents/CustomImageUplo
 const ApplicationDetail = () => {
     const [logoImage, setLogoImage] = useState<updateLogoImageType>({
         isDefaultImage: true,
-        encodedImage: ompassLogoIcon
+        image: ompassLogoIcon
     })
     const [inputName, setInputName] = useState('')
     const [helpMsg, setHelpMsg] = useState('')
@@ -54,7 +54,7 @@ const ApplicationDetail = () => {
     const handleFileSelect = (data: updateLogoImageType) => {
         setLogoImage({
             isDefaultImage: data.isDefaultImage,
-            encodedImage: data.encodedImage
+            image: data.image
         })
     }
 
@@ -66,7 +66,7 @@ const ApplicationDetail = () => {
                 setInputDomain(data.domain ?? "")
                 setInputRedirectUrl(data.redirectUri ?? "")
                 setLogoImage({
-                    encodedImage: data.logoImage.url,
+                    image: data.logoImage.url,
                     isDefaultImage: data.logoImage.isDefaultImage
                 })
                 setInputDescription(data.description ?? "")
@@ -224,7 +224,7 @@ const ApplicationDetail = () => {
                         redirectUri: isRedmine ? inputDomain + '/ompass' : inputRedirectUrl,
                         helpDeskMessage: helpMsg,
                         logoImage: {
-                            encodedImage: convertBase64FromClientToServerFormat(logoImage.encodedImage),
+                            image: convertBase64FromClientToServerFormat(logoImage.image),
                             isDefaultImage: logoImage.isDefaultImage
                         },
                         description: inputDescription,
@@ -242,7 +242,7 @@ const ApplicationDetail = () => {
                         redirectUri: isRedmine ? inputDomain + '/ompass' : inputRedirectUrl,
                         helpDeskMessage: helpMsg,
                         logoImage: {
-                            encodedImage: convertBase64FromClientToServerFormat(logoImage.encodedImage),
+                            image: convertBase64FromClientToServerFormat(logoImage.image),
                             isDefaultImage: logoImage.isDefaultImage
                         },
                         description: inputDescription,

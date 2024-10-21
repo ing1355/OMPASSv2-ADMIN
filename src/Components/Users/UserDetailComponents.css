@@ -24,6 +24,7 @@
         }
     }
     &.linux {
+        --img-size: 46px;
         gap: 12px;
         & > div {
             &:nth-last-child(2) {
@@ -31,10 +32,10 @@
             }
         }
         & > img {
-            width: 100px;
-            height: 100px;
-            max-width: 100px;
-            max-height: 100px;
+            width: var(--img-size);
+            height: var(--img-size);
+            max-width: var(--img-size);
+            max-height: var(--img-size);
         }
     }
 }
@@ -91,12 +92,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    padding-bottom: 48px;
 }
 
 .linux-target-text {
     color: var(--main-grey-color);
     font-weight: bold;
-    flex: 1;
+    flex: 0 0 20px;
 }
 
 .user-detail-info-device-info-no-contents {

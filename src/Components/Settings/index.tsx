@@ -29,7 +29,7 @@ const Settings = () => {
     const [canDelete, setCanDelete] = useState(false)
     const [inputAlias, setInputAlias] = useState('회사명');
     const [logoImg, setLogoImg] = useState<updateLogoImageType>({
-        encodedImage: loginMainImage,
+        image: loginMainImage,
         isDefaultImage: true
     })
 
@@ -40,7 +40,7 @@ const Settings = () => {
         GetPortalSettingsDataFunc(({ userSignupMethod, logoImage, noticeMessage, timeZone, companyName, isUserAllowedToRemoveAuthenticator, selfSignupEnabled }) => {
             setSignupMethod(userSignupMethod)
             setLogoImg({
-                encodedImage: logoImage.url,
+                image: logoImage.url,
                 isDefaultImage: logoImage.isDefaultImage
             })
             setWelcomeText(noticeMessage)
@@ -63,7 +63,7 @@ const Settings = () => {
                     UpdatePortalSettingsDataFunc({
                         timeZone: timeZoneValue,
                         logoImage: {
-                            encodedImage: convertBase64FromClientToServerFormat(data.encodedImage),
+                            image: convertBase64FromClientToServerFormat(data.image),
                             isDefaultImage: data.isDefaultImage
                         },
                         noticeMessage: welcomeText,
@@ -80,7 +80,7 @@ const Settings = () => {
                         dispatch(subdomainInfoChange({
                             ...subdomainInfo!,
                             logoImage: {
-                                url: data.encodedImage,
+                                url: data.image,
                                 isDefaultImage: data.isDefaultImage
                             },
                             noticeMessage: welcomeText,
@@ -90,21 +90,21 @@ const Settings = () => {
                         message.error("설정 저장 실패!")
                     })
                 }
-                if(logoImg.encodedImage.startsWith('/static')) {
+                if(logoImg.image.startsWith('/static')) {
                     const img = new Image()
                     img.onload = () => {
                         let canvas = document.createElement('canvas');
                         canvas.width = img.naturalWidth;
                         canvas.height = img.naturalHeight;
                         canvas.getContext('2d')!.drawImage(img, 0, 0);
-                        const temp = logoImg.encodedImage.split('.')
+                        const temp = logoImg.image.split('.')
                         let b64Str = canvas.toDataURL(`image/${temp[temp.length - 1]}`);
                         callback({
-                            encodedImage: b64Str,
-                            isDefaultImage: logoImg.encodedImage === loginMainImage
+                            image: b64Str,
+                            isDefaultImage: logoImg.image === loginMainImage
                         })
                     }
-                    img.src = logoImg.encodedImage
+                    img.src = logoImg.image
                 } else {
                     callback(logoImg)
                 }

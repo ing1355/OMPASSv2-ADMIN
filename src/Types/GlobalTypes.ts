@@ -7,7 +7,7 @@ type logoImageType = {
 }
 type updateLogoImageType = {
     isDefaultImage: boolean
-    encodedImage: string
+    image: string
 }
 type AuthMethodType = "U2F" | 'UAF'
 type OMPASSDataType = {
