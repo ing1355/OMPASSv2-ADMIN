@@ -381,6 +381,17 @@ type DefaultUserGroupDataType = {
     id: string
     name: string
 }
+type UserHierarchyDataRpUserType = {
+    applicationId: ApplicationDataType['id']
+    rpUserId: RPUserType['id']
+    rpUsername: RPUserType['username']
+}
+type UserHierarchyDataType = {
+    id: UserDataType['userId']
+    username: UserDataType['username']
+    name: UserNameType
+    rpUsers: UserHierarchyDataRpUserType[]
+}
 type UserGroupDataType = DefaultUserGroupDataType & {
     policy: PolicyListDataType
     users: UserDataType[]

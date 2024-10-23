@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { langChange } from 'Redux/actions/langChange';
 import { Link, useNavigate } from 'react-router-dom';
-import ompassLogoIcon from '../../assets/ompassLogoIcon.png';
 import locale_image from '../../assets/locale_image.png';
 import menu_icon from '../../assets/menu_icon.png';
 import logout from '../../assets/logout.png';
@@ -13,7 +12,7 @@ import downloadIcon from '../../assets/downloadIcon.png';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { userInfoClear } from 'Redux/actions/userChange';
 import { Col, Row, Tooltip, message } from 'antd';
-import { menuDatas } from 'Constants/ConstantValues';
+import { menuDatas, ompassDefaultLogoImage } from 'Constants/ConstantValues';
 import { saveLocaleToLocalStorage } from 'Functions/GlobalFunctions';
 
 const Header = () => {
@@ -96,7 +95,7 @@ const Header = () => {
               }}
             >
               <img
-                src={ompassLogoIcon}
+                src={ompassDefaultLogoImage}
               />
               <div>
                 <span

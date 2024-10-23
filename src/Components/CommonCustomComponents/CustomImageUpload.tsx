@@ -1,11 +1,11 @@
 import './CustomImageUpload.css'
-import ompassLogoIcon from '../../assets/ompassLogoIcon.png'
 import uploadIcon from '../../assets/uploadIcon.png'
 import uploadIconHover from '../../assets/uploadIconHover.png'
 import { message, Upload } from 'antd'
 import Button from 'Components/CommonCustomComponents/Button'
 import { useState } from 'react'
 import deleteIcon from '../../assets/deleteIconRed.png';
+import { ompassDefaultLogoImage } from 'Constants/ConstantValues'
 
 type CustomImageUploadProps = {
     data: updateLogoImageType
@@ -27,7 +27,7 @@ const CustomImageUpload = ({ callback, data, defaultImg }: CustomImageUploadProp
         reader.onload = (event) => {
             callback({
                 image: event.target!.result as string,
-                isDefaultImage: event.target!.result === (defaultImg || ompassLogoIcon)
+                isDefaultImage: event.target!.result === (defaultImg || ompassDefaultLogoImage)
             })
         }
         reader.readAsDataURL(file);
@@ -37,14 +37,14 @@ const CustomImageUpload = ({ callback, data, defaultImg }: CustomImageUploadProp
         <div
             className="custom-image-upload-box"
             onMouseEnter={() => {
-                if(data.image !== (defaultImg || ompassLogoIcon)) setDeleteShow(true)
+                if(!data.isDefaultImage) setDeleteShow(true)
             }}
             onMouseLeave={() => {
                 setDeleteShow(false)
             }}
             onClick={() => {
                 callback({
-                    image: defaultImg || ompassLogoIcon,
+                    image: defaultImg || ompassDefaultLogoImage,
                     isDefaultImage: true
                 })
                 setDeleteShow(false)
@@ -61,7 +61,7 @@ const CustomImageUpload = ({ callback, data, defaultImg }: CustomImageUploadProp
                     fileUploadCallback(file);
                 }
             }}>
-            <img src={data.image || defaultImg || ompassLogoIcon} />
+            <img src={data.image || defaultImg || ompassDefaultLogoImage} />
             {deleteShow && <div className='custom-image-delete-container'>
                 <img src={deleteIcon}/>
                 삭제

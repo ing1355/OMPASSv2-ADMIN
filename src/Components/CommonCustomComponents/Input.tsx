@@ -122,9 +122,9 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                                 }
                             }}
                             onBlur={e => {
-                                if (onlyNumber) {
-                                    e.currentTarget.value = parseInt(e.currentTarget.value).toString()
-                                }
+                                // if (onlyNumber) {
+                                //     e.currentTarget.value = parseInt(e.currentTarget.value).toString()
+                                // }
                             }}
                             onChange={e => {
                                 if (valueChange) {
@@ -132,8 +132,9 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                                 }
                             }} onInput={(e) => {
                                 if (onlyNumber) {
-                                    if (!e.currentTarget.value) e.currentTarget.value = "0"
-                                    else e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')
+                                    // if (!e.currentTarget.value) e.currentTarget.value = "0"
+                                    // else e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')
+                                    e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')
                                     if (!zeroOk) {
                                         while (e.currentTarget.value.startsWith('0') && e.currentTarget.value !== '0') {
                                             e.currentTarget.value = e.currentTarget.value.slice(1,)

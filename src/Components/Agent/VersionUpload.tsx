@@ -33,7 +33,7 @@ const VersionUpload = () => {
           <Button className='st3'
             type={!isUploadingFile ? "submit" : "button"}
             form={!isUploadingFile ? 'addVersionForm' : ''}
-            aria-loading={isUploadingFile}
+            loading={isUploadingFile}
           >
             <span><FormattedMessage id={isUploadingFile ? 'LOADING' : 'CONFIRM'} /></span>
           </Button>

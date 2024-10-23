@@ -1,5 +1,3 @@
-import deleteModalIcon from '../../assets/deleteModalIcon.png';
-import ompassLogoIcon from '../../assets/ompassLogoIcon.png';
 import deviceModelIcon from '../../assets/deviceModelIcon.png';
 import lastLoginTimeIcon from '../../assets/lastLoginTimeIcon.png'
 import passcodeVisibleIcon from '../../assets/passwordVisibleIcon.png';
@@ -11,7 +9,7 @@ import iOSIcon from '../../assets/iOSIcon.png';
 import ubuntuOSIcon from '../../assets/ubuntuOSIcon.png';
 import gooroomOSIcon from '../../assets/gooroomOSIcon.png';
 import centOSIcon from '../../assets/centOSIcon.png';
-import uuid_img from '../../assets/uuid_img.png';
+import uuidIcon from '../../assets/uuidIcon.png';
 import locationIcon from '../../assets/locationIcon.png';
 import browserIcon from '../../assets/browserIcon.png';
 import ipAddressIcon from '../../assets/ipAddressIcon.png';
@@ -19,23 +17,20 @@ import macAddressIcon from '../../assets/macAddressIcon.png';
 import pcNameIcon from '../../assets/pcNameIcon.png';
 import agentVersionIcon from '../../assets/agentVersionIcon.png';
 import registeredAtIcon from '../../assets/registeredAtIcon.png';
-import chrome_img from '../../assets/chrome_img.png';
-import chrome_mobile_img from '../../assets/chrome_mobile_img.png';
-import firefox_img from '../../assets/firefox_img.png';
-import microsoft_edge_img from '../../assets/microsoft_edge_img.png';
-import safari_img from '../../assets/safari_img.png';
 import noDataIcon from '../../assets/noDataIcon.png';
+import copyIcon from '../../assets/copyIcon.png';
 import lastAuthIcon from '../../assets/lastAuthIcon.png';
 import sshIcon from '../../assets/sshIcon.png';
-import safari_mobile_img from '../../assets/safari_mobile_img.png';
 import clientIcon from '../../assets/clientIcon.png';
-import samsung_browser_mobile_img from '../../assets/samsung_browser_mobile_img.png';
 import { FormattedMessage } from 'react-intl';
 import { PropsWithChildren, useState } from 'react';
 import './UserDetailComponents.css'
 import { createOSInfo } from 'Functions/GlobalFunctions';
 import Button from 'Components/CommonCustomComponents/Button';
 import RequiredLabel from 'Components/CommonCustomComponents/RequiredLabel';
+import { ompassDefaultLogoImage } from 'Constants/ConstantValues';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { message } from 'antd';
 
 const UserDetailInfoContentItem = ({ imgSrc, title, content }: {
     imgSrc: string
@@ -56,13 +51,13 @@ const UserDetailInfoContentItem = ({ imgSrc, title, content }: {
 const AuthenticatorInfoContentsOMPASSType = ({ data }: {
     data: OMPASSAuthenticatorDataType
 }) => {
-    const { mobile, id, lastAuthenticatedAt, createdAt} = data as OMPASSAuthenticatorDataType
+    const { mobile, id, lastAuthenticatedAt, createdAt } = data as OMPASSAuthenticatorDataType
     const { os, deviceId, model, ompassAppVersion } = mobile
     return <>
         <div className="user-detail-info-device-info-content">
             <UserDetailInfoContentItem imgSrc={imgSrcByOS(os.name)} title="OS" content={`${os.name} ${os.version}`} />
-            <UserDetailInfoContentItem imgSrc={ompassLogoIcon} title="Type" content={`OMPASS v${ompassAppVersion}`} />
-            <UserDetailInfoContentItem imgSrc={uuid_img} title="Device UUID" content={deviceId} />
+            <UserDetailInfoContentItem imgSrc={ompassDefaultLogoImage} title="Type" content={`OMPASS v${ompassAppVersion}`} />
+            <UserDetailInfoContentItem imgSrc={uuidIcon} title="Device UUID" content={deviceId} />
             <UserDetailInfoContentItem imgSrc={deviceModelIcon} title="Model" content={model} />
             <UserDetailInfoContentItem imgSrc={registeredAtIcon} title="Registered At" content={createdAt} />
             <UserDetailInfoContentItem imgSrc={lastAuthIcon} title="Last Auth" content={lastAuthenticatedAt} />
@@ -76,7 +71,7 @@ const AuthenticatorInfoContentsWEBAUTHNType = ({ data }: {
     const { lastAuthenticatedAt, id } = data
     return <>
         <div className="user-detail-info-device-info-content">
-            <UserDetailInfoContentItem imgSrc={ompassLogoIcon} title="Type" content={"WEBAUTHN"} />
+            <UserDetailInfoContentItem imgSrc={ompassDefaultLogoImage} title="Type" content={"WEBAUTHN"} />
             <UserDetailInfoContentItem imgSrc={lastLoginTimeIcon} title="Last Login" content={lastAuthenticatedAt} />
         </div>
     </>
@@ -125,6 +120,19 @@ export const ViewPasscode = ({ code }: {
         >
             <img src={isView ? passcodeVisibleIcon : passcodeHiddenIcon} />
         </div>
+        <div onClick={e => {
+            e.stopPropagation()
+        }}>
+            <CopyToClipboard text={code} onCopy={(value, result) => {
+                if (result) {
+                    message.success("패스코드가 복사되었습니다.")
+                } else {
+                    message.error("패스코드 복사에 실패하였습니다.")
+                }
+            }}>
+                <img src={copyIcon} />
+            </CopyToClipboard>
+        </div>
     </div>
 }
 
@@ -148,7 +156,7 @@ export const UserInfoInputrow = ({ title, children, required }: PropsWithChildre
 }>) => {
     return <div className="user-detail-info-row">
         <div className="user-detail-info-col">
-            <RequiredLabel required={required}/>
+            <RequiredLabel required={required} />
             <span>
                 <FormattedMessage id={title} />
             </span>
@@ -187,7 +195,7 @@ export const UserDetailInfoAuthenticatorDeleteButton = ({ authenticatorId, callb
     return authenticatorId ? <Button className="st2 user-detail-info-device-info-delete-btn" onClick={async () => {
         callback(authenticatorId)
     }}>
-        <FormattedMessage id="CLEAR_DEVICE"/>
+        <FormattedMessage id="CLEAR_DEVICE" />
     </Button> : <></>
 }
 
@@ -294,13 +302,13 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
             </div>
         }
         <div className="user-detail-info-device-info-content-item">
-                <img src={lastLoginTimeIcon} />
-                <div className="user-detail-info-device-info-content-title">
-                    Last Login
-                </div>
-                <div>
-                    {clientData.updatedAt}
-                </div>
+            <img src={lastLoginTimeIcon} />
+            <div className="user-detail-info-device-info-content-title">
+                Last Login
             </div>
+            <div>
+                {clientData.updatedAt}
+            </div>
+        </div>
     </>
 }

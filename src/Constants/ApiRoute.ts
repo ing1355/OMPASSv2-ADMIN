@@ -42,6 +42,7 @@ export const GetUserGroupDetailApi = (groupId: UserGroupDataType['id']) => `/v2/
 export const AddUserGroupApi = '/v2/groups'
 export const UpdateUserGroupApi = (groupId: UserGroupDataType['id']) => `/v2/groups/${groupId}`
 export const DeleteUserGroupApi = (groupId: UserGroupDataType['id']) => `/v2/groups/${groupId}`
+export const GetUserHierarchyApi = () => '/v2/users-hierarchy'
 
 // 관리자 페이지 사용자 관리
 export const GetUserDataListApi = '/v2/users'

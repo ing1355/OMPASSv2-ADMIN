@@ -18,7 +18,7 @@
         height: 18px;
     }
 
-    &[aria-loading="true"] {
+    &[data-loading="true"] {
         cursor: not-allowed;
 
         &::before {
@@ -51,10 +51,6 @@
         }
     }
 
-    /* &:hover:not([aria-loading="true"]):not(:disabled) {
-        transform: translateY(-2px);
-        transition: all .2s ease-in-out;
-    } */
     &:disabled {
         background-color: var(--sub-purple-color6) !important;
         color: var(--main-white-color) !important;

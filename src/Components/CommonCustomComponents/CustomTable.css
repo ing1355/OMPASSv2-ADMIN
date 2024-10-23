@@ -59,8 +59,9 @@
 
 .table-st1 td {
   padding: 10px;
+  font-size: 1rem;
   text-align: center;
-  font-weight: 500;
+  font-weight: normal;
 }
 
 .table-st1 tbody tr {

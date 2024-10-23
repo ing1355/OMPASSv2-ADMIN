@@ -7,7 +7,6 @@ import { GetPasscodeHistoriesFunc } from "Functions/ApiFunctions";
 import { useNavigate } from "react-router";
 import { convertUTCStringToKSTString } from "Functions/GlobalFunctions";
 import { ViewPasscode } from "Components/Users/UserDetailComponents";
-import { userSelectPageSize } from "Constants/ConstantValues";
 import ContentsHeader from "Components/Layout/ContentsHeader";
 
 const PasscodeManagement = () => {

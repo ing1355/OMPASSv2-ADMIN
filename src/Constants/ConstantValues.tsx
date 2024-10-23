@@ -20,9 +20,10 @@ import passcodeHistoryMenuIconWhite from '../assets/passcodeHistoryMenuIconWhite
 import settingsMenuIconBlack from '../assets/settingsMenuIconBlack.png';
 import SettingsMenuIconWhite from '../assets/settingsMenuIconWhite.png';
 import { tz } from 'moment-timezone'
+import ompassLogoIcon from '../assets/ompassLogoIcon.png'
 
 export const timeZoneNames = tz.names()
-
+export const ompassDefaultLogoImage = ompassLogoIcon
 export const isDev = process.env.NODE_ENV === 'development'
 export const CopyRightText = (info: SubDomainInfoDataType) => `OMPASS Portal v${process.env.REACT_APP_VERSION} © 2024. OneMoreSecurity Inc. All Rights Reserved. (backend versions : portal - ${info.backendVersion.portalApp}, fido - ${info.backendVersion.fidoApp}, interface - ${info.backendVersion.interfaceApp})`
 export const INT_MAX_VALUE = Math.pow(2, 31) - 1

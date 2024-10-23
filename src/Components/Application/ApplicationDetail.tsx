@@ -3,11 +3,10 @@ import ContentsHeader from "Components/Layout/ContentsHeader"
 import { useNavigate, useParams } from "react-router"
 import { useLayoutEffect, useState } from "react"
 import { Switch, message } from "antd"
-import ompassLogoIcon from '../../assets/ompassLogoIcon.png'
 import CustomInputRow from "Components/Layout/CustomInputRow"
 import { AddApplicationDataFunc, DeleteApplicationListFunc, GetApplicationDetailFunc, GetApplicationListFunc, UpdateApplicationDataFunc, UpdateApplicationSecretkeyFunc } from "Functions/ApiFunctions"
 import PolicySelect from "Components/CommonCustomComponents/PolicySelect"
-import { applicationTypes, getApplicationTypeLabel } from "Constants/ConstantValues"
+import { applicationTypes, getApplicationTypeLabel, ompassDefaultLogoImage } from "Constants/ConstantValues"
 import { convertBase64FromClientToServerFormat } from "Functions/GlobalFunctions"
 import CustomModal from "Components/CommonCustomComponents/CustomModal"
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect"
@@ -25,7 +24,7 @@ import CustomImageUpload from "Components/CommonCustomComponents/CustomImageUplo
 const ApplicationDetail = () => {
     const [logoImage, setLogoImage] = useState<updateLogoImageType>({
         isDefaultImage: true,
-        image: ompassLogoIcon
+        image: ompassDefaultLogoImage
     })
     const [inputName, setInputName] = useState('')
     const [helpMsg, setHelpMsg] = useState('')

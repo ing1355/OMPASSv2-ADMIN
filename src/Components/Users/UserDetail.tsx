@@ -205,7 +205,7 @@ const UserDetail = ({ }) => {
             },
         ]
         if(isHigherRole) {
-            columns.concat({
+            return columns.concat({
                 key: "etc",
                 title: "",
                 render: (data, index, row) => row.createdAt && <div className='user-passcode-delete-btn'
@@ -226,8 +226,7 @@ const UserDetail = ({ }) => {
                     }} src={id === passcodeHover ? passcodeDeleteIconHover : passcodeDeleteIcon} />
                 </div>
             })
-        }
-        return columns
+        } else return columns
     }
 
     return <>
@@ -732,8 +731,8 @@ const PasscodeAddComponent = ({ okCallback, cancelCallback, authId }: {
         count: 'one'
     })
     const [inputCurrentPasscodeValue, setInputCurrentPasscodeValue] = useState('')
-    const [inputCurrentPasscodeTime, setInputCurrentPasscodeTime] = useState(1)
-    const [inputCurrentPasscodeCount, setInputCurrentPasscodeCount] = useState(1)
+    const [inputCurrentPasscodeTime, setInputCurrentPasscodeTime] = useState<number|string>(1)
+    const [inputCurrentPasscodeCount, setInputCurrentPasscodeCount] = useState<number|string>(1)
 
     const [addPasscodeLoading, setAddPasscodeLoading] = useState(false)
 
@@ -750,13 +749,13 @@ const PasscodeAddComponent = ({ okCallback, cancelCallback, authId }: {
             e.preventDefault();
             const target = e.target as HTMLFormElement
             const { method, time, count, codeValue, timeValue, countValue } = target.elements as any
-            if (method.value === "target" && codeValue.value.length !== 9) {
+            if (method.value === "target" && (!codeValue.value || codeValue.value.length !== 9)) {
                 return message.error("패스코드 지정 생성은 9자리 필수 입니다.")
             }
-            if (time.value === "select" && parseInt(timeValue.value) < 1) {
+            if (time.value === "select" && (!timeValue.value || parseInt(timeValue.value) < 1)) {
                 return message.error("패스코드 만료 기간은 1분 이상 설정되어야 합니다.")
             }
-            if (count.value === "select" && parseInt(countValue.value) < 1) {
+            if (count.value === "select" && (!countValue.value || parseInt(countValue.value) < 1)) {
                 return message.error("패스코드 사용 횟수는 1회 이상 설정되어야 합니다.")
             }
             setAddPasscodeLoading(true)
@@ -795,7 +794,6 @@ const PasscodeAddComponent = ({ okCallback, cancelCallback, authId }: {
                                     width: '180px',
                                     height: passcodeInputHeight
                                 }}
-                                zeroOk
                                 maxLength={9}
                                 onlyNumber
                             />
@@ -816,13 +814,12 @@ const PasscodeAddComponent = ({ okCallback, cancelCallback, authId }: {
                                 className='st1'
                                 value={inputCurrentPasscodeTime}
                                 valueChange={value => {
-                                    setInputCurrentPasscodeTime(parseInt(value))
+                                    setInputCurrentPasscodeTime(value ? parseInt(value) : '')
                                 }}
                                 onInput={(e) => {
                                     if (parseInt(e.currentTarget.value) > 525600) e.currentTarget.value = "525600"
                                 }}
                                 label="분 후 만료"
-                                nonZero
                                 style={{
                                     width: '120px',
                                     height: passcodeInputHeight
@@ -850,7 +847,7 @@ const PasscodeAddComponent = ({ okCallback, cancelCallback, authId }: {
                                 name="countValue"
                                 value={inputCurrentPasscodeCount}
                                 valueChange={value => {
-                                    setInputCurrentPasscodeCount(parseInt(value))
+                                    setInputCurrentPasscodeCount(value ? parseInt(value) : '')
                                 }}
                                 onInput={(e) => {
                                     if (parseInt(e.currentTarget.value) > 9999) e.currentTarget.value = "9999"

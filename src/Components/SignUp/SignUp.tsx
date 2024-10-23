@@ -1,7 +1,6 @@
 import { useState } from "react";
-import logoImg from '../../assets/ompassLogoIcon.png'
 
-import { CopyRightText } from "Constants/ConstantValues";
+import { CopyRightText, ompassDefaultLogoImage } from "Constants/ConstantValues";
 import './SignUp.css'
 import FirstStep from "./FirstStep";
 import SecondStep from "./SecondStep";
@@ -17,7 +16,7 @@ const SignUp = () => {
         <div className="signup-container">
             <div className="signup-header">
                 <img
-                    src={logoImg}
+                    src={ompassDefaultLogoImage}
                 />
                 <span>OMPASS</span>
             </div>

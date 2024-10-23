@@ -1,5 +1,5 @@
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosGetFile, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from "Components/CommonCustomComponents/CustomAxios";
-import { AddApplicationListApi, AddPasscodeApi, AddPoliciesListApi, AddUserDataApi, AddUserGroupApi, ApprovalUserApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DownloadAgentInstallerApi, DuplicateUserNameCheckApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetGlobalConfigApi, GetPasscodeHistoriesApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, PostLoginApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, UpdateAgentNoteApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi } from "Constants/ApiRoute";
+import { AddApplicationListApi, AddPasscodeApi, AddPoliciesListApi, AddUserDataApi, AddUserGroupApi, ApprovalUserApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DownloadAgentInstallerApi, DuplicateUserNameCheckApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetGlobalConfigApi, GetPasscodeHistoriesApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, PostLoginApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, UpdateAgentNoteApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi } from "Constants/ApiRoute";
 import { INT_MAX_VALUE } from "Constants/ConstantValues";
 import { AxiosResponse } from "axios";
 import { convertUTCStringToKSTString } from "./GlobalFunctions";
@@ -216,6 +216,12 @@ export const GetUserGroupDataListFunc = ({
         sortBy,
         sortDirection
     } as GroupListParamsType)
+}
+
+export const GetUserHierarchyFunc = (callback: (data: UserHierarchyDataType[]) => void) => {
+    return CustomAxiosGet(GetUserHierarchyApi(), (data: UserHierarchyDataType[]) => {
+        callback(data)
+    })
 }
 
 export const GetUserGroupDetailDataFunc = (groupId: DefaultUserGroupDataType['id'], callback: (data: UserGroupDataType) => void) => {

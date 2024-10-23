@@ -6,7 +6,7 @@ import ContentsHeader from "Components/Layout/ContentsHeader"
 import CustomInputRow from "Components/Layout/CustomInputRow"
 import CustomUserTransfer, { UserTransferDataType } from "Components/Layout/CustomUserTransfer"
 import { INT_MAX_VALUE } from "Constants/ConstantValues"
-import { AddUserGroupDataFunc, DeleteUserGroupDataFunc, GetUserDataListFunc, GetUserGroupDetailDataFunc, UpdateUserGroupDataFunc } from "Functions/ApiFunctions"
+import { AddUserGroupDataFunc, DeleteUserGroupDataFunc, GetApplicationListFunc, GetUserDataListFunc, GetUserGroupDetailDataFunc, GetUserHierarchyFunc, UpdateUserGroupDataFunc } from "Functions/ApiFunctions"
 import { message } from "antd"
 import { useLayoutEffect, useState } from "react"
 import { FormattedMessage } from "react-intl"
@@ -17,6 +17,8 @@ const GroupDetail = () => {
         before: [],
         after: []
     })
+    const [userDatas, setUserDatas] = useState<UserHierarchyDataType[]>([])
+    const [applicationDatas, setApplicationDatas] = useState<ApplicationListDataType[]>([])
     const [inputName, setInputName] = useState('')
     const [inputDescription, setInputDescription] = useState('')
     const [selectedPolicy, setSelectedPolicy] = useState<PolicyListDataType['id']>('')
@@ -28,6 +30,24 @@ const GroupDetail = () => {
 
     const GetDatas = async () => {
         setDataLoading(true)
+        GetApplicationListFunc({ page: 1, page_size: 9999 }, ({ results }) => {
+            setApplicationDatas(results)
+            GetUserHierarchyFunc(data => {
+                setUserDatas(data)
+                console.log(data, results)
+                if (uuid) {
+                    GetUserGroupDetailDataFunc(uuid, data => {
+                        setInputName(data.name)
+                        setInputDescription(data.description)
+                        setSelectedPolicy(data.policy ? data.policy.id : '')
+                        setUsers((u) => ({
+                            ...u,
+                            after: data.users
+                        }))
+                    })
+                }
+            })
+        })
         GetUserDataListFunc({
             page_size: INT_MAX_VALUE,
             page: 1,
@@ -38,17 +58,7 @@ const GroupDetail = () => {
                 before: results
             }))
         }).then(() => {
-            if (uuid) {
-                GetUserGroupDetailDataFunc(uuid, data => {
-                    setInputName(data.name)
-                    setInputDescription(data.description)
-                    setSelectedPolicy(data.policy ? data.policy.id : '')
-                    setUsers((u) => ({
-                        ...u,
-                        after: data.users
-                    }))
-                })
-            }
+
         }).finally(() => {
             setDataLoading(false)
         })
@@ -61,7 +71,7 @@ const GroupDetail = () => {
     return <Contents loading={dataLoading}>
         <ContentsHeader title="GROUP_MANAGEMENT" subTitle={isAdd ? "GROUP_ADD" : "GROUP_DETAIL"}>
             <Button className="st3" onClick={() => {
-                if(!inputName) {
+                if (!inputName) {
                     return message.error("그룹명을 입력해주세요")
                 }
                 const params = {
@@ -97,14 +107,14 @@ const GroupDetail = () => {
             <CustomInputRow title="그룹명" required>
                 <Input value={inputName} valueChange={value => {
                     setInputName(value)
-                }} placeholder="그룹명을 입력해주세요" className="st1"/>
+                }} placeholder="그룹명을 입력해주세요" className="st1" />
             </CustomInputRow>
             <CustomInputRow title="설명">
                 <Input value={inputDescription} valueChange={value => {
                     setInputDescription(value)
-                }} placeholder="설명을 입력해주세요" className="st1"/>
+                }} placeholder="설명을 입력해주세요" className="st1" />
             </CustomInputRow>
-            <CustomInputRow title={<FormattedMessage id="POLICY_NAME_LABEL"/>}>
+            <CustomInputRow title={<FormattedMessage id="POLICY_NAME_LABEL" />}>
                 <PolicySelect selectedPolicy={selectedPolicy} setSelectedPolicy={setSelectedPolicy} />
             </CustomInputRow>
             <CustomInputRow title="사용자">
