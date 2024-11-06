@@ -1,5 +1,5 @@
 .policy-setting-box {
-    border: 1px solid #ccc;
+    border: 1px solid var(--sub-grey-color3);
     padding: 4px 16px;
     & label {
         display: flex;
@@ -16,7 +16,7 @@
     align-items: center;
     padding: 10px;
     &:not(:last-child) {
-        border-bottom: 1.3px dashed #ccc;
+        border-bottom: 1.3px dashed var(--sub-grey-color3);
     }
 }
 
@@ -26,7 +26,7 @@
 
 .policy-setting-item-contents {
     flex: 1;
-    border-left: 1px solid #ccc;
+    border-left: 1px solid var(--sub-grey-color3);
 }
 
 .policy-setting-item-contents-col {

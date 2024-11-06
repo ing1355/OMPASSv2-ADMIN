@@ -19,6 +19,35 @@
     }
 }
 
+/* .user-detail-section.withdrawal {
+    background-color: var(--sub-grey-color);
+    position: relative;
+    & > *:not(.withdrawal-text) {
+        pointer-events: none;
+        user-select: none;
+        opacity: 0.3;
+    }
+} */
+
+.withdrawal-text {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 1;
+    & > div:first-child {
+        font-weight: bold;
+        font-size: 1.4rem;
+        margin-bottom: 12px;
+        color: var(--main-purple-color);
+    }
+    & > div:last-child {
+        font-size: 1rem;
+        letter-spacing: 2px;
+    }
+}
+
 .user-detail-header {
     cursor: pointer;
     display: flex;
@@ -44,7 +73,11 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 4px;
+    gap: 8px;
+    &>img {
+        max-height: 24px;
+        border-radius: 6px;
+    }
 }
 
 .user-detail-info-container {
@@ -73,28 +106,15 @@
         width: 100%;
     }
 
-    & h3 {
+    & h4 {
         margin-bottom: 0;
     }
-}
-
-.user-alias-image {
-    width: 18px;
 }
 
 .user-detail-header-application-info {
     display: flex;
     align-items: center;
-    gap: 12px;
-
-    &>img {
-        max-height: 28px;
-        border-radius: 6px;
-    }
-
-    &>h3 {
-        margin: 0;
-    }
+    gap: 24px;
 }
 
 .user-detail-info-device-info-title {

@@ -3,7 +3,7 @@ import ContentsHeader from "Components/Layout/ContentsHeader"
 import { useNavigate, useParams } from "react-router"
 import { useLayoutEffect, useState } from "react"
 import { Switch, message } from "antd"
-import CustomInputRow from "Components/Layout/CustomInputRow"
+import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import { AddApplicationDataFunc, DeleteApplicationListFunc, GetApplicationDetailFunc, GetApplicationListFunc, UpdateApplicationDataFunc, UpdateApplicationSecretkeyFunc } from "Functions/ApiFunctions"
 import PolicySelect from "Components/CommonCustomComponents/PolicySelect"
 import { applicationTypes, getApplicationTypeLabel, ompassDefaultLogoImage } from "Constants/ConstantValues"
@@ -16,7 +16,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard"
 import documentIcon from '../../assets/documentIcon.png'
 import documentIconHover from '../../assets/documentIconHover.png'
 import deleteIcon from '../../assets/deleteIcon.png'
-import deleteIconHover from '../../assets/deleteIconHover.png'
+import deleteIconHover from '../../assets/deleteIconRed.png'
 import './ApplicationDetail.css'
 import { FormattedMessage } from "react-intl"
 import CustomImageUpload from "Components/CommonCustomComponents/CustomImageUpload"
@@ -38,16 +38,17 @@ const ApplicationDetail = () => {
     const [inputApiServerHost, setInputApiServerHost] = useState('')
     const [dataLoading, setDataLoading] = useState(false)
     const [sureDelete, setSureDelete] = useState(false)
+    const [hasWindowsLogin, setHasWindowsLogin] = useState(false)
     const [applicationType, setApplicationType] = useState<ApplicationDataType['type'] | ''>('')
     const navigate = useNavigate()
     const { uuid } = useParams()
     const isAdd = !uuid
     const needDomains: ApplicationDataType['type'][] = ["DEFAULT", "ADMIN"]
     const isRedmine = applicationType === 'REDMINE'
-    const typeItems = applicationTypes(false).map(_ => ({
+    const typeItems = applicationTypes.map(_ => ({
         key: _,
         label: getApplicationTypeLabel(_),
-        disabled: _ === 'ADMIN' || _ === 'WINDOWS_LOGIN'
+        disabled: _ === 'ADMIN' || (hasWindowsLogin && _ === 'WINDOWS_LOGIN')
     }))
 
     const handleFileSelect = (data: updateLogoImageType) => {
@@ -79,7 +80,7 @@ const ApplicationDetail = () => {
             })
         } else {
             await GetApplicationListFunc({ type: 'WINDOWS_LOGIN' }, ({ results }) => {
-                // if (results.length > 0) setHasWindowsLogin(true)
+                if (results.length > 0) setHasWindowsLogin(true)
             })
         }
     }
@@ -94,14 +95,67 @@ const ApplicationDetail = () => {
     return <Contents loading={dataLoading}>
         <ContentsHeader title="APPLICATION_MANAGEMENT" subTitle={isAdd ? "APPLICATION_ADD" : "APPLICATION_MODIFY"}>
             <div className="custom-detail-header-items-container">
-                <Button className="st5" icon={documentIcon} hoverIcon={documentIconHover}>
-                    문서 보기
+                <Button className="st3" onClick={() => {
+                    if (!applicationType) {
+                        return message.error("어플리케이션 타입을 선택해주세요.")
+                    }
+                    if (!inputName) {
+                        return message.error("이름을 입력해주세요")
+                    }
+                    if (!inputDomain && needDomains.includes(applicationType)) {
+                        return message.error("도메인을 입력해주세요")
+                    }
+                    if (!inputRedirectUrl && needDomains.includes(applicationType)) {
+                        return message.error("리다이렉트 URI을 입력해주세요")
+                    }
+                    if (uuid) {
+                        UpdateApplicationDataFunc(uuid!, {
+                            policyId: selectedPolicy,
+                            name: inputName,
+                            domain: inputDomain ?? "",
+                            redirectUri: isRedmine ? inputDomain + '/ompass' : inputRedirectUrl,
+                            helpDeskMessage: helpMsg,
+                            logoImage: {
+                                image: convertBase64FromClientToServerFormat(logoImage.image),
+                                isDefaultImage: logoImage.isDefaultImage
+                            },
+                            description: inputDescription,
+                            type: applicationType,
+                            isTwoFactorAuthEnabled: needPassword
+                        }, () => {
+                            message.success('수정 성공!')
+                            // navigate('/Applications')
+                        })
+                    } else {
+                        AddApplicationDataFunc({
+                            policyId: selectedPolicy,
+                            name: inputName,
+                            domain: inputDomain,
+                            redirectUri: isRedmine ? inputDomain + '/ompass' : inputRedirectUrl,
+                            helpDeskMessage: helpMsg,
+                            logoImage: {
+                                image: convertBase64FromClientToServerFormat(logoImage.image),
+                                isDefaultImage: logoImage.isDefaultImage
+                            },
+                            description: inputDescription,
+                            type: applicationType,
+                            isTwoFactorAuthEnabled: needPassword
+                        }, () => {
+                            message.success('추가 성공!')
+                            navigate('/Applications')
+                        })
+                    }
+                }}>
+                    저장
                 </Button>
+                {/* <Button className="st5" icon={documentIcon} hoverIcon={documentIconHover}>
+                    문서 보기
+                </Button> */}
                 {uuid && <>
                     {applicationType !== 'ADMIN' && <Button icon={deleteIcon} hoverIcon={deleteIconHover} className="st2" onClick={() => {
                         setSureDelete(true)
                     }}>
-                        <FormattedMessage id="APPLICATION_DELETE"/>
+                        <FormattedMessage id="APPLICATION_DELETE" />
                     </Button>}
                 </>}
             </div>
@@ -117,7 +171,7 @@ const ApplicationDetail = () => {
                     <CustomInputRow title="이름" required>
                         <Input className="st1" value={inputName} valueChange={value => {
                             setInputName(value)
-                        }} placeholder="ex) 테스트 어플리케이션" readOnly={applicationType === 'ADMIN'}/>
+                        }} placeholder="ex) 테스트 어플리케이션" readOnly={applicationType === 'ADMIN'} maxLength={20} />
                     </CustomInputRow>
                     <CustomInputRow title="설명">
                         <Input className="st1" value={inputDescription} valueChange={value => {
@@ -134,16 +188,16 @@ const ApplicationDetail = () => {
                             <CustomInputRow title="도메인" required>
                                 <Input className="st1" value={inputDomain} valueChange={value => {
                                     setInputDomain(value)
-                                }} placeholder="ex) https://omsecurity.kr:1234" readOnly={applicationType === 'ADMIN'} noGap/>
+                                }} placeholder="ex) https://omsecurity.kr:1234" readOnly={applicationType === 'ADMIN'} noGap />
                             </CustomInputRow>
                             {!(isAdd && applicationType === 'REDMINE') && ((!isAdd && applicationType === 'REDMINE') ? <CustomInputRow title="리다이렉트 URI" required>
                                 <Input className="st1" value={inputRedirectUrl} valueChange={value => {
                                     setInputRedirectUrl(value)
-                                }} placeholder="ex) /ompass" noGap/>
-                                </CustomInputRow> : <CustomInputRow title="리다이렉트 URI" required>
+                                }} placeholder="ex) /ompass" noGap />
+                            </CustomInputRow> : <CustomInputRow title="리다이렉트 URI" required>
                                 <Input className="st1" value={inputRedirectUrl} valueChange={value => {
                                     setInputRedirectUrl(value)
-                                }} placeholder="ex) /ompass" readOnly={applicationType === 'ADMIN'} noGap/>
+                                }} placeholder="ex) /ompass" readOnly={applicationType === 'ADMIN'} noGap />
                             </CustomInputRow>)}
                         </>
                     }
@@ -204,63 +258,6 @@ const ApplicationDetail = () => {
                 </>
             }
         </div>
-        {applicationType && <div className="application-detail-bottom-buttons-container">
-            <Button className="st3" onClick={() => {
-                if(!inputName) {
-                    return message.error("이름을 입력해주세요")
-                }
-                if(!inputDomain && needDomains.includes(applicationType)) {
-                    return message.error("도메인을 입력해주세요")
-                }                
-                if(!inputRedirectUrl && needDomains.includes(applicationType)) {
-                    return message.error("리다이렉트 URI을 입력해주세요")
-                }
-                if (uuid) {
-                    UpdateApplicationDataFunc(uuid!, {
-                        policyId: selectedPolicy,
-                        name: inputName,
-                        domain: inputDomain ?? "",
-                        redirectUri: isRedmine ? inputDomain + '/ompass' : inputRedirectUrl,
-                        helpDeskMessage: helpMsg,
-                        logoImage: {
-                            image: convertBase64FromClientToServerFormat(logoImage.image),
-                            isDefaultImage: logoImage.isDefaultImage
-                        },
-                        description: inputDescription,
-                        type: applicationType,
-                        isTwoFactorAuthEnabled: needPassword
-                    }, () => {
-                        message.success('수정 성공!')
-                        // navigate('/Applications')
-                    })
-                } else {
-                    AddApplicationDataFunc({
-                        policyId: selectedPolicy,
-                        name: inputName,
-                        domain: inputDomain,
-                        redirectUri: isRedmine ? inputDomain + '/ompass' : inputRedirectUrl,
-                        helpDeskMessage: helpMsg,
-                        logoImage: {
-                            image: convertBase64FromClientToServerFormat(logoImage.image),
-                            isDefaultImage: logoImage.isDefaultImage
-                        },
-                        description: inputDescription,
-                        type: applicationType,
-                        isTwoFactorAuthEnabled: needPassword
-                    }, () => {
-                        message.success('추가 성공!')
-                        navigate('/Applications')
-                    })
-                }
-            }}>
-                저장
-            </Button>
-            <Button className="st7" onClick={() => {
-                navigate('/Applications')
-            }}>
-                취소
-            </Button>
-        </div>}
         <CustomModal
             open={sureDelete}
             onCancel={() => {
@@ -268,7 +265,7 @@ const ApplicationDetail = () => {
             }}
             type="warning"
             typeTitle='정말로 삭제하시겠습니까?'
-            typeContent={<FormattedMessage id="APPLICATION_DELETE_CONFIRM_MSG"/>}
+            typeContent={<FormattedMessage id="APPLICATION_DELETE_CONFIRM_MSG" />}
             okText={"삭제"}
             okCallback={() => {
                 return DeleteApplicationListFunc(uuid!, () => {

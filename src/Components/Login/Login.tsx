@@ -112,6 +112,7 @@ const Login = () => {
               type="password"
               name="password"
               maxLength={16}
+              noGap
               customType='password'
               placeholder='변경할 비밀번호 입력'
               ref={inputChangePasswordRef}
@@ -123,6 +124,7 @@ const Login = () => {
                 className='st1 login-input userId'
                 value={inputUsername}
                 maxLength={16}
+                noGap
                 name="userId"
                 valueChange={value => {
                   setInputUsername(value);
@@ -135,6 +137,7 @@ const Login = () => {
             {needPasswordChange ? <Input
               className='st1 login-input'
               type='password'
+              noGap
               rules={[
                 {
                   regExp: (val) => val != inputChangePassword,
@@ -153,6 +156,7 @@ const Login = () => {
               <Input
                 className='st1 login-input password'
                 type='password'
+                noGap
                 name="password"
                 maxLength={16}
                 value={inputPassword}

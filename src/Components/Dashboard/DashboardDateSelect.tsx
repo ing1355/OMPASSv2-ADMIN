@@ -5,6 +5,7 @@ import { getDateTimeString } from "Functions/GlobalFunctions"
 import { SetStateType } from "Types/PropsTypes"
 import Calendar from "./Calendar"
 import { subHours } from "date-fns"
+import { dashboardDateInitialValue } from "./Dashboard"
 
 const FixedItem = ({ type, selected, setSelected, onChange }: {
     selected: DashboardDateSelectType
@@ -16,6 +17,8 @@ const FixedItem = ({ type, selected, setSelected, onChange }: {
     const [temp, setTemp] = useState<DateSelectDataType | undefined>(undefined)
     const selectRef = useRef<HTMLDivElement>(null)
     const showSelectRef = useRef(showSelect)
+    const lastChanged = useRef<DashboardDateSelectDataType>(dashboardDateInitialValue())
+    const timerRef = useRef<NodeJS.Timer>()
 
     const handleMouseDown = useCallback((event: MouseEvent) => {
         if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
@@ -26,6 +29,19 @@ const FixedItem = ({ type, selected, setSelected, onChange }: {
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
         if (event.key === 'Escape') setShowSelect(false)
     }, [])
+
+    const _onChange = (type: DashboardDateSelectDataType) => {
+        lastChanged.current = type
+        onChange(type)
+        // registerTimer()
+    }
+
+    // const registerTimer = () => {
+    //     if(timerRef.current) clearInterval(timerRef.current)
+    //     timerRef.current = setInterval(() => {
+    //         onChange(lastChanged.current!)
+    //     }, 3000);
+    // }
 
     useEffect(() => {
         showSelectRef.current = showSelect
@@ -43,6 +59,13 @@ const FixedItem = ({ type, selected, setSelected, onChange }: {
         };
     }, [showSelect]);
 
+    // useEffect(() => {
+    //     registerTimer()
+    //     return () => {
+    //         if(timerRef.current) clearInterval(timerRef.current)
+    //     }
+    // },[])
+
     return <div ref={selectRef} className={`dashboard-date-select-fixed-item-container${selected === type ? ' selected' : ''}${type === 'user' ? ' user' : ''}`} onClick={(e) => {
         let startDate = new Date()
         let endDate = new Date()
@@ -51,7 +74,7 @@ const FixedItem = ({ type, selected, setSelected, onChange }: {
                 startDate = subHours(startDate, 5)
                 startDate.setMinutes(0)
                 startDate.setSeconds(0)
-                onChange({
+                _onChange({
                     startDate: getDateTimeString(startDate),
                     endDate: getDateTimeString(endDate),
                     intervalValue: 1
@@ -61,7 +84,7 @@ const FixedItem = ({ type, selected, setSelected, onChange }: {
                 startDate = subHours(startDate, 11)
                 startDate.setMinutes(0)
                 startDate.setSeconds(0)
-                onChange({
+                _onChange({
                     startDate: getDateTimeString(startDate),
                     endDate: getDateTimeString(endDate),
                     intervalValue: 3
@@ -71,7 +94,7 @@ const FixedItem = ({ type, selected, setSelected, onChange }: {
                 startDate = subHours(startDate, 23)
                 startDate.setMinutes(0)
                 startDate.setSeconds(0)
-                onChange({
+                _onChange({
                     startDate: getDateTimeString(startDate),
                     endDate: getDateTimeString(endDate),
                     intervalValue: 4
@@ -85,7 +108,7 @@ const FixedItem = ({ type, selected, setSelected, onChange }: {
                 endDate.setHours(0)
                 endDate.setMinutes(0)
                 endDate.setSeconds(0)
-                onChange({
+                _onChange({
                     startDate: getDateTimeString(startDate),
                     endDate: getDateTimeString(endDate),
                     intervalValue: 24
@@ -99,7 +122,7 @@ const FixedItem = ({ type, selected, setSelected, onChange }: {
                 endDate.setHours(0)
                 endDate.setMinutes(0)
                 endDate.setSeconds(0)
-                onChange({
+                _onChange({
                     startDate: getDateTimeString(startDate),
                     endDate: getDateTimeString(endDate),
                     intervalValue: 24
@@ -120,7 +143,7 @@ const FixedItem = ({ type, selected, setSelected, onChange }: {
                 onChange={d => {
                     setSelected('user')
                     setTemp(d)
-                    onChange({
+                    _onChange({
                         ...d,
                         intervalValue: 24
                     })

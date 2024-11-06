@@ -246,7 +246,10 @@ const CustomTable = <T extends {
                     >
                         {
                             columns.map((__, _ind) => <td key={_ind} className={`${__.onClick ? 'poiner' : ''}`} style={{
-                                whiteSpace: __.noWrap ? 'nowrap' : 'initial'
+                                whiteSpace: (__.noWrap || __.maxWidth) ? 'nowrap' : 'initial',
+                                maxWidth: __.maxWidth,
+                                textOverflow: 'ellipsis',
+                                overflow: 'hidden'
                             }}>
                                 {
                                     __.render === null ? <></> : (__.render ? __.render(_[__.key], ind, _) : _[__.key])

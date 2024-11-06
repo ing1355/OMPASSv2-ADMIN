@@ -8,6 +8,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { message } from "antd";
 import Input from "Components/CommonCustomComponents/Input";
 import RequiredLabel from "Components/CommonCustomComponents/RequiredLabel";
+import { isDev } from "Constants/ConstantValues";
 
 const InputRow = ({ label, children, required }: PropsWithChildren<{
     label: string
@@ -43,6 +44,7 @@ const SecondStep = () => {
     const [inputName2, setInputName2] = useState('')
     const [inputPhone, setInputPhone] = useState('')
     const [inputEmail, setInputEmail] = useState('')
+    const [mailCount, setMailCount] = useState(0)
 
     const [mailSendLoading, setMailSendLoading] = useState(false)
 
@@ -55,7 +57,7 @@ const SecondStep = () => {
     const codeRef = useRef<HTMLInputElement>(null)
 
     const mailTimer = useRef<NodeJS.Timer>()
-    const mailCount = useRef(0)
+    const mailCountRef = useRef(0)
 
     const navigate = useNavigate();
     const { formatMessage } = useIntl();
@@ -66,6 +68,18 @@ const SecondStep = () => {
     }, [emailCodeSend])
 
     useEffect(() => {
+        mailCountRef.current = mailCount
+    }, [mailCount])
+
+    useEffect(() => {
+        if (isDev) {
+            setInputPassword('alskdjfh!2')
+            setInputPasswordConfirm('alskdjfh!2')
+            setInputName1('kim')
+            setInputName2('jiho')
+            setInputEmail('hozzi@omsecurity.kr')
+            setInputUsername('ingtest2')
+        }
         return () => {
             if (mailTimer.current) {
                 clearInterval(mailTimer.current)
@@ -258,24 +272,28 @@ const SecondStep = () => {
                     valueChange={(value, isAlert) => {
                         setInputEmail(value)
                         setIsEmailAlert(isAlert || false)
+                        setEmailCodeSend(false)
+                        // setMailSendLoading(false)
                     }}
-                    readOnly={emailCodeSend}
+                    readOnly={emailVerify}
                 >
                     <Button
                         type='button'
                         className={'st11 signup-duplicate-check'}
                         disabled={inputEmail.length === 0 || emailVerify || isEmailAlert || mailSendLoading}
+                        loading={mailSendLoading}
                         onClick={() => {
                             setMailSendLoading(true)
+                            setEmailCodeSend(true)
                             SignUpVerificationCodeSendFunc({
                                 email: inputEmail
                             }, () => {
-                                setEmailCodeSend(true)
                                 message.success("인증 코드 발송 성공!")
                                 mailTimer.current = setInterval(() => {
-                                    mailCount.current += 1
-                                    if (mailCount.current >= 60) {
+                                    setMailCount(count => count + 1)
+                                    if (mailCountRef.current >= 10) {
                                         clearInterval(mailTimer.current)
+                                        setMailCount(0)
                                         setMailSendLoading(false)
                                     }
                                 }, 1000);
@@ -283,7 +301,7 @@ const SecondStep = () => {
                                 setMailSendLoading(false)
                             })
                         }}
-                    ><FormattedMessage id={emailCodeSend ? 'EMAIL_VERIFY_RE' : 'EMAIL_VERIFY'} />
+                    ><FormattedMessage id={emailCodeSend ? 'EMAIL_VERIFY_RE' : 'EMAIL_VERIFY'} />{mailSendLoading ? `(${10 - mailCount}s..)` : ''}
                     </Button>
                 </Input>
             </InputRow>

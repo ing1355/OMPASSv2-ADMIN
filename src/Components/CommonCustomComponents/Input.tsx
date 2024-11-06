@@ -57,24 +57,34 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
         if (!isAlert) setAlertMsg('')
     }, [isAlert])
 
+    const regexByType = (type: string) => {
+        switch (customType) {
+            case 'username':
+                return idRegex
+            case 'email':
+                return emailRegex
+            case 'name':
+                return nameRegex
+            case 'password':
+                return passwordRegex
+            default: break;
+        }
+    }
+
     const validateCheck = (value: string) => {
         if (customType) {
             let rgx
             switch (customType) {
                 case 'username':
-                    rgx = idRegex
                     setAlertMsg(<FormattedMessage id="USERNAME_CHECK" />)
                     break;
                 case 'email':
-                    rgx = emailRegex
                     setAlertMsg(<FormattedMessage id="EMAIL_CHECK" />)
                     break;
                 case 'name':
-                    rgx = nameRegex
                     setAlertMsg(<FormattedMessage id="NAME_CHECK" />)
                     break;
                 case 'password':
-                    rgx = passwordRegex
                     setAlertMsg(<FormattedMessage id="PASSWORD_CHECK" />)
                     break;
                 case 'phone':
@@ -84,6 +94,7 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                     break;
                 default: break;
             }
+            rgx = regexByType(customType)
             if (rgx) {
                 if (!rgx.test(value) || (required && value.length === 0)) {
                     return true
@@ -99,14 +110,14 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
         }
         return false
     }
-    
+
     return <>
         <div className={`custom-input-wrapper${containerClassName ? (' ' + containerClassName) : ''}${(customType || rules) ? ' has-alert' : ''}`}>
             <HasLabel label={label}>
                 <div>
                     {
                         type === 'radio' && <div className="custom-radio-container">
-                            <span className="custom-radio-outer" aria-checked={props.checked}></span>
+                            <span className="custom-radio-outer" data-checked={props.checked}></span>
                             <span className="custom-radio-inner"></span>
                         </div>
                     }
@@ -115,11 +126,11 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                             ref={ref as any}
                             className={"custom-input-inner" + (className ? ` ${className}` : '')}
                             onFocus={e => {
-                                if (validateCheck(e.currentTarget.value)) {
-                                    setIsAlert(true)
-                                } else {
-                                    setIsAlert(false)
-                                }
+                                // if (e.currentTarget.value && validateCheck(e.currentTarget.value)) {
+                                //     setIsAlert(true)
+                                // } else {
+                                //     setIsAlert(false)
+                                // }
                             }}
                             onBlur={e => {
                                 // if (onlyNumber) {
@@ -129,6 +140,11 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                             onChange={e => {
                                 if (valueChange) {
                                     valueChange(e.target.value, isAlertRef.current)
+                                }
+                                if (e.currentTarget.value && validateCheck(e.currentTarget.value)) {
+                                    setIsAlert(true)
+                                } else {
+                                    setIsAlert(false)
                                 }
                             }} onInput={(e) => {
                                 if (onlyNumber) {
@@ -147,7 +163,17 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                                 if (onlyText) {
                                     e.currentTarget.value = e.currentTarget.value.replace(/[0-9]/g, '')
                                 }
-                                if (noGap && (e.currentTarget.value.startsWith(' ') || e.currentTarget.value.endsWith(' ')) && valueChange) e.currentTarget.value = e.currentTarget.value.trim()
+                                if (customType === 'name') {
+                                    e.currentTarget.value = e.currentTarget.value.replace(/[^a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]/g, '')
+                                } else if(customType === 'username') {
+                                    e.currentTarget.value = e.currentTarget.value.replace(/[^0-9a-z]/g, '')
+                                }
+                                if (maxLength && e.currentTarget.value.length > maxLength) {
+                                    e.currentTarget.value = e.currentTarget.value.slice(0, maxLength)
+                                }
+
+                                // if (noGap && (e.currentTarget.value.startsWith(' ') || e.currentTarget.value.endsWith(' ')) && valueChange) e.currentTarget.value = e.currentTarget.value.trim()
+                                if (noGap) e.currentTarget.value = e.currentTarget.value.replace(/\s/g, '')
                                 if (validateCheck(e.currentTarget.value)) {
                                     setIsAlert(true)
                                 } else {

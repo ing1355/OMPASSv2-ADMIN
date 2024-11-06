@@ -9,11 +9,13 @@ import userAddIcon from './../../assets/userAddIcon.png'
 import userAddIconHover from './../../assets/userAddIconHover.png'
 import './UserManagement.css'
 import { userStatusTypes } from "Constants/ConstantValues";
+import useFullName from "hooks/useFullName";
 
 const UserManagement = () => {
     const [tableData, setTableData] = useState<UserDataType[]>([])
     const [totalCount, setTotalCount] = useState<number>(0);
     const [dataLoading, setDataLoading] = useState(false)
+    const getFullName = useFullName()
 
     const navigate = useNavigate()
     const createHeaderColumn = (formattedId: string) => <FormattedMessage id={formattedId} />
@@ -107,7 +109,7 @@ const UserManagement = () => {
                     {
                         key: 'name',
                         title: createHeaderColumn('NAME'),
-                        render: (data) => `${data.firstName} ${data.lastName}`
+                        render: (data) => getFullName(data)
                     },
                     {
                         key: 'role',

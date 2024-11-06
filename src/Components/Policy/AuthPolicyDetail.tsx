@@ -1,6 +1,6 @@
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
-import CustomInputRow from "Components/Layout/CustomInputRow"
+import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import { useLayoutEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useNavigate, useParams } from "react-router"
@@ -24,6 +24,7 @@ import { Circle } from './GoogleCircle'
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
 import { cidrRegex, ipAddressRegex } from "Components/CommonCustomComponents/CommonRegex";
+import CustomModal from "Components/CommonCustomComponents/CustomModal";
 
 const timepickerFormat = 'HH:mm'
 
@@ -79,7 +80,7 @@ const AuthPolicyDetail = () => {
     const [authenticatorPolicies, setAuthenticatorPolicies] = useState<PolicyDataType['enableAuthenticators']>(['OMPASS', 'OTP', 'PASSCODE', 'WEBAUTHN'])
     const [locationChecked, setLocationChecked] = useState(false)
     const [policyName, setPolicyName] = useState('')
-    const [currentRadius, setCurrentRadius] = useState(1)
+    const [currentRadius, setCurrentRadius] = useState('1')
     const [currentLocationName, setCurrentLocationName] = useState('')
     const [inputDescription, setInputDescription] = useState('')
     const [locationDatas, setLocationDatas] = useState<PolicyDataType['locationConfig']['locations']>([])
@@ -105,8 +106,9 @@ const AuthPolicyDetail = () => {
     const [currentAccessTimeValue, setCurrentAccessTimeValue] = useState<AccessTimeRestrictionValueType>(defaultTimePolicyData())
     const [detailData, setDetailData] = useState<PolicyDataType>()
     const [currentLocation, setCurrentLocation] = useState<google.maps.LatLngLiteral>({ lat: 36.713889964770544, lng: 127.88793971566751 })
-    const { formatMessage } = useIntl()
     const [adminDatas, setAdminDatas] = useState<UserDataType[]>([])
+    const [sureChange, setSureChange] = useState<'webauthn' | 'location' | null>(null)
+    const { formatMessage } = useIntl()
     const navigate = useNavigate()
 
     useLayoutEffect(() => {
@@ -159,7 +161,7 @@ const AuthPolicyDetail = () => {
         setCurrentAccessTimeValue(defaultTimePolicyData())
         setCurrentIpAddress('')
         setCurrentLocationName('')
-        setCurrentRadius(1)
+        setCurrentRadius('1')
         setCurrentNoticeThemseleves({
             methods: []
         })
@@ -205,6 +207,9 @@ const AuthPolicyDetail = () => {
         return <label className="authenticator-controller">
             {type}
             <Switch checked={authenticatorPolicies.includes(type)} onChange={check => {
+                if (type === 'WEBAUTHN' && locationChecked && check) {
+                    return setSureChange('webauthn')
+                }
                 if (type !== 'OMPASS') {
                     if (check) {
                         setAuthenticatorPolicies(authenticatorPolicies.concat(type))
@@ -224,6 +229,24 @@ const AuthPolicyDetail = () => {
                         return message.error("정책명은 필수 입력 항목입니다.")
                     }
                     if (browserChecked.length === 0) return message.error("브라우저는 최소 1개 이상 허용해야 합니다.")
+                    if (locationChecked && locationDatas.some(_ => !_.alias)) {
+                        return message.error("사용자 위치 허용 정책은 위치명이 필수 입력 사항입니다.")
+                    }
+                    if (ipAddressChecked && ipAddressValues.length === 0) {
+                        return message.error("IP 접근 허용 정책을 1개 이상 설정해주세요.")
+                    }
+                    if (accessTimeChecked && accessTimeValues.length === 0) {
+                        return message.error("시간 접근 허용 정책을 1개 이상 설정해주세요.")
+                    }
+                    if (currentNoticeAdmin.isEnabled && currentNoticeAdmin.methods.length === 0) {
+                        return message.error("위반 시 관리자 알림의 알림 방식을 1개 이상 설정해주세요.")
+                    }
+                    if (currentNoticeAdmin.isEnabled && currentNoticeAdmin.admins.length === 0) {
+                        return message.error("위반 시 관리자 알림의 알림 받을 관리자를 1명 이상 설정해주세요.")
+                    }
+                    if (currentNoticeAdmin.isEnabled && currentNoticeAdmin.targetPolicies.length === 0) {
+                        return message.error("위반 시 관리자 알림의 알림 대상 정책을 1개 이상 설정해주세요.")
+                    }
                     if (uuid) {
                         UpdatePoliciesListFunc(uuid, {
                             policyType: detailData?.policyType || "CUSTOM",
@@ -233,7 +256,7 @@ const AuthPolicyDetail = () => {
                             enableBrowsers: browserChecked,
                             networkConfig: {
                                 isEnabled: ipAddressChecked,
-                                networks: ipAddressChecked ? ipAddressValues : []
+                                networks: ipAddressValues
                             },
                             locationConfig: {
                                 isEnabled: locationChecked,
@@ -242,7 +265,7 @@ const AuthPolicyDetail = () => {
                             enableAuthenticators: authenticatorPolicies,
                             accessTimeConfig: {
                                 isEnabled: accessTimeChecked,
-                                accessTimes: accessTimeChecked ? accessTimeValues : []
+                                accessTimes: accessTimeValues
                             },
                             noticeToAdmin: currentNoticeAdmin,
                             noticeToThemselves: currentNoticeThemselves
@@ -401,9 +424,10 @@ const AuthPolicyDetail = () => {
                     <Switch style={{
                         marginBottom: !locationChecked ? 0 : '8px',
                     }} checked={locationChecked} onChange={check => {
-                        setLocationChecked(check)
+                        if (check && authenticatorPolicies.includes('WEBAUTHN')) setSureChange('location')
+                        else setLocationChecked(check)
                     }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
-                    <div className="policy-input-container" aria-hidden={!locationChecked}>
+                    <div className="policy-input-container" data-hidden={!locationChecked}>
                         <div className="policy-input-map-container">
                             <div className="map-layout">
                                 {globalDatas?.googleApiKey ? <APIProvider apiKey={globalDatas?.googleApiKey!} onLoad={() => {
@@ -438,7 +462,7 @@ const AuthPolicyDetail = () => {
                                             </div>
                                         </MapControl>
                                         <Marker position={currentLocation} />
-                                        <Circle radius={currentRadius} center={currentLocation} strokeOpacity={0} fillColor={'rgba(0,0,0,.5)'} />
+                                        {currentRadius && <Circle radius={parseInt(currentRadius)} center={currentLocation} strokeOpacity={0} fillColor={'rgba(0,0,0,.5)'} />}
                                     </Map>
                                 </APIProvider> : <div style={{
                                     width: '100%',
@@ -460,21 +484,23 @@ const AuthPolicyDetail = () => {
                                 <span className="policy-location-label">위도</span> <Input className="st1" value={currentLocation.lat} readOnly />
                                 <span className="policy-location-label">경도</span> <Input className="st1" value={currentLocation.lng} readOnly />
                                 <span className="policy-location-label">반경</span> <Input className="st1 policy-location-radius-input" onlyNumber value={currentRadius} valueChange={value => {
-                                    setCurrentRadius(parseInt(value))
+                                    setCurrentRadius(value ? value : '')
                                 }} maxLength={10} suffix="m" />
                                 <span className="policy-location-label">위치명</span> <Input className="st1" value={currentLocationName} valueChange={value => {
                                     setCurrentLocationName(value)
                                 }} placeholder="" />
                                 <Button icon={addIconWhite} className="st3" onClick={() => {
+                                    if (!currentRadius) return message.error("반경은 최소 1m 이상 필수 입력 사항입니다.")
+                                    if (!currentLocationName) return message.error("위치명은 필수 입력 사항입니다.")
                                     setLocationDatas([{
                                         alias: currentLocationName,
-                                        radius: currentRadius,
+                                        radius: parseInt(currentRadius),
                                         coordinate: {
                                             latitude: currentLocation.lat,
                                             longitude: currentLocation.lng
                                         }
                                     }, ...locationDatas])
-                                    setCurrentRadius(1)
+                                    setCurrentRadius('1')
                                     setCurrentLocationName('')
                                 }} style={{
                                     width: '16px'
@@ -508,9 +534,9 @@ const AuthPolicyDetail = () => {
                     }} checked={ipAddressChecked} onChange={check => {
                         setIpAddressChecked(check)
                     }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
-                    <div className="policy-input-container" aria-hidden={!ipAddressChecked}>
+                    <div className="policy-input-container" data-hidden={!ipAddressChecked}>
                         <div className="ip-address-policy-input-header">
-                            IP 주소 목록<div aria-valuetext={formatMessage({ id: 'IP_ADDRESS_CIDR_INFO' })}>
+                            IP 주소 목록<div data-valuetext={formatMessage({ id: 'IP_ADDRESS_CIDR_INFO' })}>
                                 <img src={ipInfoIcon} />
                             </div>
                         </div>
@@ -530,6 +556,7 @@ const AuthPolicyDetail = () => {
                                 <Button icon={addIconWhite} className="st3" onClick={() => {
                                     if (ipAddressValues.find(_ => _.ip === currentIpAddress)) return message.error("동일한 ip가 이미 설정되어 있습니다.")
                                     if (!currentIpAddress) return message.error("IP 주소를 입력해주세요.")
+                                    if (!ipAddressRegex.test(currentIpAddress)) return message.error("IP 주소 또는 범위 형식이 잘못되었습니다.")
                                     setIpAddressValues([...ipAddressValues, {
                                         ip: currentIpAddress,
                                         note: currentIpNote
@@ -547,13 +574,13 @@ const AuthPolicyDetail = () => {
                                             ip: val,
                                             note
                                         }) : _))
-                                    }}/>
+                                    }} />
                                     <Input className="st1 policy-ip-address-input" placeholder="메모" value={note} valueChange={(val) => {
                                         setIpAddressValues(ipAddressValues.map((_, _ind) => _ind === ipInd ? ({
                                             ip,
                                             note: val
                                         }) : _))
-                                    }}/>
+                                    }} />
                                     <Button className="st2" onClick={() => {
                                         setIpAddressValues(ipAddressValues.filter((_, _ind) => _ind !== ipInd))
                                     }} icon={deleteIcon} hoverIcon={deleteIconHover} style={{
@@ -575,7 +602,7 @@ const AuthPolicyDetail = () => {
                     }} checked={accessTimeChecked} onChange={check => {
                         setAccessTimeChecked(check)
                     }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
-                    <div className="policy-input-container" aria-hidden={!accessTimeChecked}>
+                    <div className="policy-input-container" data-hidden={!accessTimeChecked}>
                         <div className="time-policy-container">
                             <div className="time-policy-inner-container">
                                 <div className="time-policy-days-container">
@@ -810,7 +837,7 @@ const AuthPolicyDetail = () => {
                             isEnabled: check
                         })
                     }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
-                    <div className="policy-input-container" aria-hidden={!currentNoticeAdmin.isEnabled}>
+                    <div className="policy-input-container" data-hidden={!currentNoticeAdmin.isEnabled}>
                         <div className="policy-contents-container column">
                             <div className="notice-row-container">
                                 알림 방식 :
@@ -842,7 +869,7 @@ const AuthPolicyDetail = () => {
                                 }} />
                             </div>
                             <div className="notice-row-container">
-                                대상 : <Select mode="multiple" allowClear value={currentNoticeAdmin.admins} onChange={value => {
+                                알림 받을 관리자 : <Select mode="multiple" allowClear value={currentNoticeAdmin.admins} onChange={value => {
                                     setCurrentNoticeAdmin({
                                         ...currentNoticeAdmin,
                                         admins: value
@@ -855,6 +882,7 @@ const AuthPolicyDetail = () => {
                                 }} />
                             </div>
                             <div className="notice-row-container">
+                                알림 대상 정책 :
                                 <Input type="checkbox" checked={policyNoticeRestrictionTypes.length === currentNoticeAdmin.targetPolicies.length} onChange={e => {
                                     if (e.currentTarget.checked) {
                                         setCurrentNoticeAdmin({
@@ -919,6 +947,32 @@ const AuthPolicyDetail = () => {
                 </div>
             </CustomInputRow>
         </div>
+        <CustomModal
+            open={sureChange !== null}
+            onCancel={() => {
+                setSureChange(null)
+            }}
+            type="warning"
+            typeTitle='안내'
+            typeContent={sureChange === 'webauthn' ? <>
+                사용자 위치 허용 정책은 WEBAUTHN 인증 방식에 적용되지 않아<br/>자동으로 해제됩니다.<br />
+                그래도 계속하시겠습니까?
+            </> : <>
+                WEBAUTHN 인증 방식은 사용자 위치 허용 정책이 적용되지 않아<br/>자동으로 해제됩니다.<br />
+                그래도 계속하시겠습니까?
+            </>}
+            okText={"예"}
+            cancelText={"아니오"}
+            okCallback={async () => {
+                if (sureChange === 'webauthn') {
+                    setAuthenticatorPolicies(authenticatorPolicies.concat('WEBAUTHN'))
+                    setLocationChecked(false)
+                } else {
+                    setAuthenticatorPolicies(authenticatorPolicies.filter(_ => _ !== 'WEBAUTHN'))
+                    setLocationChecked(true)
+                }
+                setSureChange(null)
+            }} buttonLoading />
     </Contents>
 }
 //미번

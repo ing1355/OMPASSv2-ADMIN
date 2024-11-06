@@ -218,8 +218,8 @@ export const GetUserGroupDataListFunc = ({
     } as GroupListParamsType)
 }
 
-export const GetUserHierarchyFunc = (callback: (data: UserHierarchyDataType[]) => void) => {
-    return CustomAxiosGet(GetUserHierarchyApi(), (data: UserHierarchyDataType[]) => {
+export const GetUserHierarchyFunc = (callback: (data: UserHierarchyDataServerResponseType[]) => void) => {
+    return CustomAxiosGet(GetUserHierarchyApi(), (data: UserHierarchyDataServerResponseType[]) => {
         callback(data)
     })
 }
@@ -240,6 +240,32 @@ export const UpdateUserGroupDataFunc = (groupId: UserGroupDataType['id'], params
 
 export const DeleteUserGroupDataFunc = (groupId: UserGroupDataType['id'], callback: () => void) => {
     return CustomAxiosDelete(DeleteUserGroupApi(groupId), callback)
+}
+
+export const GetAllAuthLogDataListFunc = ({
+    page_size = 10,
+    page = 1,
+    rpUsername = "",
+    portalUsername = "",
+    applicationName = "",
+    authenticatorType = undefined,
+    processType = undefined,
+    sortBy = "CREATED_AT",
+    sortDirection = "DESC"
+}: AuthLogListParamsType, callback: ((data: GetListDataGeneralType<AllAuthLogDataType>) => void)) => {
+    return CustomAxiosGet(GetAuthLogDataListApi, (data: GetListDataGeneralType<AllAuthLogDataType>) => {
+        callback(data)
+    }, {
+        page_size,
+        page,
+        rpUsername,
+        portalUsername,
+        applicationName,
+        authenticatorType,
+        processType,
+        sortBy,
+        sortDirection
+    } as AuthLogListParamsType)
 }
 
 export const GetInvalidAuthLogDataListFunc = ({

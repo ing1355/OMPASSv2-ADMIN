@@ -1,3 +1,4 @@
+import { ompassDefaultLogoImage } from "Constants/ConstantValues";
 import jwtDecode from "jwt-decode";
 
 export const getStorageAuth = () => localStorage.getItem('Authorization')
@@ -128,3 +129,31 @@ export const convertBase64FromClientToServerFormat = (b64str: string) => {
 export const createOSInfo = (os?: OSInfoType) => {
     return os ? `${os.name} ${os.version}` : 'Unknown'
 }
+
+export const logoImageWithDefaultImage = (img: logoImageType) => {
+    if (img.isDefaultImage) return ompassDefaultLogoImage
+    else return img.url
+}
+
+export const convertTimeFormat = (time: number) => {
+    let minute = 0;
+    let second = 0;
+    let hours = 0;
+    if (time >= 3600) {
+        hours = Math.floor(time / 3600);
+        minute = Math.floor((time % 3600) / 60);
+        second = parseInt((time % 60).toString().padStart(2, "0"));
+    } else if (time >= 60) {
+        minute = Math.floor(time / 60);
+        second = parseInt((time % 60).toString().padStart(2, "0"));
+    } else {
+        second = time;
+    }
+    if (hours) {
+        return {hours, minute, second}
+    } else if (minute) {
+        return { minute, second };
+    } else {
+        return { second };
+    }
+};

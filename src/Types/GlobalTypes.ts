@@ -1,6 +1,7 @@
 type LanguageType = 'KR' | 'EN'
 type AuthPurposeType = "ADD_OTHER_AUTHENTICATOR" | "AUTH_LOGIN" | "REG_LOGIN"
 type AuthenticationLogType = "ALLOW" | "DENY" | "ALLOW_OUT_OF_SCHEDULE"
+type UserGroupViewType = 'portal' | 'application' | 'group'
 type logoImageType = {
     isDefaultImage: boolean
     url: string
@@ -12,13 +13,13 @@ type updateLogoImageType = {
 type AuthMethodType = "U2F" | 'UAF'
 type OMPASSDataType = {
     authPurpose: AuthPurposeType
-        method: AuthMethodType
-        application: ApplicationDataType
-        rpUser: RPUserType
-        authenticators: AuthenticatorDataType[]
-        sessionExpiredAt: string
-        ntp: string
-        createdAt: string
+    method: AuthMethodType
+    application: ApplicationDataType
+    rpUser: RPUserType
+    authenticators: AuthenticatorDataType[]
+    sessionExpiredAt: string
+    ntp: string
+    createdAt: string
 }
 
 type OSInfoType = {
@@ -50,10 +51,8 @@ type ServerMetaDataType = {
     updatedAt?: string
 }
 type UserNameType = {
-    name: {
-        lastName: string
-        firstName: string
-    }
+    lastName: string
+    firstName: string
 }
 type HttpMethodType = "GET" | "POST" | "PUT" | "DELETE"
 type ProcessTypeType = "REGISTRATION" | "AUTHENTICATION" | "POLICY"
@@ -84,6 +83,7 @@ type OMPASSAuthenticatorDataType = DefaultAuthenticatorDataType & {
         model: string
         os: OSInfoType
         deviceId: string
+        deviceName: string
     }
 }
 
@@ -92,7 +92,7 @@ type GetListDataGeneralType<T> = {
     results: T[]
 }
 type GeneralParamsType = {
-    [key:string]: any
+    [key: string]: any
     page_size?: number
     page?: number,
     sortDirection?: DirectionType
@@ -105,7 +105,6 @@ type RPUserType = {
 type PortalUserType = {
     id: string
     username: string
-    name: UserNameType
 }
 
 type LoginApiParamsType = {
@@ -148,7 +147,9 @@ type PasscodeHistoryDataType = {
     createdAt: string
     passcode: PasscodeDataType
     rpUser: RPUserType
-    portalUser: PortalUserType
+    portalUser: PortalUserType & {
+        role: userRoleType
+    }
     applicationName: ApplicationDataType['name']
     authenticationInfoId: RPUserDetailAuthDataType['id']
 }
@@ -199,7 +200,7 @@ type ApplicationListDataType = {
 type ApplicationListParamsType = GeneralParamsType & {
     id?: ApplicationDataType['id']
     name?: ApplicationDataType['name']
-    type?: ApplicationDataType['id']|""
+    type?: ApplicationDataType['id'] | ""
     sortBy?: "CREATED_AT" | "NAME"
     sortDirection?: DirectionType
     policyName?: string
@@ -306,7 +307,9 @@ type DefaultUserDataParamsType = {
     email: string
 }
 
-type DefaultUserDataType = UserNameType & DefaultUserDataParamsType
+type DefaultUserDataType = DefaultUserDataParamsType & {
+    name: UserNameType
+}
 
 type UserStatusType = "WAIT_EMAIL_VERIFICATION" | "WAIT_ADMIN_APPROVAL" | "RUN" | "WITHDRAWAL" | "LOCK" | "WAIT_INIT_PASSWORD"
 
@@ -314,16 +317,18 @@ type UserDataType = DefaultUserDataType & {
     userId: string
     group: UserGroupListDataType
     status: UserStatusType
+    recoveryCode: string
 }
 
-type UserDataParamsType = UserNameType & {
+type UserDataParamsType = {
+    name: UserNameType
     password: string
     email: string
     phone: string
 }
 
 type UserListParamsType = GeneralParamsType & {
-    [key:string]: any
+    [key: string]: any
     hasGroup?: boolean
     userId?: UserDataType['userId']
     email?: UserDataType['email']
@@ -356,6 +361,8 @@ type UserDetailDataType = RPUserDetailDataType & {
     id: string
     application: DefaultApplicationDataType
     username: string
+    createdAt: string
+    groupName: string
 }
 
 type UserDataModifyValuesType = {
@@ -381,31 +388,73 @@ type DefaultUserGroupDataType = {
     id: string
     name: string
 }
-type UserHierarchyDataRpUserType = {
-    applicationId: ApplicationDataType['id']
+type DefaultUserHierarchyDataRpUserType = {
     rpUserId: RPUserType['id']
     rpUsername: RPUserType['username']
 }
-type UserHierarchyDataType = {
+
+type UserHierarchyDataRpUserType = {
+    id: RPUserType['id']
+    username: RPUserType['username']
+    groupId: UserGroupListDataType['id']
+    groupName: UserGroupListDataType['name']
+}
+
+type UserHierarchyDataApplicationViewRpUserType = UserHierarchyDataRpUserType & {
+    portalUsername: UserHierarchyDataType['username']
+    portalName: UserHierarchyDataType['name']
+}
+
+type DefaultUserHierarchyDataType = {
     id: UserDataType['userId']
     username: UserDataType['username']
     name: UserNameType
+}
+
+type UserHierarchyApplicationDataType = {
+    id: ApplicationListDataType['id']
+    name: ApplicationListDataType['name']
+    logoImage: ApplicationListDataType['logoImage']
     rpUsers: UserHierarchyDataRpUserType[]
 }
+
+type UserHierarchyDataType = DefaultUserHierarchyDataType & {
+    applications: UserHierarchyApplicationDataType[]
+}
+
+type UserHierarchyDataApplicationViewDataType = {
+    id: ApplicationListDataType['id']
+    name: ApplicationListDataType['name']
+    logoImage: ApplicationListDataType['logoImage']
+    rpUsers: UserHierarchyDataApplicationViewRpUserType[]
+}
+
+type UserHierarchyDataGroupViewDataType = {
+    name: UserGroupListDataType['name']
+    id: UserGroupListDataType['id']
+    applications: (UserHierarchyApplicationDataType & {
+        portalUsername: UserHierarchyDataType['username']
+        portalName: UserHierarchyDataType['name']
+    })[]
+}
+
 type UserGroupDataType = DefaultUserGroupDataType & {
     policy: PolicyListDataType
-    users: UserDataType[]
+    rpUserIds: UserDataType['userId'][]
 }
+
 type UserGroupListDataType = DefaultUserGroupDataType & {
     createdAt: string
     policy: PolicyListDataType
 }
+
 type UserGroupParamsType = {
     name: string
     description: string
     policyId: PolicyDataType['id']
-    userIds: UserDataType['userId'][]
+    rpUserIds: UserDataType['userId'][]
 }
+
 type GroupListParamsType = GeneralParamsType & {
     policyName?: string
     name?: string
@@ -452,6 +501,8 @@ type InvalidAuthLogDataType = {
     reason: 'INVALID_PASSCODE' | 'BROWSER'
 }
 
+type AllAuthLogDataType = ValidAuthLogDataType | InvalidAuthLogDataType
+
 type PortalLogDataType = {
     id: number
     username: string
@@ -461,7 +512,7 @@ type PortalLogDataType = {
 }
 
 type AgentInstallerUploadParamsType = {
-    multipartFile: string
+    multipartFile: File
     "metaData.hash": string
     // "metaData.version": string
     "metaData.note": string
@@ -472,7 +523,8 @@ type UserDetailAuthInfoRowType = {
     application: ApplicationDataType
     id: UserDetailDataType['id']
     username: UserDetailDataType['username']
-    authInfo: RPUserDetailAuthDataType
+    authenticationInfo: RPUserDetailAuthDataType
+    groupName: UserDetailDataType['groupName']
 }
 
 type CustomTableSearchParams = {
@@ -515,4 +567,7 @@ type CustomTableColumnType<T> = {
     onClick?: () => void
     render?: (data: any, index: number, row: T) => React.ReactNode
     noWrap?: boolean
+    maxWidth?: string | number
 }
+
+type UserTransferDataType = UserHierarchyDataType | UserHierarchyDataApplicationViewDataType | UserHierarchyDataGroupViewDataType

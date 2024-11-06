@@ -28,6 +28,8 @@ import './UserDetailComponents.css'
 import { createOSInfo } from 'Functions/GlobalFunctions';
 import Button from 'Components/CommonCustomComponents/Button';
 import RequiredLabel from 'Components/CommonCustomComponents/RequiredLabel';
+import groupMenuIcon from '../../assets/groupMenuIconBlack.png';
+import policyMenuIconBlack from '../../assets/policyMenuIconBlack.png';
 import { ompassDefaultLogoImage } from 'Constants/ConstantValues';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { message } from 'antd';
@@ -98,29 +100,25 @@ export const UserDetailInfoAuthenticatorContent = ({ data }: {
     </div>
 }
 
-export const ViewPasscode = ({ code }: {
+export const ViewPasscode = ({ code, noView }: {
     code: string
+    noView?: boolean
 }) => {
     const [isView, setIsView] = useState(false)
     return <div className='user-detail-info-passcode-view-container'>
         <div>
             {isView ? code : "⦁⦁⦁⦁⦁⦁⦁⦁⦁"}
         </div>
-        <div
+        {!noView && <div
             onClick={(e) => {
                 e.stopPropagation()
                 e.preventDefault()
                 setIsView(!isView)
             }}
-        // onMouseEnter={() => {
-        //     setIsView(!isView)
-        // }} onMouseLeave={() => {
-        //     setIsView(!isView)
-        // }}
         >
             <img src={isView ? passcodeVisibleIcon : passcodeHiddenIcon} />
-        </div>
-        <div onClick={e => {
+        </div>}
+        {!noView && <div onClick={e => {
             e.stopPropagation()
         }}>
             <CopyToClipboard text={code} onCopy={(value, result) => {
@@ -132,7 +130,7 @@ export const ViewPasscode = ({ code }: {
             }}>
                 <img src={copyIcon} />
             </CopyToClipboard>
-        </div>
+        </div>}
     </div>
 }
 
@@ -199,12 +197,23 @@ export const UserDetailInfoAuthenticatorDeleteButton = ({ authenticatorId, callb
     </Button> : <></>
 }
 
+export const UserDetailInfoETCInfoContent = ({ data }: {
+    data: UserDetailAuthInfoRowType
+}) => {
+    const { groupName, authenticationInfo } = data
+    const { policy } = authenticationInfo
+    return <>
+        <UserDetailInfoContentItem imgSrc={groupMenuIcon} title="그룹" content={groupName || '그룹 없음'} />
+        <UserDetailInfoContentItem imgSrc={policyMenuIconBlack} title="정책" content={policy.name || '정책 없음'} />
+    </>
+}
+
 export const UserDetailInfoDeviceInfoContent = ({ data }: {
     data: UserDetailAuthInfoRowType
 }) => {
     const { application } = data
-    const clientData = data.authInfo.loginDeviceInfo
-    const { serverInfo } = data.authInfo
+    const clientData = data.authenticationInfo.loginDeviceInfo
+    const { serverInfo } = data.authenticationInfo
     const { os } = clientData
     const isBrowser = application.type === 'DEFAULT' || application.type === 'ADMIN'
     return <>

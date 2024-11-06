@@ -2,7 +2,7 @@
 } */
 
 .auto_logout_container {
-  border: 1px solid #ccc;
+  border: 1px solid var(--sub-grey-color3);
   width: 25%;
   padding: 1.7% 3%;
   border-radius: 3px;

@@ -10,8 +10,8 @@ import { ViewPasscode } from "Components/Users/UserDetailComponents";
 import ContentsHeader from "Components/Layout/ContentsHeader";
 
 const PasscodeManagement = () => {
-  const { lang } = useSelector((state: ReduxStateType) => ({
-    lang: state.lang,
+  const { userInfo } = useSelector((state: ReduxStateType) => ({
+    userInfo: state.userInfo!,
   }));
   const navigate = useNavigate();
   const [totalCount, setTotalCount] = useState<number>(0);
@@ -100,7 +100,11 @@ const PasscodeManagement = () => {
             {
               key: 'number',
               title: 'PASSCODE',
-              render: (data, ind, row) => <ViewPasscode code={row.passcode.number} />,
+              render: (data, ind, row) => {
+                const isSelf = row.portalUser.id === userInfo.userId
+                const canModify = isSelf || (userInfo.role === 'ADMIN' && row.portalUser.role === 'USER') || (userInfo.role === 'ROOT' && row.portalUser.role !== 'ROOT')
+                return <ViewPasscode code={row.passcode.number} noView={!canModify} />
+              },
               width: 200
             },
             {

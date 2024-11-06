@@ -1,0 +1,9 @@
+.auth-log-tab > .ant-tabs-nav > .ant-tabs-nav-wrap > .ant-tabs-nav-list {
+    width: 100%;
+}
+
+.auth-log-tab > .ant-tabs-nav > .ant-tabs-nav-wrap > .ant-tabs-nav-list > div {
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+}

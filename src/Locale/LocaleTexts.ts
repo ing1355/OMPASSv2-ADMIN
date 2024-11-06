@@ -303,6 +303,7 @@ const LocaleTexts = {
     USER_STATUS_WAIT_ADMIN_APPROVAL: "관리자 인증 대기중",
     USER_STATUS_WITHDRAWAL: "탈퇴",
     USER_STATUS_RUN: "활성화",
+    USER_STATUS_LOCK: "잠김",
     APPLICATION_DELETE_CONFIRM_MSG: 'After deletion, application information will be deleted and all data will not be recovered',
     IP_ADDRESS_CIDR_INFO: 'Enter an IP address or CIDR block, such as 127.0.0.1 or 127.0.0.1/32, with an optional note.',
     ACCESS_CONTROL_LABEL: 'OMPASS 인증 제어',
@@ -351,7 +352,8 @@ const LocaleTexts = {
     POLICY_NAME_LABEL: 'Policy name',
     INVALID_REASON_LABEL: 'Reason for violation',
     AUTH_LOG_ACCESS_TIME_LABEL: 'Access time',
-    AUTH_COUNT: 'Auth Count'
+    AUTH_COUNT: 'Auth Count',
+    RECOVERY_CODE: 'Recovery Code'
   },
   'ko': {
     LOGIN: '로그인',
@@ -622,7 +624,7 @@ const LocaleTexts = {
     "All other browsers_LABEL": "그 외 브라우저",
     "default policy": "기본 정책",
     USER_ROLE: "등급",
-    "NO_POLICY": "선택 안함",
+    "NO_POLICY": "정책 없음",
     USER_ROLE_VALUE: "사용자",
     ADMIN_ROLE_VALUE: "관리자",
     ROOT_ROLE_VALUE: "최고 관리자",
@@ -658,6 +660,7 @@ const LocaleTexts = {
     USER_STATUS_WAIT_ADMIN_APPROVAL: "관리자 인증 대기중",
     USER_STATUS_WITHDRAWAL: "탈퇴",
     USER_STATUS_RUN: "활성화",
+    USER_STATUS_LOCK: "잠김",
     APPLICATION_DELETE_CONFIRM_MSG: '삭제 후, 어플리케이션 정보가 삭제되며\n모든 데이터는 복구되지 않습니다.',
     IP_ADDRESS_CIDR_INFO: '127.0.0.1 또는 127.0.0.1/32와 같이 IP 주소나 CIDR 블록을 입력하고, 선택적으로 메모를 추가합니다.',
     ACCESS_CONTROL_LABEL: 'OMPASS 인증 제어',
@@ -706,7 +709,8 @@ const LocaleTexts = {
     POLICY_NAME_LABEL: '정책명',
     INVALID_REASON_LABEL: '위반 사유',
     AUTH_LOG_ACCESS_TIME_LABEL: '접근 일시',
-    AUTH_COUNT: '인증 횟수'
+    AUTH_COUNT: '인증 횟수',
+    RECOVERY_CODE: '복구 코드'
   }
 }
 

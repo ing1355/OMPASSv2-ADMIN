@@ -5,7 +5,7 @@ import { Popconfirm, message } from 'antd';
 import { useEffect, useState } from 'react';
 
 import tableDeleteIcon from '../../assets/tableDeleteIcon.png';
-import tableDeleteIconHover from '../../assets/tableDeleteIconHover.png';
+import tableDeleteIconHover from '../../assets/deleteIconRed.png';
 import downloadIcon from '../../assets/downloadIcon.png';
 import uploadIcon from '../../assets/uploadIcon.png';
 import uploadIconHover from '../../assets/uploadIconHover.png';
@@ -109,11 +109,7 @@ const AgentManagement = () => {
             {
               key: 'note',
               title: <FormattedMessage id='MEMO' />,
-              render: (data) => {
-                return <div className='version-memo-td'>
-                  {data}
-                </div>
-              }
+              maxWidth: '300px'
             },
             {
               key: 'uploadDate',

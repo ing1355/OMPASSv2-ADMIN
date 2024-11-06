@@ -5,12 +5,12 @@
     }
 }
 
-.type-modal-body-contaienr {
+.type-modal-body-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 16px;
+    gap: 6px;
     & > img {
         width: 48px;
         height: 48px;
@@ -35,7 +35,7 @@
     width: 100%;
     display: flex;
     flex-direction: row;
-    gap: 40px;
+    gap: 20px;
     & > button {
         flex: 1;
         height: 56px;

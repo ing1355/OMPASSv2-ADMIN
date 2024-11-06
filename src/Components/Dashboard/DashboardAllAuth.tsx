@@ -19,24 +19,14 @@ import { applicationTypes } from "Constants/ConstantValues"
 import { connectProps } from "@devexpress/dx-react-core"
 import { FormattedMessage } from "react-intl"
 
-const getHoverIndex = (target: any) => (target ? target.point : -1);
-
-const patchProps = ({ hoverIndex, ...props }: any) => ({
-    state: props.index === hoverIndex ? 'hovered' : null,
-    ...props,
-});
-
-const BarPoint = (props: any) => (
-    <BarSeries.Point {...patchProps(props)} />
-);
-
 const DashboardAllAuth = ({ applications }: {
     applications: ApplicationListDataType[]
 }) => {
-    const [target, setTarget] = useState<SeriesRef | null>(null)
+    const [point, setPoint] = useState<number>(-1)
     const [params, setParams] = useState(dashboardDateInitialValue())
     const [datas, setDatas] = useState<{
         date: string
+        [key: string]: any
     }[]>([])
 
     const getDatas = () => {
@@ -83,60 +73,42 @@ const DashboardAllAuth = ({ applications }: {
     }, [applications, params])
 
     const TooltipContent = ({
-        text, style, ...props
+        text, style, targetItem, ...props
     }: any) => {
         const alignStyle = {
             ...style,
             paddingLeft: '10px',
         };
-        const items = applications.map(({ name, id }, ind) => {
-            const val = "1000";
+        if(point !== -1) {
+            const items = applications.map(({ name, id }, ind) => {
+                const val = datas[point][name]
+                return (
+                    <tr key={id}>
+                        <td>
+                            <svg width="10" height="10">
+                                <circle cx="5" cy="5" r="5" fill={DashboardColors[ind]} />
+                            </svg>
+                        </td>
+                        <td>
+                            <Tooltip.Content style={alignStyle} text={name} {...props} />
+                        </td>
+                        <td align="right">
+                            <Tooltip.Content style={alignStyle} text={val ? slicePrice(val) : '0'} {...props} />
+                        </td>
+                    </tr>
+                );
+            });
             return (
-                <tr key={id}>
-                    <td>
-                        <svg width="10" height="10">
-                            <circle cx="5" cy="5" r="5" fill={DashboardColors[ind]} />
-                        </svg>
-                    </td>
-                    <td>
-                        <Tooltip.Content style={alignStyle} text={name} {...props} />
-                    </td>
-                    <td align="right">
-                        <Tooltip.Content style={alignStyle} text={val ? slicePrice(val) : 'N/A'} {...props} />
-                    </td>
-                </tr>
+                <table>
+                    <tbody>
+                        {items}
+                    </tbody>
+                </table>
             );
-        });
-        return (
-            <table>
-                {items}
-            </table>
-        );
+        } else return <>정보 없음</>
     };
 
-    const series = applications.map((_, ind) => ({ name: _.name, key: _.id, color: DashboardColors[ind] }))
-
-    const createSeries = () => {
-        const getHoverProps = () => ({
-            hoverIndex: getHoverIndex(target),
-        });
-        return series.map(({
-            name, key, color, type, scale,
-        }: any) => {
-            const props = {
-                key: name,
-                name,
-                valueField: key,
-                argumentField: 'year',
-                color,
-                scaleName: scale || 'oil',
-                pointComponent: connectProps(BarPoint, getHoverProps)
-            };
-            return createElement(type || BarSeries, props);
-        });
-    }
-    
-    return <DashboardCardWithDateSelect title={<FormattedMessage id="DASHBOARD_ALL_AUTH"/>} onChange={(_) => {
+    return <DashboardCardWithDateSelect title={<FormattedMessage id="DASHBOARD_ALL_AUTH" />} onChange={(_) => {
         setParams(_)
     }}>
         <Chart
@@ -159,14 +131,13 @@ const DashboardAllAuth = ({ applications }: {
             }
             <EventTracker />
             <HoverState
-                hover={target || undefined}
                 onHoverChange={(t) => {
-                    console.log(t)
-                    setTarget(t)
+                    if(t) {
+                        setPoint(t.point)
+                    }
                 }}
             />
             <Tooltip
-                targetItem={target || undefined}
                 contentComponent={TooltipContent}
             />
             <CustomLegend />

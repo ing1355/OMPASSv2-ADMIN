@@ -18,21 +18,22 @@ const PolicySelect = ({ selectedPolicy, setSelectedPolicy, needSelect }: PolicyS
             setPoliciesData(results)
         })
     }, [])
-    
+
     useEffect(() => {
-        if(policiesData.length > 0 && !selectedPolicy && needSelect) {
+        if (policiesData.length > 0 && !selectedPolicy && needSelect) {
             setSelectedPolicy(policiesData[0].id)
         }
-    },[policiesData, selectedPolicy])
-    
+    }, [policiesData, selectedPolicy])
+
     return <div className="custom-select-box-container">
         <CustomSelect
+            noLabel={<FormattedMessage id="NO_POLICY" />}
             items={policiesData.map(_ => ({
                 key: _.id,
                 label: _.policyType === 'DEFAULT' ? <FormattedMessage id="default policy" /> : _.name
             }))} value={selectedPolicy} onChange={id => {
                 setSelectedPolicy(id)
-            }} needSelect={needSelect}/>
+            }} needSelect={needSelect} />
         {policiesData.length > 0 && selectedPolicy && <div className="custom-detail-policy-navigate-text">
             <a target="_blank" href={`/Policies/auth/detail/${selectedPolicy}`}>여기</a>를 눌러 정책을 편집할 수 있습니다.
         </div>}

@@ -3,70 +3,54 @@ import Input from "Components/CommonCustomComponents/Input"
 import PolicySelect from "Components/CommonCustomComponents/PolicySelect"
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
-import CustomInputRow from "Components/Layout/CustomInputRow"
-import CustomUserTransfer, { UserTransferDataType } from "Components/Layout/CustomUserTransfer"
-import { INT_MAX_VALUE } from "Constants/ConstantValues"
-import { AddUserGroupDataFunc, DeleteUserGroupDataFunc, GetApplicationListFunc, GetUserDataListFunc, GetUserGroupDetailDataFunc, GetUserHierarchyFunc, UpdateUserGroupDataFunc } from "Functions/ApiFunctions"
-import { message } from "antd"
-import { useLayoutEffect, useState } from "react"
+import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
+import UserTransfer from "Components/Group/UserTransfer"
+import { AddUserGroupDataFunc, DeleteUserGroupDataFunc, GetUserGroupDetailDataFunc, UpdateUserGroupDataFunc } from "Functions/ApiFunctions"
+import { message, Radio, RadioChangeEvent, Space } from "antd"
+import { useEffect, useLayoutEffect, useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { useNavigate, useParams } from "react-router"
+import './GroupDetail.css'
 
 const GroupDetail = () => {
-    const [users, setUsers] = useState<UserTransferDataType>({
-        before: [],
-        after: []
-    })
-    const [userDatas, setUserDatas] = useState<UserHierarchyDataType[]>([])
-    const [applicationDatas, setApplicationDatas] = useState<ApplicationListDataType[]>([])
     const [inputName, setInputName] = useState('')
     const [inputDescription, setInputDescription] = useState('')
     const [selectedPolicy, setSelectedPolicy] = useState<PolicyListDataType['id']>('')
+    const [selectedUsers, setSelectedUsers] = useState<UserHierarchyDataRpUserType['id'][]>([])
+    const [selectedView, setSelectedView] = useState<UserGroupViewType>('portal')
     const [dataLoading, setDataLoading] = useState(false)
+    const [refresh, setRefresh] = useState(false)
     const navigate = useNavigate()
     const { uuid } = useParams()
 
     const isAdd = !uuid
 
-    const GetDatas = async () => {
-        setDataLoading(true)
-        GetApplicationListFunc({ page: 1, page_size: 9999 }, ({ results }) => {
-            setApplicationDatas(results)
-            GetUserHierarchyFunc(data => {
-                setUserDatas(data)
-                console.log(data, results)
-                if (uuid) {
-                    GetUserGroupDetailDataFunc(uuid, data => {
-                        setInputName(data.name)
-                        setInputDescription(data.description)
-                        setSelectedPolicy(data.policy ? data.policy.id : '')
-                        setUsers((u) => ({
-                            ...u,
-                            after: data.users
-                        }))
-                    })
-                }
-            })
-        })
-        GetUserDataListFunc({
-            page_size: INT_MAX_VALUE,
-            page: 1,
-            hasGroup: false
-        }, ({ results }) => {
-            setUsers((u) => ({
-                ...u,
-                before: results
-            }))
-        }).then(() => {
+    const changeTabPosition = (e: RadioChangeEvent) => {
+        setSelectedView(e.target.value)
+    };
 
-        }).finally(() => {
-            setDataLoading(false)
-        })
+    const GetDatas = async () => {
+        if (uuid) {
+            setDataLoading(true)
+            GetUserGroupDetailDataFunc(uuid, data => {
+                setInputName(data.name)
+                setInputDescription(data.description)
+                setSelectedPolicy(data.policy ? data.policy.id : '')
+                setSelectedUsers(data.rpUserIds)
+            }).finally(() => {
+                setDataLoading(false)
+            })
+        }
     }
 
     useLayoutEffect(() => {
         GetDatas()
+        setRefresh(true)
     }, [])
+
+    useEffect(() => {
+        if(refresh) setRefresh(false)
+    },[refresh])
 
     return <Contents loading={dataLoading}>
         <ContentsHeader title="GROUP_MANAGEMENT" subTitle={isAdd ? "GROUP_ADD" : "GROUP_DETAIL"}>
@@ -78,7 +62,7 @@ const GroupDetail = () => {
                     name: inputName,
                     description: inputDescription,
                     policyId: selectedPolicy,
-                    userIds: users.after.map(_ => _.userId)
+                    rpUserIds: selectedUsers
                 }
                 if (isAdd) {
                     AddUserGroupDataFunc(params, () => {
@@ -88,7 +72,7 @@ const GroupDetail = () => {
                 } else {
                     UpdateUserGroupDataFunc(uuid, params, () => {
                         message.success('수정 성공!')
-                        // navigate('/Groups')
+                        setRefresh(true)
                     })
                 }
             }}>
@@ -105,20 +89,36 @@ const GroupDetail = () => {
         </ContentsHeader>
         <div className="contents-header-container">
             <CustomInputRow title="그룹명" required>
-                <Input value={inputName} valueChange={value => {
-                    setInputName(value)
-                }} placeholder="그룹명을 입력해주세요" className="st1" />
+                <Input
+                    value={inputName}
+                    valueChange={value => {
+                        setInputName(value)
+                    }}
+                    placeholder="그룹명을 입력해주세요"
+                    className="st1"
+                    maxLength={32}
+                    onInput={e => {
+                        if (e.currentTarget.value.startsWith(' ')) e.currentTarget.value = e.currentTarget.value.trim()
+                    }} />
             </CustomInputRow>
             <CustomInputRow title="설명">
                 <Input value={inputDescription} valueChange={value => {
                     setInputDescription(value)
-                }} placeholder="설명을 입력해주세요" className="st1" />
+                }} placeholder="설명을 입력해주세요" className="st1" maxLength={192} />
             </CustomInputRow>
             <CustomInputRow title={<FormattedMessage id="POLICY_NAME_LABEL" />}>
                 <PolicySelect selectedPolicy={selectedPolicy} setSelectedPolicy={setSelectedPolicy} />
             </CustomInputRow>
-            <CustomInputRow title="사용자">
-                <CustomUserTransfer data={users} setData={setUsers} />
+            <CustomInputRow title="사용자 목록">
+                <Space>
+                    정렬 방식 :
+                    <Radio.Group value={selectedView} onChange={changeTabPosition} className="group-view-radio-group">
+                        <Radio.Button value="portal">포탈 계정별로 보기</Radio.Button>
+                        <Radio.Button value="application">어플리케이션별로 보기</Radio.Button>
+                        {/* <Radio.Button value="group">그룹별로 보기</Radio.Button> */}
+                    </Radio.Group>
+                </Space>
+                <UserTransfer selectedUsers={selectedUsers} setSelectedUsers={setSelectedUsers} viewStyle={selectedView} refresh={refresh}/>
             </CustomInputRow>
         </div>
     </Contents>

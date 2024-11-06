@@ -11,18 +11,17 @@ import Input from 'Components/CommonCustomComponents/Input';
 import uploadIconHover from '../../assets/uploadIconHover.png'
 
 const VersionUpload = () => {
-  const [fileName, setFileName] = useState('');
   const [isUploadingFile, setIsUploadingFile] = useState<boolean>(false);
   // const [inputVersion, setInputVersion] = useState('')
   const [inputMemo, setInputMemo] = useState('')
   const [inputHash, setInputHash] = useState('')
+  const [inputFile, setInputFile] = useState<File>()
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileInput = event.target;
     if (fileInput.files && fileInput.files[0]) {
-      const name = fileInput.files[0].name;
-      setFileName(name);
+      setInputFile(fileInput.files[0])
     }
   };
 
@@ -54,27 +53,30 @@ const VersionUpload = () => {
             id='addVersionForm'
             onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
               e.preventDefault();
-              const { uploadFile } = (e.currentTarget.elements as any);
-              const multipartFile = uploadFile.files[0];
               const maxFileSize = 200 * 1024 * 1024;
-              const fileExtension = multipartFile?.name.split('.').pop();
+              const fileExtension = inputFile?.name.split('.').pop();
+              
               if (!inputHash) {
                 return message.error(formatMessage({ id: 'PLEASE_INPUT_HASH' }));
-              } else if (multipartFile.size > maxFileSize) {
+              } else if (!inputFile) {
+                return message.error("파일을 업로드해주세요.")
+              } else if (inputFile.size > maxFileSize) {
                 return message.error(formatMessage({ id: 'THE_FILE_SIZE_EXCEEDS_200MB' }));
               } else if (fileExtension !== 'zip') {
                 return message.error(formatMessage({ id: 'ONLY_ZIP_FILES_CAN_BE_UPLOADED' }));
               }
               setIsUploadingFile(true);
-                  UploadAgentInstallerFunc({
-                    "metaData.hash": inputHash,
-                    "metaData.os": "Windows",
-                    // "metaData.version": inputVersion,
-                    "metaData.note": inputMemo,
-                    multipartFile: multipartFile,
-                  }, () => {
-                    navigate('/AgentManagement');
-                  })
+              UploadAgentInstallerFunc({
+                "metaData.hash": inputHash,
+                "metaData.os": "Windows",
+                // "metaData.version": inputVersion,
+                "metaData.note": inputMemo,
+                multipartFile: inputFile,
+              }, () => {
+                navigate('/AgentManagement');
+              }).finally(() => {
+                setIsUploadingFile(false)
+              })
             }}
           >
             <div className='agent-input-row-container'>
@@ -108,7 +110,7 @@ const VersionUpload = () => {
                 }}>
                   <FormattedMessage id='SELECT_FILE' />
                 </Button>
-                {fileName}
+                {inputFile ? inputFile.name : ''}
                 <Input
                   id="uploadFile"
                   name="uploadFile"

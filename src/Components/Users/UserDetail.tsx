@@ -11,7 +11,8 @@ import userIcon from '../../assets/userIcon.png';
 import editIcon from '../../assets/editIcon.png';
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import passcodeDeleteIcon from '../../assets/tableDeleteIcon.png';
-import passcodeDeleteIconHover from '../../assets/tableDeleteIconHover.png';
+import passcodeDeleteIconHover from '../../assets/deleteIconRed.png';
+import groupMenuIcon from '../../assets/groupMenuIconBlack.png';
 import passcodeAddIcon from '../../assets/passcodeAddIcon.png';
 import closeIcon from '../../assets/closeIcon.png';
 import GroupSelect from "Components/CommonCustomComponents/GroupSelect"
@@ -19,7 +20,7 @@ import RoleSelect from "Components/CommonCustomComponents/RoleSelect"
 import CustomModal from "Components/CommonCustomComponents/CustomModal"
 import Button from 'Components/CommonCustomComponents/Button'
 import { userInfoClear } from 'Redux/actions/userChange'
-import { UserDetailInfoAuthenticatorContent, UserDetailInfoAuthenticatorDeleteButton, UserDetailInfoDeviceInfoContent, UserInfoInputrow, UserInfoRow, ViewPasscode } from './UserDetailComponents'
+import { UserDetailInfoAuthenticatorContent, UserDetailInfoAuthenticatorDeleteButton, UserDetailInfoDeviceInfoContent, UserDetailInfoETCInfoContent, UserInfoInputrow, UserInfoRow, ViewPasscode } from './UserDetailComponents'
 import { autoHypenPhoneFun, convertUTCStringToKSTString, createRandom1Digit } from 'Functions/GlobalFunctions'
 import Input from 'Components/CommonCustomComponents/Input'
 
@@ -85,8 +86,9 @@ const UserDetail = ({ }) => {
     const isAdd = !uuid
     const targetValue = isAdd ? addValues : modifyValues
     const isAdmin = userInfo.role !== 'USER'
-    const deleteText = isSelf ? '탈퇴' : '삭제'
-    const isHigherRole = isSelf || (userInfo.role === 'ADMIN' && userData?.role === 'USER') || (userInfo.role === 'ROOT' && userData?.role !== 'ROOT')
+    const deleteText = '탈퇴'
+    const canDelete = (isSelf && userInfo.role !== 'ROOT') || (userInfo.role === 'ADMIN' && userData?.role === 'USER') || (userInfo.role === 'ROOT' && userData?.role !== 'ROOT')
+    const canModify = isSelf || (userInfo.role === 'ADMIN' && userData?.role === 'USER') || (userInfo.role === 'ROOT' && userData?.role !== 'ROOT')
     const authInfoRef = useRef<{
         [key: string]: HTMLDivElement
     }>({})
@@ -96,14 +98,15 @@ const UserDetail = ({ }) => {
             id: _.id,
             username: _.username,
             application: _.application,
-            authInfo: __
+            authenticationInfo: __,
+            groupName: _.groupName
         }) as UserDetailAuthInfoRowType))
-        temp = temp.sort((a, b) => new Date(a.authInfo.createdAt).getTime() - new Date(b.authInfo.createdAt).getTime())
+        temp = temp.sort((a, b) => new Date(a.authenticationInfo.createdAt).getTime() - new Date(b.authenticationInfo.createdAt).getTime())
         return temp;
     }, [userDetailDatas])
 
-    const passcodeData = useCallback((authInfoId: UserDetailAuthInfoRowType['authInfo']['id']) => {
-        const temp1 = authInfoDatas.find(_ => _.authInfo.id === authInfoId)?.authInfo.authenticators.find(_ => _.type === 'PASSCODE') as PasscodeAuthenticatorDataType
+    const passcodeData = useCallback((authInfoId: UserDetailAuthInfoRowType['authenticationInfo']['id']) => {
+        const temp1 = authInfoDatas.find(_ => _.authenticationInfo.id === authInfoId)?.authenticationInfo.authenticators.find(_ => _.type === 'PASSCODE') as PasscodeAuthenticatorDataType
         if (!temp1) return []
         else return [temp1]
     }, [authInfoDatas])
@@ -178,7 +181,7 @@ const UserDetail = ({ }) => {
                 key: "number",
                 width: 180,
                 title: <FormattedMessage id="PASSCODE" />,
-                render: (data) => <ViewPasscode code={data} />
+                render: (data) => <ViewPasscode code={data} noView={!canModify} />
             },
             {
                 key: "issuerUsername",
@@ -204,7 +207,7 @@ const UserDetail = ({ }) => {
                 }
             },
         ]
-        if(isHigherRole) {
+        if (canModify) {
             return columns.concat({
                 key: "etc",
                 title: "",
@@ -221,8 +224,8 @@ const UserDetail = ({ }) => {
                     }}>
                     <img style={{
                         cursor: 'pointer',
-                        width: '100%',
-                        height: '100%'
+                        width: '18px',
+                        height: '18px'
                     }} src={id === passcodeHover ? passcodeDeleteIconHover : passcodeDeleteIcon} />
                 </div>
             })
@@ -244,13 +247,27 @@ const UserDetail = ({ }) => {
                         활성화
                     </Button>
                 }
-                {(isHigherRole && !isAdd) && !isDeleted && <Button className='st8' onClick={() => {
+                {(canDelete && !isAdd) && !isDeleted && <Button className='st8' onClick={() => {
                     setSureDelete(true)
                 }}>
-                    {isSelf ? '회원탈퇴' : '삭제'}
+                    회원탈퇴
                 </Button>}
             </ContentsHeader>
             <div className="user-detail-section first mb20">
+                {/* {
+                    userData?.status === 'WITHDRAWAL' && <div className='withdrawal-text'>
+                        <div>
+                            복구 코드
+                        </div>
+                        <div onCopy={e => {
+                            const selection = window.getSelection()!.toString().split(/\n/g);
+                            e.clipboardData.setData('text/plain', selection[0]);
+                            e.preventDefault();
+                        }}>
+                            {userData.recoveryCode}
+                        </div>
+                    </div>
+                } */}
                 <div className="user-detail-header" style={{
                     cursor: 'default'
                 }}>
@@ -283,7 +300,7 @@ const UserDetail = ({ }) => {
                                 {isAdd ? "등록" : "저장"}
                             </Button>
                         }
-                        {userData?.status === 'RUN' && isHigherRole && !isAdd && !isDeleted && <Button icon={!isModify && editIcon} className={isModify ? "st7" : "st3"} onClick={() => {
+                        {userData?.status === 'RUN' && canModify && !isAdd && !isDeleted && <Button icon={!isModify && editIcon} className={isModify ? "st7" : "st3"} onClick={() => {
                             setIsModify(!isModify)
                         }}>
                             {isModify ? '취소' : '수정'}
@@ -301,7 +318,7 @@ const UserDetail = ({ }) => {
                                 ...addValues,
                                 username: value
                             })
-                        }} customType='username' placeholder='아이디 입력' />
+                        }} customType='username' placeholder='아이디 입력' noGap />
                         <Button className='st6' disabled={duplicateIdCheck || addValues.username.length === 0 || usernameAlert} onClick={() => {
                             DuplicateUserNameCheckFunc(addValues.username, ({ isExist }) => {
                                 setDuplicateIdCheck(!isExist)
@@ -319,7 +336,7 @@ const UserDetail = ({ }) => {
                     </UserInfoInputrow> : <UserInfoRow title="ID" value={userData ? userData.username : ""} />}
                     {(isAdd || (isModify && (isSelf || (userData?.role === 'ADMIN' && userInfo.role === 'ROOT') || (userData?.role === 'USER' && isAdmin)))) && <><UserInfoInputrow title='PASSWORD' required>
                         <Input className='st1' value={targetValue.password} placeholder="비밀번호 입력" disabled={!targetValue.hasPassword} valueChange={value => {
-                            if(isAdd) {
+                            if (isAdd) {
                                 setAddValues({
                                     ...addValues,
                                     password: value
@@ -330,9 +347,9 @@ const UserDetail = ({ }) => {
                                     password: value
                                 })
                             }
-                        }} type="password" customType="password" />
+                        }} type="password" customType="password" noGap />
                         <Input containerClassName='has-password-confirm' className='st1' checked={!targetValue.hasPassword} type="checkbox" onChange={e => {
-                            if(isAdd) {
+                            if (isAdd) {
                                 setAddValues({
                                     ...addValues,
                                     hasPassword: !e.currentTarget.checked
@@ -343,28 +360,28 @@ const UserDetail = ({ }) => {
                                     hasPassword: !e.currentTarget.checked
                                 })
                             }
-                        }} label="비밀번호 랜덤 생성" />
+                        }} label="비밀번호 랜덤 생성" noGap />
                     </UserInfoInputrow>
-                    <UserInfoInputrow title='PASSWORD_CONFIRM' required>
-                        <Input className='st1' value={targetValue.passwordConfirm} disabled={!targetValue.hasPassword} placeholder="비밀번호 확인" valueChange={value => {
-                            if(isAdd) {
-                                setAddValues({
-                                    ...addValues,
-                                    passwordConfirm: value
-                                })
-                            } else {
-                                setModifyValues({
-                                    ...modifyValues,
-                                    passwordConfirm: value
-                                })
-                            }
-                        }} type="password" rules={[
-                            {
-                                regExp: (val) => isAdd ? val != addValues.password : val != modifyValues.password,
-                                msg: <FormattedMessage id="PASSWORD_CONFIRM_CHECK" />
-                            }
-                        ]} maxLength={16}/>
-                    </UserInfoInputrow></>}
+                        <UserInfoInputrow title='PASSWORD_CONFIRM' required>
+                            <Input className='st1' value={targetValue.passwordConfirm} disabled={!targetValue.hasPassword} placeholder="비밀번호 확인" valueChange={value => {
+                                if (isAdd) {
+                                    setAddValues({
+                                        ...addValues,
+                                        passwordConfirm: value
+                                    })
+                                } else {
+                                    setModifyValues({
+                                        ...modifyValues,
+                                        passwordConfirm: value
+                                    })
+                                }
+                            }} type="password" rules={[
+                                {
+                                    regExp: (val) => isAdd ? val != addValues.password : val != modifyValues.password,
+                                    msg: <FormattedMessage id="PASSWORD_CONFIRM_CHECK" />
+                                }
+                            ]} maxLength={16} noGap />
+                        </UserInfoInputrow></>}
                     {(isModify || isAdd) ? <UserInfoInputrow title="NAME" required>
                         <Input className='st1' value={targetValue.name.firstName} placeholder="성" onChange={e => {
                             if (isAdd) {
@@ -384,7 +401,7 @@ const UserDetail = ({ }) => {
                                     }
                                 })
                             }
-                        }} customType='name' onlyText/>
+                        }} customType='name' onlyText noGap />
                         <Input className='st1' value={targetValue.name.lastName} placeholder="이름" onChange={e => {
                             if (isAdd) {
                                 setAddValues({
@@ -403,7 +420,7 @@ const UserDetail = ({ }) => {
                                     }
                                 })
                             }
-                        }} customType='name' onlyText/>
+                        }} customType='name' onlyText noGap />
                     </UserInfoInputrow> :
                         <UserInfoRow title="NAME" value={userData ? `${userData.name.firstName} ${userData.name.lastName}` : ""} />}
                     {(isModify || isAdd) ? <UserInfoInputrow title="EMAIL" required>
@@ -421,7 +438,7 @@ const UserDetail = ({ }) => {
                                     email: e.target.value
                                 })
                             }
-                        }} maxLength={48} placeholder='이메일 입력' />
+                        }} maxLength={48} placeholder='이메일 입력' noGap />
                     </UserInfoInputrow> : <UserInfoRow title="EMAIL" value={userData?.email || "이메일 없음"} />}
 
                     {(isModify || isAdd) ? <UserInfoInputrow title="PHONE_NUMBER">
@@ -438,10 +455,10 @@ const UserDetail = ({ }) => {
                                     phone: value
                                 })
                             }
-                        }} maxLength={13} />
+                        }} maxLength={13} noGap />
                     </UserInfoInputrow> : <UserInfoRow title="PHONE_NUMBER" value={userData?.phone || "전화번호 없음"} />}
 
-                    {(isModify || isAdd) ? <UserInfoInputrow title="GROUP">
+                    {/* {(isModify || isAdd) ? <UserInfoInputrow title="GROUP">
                         <GroupSelect selectedGroup={targetValue.groupId} setSelectedGroup={(groupId) => {
                             if (isAdd) {
                                 setAddValues({
@@ -455,7 +472,7 @@ const UserDetail = ({ }) => {
                                 })
                             }
                         }} />
-                    </UserInfoInputrow> : <UserInfoRow title="GROUP" value={userData?.group?.name || "선택 안함"} />}
+                    </UserInfoInputrow> : <UserInfoRow title="GROUP" value={userData?.group?.name || "선택 안함"} />} */}
 
                     {((isModify || isAdd) && isAdmin && userData?.role !== 'ROOT') ? <UserInfoInputrow title="USER_ROLE">
                         <RoleSelect selectedGroup={isAdd ? addValues.role : modifyValues.role} setSelectedGroup={(role) => {
@@ -472,6 +489,7 @@ const UserDetail = ({ }) => {
                             }
                         }} needSelect />
                     </UserInfoInputrow> : <UserInfoRow title="USER_ROLE" value={(userData && userData.role) ? formatMessage({ id: userData.role + '_ROLE_VALUE' }) : "선택 안함"} />}
+                    {!isAdd && <UserInfoRow title="RECOVERY_CODE" value={userData?.recoveryCode!!} />}
                     {/* {(isModify || isAdd) ? <UserInfoInputrow title="POLICY_TEXT">
                         <RoleSelect selectedGroup={isAdd ? addValues.role : modifyValues.role} setSelectedGroup={(role) => {
                             if (isAdd) {
@@ -512,41 +530,44 @@ const UserDetail = ({ }) => {
             </div>
             {authInfoDatas.map((_, index) => <Fragment key={index}>
                 <div
-                    className={`user-detail-section mb20${portalSigned ? '' : ' no-portal-signed'}${!userDetailOpened.includes(_.authInfo.id) ? ' closed' : ''}`}
-                    ref={_ref => authInfoRef.current[_.authInfo.id] = _ref as HTMLDivElement}
+                    className={`user-detail-section mb20${portalSigned ? '' : ' no-portal-signed'}${!userDetailOpened.includes(_.authenticationInfo.id) ? ' closed' : ''}`}
+                    ref={_ref => authInfoRef.current[_.authenticationInfo.id] = _ref as HTMLDivElement}
                 >
                     <div className="user-detail-header" onClick={() => {
-                        if (portalSigned) setUserDetailOpened(userDetailOpened.includes(_.authInfo.id) ? userDetailOpened.filter(uOpened => uOpened !== _.authInfo.id) : userDetailOpened.concat(_.authInfo.id))
+                        if (portalSigned) setUserDetailOpened(userDetailOpened.includes(_.authenticationInfo.id) ? userDetailOpened.filter(uOpened => uOpened !== _.authenticationInfo.id) : userDetailOpened.concat(_.authenticationInfo.id))
                     }}>
                         <div className="user-detail-header-application-info">
-                            <img src={_.application.logoImage.url} />
-                            {/* <h3>#{index + 1} {_.application.name}</h3> */}
-                            <h4>{_.application.name}</h4>
                             <div className="user-detail-alias-container">
-                                <img className="user-alias-image" src={userIcon} /><h4>{_.username} {_.application.type === 'WINDOWS_LOGIN' ? `(${_.authInfo.loginDeviceInfo.name})` : ''}</h4>
+                                <img src={_.application.logoImage.url} />
+                                <h4>{_.application.name}</h4>
+                            </div>
+                            {/* <div className="user-detail-alias-container">
+                                <img src={groupMenuIcon} />
+                                <h4>
+                                    {_.groupName || "그룹 없음"}
+                                </h4>
+                            </div> */}
+                            <div className="user-detail-alias-container">
+                                <img src={userIcon} /><h4>{_.username} {_.application.type === 'WINDOWS_LOGIN' ? `(${_.authenticationInfo.loginDeviceInfo.name})` : ''}</h4>
                             </div>
                         </div>
                         <h5>
-                            {_.authInfo.loginDeviceInfo.updatedAt} 업데이트됨
+                            {_.authenticationInfo.loginDeviceInfo.updatedAt} 업데이트됨
                         </h5>
                     </div>
 
                     <div className="user-detail-info-container">
-                        {/* <div className="user-detail-info-device-info-title">
-                            <div className='user-policy-select-container'>
-                                <h3>
-                                    현재 정책
-                                </h3>
-                                <div>
-                                    <PolicySelect selectedPolicy={_.authInfo.policy} setSelectedPolicy={() => {
-
-                                    }} />
-                                    <Button className='st3' icon={editIcon}>
-                                        수정
-                                    </Button>
-                                </div>
+                        <div className="user-detail-info-device-info-title" style={{
+                            margin: '24px 0'
+                        }}>
+                            <div className='user-detail-info-divider'>
+                                기타 정보
                             </div>
-                        </div> */}
+                            <div />
+                        </div>
+                        <div className="user-detail-info-device-info-content">
+                            <UserDetailInfoETCInfoContent data={_} />
+                        </div>
                         <div className="user-detail-info-device-info-title" style={{
                             margin: '24px 0'
                         }}>
@@ -568,11 +589,11 @@ const UserDetail = ({ }) => {
                             <h4>
                                 OMPASS
                             </h4>
-                            {isHigherRole && <UserDetailInfoAuthenticatorDeleteButton authenticatorId={_.authInfo.authenticators.find(auth => auth.type === 'OMPASS')?.id} callback={(id) => {
+                            {(userInfo.role === 'USER' ? (globalDatas?.isUserAllowedToRemoveAuthenticator && canModify) : canModify) && <UserDetailInfoAuthenticatorDeleteButton authenticatorId={_.authenticationInfo.authenticators.find(auth => auth.type === 'OMPASS')?.id} callback={(id) => {
                                 setAuthenticatorDelete(id)
                             }} />}
                         </div>
-                        <UserDetailInfoAuthenticatorContent data={_.authInfo.authenticators.find(auth => auth.type === 'OMPASS')} />
+                        <UserDetailInfoAuthenticatorContent data={_.authenticationInfo.authenticators.find(auth => auth.type === 'OMPASS')} />
 
                         {
                             (_.application.type === 'ADMIN' || _.application.type === 'DEFAULT' || _.application.type === 'REDMINE') && <>
@@ -580,19 +601,19 @@ const UserDetail = ({ }) => {
                                     <h4>
                                         WEBAUTHN
                                     </h4>
-                                    {isHigherRole && <UserDetailInfoAuthenticatorDeleteButton authenticatorId={_.authInfo.authenticators.find(auth => auth.type === 'WEBAUTHN')?.id} callback={(id) => {
+                                    {(userInfo.role === 'USER' ? (globalDatas?.isUserAllowedToRemoveAuthenticator && canModify) : canModify) && <UserDetailInfoAuthenticatorDeleteButton authenticatorId={_.authenticationInfo.authenticators.find(auth => auth.type === 'WEBAUTHN')?.id} callback={(id) => {
                                         setAuthenticatorDelete(id)
                                     }} />}
                                 </div>
-                                <UserDetailInfoAuthenticatorContent data={_.authInfo.authenticators.find(auth => auth.type === 'WEBAUTHN')} />
+                                <UserDetailInfoAuthenticatorContent data={_.authenticationInfo.authenticators.find(auth => auth.type === 'WEBAUTHN')} />
                             </>
                         }
 
                         <div className="user-detail-content-passcode-container">
                             <div>
                                 <h4>PASSCODE</h4>
-                                {userInfo.role !== "USER" && !_.authInfo.authenticators.find(__ => __.type === 'PASSCODE') && <div className="passcode-add" onClick={() => {
-                                    setAddPasscode(_.authInfo.id)
+                                {userInfo.role !== "USER" && !_.authenticationInfo.authenticators.find(__ => __.type === 'PASSCODE') && <div className="passcode-add" onClick={() => {
+                                    setAddPasscode(_.authenticationInfo.id)
                                 }}>
                                     <img src={passcodeAddIcon} />
                                 </div>}
@@ -600,9 +621,9 @@ const UserDetail = ({ }) => {
                         </div>
                         <CustomTable<PasscodeAuthenticatorDataType, {}>
                             noSearch
-                            columns={columnsByRole(_.authInfo.id)}
+                            columns={columnsByRole(_.authenticationInfo.id)}
                             noDataHeight="30px"
-                            datas={passcodeData(_.authInfo.id)}
+                            datas={passcodeData(_.authenticationInfo.id)}
                             theme="table-st1"
                         />
                     </div>
@@ -731,8 +752,8 @@ const PasscodeAddComponent = ({ okCallback, cancelCallback, authId }: {
         count: 'one'
     })
     const [inputCurrentPasscodeValue, setInputCurrentPasscodeValue] = useState('')
-    const [inputCurrentPasscodeTime, setInputCurrentPasscodeTime] = useState<number|string>(1)
-    const [inputCurrentPasscodeCount, setInputCurrentPasscodeCount] = useState<number|string>(1)
+    const [inputCurrentPasscodeTime, setInputCurrentPasscodeTime] = useState<number | string>(1)
+    const [inputCurrentPasscodeCount, setInputCurrentPasscodeCount] = useState<number | string>(1)
 
     const [addPasscodeLoading, setAddPasscodeLoading] = useState(false)
 

@@ -209,3 +209,12 @@ type DashboardApplicationRPUserDataType = {
   registeredRpUserCount: number,
   unRegisteredRpUserCount: number
 }
+
+type UserHierarchyDataServerResponseType = DefaultUserHierarchyDataType & {
+  rpUsers: UserHierarchyDataRpUserServerResponseType[]
+}
+
+type UserHierarchyDataRpUserServerResponseType = DefaultUserHierarchyDataRpUserType & {
+  applicationId: ApplicationListDataType['id']
+  groupId: DefaultUserGroupDataType['id']
+}

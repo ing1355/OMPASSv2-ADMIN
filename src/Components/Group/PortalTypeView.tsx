@@ -1,0 +1,91 @@
+import { useEffect, useState } from "react"
+import groupOpenIcon from '../../assets/groupOpenIcon.png'
+import rpUesrIcon from '../../assets/login_id.png'
+import useFullName from "hooks/useFullName"
+import { logoImageWithDefaultImage } from "Functions/GlobalFunctions"
+import { SetStateType } from "Types/PropsTypes"
+
+type PortalTypeViewProps = {
+    datas: UserHierarchyDataType[]
+    selected: UserHierarchyDataRpUserType['id'][]
+    setSelected: SetStateType<UserHierarchyDataRpUserType['id'][]>
+}
+
+const getRpUserIds = (data: UserHierarchyDataType) => {
+    return data.applications.flatMap(app => app.rpUsers.map(user => user.id))
+}
+
+const PortalTypeView = ({ datas, selected, setSelected }: PortalTypeViewProps) => {
+    const [opened, setOpened] = useState<UserHierarchyDataType['id'][]>([])
+    const getFullName = useFullName();
+
+    useEffect(() => {
+        const temp = datas.map(d => d.id)
+        setOpened(opened.filter(o => temp.includes(o)))
+    }, [datas])
+    
+    return <>
+        {
+            datas.map((_, ind) => <div key={ind} className='custom-transfer-user-row'>
+                <div className='custom-transfer-user-row-title-container' data-selected={getRpUserIds(_).every(user => selected.includes(user))}>
+                    <img src={groupOpenIcon} data-opened={opened.includes(_.id)} onClick={(e) => {
+                        e.stopPropagation()
+                        if (opened.includes(_.id)) {
+                            setOpened(opened.filter(__ => __ !== _.id))
+                        } else {
+                            setOpened(opened.concat(_.id))
+                        }
+                    }} />
+                    <div onClick={() => {
+                        const userIds = getRpUserIds(_)
+                        if (userIds.every(id => selected.includes(id))) {
+                            setSelected(selected.filter(s => !userIds.includes(s)))
+                        } else {
+                            setSelected([...new Set(selected.concat(userIds))])
+                        }
+                    }}>
+                        {getFullName(_.name)}({_.username})
+                    </div>
+                </div>
+                <div className='custom-transfer-user-row-child-container' data-opened={opened.includes(_.id)}>
+                    {
+                        _.applications.map(app => <div className='transfer-user-child-application-container' data-selected={app.rpUsers.flatMap(user => user.id).every(id => selected.includes(id))} key={app.id} onClick={(e) => {
+                            e.stopPropagation()
+                            const userIds = app.rpUsers.flatMap(user => user.id)
+                            if (userIds.every(id => selected.includes(id))) {
+                                setSelected(selected.filter(s => !userIds.includes(s)))
+                            } else {
+                                setSelected([...new Set(selected.concat(userIds))])
+                            }
+                        }}>
+                            <div className='transfer-user-child-application-title'>
+                                <img src={logoImageWithDefaultImage(app.logoImage)} />
+                                <div>
+                                    {app.name}
+                                </div>
+                            </div>
+                            {
+                                app.rpUsers.map((rp, rpInd) => <div className='transfer-user-child-rp-user-container' key={rpInd} onClick={() => {
+                                    if (selected.includes(rp.id)) {
+                                        setSelected(selected.filter(tUser => tUser !== rp.id))
+                                    } else {
+                                        setSelected(selected.concat(rp.id))
+                                    }
+                                }}>
+                                    <div className='transfer-user-child-rp-user-title' data-selected={selected.includes(rp.id)}>
+                                        <img src={rpUesrIcon} />
+                                        <div>
+                                            {rp.username}({rp.groupName})
+                                        </div>
+                                    </div>
+                                </div>)
+                            }
+                        </div>)
+                    }
+                </div>
+            </div>)
+        }
+    </>
+}
+
+export default PortalTypeView

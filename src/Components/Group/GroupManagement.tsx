@@ -85,7 +85,8 @@ const GroupManagement = () => {
                 // },
                 {
                     key: 'description',
-                    title: '설명'
+                    title: '설명',
+                    maxWidth: '300px'
                 }
             ]}
             datas={tableData}

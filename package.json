@@ -1,6 +1,6 @@
 {
   "name": "ompass_rp_admin",
-  "version": "2.0.0(43)",
+  "version": "2.0.0(51)",
   "proxy": "https://ompass.kr:54006",
   "private": true,
   "dependencies": {
@@ -49,8 +49,9 @@
     "build": "cross-env GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "scp -r ./build/* hozzi@192.168.182.140:/usr/local/ompass_agent_rp",
-    "deploy:new": "scp -r ./build/* hozzi@192.168.182.140:/usr/local/ompass_agent_rp_test",
+    "__deploy": "scp -r ./build/* hozzi@192.168.182.140:/usr/local/ompass_agent_rp",
+    "deploy": "scp -r ./build/* hozzi@192.168.182.140:/usr/local/ompass_agent_rp_test",
+    "deploy2": "scp -r ./build/* hozzi@192.168.182.140:/usr/local/ompass_agent_rp_dev",
     "testDeploy": "scp -r ./build/* hozzi@192.168.182.140:/usr/local/ompass_agent_rp_test",
     "awsInvalidation": "aws cloudfront create-invalidation --distribution-id E2ALB03P1N7UVH --paths \"/*\" --no-cli-pager",
     "awsTestInvalidation": "aws cloudfront create-invalidation --distribution-id EZ1Y858BAFJCL --paths \"/*\" --no-cli-pager",

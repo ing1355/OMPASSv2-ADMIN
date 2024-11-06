@@ -19,7 +19,8 @@
     gap: 16px;
     align-items: center;
     justify-content: center;
-    & > img {
+
+    &>img {
         width: 32px;
         height: 32px;
         cursor: pointer;
@@ -33,7 +34,8 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    & > span > b {
+
+    &>span>b {
         color: var(--main-purple-color);
     }
 }
@@ -50,13 +52,15 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+
     &>div {
         padding: 6px 8px;
         width: 100%;
         height: 100%;
         box-sizing: border-box;
         position: relative;
-        & > input {
+
+        &>input {
             width: 100%;
             height: 100%;
             box-sizing: border-box;
@@ -64,12 +68,14 @@
             border-radius: 12px;
             border: 1px solid var(--main-purple-color);
             color: var(--main-grey-color-2);
+
             &::placeholder {
                 color: var(--main-grey-color-3);
                 font-size: .8rem;
             }
         }
-        & > img {
+
+        &>img {
             position: absolute;
             top: 50%;
             right: 20px;
@@ -80,26 +86,106 @@
 }
 
 .custom-transfer-user-row {
-    height: 32px;
-    padding: 4px 8px;
     line-height: 32px;
-    cursor: pointer;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    color: var(--main-grey-color-2);
+}
+
+.custom-transfer-user-row-title-container {
+    padding: 4px 8px;
+    height: 24px;
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 8px;
-    color: var(--main-grey-color-2);
-    &>img {
-        height: 60%;
-    }
-    &:hover {
-        background-color: var(--sub-blue-color-2);
-    }
-    &[aria-selected="true"] {
+}
+
+.custom-transfer-user-row-title-container > div {
+    font-size: .95rem;
+    cursor: pointer;
+    flex: 1;
+    user-select: none;
+}
+
+.custom-transfer-user-row-title-container[data-selected="true"] {
+    & > div {
         font-weight: bold;
         background-color: var(--sub-blue-color-2);
+    }
+}
+
+.custom-transfer-user-row-title-container > img {
+    height: 100%;
+    padding: 2px;
+    box-sizing: border-box;
+    transition: all .15s ease-in-out;
+    cursor: pointer;
+    user-select: none;
+    &[data-opened="true"] {
+        transform: rotate(-90deg);
+    }
+}
+
+.custom-transfer-user-row-child-container {
+    overflow: hidden;
+    max-height: 9999px;
+    transition: all .5s ease-out;
+    &[data-opened="false"] {
+        transition: all .001s ease-out;
+        max-height: 0px;
+    }
+}
+
+.transfer-user-child-application-container {
+    &[data-selected="true"] {
+        font-weight: bold;
+    }
+}
+
+.transfer-user-child-application-title {
+    height: 24px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    &>img {
+        height: 60%;
+        user-select: none;
+    }
+    &>div {
+        font-size: .9rem;
+        user-select: none;
+    }
+}
+
+.custom-transfer-user-row-child-container, .transfer-user-child-rp-user-container {
+    padding-left: 24px;
+}
+
+.custom-transfer-user-row-title-container > div:hover, .transfer-user-child-application-title:hover > div, .transfer-user-child-rp-user-title:hover > div {
+    color: var(--main-purple-color);
+    font-weight: bold;
+}
+
+.transfer-user-child-rp-user-title {
+    height: 24px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    &>img {
+        height: 60%;
+        user-select: none;
+    }
+    &>div {
+        font-size: .8rem;
+        user-select: none;
+    }
+    &[data-selected="true"] {
+        font-weight: bold;
     }
 }

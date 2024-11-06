@@ -249,7 +249,7 @@ const PermissionComponent = ({ roleType }: { roleType: userRoleType }) => {
   }
 
   return (
-    <div className='mt10' style={{border: '1px solid #ccc', borderRadius: '8px', padding: '2px 20px'}}>
+    <div className='mt10' style={{border: '1px solid var(--sub-grey-color3)', borderRadius: '8px', padding: '2px 20px'}}>
       {permissionCheckboxFun(roleType)}
     </div>
   )

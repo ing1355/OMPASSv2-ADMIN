@@ -4,3 +4,12 @@
     align-items: center;
     gap: 24px;
 }
+
+.admin-need {
+    transition: all .25s ease-out;
+    height: 0px;
+    overflow: hidden;
+    &.visible {
+        height: 46px;
+    }
+}

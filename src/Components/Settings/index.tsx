@@ -1,6 +1,6 @@
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
-import CustomInputRow from "Components/Layout/CustomInputRow"
+import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import { GetPortalSettingsDataFunc, UpdatePortalSettingsDataFunc } from "Functions/ApiFunctions"
 import { useLayoutEffect, useState } from "react"
 import './Settings.css'
@@ -34,7 +34,7 @@ const Settings = () => {
     })
 
     const dispatch = useDispatch()
-    
+
     const getDatas = async () => {
         setDataLoading(true)
         GetPortalSettingsDataFunc(({ userSignupMethod, logoImage, noticeMessage, timeZone, companyName, isUserAllowedToRemoveAuthenticator, selfSignupEnabled }) => {
@@ -90,7 +90,7 @@ const Settings = () => {
                         message.error("설정 저장 실패!")
                     })
                 }
-                if(logoImg.image.startsWith('/static')) {
+                if (logoImg.image.startsWith('/static')) {
                     const img = new Image()
                     img.onload = () => {
                         let canvas = document.createElement('canvas');
@@ -116,7 +116,7 @@ const Settings = () => {
             <CustomInputRow title="회사명">
                 <Input className="st1" value={inputAlias} valueChange={value => {
                     setInputAlias(value)
-                }} maxLength={20}/>
+                }} maxLength={20} />
             </CustomInputRow>
             <CustomInputRow title="타임존">
                 <CustomSelect value={timeZoneValue} onChange={e => {
@@ -126,21 +126,25 @@ const Settings = () => {
                     label: _
                 }))} needSelect />
             </CustomInputRow>
-            <CustomInputRow title="회원가입 관리자 승인 여부">
-                <div className="signup-field-container">
-                    <Input type="radio" name="signupMethod" value={UserSignupMethod.USER_SELF_ADMIN_PASS} checked={signupMethod === UserSignupMethod.USER_SELF_ADMIN_PASS} onChange={e => {
-                        if(e.currentTarget.checked) setSignupMethod(e.currentTarget.value as UserSignUpMethodType)
-                    }} label="사용자 직접 가입"/>
-                    <Input type="radio" name="signupMethod" value={UserSignupMethod.USER_SELF_ADMIN_ACCEPT} checked={signupMethod === UserSignupMethod.USER_SELF_ADMIN_ACCEPT} onChange={e => {
-                        if(e.currentTarget.checked) setSignupMethod(e.currentTarget.value as UserSignUpMethodType)
-                    }} label="관리자 승인 가입"/>
-                </div>
-            </CustomInputRow>
             <CustomInputRow title="사용자 직접 회원가입">
                 <Switch checked={canSignUp} onChange={check => {
                     setCanSignUp(check)
                 }} checkedChildren={'허용'} unCheckedChildren={'거부'} />
             </CustomInputRow>
+            {
+                <div className={`admin-need ${canSignUp ? ' visible' : ''}`}>
+                    <CustomInputRow title="">
+                        <div className="signup-field-container">
+                            <Input type="radio" name="signupMethod" value={UserSignupMethod.USER_SELF_ADMIN_ACCEPT} checked={signupMethod === UserSignupMethod.USER_SELF_ADMIN_ACCEPT} onChange={e => {
+                                if (e.currentTarget.checked) setSignupMethod(e.currentTarget.value as UserSignUpMethodType)
+                            }} label="관리자 승인 후 가입" />
+                            <Input type="radio" name="signupMethod" value={UserSignupMethod.USER_SELF_ADMIN_PASS} checked={signupMethod === UserSignupMethod.USER_SELF_ADMIN_PASS} onChange={e => {
+                                if (e.currentTarget.checked) setSignupMethod(e.currentTarget.value as UserSignUpMethodType)
+                            }} label="관리자 승인 없이 가입" />
+                        </div>
+                    </CustomInputRow>
+                </div>
+            }
             <CustomInputRow title="사용자 인증장치 삭제">
                 <Switch checked={canDelete} onChange={check => {
                     setCanDelete(check)
@@ -149,14 +153,14 @@ const Settings = () => {
             <CustomInputRow title="메인 텍스트 설정">
                 <Input className="st1" value={welcomeText} valueChange={value => {
                     setWelcomeText(value)
-                }} maxLength={50}/>
+                }} maxLength={50} />
             </CustomInputRow>
             <CustomInputRow title="메인 이미지 설정" containerStyle={{
                 alignItems: 'flex-start'
             }}>
                 <CustomImageUpload data={logoImg} callback={(img) => {
                     setLogoImg(img)
-                }} defaultImg={loginMainImage}/>
+                }} defaultImg={loginMainImage} />
             </CustomInputRow>
         </div>
     </Contents>

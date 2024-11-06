@@ -1,0 +1,8 @@
+.group-view-radio-group > .ant-radio-button-wrapper-checked {
+    border-color: var(--main-purple-color) !important;
+    color: var(--main-purple-color) !important;
+}
+
+.group-view-radio-group > .ant-radio-button-wrapper:hover {
+    color: var(--main-purple-color) !important;
+}

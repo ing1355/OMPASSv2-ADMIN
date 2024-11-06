@@ -134,6 +134,7 @@ a[download] {
   justify-content: start;
   flex-direction: column;
   padding-top: 48px;
+  padding-bottom: 96px;
   box-sizing: border-box;
   &.hidden {
     display: none;

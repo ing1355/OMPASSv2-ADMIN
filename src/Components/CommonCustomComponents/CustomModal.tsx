@@ -36,11 +36,11 @@ const CustomModal = ({ buttonLoading, typeTitle, typeContent, type, children, ok
             backgroundColor: 'rgba(0,0,0,.2)'
         },
         body: {
-            padding: noPadding ? 0 : '20px'
+            // padding: noPadding ? 0 : '20px'
         }
     }} {...props} onCancel={onCancel} className="custom-modal-container">
         {
-            type ? <div className='type-modal-body-contaienr'>
+            type ? <div className='type-modal-body-container'>
                 <img src={type === "info" ? infoModalIcon : deleteModalIcon} />
                 {children}
                 <div className='type-modal-body-title'>
