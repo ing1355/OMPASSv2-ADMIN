@@ -20,4 +20,5 @@ type ReduxStateType = {
   subdomainInfo?: SubDomainInfoDataType
   globalDatas?: GlobalDatasType
   windowsAgentUrl?: string
+  sessionChecked?: boolean
 }

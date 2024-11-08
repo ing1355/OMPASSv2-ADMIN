@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react"
 import groupOpenIcon from '../../assets/groupOpenIcon.png'
-import rpUesrIcon from '../../assets/login_id.png'
+import rpUesrIcon from '../../assets/groupUserIcon.png'
 import useFullName from "hooks/useFullName"
 import { logoImageWithDefaultImage } from "Functions/GlobalFunctions"
 import { SetStateType } from "Types/PropsTypes"
+import GroupOpen from "./GroupOpen"
 
 type PortalTypeViewProps = {
     datas: UserHierarchyDataType[]
@@ -28,14 +29,6 @@ const PortalTypeView = ({ datas, selected, setSelected }: PortalTypeViewProps) =
         {
             datas.map((_, ind) => <div key={ind} className='custom-transfer-user-row'>
                 <div className='custom-transfer-user-row-title-container' data-selected={getRpUserIds(_).every(user => selected.includes(user))}>
-                    <img src={groupOpenIcon} data-opened={opened.includes(_.id)} onClick={(e) => {
-                        e.stopPropagation()
-                        if (opened.includes(_.id)) {
-                            setOpened(opened.filter(__ => __ !== _.id))
-                        } else {
-                            setOpened(opened.concat(_.id))
-                        }
-                    }} />
                     <div onClick={() => {
                         const userIds = getRpUserIds(_)
                         if (userIds.every(id => selected.includes(id))) {
@@ -46,10 +39,18 @@ const PortalTypeView = ({ datas, selected, setSelected }: PortalTypeViewProps) =
                     }}>
                         {getFullName(_.name)}({_.username})
                     </div>
+                    <GroupOpen selected={getRpUserIds(_).every(user => selected.includes(user))} opened={opened.includes(_.id)} onClick={e => {
+                        e.stopPropagation()
+                        if (opened.includes(_.id)) {
+                            setOpened(opened.filter(__ => __ !== _.id))
+                        } else {
+                            setOpened(opened.concat(_.id))
+                        }
+                    }}/>
                 </div>
                 <div className='custom-transfer-user-row-child-container' data-opened={opened.includes(_.id)}>
                     {
-                        _.applications.map(app => <div className='transfer-user-child-application-container' data-selected={app.rpUsers.flatMap(user => user.id).every(id => selected.includes(id))} key={app.id} onClick={(e) => {
+                        _.applications.map(app => <div className='transfer-user-child-application-container' key={app.id} onClick={(e) => {
                             e.stopPropagation()
                             const userIds = app.rpUsers.flatMap(user => user.id)
                             if (userIds.every(id => selected.includes(id))) {
@@ -58,7 +59,7 @@ const PortalTypeView = ({ datas, selected, setSelected }: PortalTypeViewProps) =
                                 setSelected([...new Set(selected.concat(userIds))])
                             }
                         }}>
-                            <div className='transfer-user-child-application-title'>
+                            <div className='transfer-user-child-application-title' data-selected={app.rpUsers.flatMap(user => user.id).every(id => selected.includes(id))}>
                                 <img src={logoImageWithDefaultImage(app.logoImage)} />
                                 <div>
                                     {app.name}

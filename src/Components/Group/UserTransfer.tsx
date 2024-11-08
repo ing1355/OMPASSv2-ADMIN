@@ -8,11 +8,11 @@ import groupResetIconHover from '../../assets/groupResetIconHover.png'
 import { useEffect, useMemo, useState } from 'react'
 import { GetApplicationListFunc, GetUserGroupDataListFunc, GetUserHierarchyFunc } from 'Functions/ApiFunctions'
 import { message } from 'antd'
-import './UserTransfer.css'
 import TransferContainer from './TransferContainer'
 import { SetStateType } from 'Types/PropsTypes'
 import { applicationTypes } from 'Constants/ConstantValues'
 import CustomModal from 'Components/CommonCustomComponents/CustomModal'
+import './UserTransfer.css'
 
 type UserTransferProps = {
     selectedUsers: UserHierarchyDataRpUserType['id'][]
@@ -167,7 +167,7 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
     }, [refresh])
 
     return <div className="custom-transfer-user-container">
-        <TransferContainer datas={filteredUserDatas as UserTransferDataType[]} selected={tempUsers} setSelected={setTempUsers} viewStyle={viewStyle} />
+        <TransferContainer datas={filteredUserDatas as UserTransferDataType[]} selected={tempUsers} setSelected={setTempUsers} viewStyle={viewStyle} title="그룹 외 사용자"/>
         <div className='custom-transfer-buttons-container'>
             <img
                 src={onRight ? groupRightArrowIconHover : groupRightArrowIcon}
@@ -224,7 +224,7 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
                     message.success("그룹 인원 초기화 성공!")
                 }} />
         </div>
-        <TransferContainer datas={filteredSelectedUserDatas as UserTransferDataType[]} selected={selectedTempUsers} setSelected={setSelectedTempUsers} viewStyle={viewStyle} />
+        <TransferContainer datas={filteredSelectedUserDatas as UserTransferDataType[]} selected={selectedTempUsers} setSelected={setSelectedTempUsers} viewStyle={viewStyle} title="그룹 내 사용자"/>
         <CustomModal
             open={sureChange}
             onCancel={() => {

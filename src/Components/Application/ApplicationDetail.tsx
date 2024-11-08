@@ -20,6 +20,24 @@ import deleteIconHover from '../../assets/deleteIconRed.png'
 import './ApplicationDetail.css'
 import { FormattedMessage } from "react-intl"
 import CustomImageUpload from "Components/CommonCustomComponents/CustomImageUpload"
+import BottomLineText from "Components/CommonCustomComponents/BottomLineText"
+
+const ApiServerAddressItem = ({ text }: {
+    text: string
+}) => {
+    return <CustomInputRow title="API 서버 주소">
+        <CopyToClipboard text={text} onCopy={(value, result) => {
+            if (result) {
+                message.success("API 서버 주소가 복사되었습니다.")
+            } else {
+                message.error("API 서버 주소 복사에 실패하였습니다.")
+            }
+        }}>
+            <Input className="st1 secret-key" value={text} readOnly />
+        </CopyToClipboard>
+
+    </CustomInputRow>
+}
 
 const ApplicationDetail = () => {
     const [logoImage, setLogoImage] = useState<updateLogoImageType>({
@@ -161,11 +179,43 @@ const ApplicationDetail = () => {
             </div>
         </ContentsHeader>
         <div className="contents-header-container">
-            <CustomInputRow title="유형">
-                {isAdd ? <CustomSelect value={applicationType} onChange={value => {
-                    setApplicationType(value as ApplicationDataType['type'])
-                }} items={typeItems} needSelect /> : getApplicationTypeLabel(applicationType as ApplicationDataType['type'])}
-            </CustomInputRow>
+            {!isAdd && <BottomLineText title="상세 정보" style={{
+                marginBottom: '16px'
+            }} />}
+            {!isAdd && <ApiServerAddressItem text={inputApiServerHost} />}
+            {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title="클라이언트 아이디">
+                <CopyToClipboard text={inputClientId} onCopy={(value, result) => {
+                    if (result) {
+                        message.success("클라이언트 아이디가 복사되었습니다.")
+                    } else {
+                        message.error("클라이언트 아이디 복사에 실패하였습니다.")
+                    }
+                }}>
+                    <Input className="st1 secret-key" value={inputClientId} disabled={isAdd} readOnly={!isAdd} />
+                </CopyToClipboard>
+            </CustomInputRow>}
+            {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title="시크릿 키">
+                <CopyToClipboard text={inputSecretKey} onCopy={(value, result) => {
+                    if (result) {
+                        message.success("시크릿 키가 복사되었습니다.")
+                    } else {
+                        message.error("시크릿 복사에 실패하였습니다.")
+                    }
+                }}>
+                    <Input className="st1 secret-key" value={inputSecretKey} onChange={e => {
+                        setInputSecretKey(e.target.value)
+                    }} readOnly />
+                </CopyToClipboard>
+                <Button className="st9 application-detail-input-sub-btn" onClick={() => {
+                    UpdateApplicationSecretkeyFunc(uuid, (appData) => {
+                        setInputSecretKey(appData.secretKey)
+                    })
+                }}>비밀키 재발급</Button>
+            </CustomInputRow>}
+            {!isAdd && <BottomLineText title="설정" style={{
+                marginTop: '48px',
+                marginBottom: '16px'
+            }} />}
             {
                 applicationType && <>
                     <CustomInputRow title="이름" required>
@@ -206,47 +256,6 @@ const ApplicationDetail = () => {
                             setNeedPassword(check)
                         }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
                     </CustomInputRow>}
-                    {!isAdd && <CustomInputRow title="API 서버 주소">
-                        <CopyToClipboard text={inputApiServerHost} onCopy={(value, result) => {
-                            if (result) {
-                                message.success("API 서버 주소가 복사되었습니다.")
-                            } else {
-                                message.error("API 서버 주소 복사에 실패하였습니다.")
-                            }
-                        }}>
-                            <Input className="st1 secret-key" value={inputApiServerHost} disabled={isAdd} readOnly={!isAdd} />
-                        </CopyToClipboard>
-
-                    </CustomInputRow>}
-                    {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title="클라이언트 아이디">
-                        <CopyToClipboard text={inputClientId} onCopy={(value, result) => {
-                            if (result) {
-                                message.success("클라이언트 아이디가 복사되었습니다.")
-                            } else {
-                                message.error("클라이언트 아이디 복사에 실패하였습니다.")
-                            }
-                        }}>
-                            <Input className="st1 secret-key" value={inputClientId} disabled={isAdd} readOnly={!isAdd} />
-                        </CopyToClipboard>
-                    </CustomInputRow>}
-                    {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title="시크릿 키">
-                        <CopyToClipboard text={inputSecretKey} onCopy={(value, result) => {
-                            if (result) {
-                                message.success("시크릿 키가 복사되었습니다.")
-                            } else {
-                                message.error("시크릿 복사에 실패하였습니다.")
-                            }
-                        }}>
-                            <Input className="st1 secret-key" value={inputSecretKey} onChange={e => {
-                                setInputSecretKey(e.target.value)
-                            }} readOnly />
-                        </CopyToClipboard>
-                        <Button className="st9 application-detail-input-sub-btn" onClick={() => {
-                            UpdateApplicationSecretkeyFunc(uuid, (appData) => {
-                                setInputSecretKey(appData.secretKey)
-                            })
-                        }}>비밀키 재발급</Button>
-                    </CustomInputRow>}
                     <CustomInputRow title="정책 설정" required>
                         <PolicySelect selectedPolicy={selectedPolicy} setSelectedPolicy={setSelectedPolicy} needSelect />
                     </CustomInputRow>
@@ -257,6 +266,11 @@ const ApplicationDetail = () => {
                     </CustomInputRow>
                 </>
             }
+            <CustomInputRow title="유형">
+                {isAdd ? <CustomSelect value={applicationType} onChange={value => {
+                    setApplicationType(value as ApplicationDataType['type'])
+                }} items={typeItems} needSelect /> : getApplicationTypeLabel(applicationType as ApplicationDataType['type'])}
+            </CustomInputRow>
         </div>
         <CustomModal
             open={sureDelete}

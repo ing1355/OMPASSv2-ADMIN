@@ -541,7 +541,7 @@ const AuthPolicyDetail = () => {
                             </div>
                         </div>
                         <div className="location-policy-container">
-                            <div className="location-item-container">
+                            <div className="location-item-container current">
                                 <Input className="st1 policy-ip-address-input" placeholder="IP 주소 또는 범위" value={currentIpAddress} valueChange={value => {
                                     setCurrentIpAddress(value)
                                 }} maxLength={16} rules={[
@@ -603,7 +603,7 @@ const AuthPolicyDetail = () => {
                         setAccessTimeChecked(check)
                     }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
                     <div className="policy-input-container" data-hidden={!accessTimeChecked}>
-                        <div className="time-policy-container">
+                        <div className="time-policy-container current">
                             <div className="time-policy-inner-container">
                                 <div className="time-policy-days-container">
                                     요일 선택 : <Input type="checkbox" checked={TimePolicyDayOfWeeksList.every(__ => currentAccessTimeValue.selectedDayOfWeeks.includes(__))} onChange={e => {
@@ -869,15 +869,35 @@ const AuthPolicyDetail = () => {
                                 }} />
                             </div>
                             <div className="notice-row-container">
-                                알림 받을 관리자 : <Select mode="multiple" allowClear value={currentNoticeAdmin.admins} onChange={value => {
+                                알림 받을 관리자 : <Select mode="multiple" allowClear value={currentNoticeAdmin.admins} 
+                                onSelect={(value, option) => {
+                                    console.log(value, option)
+                                    if(value === '_all_value_') {
+                                        if(currentNoticeAdmin.admins.length === adminDatas.length) {
+                                            setCurrentNoticeAdmin({
+                                                ...currentNoticeAdmin,
+                                                admins: []
+                                            })
+                                        } else {
+                                            setCurrentNoticeAdmin({
+                                                ...currentNoticeAdmin,
+                                                admins: adminDatas.map(_ => _.userId)
+                                            })
+                                        }
+                                    }
+                                }}
+                                onChange={value => {
                                     setCurrentNoticeAdmin({
                                         ...currentNoticeAdmin,
                                         admins: value
                                     })
-                                }} options={adminDatas.map(opt => ({
+                                }} options={[{
+                                    label: currentNoticeAdmin.admins.length === adminDatas.length ? "전체 선택 해제" : "전체 선택",
+                                    value: "_all_value_"
+                                },...adminDatas.map(opt => ({
                                     label: opt.username,
                                     value: opt.userId
-                                }))} style={{
+                                }))]} style={{
                                     width: '600px',
                                 }} />
                             </div>

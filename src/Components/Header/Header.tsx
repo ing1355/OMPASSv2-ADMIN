@@ -15,6 +15,7 @@ import { Tooltip } from 'antd';
 import { ompassDefaultLogoImage } from 'Constants/ConstantValues';
 import { saveLocaleToLocalStorage } from 'Functions/GlobalFunctions';
 import SessionTimeCount from './SessionTimeCount';
+import CustomModal from 'Components/CommonCustomComponents/CustomModal';
 
 const Header = () => {
   const { lang, userInfo, subdomainInfo } = useSelector((state: ReduxStateType) => ({
@@ -129,9 +130,7 @@ const Header = () => {
             {username}
           </div>
           <div className='header-locale-container'>
-            <div>
-              <img src={locale_image} />
-            </div>
+            <img src={locale_image} />
             <span
               className={'mlr5 locale-toggle' + (lang === 'KR' ? ' active' : '')}
               onClick={() => {
@@ -160,6 +159,7 @@ const Header = () => {
           </Tooltip>
         </div>
       </div>
+      
     </div>
   )
 }

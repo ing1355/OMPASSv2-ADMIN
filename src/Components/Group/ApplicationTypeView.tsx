@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react"
-import userIconColor from '../../assets/userIconColor.png'
+import rpUesrIcon from '../../assets/groupUserIcon.png'
 import groupOpenIcon from '../../assets/groupOpenIcon.png'
 import useFullName from "hooks/useFullName"
 import { logoImageWithDefaultImage } from "Functions/GlobalFunctions"
 import { SetStateType } from "Types/PropsTypes"
+import GroupOpen from "./GroupOpen"
 
 type ApplicationTypeViewProps = {
     datas: UserHierarchyDataApplicationViewDataType[]
@@ -19,42 +20,40 @@ const ApplicationTypeView = ({ datas, selected, setSelected }: ApplicationTypeVi
         const temp = datas.map(d => d.id)
         setOpened(opened.filter(o => temp.includes(o)))
     }, [datas])
-    
+
     return <>
         {
             datas.map((_, ind) => <div key={ind} className='custom-transfer-user-row'>
-                <div className='custom-transfer-user-row-title-container' data-selected={_.rpUsers.every(users => selected.includes(users.id))}>
-                    <img src={groupOpenIcon} data-opened={opened.includes(_.id)} onClick={(e) => {
+                <div className='custom-transfer-user-row-title-container'>
+                    <div className="custom-transfer-user-row-title-application-container" data-selected={_.rpUsers.every(users => selected.includes(users.id))} onClick={() => {
+                            const userIds = _.rpUsers.map(user => user.id)
+                            if (userIds.every(id => selected.includes(id))) {
+                                setSelected(selected.filter(s => !userIds.includes(s)))
+                            } else {
+                                setSelected([...new Set(selected.concat(userIds))])
+                            }
+                        }}>
+                        <div>
+                            <img src={logoImageWithDefaultImage(_.logoImage)} />
+                        </div>
+                        <div>
+                            {_.name}
+                        </div>
+                    </div>
+                    <GroupOpen selected={_.rpUsers.every(users => selected.includes(users.id))} opened={opened.includes(_.id)} onClick={e => {
                         e.stopPropagation()
                         if (opened.includes(_.id)) {
                             setOpened(opened.filter(__ => __ !== _.id))
                         } else {
                             setOpened(opened.concat(_.id))
                         }
-                    }} />
-                    <img src={logoImageWithDefaultImage(_.logoImage)} onClick={() => {
-                        if (opened.includes(_.id)) {
-                            setOpened(opened.filter(__ => __ !== _.id))
-                        } else {
-                            setOpened(opened.concat(_.id))
-                        }
-                    }} />
-                    <div onClick={() => {
-                        const userIds = _.rpUsers.map(user => user.id)
-                        if (userIds.every(id => selected.includes(id))) {
-                            setSelected(selected.filter(s => !userIds.includes(s)))
-                        } else {
-                            setSelected([...new Set(selected.concat(userIds))])
-                        }
-                    }}>
-                        {_.name}
-                    </div>
+                    }}/>
                 </div>
                 <div className='custom-transfer-user-row-child-container' data-opened={opened.includes(_.id)} onClick={e => {
                     e.stopPropagation()
                 }}>
                     {
-                        _.rpUsers.map(user => <div className='transfer-user-child-application-container' data-selected={selected.includes(user.id)} key={user.id} onClick={(e) => {
+                        _.rpUsers.map(user => <div className='transfer-user-child-application-container' key={user.id} onClick={(e) => {
                             e.stopPropagation()
                             if (selected.includes(user.id)) {
                                 setSelected(selected.filter(tUser => tUser !== user.id))
@@ -62,8 +61,8 @@ const ApplicationTypeView = ({ datas, selected, setSelected }: ApplicationTypeVi
                                 setSelected(selected.concat(user.id))
                             }
                         }}>
-                            <div className='transfer-user-child-application-title'>
-                                <img src={userIconColor} />
+                            <div className='transfer-user-child-application-title application' data-selected={selected.includes(user.id)}>
+                                <img src={rpUesrIcon} />
                                 <div>
                                     {user.portalUsername}({getFullName(user.portalName)}) - {user.username}({user.groupName ?? "그룹 없음"})
                                 </div>

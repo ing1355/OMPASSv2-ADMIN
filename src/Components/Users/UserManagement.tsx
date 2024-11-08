@@ -7,6 +7,9 @@ import Contents from "Components/Layout/Contents";
 import ContentsHeader from "Components/Layout/ContentsHeader";
 import userAddIcon from './../../assets/userAddIcon.png'
 import userAddIconHover from './../../assets/userAddIconHover.png'
+import rootRoleIcon from './../../assets/rootRoleIcon.png'
+import userRoleIcon from './../../assets/userRoleIcon.png'
+import adminRoleIcon from './../../assets/adminRoleIcon.png'
 import './UserManagement.css'
 import { userStatusTypes } from "Constants/ConstantValues";
 import useFullName from "hooks/useFullName";
@@ -47,26 +50,30 @@ const UserManagement = () => {
                 datas={tableData}
                 hover
                 searchOptions={[
+                    // {
+                    //     key: 'role',
+                    //     type: 'select',
+                    //     selectOptions: [
+                    //         {
+                    //             key: 'USER',
+                    //             label: <FormattedMessage id={'USER_ROLE_VALUE'} />
+                    //         },
+                    //         {
+                    //             key: 'ADMIN',
+                    //             label: <FormattedMessage id={'ADMIN_ROLE_VALUE'} />
+                    //         },
+                    //         {
+                    //             key: 'ROOT',
+                    //             label: <FormattedMessage id={'ROOT_ROLE_VALUE'} />
+                    //         },
+                    //     ]
+                    // },
                     {
                         key: 'username',
                         type: 'string'
                     }, {
                         key: 'name',
                         type: 'string',
-                    },
-                    {
-                        key: 'role',
-                        type: 'select',
-                        selectOptions: [
-                            {
-                                key: 'USER',
-                                label: <FormattedMessage id={'USER_ROLE_VALUE'} />
-                            },
-                            {
-                                key: 'ADMIN',
-                                label: <FormattedMessage id={'ADMIN_ROLE_VALUE'} />
-                            },
-                        ]
                     },
                     {
                         key: 'email',
@@ -81,7 +88,7 @@ const UserManagement = () => {
                         type: 'select',
                         selectOptions: userStatusTypes.map(_ => ({
                             key: _,
-                            label: <FormattedMessage id={`USER_STATUS_${_}`}/>
+                            label: <FormattedMessage id={`USER_STATUS_${_}`} />
                         }))
                     },
                 ]}
@@ -102,20 +109,33 @@ const UserManagement = () => {
                 // }}
                 pagination
                 columns={[
+                    // {
+                    //     key: 'role',
+                    //     title: createHeaderColumn('USER_ROLE'),
+                    //     // render: (data) => <FormattedMessage id={data + '_ROLE_VALUE'} />,
+                    //     render: (data, ind, row) => <div>
+                    //         <img src={row.role === 'ROOT' ? rootRoleIcon : (row.role === 'ADMIN' ? adminRoleIcon : userRoleIcon)} style={{
+                    //             width: "24px", height: "24px", boxSizing: 'border-box'
+                    //         }} />
+                    //     </div>,
+                    //     // noWrap: true,
+                    // },
                     {
                         key: 'username',
-                        title: createHeaderColumn('USER_ID')
+                        title: createHeaderColumn('USER_ID'),
+                        render: (data,ind,row) => <div className="user-username-column">
+                            <img src={row.role === 'ROOT' ? rootRoleIcon : (row.role === 'ADMIN' ? adminRoleIcon : userRoleIcon)} style={{
+                                width: "24px", height: "24px", boxSizing: 'border-box'
+                            }} />
+                            <div>
+                                {data}
+                            </div>
+                        </div>
                     },
                     {
                         key: 'name',
                         title: createHeaderColumn('NAME'),
                         render: (data) => getFullName(data)
-                    },
-                    {
-                        key: 'role',
-                        title: createHeaderColumn('USER_ROLE'),
-                        render: (data) => <FormattedMessage id={data + '_ROLE_VALUE'} />,
-                        noWrap: true
                     },
                     {
                         key: 'group',

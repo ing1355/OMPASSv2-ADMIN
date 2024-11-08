@@ -498,7 +498,7 @@ type InvalidAuthLogDataType = {
     authenticationTime: string
     ompassData: OMPASSDataType
     policyAtTimeOfEvent: PolicyDataType
-    reason: 'INVALID_PASSCODE' | 'BROWSER'
+    reason: 'INVALID_SIGNATURE' | 'INVALID_PASSCODE' | 'INVALID_OTP' | 'BROWSER' | 'ACCESS_TIME' | 'LOCATION_' | 'IP_WHITE_LIST' | 'COUNTRY' | 'NONE'
 }
 
 type AllAuthLogDataType = ValidAuthLogDataType | InvalidAuthLogDataType

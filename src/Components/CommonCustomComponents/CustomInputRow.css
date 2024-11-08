@@ -3,7 +3,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 48px;
+    gap: 12px;
     padding: 12px 0;
     width: 100%;
     position: relative;
@@ -16,7 +16,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: flex-start;
     gap: 6px;
 }
 
@@ -32,7 +32,7 @@
     column-gap: 16px;
 
     &>.custom-input-wrapper {
-        flex: 0 0 80%;
+        flex: 0 0 85%;
         height: 42px;
     }
 

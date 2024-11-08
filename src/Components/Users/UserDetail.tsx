@@ -23,6 +23,7 @@ import { userInfoClear } from 'Redux/actions/userChange'
 import { UserDetailInfoAuthenticatorContent, UserDetailInfoAuthenticatorDeleteButton, UserDetailInfoDeviceInfoContent, UserDetailInfoETCInfoContent, UserInfoInputrow, UserInfoRow, ViewPasscode } from './UserDetailComponents'
 import { autoHypenPhoneFun, convertUTCStringToKSTString, createRandom1Digit } from 'Functions/GlobalFunctions'
 import Input from 'Components/CommonCustomComponents/Input'
+import BottomLineText from 'Components/CommonCustomComponents/BottomLineText'
 
 const passcodeInputHeight = '30px'
 
@@ -557,34 +558,17 @@ const UserDetail = ({ }) => {
                     </div>
 
                     <div className="user-detail-info-container">
-                        <div className="user-detail-info-device-info-title" style={{
-                            margin: '24px 0'
-                        }}>
-                            <div className='user-detail-info-divider'>
-                                기타 정보
-                            </div>
-                            <div />
-                        </div>
+                        <BottomLineText title="기본 정보" style={{
+                            margin: '24px 0 0 0'
+                        }}/>
                         <div className="user-detail-info-device-info-content">
                             <UserDetailInfoETCInfoContent data={_} />
                         </div>
-                        <div className="user-detail-info-device-info-title" style={{
-                            margin: '24px 0'
-                        }}>
-                            <div className='user-detail-info-divider'>
-                                접속 장치
-                            </div>
-                            <div />
-                        </div>
+                        <BottomLineText title="접속 장치"/>
                         <div className="user-detail-info-device-info-content">
                             <UserDetailInfoDeviceInfoContent data={_} />
                         </div>
-                        <div className="user-detail-info-device-info-title">
-                            <div className='user-detail-info-divider'>
-                                인증 장치
-                            </div>
-                            <div />
-                        </div>
+                        <BottomLineText title="인증 장치"/>
                         <div className="user-detail-info-device-info-title">
                             <h4>
                                 OMPASS

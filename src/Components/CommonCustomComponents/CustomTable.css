@@ -58,13 +58,14 @@
 }
 
 .table-st1 td {
-  padding: 10px;
+  padding: 6px;
   font-size: 1rem;
   text-align: center;
   font-weight: normal;
 }
 
 .table-st1 tbody tr {
+    height: 40px;
     border-bottom: .1px solid var(--sub-grey-color6);
 }
 

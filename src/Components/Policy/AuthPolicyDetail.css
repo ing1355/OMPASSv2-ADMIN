@@ -103,6 +103,12 @@
     height: 36px;
 }
 
+.location-item-container.current {
+    background-color: var(--sub-grey-color9);
+    border-radius: 8px;
+    padding: 12px 12px 12px 12px;
+}
+
 .authenticator-controller {
     display: inline-flex;
     align-items: center;
@@ -153,6 +159,12 @@
     gap: 8px;
 }
 
+.time-policy-container.current {
+    background-color: var(--sub-grey-color9);
+    border-radius: 12px;
+    padding: 12px;
+}
+
 .time-policy-inner-container {
     border-radius: 8px;
     padding: 12px 8px;
@@ -193,7 +205,7 @@
     &.current {
         padding: 12px 8px;
         border-radius: 10px;
-        background-color: var(--sub-grey-color);
+        background-color: var(--sub-grey-color9);
     }
 }
 

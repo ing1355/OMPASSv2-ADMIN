@@ -5,6 +5,10 @@ export const getStorageAuth = () => localStorage.getItem('Authorization')
 export const setStorageAuth = (token: string) => localStorage.setItem('Authorization', token)
 export const removeStorageAuth = () => localStorage.removeItem('Authorization')
 
+export const saveLocaleToLocalStorage = (locale: ReduxStateType['lang'] = "KR") => {
+    localStorage.setItem('locale', locale);
+}
+
 export const pad2Digit = (value: number) => {
     return value.toString().padStart(2, '0')
 }
@@ -89,10 +93,6 @@ export const parseJwtToken = (token: string) => {
             user: UserDataType
         }
     }).data.user
-}
-
-export const saveLocaleToLocalStorage = (locale: ReduxStateType['lang'] = "KR") => {
-    localStorage.setItem('locale', locale);
 }
 
 export const autoHypenPhoneFun = (phone: string) => {

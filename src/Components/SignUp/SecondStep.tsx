@@ -123,7 +123,7 @@ const SecondStep = () => {
                     codeRef.current?.focus()
                     return message.error("인증 코드 확인은 필수입니다.")
                 }
-                if (inputUsername && inputName1 && inputName2 && inputEmail) {
+                if (inputUsername && inputName1 && inputName2 && inputEmail && inputPassword) {
                     SignUpRequestFunc({
                         name: {
                             firstName: inputName1,
@@ -140,8 +140,6 @@ const SecondStep = () => {
                     }).catch(() => {
                         message.error(formatMessage({ id: 'FAIL_REGISTER' }));
                     })
-                } else if (inputUsername && idExist) {
-                    message.error(formatMessage({ id: 'ID_CHECK' }));
                 } else {
                     message.error(formatMessage({ id: 'PLEASE_ENTER_ALL_THE_ITEMS' }));
                 }

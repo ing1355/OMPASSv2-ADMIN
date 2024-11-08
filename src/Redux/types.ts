@@ -4,6 +4,7 @@ const types = {
   userInfoChange: 'USERINFOCHANGE',
   userInfoClear: 'USERINFOCLEAR',
   subdomainInfoChange: 'SUBDOMAININFOCHANGE',
-  globalDatasChange: 'GLOBALDATASCHANGE'
+  globalDatasChange: 'GLOBALDATASCHANGE',
+  sessionCheckChange: 'SESSIONCHECKCHANGE'
 };
 export default types;
