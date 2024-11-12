@@ -31,7 +31,7 @@ export const getPath = (x: any, width: any, y: any, y1: any) => {
 
 export const BarWithLabel = (props: any) => {
     // const width = maxBarWidth * barWidth;
-    const { arg, barWidth, maxBarWidth, val, startVal, color, value, style, } = props
+    const { arg, val, startVal, color, value, style, } = props
     const width = 18;
     return value && <svg>
         <defs>

@@ -1,14 +1,9 @@
-import Header from 'Components/Header/Header';
 import './PermissionSettings.css';
-import { CopyRightText } from 'Constants/ConstantValues';
 import { FormattedMessage } from 'react-intl';
 import PermissionComponent from './PermissionComponent';
 import Contents from 'Components/Layout/Contents';
-import { useWindowHeightHeader } from 'hooks/useWindowHeight';
 
 const PermissionSettings = () => {
-  const height = useWindowHeightHeader();
-
   return (
     <>
       <Contents>

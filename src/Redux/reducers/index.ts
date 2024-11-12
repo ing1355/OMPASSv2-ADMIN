@@ -10,5 +10,5 @@ export default combineReducers({
   userInfo: userReducer,
   subdomainInfo: subdomainInfoReducer,
   globalDatas: globalDatasReducer,
-  sessionCheckd: sessionCheckReducer
+  sessionChecked: sessionCheckReducer
 });

@@ -1,13 +1,12 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
-import { useLayoutEffect, useState } from "react"
+import { useState } from "react"
 import { useNavigate } from "react-router"
 import { GetUserGroupDataListFunc } from "Functions/ApiFunctions"
 import { FormattedMessage } from "react-intl"
 import groupAddIcon from './../../assets/groupAddIcon.png'
 import groupAddIconHover from './../../assets/groupAddIconHover.png'
-import { userSelectPageSize } from "Constants/ConstantValues"
 
 const GroupManagement = () => {
     const [totalCount, setTotalCount] = useState(10);

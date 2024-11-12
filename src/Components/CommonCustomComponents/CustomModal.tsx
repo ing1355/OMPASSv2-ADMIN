@@ -9,6 +9,7 @@ type CustomModalProps = ModalProps & {
     type?: 'info' | 'warning'
     cancelText?: string
     okText?: string
+    noClose?: boolean
     okCallback?: () => Promise<any>
     cancelCallback?: () => void
     okClassName?: string
@@ -19,16 +20,16 @@ type CustomModalProps = ModalProps & {
     noPadding?: boolean
 }
 
-const CustomModal = ({ buttonLoading, typeTitle, typeContent, type, children, okText, cancelText, okCallback, cancelCallback, okClassName, cancelClassName, onCancel, noPadding, ...props }: CustomModalProps) => {
+const CustomModal = ({ buttonLoading, typeTitle, typeContent, type, children, okText, cancelText, okCallback, cancelCallback, okClassName, cancelClassName, onCancel, noPadding, noClose, ...props }: CustomModalProps) => {
     const [okLoading, setOkLoading] = useState(false)
     
     return <Modal 
     footer={null} 
     closeIcon={null} 
     mask 
-    maskClosable 
+    maskClosable={!noClose}
     centered
-    keyboard
+    keyboard={!noClose}
     destroyOnClose
     styles={{
         mask: {

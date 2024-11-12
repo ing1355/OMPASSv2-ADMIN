@@ -35,6 +35,10 @@
     color: var(--main-purple-color);
 }
 
+.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):hover::before, .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)::before {
+    background-color: var(--main-purple-color);
+}
+
 .group-view-radio-item>span {
     display: flex;
     flex-direction: row;
@@ -57,6 +61,7 @@
     height: 32px;
     box-sizing: border-box;
     padding: 6px;
+    padding-right: 0px;
     display: flex;
     justify-content: center;
     align-items: center;

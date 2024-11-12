@@ -23,7 +23,7 @@ import AuthLog from 'Components/Log/AuthLog';
 import PortalLog from 'Components/Log/PortalLog';
 import Settings from 'Components/Settings';
 import { GetGlobalConfigFunc, GetSubDomainInfoFunc } from 'Functions/ApiFunctions';
-import { subDomain, UserSignupMethod } from 'Constants/ConstantValues';
+import { subDomain } from 'Constants/ConstantValues';
 import { subdomainInfoChange } from 'Redux/actions/subdomainInfoChange';
 import SignUp from 'Components/SignUp/SignUp';
 import { globalDatasChange } from 'Redux/actions/globalDatasChange';
@@ -36,14 +36,11 @@ const convertLangToIntlVer = (lang: ReduxStateType['lang']) => {
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
-  const { lang, userInfo, subdomainInfo, globalDatas } = useSelector((state: ReduxStateType) => ({
+  const { lang, userInfo, globalDatas } = useSelector((state: ReduxStateType) => ({
     lang: state.lang!,
     userInfo: state.userInfo,
-    subdomainInfo: state.subdomainInfo,
     globalDatas: state.globalDatas
   }));
-
-  const { userSignupMethod } = subdomainInfo || {}
 
   const getDomainInfo = () => {
     GetSubDomainInfoFunc(subDomain, (data) => {

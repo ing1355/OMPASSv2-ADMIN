@@ -15,7 +15,6 @@ import { Tooltip } from 'antd';
 import { ompassDefaultLogoImage } from 'Constants/ConstantValues';
 import { saveLocaleToLocalStorage } from 'Functions/GlobalFunctions';
 import SessionTimeCount from './SessionTimeCount';
-import CustomModal from 'Components/CommonCustomComponents/CustomModal';
 
 const Header = () => {
   const { lang, userInfo, subdomainInfo } = useSelector((state: ReduxStateType) => ({
@@ -24,7 +23,6 @@ const Header = () => {
     subdomainInfo: state.subdomainInfo!
   }));
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const { username, role, userId } = userInfo! ?? {};
   const dropdownRef = useRef<any>(null);
   const dispatch = useDispatch();
@@ -43,19 +41,6 @@ const Header = () => {
       document.removeEventListener('mousedown', handleMouseDown);
     };
   }, [isMenuOpen]);
-
-
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
 
   return (
     <div

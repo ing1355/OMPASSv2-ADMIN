@@ -126,12 +126,16 @@ export const convertBase64FromClientToServerFormat = (b64str: string) => {
     return b64str.startsWith('data:image') ? b64str.split(',')[1] : b64str
 }
 
+export const convertBase64FromServerFormatToClient = (str: string) => {
+    return str.startsWith('data:image') ? str : ('data:image/png;base64,' + str)
+}
+
 export const createOSInfo = (os?: OSInfoType) => {
     return os ? `${os.name} ${os.version}` : 'Unknown'
 }
 
 export const logoImageWithDefaultImage = (img: logoImageType) => {
-    if (img.isDefaultImage) return ompassDefaultLogoImage
+    if (!img || img.isDefaultImage) return ompassDefaultLogoImage
     else return img.url
 }
 
@@ -142,10 +146,10 @@ export const convertTimeFormat = (time: number) => {
     if (time >= 3600) {
         hours = Math.floor(time / 3600);
         minute = Math.floor((time % 3600) / 60);
-        second = parseInt((time % 60).toString().padStart(2, "0"));
+        second = time % 60;
     } else if (time >= 60) {
         minute = Math.floor(time / 60);
-        second = parseInt((time % 60).toString().padStart(2, "0"));
+        second = time % 60;
     } else {
         second = time;
     }

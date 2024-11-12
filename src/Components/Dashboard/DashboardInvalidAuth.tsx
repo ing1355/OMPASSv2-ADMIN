@@ -17,6 +17,7 @@ import { Animation, EventTracker, Stack } from "@devexpress/dx-react-chart"
 import { DashboardColors } from "./DashboardColors"
 import { convertUTCStringToKSTString } from "Functions/GlobalFunctions"
 import { FormattedMessage } from "react-intl"
+import DashBoardBarChart from "./DashboardBarChart"
 
 const DashboardInvalidAuth = ({ applications }: {
     applications: ApplicationListDataType[]
@@ -72,33 +73,7 @@ const DashboardInvalidAuth = ({ applications }: {
     return <DashboardCardWithDateSelect title={<FormattedMessage id="DASHBOARD_INVALID_ALL_AUTH"/>} isCard={false} onChange={(d) => {
         setParams(d)
     }}>
-        <Chart
-            height={280}
-            data={datas}
-        >
-            <ArgumentAxis
-                showTicks={false}
-            />
-            <ValueAxis
-                // showLabels={false}
-            // showTicks={false}
-            />
-            {
-                applications.map((d, ind) => <LineSeries
-                    key={ind}
-                    valueField={d.name}
-                    name={d.name}
-                    argumentField="date"
-                    color={DashboardColors[ind]}
-                />)
-            }
-            <EventTracker />
-            <Tooltip />
-            {/* <CustomLegend/> */}
-            <ZoomAndPan />
-            {/* <Animation /> */}
-            <Stack />
-        </Chart>
+        <DashBoardBarChart datas={datas} keys={applications.map(_ => _.name)} indexKey="date" customColor/>
     </DashboardCardWithDateSelect>
 }
 

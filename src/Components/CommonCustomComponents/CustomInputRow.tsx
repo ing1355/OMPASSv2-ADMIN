@@ -2,7 +2,7 @@ import { CSSProperties, PropsWithChildren } from "react"
 import './CustomInputRow.css'
 import RequiredLabel from "Components/CommonCustomComponents/RequiredLabel"
 
-const CustomInputRow = ({ title, children, noLabelPadding, style, required, containerStyle, contentsStyle, noCenter }: PropsWithChildren<{
+const CustomInputRow = ({ title, children, noLabelPadding, style, required, containerStyle, contentsStyle, noCenter, isVertical }: PropsWithChildren<{
     title: string | React.ReactNode
     noLabelPadding?: boolean
     style?: CSSProperties
@@ -10,6 +10,7 @@ const CustomInputRow = ({ title, children, noLabelPadding, style, required, cont
     required?: boolean
     contentsStyle?: CSSProperties
     noCenter?: boolean
+    isVertical?: boolean
 }>) => {
     const styles = {
         ...style
@@ -22,7 +23,7 @@ const CustomInputRow = ({ title, children, noLabelPadding, style, required, cont
             <RequiredLabel required={required}/>
             {title}
         </div>
-        <div className="custom-detail-contents" style={contentsStyle}>
+        <div className="custom-detail-contents" style={contentsStyle} data-vertical={isVertical}>
             {children}
         </div>
     </div>

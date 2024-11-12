@@ -72,6 +72,10 @@ type PasscodeAuthenticatorDataType = DefaultAuthenticatorDataType & PasscodeData
 type WebAuthnAuthenticatorDataType = DefaultAuthenticatorDataType & {
     id: string
     type: "WEBAUTHN"
+    webauthnDevice: {
+        model: string
+        icon: string
+    }
 }
 
 type OMPASSAuthenticatorDataType = DefaultAuthenticatorDataType & {
@@ -343,7 +347,9 @@ type RPUserDetailAuthDataType = {
     id: string
     createdAt: string
     username: string
-    policy: PolicyListDataType
+    policy: PolicyListDataType & {
+        source: 'APPLICATION' | 'GROUP'
+    }
     loginDeviceInfo: LoginDeviceInfoDataType
     serverInfo: ServerMetaDataType
     authenticators: AuthenticatorDataType[]

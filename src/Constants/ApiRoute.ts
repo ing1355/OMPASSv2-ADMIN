@@ -2,6 +2,7 @@
 export const PostLoginApi = '/v2/login';
 export const PostTokenVerifyApi = '/v2/login/token-verification';
 export const UpdatePasswordApi = '/v2/users/password'
+export const ResetPasswordApi = (username: string, email: string) => `/v2/init-password/username/${username}/email/${email}`
 
 // 사용자
 export const DuplicateUserNameCheckApi = (username: string) => `/v2/users/username/${username}/existence`;
@@ -52,6 +53,7 @@ export const UpdateUserDataApi = (userId: UserDataType['userId']) => `/v2/users/
 export const DeleteUserDataApi = (userId: UserDataType['userId']) => `/v2/users/${userId}`
 export const GetUserDetailDataApi = (userId: UserDataType['userId']) => `/v2/users/${userId}/rp/details`
 export const DeleteAuthenticatorData = (authenticatorId: AuthenticatorDataType['id']) => `/v2/authenticators/${authenticatorId}`
+export const UnlockUserApi = (userId: UserDataType['userId']) => `/v2/users/${userId}/unlock`
 
 // 인증장치 정책 업데이트
 export const UpdateUserAuthenticatorPolicyApi = (authId: string, policyId: string) => `/v2/rp/authentication-data/${authId}/policy/${policyId}`
@@ -80,3 +82,6 @@ export const GetDashboardTopApi = '/v2/dashboard/user-count'
 export const GetDashboardApplicationRPUserApi = '/v2/dashboard/rp-user-count'
 export const GetDashboardApplicationAuthApi = '/v2/dashboard/auth-req-count'
 export const GetDashboardApplicationAuthSumApi = '/v2/dashboard/auth-req-sum-count'
+
+// 세션 갱신
+export const PatchSessionTokenApi = '/v2/refresh-session'

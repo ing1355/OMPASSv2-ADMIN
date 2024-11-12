@@ -2,7 +2,7 @@ import './UserDetail.css'
 import { message } from "antd"
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
-import { AddPasscodeFunc, AddUserDataFunc, DeleteAuthenticatorDataFunc, GetUserDataListFunc, GetUserDetailDataFunc, UpdateUserDataFunc, DeleteUserDataFunc, DuplicateUserNameCheckFunc, ApprovalUserFunc } from "Functions/ApiFunctions"
+import { AddPasscodeFunc, AddUserDataFunc, DeleteAuthenticatorDataFunc, GetUserDataListFunc, GetUserDetailDataFunc, UpdateUserDataFunc, DeleteUserDataFunc, DuplicateUserNameCheckFunc, ApprovalUserFunc, UnlockUserFunc } from "Functions/ApiFunctions"
 import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 import { useLocation, useNavigate, useParams } from "react-router"
@@ -12,16 +12,14 @@ import editIcon from '../../assets/editIcon.png';
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import passcodeDeleteIcon from '../../assets/tableDeleteIcon.png';
 import passcodeDeleteIconHover from '../../assets/deleteIconRed.png';
-import groupMenuIcon from '../../assets/groupMenuIconBlack.png';
 import passcodeAddIcon from '../../assets/passcodeAddIcon.png';
 import closeIcon from '../../assets/closeIcon.png';
-import GroupSelect from "Components/CommonCustomComponents/GroupSelect"
 import RoleSelect from "Components/CommonCustomComponents/RoleSelect"
 import CustomModal from "Components/CommonCustomComponents/CustomModal"
 import Button from 'Components/CommonCustomComponents/Button'
 import { userInfoClear } from 'Redux/actions/userChange'
 import { UserDetailInfoAuthenticatorContent, UserDetailInfoAuthenticatorDeleteButton, UserDetailInfoDeviceInfoContent, UserDetailInfoETCInfoContent, UserInfoInputrow, UserInfoRow, ViewPasscode } from './UserDetailComponents'
-import { autoHypenPhoneFun, convertUTCStringToKSTString, createRandom1Digit } from 'Functions/GlobalFunctions'
+import { autoHypenPhoneFun, convertUTCStringToKSTString, createRandom1Digit, logoImageWithDefaultImage } from 'Functions/GlobalFunctions'
 import Input from 'Components/CommonCustomComponents/Input'
 import BottomLineText from 'Components/CommonCustomComponents/BottomLineText'
 
@@ -72,6 +70,7 @@ const UserDetail = ({ }) => {
     const [dataLoading, setDataLoading] = useState(false)
     const [isModify, setIsModify] = useState(false)
     const [sureDelete, setSureDelete] = useState(false);
+    const [sureUnlock, setSureUnlock] = useState(false)
     const [authenticatorDelete, setAuthenticatorDelete] = useState('')
     const [modifyValues, setModifyValues] = useState<UserDataModifyLocalValuesType>(initModifyValues)
     const [addValues, setAddValues] = useState<UserDataAddLocalValuesType>(initAddValues)
@@ -248,6 +247,13 @@ const UserDetail = ({ }) => {
                         활성화
                     </Button>
                 }
+                {/* {
+                    userInfo.role === 'ROOT' && <Button className='st5' onClick={() => {
+                        
+                    }}>
+                        권한 승계
+                    </Button>
+                } */}
                 {(canDelete && !isAdd) && !isDeleted && <Button className='st8' onClick={() => {
                     setSureDelete(true)
                 }}>
@@ -255,20 +261,6 @@ const UserDetail = ({ }) => {
                 </Button>}
             </ContentsHeader>
             <div className="user-detail-section first mb20">
-                {/* {
-                    userData?.status === 'WITHDRAWAL' && <div className='withdrawal-text'>
-                        <div>
-                            복구 코드
-                        </div>
-                        <div onCopy={e => {
-                            const selection = window.getSelection()!.toString().split(/\n/g);
-                            e.clipboardData.setData('text/plain', selection[0]);
-                            e.preventDefault();
-                        }}>
-                            {userData.recoveryCode}
-                        </div>
-                    </div>
-                } */}
                 <div className="user-detail-header" style={{
                     cursor: 'default'
                 }}>
@@ -301,7 +293,7 @@ const UserDetail = ({ }) => {
                                 {isAdd ? "등록" : "저장"}
                             </Button>
                         }
-                        {userData?.status === 'RUN' && canModify && !isAdd && !isDeleted && <Button icon={!isModify && editIcon} className={isModify ? "st7" : "st3"} onClick={() => {
+                        {(userData?.status === 'RUN' || userData?.status === 'LOCK') && canModify && !isAdd && !isDeleted && <Button icon={!isModify && editIcon} className={isModify ? "st7" : "st3"} onClick={() => {
                             setIsModify(!isModify)
                         }}>
                             {isModify ? '취소' : '수정'}
@@ -378,7 +370,7 @@ const UserDetail = ({ }) => {
                                 }
                             }} type="password" rules={[
                                 {
-                                    regExp: (val) => isAdd ? val != addValues.password : val != modifyValues.password,
+                                    regExp: (val) => isAdd ? val !== addValues.password : val !== modifyValues.password,
                                     msg: <FormattedMessage id="PASSWORD_CONFIRM_CHECK" />
                                 }
                             ]} maxLength={16} noGap />
@@ -490,7 +482,17 @@ const UserDetail = ({ }) => {
                             }
                         }} needSelect />
                     </UserInfoInputrow> : <UserInfoRow title="USER_ROLE" value={(userData && userData.role) ? formatMessage({ id: userData.role + '_ROLE_VALUE' }) : "선택 안함"} />}
-                    {!isAdd && <UserInfoRow title="RECOVERY_CODE" value={userData?.recoveryCode!!} />}
+                    {!isAdd && <UserInfoRow title="RECOVERY_CODE" value={userData?.recoveryCode || '-'} />}
+                    {!isAdd && <UserInfoRow title="상태" value={<>
+                        <FormattedMessage id={`USER_STATUS_${userData?.status}`} />
+                        {userData?.status === 'LOCK' && <Button className='st1' style={{
+                            marginLeft: '8px'
+                        }} onClick={() => {
+                            setSureUnlock(true)
+                        }}>
+                            잠금 해제
+                        </Button>}
+                    </>} />}
                     {/* {(isModify || isAdd) ? <UserInfoInputrow title="POLICY_TEXT">
                         <RoleSelect selectedGroup={isAdd ? addValues.role : modifyValues.role} setSelectedGroup={(role) => {
                             if (isAdd) {
@@ -539,7 +541,7 @@ const UserDetail = ({ }) => {
                     }}>
                         <div className="user-detail-header-application-info">
                             <div className="user-detail-alias-container">
-                                <img src={_.application.logoImage.url} />
+                                <img src={logoImageWithDefaultImage(_.application.logoImage)} />
                                 <h4>{_.application.name}</h4>
                             </div>
                             {/* <div className="user-detail-alias-container">
@@ -560,15 +562,15 @@ const UserDetail = ({ }) => {
                     <div className="user-detail-info-container">
                         <BottomLineText title="기본 정보" style={{
                             margin: '24px 0 0 0'
-                        }}/>
+                        }} />
                         <div className="user-detail-info-device-info-content">
                             <UserDetailInfoETCInfoContent data={_} />
                         </div>
-                        <BottomLineText title="접속 장치"/>
+                        <BottomLineText title="접속 장치" />
                         <div className="user-detail-info-device-info-content">
                             <UserDetailInfoDeviceInfoContent data={_} />
                         </div>
-                        <BottomLineText title="인증 장치"/>
+                        <BottomLineText title="인증 장치" />
                         <div className="user-detail-info-device-info-title">
                             <h4>
                                 OMPASS
@@ -615,6 +617,23 @@ const UserDetail = ({ }) => {
             </Fragment>
             )}
         </Contents >
+        <CustomModal
+            open={sureUnlock}
+            onCancel={() => {
+                setSureUnlock(false);
+            }}
+            type="warning"
+            typeTitle={`계정 잠금 해제`}
+            typeContent={`현재 계정을 잠금 해제 하시겠습니까?`}
+            okText={"예"}
+            cancelText={"아니오"}
+            okCallback={() => {
+                return UnlockUserFunc(userData?.userId!, () => {
+                    setSureUnlock(false)
+                    message.success(`잠금 해제 성공!`)
+                    setUserData({...userData!, status: 'RUN'})
+                })
+            }} buttonLoading />
         <CustomModal
             open={sureDelete}
             onCancel={() => {

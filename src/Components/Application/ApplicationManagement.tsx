@@ -1,9 +1,8 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable";
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
-import { applicationTypes, getApplicationTypeLabel, userSelectPageSize } from "Constants/ConstantValues";
+import { applicationTypes, getApplicationTypeLabel } from "Constants/ConstantValues";
 import { GetApplicationListFunc, GetPoliciesListFunc } from "Functions/ApiFunctions";
-import { PaginationProps } from "antd"
 import { useLayoutEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { useNavigate } from "react-router";

@@ -17,6 +17,7 @@ import { saveLocaleToLocalStorage } from 'Functions/GlobalFunctions';
 import Button from 'Components/CommonCustomComponents/Button';
 import Input from 'Components/CommonCustomComponents/Input';
 import { message } from 'antd';
+import ResetPassword from './ResetPassword';
 
 const Login = () => {
   const { lang, subdomainInfo } = useSelector((state: ReduxStateType) => ({
@@ -30,8 +31,10 @@ const Login = () => {
   const [inputChangePassword, setInputChangePassword] = useState('')
   const [inputChangePasswordConfirm, setInputChangePasswordConfirm] = useState('')
   const [needPasswordChange, setNeedPasswordChange] = useState(false)
+  const [passwordReset, setPasswordReset] = useState(false)
+  const [ompassOpened, setOmpassOpened] = useState(false)
+  const ompassWindowRef = useRef<Window | null | undefined>()
   const dispatch = useDispatch();
-  const { formatMessage } = useIntl();
   const navigate = useNavigate()
   const inputChangePasswordRef = useRef<HTMLInputElement>(null)
   const { noticeMessage, logoImage, userSignupMethod } = subdomainInfo || {}
@@ -39,7 +42,14 @@ const Login = () => {
   useEffect(() => {
     setInputChangePassword('')
     setInputChangePasswordConfirm('')
+    setInputPassword('')
   }, [needPasswordChange])
+
+  useEffect(() => {
+    setInputPassword('')
+    if (cookies.rememberUserId) setInputUsername(cookies.rememberUserId)
+    else setInputUsername('')
+  }, [passwordReset])
 
   const loginRequest = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -67,10 +77,18 @@ const Login = () => {
         const resultUri = popupUri + `&authorization=${token}`
         if (isDev) {
           const targetUrl = "192.168.182.120:9002"
-          OMPASS(resultUri.replace("www.ompass.kr:54007", targetUrl).replace("www.ompass.kr:54012", targetUrl).replace("192.168.182.75:9001", targetUrl).replace("ompass.kr:59001", targetUrl));
+          ompassWindowRef.current = OMPASS(resultUri.replace("www.ompass.kr:54007", targetUrl).replace("www.ompass.kr:54012", targetUrl).replace("192.168.182.75:9001", targetUrl).replace("ompass.kr:59001", targetUrl));
         } else {
-          OMPASS(resultUri);
+          ompassWindowRef.current = OMPASS(resultUri);
         }
+        // if(ompassWindowRef.current) {
+        //   setOmpassOpened(true)
+        //   setInterval(() => {
+        //     if(ompassWindowRef.current?.closed) {
+        //       setOmpassOpened(false)
+        //     }
+        //   }, 500);
+        // }
         if (saveId.checked) {
           setCookie("rememberUserId", inputUsername)
         } else {
@@ -84,7 +102,9 @@ const Login = () => {
     if (needPasswordChange) inputChangePasswordRef.current?.focus()
   }, [needPasswordChange])
 
-  return <>
+  return passwordReset ? <ResetPassword onComplete={() => {
+    setPasswordReset(false)
+  }} /> : <>
     <div
       className='login-container'
     >
@@ -106,20 +126,22 @@ const Login = () => {
           <div
             className='login-input-container'
           >
-            {needPasswordChange ? <Input
-              className='st1 login-input'
-              value={inputChangePassword}
-              type="password"
-              name="password"
-              maxLength={16}
-              noGap
-              customType='password'
-              placeholder='변경할 비밀번호 입력'
-              ref={inputChangePasswordRef}
-              valueChange={value => {
-                setInputChangePassword(value);
-              }}
-            /> : <><label htmlFor='userId'><FormattedMessage id='ID' /></label>
+            {needPasswordChange ? <>
+              <label htmlFor='userId'><FormattedMessage id='PASSWORD' /></label>
+              <Input
+                className='st1 login-input'
+                value={inputChangePassword}
+                type="password"
+                name="password"
+                maxLength={16}
+                noGap
+                customType='password'
+                placeholder='변경할 비밀번호 입력'
+                ref={inputChangePasswordRef}
+                valueChange={value => {
+                  setInputChangePassword(value);
+                }}
+              /> </> : <><label htmlFor='userId'><FormattedMessage id='ID' /></label>
               <Input
                 className='st1 login-input userId'
                 value={inputUsername}
@@ -134,24 +156,26 @@ const Login = () => {
           <div
             className='login-input-container'
           >
-            {needPasswordChange ? <Input
-              className='st1 login-input'
-              type='password'
-              noGap
-              rules={[
-                {
-                  regExp: (val) => val != inputChangePassword,
-                  msg: <FormattedMessage id="PASSWORD_CONFIRM_CHECK" />
-                }
-              ]}
-              value={inputChangePasswordConfirm}
-              name="passwordConfirm"
-              maxLength={16}
-              placeholder='비밀번호 재입력'
-              valueChange={value => {
-                setInputChangePasswordConfirm(value);
-              }}
-            /> : <>
+            {needPasswordChange ? <>
+              <label htmlFor='userId'><FormattedMessage id='PASSWORD_CONFIRM' /></label>
+              <Input
+                className='st1 login-input'
+                type='password'
+                noGap
+                rules={[
+                  {
+                    regExp: (val) => val != inputChangePassword,
+                    msg: <FormattedMessage id="PASSWORD_CONFIRM_CHECK" />
+                  }
+                ]}
+                value={inputChangePasswordConfirm}
+                name="passwordConfirm"
+                maxLength={16}
+                placeholder='비밀번호 재입력'
+                valueChange={value => {
+                  setInputChangePasswordConfirm(value);
+                }}
+              /> </> : <>
               <label htmlFor='userPassword'><FormattedMessage id='PASSWORD' /></label>
               <Input
                 className='st1 login-input password'
@@ -170,11 +194,19 @@ const Login = () => {
             <div className='login-action-row'>
               <Input id='saveId' type='checkbox' className='mr10' defaultChecked={cookies.rememberUserId} label={<FormattedMessage id='SAVE_ID' />} />
             </div>
-            {subdomainInfo.selfSignupEnabled && <div className='login-action-row signup' onClick={() => {
-              navigate("/signup")
-            }}>
-              <FormattedMessage id="CREATE_ACCOUNT" />
-            </div>}
+            <div className='login-action-row'>
+              <div className='reset-password-text' onClick={() => {
+                setPasswordReset(true)
+              }}>
+                비밀번호 초기화
+              </div>
+              <div className='login-action-vertical-line' />
+              {subdomainInfo.selfSignupEnabled && <div className='signup' onClick={() => {
+                navigate("/signup")
+              }}>
+                <FormattedMessage id="CREATE_ACCOUNT" />
+              </div>}
+            </div>
           </div>}
           <Button
             className="st3 login-button"
@@ -182,6 +214,17 @@ const Login = () => {
           >
             <FormattedMessage id={needPasswordChange ? 'LETS_CHANGE' : 'LOGIN'} />
           </Button>
+          {
+            (needPasswordChange || passwordReset) && <Button
+              type='submit'
+              className={'st6 login-button'}
+              onClick={() => {
+                setPasswordReset(false)
+                setNeedPasswordChange(false)
+              }}
+            ><FormattedMessage id='GO_BACK' />
+            </Button>
+          }
           {!needPasswordChange && <Link to='/GuidePage' className='quick-start-guide-text'>
             <FormattedMessage id='GO_TO_QUICK_GUIDE' />
           </Link>}

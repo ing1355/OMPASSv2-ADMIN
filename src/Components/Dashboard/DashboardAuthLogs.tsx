@@ -14,7 +14,7 @@ const DashboardAuthLogs = ({ applications }: {
 
     const getDatas = () => {
         const _params: AuthLogListParamsType = {
-            page_size: 8,
+            page_size: 12,
             page: 1,
             authenticationLogType: 'DENY'
         }

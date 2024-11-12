@@ -23,9 +23,9 @@ import lastAuthIcon from '../../assets/lastAuthIcon.png';
 import sshIcon from '../../assets/sshIcon.png';
 import clientIcon from '../../assets/clientIcon.png';
 import { FormattedMessage } from 'react-intl';
-import { PropsWithChildren, useState } from 'react';
+import React, { PropsWithChildren, useState } from 'react';
 import './UserDetailComponents.css'
-import { createOSInfo } from 'Functions/GlobalFunctions';
+import { convertBase64FromServerFormatToClient, createOSInfo } from 'Functions/GlobalFunctions';
 import Button from 'Components/CommonCustomComponents/Button';
 import RequiredLabel from 'Components/CommonCustomComponents/RequiredLabel';
 import groupMenuIcon from '../../assets/groupMenuIconBlack.png';
@@ -36,8 +36,8 @@ import { message } from 'antd';
 
 const UserDetailInfoContentItem = ({ imgSrc, title, content }: {
     imgSrc: string
-    title: string
-    content: string
+    title: React.ReactNode
+    content: React.ReactNode
 }) => {
     return <div className="user-detail-info-device-info-content-item">
         <img src={imgSrc} />
@@ -57,12 +57,12 @@ const AuthenticatorInfoContentsOMPASSType = ({ data }: {
     const { os, deviceId, model, ompassAppVersion } = mobile
     return <>
         <div className="user-detail-info-device-info-content">
-            <UserDetailInfoContentItem imgSrc={imgSrcByOS(os.name)} title="OS" content={`${os.name} ${os.version}`} />
-            <UserDetailInfoContentItem imgSrc={ompassDefaultLogoImage} title="Type" content={`OMPASS v${ompassAppVersion}`} />
-            <UserDetailInfoContentItem imgSrc={uuidIcon} title="Device UUID" content={deviceId} />
-            <UserDetailInfoContentItem imgSrc={deviceModelIcon} title="Model" content={model} />
-            <UserDetailInfoContentItem imgSrc={registeredAtIcon} title="Registered At" content={createdAt} />
-            <UserDetailInfoContentItem imgSrc={lastAuthIcon} title="Last Auth" content={lastAuthenticatedAt} />
+            <UserDetailInfoContentItem imgSrc={imgSrcByOS(os.name)} title={<FormattedMessage id="USER_DETAIL_OS_LABEL" />} content={`${os.name} ${os.version}`} />
+            <UserDetailInfoContentItem imgSrc={ompassDefaultLogoImage} title={<FormattedMessage id="USER_DETAIL_VERSION_LABEL" />} content={`OMPASS v${ompassAppVersion}`} />
+            <UserDetailInfoContentItem imgSrc={uuidIcon} title={<FormattedMessage id="USER_DETAIL_UUID_LABEL" />} content={deviceId} />
+            <UserDetailInfoContentItem imgSrc={deviceModelIcon} title={<FormattedMessage id="USER_DETAIL_DEVICE_INFO_LABEL" />} content={model} />
+            <UserDetailInfoContentItem imgSrc={registeredAtIcon} title={<FormattedMessage id="USER_DETAIL_REGISTERED_AT_LABEL" />} content={createdAt} />
+            <UserDetailInfoContentItem imgSrc={lastAuthIcon} title={<FormattedMessage id="USER_DETAIL_LAST_AUTH_LABEL" />} content={lastAuthenticatedAt} />
         </div>
     </>
 }
@@ -70,11 +70,14 @@ const AuthenticatorInfoContentsOMPASSType = ({ data }: {
 const AuthenticatorInfoContentsWEBAUTHNType = ({ data }: {
     data: WebAuthnAuthenticatorDataType
 }) => {
-    const { lastAuthenticatedAt, id } = data
+    const { lastAuthenticatedAt, createdAt, webauthnDevice } = data
+    const { icon, model } = webauthnDevice
+
     return <>
         <div className="user-detail-info-device-info-content">
-            <UserDetailInfoContentItem imgSrc={ompassDefaultLogoImage} title="Type" content={"WEBAUTHN"} />
-            <UserDetailInfoContentItem imgSrc={lastLoginTimeIcon} title="Last Login" content={lastAuthenticatedAt} />
+            <UserDetailInfoContentItem imgSrc={convertBase64FromServerFormatToClient(icon)} title={<FormattedMessage id="USER_DETAIL_TYPE_LABEL" />} content={model} />
+            <UserDetailInfoContentItem imgSrc={registeredAtIcon} title={<FormattedMessage id="USER_DETAIL_REGISTERED_AT_LABEL" />} content={createdAt} />
+            <UserDetailInfoContentItem imgSrc={lastAuthIcon} title={<FormattedMessage id="USER_DETAIL_LAST_AUTH_LABEL" />} content={lastAuthenticatedAt} />
         </div>
     </>
 }
@@ -136,7 +139,7 @@ export const ViewPasscode = ({ code, noView }: {
 
 export const UserInfoRow = ({ title, value }: {
     title: string
-    value: string
+    value: React.ReactNode
 }) => {
     return <div className="user-detail-info-row">
         <div className="user-detail-info-col">
@@ -217,13 +220,13 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
     const { os } = clientData
     const isBrowser = application.type === 'DEFAULT' || application.type === 'ADMIN'
     return <>
-        {application.type !== 'LINUX_LOGIN' && <UserDetailInfoContentItem imgSrc={imgSrcByOS(os?.name!)} title="OS" content={`${os?.name} ${os?.version}`} />}
+        {application.type !== 'LINUX_LOGIN' && <UserDetailInfoContentItem imgSrc={imgSrcByOS(os?.name!)} title={<FormattedMessage id="USER_DETAIL_OS_LABEL" />} content={`${os?.name} ${os?.version}`} />}
         {application.type === 'LINUX_LOGIN' && <>
             <div className="user-detail-info-device-info-content-item linux">
                 <div className='linux-target-text'>Client</div>
                 <img src={clientIcon} />
                 <div className="user-detail-info-device-info-content-title">
-                    IP Address
+                    <FormattedMessage id="USER_DETAIL_IP_ADDRESS_LABEL" />
                 </div>
                 <div>
                     {clientData.ip}
@@ -236,7 +239,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
                 <div className='linux-target-text'>Server</div>
                 <img src={imgSrcByOS(serverInfo.os?.name!)} />
                 <div className="user-detail-info-device-info-content-title">
-                    OS
+                    <FormattedMessage id="USER_DETAIL_OS_LABEL" />
                 </div>
                 <div>
                     {createOSInfo(serverInfo.os)}
@@ -248,7 +251,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
             isBrowser && <div className="user-detail-info-device-info-content-item">
                 <img src={browserIcon} />
                 <div className="user-detail-info-device-info-content-title">
-                    Browser
+                    <FormattedMessage id="USER_DETAIL_BROWSER_LABEL" />
                 </div>
                 <div>
                     {clientData.browser}
@@ -259,7 +262,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
             isBrowser && <div className="user-detail-info-device-info-content-item">
                 <img src={locationIcon} />
                 <div className="user-detail-info-device-info-content-title">
-                    Location
+                    <FormattedMessage id="USER_DETAIL_LOCATION_LABEL" />
                 </div>
                 <div>
                     {clientData.location}
@@ -270,7 +273,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
             isBrowser && <div className="user-detail-info-device-info-content-item">
                 <img src={ipAddressIcon} />
                 <div className="user-detail-info-device-info-content-title">
-                    IP Address
+                    <FormattedMessage id="USER_DETAIL_IP_ADDRESS_LABEL" />
                 </div>
                 <div>
                     {clientData.ip}
@@ -313,7 +316,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
         <div className="user-detail-info-device-info-content-item">
             <img src={lastLoginTimeIcon} />
             <div className="user-detail-info-device-info-content-title">
-                Last Login
+                <FormattedMessage id="USER_DETAIL_LAST_LOGIN_LABEL" />
             </div>
             <div>
                 {clientData.updatedAt}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { useSelector } from "react-redux";
 import Contents from "Components/Layout/Contents";

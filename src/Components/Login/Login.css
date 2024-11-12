@@ -24,7 +24,7 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 36px;
+  margin-bottom: 24px;
   height: 60px;
   & > img {
     max-width: 60%;
@@ -89,8 +89,9 @@
 }
 
 .login-body.password-change {
-  width: 400px;
-  height: 260px;
+  width: 500px;
+  height: 460px;
+  box-sizing: border-box;
 }
 
 .login-form-title {
@@ -130,9 +131,9 @@
 
 .login-button {
   width: 100%;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: bold;
-  height: 48px;
+  height: 42px;
   margin: 8px 0;
 }
 
@@ -185,6 +186,19 @@
     color: var(--main-purple-color);
     text-decoration: underline;
   }
+}
+
+.reset-password-text {
+  cursor: pointer;
+  &:hover {
+    color: var(--main-purple-color);
+    text-decoration: underline;
+  }
+}
+
+.login-action-vertical-line {
+  height: 100%;
+  border: .1px solid black;
 }
 
 /* 반응형 */

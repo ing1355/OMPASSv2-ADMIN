@@ -14,9 +14,10 @@ type CustomSelectProps = {
     onChange: (val: string) => void
     needSelect?: boolean
     noLabel?: React.ReactNode
+    style?: React.HTMLAttributes<HTMLDivElement>['style']
 }
 
-const CustomSelect = ({ items, value, onChange, needSelect, noLabel }: CustomSelectProps) => {
+const CustomSelect = ({ items, value, onChange, needSelect, noLabel, style }: CustomSelectProps) => {
     const [showSelect, setShowSelect] = useState(false)
     const [active, setActive] = useState<any>(items.length > 0 ? items.find(_ => _.key === value)?.key || items[0].key : '')
     const selectRef = useRef<HTMLDivElement>(null)
@@ -79,7 +80,7 @@ const CustomSelect = ({ items, value, onChange, needSelect, noLabel }: CustomSel
 
     return <div className={`custom-select-container${showSelect ? ' opened' : ''}${_items.length > 5 ? ' scroll' : ''}`} onClick={() => {
         setShowSelect(!showSelect)
-    }} ref={selectRef}>
+    }} ref={selectRef} style={style}>
         {value ? _items.find(_ => _.key === value)?.label : (noLabel || '선택 안함')}
         {
             showSelect && <div className="custom-select-option-container" ref={scrollRef}>

@@ -1,23 +1,22 @@
-import { createElement, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import DashboardCardWithDateSelect from "./DashboardCardWithDateSelect"
 import { dashboardDateInitialValue } from "./Dashboard"
 import { GetDashboardApplicationAuthFunc } from "Functions/ApiFunctions"
-import { BarWithLabel, convertDaysByDate, convertHourRangeByDate, CustomLegend } from "./DashboardFunctions"
+import { convertDaysByDate, convertHourRangeByDate, CustomLegend } from "./DashboardFunctions"
 import {
     Chart,
     BarSeries,
     ArgumentAxis,
     ValueAxis,
     ZoomAndPan,
-    Legend,
     Tooltip
 } from '@devexpress/dx-react-chart-material-ui';
-import { Animation, EventTracker, HoverState, SeriesRef, Stack } from "@devexpress/dx-react-chart"
+import { EventTracker, HoverState, Stack } from "@devexpress/dx-react-chart"
 import { DashboardColors } from "./DashboardColors"
 import { convertUTCStringToKSTString, slicePrice } from "Functions/GlobalFunctions"
-import { applicationTypes } from "Constants/ConstantValues"
-import { connectProps } from "@devexpress/dx-react-core"
 import { FormattedMessage } from "react-intl"
+import { ResponsiveBar } from "@nivo/bar"
+import DashBoardBarChart from "./DashboardBarChart"
 
 const DashboardAllAuth = ({ applications }: {
     applications: ApplicationListDataType[]
@@ -79,7 +78,7 @@ const DashboardAllAuth = ({ applications }: {
             ...style,
             paddingLeft: '10px',
         };
-        if(point !== -1) {
+        if (point !== -1) {
             const items = applications.map(({ name, id }, ind) => {
                 const val = datas[point][name]
                 return (
@@ -107,48 +106,11 @@ const DashboardAllAuth = ({ applications }: {
             );
         } else return <>정보 없음</>
     };
-
+    
     return <DashboardCardWithDateSelect title={<FormattedMessage id="DASHBOARD_ALL_AUTH" />} onChange={(_) => {
         setParams(_)
     }}>
-        <Chart
-            height={200}
-            data={datas}
-        >
-            <ArgumentAxis
-                showTicks={false}
-            />
-            <ValueAxis
-            />
-            {
-                applications.map((d, ind) => <BarSeries
-                    key={ind}
-                    valueField={d.name}
-                    name={d.name}
-                    argumentField="date"
-                    color={DashboardColors[ind]}
-                />)
-            }
-            <EventTracker />
-            <HoverState
-                onHoverChange={(t) => {
-                    if(t) {
-                        setPoint(t.point)
-                    }
-                }}
-            />
-            <Tooltip
-                contentComponent={TooltipContent}
-            />
-            <CustomLegend />
-            <ZoomAndPan />
-            {/* {createSeries()} */}
-            <Stack
-                stacks={[
-                    { series: applications.map(_ => _.name) },
-                ]}
-            />
-        </Chart>
+        <DashBoardBarChart datas={datas} keys={applications.map(_ => _.name)} indexKey="date" customColor/>
     </DashboardCardWithDateSelect>
 }
 

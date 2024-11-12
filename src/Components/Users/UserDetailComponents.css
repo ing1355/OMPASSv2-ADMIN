@@ -12,17 +12,6 @@
         max-height: 60px;
         max-width: 60px;
     }
-    & > div {
-        text-align: center;
-        &:nth-last-child(2) {
-            flex: 0 0 26px;
-        }
-        &:last-child {
-            flex: 1;
-            font-size: 1rem;
-            letter-spacing: 0px;
-        }
-    }
     &.linux {
         --img-size: 46px;
         gap: 12px;
@@ -37,6 +26,19 @@
             max-width: var(--img-size);
             max-height: var(--img-size);
         }
+    }
+}
+
+.user-detail-info-device-info-content-item > div {
+    text-align: center;
+    &:nth-last-child(2) {
+        flex: 0 0 26px;
+    }
+    &:last-child {
+        flex: 1;
+        font-size: 1rem;
+        letter-spacing: 0px;
+        max-width: 160px;
     }
 }
 

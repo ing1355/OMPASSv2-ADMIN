@@ -2,7 +2,6 @@
   background-color: white;
   height: calc(100% - var(--header-height));
   margin-top: var(--header-height);
-  margin-bottom: 40px;
   width: 100%;
   overflow-x: hidden;
   overflow-y: auto;
@@ -10,4 +9,19 @@
 
 .ant-switch.ant-switch-checked {
   background: var(--main-purple-color) !important;
+}
+
+.ant-select-item.ant-select-item-option.ant-select-item-option-selected {
+  background-color: var(--sub-purple-color5);
+  & > div {
+    color: var(--main-purple-color2);
+  }
+}
+.ant-select-item.ant-select-item-option-active {
+  color: var(--sub-grey-color4);
+  background-color: var(--sub-grey-color8);
+}
+
+.ant-select-item-option-content {
+  color: var(--main-grey-color2);
 }

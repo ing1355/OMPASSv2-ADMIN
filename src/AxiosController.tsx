@@ -25,7 +25,7 @@ const AxiosController = () => {
     }, (err) => {
       console.log(err)
       if (err && err.response && err.response) {
-        const { data, status } = err.response
+        const { data } = err.response
         if(data && data.code === 'ERR_B009') {
           dispatch(userInfoClear());
           navigate('/');

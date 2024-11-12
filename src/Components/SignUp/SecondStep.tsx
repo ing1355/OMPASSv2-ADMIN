@@ -1,5 +1,5 @@
 import { DuplicateUserNameCheckFunc, SignUpRequestFunc, SignUpVerificationCodeSendFunc, SignUpVerificationCodeVerifyFunc } from "Functions/ApiFunctions";
-import { emailRegex, idRegex, nameRegex, passwordRegex } from "Components/CommonCustomComponents/CommonRegex";
+import { nameRegex } from "Components/CommonCustomComponents/CommonRegex";
 import { autoHypenPhoneFun } from "Functions/GlobalFunctions";
 import Button from "Components/CommonCustomComponents/Button";
 import { PropsWithChildren, useEffect, useRef, useState } from "react";
@@ -363,7 +363,7 @@ const SecondStep = () => {
             </Button>
             <Button
                 type='submit'
-                className={'st1 agree-button signup-complete'}
+                className={'st6 agree-button signup-complete'}
                 onClick={() => {
                     navigate('/')
                 }}

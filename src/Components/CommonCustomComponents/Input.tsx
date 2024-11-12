@@ -1,6 +1,7 @@
 import React, { forwardRef, useEffect, useRef, useState } from "react"
 import { emailRegex, idRegex, nameRegex, passwordRegex } from "./CommonRegex"
 import { FormattedMessage } from "react-intl"
+import { slicePrice } from "Functions/GlobalFunctions"
 
 type CustomType = "username" | "password" | "email" | "name" | "phone"
 
@@ -15,6 +16,7 @@ type CustomInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
     onlyText?: boolean
     noGap?: boolean
     suffix?: string
+    sliceNum?: boolean
     rules?: {
         regExp: RegExp | ((value: string) => boolean),
         msg: string | React.ReactNode
@@ -33,7 +35,7 @@ const HasLabel = ({ children, label }: {
 </>}
     </div>
 
-const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyNumber, label, value, containerClassName, onInput, customType, rules, maxLength, required, className, noGap, type, suffix, style, onlyText, ...props }: CustomInputProps, ref) => {
+const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyNumber, label, value, containerClassName, onInput, customType, rules, maxLength, required, className, noGap, type, suffix, style, onlyText, sliceNum, ...props }: CustomInputProps, ref) => {
     const [isAlert, _setIsAlert] = useState(false)
     const [alertMsg, setAlertMsg] = useState<string | React.ReactNode>('')
     const isAlertRef = useRef(isAlert)
@@ -139,6 +141,7 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                             }}
                             onChange={e => {
                                 if (valueChange) {
+                                    if (sliceNum) e.target.value = e.target.value.replace(/,/g, '')
                                     valueChange(e.target.value, isAlertRef.current)
                                 }
                                 if (e.currentTarget.value && validateCheck(e.currentTarget.value)) {
@@ -165,7 +168,7 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                                 }
                                 if (customType === 'name') {
                                     e.currentTarget.value = e.currentTarget.value.replace(/[^a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]/g, '')
-                                } else if(customType === 'username') {
+                                } else if (customType === 'username') {
                                     e.currentTarget.value = e.currentTarget.value.replace(/[^0-9a-z]/g, '')
                                 }
                                 if (maxLength && e.currentTarget.value.length > maxLength) {
@@ -180,7 +183,7 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                                     setIsAlert(false)
                                 }
                                 if (onInput) onInput(e)
-                            }} {...props} type={type} value={props.disabled ? "" : value} maxLength={maxLength || maxLengthByCustomType()}
+                            }} {...props} type={type} value={props.disabled ? "" : ((value && sliceNum) ? slicePrice(value as string | number) : value)} maxLength={maxLength || maxLengthByCustomType()}
                             style={{
                                 paddingRight: `${suffix ? (11 + suffix.length * 15 + 'px') : ''}`,
                                 ...style

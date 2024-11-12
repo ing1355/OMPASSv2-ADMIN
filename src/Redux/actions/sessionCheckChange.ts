@@ -2,7 +2,7 @@ import types from '../types';
 
 export function sessionCheckChange(sessionChecked: boolean) {
   return {
-    type: types.globalDatasChange,
+    type: types.sessionCheckChange,
     payload: sessionChecked
   }
 }

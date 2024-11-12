@@ -1,5 +1,5 @@
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosGetFile, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from "Components/CommonCustomComponents/CustomAxios";
-import { AddApplicationListApi, AddPasscodeApi, AddPoliciesListApi, AddUserDataApi, AddUserGroupApi, ApprovalUserApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DownloadAgentInstallerApi, DuplicateUserNameCheckApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetGlobalConfigApi, GetPasscodeHistoriesApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, PostLoginApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, UpdateAgentNoteApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi } from "Constants/ApiRoute";
+import { AddApplicationListApi, AddPasscodeApi, AddPoliciesListApi, AddUserDataApi, AddUserGroupApi, ApprovalUserApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DownloadAgentInstallerApi, DuplicateUserNameCheckApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetGlobalConfigApi, GetPasscodeHistoriesApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, PatchSessionTokenApi, PostLoginApi, ResetPasswordApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, UnlockUserApi, UpdateAgentNoteApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi } from "Constants/ApiRoute";
 import { INT_MAX_VALUE } from "Constants/ConstantValues";
 import { AxiosResponse } from "axios";
 import { convertUTCStringToKSTString } from "./GlobalFunctions";
@@ -171,6 +171,10 @@ export const UpdateUserDataFunc = (userId: UserDataType['userId'], params: UserD
 
 export const DeleteUserDataFunc = (userId: UserDataType['userId'], callback: () => void) => {
     return CustomAxiosDelete(DeleteUserDataApi(userId), callback)
+}
+
+export const UnlockUserFunc = (userId: UserDataType['userId'], callback: () => void) => {
+    return CustomAxiosPatch(UnlockUserApi(userId), callback)
 }
 
 export const GetUserDetailDataFunc = (userId: UserDataType['userId'], callback: (data: UserDetailDataType[]) => void) => {
@@ -458,4 +462,12 @@ export const GetDashboardApplicationInvalidAuthFunc = (params: ApplicationListDa
 
 export const GetDashboardApplicationInvalidAuthSumFunc = (params: ApplicationListDataType['id'][], params2: DashboardDateSelectDataType, callback: (data: DashboardChartDataType[]) => void) => {
     return CustomAxiosGet(GetDashboardApplicationAuthSumApi, callback, { applicationIds: params, ...convertDashboardDateParamsKSTtoUTC(params2), logType: 'DENY' })
+}
+
+export const PatchSessionTokenFunc = (callback: (data: any, token: string) => void) => {
+    return CustomAxiosPatch(PatchSessionTokenApi, callback)
+}
+
+export const ResetPasswordFunc = (username: string, email: string, callback: () => void) => {
+    return CustomAxiosPatch(ResetPasswordApi(username, email), callback)
 }

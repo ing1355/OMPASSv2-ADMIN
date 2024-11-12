@@ -1,4 +1,4 @@
-import React, { CSSProperties, useEffect, useMemo, useRef, useState } from "react"
+import React, { CSSProperties, useEffect, useMemo, useState } from "react"
 import './CustomTable.css'
 import { Pagination, PaginationProps } from "antd"
 import searchIcon from './../../assets/searchIcon.png'
@@ -88,7 +88,6 @@ const CustomTable = <T extends {
     const [searchValue, setSearchValue] = useState('')
     const [hoverId, setHoverId] = useState(-1)
     const [_refresh, setRefresh] = useState(false)
-    const navigate = useNavigate()
     const location = useLocation()
 
     const searchTarget = useMemo(() => {

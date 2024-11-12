@@ -7,3 +7,11 @@
     justify-content: center;
     align-items: center;
 }
+
+.auth-log-tab .ant-tabs-tab.ant-tabs-tab-active {
+    border: 1px solid var(--main-purple-color);
+}
+
+.auth-log-tab .ant-tabs-tab.ant-tabs-tab-active > .ant-tabs-tab-btn{
+    color: var(--main-purple-color);
+}

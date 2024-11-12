@@ -88,7 +88,7 @@ export function CustomAxiosPatch(url: string, callback?: Function, params?: any,
         ...config.headers
     } : defaultHeaders()
     return axios.patch(url, params, { headers }).then(res => {
-        if (callback) callback(res.data);
+        if (callback) callback(res.data, res.headers.authorization);
         return res.data
     })
 }

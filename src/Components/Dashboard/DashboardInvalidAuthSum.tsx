@@ -6,15 +6,15 @@ import { convertUTCStringToKSTString } from "Functions/GlobalFunctions"
 import { convertDaysByDate, convertHourRangeByDate } from "./DashboardFunctions"
 import {
     Chart,
-    BarSeries,
     ArgumentAxis,
     ValueAxis,
     ZoomAndPan,
     Tooltip,
     LineSeries
 } from '@devexpress/dx-react-chart-material-ui';
-import { Animation, EventTracker } from "@devexpress/dx-react-chart";
+import { EventTracker } from "@devexpress/dx-react-chart";
 import { FormattedMessage } from "react-intl"
+import DashBoardBarChart from "./DashboardBarChart"
 
 const DashboardInvalidAuthSum = ({ applications }: {
     applications: ApplicationListDataType[]
@@ -51,20 +51,7 @@ const DashboardInvalidAuthSum = ({ applications }: {
     return <DashboardCardWithDateSelect title={<FormattedMessage id="DASHBOARD_INVALID_ALL_AUTH_SUM"/>} isCard={false} onChange={(d) => {
         setParams(d)
     }}>
-        <Chart
-            height={280}
-            data={datas}
-        >
-            <ArgumentAxis
-                showTicks={false}
-            />
-            <ValueAxis />
-            <EventTracker />
-            <Tooltip />
-            <LineSeries valueField="count" argumentField="name"/>
-            <ZoomAndPan />
-            {/* <Animation /> */}
-        </Chart>
+        <DashBoardBarChart datas={datas} keys={["count"]} indexKey="name"/>
     </DashboardCardWithDateSelect>
 }
 

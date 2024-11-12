@@ -12,12 +12,23 @@
 
 .copyRight-style.content {
     background-color: white;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 40px;
+    margin-top: 0;
 }
+
+.content-center {
+    min-height: calc(100% - 40px);
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    flex-direction: column;
+    padding-top: 48px;
+    padding-bottom: 96px;
+    box-sizing: border-box;
+    &.hidden {
+      display: none;
+    }
+  }

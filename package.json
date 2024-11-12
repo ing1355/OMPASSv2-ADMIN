@@ -1,6 +1,6 @@
 {
   "name": "ompass_rp_admin",
-  "version": "2.0.0(52)",
+  "version": "2.0.0(55)",
   "proxy": "https://ompass.kr:54006",
   "private": true,
   "dependencies": {
@@ -9,6 +9,9 @@
     "@devexpress/dx-react-core": "^4.0.9",
     "@googlemaps/js-api-loader": "^1.16.8",
     "@mui/material": "^6.1.2",
+    "@nivo/bar": "^0.88.0",
+    "@nivo/core": "^0.88.0",
+    "@nivo/line": "^0.88.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",

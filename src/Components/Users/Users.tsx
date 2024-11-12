@@ -8,7 +8,7 @@ const Users = () => {
         userInfo: state.userInfo!,
       }))
     
-      const { role, userId } = userInfo
+      const { role } = userInfo
 
     return role === "USER" ? <UserDetail/> : <>
         <Routes>

@@ -8,7 +8,6 @@ import ContentsHeader from "Components/Layout/ContentsHeader";
 import userAddIcon from './../../assets/userAddIcon.png'
 import userAddIconHover from './../../assets/userAddIconHover.png'
 import rootRoleIcon from './../../assets/rootRoleIcon.png'
-import userRoleIcon from './../../assets/userRoleIcon.png'
 import adminRoleIcon from './../../assets/adminRoleIcon.png'
 import './UserManagement.css'
 import { userStatusTypes } from "Constants/ConstantValues";
@@ -124,9 +123,9 @@ const UserManagement = () => {
                         key: 'username',
                         title: createHeaderColumn('USER_ID'),
                         render: (data,ind,row) => <div className="user-username-column">
-                            <img src={row.role === 'ROOT' ? rootRoleIcon : (row.role === 'ADMIN' ? adminRoleIcon : userRoleIcon)} style={{
+                            {row.role !== 'USER' && <img src={row.role === 'ROOT' ? rootRoleIcon : adminRoleIcon} style={{
                                 width: "24px", height: "24px", boxSizing: 'border-box'
-                            }} />
+                            }} />}
                             <div>
                                 {data}
                             </div>

@@ -14,6 +14,7 @@ import { Animation, EventTracker } from "@devexpress/dx-react-chart";
 import { BarWithLabel, convertDaysByDate, convertHourRangeByDate } from "./DashboardFunctions";
 import { convertUTCStringToKSTString } from "Functions/GlobalFunctions";
 import { FormattedMessage } from "react-intl";
+import DashBoardBarChart from "./DashboardBarChart";
 
 const tooltipContentTitleStyle = {
   fontWeight: 'bold',
@@ -80,27 +81,7 @@ const DashboardAllAuthSum = ({ applications }: {
   return <DashboardCardWithDateSelect title={<FormattedMessage id="DASHBOARD_ALL_AUTH_SUM"/>} onChange={(_) => {
     setParams(_)
   }}>
-    <Chart
-      height={160}
-      data={datas}
-    >
-      <ArgumentAxis
-        showTicks={false}
-      />
-      <ValueAxis />
-      <BarSeries
-        valueField="count"
-        argumentField="name"
-        color="url(#grad1)"
-        pointComponent={BarWithLabel}
-      />
-      <EventTracker/>
-      <Tooltip
-            contentComponent={TooltipContent}
-          />
-      {/* <ZoomAndPan /> */}
-      <Animation />
-    </Chart>
+    <DashBoardBarChart datas={datas} keys={["count"]} indexKey="name"/>
   </DashboardCardWithDateSelect>
 }
 

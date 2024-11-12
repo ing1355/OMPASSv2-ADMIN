@@ -1,7 +1,7 @@
 import './GuidePage.css';
 
 import { useState } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Col, Row } from 'antd';
@@ -25,7 +25,6 @@ const GuidePage = () => {
   }));
 
   const height = useWindowHeight();
-  const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
   const [isFileDownloadDisable, setIsFileDownloadDisable] = useState<boolean>(false);

@@ -216,6 +216,11 @@ const ApplicationDetail = () => {
                 marginTop: '48px',
                 marginBottom: '16px'
             }} />}
+            <CustomInputRow title="유형">
+                {isAdd ? <CustomSelect value={applicationType} onChange={value => {
+                    setApplicationType(value as ApplicationDataType['type'])
+                }} items={typeItems} needSelect /> : getApplicationTypeLabel(applicationType as ApplicationDataType['type'])}
+            </CustomInputRow>
             {
                 applicationType && <>
                     <CustomInputRow title="이름" required>
@@ -266,11 +271,6 @@ const ApplicationDetail = () => {
                     </CustomInputRow>
                 </>
             }
-            <CustomInputRow title="유형">
-                {isAdd ? <CustomSelect value={applicationType} onChange={value => {
-                    setApplicationType(value as ApplicationDataType['type'])
-                }} items={typeItems} needSelect /> : getApplicationTypeLabel(applicationType as ApplicationDataType['type'])}
-            </CustomInputRow>
         </div>
         <CustomModal
             open={sureDelete}

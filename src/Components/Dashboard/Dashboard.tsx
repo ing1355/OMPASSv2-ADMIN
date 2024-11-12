@@ -14,7 +14,6 @@ import DashboardInvalidAuth from "./DashboardInvalidAuth";
 import { getDateTimeString } from "Functions/GlobalFunctions";
 import DashboardAuthLogs from "./DashboardAuthLogs";
 import { subHours } from "date-fns";
-import { FormattedMessage } from "react-intl";
 
 export const dashboardDateInitialValue = () => {
     let startDate = new Date()
@@ -47,22 +46,22 @@ const Dashboard = () => {
         await GetApplicationListFunc(_params, ({ results, totalCount }) => {
             setApplicationDatas(results)
             setSelectedApplication(results)
-            console.log(results)
         }).finally(() => {
             setDataLoading(false)
         })
     }
 
-    return <Contents loading={dataLoading}>
+    return <Contents loading={dataLoading} containerStyle={{
+        paddingTop: 0,
+        paddingBottom: 0
+    }}>
         <ContentsHeader title="test" subTitle="DASHBOARD_TITLE" contentStyle={{
-            marginBottom: 0
+            marginBottom: 0,
+            paddingTop: 0
         }} className="dashboard">
         </ContentsHeader>
         <div className="contents-header-container dashboard">
             <DashboardTop />
-            <div className="dashboard-application-select-title">
-                <FormattedMessage id="DASHBOARD_APPLICATION_SELECT"/>
-            </div>
             <DashboardApplicationSelect selectedApplication={selectedApplication} setSelectedApplication={setSelectedApplication} applications={applicationDatas} />
             <div className="dashboard-middle-container">
                 <div className="dashboard-middle-item">

@@ -1,6 +1,6 @@
 const ServerErrorCodes = {
     'KR': {
-        ERR_B002: "사용자가 존재하지 않습니다.",
+        ERR_B002: "아이디와 이메일을 확인해 주세요.",
         ERR_B003: "사용자 아이디가 이미 존재합니다.",
         ERR_B004: "아이디와 비밀번호를 확인해 주세요.",
         ERR_B005: "OMPASS에 등록되지 않은 사용자는 비밀번호로 먼저 로그인해야 합니다.",
@@ -28,7 +28,7 @@ const ServerErrorCodes = {
         ERR_B030: "이미 존재하는 버전입니다."
     },
     'EN': {
-        ERR_B002: "User does not exist",
+        ERR_B002: "Please check your ID and email",
         ERR_B003: "User ID already exists",
         ERR_B004: "Please check your ID and password",
         ERR_B005: "Users not registered with OMPASS must first log in with a password",

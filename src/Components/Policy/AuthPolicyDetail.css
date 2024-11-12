@@ -37,13 +37,6 @@
     border-radius: 8px;
     height: auto;
     transition: height .1s ease-out;
-    &[data-hidden="true"] {
-        height: 0px;
-        padding: 0;
-        & > div {
-            display: none;
-        }
-    }
     &.time-policy {
         border: none;
     }
@@ -134,17 +127,40 @@
     position: relative;
 }
 
+.custom-detail-contents[data-vertical="true"] > .policy-contents-container{
+    width: 85%;
+}
+
 .policy-contents-container {
     border: 1px solid var(--sub-grey-color5);
     margin: 12px 0;
     padding: 10px 12px;
     border-radius: 8px;
-    flex: 0 0 80%;
+    flex: 0 0 85%;
     box-sizing: border-box;
+    &[data-hidden="true"] {
+        height: 0px;
+        padding: 0;
+        margin: 0;
+        border: none;
+        & > div {
+            display: none;
+        }
+    }
     &.column {
         display: flex;
         flex-direction: column;
         gap: 12px;
+    }
+}
+
+.policy-contents-container.browsers {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    row-gap: 16px;
+    & > div {
+        flex: 0 0 25%;
     }
 }
 
@@ -168,7 +184,6 @@
 .time-policy-inner-container {
     border-radius: 8px;
     padding: 12px 8px;
-    border: 1px solid var(--sub-grey-color5);
     flex: 0 0 80%;
     gap: 12px;
     display: flex;
@@ -198,8 +213,8 @@
     /* margin-top: 12px; */
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     align-items: center;
-    gap: 8px;
     height: 32px;
     padding: 4px 8px;
     &.current {
@@ -217,7 +232,7 @@
         overflow: hidden;
         border-radius: 12px;
         width: 500px;
-        height: 300px;
+        height: 260px;
     }   
 }
 
@@ -240,7 +255,6 @@
 
 .policy-location-radius-input {
     padding-right: 24px;
-    width: 120px !important;
     position: relative;
 }
 
@@ -272,4 +286,100 @@
     &>div:first-child {
         width: 120px;
     }
+}
+
+.current-location-input-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background-color: var(--sub-grey-color9);
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.current-location-policy-input-container {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+}
+
+.current-location-input-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 12px;
+    height: 54px;
+}
+
+.current-location-input-row.first {
+}
+
+.current-location-input-row.fourth {
+    margin-top: 12px;
+    height: 32px;
+    & > button {
+        width: 100%;
+    }
+}
+
+.current-location-input-row-item {
+    flex: 1;
+    gap: 4px;
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-policy-validate-container {
+    transition: all .25s ease-in-out;
+    height: fit-content;
+    overflow: hidden;
+    &[data-hidden="true"] {
+        height: 0px;
+    }
+}
+
+.policy-notice-admin-tag-container {
+    display: inline-flex;
+    flex: none;
+    align-self: center;
+}
+
+.policy-notice-admin-tag-container.withdrawal {
+    & .policy-notice-admin-tag-item {
+        background-color: var(--sub-red-color);
+    }    
+    & .policy-notice-admin-tag-text {
+        text-decoration: line-through;
+    }
+}
+
+.policy-notice-admin-tag-item {
+    margin: 2px 0;
+    border-radius: 4px;
+    margin-inline-end: 4px;
+    padding-inline-start: 8px;
+    padding-inline-end: 4px;
+    box-sizing: border-box;
+    background-color: var(--sub-purple-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+}
+
+.policy-notice-admin-tag-text {
+
+}
+
+.policy-notice-admin-tag-img {
+    height: 16px;
+    width: 16px;
+    padding: 2px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+:where(.css-dev-only-do-not-override-1xg9z9n).ant-select-outlined:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer):hover .ant-select-selector, .ant-select-focused:where(.css-dev-only-do-not-override-1xg9z9n).ant-select-outlined:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer) .ant-select-selector {
+    border-color: var(--main-purple-color);
 }
