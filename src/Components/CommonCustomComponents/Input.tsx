@@ -6,7 +6,7 @@ import { slicePrice } from "Functions/GlobalFunctions"
 type CustomType = "username" | "password" | "email" | "name" | "phone"
 
 type CustomInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
-    valueChange?: (value: string, isAlert?: boolean) => void
+    valueChange?: (value: string, isAlert: boolean) => void
     onlyNumber?: boolean
     label?: string | React.ReactNode
     containerClassName?: string
@@ -142,7 +142,7 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                             onChange={e => {
                                 if (valueChange) {
                                     if (sliceNum) e.target.value = e.target.value.replace(/,/g, '')
-                                    valueChange(e.target.value, isAlertRef.current)
+                                    valueChange(e.target.value, isAlertRef.current || false)
                                 }
                                 if (e.currentTarget.value && validateCheck(e.currentTarget.value)) {
                                     setIsAlert(true)

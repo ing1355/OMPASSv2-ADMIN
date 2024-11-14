@@ -102,7 +102,7 @@ const AuthPolicyDetail = () => {
     const [inputDescription, setInputDescription] = useState('')
     const [locationDatas, setLocationDatas] = useState<PolicyDataType['locationConfig']['locations']>([])
     const [browserChecked, setBrowserChecked] = useState<(BrowserPolicyType)[]>(isAdd ? PolicyBrowsersList : [])
-    const [ompassControl, setOmpassControl] = useState<PolicyDataType['accessControl']>('ACTIVE')
+    const [ompassControl, setOmpassControl] = useState<PolicyDataType['accessControl']>('INACTIVE')
     const [ipAddressChecked, setIpAddressChecked] = useState(false)
     const [currentIpAddress, setCurrentIpAddress] = useState('')
     const [currentIpNote, setCurrentIpNote] = useState('')
@@ -249,27 +249,29 @@ const AuthPolicyDetail = () => {
                     if (!policyName) {
                         return message.error("정책명은 필수 입력 항목입니다.")
                     }
-                    if (browserChecked.length === 0) return message.error("브라우저는 최소 1개 이상 허용해야 합니다.")
-                    if (locationChecked && locationDatas.some(_ => !_.alias)) {
-                        return message.error("사용자 위치 허용 정책은 위치명이 필수 입력 사항입니다.")
-                    }
-                    if (ipAddressChecked && ipAddressValues.length === 0) {
-                        return message.error("IP 접근 허용 정책을 1개 이상 설정해주세요.")
-                    }
-                    if (accessTimeChecked && accessTimeValues.length === 0) {
-                        return message.error("시간 접근 허용 정책을 1개 이상 설정해주세요.")
-                    }
-                    if (currentNoticeAdmin.isEnabled && currentNoticeAdmin.methods.length === 0) {
-                        return message.error("위반 시 관리자 알림의 알림 방식을 1개 이상 설정해주세요.")
-                    }
-                    if (currentNoticeAdmin.isEnabled && currentNoticeAdmin.admins.length === 0) {
-                        return message.error("위반 시 관리자 알림의 알림 받을 관리자를 1명 이상 설정해주세요.")
-                    }
-                    if (currentNoticeAdmin.isEnabled && currentNoticeAdmin.admins.some(_ => adminDatas.find(admin => admin.userId === _)?.status === 'WITHDRAWAL')) {
-                        return message.error("위반 시 관리자 알림에 이미 탈퇴한 관리자가 포함되어 있습니다. 해당 관리자를 제외시켜 주세요.")
-                    }
-                    if (currentNoticeAdmin.isEnabled && currentNoticeAdmin.targetPolicies.length === 0) {
-                        return message.error("위반 시 관리자 알림의 알림 대상 정책을 1개 이상 설정해주세요.")
+                    if(ompassControl === 'ACTIVE') {
+                        if (browserChecked.length === 0) return message.error("브라우저는 최소 1개 이상 허용해야 합니다.")
+                        if (locationChecked && locationDatas.some(_ => !_.alias)) {
+                            return message.error("사용자 위치 허용 정책은 위치명이 필수 입력 사항입니다.")
+                        }
+                        if (ipAddressChecked && ipAddressValues.length === 0) {
+                            return message.error("IP 접근 허용 정책을 1개 이상 설정해주세요.")
+                        }
+                        if (accessTimeChecked && accessTimeValues.length === 0) {
+                            return message.error("시간 접근 허용 정책을 1개 이상 설정해주세요.")
+                        }
+                        if (currentNoticeAdmin.isEnabled && currentNoticeAdmin.methods.length === 0) {
+                            return message.error("위반 시 관리자 알림의 알림 방식을 1개 이상 설정해주세요.")
+                        }
+                        if (currentNoticeAdmin.isEnabled && currentNoticeAdmin.admins.length === 0) {
+                            return message.error("위반 시 관리자 알림의 알림 받을 관리자를 1명 이상 설정해주세요.")
+                        }
+                        if (currentNoticeAdmin.isEnabled && currentNoticeAdmin.admins.some(_ => adminDatas.find(admin => admin.userId === _)?.status === 'WITHDRAWAL')) {
+                            return message.error("위반 시 관리자 알림에 이미 탈퇴한 관리자가 포함되어 있습니다. 해당 관리자를 제외시켜 주세요.")
+                        }
+                        if (currentNoticeAdmin.isEnabled && currentNoticeAdmin.targetPolicies.length === 0) {
+                            return message.error("위반 시 관리자 알림의 알림 대상 정책을 1개 이상 설정해주세요.")
+                        }
                     }
                     if (uuid) {
                         UpdatePoliciesListFunc(uuid, {
@@ -293,7 +295,17 @@ const AuthPolicyDetail = () => {
                             },
                             noticeToAdmin: currentNoticeAdmin,
                             noticeToThemselves: currentNoticeThemselves
-                        }, () => {
+                        }, ({enableAuthenticators, enableBrowsers, locationConfig, networkConfig, noticeToAdmin, noticeToThemselves, accessTimeConfig}) => {
+                            setAuthenticatorPolicies(enableAuthenticators)
+                            setBrowserChecked(enableBrowsers)
+                            setIpAddressChecked(networkConfig.isEnabled)
+                            setIpAddressValues(networkConfig.networks)
+                            setLocationChecked(locationConfig.isEnabled)
+                            setLocationDatas(locationConfig.locations)
+                            setAccessTimeChecked(accessTimeConfig.isEnabled)
+                            setAccessTimeValues(accessTimeConfig.accessTimes)
+                            setCurrentNoticeAdmin(noticeToAdmin)
+                            setCurrentNoticeThemseleves(noticeToThemselves)
                             message.success('수정 성공!')
                             // navigate('/Policies')
                         })
@@ -331,13 +343,6 @@ const AuthPolicyDetail = () => {
                     setInputDescription(value)
                 }} />
             </CustomInputRow>
-            <CustomInputRow title="인증 방식 제어">
-                <div className="policy-contents-container">
-                    <AuthenticatorController type={"OTP"} />
-                    <AuthenticatorController type={"PASSCODE"} />
-                    <AuthenticatorController type={"WEBAUTHN"} />
-                </div>
-            </CustomInputRow>
             <CustomInputRow title={<FormattedMessage id={`${policyNoticeRestrictionTypes[0]}_LABEL`} />} required noCenter>
                 <div className="policy-contents-container">
                     <div className="authenticator-ompass-auth">
@@ -363,6 +368,13 @@ const AuthPolicyDetail = () => {
                 </div>
             </CustomInputRow>
             <div className="auth-policy-validate-container" data-hidden={ompassControl !== 'ACTIVE'}>
+                <CustomInputRow title="인증 방식 제어">
+                    <div className="policy-contents-container">
+                        <AuthenticatorController type={"OTP"} />
+                        <AuthenticatorController type={"PASSCODE"} />
+                        <AuthenticatorController type={"WEBAUTHN"} />
+                    </div>
+                </CustomInputRow>
                 <CustomInputRow title={<FormattedMessage id={`${policyNoticeRestrictionTypes[1]}_LABEL`} />} noCenter required>
                     <div className="policy-contents-container browsers">
                         <Input type="checkbox" label="전체 선택" checked={browserChecked.length === PolicyBrowsersList.length} onChange={e => {
@@ -588,7 +600,6 @@ const AuthPolicyDetail = () => {
                                         <span className="policy-location-label">반경</span> <Input className="st1 policy-location-radius-input" value={modifyLocationIndex === ind ? modifyLocationTemp.radius : _.radius} readOnly={modifyLocationIndex !== ind} style={{
                                             width: '160px'
                                         }} suffix="m" sliceNum valueChange={(val) => {
-                                            console.log(val)
                                             setModifyLocationTemp({
                                                 ...modifyLocationTemp,
                                                 radius: parseInt(val)
@@ -605,8 +616,8 @@ const AuthPolicyDetail = () => {
                                                 setModifyLocationTemp({
                                                     ...modifyLocationTemp,
                                                     coordinate: {
-                                                        latitude: _.coordinate.latitude,
-                                                        longitude: _.coordinate.longitude
+                                                        latitude: Number(_.coordinate.latitude),
+                                                        longitude: Number(_.coordinate.longitude)
                                                     }
                                                 })
                                             } else {
@@ -620,7 +631,13 @@ const AuthPolicyDetail = () => {
                                         }} />}
                                         {modifyLocationIndex !== ind && <Button icon={modifyLocationIndex !== -1 && modifyLocationIndex !== ind ? locationEditIconHover : locationEditIcon} hoverIcon={locationEditIconHover} className="st1" onClick={() => {
                                             setModifyLocationIndex(ind)
-                                            setModifyLocationTemp(_)
+                                            setModifyLocationTemp({
+                                                ..._,
+                                                coordinate: {
+                                                    latitude: Number(_.coordinate.latitude),
+                                                    longitude: Number(_.coordinate.longitude)
+                                                }
+                                            })
                                         }} style={{
                                             width: '16px'
                                         }} disabled={modifyLocationIndex !== -1 && modifyLocationIndex !== ind} />}
@@ -752,21 +769,23 @@ const AuthPolicyDetail = () => {
                                         alignItems: 'center',
                                         gap: '12px'
                                     }}>
-                                        시간 선택 : <TimePicker format={timepickerFormat} size="small" disabled={currentAccessTimeValue.timeRange.type === 'ALL_TIME'} value={dayjs(currentAccessTimeValue.timeRange.startTime, timepickerFormat)} onChange={val => {
+                                        시간 선택 :
+                                        {/* <TimePicker format={timepickerFormat} size="small" disabled={currentAccessTimeValue.timeRange.type === 'ALL_TIME'} value={currentAccessTimeValue.timeRange.startTime ? dayjs(currentAccessTimeValue.timeRange.startTime, timepickerFormat) : null} onChange={val => {
                                             setCurrentAccessTimeValue({
                                                 ...currentAccessTimeValue,
                                                 timeRange: {
                                                     ...currentAccessTimeValue.timeRange,
-                                                    startTime: val.format(timepickerFormat)
+                                                    startTime: val ? val.format(timepickerFormat) : null
                                                 }
                                             })
-                                        }} />
-                                        <TimePicker format={timepickerFormat} size="small" disabled={currentAccessTimeValue.timeRange.type === 'ALL_TIME'} value={dayjs(currentAccessTimeValue.timeRange.endTime, timepickerFormat)} onChange={val => {
+                                        }} /> */}
+                                        <TimePicker.RangePicker format={timepickerFormat} size="small" disabled={currentAccessTimeValue.timeRange.type === 'ALL_TIME'} value={[currentAccessTimeValue.timeRange.startTime ? dayjs(currentAccessTimeValue.timeRange.startTime, timepickerFormat) : null, currentAccessTimeValue.timeRange.endTime ? dayjs(currentAccessTimeValue.timeRange.endTime, timepickerFormat) : null]} onChange={val => {
                                             setCurrentAccessTimeValue({
                                                 ...currentAccessTimeValue,
                                                 timeRange: {
                                                     ...currentAccessTimeValue.timeRange,
-                                                    endTime: val.format(timepickerFormat)
+                                                    startTime: (val && val[0]) ? val[0].format(timepickerFormat) : null,
+                                                    endTime: (val && val[1]) ? val[1].format(timepickerFormat) : null
                                                 }
                                             })
                                         }} />
@@ -806,6 +825,7 @@ const AuthPolicyDetail = () => {
                                 </div>
                                 <div className="time-policy-buttons-container">
                                     <Button icon={addIconWhite} className="st3" onClick={() => {
+                                        if (currentAccessTimeValue.timeRange.type === 'SPECIFIC_TIME' && (!currentAccessTimeValue.timeRange.startTime || !currentAccessTimeValue.timeRange.endTime)) return message.error("시간 접근 허용 정책에서 시간 선택을 확인해주세요.")
                                         setAccessTimeValues([currentAccessTimeValue, ...accessTimeValues])
                                         setCurrentAccessTimeValue(defaultTimePolicyData())
                                     }} style={{
@@ -1022,8 +1042,8 @@ const AuthPolicyDetail = () => {
                                     onFocus={() => {
                                         setNoticeAdminPopupOpened(true)
                                     }}
-                                    tagRender={({ label, disabled, closable, onClose, value }) => <div className={"policy-notice-admin-tag-container" + (adminDatas.find(admin => admin.userId === value)?.status === 'WITHDRAWAL' ? ' withdrawal' : '')} onClick={(e) => {
-                                        e.stopPropagation()
+                                    tagRender={({ label, disabled, closable, onClose, value }: any) => <div className={"policy-notice-admin-tag-container" + (adminDatas.find(admin => admin.userId === value)?.status === 'WITHDRAWAL' ? ' withdrawal' : '')} onClick={(e) => {
+
                                     }}>
                                         <div className="policy-notice-admin-tag-item">
                                             <span className="policy-notice-admin-tag-text">

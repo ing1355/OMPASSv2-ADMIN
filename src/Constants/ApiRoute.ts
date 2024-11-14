@@ -3,6 +3,8 @@ export const PostLoginApi = '/v2/login';
 export const PostTokenVerifyApi = '/v2/login/token-verification';
 export const UpdatePasswordApi = '/v2/users/password'
 export const ResetPasswordApi = (username: string, email: string) => `/v2/init-password/username/${username}/email/${email}`
+export const ResetPasswordEmailSendApi = (username: string, email: string) => `/v2/init-password/username/${username}/email/${email}`
+export const ResetPasswordEmailCodeVerifyApi = () => `/v2/init-password/username`
 
 // 사용자
 export const DuplicateUserNameCheckApi = (username: string) => `/v2/users/username/${username}/existence`;

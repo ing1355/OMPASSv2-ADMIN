@@ -4,7 +4,7 @@ import { FormattedMessage } from "react-intl"
 import { getDateTimeString } from "Functions/GlobalFunctions"
 import { SetStateType } from "Types/PropsTypes"
 import Calendar from "./Calendar"
-import { subHours } from "date-fns"
+import { differenceInDays, subHours } from "date-fns"
 import { dashboardDateInitialValue } from "./Dashboard"
 
 const FixedItem = ({ type, selected, setSelected, onChange }: {
@@ -140,7 +140,7 @@ const FixedItem = ({ type, selected, setSelected, onChange }: {
             type === 'user' && showSelect ? <Calendar
                 defaultValue={temp}
                 setShow={setShowSelect}
-                onChange={d => {
+                onChange={d => {                    
                     setSelected('user')
                     setTemp(d)
                     _onChange({

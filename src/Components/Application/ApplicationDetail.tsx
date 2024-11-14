@@ -16,7 +16,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard"
 import documentIcon from '../../assets/documentIcon.png'
 import documentIconHover from '../../assets/documentIconHover.png'
 import deleteIcon from '../../assets/deleteIcon.png'
-import deleteIconHover from '../../assets/deleteIconRed.png'
+import deleteIconHover from '../../assets/deleteIconHover.png'
 import './ApplicationDetail.css'
 import { FormattedMessage } from "react-intl"
 import CustomImageUpload from "Components/CommonCustomComponents/CustomImageUpload"
@@ -125,6 +125,9 @@ const ApplicationDetail = () => {
                     }
                     if (!inputRedirectUrl && needDomains.includes(applicationType)) {
                         return message.error("리다이렉트 URI을 입력해주세요")
+                    }
+                    if (!selectedPolicy) {
+                        return message.error("정책을 설정해주세요.")
                     }
                     if (uuid) {
                         UpdateApplicationDataFunc(uuid!, {
@@ -262,7 +265,7 @@ const ApplicationDetail = () => {
                         }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
                     </CustomInputRow>}
                     <CustomInputRow title="정책 설정" required>
-                        <PolicySelect selectedPolicy={selectedPolicy} setSelectedPolicy={setSelectedPolicy} needSelect />
+                        <PolicySelect selectedPolicy={selectedPolicy} setSelectedPolicy={setSelectedPolicy} />
                     </CustomInputRow>
                     <CustomInputRow title="로고 설정" containerStyle={{
                         alignItems: 'flex-start'

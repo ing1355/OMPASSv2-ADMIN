@@ -88,10 +88,21 @@
   }
 }
 
-.login-body.password-change {
-  width: 500px;
-  height: 460px;
+.login-body.account-recovery {
+  width: 600px;
+  height: 400px;
+  gap: 16px;
   box-sizing: border-box;
+  flex-direction: column;
+}
+
+.login-body.password-change {
+  width: 600px;
+  height: 520px;
+  box-sizing: border-box;
+  &.code-confirm {
+    height: 420px;
+  }
 }
 
 .login-form-title {
@@ -134,7 +145,6 @@
   font-size: 1.1rem;
   font-weight: bold;
   height: 42px;
-  margin: 8px 0;
 }
 
 .login-footer {

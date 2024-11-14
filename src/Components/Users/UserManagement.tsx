@@ -136,12 +136,12 @@ const UserManagement = () => {
                         title: createHeaderColumn('NAME'),
                         render: (data) => getFullName(data)
                     },
-                    {
-                        key: 'group',
-                        title: createHeaderColumn('GROUP'),
-                        render: (data) => data ? data.name : <FormattedMessage id="NONE_GROUP" />,
-                        noWrap: true
-                    },
+                    // {
+                    //     key: 'group',
+                    //     title: createHeaderColumn('GROUP'),
+                    //     render: (data) => data ? data.name : <FormattedMessage id="NONE_GROUP" />,
+                    //     noWrap: true
+                    // },
                     {
                         key: 'email',
                         title: createHeaderColumn('EMAIL'),

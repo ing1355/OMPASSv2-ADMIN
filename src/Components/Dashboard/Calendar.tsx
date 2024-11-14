@@ -3,7 +3,7 @@ import './Calendar.css'
 import { SetStateType } from 'Types/PropsTypes'
 import { FormattedMessage } from 'react-intl';
 import { useEffect, useState } from 'react';
-import { addDays, addMonths, addYears, endOfMonth, format, isBefore, isSameDay, isSameMonth, isSaturday, isSunday, isWithinInterval, setHours, setMinutes, setSeconds, startOfMonth, subDays, subMonths, subYears } from 'date-fns';
+import { addDays, addMonths, addYears, differenceInDays, endOfMonth, format, isBefore, isSameDay, isSameMonth, isSaturday, isSunday, isWithinInterval, setHours, setMinutes, setSeconds, startOfMonth, subDays, subMonths, subYears } from 'date-fns';
 import { message } from 'antd';
 import leftArrowIcon from '../../assets/leftArrowIcon2.png';
 import rightArrowIcon from '../../assets/rightArrowIcon2.png';
@@ -61,10 +61,11 @@ const getDatesOfMonth = (date: Date) => {
     return results as Date[][]
 }
 
-const Calendar = ({ defaultValue, setShow, onChange }: {
+const Calendar = ({ defaultValue, setShow, onChange, monthRestriction }: {
     defaultValue: DateSelectDataType | undefined
     setShow: SetStateType<boolean>
     onChange: (data: DateSelectDataType) => void
+    monthRestriction?: boolean
 }) => {
     const [data, setData] = useState<SelectedDateType>(defaultValue ? {
         startDate: setHours(setMinutes(setSeconds(new Date(defaultValue.startDate), 0), 0), 0),
@@ -165,6 +166,7 @@ const Calendar = ({ defaultValue, setShow, onChange }: {
             </Button>
             <Button className='calendar-footer-button st3' onClick={() => {
                 if (data.startDate && data.endDate) {
+                    if(monthRestriction && differenceInDays(new Date(data.endDate), new Date(data.startDate)) > 31) return message.error("31일 이상은 설정할 수 없습니다.")
                     setShow(false)
                     onChange({
                         startDate: format(data.startDate, dateFormat),

@@ -247,8 +247,8 @@ type AccessTimeRestrictionValueType = {
     //     endTime: string
     // }
     timeRange: {
-        startTime: string,
-        endTime: string,
+        startTime: string|null,
+        endTime: string|null,
         type: AccessTimeRestrictionTimeRangeTypeType
     },
     isLoginDenyEnabled: boolean,

@@ -15,8 +15,13 @@ import CustomTable from 'Components/CommonCustomComponents/CustomTable';
 import { CurrentAgentVersionChangeFunc, DeleteAgentInstallerFunc, GetAgentInstallerListFunc } from 'Functions/ApiFunctions';
 import Button from 'Components/CommonCustomComponents/Button';
 import { convertUTCStringToKSTString } from 'Functions/GlobalFunctions';
+import { useDispatch, useSelector } from 'react-redux';
+import { subdomainInfoChange } from 'Redux/actions/subdomainInfoChange';
 
 const AgentManagement = () => {
+  const { subdomainInfo } = useSelector((state: ReduxStateType) => ({
+    subdomainInfo: state.subdomainInfo!
+  }));
   const [dataLoading, setDataLoading] = useState(false)
   const [totalCount, setTotalCount] = useState<number>(0);
   const [tableData, setTableData] = useState<AgentInstallerListDataType>([]);
@@ -25,6 +30,7 @@ const AgentManagement = () => {
   const [deleteHover, setDeleteHover] = useState(-1)
 
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const GetDatas = async (params: CustomTableSearchParams) => {
@@ -146,6 +152,10 @@ const AgentManagement = () => {
                   CurrentAgentVersionChangeFunc(data.fileId, (newData) => {
                     setTableData(tableData.map(t => t.fileId === newData.fileId ? newData : ({ ...t, downloadTarget: false })))
                     message.success(formatMessage({ id: 'CURRENT_VERSION_CHANGE_COMPLETE' }));
+                    dispatch(subdomainInfoChange({
+                      ...subdomainInfo,
+                      windowsAgentUrl: newData.downloadUrl
+                    }))
                   })
                 }}
               ><FormattedMessage id='APPLY' />

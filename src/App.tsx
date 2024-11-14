@@ -29,6 +29,8 @@ import SignUp from 'Components/SignUp/SignUp';
 import { globalDatasChange } from 'Redux/actions/globalDatasChange';
 import { userInfoChange } from 'Redux/actions/userChange';
 import Dashboard from 'Components/Dashboard/Dashboard';
+import AccountRecovery from 'Components/Login/AccountRecovery';
+import LoginPage from 'Components/Login';
 
 const convertLangToIntlVer = (lang: ReduxStateType['lang']) => {
   return lang === 'EN' ? 'en-us' : 'ko-kr'
@@ -96,9 +98,8 @@ const App: React.FC = () => {
                 <Route path='/*' element={<Navigate to='/Main' replace={true} />} />
               </>
           ) : <>
-            <Route path='/*' element={<Navigate to='/' replace={true} />} />
+            <Route path='/*' element={<LoginPage />} />
             <Route path='/signup' element={<SignUp />} />
-            <Route path='/' element={<Login />} />
           </>
         }
       </Routes>

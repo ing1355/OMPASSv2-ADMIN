@@ -154,7 +154,7 @@ const UserDetail = ({ }) => {
             setUserDetailOpened(userDetailOpened.concat(targetId))
         }
     }, [targetId, authInfoDatas, portalSigned])
-
+    
     useEffect(() => {
         if (isModify && userData) {
             setModifyValues({
@@ -280,7 +280,7 @@ const UserDetail = ({ }) => {
                                         message.error("등록 실패!")
                                     })
                                 } else {
-                                    if (modifyValues.password !== modifyValues.passwordConfirm) return message.error("비밀번호가 일치하지 않습니다.")
+                                    // if (modifyValues.password !== modifyValues.passwordConfirm) return message.error("비밀번호가 일치하지 않습니다.")
                                     UpdateUserDataFunc(uuid!, modifyValues, (data) => {
                                         setUserData(data)
                                         message.success('수정 성공!')
@@ -327,7 +327,8 @@ const UserDetail = ({ }) => {
                             중복 확인
                         </Button>
                     </UserInfoInputrow> : <UserInfoRow title="ID" value={userData ? userData.username : ""} />}
-                    {(isAdd || (isModify && (isSelf || (userData?.role === 'ADMIN' && userInfo.role === 'ROOT') || (userData?.role === 'USER' && isAdmin)))) && <><UserInfoInputrow title='PASSWORD' required>
+                    {/* {(isAdd || (isModify && (isSelf || (userData?.role === 'ADMIN' && userInfo.role === 'ROOT') || (userData?.role === 'USER' && isAdmin)))) && <>
+                    <UserInfoInputrow title='PASSWORD' required>
                         <Input className='st1' value={targetValue.password} placeholder="비밀번호 입력" disabled={!targetValue.hasPassword} valueChange={value => {
                             if (isAdd) {
                                 setAddValues({
@@ -374,7 +375,7 @@ const UserDetail = ({ }) => {
                                     msg: <FormattedMessage id="PASSWORD_CONFIRM_CHECK" />
                                 }
                             ]} maxLength={16} noGap />
-                        </UserInfoInputrow></>}
+                        </UserInfoInputrow></>} */}
                     {(isModify || isAdd) ? <UserInfoInputrow title="NAME" required>
                         <Input className='st1' value={targetValue.name.firstName} placeholder="성" onChange={e => {
                             if (isAdd) {
@@ -483,9 +484,9 @@ const UserDetail = ({ }) => {
                         }} needSelect />
                     </UserInfoInputrow> : <UserInfoRow title="USER_ROLE" value={(userData && userData.role) ? formatMessage({ id: userData.role + '_ROLE_VALUE' }) : "선택 안함"} />}
                     {!isAdd && <UserInfoRow title="RECOVERY_CODE" value={userData?.recoveryCode || '-'} />}
-                    {!isAdd && <UserInfoRow title="상태" value={<>
-                        <FormattedMessage id={`USER_STATUS_${userData?.status}`} />
-                        {userData?.status === 'LOCK' && <Button className='st1' style={{
+                    {!isAdd && <UserInfoRow title="STATUS_LABEL" value={<>
+                        {userData?.status && <FormattedMessage id={`USER_STATUS_${userData.status}`} />}
+                        {canModify && userData?.status === 'LOCK' && <Button className='st1' style={{
                             marginLeft: '8px'
                         }} onClick={() => {
                             setSureUnlock(true)
@@ -631,7 +632,7 @@ const UserDetail = ({ }) => {
                 return UnlockUserFunc(userData?.userId!, () => {
                     setSureUnlock(false)
                     message.success(`잠금 해제 성공!`)
-                    setUserData({...userData!, status: 'RUN'})
+                    setUserData({ ...userData!, status: 'RUN' })
                 })
             }} buttonLoading />
         <CustomModal

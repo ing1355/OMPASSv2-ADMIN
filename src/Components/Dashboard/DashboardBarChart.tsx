@@ -39,9 +39,9 @@ const DashBoardBarChart = ({ datas, keys, indexKey, customColor }: DashBoardBarC
 
     const yValues = useMemo(() => {
         const tick = Math.ceil(maxValue / 5)
-        return Array.from({length: 5}).map((_, ind) => {
+        return [0, ...Array.from({length: 5}).map((_, ind) => {
             return tick * (ind + 1)
-        })
+        })]
     },[maxValue])
     return <>
         <ResponsiveBar
@@ -51,7 +51,7 @@ const DashBoardBarChart = ({ datas, keys, indexKey, customColor }: DashBoardBarC
             margin={{ top: 20, right: 20, bottom: 50, left: 60 }}
             padding={0.5}
             valueScale={{ type: 'linear' }}
-            colors={customColor ? getColor : undefined}
+            colors={customColor ? getColor : {scheme:'nivo'}}
             gridYValues={yValues}
             minValue={0}
             maxValue={yValues[yValues.length - 1]}
