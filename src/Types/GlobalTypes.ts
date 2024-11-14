@@ -250,8 +250,7 @@ type AccessTimeRestrictionValueType = {
         startTime: string|null,
         endTime: string|null,
         type: AccessTimeRestrictionTimeRangeTypeType
-    },
-    isLoginDenyEnabled: boolean,
+    }
 }
 type AccessTimeRestrictionType = {
     isEnabled: boolean,

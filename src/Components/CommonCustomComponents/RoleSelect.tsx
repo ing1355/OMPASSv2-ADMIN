@@ -6,10 +6,11 @@ type RoleSelectProps = {
     selectedGroup?: userRoleType
     setSelectedGroup: (data: userRoleType) => void
     needSelect?: boolean
+    isRoot?: boolean
 }
 
-const RoleSelect = ({ selectedGroup, setSelectedGroup, needSelect }: RoleSelectProps) => {
-    const userRoles: userRoleType[] = ["USER", "ADMIN"]
+const RoleSelect = ({ selectedGroup, setSelectedGroup, needSelect, isRoot }: RoleSelectProps) => {
+    const userRoles: userRoleType[] = isRoot ? ["USER", "ADMIN"] : ["USER"]
     return <>
         <CustomSelect
             items={userRoles.map(_ => ({

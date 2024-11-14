@@ -139,7 +139,7 @@ const UserDetail = ({ }) => {
             setDataLoading(false)
         }
     }
-
+    
     useLayoutEffect(() => {
         if (uuid) {
             GetDatas()
@@ -327,7 +327,8 @@ const UserDetail = ({ }) => {
                             중복 확인
                         </Button>
                     </UserInfoInputrow> : <UserInfoRow title="ID" value={userData ? userData.username : ""} />}
-                    {/* {(isAdd || (isModify && (isSelf || (userData?.role === 'ADMIN' && userInfo.role === 'ROOT') || (userData?.role === 'USER' && isAdmin)))) && <>
+                    {/* {(isAdd || (isModify && (isSelf || (userData?.role === 'ADMIN' && userInfo.role === 'ROOT') || (userData?.role === 'USER' && isAdmin)))) && <> */}
+                    {(isAdd || (isSelf && isModify)) && <>
                     <UserInfoInputrow title='PASSWORD' required>
                         <Input className='st1' value={targetValue.password} placeholder="비밀번호 입력" disabled={!targetValue.hasPassword} valueChange={value => {
                             if (isAdd) {
@@ -375,7 +376,7 @@ const UserDetail = ({ }) => {
                                     msg: <FormattedMessage id="PASSWORD_CONFIRM_CHECK" />
                                 }
                             ]} maxLength={16} noGap />
-                        </UserInfoInputrow></>} */}
+                        </UserInfoInputrow></>}
                     {(isModify || isAdd) ? <UserInfoInputrow title="NAME" required>
                         <Input className='st1' value={targetValue.name.firstName} placeholder="성" onChange={e => {
                             if (isAdd) {
@@ -468,7 +469,7 @@ const UserDetail = ({ }) => {
                         }} />
                     </UserInfoInputrow> : <UserInfoRow title="GROUP" value={userData?.group?.name || "선택 안함"} />} */}
 
-                    {((isModify || isAdd) && isAdmin && userData?.role !== 'ROOT') ? <UserInfoInputrow title="USER_ROLE">
+                    {((isModify && userInfo.role === 'ROOT') || (isAdd && isAdmin)) ? <UserInfoInputrow title="USER_ROLE">
                         <RoleSelect selectedGroup={isAdd ? addValues.role : modifyValues.role} setSelectedGroup={(role) => {
                             if (isAdd) {
                                 setAddValues({
@@ -481,7 +482,7 @@ const UserDetail = ({ }) => {
                                     role
                                 })
                             }
-                        }} needSelect />
+                        }} needSelect isRoot={userInfo.role === 'ROOT'}/>
                     </UserInfoInputrow> : <UserInfoRow title="USER_ROLE" value={(userData && userData.role) ? formatMessage({ id: userData.role + '_ROLE_VALUE' }) : "선택 안함"} />}
                     {!isAdd && <UserInfoRow title="RECOVERY_CODE" value={userData?.recoveryCode || '-'} />}
                     {!isAdd && <UserInfoRow title="STATUS_LABEL" value={<>

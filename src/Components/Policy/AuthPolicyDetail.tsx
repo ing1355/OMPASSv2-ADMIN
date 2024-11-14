@@ -74,8 +74,7 @@ const defaultTimePolicyData = (): AccessTimeRestrictionValueType => ({
         type: 'ALL_TIME',
         startTime: dayjs().format(timepickerFormat),
         endTime: dayjs().format(timepickerFormat)
-    },
-    isLoginDenyEnabled: true,
+    }
 })
 
 const AuthPolicyDetail = () => {
@@ -814,14 +813,6 @@ const AuthPolicyDetail = () => {
                                             }} />
                                         </label>
                                     </div>
-                                    <div>
-                                        위반 시 로그인 차단 : <Switch checked={currentAccessTimeValue.isLoginDenyEnabled} onChange={check => {
-                                            setCurrentAccessTimeValue({
-                                                ...currentAccessTimeValue,
-                                                isLoginDenyEnabled: check
-                                            })
-                                        }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
-                                    </div>
                                 </div>
                                 <div className="time-policy-buttons-container">
                                     <Button icon={addIconWhite} className="st3" onClick={() => {
@@ -899,7 +890,17 @@ const AuthPolicyDetail = () => {
                                         alignItems: 'center',
                                         gap: '12px'
                                     }}>
-                                        시간 선택 : <TimePicker format={timepickerFormat} size="small" disabled={_.timeRange.type === 'ALL_TIME'} value={dayjs(_.timeRange.startTime, timepickerFormat)} onChange={val => {
+                                        시간 선택 : <TimePicker.RangePicker format={timepickerFormat} size="small" disabled={_.timeRange.type === 'ALL_TIME'} value={[_.timeRange.startTime ? dayjs(_.timeRange.startTime, timepickerFormat) : null, _.timeRange.endTime ? dayjs(_.timeRange.endTime, timepickerFormat) : null]} onChange={val => {
+                                            setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
+                                                ...timeValue,
+                                                timeRange: {
+                                                    ...timeValue.timeRange,
+                                                    startTime: (val && val[0]) ? val[0].format(timepickerFormat) : null,
+                                                    endTime: (val && val[1]) ? val[1].format(timepickerFormat) : null
+                                                }
+                                            }) : timeValue))
+                                        }} />
+                                        {/* 시간 선택 : <TimePicker format={timepickerFormat} size="small" disabled={_.timeRange.type === 'ALL_TIME'} value={dayjs(_.timeRange.startTime, timepickerFormat)} onChange={val => {
                                             setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
                                                 ...timeValue,
                                                 timeRange: {
@@ -907,8 +908,8 @@ const AuthPolicyDetail = () => {
                                                     startTime: val.format(timepickerFormat)
                                                 }
                                             }) : timeValue))
-                                        }} />
-                                        <TimePicker format={timepickerFormat} size="small" disabled={_.timeRange.type === 'ALL_TIME'} value={dayjs(_.timeRange.endTime, timepickerFormat)} onChange={val => {
+                                        }} /> */}
+                                        {/* <TimePicker format={timepickerFormat} size="small" disabled={_.timeRange.type === 'ALL_TIME'} value={dayjs(_.timeRange.endTime, timepickerFormat)} onChange={val => {
                                             setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
                                                 ...timeValue,
                                                 timeRange: {
@@ -916,7 +917,7 @@ const AuthPolicyDetail = () => {
                                                     endTime: val.format(timepickerFormat)
                                                 }
                                             }) : timeValue))
-                                        }} />
+                                        }} /> */}
                                         <Input type="checkbox" checked={_.timeRange.type === 'ALL_TIME'} onChange={e => {
                                             setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
                                                 ...timeValue,
@@ -939,14 +940,6 @@ const AuthPolicyDetail = () => {
                                                 label: _
                                             }))} />
                                         </label>
-                                    </div>
-                                    <div>
-                                        위반 시 로그인 차단 : <Switch checked={_.isLoginDenyEnabled} onChange={check => {
-                                            setAccessTimeValues(accessTimeValues.map((timeValue, tInd) => tInd === ind ? ({
-                                                ...timeValue,
-                                                isLoginDenyEnabled: check
-                                            }) : timeValue))
-                                        }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
                                     </div>
                                 </div>
                                 <div className="time-policy-buttons-container">

@@ -171,24 +171,24 @@ const Login = () => {
             />
           </>}
         </div>
-        {/* {!needPasswordChange && <div className='login-action-row-container'>
+        {!needPasswordChange && <div className='login-action-row-container'>
           <div className='login-action-row'>
             <Input id='saveId' type='checkbox' className='mr10' defaultChecked={cookies.rememberUserId} label={<FormattedMessage id='SAVE_ID' />} />
           </div>
           <div className='login-action-row'>
-            <div className='reset-password-text' onClick={() => {
+            {/* <div className='reset-password-text' onClick={() => {
               navigate('/accountRecovery')
             }}>
               계정 복구
             </div>
-            <div className='login-action-vertical-line' />
+            <div className='login-action-vertical-line' /> */}
             {subdomainInfo.selfSignupEnabled && <div className='signup' onClick={() => {
               navigate("/signup")
             }}>
               <FormattedMessage id="CREATE_ACCOUNT" />
             </div>}
           </div>
-        </div>} */}
+        </div>}
         <Button
           className="st3 login-button"
           type='submit'
