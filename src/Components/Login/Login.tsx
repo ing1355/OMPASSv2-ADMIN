@@ -1,4 +1,4 @@
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { Link, useNavigate } from 'react-router-dom';
 import { OMPASS } from 'ompass';
 import { useState, useRef, useEffect } from 'react';
@@ -26,8 +26,12 @@ const Login = () => {
   const [needPasswordChange, setNeedPasswordChange] = useState(false)
   const [ompassOpened, setOmpassOpened] = useState(false)
   const ompassWindowRef = useRef<Window | null | undefined>()
+
+  const inputUesrnameRef = useRef<HTMLInputElement>()
+  const inputPasswordRef = useRef<HTMLInputElement>()
   
   const navigate = useNavigate()
+  const { formatMessage } = useIntl()
   const inputChangePasswordRef = useRef<HTMLInputElement>(null)
   const { noticeMessage, logoImage, userSignupMethod } = subdomainInfo || {}
 
@@ -48,6 +52,14 @@ const Login = () => {
         setTempToken('')
       })
     } else {
+      if(!inputUsername) {
+        inputUesrnameRef.current?.focus()
+        return message.error("아이디를 입력해주세요.")
+      }
+      if(!inputPassword) {
+        inputPasswordRef.current?.focus()
+        return message.error("비밀번호를 입력해주세요.")
+      }
       LoginFunc({
         domain: subDomain,
         username: inputUsername,
@@ -58,14 +70,19 @@ const Login = () => {
         if (status === 'WAIT_INIT_PASSWORD') {
           setInputPassword('')
           setTempToken(token)
+          message.info("비밀번호 초기화 대상입니다. 비밀번호 초기화를 진행해주세요.")
           return setNeedPasswordChange(true)
         }
-        const resultUri = popupUri + `&authorization=${token}`
+        const temp = popupUri + `&authorization=${token}`
         if (isDev) {
           const targetUrl = "192.168.182.120:9002"
+          const resultUri = temp.replace("www.ompass.kr:54007", targetUrl).replace("www.ompass.kr:54012", targetUrl).replace("192.168.182.75:9001", targetUrl).replace("ompass.kr:59001", targetUrl)
+          if(!ompassWindowRef.current?.closed) {
+            ompassWindowRef.current?.close()
+          }
           ompassWindowRef.current = OMPASS(resultUri.replace("www.ompass.kr:54007", targetUrl).replace("www.ompass.kr:54012", targetUrl).replace("192.168.182.75:9001", targetUrl).replace("ompass.kr:59001", targetUrl));
         } else {
-          ompassWindowRef.current = OMPASS(resultUri);
+          ompassWindowRef.current = OMPASS(temp);
         }
         // if(ompassWindowRef.current) {
         //   setOmpassOpened(true)
@@ -80,6 +97,8 @@ const Login = () => {
         } else {
           removeCookie("rememberUserId");
         }
+      }).catch(err => {
+        setInputPassword('')
       })
     }
   }
@@ -117,7 +136,7 @@ const Login = () => {
               maxLength={16}
               noGap
               customType='password'
-              placeholder='변경할 비밀번호 입력'
+              placeholder={formatMessage({id: 'PASSWORD_CHANGE_PLACEHOLDER'})}
               ref={inputChangePasswordRef}
               valueChange={value => {
                 setInputChangePassword(value);
@@ -128,6 +147,7 @@ const Login = () => {
               value={inputUsername}
               maxLength={16}
               noGap
+              ref={inputUesrnameRef}
               name="userId"
               valueChange={value => {
                 setInputUsername(value);
@@ -152,7 +172,7 @@ const Login = () => {
               value={inputChangePasswordConfirm}
               name="passwordConfirm"
               maxLength={16}
-              placeholder='비밀번호 재입력'
+              placeholder={formatMessage({id: 'PASSWORD_CHANGE_CONFIRM_PLACEHOLDER'})}
               valueChange={value => {
                 setInputChangePasswordConfirm(value);
               }}
@@ -162,6 +182,7 @@ const Login = () => {
               className='st1 login-input password'
               type='password'
               noGap
+              ref={inputPasswordRef}
               name="password"
               maxLength={16}
               value={inputPassword}
@@ -176,12 +197,12 @@ const Login = () => {
             <Input id='saveId' type='checkbox' className='mr10' defaultChecked={cookies.rememberUserId} label={<FormattedMessage id='SAVE_ID' />} />
           </div>
           <div className='login-action-row'>
-            {/* <div className='reset-password-text' onClick={() => {
+            <div className='reset-password-text' onClick={() => {
               navigate('/accountRecovery')
             }}>
               계정 복구
             </div>
-            <div className='login-action-vertical-line' /> */}
+            {subdomainInfo.selfSignupEnabled && <div className='login-action-vertical-line' />}
             {subdomainInfo.selfSignupEnabled && <div className='signup' onClick={() => {
               navigate("/signup")
             }}>

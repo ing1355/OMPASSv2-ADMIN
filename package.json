@@ -1,12 +1,9 @@
 {
   "name": "ompass_rp_admin",
-  "version": "2.0.0(58)",
+  "version": "2.0.0(61)",
   "proxy": "https://ompass.kr:54006",
   "private": true,
   "dependencies": {
-    "@devexpress/dx-react-chart": "^4.0.9",
-    "@devexpress/dx-react-chart-material-ui": "^4.0.9",
-    "@devexpress/dx-react-core": "^4.0.9",
     "@googlemaps/js-api-loader": "^1.16.8",
     "@mui/material": "^6.1.2",
     "@nivo/bar": "^0.88.0",
@@ -50,10 +47,11 @@
   "scripts": {
     "start": "cross-env HTTPS=true react-scripts start",
     "build": "cross-env GENERATE_SOURCEMAP=false react-scripts build",
+    "build:dev": "cross-env REACT_APP_DEV=dev GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "__deploy": "scp -r ./build/* hozzi@192.168.182.140:/usr/local/ompass_agent_rp",
-    "deploy": "scp -r ./build/* hozzi@192.168.182.140:/usr/local/ompass_agent_rp_test",
+    "deploy": "scp -r ./build/* hozzi@192.168.182.140:/opt/ompass2/fe/ompass_portal",
     "deploy2": "scp -r ./build/* hozzi@192.168.182.140:/usr/local/ompass_agent_rp_dev",
     "testDeploy": "scp -r ./build/* hozzi@192.168.182.140:/usr/local/ompass_agent_rp_test",
     "awsInvalidation": "aws cloudfront create-invalidation --distribution-id E2ALB03P1N7UVH --paths \"/*\" --no-cli-pager",

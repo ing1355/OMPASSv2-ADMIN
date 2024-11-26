@@ -18,19 +18,20 @@ import documentIconHover from '../../assets/documentIconHover.png'
 import deleteIcon from '../../assets/deleteIcon.png'
 import deleteIconHover from '../../assets/deleteIconHover.png'
 import './ApplicationDetail.css'
-import { FormattedMessage } from "react-intl"
+import { FormattedMessage, useIntl } from "react-intl"
 import CustomImageUpload from "Components/CommonCustomComponents/CustomImageUpload"
 import BottomLineText from "Components/CommonCustomComponents/BottomLineText"
 
 const ApiServerAddressItem = ({ text }: {
     text: string
 }) => {
-    return <CustomInputRow title="API 서버 주소">
+    const { formatMessage } = useIntl()
+    return <CustomInputRow title={<FormattedMessage id="API_SERVER_ADDRESS_LABEL"/>}>
         <CopyToClipboard text={text} onCopy={(value, result) => {
             if (result) {
-                message.success("API 서버 주소가 복사되었습니다.")
+                message.success(formatMessage({id: 'API_SERVER_ADDRESS_COPY_SUCCESS'}))
             } else {
-                message.error("API 서버 주소 복사에 실패하였습니다.")
+                message.success(formatMessage({id: 'API_SERVER_ADDRESS_COPY_FAIL'}))
             }
         }}>
             <Input className="st1 secret-key" value={text} readOnly />
@@ -59,9 +60,10 @@ const ApplicationDetail = () => {
     const [hasWindowsLogin, setHasWindowsLogin] = useState(false)
     const [applicationType, setApplicationType] = useState<ApplicationDataType['type'] | ''>('')
     const navigate = useNavigate()
+    const {formatMessage} = useIntl()
     const { uuid } = useParams()
     const isAdd = !uuid
-    const needDomains: ApplicationDataType['type'][] = ["DEFAULT", "ADMIN"]
+    const needDomains: ApplicationDataType['type'][] = ["DEFAULT", "ADMIN", "RADIUS"]
     const isRedmine = applicationType === 'REDMINE'
     const typeItems = applicationTypes.map(_ => ({
         key: _,
@@ -115,19 +117,19 @@ const ApplicationDetail = () => {
             <div className="custom-detail-header-items-container">
                 <Button className="st3" onClick={() => {
                     if (!applicationType) {
-                        return message.error("어플리케이션 타입을 선택해주세요.")
+                        return message.error(formatMessage({id: 'PLEASE_SELECT_APPLICATION_TYPE'}))
                     }
                     if (!inputName) {
-                        return message.error("이름을 입력해주세요")
+                        return message.error(formatMessage({id: 'PLEASE_INPUT_APPLICATION_NAME'}))
                     }
                     if (!inputDomain && needDomains.includes(applicationType)) {
-                        return message.error("도메인을 입력해주세요")
+                        return message.error(formatMessage({id: 'PLEASE_INPUT_APPLICATION_DOMAIN'}))
                     }
                     if (!inputRedirectUrl && needDomains.includes(applicationType)) {
-                        return message.error("리다이렉트 URI을 입력해주세요")
+                        return message.error(formatMessage({id: 'PLEASE_INPUT_APPLICATION_REDIRECT_URI'}))
                     }
                     if (!selectedPolicy) {
-                        return message.error("정책을 설정해주세요.")
+                        return message.error(formatMessage({id: 'PLEASE_SELECT_APPLICATION_POLICY'}))
                     }
                     if (uuid) {
                         UpdateApplicationDataFunc(uuid!, {
@@ -144,7 +146,7 @@ const ApplicationDetail = () => {
                             type: applicationType,
                             isTwoFactorAuthEnabled: needPassword
                         }, () => {
-                            message.success('수정 성공!')
+                            message.success(formatMessage({id: 'APPLICATION_MODIFY_SUCCESS_MSG'}))
                             // navigate('/Applications')
                         })
                     } else {
@@ -162,16 +164,16 @@ const ApplicationDetail = () => {
                             type: applicationType,
                             isTwoFactorAuthEnabled: needPassword
                         }, () => {
-                            message.success('추가 성공!')
+                            message.success(formatMessage({id: 'APPLICATION_ADD_SUCCESS_MSG'}))
                             navigate('/Applications')
                         })
                     }
                 }}>
-                    저장
+                    <FormattedMessage id="SAVE"/>
                 </Button>
-                {/* <Button className="st5" icon={documentIcon} hoverIcon={documentIconHover}>
-                    문서 보기
-                </Button> */}
+                <Button className="st5" icon={documentIcon} hoverIcon={documentIconHover}>
+                    <FormattedMessage id="APPLICATION_DOCS_VIEW_LABEL"/>
+                </Button>
                 {uuid && <>
                     {applicationType !== 'ADMIN' && <Button icon={deleteIcon} hoverIcon={deleteIconHover} className="st2" onClick={() => {
                         setSureDelete(true)
@@ -182,27 +184,27 @@ const ApplicationDetail = () => {
             </div>
         </ContentsHeader>
         <div className="contents-header-container">
-            {!isAdd && <BottomLineText title="상세 정보" style={{
+            {!isAdd && <BottomLineText title={<FormattedMessage id="APPLICATION_INFO_DETAIL_LABELS"/>} style={{
                 marginBottom: '16px'
             }} />}
             {!isAdd && <ApiServerAddressItem text={inputApiServerHost} />}
-            {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title="클라이언트 아이디">
+            {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_CLIENT_ID_LABEL"/>}>
                 <CopyToClipboard text={inputClientId} onCopy={(value, result) => {
                     if (result) {
-                        message.success("클라이언트 아이디가 복사되었습니다.")
+                        message.success(formatMessage({id: 'APPLICATION_CLIENT_ID_COPY_SUCCESS_MSG'}))
                     } else {
-                        message.error("클라이언트 아이디 복사에 실패하였습니다.")
+                        message.success(formatMessage({id: 'APPLICATION_CLIENT_ID_COPY_FAIL_MSG'}))
                     }
                 }}>
                     <Input className="st1 secret-key" value={inputClientId} disabled={isAdd} readOnly={!isAdd} />
                 </CopyToClipboard>
             </CustomInputRow>}
-            {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title="시크릿 키">
+            {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_SECRET_KEY_LABEL"/>}>
                 <CopyToClipboard text={inputSecretKey} onCopy={(value, result) => {
                     if (result) {
-                        message.success("시크릿 키가 복사되었습니다.")
+                        message.success(formatMessage({id: 'APPLICATION_SECRET_KEY_COPY_SUCCESS_MSG'}))
                     } else {
-                        message.error("시크릿 복사에 실패하였습니다.")
+                        message.success(formatMessage({id: 'APPLICATION_SECRET_KEY_COPY_FAIL_MSG'}))
                     }
                 }}>
                     <Input className="st1 secret-key" value={inputSecretKey} onChange={e => {
@@ -213,61 +215,61 @@ const ApplicationDetail = () => {
                     UpdateApplicationSecretkeyFunc(uuid, (appData) => {
                         setInputSecretKey(appData.secretKey)
                     })
-                }}>비밀키 재발급</Button>
+                }}><FormattedMessage id="APPLICATION_SECRET_KEY_RESET"/></Button>
             </CustomInputRow>}
-            {!isAdd && <BottomLineText title="설정" style={{
+            {!isAdd && <BottomLineText title={<FormattedMessage id="APPLICATION_INFO_SETTING_LABELS"/>} style={{
                 marginTop: '48px',
                 marginBottom: '16px'
             }} />}
-            <CustomInputRow title="유형">
+            <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_TYPE_LABEL"/>}>
                 {isAdd ? <CustomSelect value={applicationType} onChange={value => {
                     setApplicationType(value as ApplicationDataType['type'])
                 }} items={typeItems} needSelect /> : getApplicationTypeLabel(applicationType as ApplicationDataType['type'])}
             </CustomInputRow>
             {
                 applicationType && <>
-                    <CustomInputRow title="이름" required>
+                    <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_NAME_LABEL"/>} required>
                         <Input className="st1" value={inputName} valueChange={value => {
                             setInputName(value)
-                        }} placeholder="ex) 테스트 어플리케이션" readOnly={applicationType === 'ADMIN'} maxLength={20} />
+                        }} placeholder={formatMessage({id: 'APPLICATION_INFO_NAME_PLACEHOLDER'})} readOnly={applicationType === 'ADMIN'} maxLength={20} />
                     </CustomInputRow>
-                    <CustomInputRow title="설명">
+                    <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_DESCRIPTION_LABEL"/>}>
                         <Input className="st1" value={inputDescription} valueChange={value => {
                             setInputDescription(value)
                         }} />
                     </CustomInputRow>
-                    <CustomInputRow title="공지사항">
+                    <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_NOTICE_LABEL"/>}>
                         <Input className="st1" value={helpMsg} valueChange={value => {
                             setHelpMsg(value)
                         }} />
                     </CustomInputRow>
                     {
                         needDomains.includes(applicationType) && <>
-                            <CustomInputRow title="도메인" required>
+                            <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_DOMAIN_LABEL"/>} required>
                                 <Input className="st1" value={inputDomain} valueChange={value => {
                                     setInputDomain(value)
                                 }} placeholder="ex) https://omsecurity.kr:1234" readOnly={applicationType === 'ADMIN'} noGap />
                             </CustomInputRow>
-                            {!(isAdd && applicationType === 'REDMINE') && ((!isAdd && applicationType === 'REDMINE') ? <CustomInputRow title="리다이렉트 URI" required>
+                            {!(isAdd && applicationType === 'REDMINE') && ((!isAdd && applicationType === 'REDMINE') ? <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_REDIRECT_URI_LABEL"/>} required>
                                 <Input className="st1" value={inputRedirectUrl} valueChange={value => {
                                     setInputRedirectUrl(value)
                                 }} placeholder="ex) /ompass" noGap />
-                            </CustomInputRow> : <CustomInputRow title="리다이렉트 URI" required>
+                            </CustomInputRow> : <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_REDIRECT_URI_LABEL"/>} required>
                                 <Input className="st1" value={inputRedirectUrl} valueChange={value => {
                                     setInputRedirectUrl(value)
                                 }} placeholder="ex) /ompass" readOnly={applicationType === 'ADMIN'} noGap />
                             </CustomInputRow>)}
                         </>
                     }
-                    {applicationType === 'WINDOWS_LOGIN' && <CustomInputRow title="패스워드 입력 필요">
+                    {applicationType === 'WINDOWS_LOGIN' && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_WINDOWS_PASSWORD_NEED_CHECK_LABEL"/>}>
                         <Switch checked={needPassword} onChange={check => {
                             setNeedPassword(check)
                         }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
                     </CustomInputRow>}
-                    <CustomInputRow title="정책 설정" required>
+                    <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_POLICY_LABEL"/>} required>
                         <PolicySelect selectedPolicy={selectedPolicy} setSelectedPolicy={setSelectedPolicy} />
                     </CustomInputRow>
-                    <CustomInputRow title="로고 설정" containerStyle={{
+                    <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_LOGO_LABEL"/>} containerStyle={{
                         alignItems: 'flex-start'
                     }}>
                         <CustomImageUpload data={logoImage} callback={handleFileSelect} />
@@ -281,20 +283,17 @@ const ApplicationDetail = () => {
                 setSureDelete(false);
             }}
             type="warning"
-            typeTitle='정말로 삭제하시겠습니까?'
+            typeTitle={formatMessage({id: 'APPLICATION_SURE_DELETE_TEXT'})}
             typeContent={<FormattedMessage id="APPLICATION_DELETE_CONFIRM_MSG" />}
-            okText={"삭제"}
+            yesOrNo
             okCallback={() => {
                 return DeleteApplicationListFunc(uuid!, () => {
                     setSureDelete(false)
-                    message.success('삭제 성공!')
+                    message.success(formatMessage({id: 'APPLICATION_DELETE_SUCCESS_MSG'}))
                     navigate('/Applications')
-                }).catch(err => {
-                    message.error("삭제 실패")
                 })
             }} buttonLoading />
     </Contents>
-    //미번
 }
 
 export default ApplicationDetail

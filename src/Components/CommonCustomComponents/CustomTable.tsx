@@ -7,7 +7,7 @@ import Button from "./Button"
 import CustomSelect from "./CustomSelect"
 import Input from "./Input"
 import { userSelectPageSize } from "Constants/ConstantValues"
-import { FormattedMessage } from "react-intl"
+import { FormattedMessage, useIntl } from "react-intl"
 import { useLocation, useNavigate } from "react-router"
 
 type CustomTableButtonType = {
@@ -21,7 +21,7 @@ type CustomTableButtonType = {
 type SearchOptionType = {
     key: string
     type: 'string' | 'select'
-    label?: string
+    label?: React.ReactNode
     needSelect?: boolean
     selectOptions?: {
         key: string
@@ -47,13 +47,14 @@ type CustomTableProps<T extends {
     noDataHeight?: CSSProperties['height']
     pagination?: boolean
     totalCount?: number
-    paramsChange?: (params: P) => void
     hover?: boolean
     noSearch?: boolean
     searchOptions?: SearchOptionType[]
+    onPageChange?: (page: number, size: number) => void
     onSearchChange?: (val: CustomTableSearchParams) => void
     addBtn?: CustomTableButtonType
     deleteBtn?: CustomTableButtonType
+    customBtns?: React.ReactNode
     refresh?: boolean
 }
 
@@ -76,9 +77,11 @@ const CustomTable = <T extends {
     noDataHeight,
     noSearch,
     searchOptions,
+    onPageChange,
     onSearchChange,
     addBtn,
     deleteBtn,
+    customBtns,
     refresh,
     hover }: CustomTableProps<T, P>) => {
         
@@ -89,6 +92,7 @@ const CustomTable = <T extends {
     const [hoverId, setHoverId] = useState(-1)
     const [_refresh, setRefresh] = useState(false)
     const location = useLocation()
+    const { formatMessage } = useIntl()
 
     const searchTarget = useMemo(() => {
         if(searchOptions) {
@@ -120,6 +124,7 @@ const CustomTable = <T extends {
             searchCallback(pageNumber, pageSizeOptions)
         }
         localStorage.setItem('user_select_size', pageSizeOptions.toString())
+        if(onPageChange) onPageChange(pageNumber, pageSizeOptions)
     };
 
     useEffect(() => {
@@ -170,14 +175,14 @@ const CustomTable = <T extends {
                     setSearchType(type)
                 }} needSelect/>
                 {
-                    searchTarget?.type === 'string' ? <Input containerClassName="table-search-input" className="st1" name="searchValue" value={searchValue} placeholder="검색명" valueChange={value => {
+                    searchTarget?.type === 'string' ? <Input containerClassName="table-search-input" className="st1" name="searchValue" value={searchValue} placeholder={formatMessage({id:'TABLE_SEARCH_PLACEHOLDER_LABEL'})} valueChange={value => {
                         setSearchValue(value)
                     }} /> : <CustomSelect value={searchValue} onChange={value => {
                         setSearchValue(value)
                     }} items={searchTarget?.selectOptions!} needSelect={searchTarget?.needSelect}/>
                 }
                 <Button className="st3" icon={searchIcon} type="submit">
-                    검색
+                    <FormattedMessage id="SEARCH"/>
                 </Button>
                 <Button className="st4" onClick={() => {
                     setSearchType(searchOptions[0].key)
@@ -186,7 +191,7 @@ const CustomTable = <T extends {
                     setTableSize(10)
                     searchCallback(1, 10)
                 }} icon={resetIcon}>
-                    초기화
+                    <FormattedMessage id="NORMAL_RESET_LABEL"/>
                 </Button>
             </form>}
             <div className="custom-table-header-buttons">
@@ -196,6 +201,7 @@ const CustomTable = <T extends {
                 {deleteBtn && <Button className="st3" icon={deleteBtn.icon} hoverIcon={deleteBtn.hoverIcon} onClick={deleteBtn.callback}>
                     {deleteBtn.label}
                 </Button>}
+                {customBtns}
             </div>
         </div>
         <table className={`custom-table ${theme}${className ? ' ' + className : ''}`}>

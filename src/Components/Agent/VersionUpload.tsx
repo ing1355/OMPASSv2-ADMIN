@@ -59,7 +59,7 @@ const VersionUpload = () => {
               if (!inputHash) {
                 return message.error(formatMessage({ id: 'PLEASE_INPUT_HASH' }));
               } else if (!inputFile) {
-                return message.error("파일을 업로드해주세요.")
+                return message.error(formatMessage({id: 'PLEASE_UPLOAD_INPUT_FILE'}))
               } else if (inputFile.size > maxFileSize) {
                 return message.error(formatMessage({ id: 'THE_FILE_SIZE_EXCEEDS_200MB' }));
               } else if (fileExtension !== 'zip') {

@@ -99,6 +99,10 @@
 
 @media (max-width:768px) {
 
+  .header-container-contents {
+    
+  }
+
   /* 모바일 가로, 타블렛 세로 */
   .header_logo_title {
     font-size: 1.3rem;

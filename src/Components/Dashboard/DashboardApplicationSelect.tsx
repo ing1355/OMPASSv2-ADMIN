@@ -18,7 +18,7 @@ const DashboardApplicationSelect = ({ selectedApplication, setSelectedApplicatio
                     setSelectedApplication(applications)
                 }
             }}>
-                전체
+                <FormattedMessage id="NORMAL_ALL_LABEL"/>
             </div>
             {
                 applications.map(_ => <div key={_.id} className={`dashboard-application-select-item${selectedApplication.find((__) => __.id === _.id) ? ' selected' : ''}`} onClick={() => {

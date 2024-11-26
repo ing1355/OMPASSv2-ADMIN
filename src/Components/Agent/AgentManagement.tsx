@@ -174,15 +174,11 @@ const AgentManagement = () => {
                   e?.stopPropagation()
                   e?.preventDefault()
                   const versionIds = `${row.fileId}`
-                  if (versionIds) {
-                    DeleteAgentInstallerFunc(versionIds, () => {
-                      setOpenFileDelete(-1);
-                      setRefresh(true)
-                      message.success(formatMessage({ id: 'VERSION_DELETE' }));
-                    })
-                  } else {
-                    message.error(formatMessage({ id: 'NO_ITEM_SELECTED' }));
-                  }
+                  DeleteAgentInstallerFunc(versionIds, () => {
+                    setOpenFileDelete(-1);
+                    setRefresh(true)
+                    message.success(formatMessage({ id: 'VERSION_DELETE' }));
+                  })
                 }}
                 onCancel={(e) => {
                   e?.stopPropagation()

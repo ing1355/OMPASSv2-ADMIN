@@ -93,7 +93,6 @@ const SecondStep = () => {
                 e.preventDefault();
                 if (isIdAlert) {
                     return usernameRef.current?.focus()
-                    // return message.error(formatMessage({id:'USERNAME_CHECK'}))
                 }
                 if (idExist) {
                     return message.error(formatMessage({ id: 'ID_CHECK' }))
@@ -103,25 +102,22 @@ const SecondStep = () => {
                 }
                 if (inputPassword !== inputPasswordConfirm) {
                     return passwordConfirmRef.current?.focus()
-                    // return message.error("비밀번호가 일치하지 않습니다.")
                 }
                 if (isNameAlert1) {
                     return firstNameRef.current?.focus()
-                    // return message.error(formatMessage({id: 'FIRST_NAME_CHECK'}))
                 }
                 if (isNameAlert2) {
                     return lastNameRef.current?.focus()
-                    // return message.error(formatMessage({id: 'LAST_NAME_CHECK'}))
                 }
                 if (isEmailAlert) {
                     return emailRef.current?.focus()
                 }
                 if (!emailCodeSend) {
-                    return message.error("이메일을 입력한 뒤 인증 코드를 발송해주세요.")
+                    return message.error(formatMessage({id: 'SEND_CODE_NEED_EMAIL_SEND_FIRST'}))
                 }
                 if (!emailVerify) {
                     codeRef.current?.focus()
-                    return message.error("인증 코드 확인은 필수입니다.")
+                    return message.error(formatMessage({id: 'NEED_CODE_VERIFY_MSG'}))
                 }
                 if (inputUsername && inputName1 && inputName2 && inputEmail && inputPassword) {
                     SignUpRequestFunc({
@@ -222,7 +218,6 @@ const SecondStep = () => {
                     required
                     ref={firstNameRef}
                     noGap
-                    onlyText
                     customType="name"
                     rules={[
                         {
@@ -242,7 +237,6 @@ const SecondStep = () => {
                     className='st1'
                     required
                     ref={lastNameRef}
-                    onlyText
                     noGap
                     rules={[
                         {
@@ -286,7 +280,7 @@ const SecondStep = () => {
                             SignUpVerificationCodeSendFunc({
                                 email: inputEmail
                             }, () => {
-                                message.success("인증 코드 발송 성공!")
+                                message.success(formatMessage({id: 'EMAIL_SEND_FOR_CODE_VERIFY_SUCCESS_MSG'}))
                                 mailTimer.current = setInterval(() => {
                                     setMailCount(count => count + 1)
                                     if (mailCountRef.current >= 10) {
@@ -329,7 +323,7 @@ const SecondStep = () => {
                                 code: verifyCode
                             }, () => {
                                 setEmailVerify(true)
-                                message.success("인증 코드 검증 성공!")
+                                message.success(formatMessage({id: 'SIGNUP_CODE_VERIFY_SUCCESS_MSG'}))
                             })
                         }}
                     ><FormattedMessage id='EMAIL_CODE_VERIFY' />

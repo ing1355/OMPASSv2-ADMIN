@@ -22,7 +22,7 @@ import copyIcon from '../../assets/copyIcon.png';
 import lastAuthIcon from '../../assets/lastAuthIcon.png';
 import sshIcon from '../../assets/sshIcon.png';
 import clientIcon from '../../assets/clientIcon.png';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import React, { PropsWithChildren, useState } from 'react';
 import './UserDetailComponents.css'
 import { convertBase64FromServerFormatToClient, createOSInfo } from 'Functions/GlobalFunctions';
@@ -34,10 +34,11 @@ import { ompassDefaultLogoImage } from 'Constants/ConstantValues';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { message } from 'antd';
 
-const UserDetailInfoContentItem = ({ imgSrc, title, content }: {
+const UserDetailInfoContentItem = ({ imgSrc, title, content, subContent }: {
     imgSrc: string
     title: React.ReactNode
     content: React.ReactNode
+    subContent?: string
 }) => {
     return <div className="user-detail-info-device-info-content-item">
         <img src={imgSrc} />
@@ -46,6 +47,11 @@ const UserDetailInfoContentItem = ({ imgSrc, title, content }: {
         </div>
         <div>
             {content}
+            {
+                subContent ? <>
+                    <br />({subContent})
+                </> : ''
+            }
         </div>
     </div>
 }
@@ -54,13 +60,13 @@ const AuthenticatorInfoContentsOMPASSType = ({ data }: {
     data: OMPASSAuthenticatorDataType
 }) => {
     const { mobile, id, lastAuthenticatedAt, createdAt } = data as OMPASSAuthenticatorDataType
-    const { os, deviceId, model, ompassAppVersion } = mobile
+    const { os, deviceId, deviceName, model, ompassAppVersion } = mobile
     return <>
         <div className="user-detail-info-device-info-content">
             <UserDetailInfoContentItem imgSrc={imgSrcByOS(os.name)} title={<FormattedMessage id="USER_DETAIL_OS_LABEL" />} content={`${os.name} ${os.version}`} />
             <UserDetailInfoContentItem imgSrc={ompassDefaultLogoImage} title={<FormattedMessage id="USER_DETAIL_VERSION_LABEL" />} content={`OMPASS v${ompassAppVersion}`} />
             <UserDetailInfoContentItem imgSrc={uuidIcon} title={<FormattedMessage id="USER_DETAIL_UUID_LABEL" />} content={deviceId} />
-            <UserDetailInfoContentItem imgSrc={deviceModelIcon} title={<FormattedMessage id="USER_DETAIL_DEVICE_INFO_LABEL" />} content={model} />
+            <UserDetailInfoContentItem imgSrc={deviceModelIcon} title={<FormattedMessage id="USER_DETAIL_DEVICE_INFO_LABEL" />} content={model} subContent={deviceName} />
             <UserDetailInfoContentItem imgSrc={registeredAtIcon} title={<FormattedMessage id="USER_DETAIL_REGISTERED_AT_LABEL" />} content={createdAt} />
             <UserDetailInfoContentItem imgSrc={lastAuthIcon} title={<FormattedMessage id="USER_DETAIL_LAST_AUTH_LABEL" />} content={lastAuthenticatedAt} />
         </div>
@@ -108,6 +114,7 @@ export const ViewPasscode = ({ code, noView }: {
     noView?: boolean
 }) => {
     const [isView, setIsView] = useState(false)
+    const { formatMessage } = useIntl()
     return <div className='user-detail-info-passcode-view-container'>
         <div>
             {isView ? code : "⦁⦁⦁⦁⦁⦁⦁⦁⦁"}
@@ -126,9 +133,44 @@ export const ViewPasscode = ({ code, noView }: {
         }}>
             <CopyToClipboard text={code} onCopy={(value, result) => {
                 if (result) {
-                    message.success("패스코드가 복사되었습니다.")
+                    message.success(formatMessage({id: 'PASSCODE_COPY_SUCCESS_MSG'}))
                 } else {
-                    message.error("패스코드 복사에 실패하였습니다.")
+                    message.success(formatMessage({id: 'PASSCODE_COPY_FAIL_MSG'}))
+                }
+            }}>
+                <img src={copyIcon} />
+            </CopyToClipboard>
+        </div>}
+    </div>
+}
+
+export const ViewRecoveryCode = ({ code, noView }: {
+    code: string
+    noView?: boolean
+}) => {
+    const [isView, setIsView] = useState(false)
+    const { formatMessage } = useIntl()
+    return <div className='user-detail-info-passcode-view-container'>
+        <div>
+            {isView ? code : "⦁⦁⦁⦁⦁⦁⦁⦁"}
+        </div>
+        {!noView && <div
+            onClick={(e) => {
+                e.stopPropagation()
+                e.preventDefault()
+                setIsView(!isView)
+            }}
+        >
+            <img src={isView ? passcodeVisibleIcon : passcodeHiddenIcon} />
+        </div>}
+        {!noView && <div onClick={e => {
+            e.stopPropagation()
+        }}>
+            <CopyToClipboard text={code} onCopy={(value, result) => {
+                if (result) {
+                    message.success("복구 코드 복사에 성공하였습니다.")
+                } else {
+                    message.success("복구 코드 복사에 실패하였습니다.")
                 }
             }}>
                 <img src={copyIcon} />
@@ -206,8 +248,8 @@ export const UserDetailInfoETCInfoContent = ({ data }: {
     const { groupName, authenticationInfo } = data
     const { policy } = authenticationInfo
     return <>
-        <UserDetailInfoContentItem imgSrc={groupMenuIcon} title="그룹" content={groupName || '그룹 없음'} />
-        <UserDetailInfoContentItem imgSrc={policyMenuIconBlack} title="정책" content={policy.name || '정책 없음'} />
+        <UserDetailInfoContentItem imgSrc={groupMenuIcon} title="그룹" content={groupName || <FormattedMessage id="NO_GROUP_SELECTED_LABEL"/>} />
+        <UserDetailInfoContentItem imgSrc={policyMenuIconBlack} title="정책" content={policy.name || <FormattedMessage id="NO_POLICY_SELECTED_LABEL"/>} />
     </>
 }
 
@@ -234,6 +276,16 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
             </div>
             <div className='ssh-icon-container'>
                 <img src={sshIcon} />
+            </div>
+            <div className="user-detail-info-device-info-content-item linux">
+                <div className='linux-target-text'>Server</div>
+                <img src={clientIcon} />
+                <div className="user-detail-info-device-info-content-title">
+                    <FormattedMessage id="USER_DETAIL_IP_ADDRESS_LABEL" />
+                </div>
+                <div>
+                    {serverInfo.ip}
+                </div>
             </div>
             <div className="user-detail-info-device-info-content-item linux">
                 <div className='linux-target-text'>Server</div>

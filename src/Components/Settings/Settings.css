@@ -13,3 +13,22 @@
         height: 46px;
     }
 }
+
+.admin-need2 {
+    transition: all .25s ease-out;
+    height: 0px;
+    overflow: hidden;
+    &.visible {
+        height: 40px;
+    }
+    &.visible.noticeVisible {
+        height: 160px;        
+    }
+}
+
+.admin-notice-setting-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}

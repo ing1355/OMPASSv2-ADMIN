@@ -6,6 +6,7 @@ import Button from 'Components/CommonCustomComponents/Button'
 import { useState } from 'react'
 import deleteIcon from '../../assets/deleteIconRed.png';
 import { ompassDefaultLogoImage } from 'Constants/ConstantValues'
+import { FormattedMessage, useIntl } from 'react-intl'
 
 type CustomImageUploadProps = {
     data: updateLogoImageType
@@ -15,13 +16,14 @@ type CustomImageUploadProps = {
 
 const CustomImageUpload = ({ callback, data, defaultImg }: CustomImageUploadProps) => {
     const [deleteShow, setDeleteShow] = useState(false)
+    const { formatMessage } = useIntl()
     
     const fileUploadCallback = (file: File) => {
         if (file.size > 1024 * 1024) {
-            return message.error("1MB를 초과하는 파일은 업로드가 불가능합니다.")
+            return message.error(formatMessage({id:'IMAGE_FILE_UPLOADED_SIZE_EXCEEDS_1MB'}))
         }
         if (!file.type.startsWith('image')) {
-            return message.error("올바른 이미지 형식이 아닙니다.")
+            return message.error(formatMessage({id:'IMAGE_FILE_UPLOADED_INVALID_FILE_FORMAT'}))
         }
         const reader = new FileReader();
         reader.onload = (event) => {
@@ -64,15 +66,15 @@ const CustomImageUpload = ({ callback, data, defaultImg }: CustomImageUploadProp
             <img src={data.image || defaultImg || ompassDefaultLogoImage} />
             {deleteShow && <div className='custom-image-delete-container'>
                 <img src={deleteIcon}/>
-                삭제
+                <FormattedMessage id="DELETE"/>
             </div>}
         </div>
         <div className="custom-image-upload-text">
-            이미지 업로드(드래그 가능)
+            <FormattedMessage id="IMAGE_UPLOAD_TITLE_LABEL"/>
             <br />
-            (최대 1MB)
+            <FormattedMessage id="IMAGE_UPLOAD_SUB_DESCRIPITON_1_LABEL"/>
             <br />
-            (jpeg, png, webp, jpg 가능)
+            <FormattedMessage id="IMAGE_UPLOAD_SUB_DESCRIPITON_2_LABEL"/>
             <Upload
                 showUploadList={false}
                 customRequest={() => {
@@ -83,7 +85,7 @@ const CustomImageUpload = ({ callback, data, defaultImg }: CustomImageUploadProp
                     if (e.file) fileUploadCallback(e.file.originFileObj as File)
                 }} >
                 <Button className="st5" icon={uploadIcon} hoverIcon={uploadIconHover}>
-                    업로드
+                    <FormattedMessage id="NORMAL_UPLOAD_LABEL"/>
                 </Button>
             </Upload>
         </div>

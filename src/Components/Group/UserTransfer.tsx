@@ -167,7 +167,7 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
     }, [refresh])
 
     return <div className="custom-transfer-user-container">
-        <TransferContainer datas={filteredUserDatas as UserTransferDataType[]} selected={tempUsers} setSelected={setTempUsers} viewStyle={viewStyle} title="그룹 외 사용자"/>
+        <TransferContainer datas={filteredUserDatas as UserTransferDataType[]} selected={tempUsers} setSelected={setTempUsers} viewStyle={viewStyle} title="현재 그룹 미포함 사용자"/>
         <div className='custom-transfer-buttons-container'>
             <img
                 src={onRight ? groupRightArrowIconHover : groupRightArrowIcon}
@@ -224,7 +224,7 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
                     message.success("그룹 인원 초기화 성공!")
                 }} />
         </div>
-        <TransferContainer datas={filteredSelectedUserDatas as UserTransferDataType[]} selected={selectedTempUsers} setSelected={setSelectedTempUsers} viewStyle={viewStyle} title="그룹 내 사용자"/>
+        <TransferContainer datas={filteredSelectedUserDatas as UserTransferDataType[]} selected={selectedTempUsers} setSelected={setSelectedTempUsers} viewStyle={viewStyle} title="현재 그룹 포함 사용자"/>
         <CustomModal
             open={sureChange}
             onCancel={() => {
@@ -232,9 +232,9 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
             }}
             type="warning"
             typeTitle='그룹 이동 안내'
-            typeContent={<>다른 그룹에 이미 포함되어있는 사용자가 존재합니다.<br />정말 현재 그룹에 포함시키시겠습니까?</>}
-            okText={"예"}
-            cancelText={"아니오"}
+            typeContent={<>다른 그룹에 이미 포함되어있는 사용자가 존재합니다.<br />선택한 사용자를 그룹에 추가시키시겠습니까?</>}
+            okText={"추가"}
+            cancelText={"취소"}
             okCallback={async () => {
                 setSelectedUsers(selectedUsers.concat(tempUsers))
                 setTempUsers([])

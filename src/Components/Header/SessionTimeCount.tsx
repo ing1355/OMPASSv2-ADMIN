@@ -3,7 +3,7 @@ import CustomModal from "Components/CommonCustomComponents/CustomModal"
 import { PatchSessionTokenFunc } from "Functions/ApiFunctions"
 import { getStorageAuth, setStorageAuth } from "Functions/GlobalFunctions"
 import jwtDecode from "jwt-decode"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { sessionCheckChange } from "Redux/actions/sessionCheckChange"
 import { userInfoChange, userInfoClear } from "Redux/actions/userChange"
@@ -44,30 +44,44 @@ const SessionTimeCount = () => {
         sessionCheckedRef.current = sessionChecked
     }, [sessionChecked])
 
+    const settingTimer = useCallback(() => {
+        if (sessionTimerRef.current) {
+            clearInterval(sessionTimerRef.current)
+        }
+        const temp = jwtDecode(getStorageAuth()!) as any
+        let currentTime = Date.now();
+        let expireTime = parseInt((temp.exp.toString()).padEnd((currentTime + "").length, "0"))
+        let gap = expireTime - currentTime;
+        setRemainSessionTime(parseInt((gap / 1000).toFixed(0)))
+        sessionTimerRef.current = setInterval(() => {
+            if (remainSessionTimeRef.current > 0 && remainSessionTimeRef.current <= 600 && !sessionCheckedRef.current) {
+                dispatch(sessionCheckChange(true))
+                setShowSession(true)
+                setRemainSessionTime(time => time - 1)
+            } else if (remainSessionTimeRef.current) {
+                setRemainSessionTime(time => time - 1)
+            } else if (remainSessionTimeRef.current <= 0) {
+                message.error('세션이 만료되었습니다.')
+                clearInterval(sessionTimerRef.current)
+                dispatch(sessionCheckChange(false))
+                dispatch(userInfoClear());
+            }
+        }, 1000);
+    }, [])
+
+    const visibilityChangeCallback = useCallback((e: Event) => {
+        if (document.visibilityState === "visible") {
+            settingTimer()
+          }
+    }, [])
+
+
     useEffect(() => {
         if (userInfo) {
-            if (sessionTimerRef.current) {
-                clearInterval(sessionTimerRef.current)
-            }
-            const temp = jwtDecode(getStorageAuth()!) as any
-            let currentTime = Date.now();
-            let expireTime = parseInt((temp.exp.toString()).padEnd((currentTime + "").length, "0"))
-            let gap = expireTime - currentTime;
-            setRemainSessionTime(parseInt((gap / 1000).toFixed(0)))
-            sessionTimerRef.current = setInterval(() => {
-                if (remainSessionTimeRef.current > 0 && remainSessionTimeRef.current <= 600 && !sessionCheckedRef.current) {
-                    dispatch(sessionCheckChange(true))
-                    setShowSession(true)
-                    setRemainSessionTime(time => time - 1)
-                } else if (remainSessionTimeRef.current) {
-                    setRemainSessionTime(time => time - 1)
-                } else if (remainSessionTimeRef.current <= 0) {
-                    message.error('세션이 만료되었습니다.')
-                    clearInterval(sessionTimerRef.current)
-                    dispatch(sessionCheckChange(false))
-                    dispatch(userInfoClear());
-                }
-            }, 1000);
+            settingTimer()
+            document.addEventListener('visibilitychange', visibilityChangeCallback)
+        } else {
+            document.removeEventListener('visibilitychange', visibilityChangeCallback)
         }
     }, [userInfo])
 

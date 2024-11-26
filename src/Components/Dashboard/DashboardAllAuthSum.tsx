@@ -2,49 +2,10 @@ import DashboardCardWithDateSelect from "./DashboardCardWithDateSelect"
 import { useEffect, useState } from "react";
 import { GetDashboardApplicationAuthSumFunc } from "Functions/ApiFunctions";
 import { dashboardDateInitialValue } from "./Dashboard";
-import {
-  Chart,
-  BarSeries,
-  ArgumentAxis,
-  ValueAxis,
-  ZoomAndPan,
-  Tooltip
-} from '@devexpress/dx-react-chart-material-ui';
-import { Animation, EventTracker } from "@devexpress/dx-react-chart";
-import { BarWithLabel, convertDaysByDate, convertHourRangeByDate } from "./DashboardFunctions";
+import { convertDaysByDate, convertHourRangeByDate } from "./DashboardFunctions";
 import { convertUTCStringToKSTString } from "Functions/GlobalFunctions";
 import { FormattedMessage } from "react-intl";
 import DashBoardBarChart from "./DashboardBarChart";
-
-const tooltipContentTitleStyle = {
-  fontWeight: 'bold',
-  paddingBottom: 0,
-};
-const tooltipContentBodyStyle = {
-  paddingTop: 0,
-};
-
-const TooltipContent = (props: any) => {
-  const { targetItem, text, ...restProps } = props;
-  return (
-    <div>
-      <div>
-        <Tooltip.Content
-          {...restProps}
-          style={tooltipContentTitleStyle}
-          text={<FormattedMessage id="AUTH_COUNT"/>}
-        />
-      </div>
-      <div>
-        <Tooltip.Content
-          {...restProps}
-          style={tooltipContentBodyStyle}
-          text={text}
-        />
-      </div>
-    </div>
-  );
-};
 
 const DashboardAllAuthSum = ({ applications }: {
   applications: ApplicationListDataType[]

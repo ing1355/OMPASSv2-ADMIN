@@ -52,6 +52,15 @@ const App: React.FC = () => {
 
   useEffect(() => {
     getDomainInfo()
+    const documentHeight = () => {
+      const doc = document.documentElement
+      doc.style.setProperty('--doc-height', `${window.innerHeight}px`)
+     }
+     window.addEventListener('resize', documentHeight)
+     documentHeight()
+     return () => {
+      window.removeEventListener('resize', documentHeight)
+     }
   }, [])
 
   useEffect(() => {
@@ -69,8 +78,8 @@ const App: React.FC = () => {
 
   return <IntlProvider locale={convertLangToIntlVer(lang)} messages={Locale[lang]}>
     <AxiosController />
-    {userInfo && <Header />}
     <div className={userInfo ? 'contents-container' : ""}>
+    {userInfo && <Header />}
       <Routes>
         <Route path='/ompass/*' element={<OMPASSVerify />} />
         <Route path='/GuidePage' element={<GuidePage />} />

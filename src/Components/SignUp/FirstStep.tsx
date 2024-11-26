@@ -6,9 +6,9 @@ import RefundImg from '../../assets/refunded_img.png';
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 
-type FirstStepProps = {
+type FirstStepProps = PropsWithChildren<{
     checkedChange: (checked: boolean) => void
-}
+}>
 
 const AgreeText = ({ title, subTitle, children }: PropsWithChildren<{
     title: string | React.ReactNode
@@ -21,7 +21,7 @@ const AgreeText = ({ title, subTitle, children }: PropsWithChildren<{
     </div>
 }
 
-const FirstStep = ({ checkedChange }: FirstStepProps) => {
+const FirstStep = ({ checkedChange, children }: FirstStepProps) => {
     const [selectAll, setSelectAll] = useState(false);
     const [checkBoxes, setCheckBoxes] = useState<{
         id: number, name: string, isChecked: boolean
@@ -49,14 +49,14 @@ const FirstStep = ({ checkedChange }: FirstStepProps) => {
             }
         }
 
-        return (
+        return <>
             <div>
                 {subList.map((item) => (
 
                     <div key={isService ? 'Service' + item : '' + item}>
                         <div style={{ display: 'flex' }}>
                             <div className='circleNumber'>{item}</div>
-                            <div style={{ flexBasis: '480px' }}>
+                            <div className="agree-subscription" style={{ flexBasis: '480px' }}>
                                 {isService ?
                                     <FormattedMessage id={`AGREE_SERVICE_CONTENT_SUB_${number}_${item}`} />
                                     :
@@ -79,7 +79,7 @@ const FirstStep = ({ checkedChange }: FirstStepProps) => {
                     </div>
                 ))}
             </div>
-        );
+        </>
     }
 
     const AgreeSubList = (isService: boolean, number: number, innerNumber: number, innerCount: number) => {

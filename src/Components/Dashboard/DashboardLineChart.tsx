@@ -1,6 +1,5 @@
-import { BarDatum } from "@nivo/bar"
-import { DashboardColors } from "./DashboardColors"
 import { ResponsiveLine, Serie } from "@nivo/line"
+import { useIntl } from "react-intl"
 
 type DashBoardLineChartProps = {
     datas: Serie[]
@@ -8,7 +7,7 @@ type DashBoardLineChartProps = {
 }
 
 const DashBoardLineChart = ({ datas, keys }: DashBoardLineChartProps) => {
-    console.log(datas)
+    const {formatMessage} = useIntl()
     return <>
         <ResponsiveLine
             data={datas}
@@ -28,35 +27,11 @@ const DashBoardLineChart = ({ datas, keys }: DashBoardLineChartProps) => {
                 tickSize: 0,
                 tickPadding: 5,
                 tickRotation: 0,
-                legend: '인증 횟수',
+                legend: formatMessage({id: 'DASHBOARD_AXIS_LEFT_AUTH_NUM_LABEL'}),
                 legendPosition: 'middle',
                 legendOffset: -40,
                 truncateTickAt: 0,
             }}
-            // legends={[
-            //     {
-            //         dataFrom: 'keys',
-            //         anchor: 'bottom-right',
-            //         direction: 'column',
-            //         justify: false,
-            //         translateX: 120,
-            //         translateY: 0,
-            //         itemsSpacing: 2,
-            //         itemWidth: 100,
-            //         itemHeight: 20,
-            //         itemDirection: 'left-to-right',
-            //         itemOpacity: 0.85,
-            //         symbolSize: 20,
-            //         effects: [
-            //             {
-            //                 on: 'hover',
-            //                 style: {
-            //                     itemOpacity: 1
-            //                 }
-            //             }
-            //         ]
-            //     }
-            // ]}
         />
     </>
 }

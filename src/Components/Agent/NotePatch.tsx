@@ -6,11 +6,12 @@ import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader";
 import { UpdateAgentInstallerNoteFunc } from 'Functions/ApiFunctions';
 import { useEffect, useState } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { useLocation, useNavigate } from "react-router";
 
 const NotePatch = () => {
     const [inputMemo, setInputMemo] = useState('')
+    const { formatMessage } = useIntl()
     const navigate = useNavigate();
     const location = useLocation()
     const { fileId, note }: {
@@ -29,7 +30,7 @@ const NotePatch = () => {
             <ContentsHeader title="VERSION_MANAGEMENT" subTitle={'NOTE_PATCH'}>
                 <Button className='st3' onClick={() => {
                     UpdateAgentInstallerNoteFunc(fileId, inputMemo, () => {
-                        message.success('메모 수정 성공!')
+                        message.success(formatMessage({id: 'NOTE_PATCH_SUCCESS_MSG'}))
                         navigate('/AgentManagement', {
                             replace: true
                         });

@@ -2,26 +2,14 @@ import { useEffect, useState } from "react"
 import DashboardCardWithDateSelect from "./DashboardCardWithDateSelect"
 import { dashboardDateInitialValue } from "./Dashboard"
 import { GetDashboardApplicationAuthFunc } from "Functions/ApiFunctions"
-import { convertDaysByDate, convertHourRangeByDate, CustomLegend } from "./DashboardFunctions"
-import {
-    Chart,
-    BarSeries,
-    ArgumentAxis,
-    ValueAxis,
-    ZoomAndPan,
-    Tooltip
-} from '@devexpress/dx-react-chart-material-ui';
-import { EventTracker, HoverState, Stack } from "@devexpress/dx-react-chart"
-import { DashboardColors } from "./DashboardColors"
-import { convertUTCStringToKSTString, slicePrice } from "Functions/GlobalFunctions"
+import { convertDaysByDate, convertHourRangeByDate } from "./DashboardFunctions"
+import { convertUTCStringToKSTString } from "Functions/GlobalFunctions"
 import { FormattedMessage } from "react-intl"
-import { ResponsiveBar } from "@nivo/bar"
 import DashBoardBarChart from "./DashboardBarChart"
 
 const DashboardAllAuth = ({ applications }: {
     applications: ApplicationListDataType[]
 }) => {
-    const [point, setPoint] = useState<number>(-1)
     const [params, setParams] = useState(dashboardDateInitialValue())
     const [datas, setDatas] = useState<{
         date: string
@@ -70,42 +58,6 @@ const DashboardAllAuth = ({ applications }: {
             setDatas([])
         }
     }, [applications, params])
-
-    const TooltipContent = ({
-        text, style, targetItem, ...props
-    }: any) => {
-        const alignStyle = {
-            ...style,
-            paddingLeft: '10px',
-        };
-        if (point !== -1) {
-            const items = applications.map(({ name, id }, ind) => {
-                const val = datas[point][name]
-                return (
-                    <tr key={id}>
-                        <td>
-                            <svg width="10" height="10">
-                                <circle cx="5" cy="5" r="5" fill={DashboardColors[ind]} />
-                            </svg>
-                        </td>
-                        <td>
-                            <Tooltip.Content style={alignStyle} text={name} {...props} />
-                        </td>
-                        <td align="right">
-                            <Tooltip.Content style={alignStyle} text={val ? slicePrice(val) : '0'} {...props} />
-                        </td>
-                    </tr>
-                );
-            });
-            return (
-                <table>
-                    <tbody>
-                        {items}
-                    </tbody>
-                </table>
-            );
-        } else return <>정보 없음</>
-    };
     
     return <DashboardCardWithDateSelect title={<FormattedMessage id="DASHBOARD_ALL_AUTH" />} onChange={(_) => {
         setParams(_)

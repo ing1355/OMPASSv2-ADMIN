@@ -2,7 +2,7 @@ import './UserDetail.css'
 import { message } from "antd"
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
-import { AddPasscodeFunc, AddUserDataFunc, DeleteAuthenticatorDataFunc, GetUserDataListFunc, GetUserDetailDataFunc, UpdateUserDataFunc, DeleteUserDataFunc, DuplicateUserNameCheckFunc, ApprovalUserFunc, UnlockUserFunc } from "Functions/ApiFunctions"
+import { AddPasscodeFunc, AddUserDataFunc, DeleteAuthenticatorDataFunc, GetUserDataListFunc, GetUserDetailDataFunc, UpdateUserDataFunc, DeleteUserDataFunc, DuplicateUserNameCheckFunc, ApprovalUserFunc, SendPasscodeEmailFunc } from "Functions/ApiFunctions"
 import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 import { useLocation, useNavigate, useParams } from "react-router"
@@ -12,16 +12,21 @@ import editIcon from '../../assets/editIcon.png';
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import passcodeDeleteIcon from '../../assets/tableDeleteIcon.png';
 import passcodeDeleteIconHover from '../../assets/deleteIconRed.png';
-import passcodeAddIcon from '../../assets/passcodeAddIcon.png';
+import addIconWhite from '../../assets/addIconWhite.png';
+import addIconGrey from '../../assets/addIconGrey.png';
+import passcodeEmailSendIcon from '../../assets/passcodeEmailSendIcon.png';
+import passcodeEmailSendIconGrey from '../../assets/passcodeEmailSendIconGrey.png';
 import closeIcon from '../../assets/closeIcon.png';
 import RoleSelect from "Components/CommonCustomComponents/RoleSelect"
 import CustomModal from "Components/CommonCustomComponents/CustomModal"
 import Button from 'Components/CommonCustomComponents/Button'
 import { userInfoClear } from 'Redux/actions/userChange'
-import { UserDetailInfoAuthenticatorContent, UserDetailInfoAuthenticatorDeleteButton, UserDetailInfoDeviceInfoContent, UserDetailInfoETCInfoContent, UserInfoInputrow, UserInfoRow, ViewPasscode } from './UserDetailComponents'
+import { UserDetailInfoAuthenticatorContent, UserDetailInfoAuthenticatorDeleteButton, UserDetailInfoDeviceInfoContent, UserDetailInfoETCInfoContent, UserInfoInputrow, UserInfoRow, ViewPasscode, ViewRecoveryCode } from './UserDetailComponents'
 import { autoHypenPhoneFun, convertUTCStringToKSTString, createRandom1Digit, logoImageWithDefaultImage } from 'Functions/GlobalFunctions'
 import Input from 'Components/CommonCustomComponents/Input'
 import BottomLineText from 'Components/CommonCustomComponents/BottomLineText'
+import { isDev2 } from 'Constants/ConstantValues'
+import UnLockBtn from './UnLockBtn'
 
 const passcodeInputHeight = '30px'
 
@@ -54,12 +59,25 @@ const initAddValues: UserDataAddLocalValuesType = {
     hasPassword: true
 }
 
+const PasscodeAddBtn = ({ added, onClick }: {
+    added: boolean
+    onClick: React.DOMAttributes<HTMLDivElement>['onClick']
+}) => {
+    const [hover, setHover] = useState(false)
+    return <div className="passcode-add" onClick={onClick} onMouseEnter={() => {
+        setHover(true)
+    }} onMouseLeave={() => {
+        setHover(false)
+    }}>
+        <img src={!added ? (hover ? addIconWhite : addIconGrey) : (hover ? passcodeEmailSendIcon : passcodeEmailSendIconGrey)} />
+    </div>
+}
+
 const UserDetail = ({ }) => {
-    const { userInfo, globalDatas, subdomainInfo } = useSelector((state: ReduxStateType) => ({
+    const { userInfo, globalDatas } = useSelector((state: ReduxStateType) => ({
         lang: state.lang,
         userInfo: state.userInfo!,
         globalDatas: state.globalDatas,
-        subdomainInfo: state.subdomainInfo!
     }));
     const [passcodeHover, setPasscodeHover] = useState("")
     const [duplicateIdCheck, setDuplicateIdCheck] = useState(false)
@@ -68,27 +86,27 @@ const UserDetail = ({ }) => {
     const [userDetailOpened, setUserDetailOpened] = useState<RPUserDetailAuthDataType['id'][]>([])
     const [userData, setUserData] = useState<UserDataType | undefined>()
     const [dataLoading, setDataLoading] = useState(false)
+
     const [isModify, setIsModify] = useState(false)
     const [sureDelete, setSureDelete] = useState(false);
-    const [sureUnlock, setSureUnlock] = useState(false)
     const [authenticatorDelete, setAuthenticatorDelete] = useState('')
     const [modifyValues, setModifyValues] = useState<UserDataModifyLocalValuesType>(initModifyValues)
     const [addValues, setAddValues] = useState<UserDataAddLocalValuesType>(initAddValues)
     const [addPasscode, setAddPasscode] = useState<RPUserDetailAuthDataType['id']>("")
     const [portalSigned, setPortalSigned] = useState(false)
+
     const navigate = useNavigate()
     const location = useLocation()
     const dispatch = useDispatch()
     const _uuid = useParams().uuid;
     const isDeleted = userData?.status === 'WITHDRAWAL'
     const uuid = userInfo.role === 'USER' ? userInfo.userId : _uuid
-    const isSelf = userInfo.userId === uuid
+    const isSelf = (isDev2 && userInfo.role === 'ROOT') || (userInfo.userId === uuid)
     const isAdd = !uuid
     const targetValue = isAdd ? addValues : modifyValues
     const isAdmin = userInfo.role !== 'USER'
-    const deleteText = '탈퇴'
-    const canDelete = (isSelf && userInfo.role !== 'ROOT') || (userInfo.role === 'ADMIN' && userData?.role === 'USER') || (userInfo.role === 'ROOT' && userData?.role !== 'ROOT')
-    const canModify = isSelf || (userInfo.role === 'ADMIN' && userData?.role === 'USER') || (userInfo.role === 'ROOT' && userData?.role !== 'ROOT')
+    const canDelete = (isDev2 && userInfo.role === 'ROOT') || (isSelf && userInfo.role !== 'ROOT') || (userInfo.role === 'ADMIN' && userData?.role === 'USER') || (userInfo.role === 'ROOT' && userData?.role !== 'ROOT')
+    const canModify = (isDev2 && userInfo.role === 'ROOT') || (isSelf || (userInfo.role === 'ADMIN' && userData?.role === 'USER') || (userInfo.role === 'ROOT' && userData?.role !== 'ROOT'))
     const authInfoRef = useRef<{
         [key: string]: HTMLDivElement
     }>({})
@@ -139,7 +157,7 @@ const UserDetail = ({ }) => {
             setDataLoading(false)
         }
     }
-    
+
     useLayoutEffect(() => {
         if (uuid) {
             GetDatas()
@@ -154,7 +172,7 @@ const UserDetail = ({ }) => {
             setUserDetailOpened(userDetailOpened.concat(targetId))
         }
     }, [targetId, authInfoDatas, portalSigned])
-    
+
     useEffect(() => {
         if (isModify && userData) {
             setModifyValues({
@@ -214,7 +232,7 @@ const UserDetail = ({ }) => {
                 render: (data, index, row) => row.createdAt && <div className='user-passcode-delete-btn'
                     onClick={() => {
                         DeleteAuthenticatorDataFunc(row.id, () => {
-                            message.success("패스코드 삭제 성공!")
+                            message.success(formatMessage({ id: 'PASSCODE_DELETE_SUCCESS_MSG' }))
                             GetDatas()
                         })
                     }} onMouseEnter={() => {
@@ -240,11 +258,11 @@ const UserDetail = ({ }) => {
                 {
                     userData?.status === 'WAIT_ADMIN_APPROVAL' && <Button className='st6' onClick={() => {
                         ApprovalUserFunc(userData.userId, () => {
-                            message.success('회원가입 승인!')
+                            message.success(formatMessage({ id: 'SIGNUP_APPROVE_SUCCESS_MSG' }))
+                            navigate('/UserManagement')
                         })
-                        navigate('/UserManagement')
                     }}>
-                        활성화
+                        <FormattedMessage id="USER_ACTIVATE_LABEL" />
                     </Button>
                 }
                 {/* {
@@ -257,7 +275,7 @@ const UserDetail = ({ }) => {
                 {(canDelete && !isAdd) && !isDeleted && <Button className='st8' onClick={() => {
                     setSureDelete(true)
                 }}>
-                    회원탈퇴
+                    <FormattedMessage id="USER_WITHDRAWAL_LABEL" />
                 </Button>}
             </ContentsHeader>
             <div className="user-detail-section first mb20">
@@ -268,35 +286,39 @@ const UserDetail = ({ }) => {
                     <div className="user-detail-header-btns">
                         {
                             ((!isAdd && isModify) || isAdd) && <Button className="st3" onClick={() => {
-                                if (isAdd && !addValues.username) return message.error("아이디를 입력해주세요.");
-                                if (!targetValue.name.firstName) return message.error("성을 입력해주세요.");
-                                if (!targetValue.name.lastName) return message.error("이름을 입력해주세요.");
-                                if (!targetValue.email) return message.error("이메일을 입력해주세요.")
+                                if (isAdd && !addValues.username) {
+                                    return message.error(formatMessage({ id: 'PLEASE_INPUT_ID' }));
+                                }
+                                if (!targetValue.name.firstName) {
+                                    return message.error(formatMessage({ id: 'PLEASE_INPUT_FIRST_NAME' }));
+                                }
+                                if (!targetValue.name.lastName) {
+                                    return message.error(formatMessage({ id: 'PLEASE_INPUT_LAST_NAME' }));
+                                }
+                                if (!targetValue.email) {
+                                    return message.error(formatMessage({ id: 'PLEASE_INPUT_EMAIL' }));
+                                }
                                 if (isAdd) {
                                     AddUserDataFunc(addValues, () => {
-                                        message.success("등록 성공!")
+                                        message.success(formatMessage({ id: 'USER_ADD_SUCCESS_MSG' }))
                                         navigate('/UserManagement')
-                                    }).catch(err => {
-                                        message.error("등록 실패!")
                                     })
                                 } else {
                                     // if (modifyValues.password !== modifyValues.passwordConfirm) return message.error("비밀번호가 일치하지 않습니다.")
                                     UpdateUserDataFunc(uuid!, modifyValues, (data) => {
                                         setUserData(data)
-                                        message.success('수정 성공!')
+                                        message.success(formatMessage({ id: 'USER_MODIFY_SUCCESS_MSG' }))
                                         setIsModify(false)
-                                    }).catch(err => {
-                                        message.error("수정 실패!")
                                     })
                                 }
                             }}>
-                                {isAdd ? "등록" : "저장"}
+                                <FormattedMessage id={isAdd ? "REGISTER" : "SAVE"} />
                             </Button>
                         }
                         {(userData?.status === 'RUN' || userData?.status === 'LOCK') && canModify && !isAdd && !isDeleted && <Button icon={!isModify && editIcon} className={isModify ? "st7" : "st3"} onClick={() => {
                             setIsModify(!isModify)
                         }}>
-                            {isModify ? '취소' : '수정'}
+                            <FormattedMessage id={isModify ? "CANCEL" : "EDIT"} />
                         </Button>}
                     </div>
                     {/* user, admin 계정의 경우 본인만 수정, 탈퇴할 수 있음 */}
@@ -311,54 +333,54 @@ const UserDetail = ({ }) => {
                                 ...addValues,
                                 username: value
                             })
-                        }} customType='username' placeholder='아이디 입력' noGap />
+                        }} customType='username' placeholder={formatMessage({ id: 'USER_ID_PLACEHOLDER' })} noGap />
                         <Button className='st6' disabled={duplicateIdCheck || addValues.username.length === 0 || usernameAlert} onClick={() => {
                             DuplicateUserNameCheckFunc(addValues.username, ({ isExist }) => {
                                 setDuplicateIdCheck(!isExist)
                                 if (isExist) {
-                                    message.error("이미 사용중인 아이디 입니다.")
+                                    message.success(formatMessage({ id: 'USER_ID_EXIST_CHECK_FAIL_MSG' }))
                                 } else {
-                                    message.success("사용 가능한 아이디 입니다.")
+                                    message.success(formatMessage({ id: 'USER_ID_EXIST_CHECK_SUCCESS_MSG' }))
                                 }
                             })
                         }} style={{
                             height: '100%'
                         }}>
-                            중복 확인
+                            <FormattedMessage id="DUPLICATE_CHECK" />
                         </Button>
                     </UserInfoInputrow> : <UserInfoRow title="ID" value={userData ? userData.username : ""} />}
                     {/* {(isAdd || (isModify && (isSelf || (userData?.role === 'ADMIN' && userInfo.role === 'ROOT') || (userData?.role === 'USER' && isAdmin)))) && <> */}
                     {(isAdd || (isSelf && isModify)) && <>
-                    <UserInfoInputrow title='PASSWORD' required>
-                        <Input className='st1' value={targetValue.password} placeholder="비밀번호 입력" disabled={!targetValue.hasPassword} valueChange={value => {
-                            if (isAdd) {
-                                setAddValues({
-                                    ...addValues,
-                                    password: value
-                                })
-                            } else {
-                                setModifyValues({
-                                    ...modifyValues,
-                                    password: value
-                                })
-                            }
-                        }} type="password" customType="password" noGap />
-                        <Input containerClassName='has-password-confirm' className='st1' checked={!targetValue.hasPassword} type="checkbox" onChange={e => {
-                            if (isAdd) {
-                                setAddValues({
-                                    ...addValues,
-                                    hasPassword: !e.currentTarget.checked
-                                })
-                            } else {
-                                setModifyValues({
-                                    ...modifyValues,
-                                    hasPassword: !e.currentTarget.checked
-                                })
-                            }
-                        }} label="비밀번호 랜덤 생성" noGap />
-                    </UserInfoInputrow>
+                        <UserInfoInputrow title='PASSWORD' required>
+                            <Input className='st1' value={targetValue.password} placeholder={formatMessage({ id: 'PASSWORD_PLACEHOLDER' })} disabled={!targetValue.hasPassword} valueChange={value => {
+                                if (isAdd) {
+                                    setAddValues({
+                                        ...addValues,
+                                        password: value
+                                    })
+                                } else {
+                                    setModifyValues({
+                                        ...modifyValues,
+                                        password: value
+                                    })
+                                }
+                            }} type="password" customType="password" noGap />
+                            <Input containerClassName='has-password-confirm' className='st1' checked={!targetValue.hasPassword} type="checkbox" onChange={e => {
+                                if (isAdd) {
+                                    setAddValues({
+                                        ...addValues,
+                                        hasPassword: !e.currentTarget.checked
+                                    })
+                                } else {
+                                    setModifyValues({
+                                        ...modifyValues,
+                                        hasPassword: !e.currentTarget.checked
+                                    })
+                                }
+                            }} label={<FormattedMessage id="PASSWORD_RANDOM_GENERATE_LABEL" />} noGap />
+                        </UserInfoInputrow>
                         <UserInfoInputrow title='PASSWORD_CONFIRM' required>
-                            <Input className='st1' value={targetValue.passwordConfirm} disabled={!targetValue.hasPassword} placeholder="비밀번호 확인" valueChange={value => {
+                            <Input className='st1' value={targetValue.passwordConfirm} disabled={!targetValue.hasPassword} placeholder={formatMessage({ id: 'PASSWORD_CONFIRM' })} valueChange={value => {
                                 if (isAdd) {
                                     setAddValues({
                                         ...addValues,
@@ -378,7 +400,7 @@ const UserDetail = ({ }) => {
                             ]} maxLength={16} noGap />
                         </UserInfoInputrow></>}
                     {(isModify || isAdd) ? <UserInfoInputrow title="NAME" required>
-                        <Input className='st1' value={targetValue.name.firstName} placeholder="성" onChange={e => {
+                        <Input className='st1' value={targetValue.name.firstName} placeholder={formatMessage({ id: 'FIRST_NAME_PLACEHOLDER' })} onChange={e => {
                             if (isAdd) {
                                 setAddValues({
                                     ...addValues,
@@ -396,8 +418,8 @@ const UserDetail = ({ }) => {
                                     }
                                 })
                             }
-                        }} customType='name' onlyText noGap />
-                        <Input className='st1' value={targetValue.name.lastName} placeholder="이름" onChange={e => {
+                        }} customType='name' noGap />
+                        <Input className='st1' value={targetValue.name.lastName} placeholder={formatMessage({ id: 'LAST_NAME_PLACEHOLDER' })} onChange={e => {
                             if (isAdd) {
                                 setAddValues({
                                     ...addValues,
@@ -415,7 +437,7 @@ const UserDetail = ({ }) => {
                                     }
                                 })
                             }
-                        }} customType='name' onlyText noGap />
+                        }} customType='name' noGap />
                     </UserInfoInputrow> :
                         <UserInfoRow title="NAME" value={userData ? `${userData.name.firstName} ${userData.name.lastName}` : ""} />}
                     {(isModify || isAdd) ? <UserInfoInputrow title="EMAIL" required>
@@ -433,8 +455,8 @@ const UserDetail = ({ }) => {
                                     email: e.target.value
                                 })
                             }
-                        }} maxLength={48} placeholder='이메일 입력' noGap />
-                    </UserInfoInputrow> : <UserInfoRow title="EMAIL" value={userData?.email || "이메일 없음"} />}
+                        }} maxLength={48} placeholder={formatMessage({ id: 'EMAIL_PLACEHOLDER' })} noGap />
+                    </UserInfoInputrow> : <UserInfoRow title="EMAIL" value={userData?.email || formatMessage({ id: 'NO_EMAIL_INPUT_LABEL' })} />}
 
                     {(isModify || isAdd) ? <UserInfoInputrow title="PHONE_NUMBER">
                         <Input className='st1' value={isAdd ? addValues.phone : modifyValues.phone} valueChange={value => {
@@ -451,23 +473,7 @@ const UserDetail = ({ }) => {
                                 })
                             }
                         }} maxLength={13} noGap />
-                    </UserInfoInputrow> : <UserInfoRow title="PHONE_NUMBER" value={userData?.phone || "전화번호 없음"} />}
-
-                    {/* {(isModify || isAdd) ? <UserInfoInputrow title="GROUP">
-                        <GroupSelect selectedGroup={targetValue.groupId} setSelectedGroup={(groupId) => {
-                            if (isAdd) {
-                                setAddValues({
-                                    ...addValues,
-                                    groupId
-                                })
-                            } else {
-                                setModifyValues({
-                                    ...modifyValues,
-                                    groupId
-                                })
-                            }
-                        }} />
-                    </UserInfoInputrow> : <UserInfoRow title="GROUP" value={userData?.group?.name || "선택 안함"} />} */}
+                    </UserInfoInputrow> : <UserInfoRow title="PHONE_NUMBER" value={userData?.phone || formatMessage({ id: 'NO_PHONE_INPUT_LABEL' })} />}
 
                     {((isModify && userInfo.role === 'ROOT') || (isAdd && isAdmin)) ? <UserInfoInputrow title="USER_ROLE">
                         <RoleSelect selectedGroup={isAdd ? addValues.role : modifyValues.role} setSelectedGroup={(role) => {
@@ -482,55 +488,15 @@ const UserDetail = ({ }) => {
                                     role
                                 })
                             }
-                        }} needSelect isRoot={userInfo.role === 'ROOT'}/>
+                        }} needSelect isRoot={userInfo.role === 'ROOT'} />
                     </UserInfoInputrow> : <UserInfoRow title="USER_ROLE" value={(userData && userData.role) ? formatMessage({ id: userData.role + '_ROLE_VALUE' }) : "선택 안함"} />}
-                    {!isAdd && <UserInfoRow title="RECOVERY_CODE" value={userData?.recoveryCode || '-'} />}
-                    {!isAdd && <UserInfoRow title="STATUS_LABEL" value={<>
+                    {!isAdd && userData?.recoveryCode && <UserInfoRow title="RECOVERY_CODE" value={<ViewRecoveryCode code={userData.recoveryCode} />} />}
+                    {!isAdd && <UserInfoRow title="NORMAL_STATUS_LABEL" value={<>
                         {userData?.status && <FormattedMessage id={`USER_STATUS_${userData.status}`} />}
-                        {canModify && userData?.status === 'LOCK' && <Button className='st1' style={{
-                            marginLeft: '8px'
-                        }} onClick={() => {
-                            setSureUnlock(true)
-                        }}>
-                            잠금 해제
-                        </Button>}
+                        {canModify && userData?.status === 'LOCK' && <UnLockBtn userData={userData} onSuccess={() => {
+                            setUserData({ ...userData!, status: 'RUN' })
+                        }} />}
                     </>} />}
-                    {/* {(isModify || isAdd) ? <UserInfoInputrow title="POLICY_TEXT">
-                        <RoleSelect selectedGroup={isAdd ? addValues.role : modifyValues.role} setSelectedGroup={(role) => {
-                            if (isAdd) {
-                                setAddValues({
-                                    ...addValues,
-                                    role
-                                })
-                            } else {
-                                setModifyValues({
-                                    ...modifyValues,
-                                    role
-                                })
-                            }
-                        }} />
-                    </UserInfoInputrow> : <UserInfoRow title="USER_ROLE" value={(userData && userData.role) ? formatMessage({id: userData.role + '_ROLE_VALUE'}) : "선택 안함"} />} */}
-
-                    {/* {
-                        isModify && <UserInfoInputrow title="PASSWORD">
-                            <Input className='st1' value={modifyValues.password} onChange={e => {
-                                setModifyValues({
-                                    ...modifyValues,
-                                    password: e.target.value
-                                })
-                            }} type='password' maxLength={16} />
-                        </UserInfoInputrow>
-                    }
-                    {
-                        isModify && <UserInfoInputrow title="PASSWORD_CONFIRM">
-                            <Input className='st1' value={modifyValues.passwordConfirm} onChange={e => {
-                                setModifyValues({
-                                    ...modifyValues,
-                                    passwordConfirm: e.target.value
-                                })
-                            }} type='password' maxLength={16} />
-                        </UserInfoInputrow>
-                    } */}
                 </div>
             </div>
             {authInfoDatas.map((_, index) => <Fragment key={index}>
@@ -546,33 +512,27 @@ const UserDetail = ({ }) => {
                                 <img src={logoImageWithDefaultImage(_.application.logoImage)} />
                                 <h4>{_.application.name}</h4>
                             </div>
-                            {/* <div className="user-detail-alias-container">
-                                <img src={groupMenuIcon} />
-                                <h4>
-                                    {_.groupName || "그룹 없음"}
-                                </h4>
-                            </div> */}
                             <div className="user-detail-alias-container">
                                 <img src={userIcon} /><h4>{_.username} {_.application.type === 'WINDOWS_LOGIN' ? `(${_.authenticationInfo.loginDeviceInfo.name})` : ''}</h4>
                             </div>
                         </div>
                         <h5>
-                            {_.authenticationInfo.loginDeviceInfo.updatedAt} 업데이트됨
+                            {_.authenticationInfo.loginDeviceInfo.updatedAt} <FormattedMessage id="USER_INFO_UPDATED_LABEL" />
                         </h5>
                     </div>
 
                     <div className="user-detail-info-container">
-                        <BottomLineText title="기본 정보" style={{
+                        <BottomLineText title={formatMessage({ id: 'USER_INFO_DEFAULT_LABEL' })} style={{
                             margin: '24px 0 0 0'
                         }} />
                         <div className="user-detail-info-device-info-content">
                             <UserDetailInfoETCInfoContent data={_} />
                         </div>
-                        <BottomLineText title="접속 장치" />
+                        <BottomLineText title={formatMessage({ id: 'USER_INFO_ACCESS_LABEL' })} />
                         <div className="user-detail-info-device-info-content">
                             <UserDetailInfoDeviceInfoContent data={_} />
                         </div>
-                        <BottomLineText title="인증 장치" />
+                        <BottomLineText title={formatMessage({ id: 'USER_INFO_AUTH_LABEL' })} />
                         <div className="user-detail-info-device-info-title">
                             <h4>
                                 OMPASS
@@ -597,65 +557,53 @@ const UserDetail = ({ }) => {
                             </>
                         }
 
-                        <div className="user-detail-content-passcode-container">
-                            <div>
-                                <h4>PASSCODE</h4>
-                                {userInfo.role !== "USER" && !_.authenticationInfo.authenticators.find(__ => __.type === 'PASSCODE') && <div className="passcode-add" onClick={() => {
-                                    setAddPasscode(_.authenticationInfo.id)
-                                }}>
-                                    <img src={passcodeAddIcon} />
-                                </div>}
+                        <div>
+                            <div className="user-detail-content-passcode-container">
+                                <div>
+                                    <h4>PASSCODE</h4>
+                                    {userInfo.role !== "USER" && <PasscodeAddBtn added={_.authenticationInfo.authenticators.some(__ => __.type === 'PASSCODE')} onClick={() => {
+                                        if (_.authenticationInfo.authenticators.some(__ => __.type === 'PASSCODE')) {
+                                            SendPasscodeEmailFunc(passcodeData(_.authenticationInfo.id)[0].id, () => {
+                                                message.success("패스코드를 사용자 이메일로 재발송하였습니다.")
+                                            })
+                                        } else {
+                                            setAddPasscode(_.authenticationInfo.id)
+                                        }
+                                    }} />}
+                                </div>
                             </div>
+                            <CustomTable<PasscodeAuthenticatorDataType, {}>
+                                noSearch
+                                columns={columnsByRole(_.authenticationInfo.id)}
+                                noDataHeight="30px"
+                                datas={passcodeData(_.authenticationInfo.id)}
+                                theme="table-st1"
+                            />
                         </div>
-                        <CustomTable<PasscodeAuthenticatorDataType, {}>
-                            noSearch
-                            columns={columnsByRole(_.authenticationInfo.id)}
-                            noDataHeight="30px"
-                            datas={passcodeData(_.authenticationInfo.id)}
-                            theme="table-st1"
-                        />
                     </div>
                 </div>
             </Fragment>
             )}
         </Contents >
-        <CustomModal
-            open={sureUnlock}
-            onCancel={() => {
-                setSureUnlock(false);
-            }}
-            type="warning"
-            typeTitle={`계정 잠금 해제`}
-            typeContent={`현재 계정을 잠금 해제 하시겠습니까?`}
-            okText={"예"}
-            cancelText={"아니오"}
-            okCallback={() => {
-                return UnlockUserFunc(userData?.userId!, () => {
-                    setSureUnlock(false)
-                    message.success(`잠금 해제 성공!`)
-                    setUserData({ ...userData!, status: 'RUN' })
-                })
-            }} buttonLoading />
+
         <CustomModal
             open={sureDelete}
             onCancel={() => {
                 setSureDelete(false);
             }}
             type="warning"
-            typeTitle={`정말로 ${deleteText}하시겠습니까?`}
-            typeContent={`${deleteText} 후, 계정 정보가 삭제되며 모든 데이터는 복구되지 않습니다.`}
-            okText={"예"}
+            typeTitle={formatMessage({ id: 'USER_WITHDRAWAL_MODAL_TITLE' })}
+            typeContent={formatMessage({ id: 'USER_WITHDRAWAL_MODAL_SUBSCRIPTION' })}
+            yesOrNo
             okCallback={() => {
                 return DeleteUserDataFunc(userData?.userId!, () => {
                     setSureDelete(false)
-                    message.success(`${deleteText} 성공!`)
+                    message.success(formatMessage({ id: 'USER_WITHDRAWAL_SUCCESS_MSG' }))
                     if (isSelf) {
                         dispatch(userInfoClear());
                     } else {
                         navigate('/UserManagement')
                     }
-                }).catch(err => {
-                    message.error(`${deleteText} 실패`)
                 })
             }} buttonLoading />
         <CustomModal
@@ -664,62 +612,32 @@ const UserDetail = ({ }) => {
                 setAuthenticatorDelete("")
             }}
             type="warning"
-            typeTitle='인증 수단을 삭제하시겠습니까?'
-            typeContent='삭제 후, 모든 데이터는 복구되지 않습니다.'
-            okText={"삭제"}
+            typeTitle={formatMessage({ id: 'USER_AUTH_DEVICE_UNREGISTER_MODAL_TITLE' })}
+            typeContent={formatMessage({ id: 'USER_AUTH_DEVICE_UNREGISTER_MODAL_SUBSCRIPTION' })}
+            yesOrNo
             okCallback={async () => {
                 return DeleteAuthenticatorDataFunc(authenticatorDelete, () => {
-                    message.success("인증 수단 삭제 성공!")
+                    message.success(formatMessage({ id: 'USER_AUTH_DEVICE_UNREGISTER_SUCCESS_MSG' }))
                     setAuthenticatorDelete("")
                     GetDatas()
-                }).catch(err => {
-                    message.error("인증 수단 삭제 실패!")
                 })
             }} buttonLoading />
-        <CustomModal
-            open={addPasscode !== ''}
-            width={520}
-            noPadding
-            onCancel={() => {
-                setAddPasscode("")
-            }}
-            afterOpenChange={opened => {
-
-            }}
-            okCallback={async () => {
-                return DeleteAuthenticatorDataFunc(authenticatorDelete, () => {
-                    message.success("인증 수단 삭제 성공!")
-                    setAuthenticatorDelete("")
-                    GetDatas()
-                }).catch(err => {
-                    message.error("인증 수단 삭제 실패!")
-                })
-            }}>
-            <div className='passcode-add-title'>
-                패스코드 추가
-                <div onClick={() => {
-                    setAddPasscode("")
-                }}>
-                    <img src={closeIcon} />
-                </div>
-            </div>
-            <PasscodeAddComponent authId={addPasscode} cancelCallback={() => {
-                setAddPasscode("")
-            }} okCallback={(newData) => {
-                message.success('패스코드 생성 성공!')
-                setUserDetailDatas(userDetailDatas.map((ud, ud_ind) => ({
-                    ...ud,
-                    authenticationInfo: ud.authenticationInfo.map((aInfo, aInd) => aInfo.id === addPasscode ? ({
-                        ...aInfo,
-                        authenticators: aInfo.authenticators.concat({
-                            ...newData,
-                            createdAt: convertUTCStringToKSTString(newData.createdAt)
-                        })
-                    }) : aInfo)
-                })))
-                setAddPasscode("")
-            }} />
-        </CustomModal>
+        <PasscodeAddComponent modalOpen={addPasscode !== ''} authId={addPasscode} cancelCallback={() => {
+            setAddPasscode("")
+        }} okCallback={(newData) => {
+            message.success(formatMessage({ id: 'PASSCODE_ADD_SUCCESS_MSG' }))
+            setUserDetailDatas(userDetailDatas.map((ud, ud_ind) => ({
+                ...ud,
+                authenticationInfo: ud.authenticationInfo.map((aInfo, aInd) => aInfo.id === addPasscode ? ({
+                    ...aInfo,
+                    authenticators: aInfo.authenticators.concat({
+                        ...newData,
+                        createdAt: convertUTCStringToKSTString(newData.createdAt)
+                    })
+                }) : aInfo)
+            })))
+            setAddPasscode("")
+        }} />
     </>
 }
 
@@ -742,10 +660,11 @@ const PasscodeRadioButton = ({ title, name, defaultChecked, children, value, che
     </div>
 }
 
-const PasscodeAddComponent = ({ okCallback, cancelCallback, authId }: {
+const PasscodeAddComponent = ({ okCallback, cancelCallback, authId, modalOpen }: {
     cancelCallback: Function
     okCallback: (data: PasscodeAuthenticatorDataType) => void
     authId: string
+    modalOpen: boolean
 }) => {
     const [addPasscodeMethod, setAddPasscodeMethod] = useState<{
         method: 'target' | 'random'
@@ -761,6 +680,7 @@ const PasscodeAddComponent = ({ okCallback, cancelCallback, authId }: {
     const [inputCurrentPasscodeCount, setInputCurrentPasscodeCount] = useState<number | string>(1)
 
     const [addPasscodeLoading, setAddPasscodeLoading] = useState(false)
+    const { formatMessage } = useIntl()
 
     const radioChangeCallback = (name: string, value: string) => {
         setAddPasscodeMethod({
@@ -769,20 +689,22 @@ const PasscodeAddComponent = ({ okCallback, cancelCallback, authId }: {
         })
     }
 
-    return <form
-        className='passcode-add-form'
-        onSubmit={(e) => {
+    return <CustomModal
+        open={modalOpen}
+        width={520}
+        noPadding
+        onSubmit={async e => {
             e.preventDefault();
             const target = e.target as HTMLFormElement
             const { method, time, count, codeValue, timeValue, countValue } = target.elements as any
             if (method.value === "target" && (!codeValue.value || codeValue.value.length !== 9)) {
-                return message.error("패스코드 지정 생성은 9자리 필수 입니다.")
+                return message.error(formatMessage({ id: 'PASSCODE_NEED_9_DIGIT_NUMBERS' }))
             }
             if (time.value === "select" && (!timeValue.value || parseInt(timeValue.value) < 1)) {
-                return message.error("패스코드 만료 기간은 1분 이상 설정되어야 합니다.")
+                return message.error(formatMessage({ id: 'PASSCODE_NEED_MORE_THAN_1_MINUTES' }))
             }
             if (count.value === "select" && (!countValue.value || parseInt(countValue.value) < 1)) {
-                return message.error("패스코드 사용 횟수는 1회 이상 설정되어야 합니다.")
+                return message.error(formatMessage({ id: 'PASSCODE_NEED_MORE_THAN_1_TIMES' }))
             }
             setAddPasscodeLoading(true)
             AddPasscodeFunc({
@@ -795,18 +717,26 @@ const PasscodeAddComponent = ({ okCallback, cancelCallback, authId }: {
             }).finally(() => {
                 setAddPasscodeLoading(false)
             })
-        }} onChange={e => {
-            const target = e.target as HTMLInputElement
-            // if (target.name === 'method') setAddPasscodeMethod(target.value)
+        }}
+        onCancel={() => {
+            cancelCallback()
         }}>
+        <div className='passcode-add-title'>
+            <FormattedMessage id="PASSCODE_ADD_MODAL_TITLE" />
+            <div onClick={() => {
+                cancelCallback()
+            }}>
+                <img src={closeIcon} />
+            </div>
+        </div>
         <div className='passcode-add-contents'>
             <div className='passcode-add-content-container'>
                 <div className='passcode-add-content-title'>
-                    패스코드 생성 방식
+                    <FormattedMessage id="PASSCODE_ADD_MODAL_TYPE_TITLE" />
                 </div>
                 <div className='passcode-add-content-row'>
-                    <PasscodeRadioButton title="랜덤 생성" name="method" value="random" checked={addPasscodeMethod.method === 'random'} onChange={radioChangeCallback} />
-                    <PasscodeRadioButton title="지정 생성 (9자리)" name="method" value="target" checked={addPasscodeMethod.method === 'target'} onChange={radioChangeCallback}>
+                    <PasscodeRadioButton title={formatMessage({ id: 'PASSCODE_RANDOM_GENERATE_LABEL' })} name="method" value="random" checked={addPasscodeMethod.method === 'random'} onChange={radioChangeCallback} />
+                    <PasscodeRadioButton title={formatMessage({ id: 'PASSCODE_FIX_GENERATE_LABEL' })} name="method" value="target" checked={addPasscodeMethod.method === 'target'} onChange={radioChangeCallback}>
                         <div className='passcode-add-input-label-container'>
                             <Input
                                 disabled={addPasscodeMethod.method !== 'target'}
@@ -829,11 +759,11 @@ const PasscodeAddComponent = ({ okCallback, cancelCallback, authId }: {
             </div>
             <div className='passcode-add-content-container'>
                 <div className='passcode-add-content-title'>
-                    패스코드 만료 기간
+                    <FormattedMessage id="PASSCODE_EXPIRE_TIME_LABEL" />
                 </div>
                 <div className='passcode-add-content-row'>
-                    <PasscodeRadioButton title="무제한" name="time" value='infinity' checked={addPasscodeMethod.time === 'infinity'} onChange={radioChangeCallback} />
-                    <PasscodeRadioButton title="제한" name="time" value='select' checked={addPasscodeMethod.time === 'select'} onChange={radioChangeCallback}>
+                    <PasscodeRadioButton title={formatMessage({ id: 'PASSCODE_USE_INFINITY_TIMES_LABEL' })} name="time" value='infinity' checked={addPasscodeMethod.time === 'infinity'} onChange={radioChangeCallback} />
+                    <PasscodeRadioButton title={formatMessage({ id: 'PASSCODE_USE_FINITE_TIMES_LABEL' })} name="time" value='select' checked={addPasscodeMethod.time === 'select'} onChange={radioChangeCallback}>
                         <div className='passcode-add-input-label-container'>
                             <Input
                                 disabled={addPasscodeMethod.time !== 'select'}
@@ -845,7 +775,7 @@ const PasscodeAddComponent = ({ okCallback, cancelCallback, authId }: {
                                 onInput={(e) => {
                                     if (parseInt(e.currentTarget.value) > 525600) e.currentTarget.value = "525600"
                                 }}
-                                label="분 후 만료"
+                                label={formatMessage({ id: 'PASSCODE_EXPIRE_TIME_SUB_LABEL' })}
                                 style={{
                                     width: '120px',
                                     height: passcodeInputHeight
@@ -860,12 +790,12 @@ const PasscodeAddComponent = ({ okCallback, cancelCallback, authId }: {
             </div>
             <div className='passcode-add-content-container'>
                 <div className='passcode-add-content-title'>
-                    패스코드 사용 횟수
+                    <FormattedMessage id="PASSCODE_USE_TIMES_LABEL" />
                 </div>
                 <div className='passcode-add-content-row'>
-                    <PasscodeRadioButton title="한번만" name="count" value='one' checked={addPasscodeMethod.count === 'one'} onChange={radioChangeCallback} />
-                    <PasscodeRadioButton title="무제한" name="count" value='infinity' checked={addPasscodeMethod.count === 'infinity'} onChange={radioChangeCallback} />
-                    <PasscodeRadioButton title="지정 횟수" name="count" value='select' checked={addPasscodeMethod.count === 'select'} onChange={radioChangeCallback}>
+                    <PasscodeRadioButton title={formatMessage({ id: 'PASSCODE_USE_ONE_TIMES_LABEL' })} name="count" value='one' checked={addPasscodeMethod.count === 'one'} onChange={radioChangeCallback} />
+                    <PasscodeRadioButton title={formatMessage({ id: 'PASSCODE_USE_INFINITY_TIMES_LABEL' })} name="count" value='infinity' checked={addPasscodeMethod.count === 'infinity'} onChange={radioChangeCallback} />
+                    <PasscodeRadioButton title={formatMessage({ id: 'PASSCODE_USE_FIXED_TIMES_LABEL' })} name="count" value='select' checked={addPasscodeMethod.count === 'select'} onChange={radioChangeCallback}>
                         <div className='passcode-add-input-label-container'>
                             <Input
                                 disabled={addPasscodeMethod.count !== 'select'}
@@ -878,7 +808,7 @@ const PasscodeAddComponent = ({ okCallback, cancelCallback, authId }: {
                                 onInput={(e) => {
                                     if (parseInt(e.currentTarget.value) > 9999) e.currentTarget.value = "9999"
                                 }}
-                                label="회"
+                                label={formatMessage({ id: 'PASSCODE_USE_TIMES_SUB_LABEL' })}
                                 nonZero
                                 maxLength={5}
                                 style={{
@@ -895,14 +825,14 @@ const PasscodeAddComponent = ({ okCallback, cancelCallback, authId }: {
                 <Button className='st7' onClick={() => {
                     cancelCallback()
                 }}>
-                    닫기
+                    <FormattedMessage id="CLOSE" />
                 </Button>
                 <Button className='st3' type='submit' loading={addPasscodeLoading}>
-                    완료
+                    <FormattedMessage id="NORMAL_COMPLETE_LABEL" />
                 </Button>
             </div>
         </div>
-    </form>
+    </CustomModal>
 }
 
 export default UserDetail

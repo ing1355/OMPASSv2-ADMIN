@@ -3,7 +3,7 @@ import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import { GetInvalidAuthLogDataListFunc } from "Functions/ApiFunctions"
 import { convertUTCStringToKSTString } from "Functions/GlobalFunctions"
 import { useEffect, useState } from "react"
-import { FormattedMessage } from "react-intl"
+import { FormattedMessage, useIntl } from "react-intl"
 import { useNavigate } from "react-router"
 
 const DashboardAuthLogs = ({ applications }: {
@@ -11,6 +11,7 @@ const DashboardAuthLogs = ({ applications }: {
 }) => {
     const [datas, setDatas] = useState<InvalidAuthLogDataType[]>([])
     const navigate = useNavigate()
+    const { formatMessage } = useIntl()
 
     const getDatas = () => {
         const _params: AuthLogListParamsType = {
@@ -45,7 +46,7 @@ const DashboardAuthLogs = ({ applications }: {
                 <FormattedMessage id="DASHBOARD_RECENT_INVALID_LOGS"/>
             </div>
             <Tooltip>
-            <div className="dashboard-invalid-auth-log-table-more-btn" data-valuetext="비정상 로그 더보기" onClick={() => {
+            <div className="dashboard-invalid-auth-log-table-more-btn" data-valuetext={formatMessage({id: 'DASHBOARD_MORE_INVALID_LOG_LABEL'})} onClick={() => {
                 navigate('/AuthLogs', {
                     state: {
                         type: 'invalid'

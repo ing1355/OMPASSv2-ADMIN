@@ -1,4 +1,3 @@
-import { Legend } from "@devexpress/dx-react-chart-material-ui"
 import { DateTimeFormat } from "Constants/ConstantValues"
 import { addDays, format } from "date-fns"
 import { convertKSTStringToUTCString, pad2Digit } from "Functions/GlobalFunctions"
@@ -48,14 +47,3 @@ export const BarWithLabel = (props: any) => {
         <path className="custom-dashboard-chart-path" d={getPath(arg - width / 2, width, val, startVal)} fill={color} style={style} />
     </svg>
 };
-
-const Root = (props: any) => (
-    <Legend.Root {...props} sx={{ display: 'flex', margin: 'auto', flexDirection: 'row' }} />
-);
-const Label = (props: any) => (
-    <Legend.Label {...props} sx={{ whiteSpace: 'nowrap' }} />
-);
-
-export const CustomLegend = () => {
-    return <Legend position="bottom" rootComponent={Root} labelComponent={Label} />
-}

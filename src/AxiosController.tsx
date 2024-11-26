@@ -31,7 +31,7 @@ const AxiosController = () => {
           navigate('/');
           if(data) {
             const { code } = err.response.data;
-            _message.error(formatMessage({id: code}))
+            // _message.error(formatMessage({id: code}))
           }
         } else {
           if(data) {

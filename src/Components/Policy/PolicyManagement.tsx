@@ -1,18 +1,19 @@
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
 import './PolicyManagement.css'
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import { useNavigate } from "react-router"
 import { GetPoliciesListFunc } from "Functions/ApiFunctions"
 import policyAddIcon from '../../assets/policyAddIcon.png'
 import policyAddIconHover from '../../assets/policyAddIconHover.png'
 import { convertUTCStringToKSTString } from "Functions/GlobalFunctions"
+import { message } from "antd"
+import { FormattedMessage } from "react-intl"
 
 const PolicyManagement = () => {
     const [tableData, setTableData] = useState<PolicyListDataType[]>([])
     const [totalCount, setTotalCount] = useState<number>(0);
-    const [opened, setOpened] = useState<string[]>([])
     const [dataLoading, setDataLoading] = useState(false)
 
     const navigate = useNavigate()
@@ -61,6 +62,11 @@ const PolicyManagement = () => {
                 pagination
                 columns={[
                     {
+                        key: 'applicationType',
+                        title: '어플리케이션 타입',
+                        render: (data, ind, row) => data ? <FormattedMessage id={`${data}_APPLICATION_TYPE`}/> : "기능 준비 중"
+                    },
+                    {
                         key: 'name',
                         title: '정책명',
                         render: (data, ind, row) => row.policyType === 'DEFAULT' ? "기본 정책" : data
@@ -84,5 +90,5 @@ const PolicyManagement = () => {
         </div>
     </Contents>
 }
-//미번
+
 export default PolicyManagement

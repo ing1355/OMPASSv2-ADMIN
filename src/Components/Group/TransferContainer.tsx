@@ -118,7 +118,6 @@ const TransferContainer = ({ datas, selected, setSelected, viewStyle, title }: T
                     전체{rpUserNums === selected.length ? ' 선택 해제' : ' 선택'}
                 </Button>
                 <ClearBtn onClick={() => {
-                    console.log('test?')
                     setSelected([])
                 }} />
             </div>

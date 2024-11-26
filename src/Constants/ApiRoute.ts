@@ -2,12 +2,9 @@
 export const PostLoginApi = '/v2/login';
 export const PostTokenVerifyApi = '/v2/login/token-verification';
 export const UpdatePasswordApi = '/v2/users/password'
-export const ResetPasswordApi = (username: string, email: string) => `/v2/init-password/username/${username}/email/${email}`
-export const ResetPasswordEmailSendApi = (username: string, email: string) => `/v2/init-password/username/${username}/email/${email}`
-export const ResetPasswordEmailCodeVerifyApi = () => `/v2/init-password/username`
-
-// 사용자
-export const DuplicateUserNameCheckApi = (username: string) => `/v2/users/username/${username}/existence`;
+export const ResetPasswordApi = `/v2/recovery-account`
+export const ResetPasswordEmailSendApi = `/v2/recovery-account/mail`
+export const ResetPasswordEmailCodeVerifyApi = `/v2/recovery-account/verification`
 
 // Windows agent 파일
 export const GetAgentInstallerListApi = `/v2/agent-installer`;
@@ -17,11 +14,11 @@ export const DownloadAgentInstallerApi = '/v2/agent-installer/download';
 export const UploadAgentInstallerApi = `/v2/agent-installer/upload`;
 export const UpdateAgentNoteApi = (fileId: AgentInstallerDataType['fileId']) => `/v2/agent-installer/${fileId}/note`
 
-// 패스코드 이력
-export const GetPasscodeHistoriesApi = '/v2/passcode-histories';
-
 // 패스코드 관리
+export const GetPasscodeHistoriesApi = '/v2/passcode-histories';
+export const GetPasscodeListApi = '/v2/passcode'
 export const AddPasscodeApi = '/v2/rp/users/passcode'
+export const SendPasscodeEmailApi = '/v2/passcode/email'
 
 // 어플리케이션
 export const GetApplicationListApi = '/v2/applications'
@@ -56,6 +53,8 @@ export const DeleteUserDataApi = (userId: UserDataType['userId']) => `/v2/users/
 export const GetUserDetailDataApi = (userId: UserDataType['userId']) => `/v2/users/${userId}/rp/details`
 export const DeleteAuthenticatorData = (authenticatorId: AuthenticatorDataType['id']) => `/v2/authenticators/${authenticatorId}`
 export const UnlockUserApi = (userId: UserDataType['userId']) => `/v2/users/${userId}/unlock`
+export const AddUserWithCsvDataApi = '/v2/users/csv'
+export const DuplicateUserNameCheckApi = (username: string) => `/v2/users/username/${username}/existence`;
 
 // 인증장치 정책 업데이트
 export const UpdateUserAuthenticatorPolicyApi = (authId: string, policyId: string) => `/v2/rp/authentication-data/${authId}/policy/${policyId}`
@@ -87,3 +86,7 @@ export const GetDashboardApplicationAuthSumApi = '/v2/dashboard/auth-req-sum-cou
 
 // 세션 갱신
 export const PatchSessionTokenApi = '/v2/refresh-session'
+
+// 계정 복구
+export const SendRecoveryMailApi = '/v2/recovery-account/mail'
+export const ValidateRecoveryMailApi = '/v2/recovery-account/verification'

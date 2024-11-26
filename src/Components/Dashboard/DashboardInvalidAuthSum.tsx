@@ -4,15 +4,6 @@ import { dashboardDateInitialValue } from "./Dashboard"
 import { GetDashboardApplicationInvalidAuthSumFunc } from "Functions/ApiFunctions"
 import { convertUTCStringToKSTString } from "Functions/GlobalFunctions"
 import { convertDaysByDate, convertHourRangeByDate } from "./DashboardFunctions"
-import {
-    Chart,
-    ArgumentAxis,
-    ValueAxis,
-    ZoomAndPan,
-    Tooltip,
-    LineSeries
-} from '@devexpress/dx-react-chart-material-ui';
-import { EventTracker } from "@devexpress/dx-react-chart";
 import { FormattedMessage } from "react-intl"
 import DashBoardBarChart from "./DashboardBarChart"
 

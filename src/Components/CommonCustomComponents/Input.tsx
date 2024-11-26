@@ -167,8 +167,9 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                                     e.currentTarget.value = e.currentTarget.value.replace(/[0-9]/g, '')
                                 }
                                 if (customType === 'name') {
-                                    e.currentTarget.value = e.currentTarget.value.replace(/[^a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]/g, '')
+                                    e.currentTarget.value = e.currentTarget.value.replace(/[^a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣0-9]/g, '')
                                 } else if (customType === 'username') {
+                                    console.log(e.currentTarget.value)
                                     e.currentTarget.value = e.currentTarget.value.replace(/[^0-9a-z]/g, '')
                                 }
                                 if (maxLength && e.currentTarget.value.length > maxLength) {
@@ -192,7 +193,7 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                             {suffix}
                         </div>}
                     </span>
-                    {((customType || rules) && isAlert) && <div className="custom-type-alert-text">
+                    {((customType || rules) && isAlert) && <div className={`custom-type-alert-text ${customType ?? ''}`}>
                         {isAlert ? alertMsg : ''}
                     </div>}
                 </div>

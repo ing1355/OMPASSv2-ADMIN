@@ -1,5 +1,5 @@
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from "Components/CommonCustomComponents/CustomAxios";
-import { AddApplicationListApi, AddPasscodeApi, AddPoliciesListApi, AddUserDataApi, AddUserGroupApi, ApprovalUserApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DuplicateUserNameCheckApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetGlobalConfigApi, GetPasscodeHistoriesApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, PatchSessionTokenApi, PostLoginApi, ResetPasswordApi, ResetPasswordEmailCodeVerifyApi, ResetPasswordEmailSendApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, UnlockUserApi, UpdateAgentNoteApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi } from "Constants/ApiRoute";
+import { AddApplicationListApi, AddPasscodeApi, AddPoliciesListApi, AddUserDataApi, AddUserGroupApi, AddUserWithCsvDataApi, ApprovalUserApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DuplicateUserNameCheckApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetGlobalConfigApi, GetPasscodeHistoriesApi, GetPasscodeListApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, PatchSessionTokenApi, PostLoginApi, ResetPasswordApi, ResetPasswordEmailCodeVerifyApi, ResetPasswordEmailSendApi, SendPasscodeEmailApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, UnlockUserApi, UpdateAgentNoteApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi } from "Constants/ApiRoute";
 import { INT_MAX_VALUE } from "Constants/ConstantValues";
 import { convertUTCStringToKSTString } from "./GlobalFunctions";
 import { convertDashboardDateParamsKSTtoUTC } from "Components/Dashboard/DashboardFunctions";
@@ -28,7 +28,12 @@ export const GetPasscodeHistoriesFunc = ({
     page_size = 10,
     page = 1,
     sortBy = "CREATED_AT",
-    sortDirection = "DESC"
+    sortDirection = "DESC",
+    applicationName = "",
+    issuerUsername = "",
+    portalUsername = "",
+    rpUsername = "",
+    action = undefined
 }: PasscodeHistoriesParamsType, callback: (data: GetListDataGeneralType<PasscodeHistoryDataType>) => void) => {
     return CustomAxiosGet(GetPasscodeHistoriesApi, (data: GetListDataGeneralType<PasscodeHistoryDataType>) => {
         callback(data)
@@ -36,7 +41,38 @@ export const GetPasscodeHistoriesFunc = ({
         page_size,
         page,
         sortBy,
-        sortDirection
+        sortDirection,
+        applicationName,
+        issuerUsername,
+        portalUsername,
+        rpUsername,
+        action
+    } as PasscodeHistoriesParamsType)
+}
+
+export const GetPasscodeListFunc = ({
+    page_size = 10,
+    page = 1,
+    sortBy = "CREATED_AT",
+    sortDirection = "DESC",
+    applicationName = "",
+    issuerUsername = "",
+    portalUsername = "",
+    rpUsername = "",
+    action = undefined
+}: PasscodeHistoriesParamsType, callback: (data: GetListDataGeneralType<PasscodeListDataType>) => void) => {
+    return CustomAxiosGet(GetPasscodeListApi, (data: GetListDataGeneralType<PasscodeListDataType>) => {
+        callback(data)
+    }, {
+        page_size,
+        page,
+        sortBy,
+        sortDirection,
+        applicationName,
+        issuerUsername,
+        portalUsername,
+        rpUsername,
+        action
     } as PasscodeHistoriesParamsType)
 }
 
@@ -110,14 +146,14 @@ export const GetPolicyDetailDataFunc = (policyId: PolicyDataType['id']) => {
         return res.data as PolicyDataType
     })
 }
-export const AddPoliciesListFunc = (params: DefaultPolicyDataType, callback: () => void) => {
+export const AddPoliciesListFunc = (params: PolicyDataType, callback: () => void) => {
     return CustomAxiosPost(AddPoliciesListApi, () => {
         callback()
     }, params)
 }
 
-export const UpdatePoliciesListFunc = (policyId: PolicyDataType['id'], params: DefaultPolicyDataType, callback: (data: PolicyDataType) => void) => {
-    return CustomAxiosPut(UpdatePoliciesListApi(policyId), callback, params)
+export const UpdatePoliciesListFunc = (params: PolicyDataType, callback: (data: PolicyDataType) => void) => {
+    return CustomAxiosPut(UpdatePoliciesListApi(params.id), callback, params)
 }
 
 export const DeletePoliciesListFunc = (policyId: PolicyDataType['id'], callback: () => void) => {
@@ -170,8 +206,13 @@ export const DeleteUserDataFunc = (userId: UserDataType['userId'], callback: () 
     return CustomAxiosDelete(DeleteUserDataApi(userId), callback)
 }
 
-export const UnlockUserFunc = (userId: UserDataType['userId'], callback: () => void) => {
-    return CustomAxiosPatch(UnlockUserApi(userId), callback)
+export const UnlockUserFunc = (userId: UserDataType['userId'], shouldGenerateRandomPassword: boolean, password: string, callback: (res: {
+    password: string
+}) => void) => {
+    return CustomAxiosPatch(UnlockUserApi(userId), callback, {
+        shouldGenerateRandomPassword,
+        password
+    })
 }
 
 export const GetUserDetailDataFunc = (userId: UserDataType['userId'], callback: (data: UserDetailDataType[]) => void) => {
@@ -355,6 +396,10 @@ export const DuplicateUserNameCheckFunc = (username: UserDataType['username'], c
     return CustomAxiosGet(DuplicateUserNameCheckApi(username), callback)
 }
 
+export const AddUserWithCsvDataFunc = (datas: DefaultUserDataType[], callback: (response: UserDataType[]) => void) => {
+    return CustomAxiosPost(AddUserWithCsvDataApi, callback, datas)
+}
+
 export const GetAgentInstallerListFunc = ({
     page_size = 10,
     page = 1,
@@ -465,18 +510,26 @@ export const PatchSessionTokenFunc = (callback: (data: any, token: string) => vo
     return CustomAxiosPatch(PatchSessionTokenApi, callback)
 }
 
-export const ResetPasswordFunc = (username: string, email: string, callback: () => void) => {
-    return CustomAxiosPatch(ResetPasswordApi(username, email), callback)
+export const ResetPasswordFunc = (password: string, token: string, callback: () => void) => {
+    return CustomAxiosPatch(ResetPasswordApi, callback, {
+        password
+    }, {
+        authorization: token
+    })
 }
 
-export const ResetPasswordEmailSendFunc = (username: string, email: string, callback: () => void) => {
-    return CustomAxiosPost(ResetPasswordEmailSendApi(username, email), callback)
+export const ResetPasswordEmailSendFunc = (params: RecoverySendMailParamsType, callback: (a: any, b: any) => void) => {
+    return CustomAxiosPost(ResetPasswordEmailSendApi, callback, params)
 }
 
-export const ResetPasswordEmailCodeVerifyFunc = (params: {
-    username: string
-    email: string
+export const ResetPasswordEmailCodeVerifyFunc = (params: RecoverySendMailParamsType & {
     code: string
-}, callback: () => void) => {
-    return CustomAxiosPost(ResetPasswordEmailCodeVerifyApi(), callback, params)
+}, callback: (a: any,b: any) => void) => {
+    return CustomAxiosPost(ResetPasswordEmailCodeVerifyApi, callback, params)
+}
+
+export const SendPasscodeEmailFunc = (passcodeId: PasscodeDataType['id'], callback: () => void) => {
+    return CustomAxiosPost(SendPasscodeEmailApi, callback, {
+        passcodeId
+    })
 }

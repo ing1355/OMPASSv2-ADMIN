@@ -1,0 +1,45 @@
+.excel-errors-container {
+    width: 100%;
+    max-height: 600px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.excel-errors-row {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid var(--sub-grey-color6);
+    padding: 6px 0;
+}
+
+.excel-errors-row.header {
+    background-color: var(--sub-grey-color);
+    height: 30px;
+    border-bottom: none;
+}
+
+.excel-errors-row > div:first-child {
+}
+
+.excel-errors-row > div:last-child {
+    
+}
+
+.excel-errors-row > div:first-child {
+    flex: 0 0 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.excel-errors-row > div:last-child {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.excel-errors-modal-button {
+    flex: 0 0 200px !important;
+}

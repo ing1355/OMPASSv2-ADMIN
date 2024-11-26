@@ -58,7 +58,7 @@ const Dashboard = () => {
         <ContentsHeader title="test" subTitle="DASHBOARD_TITLE" contentStyle={{
             marginBottom: 0,
             paddingTop: 0
-        }} className="dashboard">
+        }} className="dashboard" noBack>
         </ContentsHeader>
         <div className="contents-header-container dashboard">
             <DashboardTop />

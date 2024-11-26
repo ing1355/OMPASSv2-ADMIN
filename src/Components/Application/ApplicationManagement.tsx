@@ -56,6 +56,7 @@ const ApplicationManagement = () => {
     return <Contents loading={dataLoading}>
         <ContentsHeader title="APPLICATION_MANAGEMENT" subTitle="APPLICATION_LIST">
         </ContentsHeader>
+        <div className="contents-header-container">
         <CustomTable<ApplicationListDataType, ApplicationListParamsType>
             theme='table-st1'
             className="contents-header-container"
@@ -72,13 +73,13 @@ const ApplicationManagement = () => {
             }, {
                 key: 'policyName',
                 type: 'string',
-                label: '정책명'
+                label: <FormattedMessage id="POLICY_NAME_LABEL"/>
             }]}
             onSearchChange={(data) => {
                 GetDatas(data)
             }}
             addBtn={{
-                label: "추가",
+                label: <FormattedMessage id="NORMAL_ADD_LABEL"/>,
                 icon: applicationAddIcon,
                 hoverIcon: applicationAddIconHover,
                 callback: () => {
@@ -100,28 +101,28 @@ const ApplicationManagement = () => {
             columns={[
                 {
                     key: 'name',
-                    title: '어플리케이션명'
+                    title: <FormattedMessage id="APPLICATION_INFO_NAME_LABEL"/>
                 },
                 {
                     key: 'type',
-                    title: '타입',
+                    title: <FormattedMessage id="APPLICATION_INFO_TYPE_LABEL"/>,
                     render: (data) => {
                         return data ? getApplicationTypeLabel(data) : ""
                     }
                 },
                 {
                     key: 'domain',
-                    title: '도메인',
-                    render: (data) => data || '도메인 없음'
+                    title: <FormattedMessage id="APPLICATION_INFO_DOMAIN_LABEL"/>,
+                    render: (data) => data || <FormattedMessage id="APPLICATION_NO_DOMAIN_LABEL"/>
                 },
                 {
                     key: 'description',
-                    title: '설명',
-                    render: (data) => data || '설명 없음'
+                    title: <FormattedMessage id="APPLICATION_INFO_DESCRIPTION_LABEL"/>,
+                    render: (data) => data || <FormattedMessage id="APPLICATION_NO_DESCRIPTION_LABEL"/>
                 },
                 {
                     key: 'policyId',
-                    title: '정책명',
+                    title: <FormattedMessage id="POLICY_NAME_LABEL"/>,
                     render: (data, ind, row) => {
                         const target = policiesData.find(_ => _.id === data);
                         if(target) {
@@ -134,13 +135,8 @@ const ApplicationManagement = () => {
             pagination
             totalCount={totalCount}
         />
-        {/* <div
-            className="mt30 mb40"
-            style={{ textAlign: 'center' }}
-        >
-            <Pagination showQuickJumper showSizeChanger current={pageNum} pageSize={tableCellSize} total={totalCount} onChange={onChangePage} />
-        </div> */}
+        </div>
     </Contents>
 }
-//미번
+
 export default ApplicationManagement

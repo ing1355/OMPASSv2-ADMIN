@@ -26,7 +26,7 @@ label:has(input[type="checkbox"]) {
     align-items: center;
     gap: 4px;
     user-select: none;
-    margin-left: 4px;
+    /* margin-left: 4px; */
 }
 
 label:has(input[type="checkbox"]:checked)::before {
@@ -51,22 +51,23 @@ label:has(input[type="checkbox"]) {
     display: flex;
     cursor: pointer;
     padding-left: 14px;
-    &::after {
-        border: 1px solid var(--sub-grey-color5);
-        border-radius: 3px;
-        background-image: url('../assets/checkIconWhite.png');
-        background-repeat: no-repeat;
-        background-size: 50%;
-        box-sizing: border-box;
-        background-position: center;
-        content: '';
-        width: 16px;
-        height: 16px;
-        position: absolute;
-        left: 0;
-        top: 50%;
-        transform: translateY(-50%);
-    }
+}
+
+label:has(input[type="checkbox"])::after {
+    border: 1px solid var(--sub-grey-color5);
+    border-radius: 3px;
+    background-image: url('../assets/checkIconWhite.png');
+    background-repeat: no-repeat;
+    background-size: 50%;
+    box-sizing: border-box;
+    background-position: center;
+    content: '';
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .checkbox-label:has(input[type="checkbox"]):has(input:checked) {
@@ -88,29 +89,31 @@ label:has(input[type="checkbox"]) {
     align-items: center;
 }
 
-.custom-label-wrapper > div, .custom-label-wrapper > label > div {
+.custom-label-wrapper>div,
+.custom-label-wrapper>label>div {
     position: relative;
     width: 100%;
     height: 100%;
     flex: 1;
 }
 
-.custom-label-wrapper > label {
+.custom-label-wrapper>label {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 4px;
-    
-    &:not(:has(input[type="radio"]))input {
-        height: 36px;
-    }
-    &>div {
-        box-sizing: border-box;
-        height: 100%;
-    }
 }
 
-.custom-label-wrapper > div > span:has(input:focus)+.custom-type-alert-text {
+.custom-label-wrapper>label:not(:has(input[type="radio"]))input {
+    height: 36px;
+}
+
+.custom-label-wrapper>div {
+    box-sizing: border-box;
+    height: 100%;
+}
+
+.custom-label-wrapper>div>span:has(input:focus)+.custom-type-alert-text {
     display: flex;
 }
 
@@ -120,28 +123,36 @@ label:has(input[type="checkbox"]) {
     width: 100%;
 }
 
+input[type="checkbox"] {
+    display: none;
+    /* position: absolute;
+    display: block;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    white-space: nowrap;
+    clip: rect(1px 1px 1px 1px);
+    clip-path: inset(1px); */
+}
+
 input {
     padding: 2px 12px;
     outline: none;
     text-align: center;
+}
 
-    &[type="checkbox"] {
-        display: none;
-    }
+input[type="radio"] {
+    accent-color: var(--main-purple-color);
+    opacity: 0;
+    position: absolute;
+    height: 0;
+    width: 0;
+}
 
-    &:-webkit-autofill {
-        -webkit-box-shadow: 0 0 0px 1000px var(--sub-purple-color4) inset;
-        border: 1.4px solid var(--main-purple-color);
-        /* transition: background-color 5000s ease-in-out 0s; */
-    }
-
-    &[type="radio"] {
-        accent-color: var(--main-purple-color);
-        opacity: 0;
-        position: absolute;
-        height: 0;
-        width: 0;
-    }
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px var(--sub-purple-color4) inset;
+    border: 1.4px solid var(--main-purple-color);
+    /* transition: background-color 5000s ease-in-out 0s; */
 }
 
 .custom-radio-container {
@@ -177,22 +188,18 @@ input {
 input.st1 {
     border-radius: 8px;
     border: 1.4px solid var(--sub-grey-color5);
+}
 
-    &::placeholder {
-        color: var(--sub-grey-color3);
-    }
+input.st1::placeholder {
+    color: var(--sub-grey-color3);
+}
 
-    /* &:focus {
-        border-color:  var(--main-purple-color);
-        color: var(--main-purple-color);
-    } */
-    &:disabled {
-        background-color: var(--main-grey-color2);
-    }
+input.st1:disabled {
+    background-color: var(--main-grey-color2);
+}
 
-    &:read-only {
-        background-color: var(--sub-grey-color);
-    }
+input.st1:read-only {
+    background-color: var(--sub-grey-color);
 }
 
 .custom-type-alert-text {
@@ -214,6 +221,14 @@ input.st1 {
     display: none;
 }
 
+.custom-type-alert-text.email {
+    left: 70%;
+}
+
+.custom-type-alert-text.email::after {
+    left: 35%;
+}
+
 .custom-type-alert-text::after {
     content: '';
     position: absolute;
@@ -223,6 +238,7 @@ input.st1 {
     border-bottom: 10px solid black;
     border-right: 10px solid black;
     transform: rotate(45deg);
+
 }
 
 .custom-input-inner-container {
@@ -234,4 +250,15 @@ input.st1 {
     top: 50%;
     right: 8px;
     transform: translateY(-50%);
+}
+
+@media (max-width:767px) {
+    .custom-type-alert-text {
+        font-size: .65rem;
+        padding: 6px 8px;
+    }
+
+    label:has(input[type="checkbox"]) {
+        gap: 8px;
+    }
 }

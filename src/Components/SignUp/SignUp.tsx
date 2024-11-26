@@ -24,7 +24,7 @@ const SignUp = () => {
                 setStepOneComplete(complete)
             }} /> : <SecondStep />}
             <div
-                className='copyRight-style mt30'
+                className='copyRight-style sign-up'
             >
                 {CopyRightText(subdomainInfo)}
             </div>

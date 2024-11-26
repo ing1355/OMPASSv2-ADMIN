@@ -34,11 +34,12 @@ const GroupManagement = () => {
     return <Contents loading={dataLoading}>
         <ContentsHeader title="GROUP_MANAGEMENT" subTitle="GROUP_LIST">
         </ContentsHeader>
+        <div className="contents-header-container">
         <CustomTable<UserGroupListDataType, {}>
             theme='table-st1'
             hover
             addBtn={{
-                label: "추가",
+                label: <FormattedMessage id="NORMAL_ADD_LABEL"/>,
                 icon: groupAddIcon,
                 hoverIcon: groupAddIconHover,
                 callback: () => {
@@ -51,7 +52,7 @@ const GroupManagement = () => {
             }, {
                 key: 'policyName',
                 type: 'string',
-                label: '정책명'
+                label: <FormattedMessage id="POLICY_NAME_LABEL"/>
             }]}
             className="contents-header-container"
             onBodyRowClick={(row, index, arr) => {
@@ -65,32 +66,25 @@ const GroupManagement = () => {
             columns={[
                 {
                     key: 'name',
-                    title: '그룹명'
+                    title: <FormattedMessage id="GROUP_NAME_LABEL"/>
                 },
                 {
                     key: 'policy',
-                    title: '정책명',
+                    title: <FormattedMessage id="POLICY_NAME_LABEL"/>,
                     render: (data, ind, row) => {
-                        return data ? (data.name === 'default policy' ? <FormattedMessage id={data.name} /> : data.name) : <FormattedMessage id="NO_POLICY"/>
+                        return data ? (data.name === 'default policy' ? <FormattedMessage id={data.name} /> : data.name) : <FormattedMessage id="NO_POLICY_SELECTED_LABEL"/>
                     }
                 },
-                // {
-                //     key: 'userNum',
-                //     title: '사용자 수',
-                //     render: (data) => {
-                //         console.log(data)
-                //         return "test"
-                //     }
-                // },
                 {
                     key: 'description',
-                    title: '설명',
+                    title: <FormattedMessage id="GROUP_DESCRIPTION_LABEL"/>,
                     maxWidth: '300px'
                 }
             ]}
             datas={tableData}
         />
+        </div>
     </Contents>
 }
-//미번
+
 export default GroupManagement

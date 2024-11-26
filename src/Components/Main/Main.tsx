@@ -66,7 +66,9 @@ const Main = () => {
   return (
     <>
       <Contents containerStyle={{
-        justifyContent: 'center'
+        justifyContent: 'center',
+        height: 'calc(100% - 120px)',
+        paddingBottom: 48
       }}>
         {menuInfoFun()}
       </Contents>

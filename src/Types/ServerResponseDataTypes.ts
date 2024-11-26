@@ -176,6 +176,11 @@ type PortalSettingsDataType = {
   timeZone: string
   isUserAllowedToRemoveAuthenticator: boolean
   selfSignupEnabled: boolean
+  noticeToAdmin: {
+    isEnabled: RestrictionNoticeDataType['isEnabled'],
+    admins: RestrictionNoticeDataType['admins'],
+    methods: RestrictionNoticeDataType['methods']
+  }
 }
 
 type UpdatePortalSettingsDataType = {
@@ -186,6 +191,11 @@ type UpdatePortalSettingsDataType = {
   timeZone: string
   isUserAllowedToRemoveAuthenticator: boolean
   selfSignupEnabled: boolean
+  noticeToAdmin: {
+    isEnabled: RestrictionNoticeDataType['isEnabled'],
+    admins: RestrictionNoticeDataType['admins'],
+    methods: RestrictionNoticeDataType['methods']
+  }
 }
 
 type GlobalDatasType = {

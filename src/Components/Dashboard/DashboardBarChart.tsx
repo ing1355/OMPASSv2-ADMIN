@@ -1,6 +1,7 @@
 import { BarDatum, ResponsiveBar } from "@nivo/bar"
 import { DashboardColors } from "./DashboardColors"
 import { useMemo } from "react"
+import { useIntl } from "react-intl"
 
 type DashBoardBarChartProps = {
     datas: BarDatum[]
@@ -10,6 +11,7 @@ type DashBoardBarChartProps = {
 }
 
 const DashBoardBarChart = ({ datas, keys, indexKey, customColor }: DashBoardBarChartProps) => {
+    const { formatMessage } = useIntl()
     const colors = useMemo(() => {
         let temp: {
             [key: string]: string
@@ -69,7 +71,7 @@ const DashBoardBarChart = ({ datas, keys, indexKey, customColor }: DashBoardBarC
                 tickSize: 0,
                 tickPadding: 5,
                 tickRotation: 0,
-                legend: '인증 횟수',
+                legend: formatMessage({id: 'DASHBOARD_AXIS_LEFT_AUTH_NUM_LABEL'}),
                 legendPosition: 'middle',
                 legendOffset: -40,
                 truncateTickAt: 0,

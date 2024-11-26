@@ -5,6 +5,7 @@ import useFullName from "hooks/useFullName"
 import { logoImageWithDefaultImage } from "Functions/GlobalFunctions"
 import { SetStateType } from "Types/PropsTypes"
 import GroupOpen from "./GroupOpen"
+import { FormattedMessage } from "react-intl"
 
 type ApplicationTypeViewProps = {
     datas: UserHierarchyDataApplicationViewDataType[]
@@ -64,7 +65,7 @@ const ApplicationTypeView = ({ datas, selected, setSelected }: ApplicationTypeVi
                             <div className='transfer-user-child-application-title application' data-selected={selected.includes(user.id)}>
                                 <img src={rpUesrIcon} />
                                 <div>
-                                    {user.portalUsername}({getFullName(user.portalName)}) - {user.username}({user.groupName ?? "그룹 없음"})
+                                    {user.portalUsername}({getFullName(user.portalName)}) - {user.username}({user.groupName ?? <FormattedMessage id="NO_GROUP_SELECTED_LABEL"/>})
                                 </div>
                             </div>
                             {/* {

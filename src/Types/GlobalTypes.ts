@@ -127,6 +127,11 @@ type LoginApiResponseType = {
 type PasscodeHistoriesParamsType = GeneralParamsType & {
     sortBy?: "CREATED_AT" | "USERNAME" | "PASSCODE_ACTION"
     sortDirection?: DirectionType
+    applicationName?: string
+    issuerUsername?: string
+    portalUsername?: string
+    rpUsername?: string
+    action?: 'CREATE' | 'DELETE'
 }
 
 type PasscodeDataType = {
@@ -135,8 +140,20 @@ type PasscodeDataType = {
     number: string
     id: string
     recycleCount: number
-    validTime: string
 }
+
+createdAt
+: 
+"2024-11-21 09:23:11"
+lastAuthenticatedAt
+: 
+"2024-11-21 10:24:32"
+status
+: 
+"REGISTERED"
+type
+: 
+"PASSCODE"
 
 type PasscodeParamsType = {
     authenticationDataId: string
@@ -158,9 +175,24 @@ type PasscodeHistoryDataType = {
     authenticationInfoId: RPUserDetailAuthDataType['id']
 }
 
+type PasscodeListDataType = {
+    passcode: PasscodeDataType & {
+        createdAt: string
+        lastAuthenticatedAt: string
+
+    }
+    rpUser: RPUserType
+    portalUser: PortalUserType & {
+        role: userRoleType
+    }
+    applicationName: ApplicationDataType['name']
+    authenticationInfoId: RPUserDetailAuthDataType['id']
+}
+
 type DefaultApplicationDataType = {
     id: string
-    type: "DEFAULT" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "ADMIN" | "RADIUS" | "GOOROOM_LOGIN" | "REDMINE"
+    // type: "DEFAULT" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "ADMIN" | "RADIUS" | "GOOROOM_LOGIN" | "REDMINE" | "ALL"
+    type: "DEFAULT" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "ADMIN" | "RADIUS" | "REDMINE" | "ALL"
     name: string
     domain?: string
     description?: string
@@ -271,30 +303,33 @@ type RestrictionNoticeThemselvesDataType = {
 }
 
 type DefaultPolicyDataType = {
+    id: string
     name: string
-    accessControl?: 'ACTIVE' | 'INACTIVE' | 'DENY'
+    accessControl: 'ACTIVE' | 'INACTIVE' | 'DENY'
     policyType: 'DEFAULT' | 'CUSTOM'
-    locationConfig: LocationPolicyType
-    enableBrowsers: BrowserPolicyType[]
-    networkConfig: IpAddressPolicyType
     enableAuthenticators: AuthenticatorPolicyType[]
     description?: string
-    accessTimeConfig: AccessTimeRestrictionType
-    noticeToAdmin: RestrictionNoticeDataType
-    noticeToThemselves: RestrictionNoticeThemselvesDataType
+    applicationType: ApplicationDataType['type']
 }
 
 type RestrictionNoticeMethodType = 'EMAIL' | 'PUSH'
 
 type PolicyDataType = DefaultPolicyDataType & {
-    id: string
+    locationConfig?: LocationPolicyType
+    enableBrowsers?: BrowserPolicyType[]
+    networkConfig?: IpAddressPolicyType
+    accessTimeConfig?: AccessTimeRestrictionType
+    noticeToAdmin?: RestrictionNoticeDataType
+    noticeToThemselves?: RestrictionNoticeThemselvesDataType
 }
+
 type PolicyListDataType = {
     id: string
     name: string
     policyType: DefaultPolicyDataType['policyType']
     description: string
     createdAt: string
+    applicationType?: ApplicationDataType['type']
 }
 type PoliciesListParamsType = GeneralParamsType & {
     policyId?: string
@@ -322,6 +357,8 @@ type UserDataType = DefaultUserDataType & {
     status: UserStatusType
     recoveryCode: string
 }
+
+type UserExcelDataType = DefaultUserDataType
 
 type UserDataParamsType = {
     name: UserNameType
@@ -576,3 +613,16 @@ type CustomTableColumnType<T> = {
 }
 
 type UserTransferDataType = UserHierarchyDataType | UserHierarchyDataApplicationViewDataType | UserHierarchyDataGroupViewDataType
+
+type RecoverySendMailParamsType = {
+    type: "PASSWORD" | "LOCK"
+    username: string
+    email: string
+}
+
+type PolicyItemsPropsType<T> = {
+    value: T
+    onChange: (data: T) => void
+    dataInit?: boolean
+    authenticators?: PolicyDataType['enableAuthenticators']
+}

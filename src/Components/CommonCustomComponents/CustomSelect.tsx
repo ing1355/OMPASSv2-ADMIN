@@ -23,6 +23,7 @@ const CustomSelect = ({ items, value, onChange, needSelect, noLabel, style }: Cu
     const selectRef = useRef<HTMLDivElement>(null)
     const scrollRef = useRef<HTMLDivElement>(null)
     const activeRef = useRef(active)
+    
     const _items: CustomSelectProps['items'] = needSelect ? items : [{
         key: '',
         label: noLabel || <FormattedMessage id="NO_SELECT_VALUE" />
@@ -81,7 +82,7 @@ const CustomSelect = ({ items, value, onChange, needSelect, noLabel, style }: Cu
     return <div className={`custom-select-container${showSelect ? ' opened' : ''}${_items.length > 5 ? ' scroll' : ''}`} onClick={() => {
         setShowSelect(!showSelect)
     }} ref={selectRef} style={style}>
-        {value ? _items.find(_ => _.key === value)?.label : (noLabel || '선택 안함')}
+        {value ? _items.find(_ => _.key === value)?.label : (noLabel || <FormattedMessage id="NO_SELECT_VALUE"/>)}
         {
             showSelect && <div className="custom-select-option-container" ref={scrollRef}>
                 {

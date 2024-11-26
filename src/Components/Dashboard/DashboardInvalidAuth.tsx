@@ -2,19 +2,7 @@ import { GetDashboardApplicationInvalidAuthFunc } from "Functions/ApiFunctions"
 import DashboardCardWithDateSelect from "./DashboardCardWithDateSelect"
 import { useEffect, useState } from "react"
 import { dashboardDateInitialValue } from "./Dashboard"
-import { convertDaysByDate, convertHourRangeByDate, CustomLegend } from "./DashboardFunctions"
-import {
-    Chart,
-    BarSeries,
-    ArgumentAxis,
-    ValueAxis,
-    ZoomAndPan,
-    Legend,
-    Tooltip,
-    LineSeries
-} from '@devexpress/dx-react-chart-material-ui';
-import { Animation, EventTracker, Stack } from "@devexpress/dx-react-chart"
-import { DashboardColors } from "./DashboardColors"
+import { convertDaysByDate, convertHourRangeByDate } from "./DashboardFunctions"
 import { convertUTCStringToKSTString } from "Functions/GlobalFunctions"
 import { FormattedMessage } from "react-intl"
 import DashBoardBarChart from "./DashboardBarChart"

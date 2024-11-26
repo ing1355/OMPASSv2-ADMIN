@@ -5,3 +5,36 @@
     align-items: center;
     gap: 4px;
 }
+
+.user-add-modal-contents-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 64px;
+    padding: 24px 60px 60px 60px;
+}
+
+.user-add-modal-contents-item {
+    flex: 1;
+    height: 260px;
+    box-shadow: 0 0 10px rgba(0,0,0,.15);
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 24px;
+    cursor: pointer;
+    font-size: 1rem;
+    box-sizing: border-box;
+    font-weight: bold;
+
+    & > img {
+        width: 100px;
+        height: 100px;
+    }
+    &:hover {
+        box-shadow: none;
+        border: 1px solid var(--main-purple-color);
+    }
+}

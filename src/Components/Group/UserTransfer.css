@@ -2,12 +2,12 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    gap: 48px;
+    gap: 32px;
     align-items: center;
 }
 
 .custom-transfer-user-content-box {
-    width: 375px;
+    width: 433.5px;
     height: 800px;
     border: 1px solid var(--sub-grey-color5);
     border-radius: 8px;

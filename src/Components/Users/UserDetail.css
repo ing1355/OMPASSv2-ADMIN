@@ -77,6 +77,7 @@
     gap: 8px;
     &>img {
         max-height: 24px;
+        width: auto;
         border-radius: 6px;
     }
 }
@@ -96,6 +97,7 @@
 }
 
 .user-detail-content-passcode-container {
+    margin-top: 20px;
     &>div:first-child {
         display: flex;
         flex-direction: row;
@@ -109,6 +111,7 @@
 
     & h4 {
         margin-bottom: 0;
+        margin-top: 0;
     }
 }
 
@@ -164,6 +167,14 @@
     height: 32px;
     width: 32px;
     cursor: pointer;
+    border-radius: 50%;
+    padding: 8px;
+    box-sizing: border-box;
+    
+    background-color: var(--sub-grey-color7);
+    &:hover {
+        background-color: var(--main-purple-color);
+    }
 
     &>img {
         width: 100%;
@@ -262,6 +273,7 @@
     display: flex;
     flex-direction: column;
     gap: 24px;
+    padding-top: 40px;
 }
 
 .passcode-add-label {
@@ -285,7 +297,6 @@
 }
 
 .passcode-add-form {
-    padding-top: 40px;
 }
 
 .passcode-add-input-label-container {
@@ -303,4 +314,42 @@
 
 .has-password-confirm {
     margin-left: 8px;
+}
+
+.user-unlock-password-row {
+    margin-top: 8px;
+    width: 100%;
+}
+
+.user-unlock-password-row > div:first-child {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 24px;
+    align-items: center;
+}
+
+.user-unlock-password-row .custom-input-wrapper {
+    height: 40px;
+}
+
+.user-unlock-password-confirm-view {
+    margin-top: 16px;
+    letter-spacing: 1px;
+    border-radius: 8px;
+    background-color: var(--main-purple-color2);
+    color: white;
+    margin: 24px auto 0 auto;
+    padding: 6px 0;
+    width: 200px;
+}
+
+.user-recovery-code-row {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+}
+
+.user-recovery-code-row > span {
+    font: small-caption;
 }

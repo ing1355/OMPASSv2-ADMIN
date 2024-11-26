@@ -13,9 +13,10 @@ import { ResetPasswordEmailCodeVerifyFunc, ResetPasswordEmailSendFunc, ResetPass
 import { FormattedMessage } from "react-intl";
 import { message } from "antd";
 import { useNavigate } from "react-router";
+import { useSearchParams } from "react-router-dom";
 
 type ResetPasswordProps = {
-
+    
 }
 
 const ResetPassword = ({ }: ResetPasswordProps) => {
@@ -32,15 +33,19 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
     const [emailAlert, setEmailAlert] = useState(false)
     const [mailCount, setMailCount] = useState(0)
     const [codeConfirm, setCodeConfirm] = useState(false)
+    const [token, setToken] = useState('')
     const [randomPasswordCheck, setRandomPasswordCheck] = useState(false)
+    const [searchParams] = useSearchParams()
+    const type = searchParams.get('type') as RecoverySendMailParamsType['type']
 
     const inputUsernameRef = useRef<HTMLInputElement>()
     const inputPasswordRef = useRef<HTMLInputElement>()
     const inputPasswordConfirmRef = useRef<HTMLInputElement>()
     const inputEmailRef = useRef<HTMLInputElement>()
+    const inputCodeRef = useRef<HTMLInputElement>()
     const mailTimer = useRef<NodeJS.Timer>()
     const mailCountRef = useRef(0)
-
+    
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -50,31 +55,30 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
     const resetRequest = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (codeConfirm) {
-            if (!inputPassword) {
-                inputPasswordRef.current?.focus()
-                return message.error("비밀번호 값을 입력해주세요.")
+            if(!randomPasswordCheck) {
+                if (!inputPassword) {
+                    inputPasswordRef.current?.focus()
+                    return message.error("비밀번호 값을 입력해주세요.")
+                }
+                if (passwordAlert) {
+                    inputPasswordRef.current?.focus()
+                    return message.error("비밀번호 값을 확인해주세요.")
+                }
+                if (!inputPasswordConfirm) {
+                    inputPasswordConfirmRef.current?.focus()
+                    return message.error("비밀번호 확인 값을 입력해주세요.")
+                }
+                if (passwordConfirmAlert) {
+                    inputPasswordConfirmRef.current?.focus()
+                    return message.error("비밀번호 확인 값을 확인해주세요.")
+                }
             }
-            if (passwordAlert) {
-                inputPasswordRef.current?.focus()
-                return message.error("비밀번호 값을 확인해주세요.")
-            }
-            if (!inputPasswordConfirm) {
-                inputPasswordConfirmRef.current?.focus()
-                return message.error("비밀번호 확인 값을 입력해주세요.")
-            }
-            if (passwordConfirmAlert) {
-                inputPasswordConfirmRef.current?.focus()
-                return message.error("비밀번호 확인 값을 확인해주세요.")
-            }
-            message.success("비밀번호 초기화 성공!")
-            navigate('/', { replace: true })
-            return;
-            ResetPasswordFunc(inputUsername, inputEmail, () => {
+            ResetPasswordFunc(inputPassword, token, () => {
                 message.success("비밀번호 초기화 성공!")
-                navigate(-1)
+                navigate('/')
             })
         } else {
-            return setCodeConfirm(true)
+            // return setCodeConfirm(true)
             if (!inputUsername) {
                 message.error("아이디를 입력해주세요")
                 return inputUsernameRef.current?.focus()
@@ -84,13 +88,18 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
             }
             if (!inputEmail) {
                 message.error("이메일을 입력해주세요")
-                return inputUsernameRef.current?.focus()
+                return inputEmailRef.current?.focus()
             }
             if (!inputEmail || emailAlert) {
                 return inputEmailRef.current?.focus()
             }
-            ResetPasswordEmailCodeVerifyFunc({ username: inputUsername, email: inputEmail, code: inputCode }, () => {
+            if (!inputCode) {
+                return inputCodeRef.current?.focus()
+            }
+            ResetPasswordEmailCodeVerifyFunc({ type, username: inputUsername, email: inputEmail, code: inputCode }, (_, _token) => {
                 message.success('인증 코드 검증 성공!')
+                setToken(_token)
+                setCodeConfirm(true)
             }).catch(err => {
                 console.log('실패 ??', err)
             })
@@ -98,7 +107,7 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
     }
 
     return <>
-        <div className={`login-body password-change${codeConfirm ? ' code-confirm' : ''}`}>
+        <div className={`login-body password-reset${codeConfirm ? ' code-confirm' : ''}`}>
             <form
                 onSubmit={resetRequest}
             >
@@ -116,11 +125,11 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                         justifyContent: 'space-between'
                     }}>
                         <div>비밀번호</div>
-                        <div>
+                        {/* <div>
                             <Input type="checkbox" name="check" label="비밀번호 랜덤 생성" checked={randomPasswordCheck} onChange={e => {
                                 setRandomPasswordCheck(e.target.checked)
                             }}/>
-                        </div>
+                        </div> */}
                     </div>
                     <Input
                         className='st1 login-input'
@@ -219,7 +228,11 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                             disabled={inputEmail.length === 0 || emailAlert || mailSendLoading}
                             onClick={() => {
                                 setMailSendLoading(true)
-                                ResetPasswordEmailSendFunc(inputUsername, inputEmail, () => {
+                                ResetPasswordEmailSendFunc({
+                                    username: inputUsername,
+                                    email: inputEmail,
+                                    type
+                                }, () => {
                                     setEmailCodeSend(true)
                                     message.success("인증 코드 발송 성공!")
                                     mailTimer.current = setInterval(() => {
@@ -250,6 +263,7 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                         name="username"
                         maxLength={9}
                         noGap
+                        ref={inputCodeRef}
                         customType='username'
                         placeholder='인증 코드 입력'
                         valueChange={value => {
@@ -267,7 +281,6 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                     {codeConfirm ? "완료" : "다음 단계로 진행"}
                 </Button>
                 <Button
-                    type='submit'
                     className={'st6 login-button'}
                     onClick={() => {
                         navigate(-1)

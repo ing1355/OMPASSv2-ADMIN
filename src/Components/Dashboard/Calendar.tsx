@@ -1,7 +1,7 @@
 import Button from 'Components/CommonCustomComponents/Button'
 import './Calendar.css'
 import { SetStateType } from 'Types/PropsTypes'
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
 import { addDays, addMonths, addYears, differenceInDays, endOfMonth, format, isBefore, isSameDay, isSameMonth, isSaturday, isSunday, isWithinInterval, setHours, setMinutes, setSeconds, startOfMonth, subDays, subMonths, subYears } from 'date-fns';
 import { message } from 'antd';
@@ -67,6 +67,7 @@ const Calendar = ({ defaultValue, setShow, onChange, monthRestriction }: {
     onChange: (data: DateSelectDataType) => void
     monthRestriction?: boolean
 }) => {
+    const { formatMessage } = useIntl()
     const [data, setData] = useState<SelectedDateType>(defaultValue ? {
         startDate: setHours(setMinutes(setSeconds(new Date(defaultValue.startDate), 0), 0), 0),
         endDate: setHours(setMinutes(setSeconds(new Date(defaultValue.endDate), 0), 0), 0)
@@ -166,14 +167,16 @@ const Calendar = ({ defaultValue, setShow, onChange, monthRestriction }: {
             </Button>
             <Button className='calendar-footer-button st3' onClick={() => {
                 if (data.startDate && data.endDate) {
-                    if(monthRestriction && differenceInDays(new Date(data.endDate), new Date(data.startDate)) > 31) return message.error("31일 이상은 설정할 수 없습니다.")
+                    if(monthRestriction && differenceInDays(new Date(data.endDate), new Date(data.startDate)) > 31) {
+                        return message.error(formatMessage({id: 'CALENDAR_MAXIMUM_RANGE_DATE_INVALID_MSG'}))
+                    }
                     setShow(false)
                     onChange({
                         startDate: format(data.startDate, dateFormat),
                         endDate: format(data.endDate, dateFormat)
                     })
                 } else {
-                    message.error("기간을 선택해주세요.")
+                    message.error(formatMessage({id: 'CALENDAR_PLEASE_SELECT_DATE_RANGE'}))
                 }
             }}>
                 <FormattedMessage id="APPLY"/>

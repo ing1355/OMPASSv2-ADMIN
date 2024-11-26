@@ -8,17 +8,34 @@ import ContentsHeader from "Components/Layout/ContentsHeader";
 import userAddIcon from './../../assets/userAddIcon.png'
 import userAddIconHover from './../../assets/userAddIconHover.png'
 import rootRoleIcon from './../../assets/rootRoleIcon.png'
+import singleUserAddIcon from './../../assets/singleUserAddIcon.png'
+import exceclUploadIcon from './../../assets/exceclUploadIcon.png'
+import ldapSyncIcon from './../../assets/ldapSyncIcon.png'
 import adminRoleIcon from './../../assets/adminRoleIcon.png'
 import './UserManagement.css'
 import { userStatusTypes } from "Constants/ConstantValues";
 import useFullName from "hooks/useFullName";
+import CustomModal from "Components/CommonCustomComponents/CustomModal";
+import { message } from "antd";
+import Button from "Components/CommonCustomComponents/Button";
+
+const UserAddItem = ({ title, icon, onClick }: {
+    title: React.ReactNode
+    icon: string
+    onClick: React.DOMAttributes<HTMLDivElement>['onClick']
+}) => {
+    return <div className="user-add-modal-contents-item" onClick={onClick}>
+        <img src={icon} />
+        {title}
+    </div>
+}
 
 const UserManagement = () => {
     const [tableData, setTableData] = useState<UserDataType[]>([])
     const [totalCount, setTotalCount] = useState<number>(0);
     const [dataLoading, setDataLoading] = useState(false)
+    const [addOpen, setAddOpen] = useState(false)
     const getFullName = useFullName()
-
     const navigate = useNavigate()
     const createHeaderColumn = (formattedId: string) => <FormattedMessage id={formattedId} />
 
@@ -49,24 +66,6 @@ const UserManagement = () => {
                 datas={tableData}
                 hover
                 searchOptions={[
-                    // {
-                    //     key: 'role',
-                    //     type: 'select',
-                    //     selectOptions: [
-                    //         {
-                    //             key: 'USER',
-                    //             label: <FormattedMessage id={'USER_ROLE_VALUE'} />
-                    //         },
-                    //         {
-                    //             key: 'ADMIN',
-                    //             label: <FormattedMessage id={'ADMIN_ROLE_VALUE'} />
-                    //         },
-                    //         {
-                    //             key: 'ROOT',
-                    //             label: <FormattedMessage id={'ROOT_ROLE_VALUE'} />
-                    //         },
-                    //     ]
-                    // },
                     {
                         key: 'username',
                         type: 'string'
@@ -95,34 +94,39 @@ const UserManagement = () => {
                     GetDatas(data)
                 }}
                 addBtn={{
-                    label: "추가",
+                    label: <FormattedMessage id="NORMAL_ADD_LABEL" />,
                     icon: userAddIcon,
                     hoverIcon: userAddIconHover,
                     callback: () => {
-                        navigate('/UserManagement/detail')
+                        setAddOpen(true)
                     }
                 }}
-                // deleteBtn={{
-                //     label: "삭제",
-                //     icon: deleteIcon
-                // }}
+                customBtns={<>
+                    <Button className="st5" onClick={() => {
+                        GetUserDataListFunc({
+                            page_size: 999999,
+                            page: 1
+                        }, (res) => {
+                            let text = '사용자 아이디,성,이름,이메일,전화 번호\n'
+                            text += res.results.map(_ => `${_.username},${_.name.firstName},${_.name.lastName},${_.email},${_.phone}`).join('\n')
+                            let link = document.createElement('a');
+                            link.download = 'OMPASS_사용자_리스트.csv';
+                            let blob = new Blob([text], { type: 'text/plain' });
+                            const url = URL.createObjectURL(blob);
+                            link.href = url;
+                            link.click();
+                            URL.revokeObjectURL(url)
+                        })
+                    }}>
+                        사용자 목록 다운로드
+                    </Button>
+                </>}
                 pagination
                 columns={[
-                    // {
-                    //     key: 'role',
-                    //     title: createHeaderColumn('USER_ROLE'),
-                    //     // render: (data) => <FormattedMessage id={data + '_ROLE_VALUE'} />,
-                    //     render: (data, ind, row) => <div>
-                    //         <img src={row.role === 'ROOT' ? rootRoleIcon : (row.role === 'ADMIN' ? adminRoleIcon : userRoleIcon)} style={{
-                    //             width: "24px", height: "24px", boxSizing: 'border-box'
-                    //         }} />
-                    //     </div>,
-                    //     // noWrap: true,
-                    // },
                     {
                         key: 'username',
                         title: createHeaderColumn('USER_ID'),
-                        render: (data,ind,row) => <div className="user-username-column">
+                        render: (data, ind, row) => <div className="user-username-column">
                             {row.role !== 'USER' && <img src={row.role === 'ROOT' ? rootRoleIcon : adminRoleIcon} style={{
                                 width: "24px", height: "24px", boxSizing: 'border-box'
                             }} />}
@@ -136,12 +140,6 @@ const UserManagement = () => {
                         title: createHeaderColumn('NAME'),
                         render: (data) => getFullName(data)
                     },
-                    // {
-                    //     key: 'group',
-                    //     title: createHeaderColumn('GROUP'),
-                    //     render: (data) => data ? data.name : <FormattedMessage id="NONE_GROUP" />,
-                    //     noWrap: true
-                    // },
                     {
                         key: 'email',
                         title: createHeaderColumn('EMAIL'),
@@ -149,12 +147,12 @@ const UserManagement = () => {
                     {
                         key: 'phone',
                         title: createHeaderColumn('PHONE_NUMBER'),
-                        render: data => data || "전화번호 없음",
+                        render: data => data || <FormattedMessage id="USER_NO_PHONE_LABEL" />,
                         noWrap: true
                     },
                     {
                         key: 'status',
-                        title: '상태',
+                        title: <FormattedMessage id="NORMAL_STATUS_LABEL" />,
                         render: data => <FormattedMessage id={`USER_STATUS_${data}`} />,
                         noWrap: true
                     }
@@ -165,6 +163,22 @@ const UserManagement = () => {
                 totalCount={totalCount}
             />
         </div>
+        <CustomModal open={addOpen} onCancel={() => {
+            setAddOpen(false)
+        }} title={<FormattedMessage id="USER_ADD_MODAL_TITLE" />} width={1000}>
+            <div className="user-add-modal-contents-container">
+                <UserAddItem title={<FormattedMessage id="USER_ADD_SINGLE_USER_ITEM_LABEL" />} icon={singleUserAddIcon} onClick={() => {
+                    navigate('/UserManagement/detail')
+                }} />
+                <UserAddItem title={<FormattedMessage id="USER_ADD_EXCEL_UPLOAD_ITEM_LABEL" />} icon={exceclUploadIcon} onClick={() => {
+                    navigate('/UserManagement/excelUpload')
+                }} />
+                <UserAddItem title={<FormattedMessage id="USER_ADD_LDAP_SYNC_ITEM_LABEL" />} icon={ldapSyncIcon} onClick={() => {
+                    message.info("기능 준비중(LDAP SYNC)")
+                    // navigate('/UserManagement/ldapSync')
+                }} />
+            </div>
+        </CustomModal>
     </Contents>
 }
 

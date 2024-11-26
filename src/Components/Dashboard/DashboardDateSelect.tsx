@@ -4,7 +4,7 @@ import { FormattedMessage } from "react-intl"
 import { getDateTimeString } from "Functions/GlobalFunctions"
 import { SetStateType } from "Types/PropsTypes"
 import Calendar from "./Calendar"
-import { differenceInDays, subHours } from "date-fns"
+import { subHours } from "date-fns"
 import { dashboardDateInitialValue } from "./Dashboard"
 
 const FixedItem = ({ type, selected, setSelected, onChange }: {
