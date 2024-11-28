@@ -151,7 +151,8 @@
 }
 
 .custom-transfer-user-row-title-container > img {
-    height: 100%;
+    width: 28px;
+    height: 28px;
     padding: 2px;
     box-sizing: border-box;
     transition: all .15s ease-in-out;

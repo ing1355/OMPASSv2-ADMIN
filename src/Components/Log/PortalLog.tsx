@@ -3,8 +3,9 @@ import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
 import { HttpMethodTypes, userSelectPageSize } from "Constants/ConstantValues"
 import { GetPortalLogDataListFunc } from "Functions/ApiFunctions"
-import { convertUTCStringToKSTString } from "Functions/GlobalFunctions"
-import { useLayoutEffect, useState } from "react"
+import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions"
+import { useState } from "react"
+import { FormattedMessage } from "react-intl"
 
 const PortalLog = () => {
     const [tableData, setTableData] = useState<PortalLogDataType[]>([])
@@ -23,7 +24,7 @@ const PortalLog = () => {
         GetPortalLogDataListFunc(_params, ({ results, totalCount }) => {
             setTableData(results.map(_ => ({
                 ..._,
-                createdAt: convertUTCStringToKSTString(_.createdAt)
+                createdAt: convertUTCStringToLocalDateString(_.createdAt)
             })))
             setTotalCount(totalCount)
         }).finally(() => {
@@ -43,7 +44,7 @@ const PortalLog = () => {
                     },
                     {
                         key: 'username',
-                        title: '아이디',
+                        title: <FormattedMessage id="PORTAL_LOG_COLUMN_ID_LABEL"/>,
                     },
                     {
                         key: 'httpMethod',
@@ -55,7 +56,7 @@ const PortalLog = () => {
                     },
                     {
                         key: 'createdAt',
-                        title: '일시'
+                        title: <FormattedMessage id="PORTAL_LOG_CREATED_AT_LABEL"/>
                     }
                 ]}
                 pagination

@@ -20,7 +20,7 @@ const PolicySelect = ({ selectedPolicy, setSelectedPolicy, needSelect, applicati
     const [policiesData, setPoliciesData] = useState<PolicyListDataType[]>([])
     const filteredPoliciesData = useMemo(() => {
         if(applicationType) {
-            return policiesData.filter(_ => _.applicationType === applicationType)
+            return policiesData.filter(_ => _.applicationType === applicationType || _.applicationType === 'ALL')
         } else {
             return policiesData
         }
@@ -31,8 +31,6 @@ const PolicySelect = ({ selectedPolicy, setSelectedPolicy, needSelect, applicati
             setPoliciesData(results)
         })
     }, [])
-
-    console.log(selectedPolicy)
 
     useEffect(() => {
         if (filteredPoliciesData.length > 0 && !selectedPolicy && !needSelect) {

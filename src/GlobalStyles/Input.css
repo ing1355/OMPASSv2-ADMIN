@@ -9,6 +9,11 @@ input[type="password"] {
     font-family: 'NEXON Lv1 Gothic OTF';
 }
 
+input:focus {
+    border-color: var(--main-purple-color);
+    background-color: var(--sub-purple-color4);
+}
+
 @keyframes backgroundWide {
     from {
         scale: 0;
@@ -36,8 +41,9 @@ label:has(input[type="checkbox"]:checked)::before {
     height: 16px;
     left: 0;
     border-radius: 3px;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 0;
+    /* top: 50%;
+    transform: translateY(-50%); */
     position: absolute;
     animation: backgroundWide .075s ease-out;
 }
@@ -66,8 +72,9 @@ label:has(input[type="checkbox"])::after {
     height: 16px;
     position: absolute;
     left: 0;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 0;
+    /* top: 50%;
+    transform: translateY(-50%); */
 }
 
 .checkbox-label:has(input[type="checkbox"]):has(input:checked) {

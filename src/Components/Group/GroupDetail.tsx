@@ -21,7 +21,7 @@ import ApplicationTypeSelect from "Components/CommonCustomComponents/Application
 const GroupDetail = () => {
     const [inputName, setInputName] = useState('')
     const [inputDescription, setInputDescription] = useState('')
-    const [selectedPolicy, setSelectedPolicy] = useState<PolicyListDataType['id']>('')
+    const [selectedPolicies, setSelectedPolicies] = useState<PolicyListDataType['id'][]>([])
     const [selectedUsers, setSelectedUsers] = useState<UserHierarchyDataRpUserType['id'][]>([])
     const [selectedView, setSelectedView] = useState<UserGroupViewType>('portal')
     const [selectedApplicationType, setSelectedApplicationType] = useState<ApplicationDataType['type']|''>('')
@@ -43,7 +43,7 @@ const GroupDetail = () => {
             GetUserGroupDetailDataFunc(uuid, data => {
                 setInputName(data.name)
                 setInputDescription(data.description)
-                // setSelectedPolicy(data.policy ? data.policy.id : '')
+                setSelectedPolicies(data.policies)
                 setSelectedUsers(data.rpUserIds)
             }).finally(() => {
                 setDataLoading(false)
@@ -69,13 +69,13 @@ const GroupDetail = () => {
                 const params = {
                     name: inputName,
                     description: inputDescription,
-                    policyId: selectedPolicy,
+                    policies: selectedPolicies,
                     rpUserIds: selectedUsers
-                }
+                } as UserGroupParamsType
                 if (isAdd) {
                     AddUserGroupDataFunc(params, () => {
                         message.success(formatMessage({id: 'GROUP_ADD_SUCCESS_MSG'}))
-                        navigate('/Groups')
+                        navigate(-1)
                     })
                 } else {
                     UpdateUserGroupDataFunc(uuid, params, () => {
@@ -89,7 +89,6 @@ const GroupDetail = () => {
             {!isAdd && <Button className="st2" onClick={() => {
                 DeleteUserGroupDataFunc(uuid, () => {
                     message.success(formatMessage({id: 'GROUP_MODIFY_DELETE_MSG'}))
-                    navigate('/Groups')
                 })
             }}>
                 <FormattedMessage id="DELETE"/>
@@ -116,7 +115,7 @@ const GroupDetail = () => {
             </CustomInputRow>
             <CustomInputRow title={"정책 선택"}>
                 <ApplicationTypeSelect selectedType={selectedApplicationType} setSelectedType={setSelectedApplicationType}/>
-                {selectedApplicationType && <PolicySelect selectedPolicy={selectedPolicy} setSelectedPolicy={setSelectedPolicy} applicationType={selectedApplicationType}/>}
+                {/* {selectedApplicationType && <PolicySelect selectedPolicy={selectedPolicy} setSelectedPolicy={setSelectedPolicy} applicationType={selectedApplicationType}/>} */}
             </CustomInputRow>
             <CustomInputRow title={<FormattedMessage id="GROUP_USER_LIST_LABEL"/>}>
                 <Space className="group-view-container">

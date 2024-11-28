@@ -7,7 +7,7 @@ import { useNavigate } from "react-router"
 import { GetPoliciesListFunc } from "Functions/ApiFunctions"
 import policyAddIcon from '../../assets/policyAddIcon.png'
 import policyAddIconHover from '../../assets/policyAddIconHover.png'
-import { convertUTCStringToKSTString } from "Functions/GlobalFunctions"
+import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions"
 import { message } from "antd"
 import { FormattedMessage } from "react-intl"
 
@@ -52,7 +52,7 @@ const PolicyManagement = () => {
                     GetDatas(data)
                 }}
                 addBtn={{
-                    label: "추가",
+                    label: <FormattedMessage id="NORMAL_ADD_LABEL"/>,
                     icon: policyAddIcon,
                     hoverIcon: policyAddIconHover,
                     callback: () => {
@@ -63,23 +63,22 @@ const PolicyManagement = () => {
                 columns={[
                     {
                         key: 'applicationType',
-                        title: '어플리케이션 타입',
+                        title: <FormattedMessage id="POLICY_COLUMN_APPLICATION_TYPE_LABEL"/>,
                         render: (data, ind, row) => data ? <FormattedMessage id={`${data}_APPLICATION_TYPE`}/> : "기능 준비 중"
                     },
                     {
                         key: 'name',
-                        title: '정책명',
+                        title: <FormattedMessage id="POLICY_COLUMN_NAME_LABEL"/>,
                         render: (data, ind, row) => row.policyType === 'DEFAULT' ? "기본 정책" : data
                     },
                     {
                         key: 'description',
-                        title: '설명',
+                        title: <FormattedMessage id="POLICY_COLUMN_DESCRIPTION_LABEL"/>,
                         render: (data) => data || "설명 없음"
                     },
                     {
                         key: 'createdAt',
-                        title: '생성일',
-                        render: (data) => convertUTCStringToKSTString(data)
+                        title: <FormattedMessage id="POLICY_COLUMN_CREATED_AT_LABEL"/>,
                     }
                 ]}
                 onBodyRowClick={(row, index, arr) => {

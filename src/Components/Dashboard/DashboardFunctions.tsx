@@ -1,12 +1,12 @@
 import { DateTimeFormat } from "Constants/ConstantValues"
 import { addDays, format } from "date-fns"
-import { convertKSTStringToUTCString, pad2Digit } from "Functions/GlobalFunctions"
+import { convertLocalDateStringToUTCString, pad2Digit } from "Functions/GlobalFunctions"
 
 export const convertDashboardDateParamsKSTtoUTC = (params: DashboardDateSelectDataType): DashboardDateSelectDataType => {
     return {
         ...params,
-        startDate: convertKSTStringToUTCString(params.startDate),
-        endDate: convertKSTStringToUTCString(params.intervalValue === 24 ? add1DayForEndDate(params.endDate) : params.endDate)
+        startDate: convertLocalDateStringToUTCString(params.startDate),
+        endDate: convertLocalDateStringToUTCString(params.intervalValue === 24 ? add1DayForEndDate(params.endDate) : params.endDate)
     }
 }
 

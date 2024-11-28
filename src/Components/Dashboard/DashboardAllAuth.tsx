@@ -3,7 +3,7 @@ import DashboardCardWithDateSelect from "./DashboardCardWithDateSelect"
 import { dashboardDateInitialValue } from "./Dashboard"
 import { GetDashboardApplicationAuthFunc } from "Functions/ApiFunctions"
 import { convertDaysByDate, convertHourRangeByDate } from "./DashboardFunctions"
-import { convertUTCStringToKSTString } from "Functions/GlobalFunctions"
+import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions"
 import { FormattedMessage } from "react-intl"
 import DashBoardBarChart from "./DashboardBarChart"
 
@@ -27,7 +27,7 @@ const DashboardAllAuth = ({ applications }: {
                         }
                     }, {})
                     return {
-                        date: convertDaysByDate(convertUTCStringToKSTString(_.startDate)),
+                        date: convertDaysByDate(convertUTCStringToLocalDateString(_.startDate)),
                         ...values
                     }
                 }))
@@ -43,7 +43,7 @@ const DashboardAllAuth = ({ applications }: {
                         }
                     }, {})
                     return {
-                        date: convertHourRangeByDate(convertUTCStringToKSTString(_.startDate), convertUTCStringToKSTString(_.endDate), ind === arr.length - 1),
+                        date: convertHourRangeByDate(convertUTCStringToLocalDateString(_.startDate), convertUTCStringToLocalDateString(_.endDate), ind === arr.length - 1),
                         ...values
                     }
                 }))

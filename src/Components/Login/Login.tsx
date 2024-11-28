@@ -29,7 +29,7 @@ const Login = () => {
 
   const inputUesrnameRef = useRef<HTMLInputElement>()
   const inputPasswordRef = useRef<HTMLInputElement>()
-  
+
   const navigate = useNavigate()
   const { formatMessage } = useIntl()
   const inputChangePasswordRef = useRef<HTMLInputElement>(null)
@@ -52,11 +52,11 @@ const Login = () => {
         setTempToken('')
       })
     } else {
-      if(!inputUsername) {
+      if (!inputUsername) {
         inputUesrnameRef.current?.focus()
         return message.error("아이디를 입력해주세요.")
       }
-      if(!inputPassword) {
+      if (!inputPassword) {
         inputPasswordRef.current?.focus()
         return message.error("비밀번호를 입력해주세요.")
       }
@@ -77,7 +77,7 @@ const Login = () => {
         if (isDev) {
           const targetUrl = "192.168.182.120:9002"
           const resultUri = temp.replace("www.ompass.kr:54007", targetUrl).replace("www.ompass.kr:54012", targetUrl).replace("192.168.182.75:9001", targetUrl).replace("ompass.kr:59001", targetUrl)
-          if(!ompassWindowRef.current?.closed) {
+          if (!ompassWindowRef.current?.closed) {
             ompassWindowRef.current?.close()
           }
           ompassWindowRef.current = OMPASS(resultUri.replace("www.ompass.kr:54007", targetUrl).replace("www.ompass.kr:54012", targetUrl).replace("192.168.182.75:9001", targetUrl).replace("ompass.kr:59001", targetUrl));
@@ -136,7 +136,7 @@ const Login = () => {
               maxLength={16}
               noGap
               customType='password'
-              placeholder={formatMessage({id: 'PASSWORD_CHANGE_PLACEHOLDER'})}
+              placeholder={formatMessage({ id: 'PASSWORD_CHANGE_PLACEHOLDER' })}
               ref={inputChangePasswordRef}
               valueChange={value => {
                 setInputChangePassword(value);
@@ -172,7 +172,7 @@ const Login = () => {
               value={inputChangePasswordConfirm}
               name="passwordConfirm"
               maxLength={16}
-              placeholder={formatMessage({id: 'PASSWORD_CHANGE_CONFIRM_PLACEHOLDER'})}
+              placeholder={formatMessage({ id: 'PASSWORD_CHANGE_CONFIRM_PLACEHOLDER' })}
               valueChange={value => {
                 setInputChangePasswordConfirm(value);
               }}
@@ -200,7 +200,7 @@ const Login = () => {
             <div className='reset-password-text' onClick={() => {
               navigate('/accountRecovery')
             }}>
-              계정 복구
+              <FormattedMessage id="RECOVERY_ACCOUNT_LABEL" />
             </div>
             {subdomainInfo.selfSignupEnabled && <div className='login-action-vertical-line' />}
             {subdomainInfo.selfSignupEnabled && <div className='signup' onClick={() => {
@@ -229,9 +229,19 @@ const Login = () => {
           ><FormattedMessage id='GO_BACK' />
           </Button>
         }
-        {!needPasswordChange && <Link to='/GuidePage' className='quick-start-guide-text'>
+        {/* {!needPasswordChange && <Link to='/GuidePage' className='quick-start-guide-text'>
           <FormattedMessage id='GO_TO_QUICK_GUIDE' />
-        </Link>}
+        </Link>} */}
+        {!needPasswordChange && <>
+          <br />
+          <span className='quick-start-guide-text' onClick={() => {
+            message.info("기능 준비중(가이드 페이지로 이동)")
+          }} style={{
+            cursor: 'pointer'
+          }}>
+            <FormattedMessage id='GO_TO_QUICK_GUIDE' />
+          </span>
+        </>}
       </form>
     </div>
   </>

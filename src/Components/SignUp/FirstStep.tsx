@@ -235,10 +235,13 @@ const FirstStep = ({ checkedChange, children }: FirstStepProps) => {
             }}
         ><FormattedMessage id='CONFIRM' />
         </Button>
+        <br/>
         <Button
             className={'st6 agree-button'}
             onClick={() => {
-                navigate('/')
+                navigate('/', {
+                    replace: true
+                })
             }}
         ><FormattedMessage id='GO_BACK' />
         </Button>

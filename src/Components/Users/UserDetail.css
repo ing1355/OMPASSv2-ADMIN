@@ -317,8 +317,15 @@
 }
 
 .user-unlock-password-row {
-    margin-top: 8px;
     width: 100%;
+}
+
+.user-unlock-password-row > div > .custom-input-wrapper {
+    height: 18px;
+}
+
+.user-unlock-password-row:last-child {
+    margin-top: 8px;
 }
 
 .user-unlock-password-row > div:first-child {
@@ -337,11 +344,17 @@
     margin-top: 16px;
     letter-spacing: 1px;
     border-radius: 8px;
-    background-color: var(--main-purple-color2);
-    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--sub-purple-color);
+    color: var(--main-purple-color2);
     margin: 24px auto 0 auto;
     padding: 6px 0;
-    width: 200px;
+    width: 100%;
+    height: 48px;
+    font-weight: bold;
+    font-size: 1.2rem;
 }
 
 .user-recovery-code-row {

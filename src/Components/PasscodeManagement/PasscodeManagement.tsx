@@ -4,6 +4,7 @@ import { Tabs } from "antd";
 import { useState } from "react";
 import PasscodeList from "./PasscodeList";
 import PasscodeLogs from "./PasscodeLogs";
+import { FormattedMessage } from "react-intl";
 
 type PasscodeManageType = 'list' | 'logs'
 
@@ -23,12 +24,12 @@ const PasscodeManagement = () => {
         type="card"
         items={[
           {
-            label: '패스코드 목록',
+            label: <FormattedMessage id="PASSCODE_LIST_LABEL"/>,
             key: "list",
             children: <PasscodeList/>
           },
           {
-            label: '패스코드 로그',
+            label: <FormattedMessage id="PASSCODE_LOG_LABEL"/>,
             key: "logs",
             children: <PasscodeLogs />
           }

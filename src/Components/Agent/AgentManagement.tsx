@@ -14,7 +14,7 @@ import Contents from 'Components/Layout/Contents';
 import CustomTable from 'Components/CommonCustomComponents/CustomTable';
 import { CurrentAgentVersionChangeFunc, DeleteAgentInstallerFunc, GetAgentInstallerListFunc } from 'Functions/ApiFunctions';
 import Button from 'Components/CommonCustomComponents/Button';
-import { convertUTCStringToKSTString } from 'Functions/GlobalFunctions';
+import { convertUTCStringToLocalDateString } from 'Functions/GlobalFunctions';
 import { useDispatch, useSelector } from 'react-redux';
 import { subdomainInfoChange } from 'Redux/actions/subdomainInfoChange';
 
@@ -45,7 +45,7 @@ const AgentManagement = () => {
     await GetAgentInstallerListFunc(_params, ({ results, totalCount }) => {
       setTableData(results.map(_ => ({
         ..._,
-        uploadDate: convertUTCStringToKSTString(_.uploadDate)
+        uploadDate: convertUTCStringToLocalDateString(_.uploadDate)
       })))
       setTotalCount(totalCount)
     }).finally(() => {
@@ -64,145 +64,147 @@ const AgentManagement = () => {
       <Contents loading={dataLoading}>
         <ContentsHeader title="VERSION_MANAGEMENT" subTitle='VERSION_LIST'>
         </ContentsHeader>
-        <CustomTable<AgentInstallerDataType, {}>
-          theme='table-st1'
-          className="contents-header-container"
-          onSearchChange={(data) => {
-            GetDatas(data)
-          }}
-          onBodyRowClick={(data) => {
-            navigate('/AgentManagement/note', {
-              state: {
-                fileId: data.fileId,
-                note: data.note
+        <div className="contents-header-container">
+          <CustomTable<AgentInstallerDataType, {}>
+            theme='table-st1'
+            className="contents-header-container"
+            onSearchChange={(data) => {
+              GetDatas(data)
+            }}
+            onBodyRowClick={(data) => {
+              navigate('/AgentManagement/note', {
+                state: {
+                  fileId: data.fileId,
+                  note: data.note
+                }
+              });
+            }}
+            refresh={refresh}
+            addBtn={{
+              label: <FormattedMessage id='FILE_UPLOAD' />,
+              icon: uploadIcon,
+              hoverIcon: uploadIconHover,
+              style: 'st5',
+              callback: () => {
+                navigate('/AgentManagement/upload');
               }
-            });
-          }}
-          refresh={refresh}
-          addBtn={{
-            label: <FormattedMessage id='FILE_UPLOAD' />,
-            icon: uploadIcon,
-            hoverIcon: uploadIconHover,
-            style: 'st5',
-            callback: () => {
-              navigate('/AgentManagement/upload');
-            }
-          }}
-          pagination
-          totalCount={totalCount}
-          datas={tableData}
-          columns={[
-            {
-              key: 'downloadTarget',
-              title: '#',
-              width: '80px',
-              render: (data) => data && <span className='manager-mark'>
-                <FormattedMessage id='CURRENT' />
-              </span>
-            },
-            {
-              key: 'version',
-              title: <FormattedMessage id='VERSION' />,
-            },
-            {
-              key: 'os',
-              title: 'os'
-            },
-            {
-              key: 'fileName',
-              title: <FormattedMessage id='FILE_NAME' />
-            },
-            {
-              key: 'note',
-              title: <FormattedMessage id='MEMO' />,
-              maxWidth: '300px'
-            },
-            {
-              key: 'uploadDate',
-              title: <FormattedMessage id='UPLOAD_DATE' />
-            },
-            {
-              key: 'uploader',
-              title: <FormattedMessage id='UPLOADER' />
-            },
-            {
-              key: 'download',
-              width: '100px',
-              title: <FormattedMessage id='DOWNLOAD' />,
-              render: (_, index, data) => <a href={data.downloadUrl} download onClick={e => {
-                e.stopPropagation()
-              }} style={{
-                padding: '10px'
-              }}>
-                <img
-                  src={downloadIcon}
-                  style={{ pointerEvents: 'none' }}
-                  width='18px'
-                />
-              </a>
-            }, {
-              key: 'currentVersionSetting',
-              title: <FormattedMessage id='CURRENT_VERSION_SETTING' />,
-              width: '140px',
-              render: (_, index, data) => <Button
-                className={'st1' + (data.downloadTarget ? ' disable' : '')}
-                disabled={data.downloadTarget ? true : false}
-                onClick={(e) => {
+            }}
+            pagination
+            totalCount={totalCount}
+            datas={tableData}
+            columns={[
+              {
+                key: 'downloadTarget',
+                title: '#',
+                width: '80px',
+                render: (data) => data && <span className='manager-mark'>
+                  <FormattedMessage id='CURRENT' />
+                </span>
+              },
+              {
+                key: 'version',
+                title: <FormattedMessage id='VERSION' />,
+              },
+              {
+                key: 'os',
+                title: 'os'
+              },
+              {
+                key: 'fileName',
+                title: <FormattedMessage id='FILE_NAME' />
+              },
+              {
+                key: 'note',
+                title: <FormattedMessage id='MEMO' />,
+                maxWidth: '300px'
+              },
+              {
+                key: 'uploadDate',
+                title: <FormattedMessage id='UPLOAD_DATE' />
+              },
+              {
+                key: 'uploader',
+                title: <FormattedMessage id='UPLOADER' />
+              },
+              {
+                key: 'download',
+                width: '100px',
+                title: <FormattedMessage id='DOWNLOAD' />,
+                render: (_, index, data) => <a href={data.downloadUrl} download onClick={e => {
                   e.stopPropagation()
-                  CurrentAgentVersionChangeFunc(data.fileId, (newData) => {
-                    setTableData(tableData.map(t => t.fileId === newData.fileId ? newData : ({ ...t, downloadTarget: false })))
-                    message.success(formatMessage({ id: 'CURRENT_VERSION_CHANGE_COMPLETE' }));
-                    dispatch(subdomainInfoChange({
-                      ...subdomainInfo,
-                      windowsAgentUrl: newData.downloadUrl
-                    }))
-                  })
-                }}
-              ><FormattedMessage id='APPLY' />
-              </Button>
-            },
-            {
-              key: 'delete',
-              title: '',
-              render: (_, index, row) => !row.downloadTarget && <Popconfirm
-                title={formatMessage({ id: 'DELETE_A_FILE' })}
-                description={formatMessage({ id: 'CONFIRM_DELETE_FILE' })}
-                okText={formatMessage({ id: 'DELETE' })}
-                cancelText={formatMessage({ id: 'CANCEL' })}
-                open={openFileDelete === index}
-                onConfirm={(e) => {
-                  e?.stopPropagation()
-                  e?.preventDefault()
-                  const versionIds = `${row.fileId}`
-                  DeleteAgentInstallerFunc(versionIds, () => {
-                    setOpenFileDelete(-1);
-                    setRefresh(true)
-                    message.success(formatMessage({ id: 'VERSION_DELETE' }));
-                  })
-                }}
-                onCancel={(e) => {
-                  e?.stopPropagation()
-                  e?.preventDefault()
-                  setOpenFileDelete(-1);
-                }}
-              >
-                <img src={deleteHover === row.fileId ? tableDeleteIconHover : tableDeleteIcon} width='25px' style={{ opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer' }}
+                }} style={{
+                  padding: '10px'
+                }}>
+                  <img
+                    src={downloadIcon}
+                    style={{ pointerEvents: 'none' }}
+                    width='18px'
+                  />
+                </a>
+              }, {
+                key: 'currentVersionSetting',
+                title: <FormattedMessage id='CURRENT_VERSION_SETTING' />,
+                width: '140px',
+                render: (_, index, data) => <Button
+                  className={'st1' + (data.downloadTarget ? ' disable' : '')}
+                  disabled={data.downloadTarget ? true : false}
                   onClick={(e) => {
-                    e.preventDefault()
                     e.stopPropagation()
-                    setOpenFileDelete(index);
+                    CurrentAgentVersionChangeFunc(data.fileId, (newData) => {
+                      setTableData(tableData.map(t => t.fileId === newData.fileId ? newData : ({ ...t, downloadTarget: false })))
+                      message.success(formatMessage({ id: 'CURRENT_VERSION_CHANGE_COMPLETE' }));
+                      dispatch(subdomainInfoChange({
+                        ...subdomainInfo,
+                        windowsAgentUrl: newData.downloadUrl
+                      }))
+                    })
                   }}
-                  onMouseEnter={() => {
-                    setDeleteHover(row.fileId)
+                ><FormattedMessage id='APPLY' />
+                </Button>
+              },
+              {
+                key: 'delete',
+                title: '',
+                render: (_, index, row) => !row.downloadTarget && <Popconfirm
+                  title={formatMessage({ id: 'DELETE_A_FILE' })}
+                  description={formatMessage({ id: 'CONFIRM_DELETE_FILE' })}
+                  okText={formatMessage({ id: 'DELETE' })}
+                  cancelText={formatMessage({ id: 'CANCEL' })}
+                  open={openFileDelete === index}
+                  onConfirm={(e) => {
+                    e?.stopPropagation()
+                    e?.preventDefault()
+                    const versionIds = `${row.fileId}`
+                    DeleteAgentInstallerFunc(versionIds, () => {
+                      setOpenFileDelete(-1);
+                      setRefresh(true)
+                      message.success(formatMessage({ id: 'VERSION_DELETE' }));
+                    })
                   }}
-                  onMouseLeave={() => {
-                    setDeleteHover(-1)
+                  onCancel={(e) => {
+                    e?.stopPropagation()
+                    e?.preventDefault()
+                    setOpenFileDelete(-1);
                   }}
-                />
-              </Popconfirm>
-            }
-          ]}
-        />
+                >
+                  <img src={deleteHover === row.fileId ? tableDeleteIconHover : tableDeleteIcon} width='25px' style={{ opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer' }}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      setOpenFileDelete(index);
+                    }}
+                    onMouseEnter={() => {
+                      setDeleteHover(row.fileId)
+                    }}
+                    onMouseLeave={() => {
+                      setDeleteHover(-1)
+                    }}
+                  />
+                </Popconfirm>
+              }
+            ]}
+          />
+        </div>
       </Contents>
     </>
   )

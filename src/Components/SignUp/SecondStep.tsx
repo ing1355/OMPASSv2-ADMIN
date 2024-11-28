@@ -132,7 +132,9 @@ const SecondStep = () => {
                         role: 'USER',
                     }, () => {
                         message.success(formatMessage({ id: 'SUCCESS_REGISTER' }));
-                        navigate('/');
+                        navigate('/', {
+                            replace: true
+                        });
                     }).catch(() => {
                         message.error(formatMessage({ id: 'FAIL_REGISTER' }));
                     })
@@ -359,7 +361,9 @@ const SecondStep = () => {
                 type='submit'
                 className={'st6 agree-button signup-complete'}
                 onClick={() => {
-                    navigate('/')
+                    navigate('/' ,{
+                        replace: true
+                    })
                 }}
             ><FormattedMessage id='GO_BACK' />
             </Button>

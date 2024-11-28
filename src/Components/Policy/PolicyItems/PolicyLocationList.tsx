@@ -43,7 +43,7 @@ const PolicyLocationList = ({ value={
         alias: ''
     })
     const { isEnabled, locations } = value
-    console.log(value)
+    
     useEffect(() => {
         if (dataInit) {
             setCurrentLocationName('')

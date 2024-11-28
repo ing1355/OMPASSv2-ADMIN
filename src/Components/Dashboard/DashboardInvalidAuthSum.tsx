@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import DashboardCardWithDateSelect from "./DashboardCardWithDateSelect"
 import { dashboardDateInitialValue } from "./Dashboard"
 import { GetDashboardApplicationInvalidAuthSumFunc } from "Functions/ApiFunctions"
-import { convertUTCStringToKSTString } from "Functions/GlobalFunctions"
+import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions"
 import { convertDaysByDate, convertHourRangeByDate } from "./DashboardFunctions"
 import { FormattedMessage } from "react-intl"
 import DashBoardBarChart from "./DashboardBarChart"
@@ -18,13 +18,13 @@ const DashboardInvalidAuthSum = ({ applications }: {
             if (params.intervalValue === 24) {
                 setDatas(data.map((_, ind, arr) => {
                     return {
-                        name: convertDaysByDate(convertUTCStringToKSTString(_.startDate)),
+                        name: convertDaysByDate(convertUTCStringToLocalDateString(_.startDate)),
                         count: _.count
                     }
                 }))
             } else {
                 setDatas(data.map((_, ind, arr) => ({
-                    name: convertHourRangeByDate(convertUTCStringToKSTString(_.startDate), convertUTCStringToKSTString(_.endDate), ind === arr.length - 1),
+                    name: convertHourRangeByDate(convertUTCStringToLocalDateString(_.startDate), convertUTCStringToLocalDateString(_.endDate), ind === arr.length - 1),
                     count: _.count
                 })))
             }

@@ -55,6 +55,7 @@ export const DeleteAuthenticatorData = (authenticatorId: AuthenticatorDataType['
 export const UnlockUserApi = (userId: UserDataType['userId']) => `/v2/users/${userId}/unlock`
 export const AddUserWithCsvDataApi = '/v2/users/csv'
 export const DuplicateUserNameCheckApi = (username: string) => `/v2/users/username/${username}/existence`;
+export const RoleSwappingApi = '/v2/users/role-swapping'
 
 // 인증장치 정책 업데이트
 export const UpdateUserAuthenticatorPolicyApi = (authId: string, policyId: string) => `/v2/rp/authentication-data/${authId}/policy/${policyId}`
@@ -90,3 +91,7 @@ export const PatchSessionTokenApi = '/v2/refresh-session'
 // 계정 복구
 export const SendRecoveryMailApi = '/v2/recovery-account/mail'
 export const ValidateRecoveryMailApi = '/v2/recovery-account/verification'
+
+// 인증 모듈
+export const OMPASSAuthStartApi = '/v2/enhanced-authentication'
+export const GetOMPASSAuthResultApi = (type: string, pollingKey: string) => `/v2/enhanced-authentication/type/${type}/polling-key/${pollingKey}`

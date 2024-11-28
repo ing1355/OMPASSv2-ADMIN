@@ -1,7 +1,7 @@
 import { Tooltip } from "antd"
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import { GetInvalidAuthLogDataListFunc } from "Functions/ApiFunctions"
-import { convertUTCStringToKSTString } from "Functions/GlobalFunctions"
+import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions"
 import { useEffect, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 import { useNavigate } from "react-router"
@@ -22,7 +22,7 @@ const DashboardAuthLogs = ({ applications }: {
         GetInvalidAuthLogDataListFunc(_params, ({ results, totalCount }) => {
             setDatas(results.map(_ => ({
                 ..._,
-                authenticationTime: convertUTCStringToKSTString(_.authenticationTime)
+                authenticationTime: convertUTCStringToLocalDateString(_.authenticationTime)
             })))
         }).finally(() => {
 

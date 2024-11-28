@@ -25,7 +25,16 @@ const ServerErrorCodes = {
         ERR_B027: "요청이 너무 많습니다. 잠시 후 다시 시도해주세요.",
         ERR_B029: "관리자 승인이 필요한 계정입니다.",
 
-        ERR_B030: "이미 존재하는 버전입니다."
+        ERR_B030: "이미 존재하는 버전입니다.",
+        ERR_B032: "종료된 요청입니다.",
+
+        ERR_B033: "사용자(본인)의 OMPASS 등록이 되어 있지 않습니다.",
+        ERR_B034: "사용자(본인)의 계정이 잠겨있습니다.",
+        ERR_B035: "사용자(본인)의 계정이 탈퇴되었습니다.",
+
+        ERR_B036: "사용자(대상)의 OMPASS 등록이 되어 있지 않습니다.",
+        ERR_B037: "사용자(대상)의 계정이 잠겨있습니다.",
+        ERR_B038: "사용자(대상)의 계정이 탈퇴되었습니다.",
     },
     'EN': {
         ERR_B002: "Please check your ID and email",
@@ -49,11 +58,20 @@ const ServerErrorCodes = {
         ERR_B022: "Invalid proxy login token",
         ERR_B023: "The rp user is not registered with OMPASS on the Windows application",
         ERR_B024: "This user has been deleted from the OMPASS portal. Please check recovery code",
-        ERR_B026: "The account is locked due to more than 5 failed password attempts.",
-        ERR_B027: "Too many requests. Please try again in a moment.",
-        ERR_B029: "This account requires admin approval.",
+        ERR_B026: "The account is locked due to more than 5 failed password attempts",
+        ERR_B027: "Too many requests. Please try again in a moment",
+        ERR_B029: "This account requires admin approval",
 
-        ERR_B030: "The file version already exists."
+        ERR_B030: "The file version already exists",
+        ERR_B032: "This request has been closed",
+
+        ERR_B033: "The user (yourself) is not registered with OMPASS",
+        ERR_B034: "Your (your) account is locked",
+        ERR_B035: "Your (your) account has been canceled",
+
+        ERR_B036: "The user (target) is not registered with OMPASS",
+        ERR_B037: "The user's (target) account is locked",
+        ERR_B038: "The user's (target) account has been canceled",
     }
 }
 

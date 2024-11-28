@@ -13,7 +13,7 @@ const LocaleTexts = {
     GROUP: 'Group',
     NONE_GROUP: 'No Group',
     EMAIL: 'E-Mail',
-    
+
     DUPLICATE_CHECK: 'Duplicate Check',
     CREATE_ACCOUNT: 'Create Account',
     SIGN_UP: 'Sign Up',
@@ -61,9 +61,9 @@ const LocaleTexts = {
     FAIL_REGISTER: 'Registration failed',
     AVAILABLE_USERNAME: 'The username is available',
     UNAVAILABLE_USERNAME: 'The username is unavailable',
-    
-    
-    
+
+
+
     USER_REGISTRATION: 'Registration',
     ADD_USER: 'Add User',
     ADMIN_ID: 'Administrator ID',
@@ -87,7 +87,7 @@ const LocaleTexts = {
     CONFIRM_UNREGISTER_DEVICE: 'Are you sure you want to unregister the device?',
     LOGIN_ENV: 'Login Environment',
     AUTH_DEVICE_NOT_FOUND: 'Authentication device not found',
-    
+
     FAILED_TO_MODIFY_PASSCODE: 'Failed to modify PASSCODE',
     FAILED_TO_CREATE_PASSCODE: 'Failed to create PASSCODE',
     PASSCODE_SETTINGS: 'PASSCODE Settings',
@@ -114,14 +114,14 @@ const LocaleTexts = {
     LOGIN_WITH_PASSWORD: 'Login with PASSCODE',
     CHANGE_PASSWORD: 'Change Password',
     ENTER_PASSCODE: 'Enter PASSCODE',
-    
+
     SECRET_KEY: 'Secret Key',
     USER: 'User',
     EXCEL_FILE_UPLOAD_SUCCESSFUL: 'Excel File Upload Successful',
     EXCEL_FILE_UPLOAD_FAILED: 'Excel file upload failed',
     EXCEL_FILE_DOWNLOAD_FAILED: 'Excel download failed',
     TYPE: 'Type',
-    
+
     VERSION_NAME: 'Version Name',
     VERSION: 'Version',
     HASH: 'Hash (SHA256)',
@@ -142,8 +142,7 @@ const LocaleTexts = {
     MINUTES_LATER: 'minutes later',
     ONCE: 'once',
     TIMES: 'times',
-    PASSCODE_MANAGEMENT: 'Passcode Logs',
-    PASSCODE_MANAGEMENT_HISTORY: 'Passcode Issuance List',
+    PASSCODE_MANAGEMENT: 'Passcode Management',
     user_type: 'type',
     USER_TYPE: 'User Rank',
     APPLY: 'Apply',
@@ -268,7 +267,6 @@ const LocaleTexts = {
     USER_STATUS_WITHDRAWAL: "탈퇴",
     USER_STATUS_RUN: "활성화",
     USER_STATUS_LOCK: "잠김",
-    APPLICATION_DELETE_CONFIRM_MSG: 'After deletion, application information will be deleted and all data will not be recovered',
     IP_ADDRESS_CIDR_INFO: 'Enter an IP address or CIDR block, such as 127.0.0.1 or 127.0.0.1/32, with an optional note.',
     ACCESS_CONTROL_LABEL: 'OMPASS 인증 제어',
     ACCESS_TIME_LABEL: '시간 접근 허용',
@@ -346,7 +344,10 @@ const LocaleTexts = {
     APPLICATION_INFO_POLICY_LABEL: 'Policy Seting',
     APPLICATION_INFO_LOGO_LABEL: 'Logo Setting',
     APPLICATION_SURE_DELETE_TEXT: 'Are you sure you want to delete it?',
+    APPLICATION_DELETE_CONFIRM_MSG: 'After deletion, application information will be deleted and all data will not be recovered',
     APPLICATION_INFO_SECRET_KEY_LABEL: 'Secret Key',
+    APPLICATION_INFO_SECRET_KEY_SURE_RESET_TEXT: 'Do you really want to reissue it?',
+    APPLICATION_INFO_SECRET_KEY_SURE_RESET_SUBSCRIPTION: 'After re-issuance, the application information changes and\nthis information must be reflected in the application\nbeing used in order to use it.',
     APPLICATION_DOCS_VIEW_LABEL: "Go To Docs",
     NORMAL_ADD_LABEL: 'Add',
     NORMAL_UPLOAD_LABEL: 'Upload',
@@ -370,7 +371,7 @@ const LocaleTexts = {
     POLICY_TAREGT_LINK_DESCRIPTION_2: 'You can edit a policy by clicking',
     DASHBOARD_MORE_INVALID_LOG_LABEL: 'More abnormal logs',
     DASHBOARD_AXIS_LEFT_AUTH_NUM_LABEL: 'Auth Count',
-    NO_POLICY_SELECTED_LABEL: 'None',    
+    NO_POLICY_SELECTED_LABEL: 'None',
     NO_GROUP_SELECTED_LABEL: 'None',
     NO_EMAIL_INPUT_LABEL: 'None',
     NO_PHONE_INPUT_LABEL: 'None',
@@ -409,6 +410,8 @@ const LocaleTexts = {
     PASSCODE_USE_TIMES_SUB_LABEL: 'Times',
     USER_UNLOCK_MODAL_TITLE: 'Unlock Account',
     USER_UNLOCK_MODAL_SUBSCRIPTION: 'Please enter the password to use after unlocking',
+    USER_ROLE_SWAP_MODAL_TITLE: 'Do you want to inherit\ncurrent user rights?',
+    USER_ROLE_SWAP_MODAL_SUBSCRIPTION: 'After inheriting super administrator privileges,\nyour role will be downgraded to administrator\nand you will not be able to use some functions.\nDo you still want to take over?',
     USER_WITHDRAWAL_MODAL_TITLE: 'Are you sure you want to withdraw?',
     USER_WITHDRAWAL_MODAL_SUBSCRIPTION: 'After withdrawal, your account information will be deleted and all data will not be recovered',
     USER_AUTH_DEVICE_UNREGISTER_MODAL_TITLE: 'Are you sure you want to disable the authentication device?',
@@ -425,7 +428,25 @@ const LocaleTexts = {
     USER_LASTNAME_LABEL: 'Last Name',
     USER_EMAIL_LABEL: 'Email',
     USER_PHONE_LABEL: 'Phone Number',
-    PASSCODE_CREATED_AT_LABEL: 'Created At'
+    PASSCODE_CREATED_AT_LABEL: 'Created At',
+    WITH_MINUTE_SECONDS_TIME: "{minute}m {second}s",
+    ONLY_SECONDS_TIME: "{second}s",
+    RECOVERY_ACCOUNT_LABEL: 'Account Recovery',
+    POLICY_COLUMN_APPLICATION_TYPE_LABEL: 'Application Type',
+    POLICY_COLUMN_NAME_LABEL: 'Policy Name',
+    POLICY_COLUMN_DESCRIPTION_LABEL: 'Description',
+    POLICY_COLUMN_CREATED_AT_LABEL: 'Created At',
+    USER_EXCEL_DOWNLOAD_LABEL: 'User List Download',
+    PASSCODE_COLUMN_APPLICATION_NAME_LABEL: 'Application Name',
+    PASSCODE_COLUMN_ISSUER_ID_LABEL: 'Issuer ID',
+    PASSCODE_COLUMN_PORTAL_ID_LABEL: 'Portal ID',
+    PASSCODE_COLUMN_RP_ID_LABEL: 'User ID',
+    PASSCODE_COLUMN_RECYCLE_COUNT_LABEL: 'Available Counts',
+    PASSCODE_COLUMN_VALID_TIME_LABEL: 'Expire Time',
+    PASSCODE_LIST_LABEL: 'Available Passcode List',
+    PASSCODE_LOG_LABEL: 'Passcode Logs',
+    PORTAL_LOG_COLUMN_ID_LABEL: 'ID',
+    PORTAL_LOG_CREATED_AT_LABEL: 'Created At',
   },
   'ko': {
     LOGIN: '로그인',
@@ -511,7 +532,7 @@ const LocaleTexts = {
     CONFIRM_UNREGISTER_DEVICE: '등록된 장치를 해제하시겠습니까?',
     LOGIN_ENV: '로그인 환경',
     AUTH_DEVICE_NOT_FOUND: '인증장치를 찾을 수 없습니다',
-    
+
     FAILED_TO_MODIFY_PASSCODE: '패스코드 수정 실패',
     FAILED_TO_CREATE_PASSCODE: '패스코드 생성 실패',
     PASSCODE_SETTINGS: '패스코드 설정',
@@ -538,14 +559,14 @@ const LocaleTexts = {
     LOGIN_WITH_PASSWORD: 'PASSCODE로 로그인',
     CHANGE_PASSWORD: '비밀번호 변경',
     ENTER_PASSCODE: 'PASSCODE 입력',
-    
+
     SECRET_KEY: '비밀키',
     USER: '사용자',
     EXCEL_FILE_UPLOAD_SUCCESSFUL: '엑셀 파일 업로드 성공',
     EXCEL_FILE_UPLOAD_FAILED: '엑셀 파일 업로드 실패',
     EXCEL_FILE_DOWNLOAD_FAILED: '엑셀 파일 다운로드 실패',
     TYPE: '타입',
-    
+
     VERSION_NAME: '버전명',
     VERSION: '버전',
     HASH: '해시값 (SHA256)',
@@ -567,7 +588,6 @@ const LocaleTexts = {
     ONCE: '1번',
     TIMES: '번',
     PASSCODE_MANAGEMENT: '패스코드 관리',
-    PASSCODE_MANAGEMENT_HISTORY: '패스코드 발급 목록',
     user_type: '타입',
     USER_TYPE: '사용자 등급',
     APPLY: '적용',
@@ -693,7 +713,6 @@ const LocaleTexts = {
     USER_STATUS_WITHDRAWAL: "탈퇴",
     USER_STATUS_RUN: "활성화",
     USER_STATUS_LOCK: "잠김",
-    APPLICATION_DELETE_CONFIRM_MSG: '삭제 후, 어플리케이션 정보가 삭제되며\n모든 데이터는 복구되지 않습니다.',
     IP_ADDRESS_CIDR_INFO: '127.0.0.1 또는 127.0.0.1/32와 같이 IP 주소나 CIDR 블록을 입력하고, 선택적으로 메모를 추가합니다.',
     ACCESS_CONTROL_LABEL: 'OMPASS 인증 제어',
     ACCESS_TIME_LABEL: '시간 접근 허용',
@@ -758,7 +777,7 @@ const LocaleTexts = {
     API_SERVER_ADDRESS_LABEL: "API 서버 주소",
     APPLICATION_INFO_DETAIL_LABELS: '상세 정보',
     APPLICATION_INFO_CLIENT_ID_LABEL: '클라이언트 아이디',
-    APPLICATION_SECRET_KEY_RESET: '비밀키 재발급',
+    APPLICATION_SECRET_KEY_RESET: '시크릿 키 재발급',
     APPLICATION_INFO_SETTING_LABELS: '설정',
     APPLICATION_INFO_TYPE_LABEL: '유형',
     APPLICATION_INFO_NAME_LABEL: '이름',
@@ -770,8 +789,11 @@ const LocaleTexts = {
     APPLICATION_INFO_WINDOWS_PASSWORD_NEED_CHECK_LABEL: '패스워드 입력 필요',
     APPLICATION_INFO_POLICY_LABEL: '정책 설정',
     APPLICATION_INFO_LOGO_LABEL: '로고 설정',
-    APPLICATION_SURE_DELETE_TEXT: '정말로 삭제하시겠습니까?',
+    APPLICATION_SURE_DELETE_TEXT: '어플리케이션을 삭제하시겠습니까?',
+    APPLICATION_DELETE_CONFIRM_MSG: '삭제 후, 어플리케이션 정보가 삭제되며\n모든 데이터는 복구되지 않습니다.',
     APPLICATION_INFO_SECRET_KEY_LABEL: '시크릿 키',
+    APPLICATION_INFO_SECRET_KEY_SURE_RESET_TEXT: '비밀키를 재발급하시겠습니까?',
+    APPLICATION_INFO_SECRET_KEY_SURE_RESET_SUBSCRIPTION: '재발급 후, 어플리케이션 정보가 변경되어\n사용 중인 어플리케이션에 이 정보를 반영해야 사용 가능합니다.',
     APPLICATION_DOCS_VIEW_LABEL: "문서 보기",
     NORMAL_ADD_LABEL: '추가',
     NORMAL_UPLOAD_LABEL: '업로드',
@@ -834,7 +856,9 @@ const LocaleTexts = {
     PASSCODE_USE_TIMES_SUB_LABEL: '회',
     USER_UNLOCK_MODAL_TITLE: '계정 잠금 해제',
     USER_UNLOCK_MODAL_SUBSCRIPTION: '잠금 해제 후 사용할 비밀번호를 입력해주세요.',
-    USER_WITHDRAWAL_MODAL_TITLE: '정말로 탈퇴하시겠습니까?',
+    USER_ROLE_SWAP_MODAL_TITLE: '현재 사용자 권한을 승계하시겠습니까?',
+    USER_ROLE_SWAP_MODAL_SUBSCRIPTION: '최고 관리자 권한 승계 후 관리자로 등급이 하향되며\n일부 기능을 사용할 수 없습니다.\n그래도 승계하시겠습니까?',
+    USER_WITHDRAWAL_MODAL_TITLE: '회원 탈퇴하시겠습니까?',
     USER_WITHDRAWAL_MODAL_SUBSCRIPTION: '탈퇴 후, 계정 정보가 삭제되며 모든 데이터는 복구되지 않습니다.',
     USER_AUTH_DEVICE_UNREGISTER_MODAL_TITLE: '인증 장치를 해제하시겠습니까?',
     USER_AUTH_DEVICE_UNREGISTER_MODAL_SUBSCRIPTION: '해제 후, 모든 데이터는 복구되지 않습니다.',
@@ -850,7 +874,25 @@ const LocaleTexts = {
     USER_LASTNAME_LABEL: '이름',
     USER_EMAIL_LABEL: '이메일',
     USER_PHONE_LABEL: '전화 번호',
-    PASSCODE_CREATED_AT_LABEL: '생성 시각'
+    PASSCODE_CREATED_AT_LABEL: '생성 시각',
+    WITH_MINUTE_SECONDS_TIME: "{minute}분 {second}초",
+    ONLY_SECONDS_TIME: "{second}초",
+    RECOVERY_ACCOUNT_LABEL: '계정 복구',
+    POLICY_COLUMN_APPLICATION_TYPE_LABEL: '어플리케이션 유형',
+    POLICY_COLUMN_NAME_LABEL: '정책명',
+    POLICY_COLUMN_DESCRIPTION_LABEL: '설명',
+    POLICY_COLUMN_CREATED_AT_LABEL: '생성일',
+    USER_EXCEL_DOWNLOAD_LABEL: '사용자 목록 다운로드',
+    PASSCODE_COLUMN_APPLICATION_NAME_LABEL: '어플리케이션명',
+    PASSCODE_COLUMN_ISSUER_ID_LABEL: '발급자 아이디',
+    PASSCODE_COLUMN_PORTAL_ID_LABEL: '포탈 아이디',
+    PASSCODE_COLUMN_RP_ID_LABEL: '사용자 아이디',
+    PASSCODE_COLUMN_RECYCLE_COUNT_LABEL: '사용 가능 횟수',
+    PASSCODE_COLUMN_VALID_TIME_LABEL: '만료 시각',
+    PASSCODE_LIST_LABEL: '사용 중인 패스코드 목록',
+    PASSCODE_LOG_LABEL: '패스코드 로그',
+    PORTAL_LOG_COLUMN_ID_LABEL: '아이디',
+    PORTAL_LOG_CREATED_AT_LABEL: '일시',
   }
 }
 

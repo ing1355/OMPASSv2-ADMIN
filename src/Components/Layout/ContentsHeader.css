@@ -7,12 +7,13 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    & > div {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 8px;
-    }
+}
+
+.contents-header-content > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
 }
 
 .custom-detail-header-items-container {
@@ -20,8 +21,17 @@
     flex-direction: row;
     align-items: center;
     gap: 8px;
-    & > div:hover {
-        color: #0b69e5;
-        cursor: pointer;
-    }
+}
+
+.custom-detail-header-items-container > div:hover {
+    color: #0b69e5;
+    cursor: pointer;
+}
+
+.contents-header-back-button {
+    width: 34px;
+    height: 34px;
+    padding: 2px;
+    box-sizing: border-box;
+    cursor: pointer;
 }

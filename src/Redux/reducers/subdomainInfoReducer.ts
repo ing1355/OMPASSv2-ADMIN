@@ -9,7 +9,10 @@ const subdomainInfo: ReduxStateType['subdomainInfo']|null = {
     interfaceApp: 'unknown'
   },
   noticeMessage: '',
-  logoImage: loginMainImage,
+  logoImage: {
+    isDefaultImage: true,
+    url: ''
+  },
   userSignupMethod: UserSignupMethod.USER_SELF_ADMIN_ACCEPT,
   selfSignupEnabled: false
 }

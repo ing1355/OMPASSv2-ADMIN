@@ -1,7 +1,7 @@
 import { message } from "antd";
 import Button from "Components/CommonCustomComponents/Button";
 import { emailRegex, idRegex, nameRegex, phoneRegex } from "Components/CommonCustomComponents/CommonRegex";
-import CustomModal from "Components/CommonCustomComponents/CustomModal";
+import CustomModal from "Components/Modal/CustomModal";
 import CustomTable from "Components/CommonCustomComponents/CustomTable";
 import CustomUpload from "Components/CommonCustomComponents/CustomUpload";
 import Contents from "Components/Layout/Contents";
@@ -74,14 +74,14 @@ const UserExcelUpload = () => {
                     <FormattedMessage id="NORMAL_RESET_LABEL" />
                 </Button>
                 <Button className="st5" onClick={async () => {
-                    const anchorElement = document.createElement('a');
-                    document.body.appendChild(anchorElement);
-                    anchorElement.download = '사용자 리스트(템플릿).csv';
-                    anchorElement.href = '/사용자 리스트(템플릿).csv';
-
-                    anchorElement.click();
-
-                    document.body.removeChild(anchorElement);
+                    let text = '사용자 아이디,성,이름,이메일,전화 번호\n'
+                    let link = document.createElement('a');
+                    link.download = 'OMPASS_사용자_리스트(템플릿).csv';
+                    let blob = new Blob([text], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    link.href = url;
+                    link.click();
+                    URL.revokeObjectURL(url)
                 }}>
                     템플릿 다운로드
                 </Button>
@@ -192,7 +192,6 @@ const UserExcelUpload = () => {
                                 return result;
                             }); // 데이터 저장
                             if (temp.length > 0) {
-                                console.log(resultData)
                                 setShowError(temp)
                                 message.error(formatMessage({ id: 'EXCEL_UPLOAD_FAIL_MSG' }));
                             } else {

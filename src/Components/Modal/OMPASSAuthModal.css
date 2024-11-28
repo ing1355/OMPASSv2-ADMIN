@@ -1,0 +1,103 @@
+.ompass-auth-content-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 24px 0;
+}
+
+.ompass-auth-content-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.ompass-auth-content-title-text {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.ompass-auth-content-sub-title {
+    font-size: .85rem;
+}
+
+.ompass-auth-content-progress-container {
+    position: relative;
+    box-shadow: 0 0 8px rgba(0,0,0,.15);
+    height: 220px;
+    width: 200px;
+    margin: 12px 0;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.ompass-auth-content-progress-icon {
+    width: 70px;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ompass-auth-content-progress-text {
+    font-size: 1.1rem;
+}
+
+.ompass-auto-content-auth-progress-text.ready {
+    color: var(--sub-grey-color5);
+}
+.ompass-auth-content-progress-text.progress {
+    color: var(--sub-grey-color4);
+}
+.ompass-auth-content-progress-text.complete {
+    color: var(--main-purple-color);
+}
+
+.ompass-auth-remain-time-container {
+    margin: 12px 0 0 0;
+    text-align: center;
+}
+
+.ompass-auth-remain-time-container > span {
+    color: var(--main-purple-color);
+    margin-left: 6px;
+    font-weight: bold;
+}
+
+.ompass-auth-qr-code-view-container {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    box-sizing: border-box;
+    padding: 4px;
+}
+
+.pair-ompass-auth-contents-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.pair-ompass-auth-animation-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+}
+
+.pair-ompass-auth-animation-container > div {
+    width: 6px;
+    height: 6px;
+    border-radius: 100%;
+    background-color: var(--sub-grey-color6);
+}

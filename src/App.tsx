@@ -29,7 +29,6 @@ import SignUp from 'Components/SignUp/SignUp';
 import { globalDatasChange } from 'Redux/actions/globalDatasChange';
 import { userInfoChange } from 'Redux/actions/userChange';
 import Dashboard from 'Components/Dashboard/Dashboard';
-import AccountRecovery from 'Components/Login/AccountRecovery';
 import LoginPage from 'Components/Login';
 
 const convertLangToIntlVer = (lang: ReduxStateType['lang']) => {

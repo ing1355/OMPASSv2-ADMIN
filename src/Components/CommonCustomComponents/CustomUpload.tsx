@@ -15,7 +15,6 @@ const CustomUpload = ({ className, onChange, accept }: CustomUploadProps) => {
     const { formatMessage } = useIntl()
 
     const changeCallback = (file: File) => {
-        console.log(file, file.type, accept?.split(','))
         const specificTypes = file.type.split('/')
         if(!(file.name.endsWith('.csv') && specificTypes.length > 1 && accept?.split(',').includes(specificTypes[1]))) {
             return message.error(formatMessage({id: 'UPLOAD_NEED_ACCEPT_TYPE'}, {

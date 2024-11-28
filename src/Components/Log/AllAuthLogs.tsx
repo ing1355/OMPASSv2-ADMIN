@@ -1,6 +1,6 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import { AuthenticationProcessTypes } from "Constants/ConstantValues"
-import { convertUTCStringToKSTString } from "Functions/GlobalFunctions"
+import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions"
 import { useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { GetAllAuthLogDataListFunc } from "Functions/ApiFunctions"
@@ -22,7 +22,7 @@ const AllAuthLogs = () => {
         GetAllAuthLogDataListFunc(_params, ({ results, totalCount }) => {
             setTableData(results.map(_ => ({
                 ..._,
-                authenticationTime: convertUTCStringToKSTString(_.authenticationTime)
+                authenticationTime: convertUTCStringToLocalDateString(_.authenticationTime)
             })))
             setTotalCount(totalCount)
         }).finally(() => {

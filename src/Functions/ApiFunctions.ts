@@ -1,8 +1,9 @@
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from "Components/CommonCustomComponents/CustomAxios";
-import { AddApplicationListApi, AddPasscodeApi, AddPoliciesListApi, AddUserDataApi, AddUserGroupApi, AddUserWithCsvDataApi, ApprovalUserApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DuplicateUserNameCheckApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetGlobalConfigApi, GetPasscodeHistoriesApi, GetPasscodeListApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, PatchSessionTokenApi, PostLoginApi, ResetPasswordApi, ResetPasswordEmailCodeVerifyApi, ResetPasswordEmailSendApi, SendPasscodeEmailApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, UnlockUserApi, UpdateAgentNoteApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi } from "Constants/ApiRoute";
-import { INT_MAX_VALUE } from "Constants/ConstantValues";
-import { convertUTCStringToKSTString } from "./GlobalFunctions";
+import { AddApplicationListApi, AddPasscodeApi, AddPoliciesListApi, AddUserDataApi, AddUserGroupApi, AddUserWithCsvDataApi, ApprovalUserApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DuplicateUserNameCheckApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetGlobalConfigApi, GetOMPASSAuthResultApi, GetPasscodeHistoriesApi, GetPasscodeListApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, OMPASSAuthStartApi, PatchSessionTokenApi, PostLoginApi, ResetPasswordApi, ResetPasswordEmailCodeVerifyApi, ResetPasswordEmailSendApi, RoleSwappingApi, SendPasscodeEmailApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, UnlockUserApi, UpdateAgentNoteApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi } from "Constants/ApiRoute";
+import { DateTimeFormat, INT_MAX_VALUE } from "Constants/ConstantValues";
 import { convertDashboardDateParamsKSTtoUTC } from "Components/Dashboard/DashboardFunctions";
+import dayjs from "dayjs";
+import { convertUTCStringToLocalDateString } from "./GlobalFunctions";
 
 export const LoginFunc = (params: LoginApiParamsType, callback: (res: LoginApiResponseType, token: string) => void) => {
     return CustomAxiosPost(
@@ -114,12 +115,16 @@ export const UpdateApplicationDataFunc = (applicationId: ApplicationDataType['id
     return CustomAxiosPut(UpdateApplicationListApi(applicationId), callback, params)
 }
 
-export const DeleteApplicationListFunc = (applicationId: ApplicationDataType['id'], callback: () => void) => {
-    return CustomAxiosDelete(DeleteApplicationListApi(applicationId), callback)
+export const DeleteApplicationListFunc = (applicationId: ApplicationDataType['id'], token: string, callback: () => void) => {
+    return CustomAxiosDelete(DeleteApplicationListApi(applicationId), callback, {
+        authorization: token
+    })
 }
 
-export const UpdateApplicationSecretkeyFunc = (applicationId: ApplicationDataType['id'], callback: (appData: ApplicationDataType) => void) => {
-    return CustomAxiosPatch(UpdateApplicationSecretkeyApi(applicationId), callback)
+export const UpdateApplicationSecretkeyFunc = (applicationId: ApplicationDataType['id'], token: string, callback: (appData: ApplicationDataType) => void) => {
+    return CustomAxiosPatch(UpdateApplicationSecretkeyApi(applicationId), callback, {
+        authorization: token
+    })
 }
 
 export const GetPoliciesListFunc = ({
@@ -131,7 +136,10 @@ export const GetPoliciesListFunc = ({
     sortDirection = "DESC"
 }: PoliciesListParamsType, callback: (data: GetListDataGeneralType<PolicyListDataType>) => void) => {
     return CustomAxiosGet(GetPoliciesListApi, (data: GetListDataGeneralType<PolicyListDataType>) => {
-        callback(data)
+        callback({...data, results: data.results.map(_ => ({
+            ..._,
+            createdAt: convertUTCStringToLocalDateString(_.createdAt)
+        }))})
     }, {
         page_size,
         page,
@@ -223,13 +231,13 @@ export const GetUserDetailDataFunc = (userId: UserDataType['userId'], callback: 
                 ...__,
                 loginDeviceInfo: {
                     ...__.loginDeviceInfo,
-                    updatedAt: convertUTCStringToKSTString(__.loginDeviceInfo.updatedAt)
+                    updatedAt: convertUTCStringToLocalDateString(__.loginDeviceInfo.updatedAt)
                 },
-                createdAt: convertUTCStringToKSTString(__.createdAt),
+                createdAt: convertUTCStringToLocalDateString(__.createdAt),
                 authenticators: __.authenticators.map(___ => ({
                     ...___,
-                    createdAt: convertUTCStringToKSTString(___.createdAt),
-                    lastAuthenticatedAt: convertUTCStringToKSTString(___.lastAuthenticatedAt)
+                    createdAt: convertUTCStringToLocalDateString(___.createdAt),
+                    lastAuthenticatedAt: convertUTCStringToLocalDateString(___.lastAuthenticatedAt)
                 }))
             }))
         })))
@@ -396,6 +404,12 @@ export const DuplicateUserNameCheckFunc = (username: UserDataType['username'], c
     return CustomAxiosGet(DuplicateUserNameCheckApi(username), callback)
 }
 
+export const RoleSwappingFunc = (token: string, callback: () => void) => {
+    return CustomAxiosPost(RoleSwappingApi, callback, null, {
+        authorization: token
+    })
+}
+
 export const AddUserWithCsvDataFunc = (datas: DefaultUserDataType[], callback: (response: UserDataType[]) => void) => {
     return CustomAxiosPost(AddUserWithCsvDataApi, callback, datas)
 }
@@ -470,7 +484,7 @@ export const SignUpVerificationCodeVerifyFunc = (params: {
     return CustomAxiosPost(SignUpVerificationCodeVerifyApi, callback, params)
 }
 
-export const ApprovalUserFunc = (userId: UserDataType['userId'], callback: () => void) => {
+export const ApprovalUserFunc = (userId: UserDataType['userId'], callback: (data: UserDataType) => void) => {
     return CustomAxiosPatch(ApprovalUserApi(userId), callback)
 }
 
@@ -532,4 +546,12 @@ export const SendPasscodeEmailFunc = (passcodeId: PasscodeDataType['id'], callba
     return CustomAxiosPost(SendPasscodeEmailApi, callback, {
         passcodeId
     })
+}
+
+export const OMPASSAuthStartFunc = (params: OMPASSAuthStartParamsType, callback: (res: OMPASSAuthStartResponseDataType) => void) => {
+    return CustomAxiosPost(OMPASSAuthStartApi, callback, params)
+}
+
+export const GetOMPASSAuthResultFunc = (type: string, pollingKey: string, callback: (res: OMPASSAuthResultDataType) => void) => {
+    return CustomAxiosGet(GetOMPASSAuthResultApi(type, pollingKey), callback)
 }

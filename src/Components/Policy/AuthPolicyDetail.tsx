@@ -2,7 +2,7 @@ import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import { useEffect, useLayoutEffect, useState } from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { useNavigate, useParams } from "react-router"
 import { message } from "antd";
 import { AddPoliciesListFunc, DeletePoliciesListFunc, GetPolicyDetailDataFunc, UpdatePoliciesListFunc } from "Functions/ApiFunctions";
@@ -12,7 +12,7 @@ import Button from "Components/CommonCustomComponents/Button";
 import Input from "Components/CommonCustomComponents/Input";
 import { applicationTypes, getApplicationTypeLabel, PolicyBrowsersList } from "Constants/ConstantValues";
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect";
-import CustomModal from "Components/CommonCustomComponents/CustomModal";
+import CustomModal from "Components/Modal/CustomModal";
 import './AuthPolicyDetail.css'
 import OMPASSAuth from "./PolicyItems/OMPASSAuth";
 import OMPASSAuthenticators from "./PolicyItems/OMPASSAuthenticators";
@@ -94,7 +94,6 @@ const AuthPolicyDetail = () => {
         setAuthenticatorPolicies(tempAuthPolices)
         if (!isDefaultPolicy) {
             if (browserUsed) setBrowserChecked(PolicyBrowsersList)
-            console.log(locationUsed)
             if (locationUsed) {
                 setLocationDatas({
                     isEnabled: false,
@@ -139,7 +138,7 @@ const AuthPolicyDetail = () => {
             noticeToThemselves
         }, () => {
             message.success('추가 성공!')
-            navigate('/Policies')
+            navigate(-1)
         })
     }
 
@@ -163,6 +162,9 @@ const AuthPolicyDetail = () => {
                     }
                     if (ompassControl === 'ACTIVE') {
                         if (browserUsed && browserChecked!.length === 0) return message.error("브라우저는 최소 1개 이상 허용해야 합니다.")
+                        if (locationUsed && locationDatas?.isEnabled && locationDatas.locations.length === 0) {
+                            return message.error("사용자 위치 허용 정책을 1개 이상 설정해주세요.")
+                        }
                         if (locationUsed && locationDatas?.isEnabled && locationDatas?.locations.some(_ => !_.alias)) {
                             return message.error("사용자 위치 허용 정책은 위치명이 필수 입력 사항입니다.")
                         }
@@ -172,6 +174,7 @@ const AuthPolicyDetail = () => {
                         if (accessTimeValues?.isEnabled && accessTimeValues.accessTimes.length === 0) {
                             return message.error("시간 접근 허용 정책을 1개 이상 설정해주세요.")
                         }
+                        console.log(noticeToAdmin)
                         if (noticeToAdmin?.isEnabled && noticeToAdmin.methods.length === 0) {
                             return message.error("위반 시 관리자 알림의 알림 방식을 1개 이상 설정해주세요.")
                         }
@@ -211,7 +214,6 @@ const AuthPolicyDetail = () => {
                                 setNoticeToThemselves(noticeToThemselves)
                             }
                             message.success('수정 성공!')
-                            // navigate('/Policies')
                         })
                     } else {
                         addAuthPolicyFunc()
@@ -227,14 +229,14 @@ const AuthPolicyDetail = () => {
                 {!isAdd && !isDefaultPolicy && <Button className="st8" onClick={() =>
                     DeletePoliciesListFunc(uuid, () => {
                         message.success('삭제 성공!')
-                        navigate('/Policies')
+                        navigate(-1)
                     })}>
                     삭제
                 </Button>}
             </div>
         </ContentsHeader>
         <div className="contents-header-container">
-            <CustomInputRow title={"어플리케이션 타입"}>
+            <CustomInputRow title={<FormattedMessage id="POLICY_COLUMN_APPLICATION_TYPE_LABEL"/>}>
                 {isAdd ? <CustomSelect value={selectedApplicationType} onChange={value => {
                     setSelectedApplicationType(value as ApplicationDataType['type'])
                 }} items={typeItems} needSelect /> : getApplicationTypeLabel(selectedApplicationType as ApplicationDataType['type'])}
@@ -252,7 +254,7 @@ const AuthPolicyDetail = () => {
                         setInputDescription(value)
                     }} />
                 </CustomInputRow>
-                <OMPASSAuth value={ompassControl} onChange={setOmpassControl} />
+                <OMPASSAuth value={ompassControl} onChange={setOmpassControl} isDefaultPolicy={isDefaultPolicy}/>
                 <div className="auth-policy-validate-container" data-hidden={ompassControl !== 'ACTIVE'}>
                     {authenticatorsUsed && <OMPASSAuthenticators value={authenticatorPolicies} onChange={setAuthenticatorPolicies} locationChecked={locationDatas?.isEnabled || false} webauthnUsed={webauthnUsed} setSureChange={setSureChange} />}
                     {browserUsed && <PolicyBrowserSelect value={browserChecked} onChange={setBrowserChecked} />}

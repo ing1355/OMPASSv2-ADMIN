@@ -10,12 +10,14 @@ import userAddIconHover from './../../assets/userAddIconHover.png'
 import rootRoleIcon from './../../assets/rootRoleIcon.png'
 import singleUserAddIcon from './../../assets/singleUserAddIcon.png'
 import exceclUploadIcon from './../../assets/exceclUploadIcon.png'
+import downloadIcon from './../../assets/downloadIcon.png'
+import downloadIconWhite from './../../assets/downloadIconWhite.png'
 import ldapSyncIcon from './../../assets/ldapSyncIcon.png'
 import adminRoleIcon from './../../assets/adminRoleIcon.png'
 import './UserManagement.css'
 import { userStatusTypes } from "Constants/ConstantValues";
 import useFullName from "hooks/useFullName";
-import CustomModal from "Components/CommonCustomComponents/CustomModal";
+import CustomModal from "Components/Modal/CustomModal";
 import { message } from "antd";
 import Button from "Components/CommonCustomComponents/Button";
 
@@ -117,8 +119,8 @@ const UserManagement = () => {
                             link.click();
                             URL.revokeObjectURL(url)
                         })
-                    }}>
-                        사용자 목록 다운로드
+                    }} icon={downloadIcon} hoverIcon={downloadIconWhite}>
+                        <FormattedMessage id="USER_EXCEL_DOWNLOAD_LABEL"/>
                     </Button>
                 </>}
                 pagination

@@ -11,8 +11,8 @@ import { message } from 'antd'
 import TransferContainer from './TransferContainer'
 import { SetStateType } from 'Types/PropsTypes'
 import { applicationTypes } from 'Constants/ConstantValues'
-import CustomModal from 'Components/CommonCustomComponents/CustomModal'
 import './UserTransfer.css'
+import CustomModal from 'Components/Modal/CustomModal'
 
 type UserTransferProps = {
     selectedUsers: UserHierarchyDataRpUserType['id'][]

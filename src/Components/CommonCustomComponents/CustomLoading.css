@@ -1,0 +1,59 @@
+.custom-loading-container {
+    --circle-size: 14px;
+    --circle-speed: 2.4s;
+    width: 50%;
+    height: 50%;
+    position: relative;
+}
+
+.custom-loading-container>div {
+    background-color: #e7e6ed;
+    position: absolute;
+    width: var(--circle-size);
+    height: var(--circle-size);
+    border-radius: var(--circle-size);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-name: UpAndDown;
+    animation-duration: var(--circle-speed);
+    background: linear-gradient(to bottom, #e7e6ed, #e7e6ed);
+}
+
+.custom-loading-container>div:nth-child(1) {
+    left: calc(50% - var(--circle-size) * 2);
+}
+
+.custom-loading-container>div:nth-child(2) {
+    animation-delay: .65s;
+}
+
+.custom-loading-container>div:nth-child(3) {
+    animation-delay: 1.3s;
+    left: calc(50% + var(--circle-size) * 2);
+}
+
+@keyframes UpAndDown {
+    from {
+        top: 50%;
+        background: linear-gradient(to bottom, #e7e6ed, #e7e6ed);
+    }
+
+    30% {
+        background: linear-gradient(to bottom, rgba(71, 21, 255, .96), rgba(71, 21, 255, .2));
+    }
+
+    50% {
+        background: linear-gradient(to bottom, rgba(71, 21, 255, .96), rgba(71, 21, 255, .2));
+        top: 40%;
+    }
+
+    60% {}
+
+    to {
+        top: 50%;
+        background: linear-gradient(to bottom, #e7e6ed, #e7e6ed);
+    }
+}

@@ -1,7 +1,7 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import { ViewPasscode } from "Components/Users/UserDetailComponents";
-import { GetPasscodeHistoriesFunc, GetPasscodeListFunc } from "Functions/ApiFunctions";
-import { convertUTCStringToKSTString } from "Functions/GlobalFunctions";
+import { GetPasscodeListFunc } from "Functions/ApiFunctions";
+import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { useSelector } from "react-redux";
@@ -64,21 +64,21 @@ const PasscodeList = () => {
         columns={[
             {
                 key: 'applicationName',
-                title: "어플리케이션명"
+                title: <FormattedMessage id="PASSCODE_COLUMN_APPLICATION_NAME_LABEL"/>
             },
             {
                 key: 'issuerUsername',
-                title: <FormattedMessage id="ADMIN_ID" />,
+                title: <FormattedMessage id="PASSCODE_COLUMN_ISSUER_ID_LABEL" />,
                 render: (data, index, row) => row.passcode.issuerUsername
             },
             {
                 key: 'portalUsername',
-                title: "포탈 아이디",
+                title: <FormattedMessage id="PASSCODE_COLUMN_PORTAL_ID_LABEL"/>,
                 render: (data, ind, row) => row.portalUser.username
             },
             {
                 key: 'rpUsername',
-                title: <FormattedMessage id="USER_ID" />,
+                title: <FormattedMessage id="PASSCODE_COLUMN_RP_ID_LABEL" />,
                 render: (data, ind, row) => row.rpUser.username
             },
             {
@@ -93,21 +93,21 @@ const PasscodeList = () => {
             },
             {
                 key: 'recycleCount',
-                title: <FormattedMessage id="USES_COUNT" />,
+                title: <FormattedMessage id="PASSCODE_COLUMN_RECYCLE_COUNT_LABEL" />,
                 render: (data, ind, row) => row.passcode.recycleCount === -1 ? "∞" : `${row.passcode.recycleCount} 회`
             },
             {
                 key: 'createdAt',
                 title: <FormattedMessage id="PASSCODE_CREATED_AT_LABEL" />,
-                render: (data, ind, row) => convertUTCStringToKSTString(row.passcode.createdAt)
+                render: (data, ind, row) => convertUTCStringToLocalDateString(row.passcode.createdAt)
             },
             {
                 key: 'expirationTime',
-                title: <FormattedMessage id="VALID_TIME" />,
+                title: <FormattedMessage id="PASSCODE_COLUMN_VALID_TIME_LABEL" />,
                 render: (_, ind, row) => {
                     const data = row.passcode.expiredAt
                     if (!data || data === "-1") return "∞"
-                    return convertUTCStringToKSTString(data)
+                    return convertUTCStringToLocalDateString(data)
                 }
             },
         ]}

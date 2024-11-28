@@ -1,9 +1,10 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import { AuthenticationProcessTypes } from "Constants/ConstantValues"
-import { convertUTCStringToKSTString } from "Functions/GlobalFunctions"
+import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions"
 import { useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { GetInvalidAuthLogDataListFunc } from "Functions/ApiFunctions"
+import { message } from "antd"
 
 const InvalidAuthLogs = () => {
     const [tableData, setTableData] = useState<InvalidAuthLogDataType[]>([])
@@ -22,7 +23,7 @@ const InvalidAuthLogs = () => {
         GetInvalidAuthLogDataListFunc(_params, ({ results, totalCount }) => {
             setTableData(results.map(_ => ({
                 ..._,
-                authenticationTime: convertUTCStringToKSTString(_.authenticationTime)
+                authenticationTime: convertUTCStringToLocalDateString(_.authenticationTime)
             })))
             setTotalCount(totalCount)
         }).finally(() => {
@@ -37,6 +38,10 @@ const InvalidAuthLogs = () => {
         loading={dataLoading}
         totalCount={totalCount}
         pagination
+        hover
+        onBodyRowClick={() => {
+            message.info("기능 준비중(row 클릭 시 상세 정보 표시)")
+        }}
         searchOptions={[{
             key: 'applicationName',
             type: 'string'

@@ -169,7 +169,6 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                                 if (customType === 'name') {
                                     e.currentTarget.value = e.currentTarget.value.replace(/[^a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣0-9]/g, '')
                                 } else if (customType === 'username') {
-                                    console.log(e.currentTarget.value)
                                     e.currentTarget.value = e.currentTarget.value.replace(/[^0-9a-z]/g, '')
                                 }
                                 if (maxLength && e.currentTarget.value.length > maxLength) {

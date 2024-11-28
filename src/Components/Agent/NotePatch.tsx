@@ -31,9 +31,7 @@ const NotePatch = () => {
                 <Button className='st3' onClick={() => {
                     UpdateAgentInstallerNoteFunc(fileId, inputMemo, () => {
                         message.success(formatMessage({id: 'NOTE_PATCH_SUCCESS_MSG'}))
-                        navigate('/AgentManagement', {
-                            replace: true
-                        });
+                        navigate(-1);
                     })
                 }}>
                     <span><FormattedMessage id='SAVE' /></span>
@@ -41,9 +39,7 @@ const NotePatch = () => {
                 <Button className='st1'
                     type='button'
                     onClick={() => {
-                        navigate('/AgentManagement', {
-                            replace: true
-                        });
+                        navigate(-1);
                     }}
                 >
                     <span><FormattedMessage id='GO_BACK' /></span>

@@ -143,16 +143,16 @@ type PasscodeDataType = {
 }
 
 createdAt
-: 
+:
 "2024-11-21 09:23:11"
 lastAuthenticatedAt
-: 
+:
 "2024-11-21 10:24:32"
 status
-: 
+:
 "REGISTERED"
 type
-: 
+:
 "PASSCODE"
 
 type PasscodeParamsType = {
@@ -279,8 +279,8 @@ type AccessTimeRestrictionValueType = {
     //     endTime: string
     // }
     timeRange: {
-        startTime: string|null,
-        endTime: string|null,
+        startTime: string | null,
+        endTime: string | null,
         type: AccessTimeRestrictionTimeRangeTypeType
     }
 }
@@ -481,19 +481,19 @@ type UserHierarchyDataGroupViewDataType = {
 }
 
 type UserGroupDataType = DefaultUserGroupDataType & {
-    policy: PolicyListDataType
+    policies: PolicyListDataType['id'][]
     rpUserIds: UserDataType['userId'][]
 }
 
 type UserGroupListDataType = DefaultUserGroupDataType & {
     createdAt: string
-    policy: PolicyListDataType
+    policies: PolicyListDataType['id'][]
 }
 
 type UserGroupParamsType = {
     name: string
     description: string
-    policyId: PolicyDataType['id']
+    policies: PolicyDataType['id'][]
     rpUserIds: UserDataType['userId'][]
 }
 
@@ -625,4 +625,56 @@ type PolicyItemsPropsType<T> = {
     onChange: (data: T) => void
     dataInit?: boolean
     authenticators?: PolicyDataType['enableAuthenticators']
+}
+
+type OMPASSAuthStartParamsType = {
+    purpose: "ROLE_SWAPPING" | "ROLE_SWAPPING_SOURCE" | "ROLE_SWAPPING_TARGET" | "ADMIN_2FA" | "RADIUS_REGISTRATION" | "NONE"
+    targetUserId?: string
+    loginDeviceInfo: {
+        os: {
+            name: string,
+            version: string
+        },
+        browser: string,
+        ip: string
+    }
+}
+
+type ClientInfoType = {
+    os: {
+        name: string
+        version: string
+    };
+    gpu?: string;
+    browser: string;
+    ip: string;
+};
+
+type OMPASSAuthResultDataType = {
+    status: {
+        source: boolean
+        target: boolean
+    }
+    token?: string
+}
+
+type OMPASSAuthStatusType = 'ready' | 'progress' | 'complete'
+
+type OMPASSAuthStartResponseDataType = {
+    ntp: string
+    url: string
+    pollingKey: string
+    sourceNonce: string
+    targetNonce?: string
+    sessionExpiredAt: string
+}
+
+type QRDataType<T> = {
+    type: "DEFAULT"
+    body: T
+}
+
+type QRDataDefaultBodyType = {
+    url: string
+    param: string
 }

@@ -1,29 +1,82 @@
-import { useCallback, useEffect, useRef } from "react";
+import { GetOMPASSAuthResultFunc, OMPASSAuthStartFunc } from "Functions/ApiFunctions";
+import { DeviceInfo } from "Functions/GetDeviceInfo";
+import { useCallback, useRef } from "react";
+
+type OMPASSAuthType = 'single' | 'pair'
 
 const useOMPASS = () => {
-    const ws = useRef<WebSocket>()
+    const timerRef = useRef<NodeJS.Timer>()
+    const sourceRef = useRef(false)
+    const targetRef = useRef(false)
 
-    const socketOpen = useCallback((userId: string, successCallback: () => void, failCallback: () => void) => {
-        // ws.current = new WebSocket(`wss:${data.interfaceServerConnection.host.replace('https://', '')}:${data.interfaceServerConnection.webSocketPort}/web`)
-        ws.current!.onopen = () => {
-            console.log('OMPASS 웹소켓 OPEN!')
-            // ws.current.send(`${JSON.stringify({
-            //     clientType: "BROWSER",
-            //     nonce
-            //   })}`)
+    const clearTimer = useCallback(() => {
+        sourceRef.current = false
+        targetRef.current = false
+        if (timerRef.current) {
+            clearInterval(timerRef.current)
+            timerRef.current = undefined
         }
-        ws.current!.onmessage = (e: MessageEvent) => {
-            console.log('OMPASS 웹소켓 메세지', e.data)
-        }
-        // ws.current.onclose = (e) => {
-        //     console.log('ws 연결 종료', e)
-        //   }
-        //   ws.current.onerror = (e) => {
-        //     console.log('ws 연결 에러', e)
-        //   }
     }, [])
 
-    return socketOpen;
+    const startAuth = useCallback(async ({
+        type, purpose, targetUserId
+    }: {
+        type: OMPASSAuthType, purpose: OMPASSAuthStartParamsType['purpose'], targetUserId?: string
+    }, readyCallback: (res: OMPASSAuthStartResponseDataType) => void, successCallback: (status: OMPASSAuthResultDataType['status'], token: OMPASSAuthResultDataType['token']) => void, errorCallback: Function) => {
+        const { os, browser, ip } = await DeviceInfo()
+        try {
+            const startCallback = (res: OMPASSAuthStartResponseDataType) => {
+                readyCallback(res)
+                clearTimer()
+                timerRef.current = setInterval(() => {
+                    GetOMPASSAuthResultFunc(purpose, res.pollingKey, ({ status, token }) => {
+                        if (type === 'single') {
+                            if (token && status.source) {
+                                successCallback(status, token)
+                                clearTimer()
+                            }
+                        } else {
+                            if (status.source && status.target) {
+                                successCallback(status, token)
+                                clearTimer()
+                            } else if((status.source !== sourceRef.current) || (status.target !== targetRef.current)) {
+                                successCallback(status, token)
+                                sourceRef.current = status.source
+                                targetRef.current = status.target
+                            }
+                            
+                        }
+                    }).catch(err => {
+                        clearTimer()
+                    })
+                }, 1000);
+            }
+            OMPASSAuthStartFunc({
+                purpose: purpose,
+                targetUserId: type === 'single' ? '' : targetUserId,
+                loginDeviceInfo: {
+                    os,
+                    browser,
+                    ip
+                }
+            }, (res) => {
+                console.log(res)
+                startCallback(res)
+            }).catch(err => {
+                console.log('start api Error catch !!', err)
+                errorCallback(err)
+            })
+        } catch (e) {
+            console.log('useOMPASS Error !!', e)
+            errorCallback(e)
+        }
+    }, [])
+
+    const stopAuth = () => {
+        clearTimer()
+    }
+
+    return {startAuth, stopAuth}
 }
 
 export default useOMPASS

@@ -34,19 +34,19 @@ const VersionUpload = () => {
             form={!isUploadingFile ? 'addVersionForm' : ''}
             loading={isUploadingFile}
           >
-            <span><FormattedMessage id={isUploadingFile ? 'LOADING' : 'CONFIRM'} /></span>
+            <span><FormattedMessage id={isUploadingFile ? 'LOADING' : 'SAVE'} /></span>
           </Button>
-          <Button className='st1'
+          {/* <Button className='st1'
             type='button'
             disabled={isUploadingFile}
             onClick={() => {
               if (!isUploadingFile) {
-                navigate('/AgentManagement');
+                navigate(-1);
               }
             }}
           >
             <span><FormattedMessage id='GO_BACK' /></span>
-          </Button>
+          </Button> */}
         </ContentsHeader>
         <div className="contents-header-container">
           <form
@@ -73,7 +73,7 @@ const VersionUpload = () => {
                 "metaData.note": inputMemo,
                 multipartFile: inputFile,
               }, () => {
-                navigate('/AgentManagement');
+                navigate(-1);
               }).finally(() => {
                 setIsUploadingFile(false)
               })

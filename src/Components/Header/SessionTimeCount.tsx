@@ -1,5 +1,5 @@
 import { message } from "antd"
-import CustomModal from "Components/CommonCustomComponents/CustomModal"
+import CustomModal from "Components/Modal/CustomModal"
 import { PatchSessionTokenFunc } from "Functions/ApiFunctions"
 import { getStorageAuth, setStorageAuth } from "Functions/GlobalFunctions"
 import jwtDecode from "jwt-decode"
@@ -7,12 +7,16 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { sessionCheckChange } from "Redux/actions/sessionCheckChange"
 import { userInfoChange, userInfoClear } from "Redux/actions/userChange"
+import './SessionTimeCount.css'
+import timeIcon from '../../assets/sessionTimeIcon.png'
+import CustomDropdown from "Components/CommonCustomComponents/CustomDropdown"
 
 const SessionTimeCount = () => {
     const { sessionChecked, userInfo } = useSelector((state: ReduxStateType) => ({
         sessionChecked: state.sessionChecked,
         userInfo: state.userInfo,
     }))
+    const [sessionOpen, setSessionOpen] = useState(false)
     const [remainSessionTime, setRemainSessionTime] = useState(0)
     const [showSession, setShowSession] = useState(false)
     const remainSessionTimeRef = useRef(remainSessionTime)
@@ -72,7 +76,7 @@ const SessionTimeCount = () => {
     const visibilityChangeCallback = useCallback((e: Event) => {
         if (document.visibilityState === "visible") {
             settingTimer()
-          }
+        }
     }, [])
 
 
@@ -85,8 +89,31 @@ const SessionTimeCount = () => {
         }
     }, [userInfo])
 
+    const refreshCallback = () => {
+        return PatchSessionTokenFunc((res, token) => {
+            setStorageAuth(token)
+            dispatch(userInfoChange(token))
+            dispatch(sessionCheckChange(false))
+            setShowSession(false)
+            message.success("세션 갱신에 성공하였습니다.")
+        })
+    }
+
     return <>
-        남은 세션 시간: {remainTime}
+        <CustomDropdown hover items={[
+            {
+                label: '세션 갱신',
+                callback: () => {
+                    refreshCallback();
+                },
+            }
+        ]}>
+            <div className="remain-session-time-container" onClick={() => {
+                setSessionOpen(true)
+            }}>
+                <img src={timeIcon} /> {remainTime}
+            </div>
+        </CustomDropdown>
         <CustomModal
             open={showSession}
             onCancel={() => {
@@ -102,12 +129,7 @@ const SessionTimeCount = () => {
             okText={"예"}
             cancelText={"아니오"}
             okCallback={async () => {
-                return PatchSessionTokenFunc((res, token) => {
-                    setStorageAuth(token)
-                    dispatch(userInfoChange(token))
-                    dispatch(sessionCheckChange(false))
-                    setShowSession(false)
-                })
+                return refreshCallback();
             }} buttonLoading />
     </>
 }

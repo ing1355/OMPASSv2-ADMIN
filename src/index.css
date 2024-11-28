@@ -50,6 +50,8 @@
 * {
   font-family: NEXON Lv2 Gothic OTF, NEXON Lv1 Gothic OTF;
   font-style: normal;
+  white-space: normal;
+  word-break: keep-all;
 }
 
 :root {

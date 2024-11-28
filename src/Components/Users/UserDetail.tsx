@@ -2,7 +2,7 @@ import './UserDetail.css'
 import { message } from "antd"
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
-import { AddPasscodeFunc, AddUserDataFunc, DeleteAuthenticatorDataFunc, GetUserDataListFunc, GetUserDetailDataFunc, UpdateUserDataFunc, DeleteUserDataFunc, DuplicateUserNameCheckFunc, ApprovalUserFunc, SendPasscodeEmailFunc } from "Functions/ApiFunctions"
+import { AddPasscodeFunc, AddUserDataFunc, DeleteAuthenticatorDataFunc, GetUserDataListFunc, GetUserDetailDataFunc, UpdateUserDataFunc, DeleteUserDataFunc, DuplicateUserNameCheckFunc, ApprovalUserFunc, SendPasscodeEmailFunc, RoleSwappingFunc } from "Functions/ApiFunctions"
 import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 import { useLocation, useNavigate, useParams } from "react-router"
@@ -16,19 +16,19 @@ import addIconWhite from '../../assets/addIconWhite.png';
 import addIconGrey from '../../assets/addIconGrey.png';
 import passcodeEmailSendIcon from '../../assets/passcodeEmailSendIcon.png';
 import passcodeEmailSendIconGrey from '../../assets/passcodeEmailSendIconGrey.png';
-import closeIcon from '../../assets/closeIcon.png';
+
 import RoleSelect from "Components/CommonCustomComponents/RoleSelect"
-import CustomModal from "Components/CommonCustomComponents/CustomModal"
+import CustomModal from "Components/Modal/CustomModal"
 import Button from 'Components/CommonCustomComponents/Button'
 import { userInfoClear } from 'Redux/actions/userChange'
 import { UserDetailInfoAuthenticatorContent, UserDetailInfoAuthenticatorDeleteButton, UserDetailInfoDeviceInfoContent, UserDetailInfoETCInfoContent, UserInfoInputrow, UserInfoRow, ViewPasscode, ViewRecoveryCode } from './UserDetailComponents'
-import { autoHypenPhoneFun, convertUTCStringToKSTString, createRandom1Digit, logoImageWithDefaultImage } from 'Functions/GlobalFunctions'
+import { autoHypenPhoneFun, convertUTCStringToLocalDateString, createRandom1Digit, logoImageWithDefaultImage } from 'Functions/GlobalFunctions'
 import Input from 'Components/CommonCustomComponents/Input'
 import BottomLineText from 'Components/CommonCustomComponents/BottomLineText'
 import { isDev2 } from 'Constants/ConstantValues'
 import UnLockBtn from './UnLockBtn'
-
-const passcodeInputHeight = '30px'
+import { PasscodeAddComponent } from './PasscodeComponents'
+import PairOMPASSAuthModal from 'Components/Modal/PairOMPASSAuthModal'
 
 const initModifyValues: UserDataModifyLocalValuesType = {
     name: {
@@ -86,8 +86,9 @@ const UserDetail = ({ }) => {
     const [userDetailOpened, setUserDetailOpened] = useState<RPUserDetailAuthDataType['id'][]>([])
     const [userData, setUserData] = useState<UserDataType | undefined>()
     const [dataLoading, setDataLoading] = useState(false)
-
+    const [authView, setAuthView] = useState(false)
     const [isModify, setIsModify] = useState(false)
+    const [sureSwap, setSureSwap] = useState(false);
     const [sureDelete, setSureDelete] = useState(false);
     const [authenticatorDelete, setAuthenticatorDelete] = useState('')
     const [modifyValues, setModifyValues] = useState<UserDataModifyLocalValuesType>(initModifyValues)
@@ -152,7 +153,6 @@ const UserDetail = ({ }) => {
                 })
             } catch (e) {
                 navigate(-1)
-                // navigate('/UserManagement')
             }
             setDataLoading(false)
         }
@@ -214,7 +214,7 @@ const UserDetail = ({ }) => {
                 title: <FormattedMessage id="VALID_TIME" />,
                 render: (data) => {
                     if (data === "-1") return "∞"
-                    return convertUTCStringToKSTString(data)
+                    return convertUTCStringToLocalDateString(data)
                 }
             },
             {
@@ -257,21 +257,22 @@ const UserDetail = ({ }) => {
             }}>
                 {
                     userData?.status === 'WAIT_ADMIN_APPROVAL' && <Button className='st6' onClick={() => {
-                        ApprovalUserFunc(userData.userId, () => {
+                        ApprovalUserFunc(userData.userId, (data: UserDataType) => {
+                            setUserData(data)
                             message.success(formatMessage({ id: 'SIGNUP_APPROVE_SUCCESS_MSG' }))
-                            navigate('/UserManagement')
                         })
                     }}>
                         <FormattedMessage id="USER_ACTIVATE_LABEL" />
                     </Button>
                 }
-                {/* {
-                    userInfo.role === 'ROOT' && <Button className='st5' onClick={() => {
-                        
+                {
+                    // userInfo.role === 'ROOT' && <Button className='st5' onClick={() => {
+                        userInfo.role === 'ROOT' && <Button className='st5' onClick={() => {
+                        setSureSwap(true)
                     }}>
                         권한 승계
                     </Button>
-                } */}
+                }
                 {(canDelete && !isAdd) && !isDeleted && <Button className='st8' onClick={() => {
                     setSureDelete(true)
                 }}>
@@ -301,7 +302,7 @@ const UserDetail = ({ }) => {
                                 if (isAdd) {
                                     AddUserDataFunc(addValues, () => {
                                         message.success(formatMessage({ id: 'USER_ADD_SUCCESS_MSG' }))
-                                        navigate('/UserManagement')
+                                        navigate(-1)
                                     })
                                 } else {
                                     // if (modifyValues.password !== modifyValues.passwordConfirm) return message.error("비밀번호가 일치하지 않습니다.")
@@ -494,7 +495,7 @@ const UserDetail = ({ }) => {
                     {!isAdd && <UserInfoRow title="NORMAL_STATUS_LABEL" value={<>
                         {userData?.status && <FormattedMessage id={`USER_STATUS_${userData.status}`} />}
                         {canModify && userData?.status === 'LOCK' && <UnLockBtn userData={userData} onSuccess={() => {
-                            setUserData({ ...userData!, status: 'RUN' })
+                            setUserData({ ...userData!, status: 'WAIT_INIT_PASSWORD' })
                         }} />}
                     </>} />}
                 </div>
@@ -561,7 +562,7 @@ const UserDetail = ({ }) => {
                             <div className="user-detail-content-passcode-container">
                                 <div>
                                     <h4>PASSCODE</h4>
-                                    {userInfo.role !== "USER" && <PasscodeAddBtn added={_.authenticationInfo.authenticators.some(__ => __.type === 'PASSCODE')} onClick={() => {
+                                    {userInfo.role !== "USER" && canModify && <PasscodeAddBtn added={_.authenticationInfo.authenticators.some(__ => __.type === 'PASSCODE')} onClick={() => {
                                         if (_.authenticationInfo.authenticators.some(__ => __.type === 'PASSCODE')) {
                                             SendPasscodeEmailFunc(passcodeData(_.authenticationInfo.id)[0].id, () => {
                                                 message.success("패스코드를 사용자 이메일로 재발송하였습니다.")
@@ -585,7 +586,28 @@ const UserDetail = ({ }) => {
             </Fragment>
             )}
         </Contents >
-
+        <PairOMPASSAuthModal opened={authView} onCancel={() => {
+            setAuthView(false)
+        }} successCallback={(token) => {
+            RoleSwappingFunc(token, () => {
+                dispatch(userInfoClear())
+                setAuthView(false)
+                message.success("권한 승계에 성공하였습니다. 포탈을 이용하려면 다시 로그인해주세요.")
+            })
+        }} userData={userData}/>
+        <CustomModal
+            open={sureSwap}
+            onCancel={() => {
+                setSureSwap(false)
+            }}
+            type="warning"
+            typeTitle={formatMessage({ id: 'USER_ROLE_SWAP_MODAL_TITLE' })}
+            typeContent={formatMessage({ id: 'USER_ROLE_SWAP_MODAL_SUBSCRIPTION' })}
+            yesOrNo
+            okCallback={async () => {
+                setAuthView(true)
+                setSureSwap(false)
+            }} buttonLoading />
         <CustomModal
             open={sureDelete}
             onCancel={() => {
@@ -602,7 +624,7 @@ const UserDetail = ({ }) => {
                     if (isSelf) {
                         dispatch(userInfoClear());
                     } else {
-                        navigate('/UserManagement')
+                        navigate(-1)
                     }
                 })
             }} buttonLoading />
@@ -632,207 +654,13 @@ const UserDetail = ({ }) => {
                     ...aInfo,
                     authenticators: aInfo.authenticators.concat({
                         ...newData,
-                        createdAt: convertUTCStringToKSTString(newData.createdAt)
+                        createdAt: convertUTCStringToLocalDateString(newData.createdAt)
                     })
                 }) : aInfo)
             })))
             setAddPasscode("")
         }} />
     </>
-}
-
-const PasscodeRadioButton = ({ title, name, defaultChecked, children, value, checked, onChange }: {
-    title: string
-    name: string
-    defaultChecked?: boolean
-    checked?: boolean
-    children?: React.ReactNode
-    value?: string
-    onChange: (name: string, val: string) => void
-}) => {
-    return <div className='passcode-add-item'>
-        <label className='passcode-add-label'>
-            <Input type="radio" value={value} name={name} defaultChecked={defaultChecked} checked={checked} valueChange={value => {
-                onChange(name, value)
-            }} /> {title}
-        </label>
-        {children}
-    </div>
-}
-
-const PasscodeAddComponent = ({ okCallback, cancelCallback, authId, modalOpen }: {
-    cancelCallback: Function
-    okCallback: (data: PasscodeAuthenticatorDataType) => void
-    authId: string
-    modalOpen: boolean
-}) => {
-    const [addPasscodeMethod, setAddPasscodeMethod] = useState<{
-        method: 'target' | 'random'
-        time: 'infinity' | 'select'
-        count: 'infinity' | 'one' | 'select'
-    }>({
-        method: 'random',
-        time: 'infinity',
-        count: 'one'
-    })
-    const [inputCurrentPasscodeValue, setInputCurrentPasscodeValue] = useState('')
-    const [inputCurrentPasscodeTime, setInputCurrentPasscodeTime] = useState<number | string>(1)
-    const [inputCurrentPasscodeCount, setInputCurrentPasscodeCount] = useState<number | string>(1)
-
-    const [addPasscodeLoading, setAddPasscodeLoading] = useState(false)
-    const { formatMessage } = useIntl()
-
-    const radioChangeCallback = (name: string, value: string) => {
-        setAddPasscodeMethod({
-            ...addPasscodeMethod,
-            [name]: value
-        })
-    }
-
-    return <CustomModal
-        open={modalOpen}
-        width={520}
-        noPadding
-        onSubmit={async e => {
-            e.preventDefault();
-            const target = e.target as HTMLFormElement
-            const { method, time, count, codeValue, timeValue, countValue } = target.elements as any
-            if (method.value === "target" && (!codeValue.value || codeValue.value.length !== 9)) {
-                return message.error(formatMessage({ id: 'PASSCODE_NEED_9_DIGIT_NUMBERS' }))
-            }
-            if (time.value === "select" && (!timeValue.value || parseInt(timeValue.value) < 1)) {
-                return message.error(formatMessage({ id: 'PASSCODE_NEED_MORE_THAN_1_MINUTES' }))
-            }
-            if (count.value === "select" && (!countValue.value || parseInt(countValue.value) < 1)) {
-                return message.error(formatMessage({ id: 'PASSCODE_NEED_MORE_THAN_1_TIMES' }))
-            }
-            setAddPasscodeLoading(true)
-            AddPasscodeFunc({
-                authenticationDataId: authId,
-                passcodeNumber: method.value === 'target' ? codeValue.value : Array.from({ length: 9 }).map(_ => createRandom1Digit()).join(''),
-                validTime: time.value === 'select' ? timeValue.value : -1,
-                recycleCount: count.value === 'one' ? 1 : (count.value === 'select' ? countValue.value : -1)
-            }, (data) => {
-                okCallback(data)
-            }).finally(() => {
-                setAddPasscodeLoading(false)
-            })
-        }}
-        onCancel={() => {
-            cancelCallback()
-        }}>
-        <div className='passcode-add-title'>
-            <FormattedMessage id="PASSCODE_ADD_MODAL_TITLE" />
-            <div onClick={() => {
-                cancelCallback()
-            }}>
-                <img src={closeIcon} />
-            </div>
-        </div>
-        <div className='passcode-add-contents'>
-            <div className='passcode-add-content-container'>
-                <div className='passcode-add-content-title'>
-                    <FormattedMessage id="PASSCODE_ADD_MODAL_TYPE_TITLE" />
-                </div>
-                <div className='passcode-add-content-row'>
-                    <PasscodeRadioButton title={formatMessage({ id: 'PASSCODE_RANDOM_GENERATE_LABEL' })} name="method" value="random" checked={addPasscodeMethod.method === 'random'} onChange={radioChangeCallback} />
-                    <PasscodeRadioButton title={formatMessage({ id: 'PASSCODE_FIX_GENERATE_LABEL' })} name="method" value="target" checked={addPasscodeMethod.method === 'target'} onChange={radioChangeCallback}>
-                        <div className='passcode-add-input-label-container'>
-                            <Input
-                                disabled={addPasscodeMethod.method !== 'target'}
-                                className='st1'
-                                name="codeValue"
-                                value={inputCurrentPasscodeValue}
-                                valueChange={value => {
-                                    setInputCurrentPasscodeValue(value)
-                                }}
-                                style={{
-                                    width: '180px',
-                                    height: passcodeInputHeight
-                                }}
-                                maxLength={9}
-                                onlyNumber
-                            />
-                        </div>
-                    </PasscodeRadioButton>
-                </div>
-            </div>
-            <div className='passcode-add-content-container'>
-                <div className='passcode-add-content-title'>
-                    <FormattedMessage id="PASSCODE_EXPIRE_TIME_LABEL" />
-                </div>
-                <div className='passcode-add-content-row'>
-                    <PasscodeRadioButton title={formatMessage({ id: 'PASSCODE_USE_INFINITY_TIMES_LABEL' })} name="time" value='infinity' checked={addPasscodeMethod.time === 'infinity'} onChange={radioChangeCallback} />
-                    <PasscodeRadioButton title={formatMessage({ id: 'PASSCODE_USE_FINITE_TIMES_LABEL' })} name="time" value='select' checked={addPasscodeMethod.time === 'select'} onChange={radioChangeCallback}>
-                        <div className='passcode-add-input-label-container'>
-                            <Input
-                                disabled={addPasscodeMethod.time !== 'select'}
-                                className='st1'
-                                value={inputCurrentPasscodeTime}
-                                valueChange={value => {
-                                    setInputCurrentPasscodeTime(value ? parseInt(value) : '')
-                                }}
-                                onInput={(e) => {
-                                    if (parseInt(e.currentTarget.value) > 525600) e.currentTarget.value = "525600"
-                                }}
-                                label={formatMessage({ id: 'PASSCODE_EXPIRE_TIME_SUB_LABEL' })}
-                                style={{
-                                    width: '120px',
-                                    height: passcodeInputHeight
-                                }}
-                                maxLength={7}
-                                name="timeValue"
-                                onlyNumber
-                            />
-                        </div>
-                    </PasscodeRadioButton>
-                </div>
-            </div>
-            <div className='passcode-add-content-container'>
-                <div className='passcode-add-content-title'>
-                    <FormattedMessage id="PASSCODE_USE_TIMES_LABEL" />
-                </div>
-                <div className='passcode-add-content-row'>
-                    <PasscodeRadioButton title={formatMessage({ id: 'PASSCODE_USE_ONE_TIMES_LABEL' })} name="count" value='one' checked={addPasscodeMethod.count === 'one'} onChange={radioChangeCallback} />
-                    <PasscodeRadioButton title={formatMessage({ id: 'PASSCODE_USE_INFINITY_TIMES_LABEL' })} name="count" value='infinity' checked={addPasscodeMethod.count === 'infinity'} onChange={radioChangeCallback} />
-                    <PasscodeRadioButton title={formatMessage({ id: 'PASSCODE_USE_FIXED_TIMES_LABEL' })} name="count" value='select' checked={addPasscodeMethod.count === 'select'} onChange={radioChangeCallback}>
-                        <div className='passcode-add-input-label-container'>
-                            <Input
-                                disabled={addPasscodeMethod.count !== 'select'}
-                                className='st1'
-                                name="countValue"
-                                value={inputCurrentPasscodeCount}
-                                valueChange={value => {
-                                    setInputCurrentPasscodeCount(value ? parseInt(value) : '')
-                                }}
-                                onInput={(e) => {
-                                    if (parseInt(e.currentTarget.value) > 9999) e.currentTarget.value = "9999"
-                                }}
-                                label={formatMessage({ id: 'PASSCODE_USE_TIMES_SUB_LABEL' })}
-                                nonZero
-                                maxLength={5}
-                                style={{
-                                    width: '140px',
-                                    height: passcodeInputHeight
-                                }}
-                                onlyNumber
-                            />
-                        </div>
-                    </PasscodeRadioButton>
-                </div>
-            </div>
-            <div className='passcode-add-buttons'>
-                <Button className='st7' onClick={() => {
-                    cancelCallback()
-                }}>
-                    <FormattedMessage id="CLOSE" />
-                </Button>
-                <Button className='st3' type='submit' loading={addPasscodeLoading}>
-                    <FormattedMessage id="NORMAL_COMPLETE_LABEL" />
-                </Button>
-            </div>
-        </div>
-    </CustomModal>
 }
 
 export default UserDetail

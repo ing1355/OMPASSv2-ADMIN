@@ -53,6 +53,11 @@
     font-weight: bold;
 }
 
+.plan-selected > img {
+    height: 14px;
+    width: 14px;
+}
+
 .plan-title {
     text-align: center;
 }
@@ -135,9 +140,11 @@
     padding-right: 44px;
     margin-top: 12px;
     gap: 12px;
-    & > img {
-        height: 30px;
-    }
+}
+
+.billing-current-user-gauge-container > img {
+    width: 30px;
+    height: 30px;
 }
 
 .billing-current-plan-user-gauge {

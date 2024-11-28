@@ -1,7 +1,7 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import { ViewPasscode } from "Components/Users/UserDetailComponents";
 import { GetPasscodeHistoriesFunc } from "Functions/ApiFunctions";
-import { convertUTCStringToKSTString } from "Functions/GlobalFunctions";
+import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { useSelector } from "react-redux";
@@ -120,7 +120,7 @@ const PasscodeLogs = () => {
             {
                 key: 'createdAt',
                 title: <FormattedMessage id="ACTION_DATE" />,
-                render: (data) => convertUTCStringToKSTString(data)
+                render: (data) => convertUTCStringToLocalDateString(data)
             },
             {
                 key: 'expirationTime',
@@ -128,7 +128,7 @@ const PasscodeLogs = () => {
                 render: (_, ind, row) => {
                     const data = row.passcode.expiredAt
                     if (!data) return "∞"
-                    return convertUTCStringToKSTString(data)
+                    return convertUTCStringToLocalDateString(data)
                 }
             },
         ]}

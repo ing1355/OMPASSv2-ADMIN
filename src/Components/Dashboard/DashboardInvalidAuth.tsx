@@ -3,7 +3,7 @@ import DashboardCardWithDateSelect from "./DashboardCardWithDateSelect"
 import { useEffect, useState } from "react"
 import { dashboardDateInitialValue } from "./Dashboard"
 import { convertDaysByDate, convertHourRangeByDate } from "./DashboardFunctions"
-import { convertUTCStringToKSTString } from "Functions/GlobalFunctions"
+import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions"
 import { FormattedMessage } from "react-intl"
 import DashBoardBarChart from "./DashboardBarChart"
 
@@ -26,7 +26,7 @@ const DashboardInvalidAuth = ({ applications }: {
                         }
                     }, {})
                     return {
-                        date: convertDaysByDate(convertUTCStringToKSTString(_.startDate)),
+                        date: convertDaysByDate(convertUTCStringToLocalDateString(_.startDate)),
                         ...values
                     }
                 }))
@@ -42,7 +42,7 @@ const DashboardInvalidAuth = ({ applications }: {
                         }
                     }, {})
                     return {
-                        date: convertHourRangeByDate(convertUTCStringToKSTString(_.startDate), convertUTCStringToKSTString(_.endDate), ind === arr.length - 1),
+                        date: convertHourRangeByDate(convertUTCStringToLocalDateString(_.startDate), convertUTCStringToLocalDateString(_.endDate), ind === arr.length - 1),
                         ...values
                     }
                 }))

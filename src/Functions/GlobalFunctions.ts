@@ -1,4 +1,5 @@
-import { ompassDefaultLogoImage } from "Constants/ConstantValues";
+import { DateTimeFormat, ompassDefaultLogoImage } from "Constants/ConstantValues";
+import dayjs from "dayjs";
 import jwtDecode from "jwt-decode";
 
 export const getStorageAuth = () => localStorage.getItem('Authorization')
@@ -17,16 +18,6 @@ export const createRandom1Digit = () => {
     return Math.floor(Math.random() * 10).toString()
 }
 
-export const getDateString = (date: Date) => {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-
-    const dateString = `${year}-${month}-${day}`
-
-    return dateString;
-}
-
 export const getDateTimeString = (date: Date) => {
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -41,25 +32,12 @@ export const getDateTimeString = (date: Date) => {
     return datetimeString;
 }
 
-export const convertKSTToUTC = (date: Date) => {
-    var temp = new Date(date);
-    temp.setDate(date.getDate() - 1);
-    temp.setHours(date.getHours() + 15);
-    return temp;
+export const convertUTCStringToLocalDateString = (date: string) => {
+    return dayjs.utc(date).local().format(DateTimeFormat)
 }
 
-export const convertUTCToKST = (date: Date) => {
-    var temp = new Date(date);
-    temp.setHours(date.getHours() + 9);
-    return temp;
-}
-
-export const convertUTCStringToKSTString = (date: string) => {
-    return getDateTimeString(convertUTCToKST(new Date(date)))
-}
-
-export const convertKSTStringToUTCString = (date: string) => {
-    return getDateTimeString(convertKSTToUTC(new Date(date)))
+export const convertLocalDateStringToUTCString = (date: string) => {
+    return dayjs(date).utc().format(DateTimeFormat)
 }
 
 export const slicePrice = (price: string | number) => {
@@ -139,23 +117,39 @@ export const logoImageWithDefaultImage = (img: logoImageType) => {
     else return img.url
 }
 
+// export const convertTimeFormat = (time: number) => {
+//     let minute = 0;
+//     let second = 0;
+//     let hours = 0;
+//     if (time >= 3600) {
+//         hours = Math.floor(time / 3600);
+//         minute = Math.floor((time % 3600) / 60);
+//         second = time % 60;
+//     } else if (time >= 60) {
+//         minute = Math.floor(time / 60);
+//         second = time % 60;
+//     } else {
+//         second = time;
+//     }
+//     if (hours) {
+//         return {hours, minute, second}
+//     } else if (minute) {
+//         return { minute, second };
+//     } else {
+//         return { second };
+//     }
+// };
+
 export const convertTimeFormat = (time: number) => {
     let minute = 0;
     let second = 0;
-    let hours = 0;
-    if (time >= 3600) {
-        hours = Math.floor(time / 3600);
-        minute = Math.floor((time % 3600) / 60);
-        second = time % 60;
-    } else if (time >= 60) {
+    if (time >= 60) {
         minute = Math.floor(time / 60);
-        second = time % 60;
+        second = parseInt((time % 60).toString().padStart(2, "0"));
     } else {
         second = time;
     }
-    if (hours) {
-        return {hours, minute, second}
-    } else if (minute) {
+    if (minute) {
         return { minute, second };
     } else {
         return { second };
