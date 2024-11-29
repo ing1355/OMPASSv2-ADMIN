@@ -1,4 +1,4 @@
-import { getDaysInMonth, subMonths } from 'date-fns';
+import { getDaysInMonth } from 'date-fns';
 import React from 'react';
 
 const DATE_MONTH_FIXER = 1;

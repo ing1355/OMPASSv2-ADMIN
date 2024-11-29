@@ -1,12 +1,18 @@
+.policy-setting-box label>input {
+    margin-right: 10px;
+}
+
+.policy-setting-box label {
+    display: flex;
+}
+
 .policy-setting-box {
     border: 1px solid var(--sub-grey-color3);
     padding: 4px 16px;
-    & label {
-        display: flex;
-        & > input {
-            margin-right: 10px;
-        }
-    }
+}
+
+.policy-setting-item-row:not(:last-child) {
+    border-bottom: 1.3px dashed var(--sub-grey-color3);
 }
 
 .policy-setting-item-row {
@@ -15,9 +21,6 @@
     flex-direction: row;
     align-items: center;
     padding: 10px;
-    &:not(:last-child) {
-        border-bottom: 1.3px dashed var(--sub-grey-color3);
-    }
 }
 
 .policy-setting-item-title {

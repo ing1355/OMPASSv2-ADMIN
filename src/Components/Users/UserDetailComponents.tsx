@@ -33,6 +33,7 @@ import policyMenuIconBlack from '../../assets/policyMenuIconBlack.png';
 import { ompassDefaultLogoImage } from 'Constants/ConstantValues';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { message } from 'antd';
+import RadiusUserRegisterOMPASSAuthModal from 'Components/Modal/RadiusUserRegisterOMPASSAuthModal';
 
 const UserDetailInfoContentItem = ({ imgSrc, title, content, subContent }: {
     imgSrc: string
@@ -133,9 +134,9 @@ export const ViewPasscode = ({ code, noView }: {
         }}>
             <CopyToClipboard text={code} onCopy={(value, result) => {
                 if (result) {
-                    message.success(formatMessage({id: 'PASSCODE_COPY_SUCCESS_MSG'}))
+                    message.success(formatMessage({ id: 'PASSCODE_COPY_SUCCESS_MSG' }))
                 } else {
-                    message.success(formatMessage({id: 'PASSCODE_COPY_FAIL_MSG'}))
+                    message.success(formatMessage({ id: 'PASSCODE_COPY_FAIL_MSG' }))
                 }
             }}>
                 <img src={copyIcon} />
@@ -248,8 +249,8 @@ export const UserDetailInfoETCInfoContent = ({ data }: {
     const { groupName, authenticationInfo } = data
     const { policy } = authenticationInfo
     return <>
-        <UserDetailInfoContentItem imgSrc={groupMenuIcon} title="그룹" content={groupName || <FormattedMessage id="NO_GROUP_SELECTED_LABEL"/>} />
-        <UserDetailInfoContentItem imgSrc={policyMenuIconBlack} title="정책" content={policy.name || <FormattedMessage id="NO_POLICY_SELECTED_LABEL"/>} />
+        <UserDetailInfoContentItem imgSrc={groupMenuIcon} title="그룹" content={groupName || <FormattedMessage id="NO_GROUP_SELECTED_LABEL" />} />
+        <UserDetailInfoContentItem imgSrc={policyMenuIconBlack} title="정책" content={policy?.name || <FormattedMessage id="NO_POLICY_SELECTED_LABEL" />} />
     </>
 }
 
@@ -284,17 +285,17 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
                     <FormattedMessage id="USER_DETAIL_IP_ADDRESS_LABEL" />
                 </div>
                 <div>
-                    {serverInfo.ip}
+                    {serverInfo?.ip}
                 </div>
             </div>
             <div className="user-detail-info-device-info-content-item linux">
                 <div className='linux-target-text'>Server</div>
-                <img src={imgSrcByOS(serverInfo.os?.name!)} />
+                <img src={imgSrcByOS(serverInfo?.os?.name!)} />
                 <div className="user-detail-info-device-info-content-title">
                     <FormattedMessage id="USER_DETAIL_OS_LABEL" />
                 </div>
                 <div>
-                    {createOSInfo(serverInfo.os)}
+                    {createOSInfo(serverInfo?.os)}
                 </div>
             </div>
         </>}
@@ -374,5 +375,22 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
                 {clientData.updatedAt}
             </div>
         </div>
+    </>
+}
+
+export const RadiusDetailItem = ({onComplete, appId}: {
+    appId: ApplicationDataType['id']
+    onComplete: () => void
+}) => {
+    const [authView, setAuthView] = useState(false)
+    return <>
+    <div className='user-radius-register-container' onClick={() => {
+        setAuthView(true)
+    }}>
+        Radius 등록하기
+    </div>
+    <RadiusUserRegisterOMPASSAuthModal radiusApplicationId={appId} opened={authView} onCancel={() => {
+        setAuthView(false)
+    }} successCallback={onComplete}/>
     </>
 }

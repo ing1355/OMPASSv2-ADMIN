@@ -2,7 +2,7 @@ import Button from 'Components/CommonCustomComponents/Button'
 import './Calendar.css'
 import { SetStateType } from 'Types/PropsTypes'
 import { FormattedMessage, useIntl } from 'react-intl';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { addDays, addMonths, addYears, differenceInDays, endOfMonth, format, isBefore, isSameDay, isSameMonth, isSaturday, isSunday, isWithinInterval, setHours, setMinutes, setSeconds, startOfMonth, subDays, subMonths, subYears } from 'date-fns';
 import { message } from 'antd';
 import leftArrowIcon from '../../assets/leftArrowIcon2.png';

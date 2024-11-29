@@ -28,13 +28,15 @@ type CustomModalProps = ModalProps & {
     buttonsType?: 'small'
     onCancel: () => void
     icon?: string
+    noBtns?: boolean
+    titleLeft?: boolean
 }
 
-const CustomModal = ({ title, buttonLoading, typeTitle, typeContent, type, children, okText, cancelText, okCallback, cancelCallback, okClassName, cancelClassName, onCancel, noPadding, noClose, yesOrNo, justConfirm, onOpen, onSubmit, buttonsType, icon, ...props }: CustomModalProps) => {
+const CustomModal = ({ titleLeft, noBtns, title, buttonLoading, typeTitle, typeContent, type, children, okText, cancelText, okCallback, cancelCallback, okClassName, cancelClassName, onCancel, noPadding, noClose, yesOrNo, justConfirm, onOpen, onSubmit, buttonsType, icon, ...props }: CustomModalProps) => {
     const [okLoading, setOkLoading] = useState(false)
 
     const ButtonsComponent = () => {
-        return <div className={`type-modal-body-buttons ${type || 'info'}${buttonsType ? ` ${buttonsType}` : ''}`}>
+        return !noBtns ? <div className={`type-modal-body-buttons ${type || 'info'}${buttonsType ? ` ${buttonsType}` : ''}`}>
             {!justConfirm && <Button className={`cancel-button${buttonsType ? ` ${buttonsType}` : ''}`} onClick={onCancel}>
                 {yesOrNo ? <FormattedMessage id="NORMAL_NO_LABEL" /> : (cancelText || <FormattedMessage id="NORMAL_CLOSE_LABEL" />)}
             </Button>}
@@ -52,7 +54,7 @@ const CustomModal = ({ title, buttonLoading, typeTitle, typeContent, type, child
             }} type="submit">
                 {yesOrNo ? <FormattedMessage id="NORMAL_YES_LABEL" /> : (okText || <FormattedMessage id="CONFIRM" />)}
             </Button>
-        </div>
+        </div> : <></>
     }
 
     return <Modal
@@ -106,7 +108,9 @@ const CustomModal = ({ title, buttonLoading, typeTitle, typeContent, type, child
                         <ButtonsComponent />
                     </> : <>
                         {icon && <img src={icon} />}
-                        {title && <div className="custom-modal-normal-title">
+                        {title && <div className="custom-modal-normal-title" style={{
+                            textAlign: titleLeft ? 'left' : 'center'
+                        }}>
                             {title}
                         </div>}
                         <div className="custom-modal-close-icon" onClick={() => {

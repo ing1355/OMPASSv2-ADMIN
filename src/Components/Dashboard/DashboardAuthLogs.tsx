@@ -58,7 +58,7 @@ const DashboardAuthLogs = ({ applications }: {
             </Tooltip>
         </div>
         <div className="dashboard-middle-invalid-auth-log-table">
-            <CustomTable<InvalidAuthLogDataType, {}>
+            <CustomTable<InvalidAuthLogDataType>
                 theme='table-st1'
                 datas={datas}
                 columns={[

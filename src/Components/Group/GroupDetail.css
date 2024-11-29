@@ -16,11 +16,6 @@
     box-sizing: border-box;
     height: 28px;
     padding: 4px;
-
-    &>img {
-        width: 100%;
-        height: 100%;
-    }
 }
 
 .group-view-container .ant-radio-group span {
@@ -72,4 +67,40 @@
 .custom-transfer-user-button-container>div>img {
     width: 100%;
     height: 100%;
+}
+
+.group-policy-select-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.group-policy-items-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.group-policy-items {
+    padding: 6px 8px;
+    box-sizing: border-box;
+    font-size: .8rem;
+    background-color: var(--sub-purple-color);
+    color: var(--main-purple-color2);
+    border-radius: 8px;
+    font-weight: bold;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+}
+
+.group-policy-items > img {
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    padding: 2px;
+    box-sizing: border-box;
 }

@@ -20,9 +20,10 @@ import './ApplicationDetail.css'
 import { FormattedMessage, useIntl } from "react-intl"
 import CustomImageUpload from "Components/CommonCustomComponents/CustomImageUpload"
 import BottomLineText from "Components/CommonCustomComponents/BottomLineText"
-import { domainRegex } from "Components/CommonCustomComponents/CommonRegex"
+import { domainRegex, redirectUriRegex } from "Components/CommonCustomComponents/CommonRegex"
 import CustomModal from "Components/Modal/CustomModal"
 import SingleOMPASSAuthModal from "Components/Modal/SingleOMPASSAuthModal"
+import RadiusDetailInfo from "./RadiusDetailInfo"
 
 const ApiServerAddressItem = ({ text }: {
     text: string
@@ -62,12 +63,13 @@ const ApplicationDetail = () => {
     const [authPurpose, setAuthPurpose] = useState<'delete' | 'reset' | ''>('')
     const [sureReset, setSureReset] = useState(false)
     const [hasWindowsLogin, setHasWindowsLogin] = useState(false)
+    const [radiusData, setRadiusData] = useState<RadiusDataType>()
     const [applicationType, setApplicationType] = useState<ApplicationDataType['type'] | ''>('')
     const navigate = useNavigate()
     const { formatMessage } = useIntl()
     const { uuid } = useParams()
     const isAdd = !uuid
-    const needDomains: ApplicationDataType['type'][] = ["DEFAULT", "ADMIN", "RADIUS"]
+    const needDomains: ApplicationDataType['type'][] = ["DEFAULT", "ADMIN"]
     const isRedmine = applicationType === 'REDMINE'
     const typeItems = applicationTypes.map(_ => ({
         key: _,
@@ -101,6 +103,7 @@ const ApplicationDetail = () => {
                 setHelpMsg(data.helpDeskMessage || "")
                 setInputApiServerHost(data.apiServerHost)
                 setNeedPassword(data.isTwoFactorAuthEnabled ?? false)
+                setRadiusData(data.radiusProxyServer)
             })
         } else {
             await GetApplicationListFunc({ type: 'WINDOWS_LOGIN' }, ({ results }) => {
@@ -131,6 +134,9 @@ const ApplicationDetail = () => {
                     }
                     if (needDomains.includes(applicationType) && !domainRegex.test(inputDomain)) {
                         return message.error("도메인 값이 올바르지 않습니다.")
+                    }
+                    if (needDomains.includes(applicationType) && !redirectUriRegex.test(inputRedirectUrl)) {
+                        return message.error("리다이렉트 URI가 올바르지 않습니다.")
                     }
                     if (!inputRedirectUrl && needDomains.includes(applicationType)) {
                         return message.error(formatMessage({ id: 'PLEASE_INPUT_APPLICATION_REDIRECT_URI' }))
@@ -192,21 +198,21 @@ const ApplicationDetail = () => {
             </div>
         </ContentsHeader>
         <div className="contents-header-container">
-            {!isAdd && <BottomLineText title={<FormattedMessage id="APPLICATION_INFO_DETAIL_LABELS" />} style={{
-                marginBottom: '16px'
-            }} />}
-            {!isAdd && <ApiServerAddressItem text={inputApiServerHost} />}
-            {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_CLIENT_ID_LABEL" />}>
-                <CopyToClipboard text={inputClientId} onCopy={(value, result) => {
-                    if (result) {
-                        message.success(formatMessage({ id: 'APPLICATION_CLIENT_ID_COPY_SUCCESS_MSG' }))
-                    } else {
-                        message.success(formatMessage({ id: 'APPLICATION_CLIENT_ID_COPY_FAIL_MSG' }))
-                    }
-                }}>
-                    <Input className="st1 secret-key" value={inputClientId} disabled={isAdd} readOnly={!isAdd} />
-                </CopyToClipboard>
-            </CustomInputRow>}
+            {
+                applicationType !== 'ADMIN' && <>
+                    {!isAdd && <BottomLineText title={<FormattedMessage id="APPLICATION_INFO_DETAIL_LABELS" />} />}
+                    {!isAdd && <ApiServerAddressItem text={inputApiServerHost} />}
+                    {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_CLIENT_ID_LABEL" />}>
+                        <CopyToClipboard text={inputClientId} onCopy={(value, result) => {
+                            if (result) {
+                                message.success(formatMessage({ id: 'APPLICATION_CLIENT_ID_COPY_SUCCESS_MSG' }))
+                            } else {
+                                message.success(formatMessage({ id: 'APPLICATION_CLIENT_ID_COPY_FAIL_MSG' }))
+                            }
+                        }}>
+                            <Input className="st1 secret-key" value={inputClientId} disabled={isAdd} readOnly={!isAdd} />
+                        </CopyToClipboard>
+                    </CustomInputRow>}
             {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_SECRET_KEY_LABEL" />}>
                 <CopyToClipboard text={inputSecretKey} onCopy={(value, result) => {
                     if (result) {
@@ -223,9 +229,11 @@ const ApplicationDetail = () => {
                     setSureReset(true)
                 }}><FormattedMessage id="APPLICATION_SECRET_KEY_RESET" /></Button>
             </CustomInputRow>}
+                </>
+            }
+            {!isAdd && applicationType === 'RADIUS' && <RadiusDetailInfo data={radiusData} />}
             {!isAdd && <BottomLineText title={<FormattedMessage id="APPLICATION_INFO_SETTING_LABELS" />} style={{
-                marginTop: '48px',
-                marginBottom: '16px'
+                marginTop: applicationType === 'ADMIN' ? 0 : '36px',
             }} />}
             <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_TYPE_LABEL" />}>
                 {isAdd ? <CustomSelect value={applicationType} onChange={value => {
@@ -313,10 +321,10 @@ const ApplicationDetail = () => {
             setAuthPurpose('')
         }} successCallback={(token) => {
             console.log('complete token : ', token)
-            if(authPurpose === 'reset') {
+            if (authPurpose === 'reset') {
                 return UpdateApplicationSecretkeyFunc(uuid!, token, (appData) => {
                     setInputSecretKey(appData.secretKey)
-                    message.success(formatMessage({id: 'APPLICATION_SECRET_KEY_REISSUANCE_SUCCESS_MSG'}))
+                    message.success(formatMessage({ id: 'APPLICATION_SECRET_KEY_REISSUANCE_SUCCESS_MSG' }))
                 })
             } else {
                 return DeleteApplicationListFunc(uuid!, token, () => {

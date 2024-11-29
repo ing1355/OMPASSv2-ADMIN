@@ -13,9 +13,10 @@ type OMPASSAuthContentsProps = {
     username: string
     status: OMPASSAuthStatusType
     sessionData: QRDataDefaultBodyType
+    isRegister?: boolean
 }
 
-const OMPASSAuthContents = ({ role, name, username, status, sessionData }: OMPASSAuthContentsProps) => {
+const OMPASSAuthContents = ({ isRegister, role, name, username, status, sessionData }: OMPASSAuthContentsProps) => {
     const isComplete = status === 'complete'
     const getFullName = useFullName()
     const [qrView, setQrView] = useState(false)
@@ -33,7 +34,7 @@ const OMPASSAuthContents = ({ role, name, username, status, sessionData }: OMPAS
             </div>
         </div>
         <div className="ompass-auth-content-progress-container">
-            {!isComplete && qrData.body.url && <div className="ompass-auth-qr-code-view-container" onMouseEnter={() => {
+            {!isRegister && !isComplete && qrData.body.url && <div className="ompass-auth-qr-code-view-container" onMouseEnter={() => {
                 setQrView(true)
             }} onMouseLeave={() => {
                 setQrView(false)
@@ -41,8 +42,8 @@ const OMPASSAuthContents = ({ role, name, username, status, sessionData }: OMPAS
                 <img src={QRIcon} />
             </div>}
             {
-                (qrView && !isComplete) ? <div className="ompass-auth-qr-code-container">
-                    <QRCode data={qrData} size={100} />
+                ((isRegister || qrView) && !isComplete) ? <div className="ompass-auth-qr-code-container">
+                    {(isRegister && !qrData.body.url) ? <CustomLoading /> : <QRCode data={qrData} size={isRegister ? 160 : 100} />}
                 </div> : <>
                     <div className="ompass-auth-content-progress-icon">
                         {

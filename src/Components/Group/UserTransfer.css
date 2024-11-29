@@ -13,18 +13,22 @@
     border-radius: 8px;
 }
 
+.custom-transfer-buttons-container>img {
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+}
+
 .custom-transfer-buttons-container {
     display: flex;
     flex-direction: column;
     gap: 16px;
     align-items: center;
     justify-content: center;
+}
 
-    &>img {
-        width: 32px;
-        height: 32px;
-        cursor: pointer;
-    }
+.custom-transfer-user-content-header>span>b {
+    color: var(--main-purple-color);
 }
 
 .custom-transfer-user-content-header {
@@ -34,10 +38,6 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-
-    &>span>b {
-        color: var(--main-purple-color);
-    }
 }
 
 .custom-transfer-user-list-container {
@@ -54,23 +54,28 @@
     align-items: center;
 }
 
-.custom-transfer-user-list-search-container > div {
+.custom-transfer-user-list-search-container>div>img {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    width: 16px;
+}
+
+.custom-transfer-user-list-search-container>div {
     padding: 6px 8px;
     width: 100%;
     height: 100%;
     box-sizing: border-box;
     position: relative;
-
-    &>img {
-        position: absolute;
-        top: 50%;
-        right: 20px;
-        transform: translateY(-50%);
-        width: 16px;
-    }
 }
 
-.custom-transfer-user-list-search-container > div > input {
+.custom-transfer-user-list-search-container>div>input::placeholder {
+    color: var(--main-grey-color-3);
+    font-size: .8rem;
+}
+
+.custom-transfer-user-list-search-container>div>input {
     width: 100%;
     height: 100%;
     box-sizing: border-box;
@@ -78,11 +83,11 @@
     border-radius: 12px;
     border: 1px solid var(--main-purple-color);
     color: var(--main-grey-color-2);
+}
 
-    &::placeholder {
-        color: var(--main-grey-color-3);
-        font-size: .8rem;
-    }
+.custom-transfer-user-search:focus {
+    background-image: url('../../assets/groupSeaerchIconColor.png');
+    border-color: var(--main-purple-color);
 }
 
 .custom-transfer-user-search {
@@ -94,10 +99,6 @@
     background-size: 20px 20px;
     background-position: right 8px center;
     padding-right: 36px;
-    &:focus {
-        background-image: url('../../assets/groupSeaerchIconColor.png');
-        border-color: var(--main-purple-color);
-    }
 }
 
 .custom-transfer-user-row {
@@ -119,7 +120,7 @@
     gap: 4px;
 }
 
-.custom-transfer-user-row-title-container > div {
+.custom-transfer-user-row-title-container>div {
     font-size: .9rem;
     color: var(--sub-grey-color4);
     cursor: pointer;
@@ -127,6 +128,19 @@
     padding: 0 6px;
     flex: 1;
     user-select: none;
+}
+
+.custom-transfer-user-row-title-application-container>div {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 6px 0;
+    box-sizing: border-box;
+}
+
+.custom-transfer-user-row-title-application-container img {
+    width: 24px;
+    height: 24px;
 }
 
 .custom-transfer-user-row-title-application-container {
@@ -137,20 +151,13 @@
     height: 100%;
     align-items: center;
     gap: 8px;
-    & > div {
-        height: 100%;
-        display: flex;
-        align-items: center;
-        padding: 6px 0;
-        box-sizing: border-box;
-    }
-    & img {
-        width: 24px;
-        height: 24px;
-    }
 }
 
-.custom-transfer-user-row-title-container > img {
+.custom-transfer-user-row-title-container>img[data-opened="true"] {
+    transform: rotate(-90deg);
+}
+
+.custom-transfer-user-row-title-container>img {
     width: 28px;
     height: 28px;
     padding: 2px;
@@ -158,24 +165,43 @@
     transition: all .15s ease-in-out;
     cursor: pointer;
     user-select: none;
-    &[data-opened="true"] {
-        transform: rotate(-90deg);
-    }
+}
+
+.custom-transfer-user-row-child-container[data-opened="false"] {
+    transition: all .001s ease-out;
+    max-height: 0px;
 }
 
 .custom-transfer-user-row-child-container {
     overflow: hidden;
     max-height: 9999px;
     transition: all .5s ease-out;
-    &[data-opened="false"] {
-        transition: all .001s ease-out;
-        max-height: 0px;
-    }
 }
 
 .transfer-user-child-application-container {
     padding: 0 4px;
     border-radius: 8px;
+}
+
+.transfer-user-child-application-title:not(.application) {
+    gap: 6px;
+}
+
+.transfer-user-child-application-title>img {
+    height: 24px;
+    width: 24px;
+    user-select: none;
+}
+
+.transfer-user-child-application-title.application>img {
+    padding: 4px;
+    box-sizing: border-box;
+}
+
+.transfer-user-child-application-title>div {
+    font-size: .8rem;
+    color: var(--sub-grey-color4);
+    user-select: none;
 }
 
 .transfer-user-child-application-title {
@@ -186,31 +212,31 @@
     border-radius: 8px;
     cursor: pointer;
     padding: 0 6px;
-    &:not(.application) {
-        gap: 6px;
-    }
-    &>img {
-        height: 24px;
-        width: 24px;
-        user-select: none;
-    }
-    &.application>img {
-        padding: 4px;
-        box-sizing: border-box;
-    }
-    &>div {
-        font-size: .8rem;
-        color: var(--sub-grey-color4);
-        user-select: none;
-    }
 }
 
-.custom-transfer-user-row-child-container, .transfer-user-child-rp-user-container {
+.custom-transfer-user-row-child-container,
+.transfer-user-child-rp-user-container {
     padding-left: 24px;
 }
 
-.custom-transfer-user-row-title-container > div:hover, .transfer-user-child-application-title:hover, .transfer-user-child-rp-user-title:hover {
+.custom-transfer-user-row-title-container>div:hover,
+.transfer-user-child-application-title:hover,
+.transfer-user-child-rp-user-title:hover {
     background-color: var(--sub-purple-color3);
+}
+
+.transfer-user-child-rp-user-title>img {
+    width: 24px;
+    height: 24px;
+    padding: 4px;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+.transfer-user-child-rp-user-title>div {
+    font-size: .8rem;
+    user-select: none;
+    color: var(--sub-grey-color4);
 }
 
 .transfer-user-child-rp-user-title {
@@ -221,23 +247,13 @@
     border-radius: 8px;
     padding: 0 6px;
     cursor: pointer;
-    &>img {
-        width: 24px;
-        height: 24px;
-        padding: 4px;
-        box-sizing: border-box;
-        user-select: none;
-    }
-    &>div {
-        font-size: .8rem;
-        user-select: none;
-        color: var(--sub-grey-color4);
-    }
 }
 
-.custom-transfer-user-row-title-container[data-selected="true"], .custom-transfer-user-row-title-application-container[data-selected="true"], .transfer-user-child-application-title[data-selected="true"], .transfer-user-child-application-container[data-selected="true"], .transfer-user-child-rp-user-title[data-selected="true"] {
-    & > div {
-        font-weight: bold;
-        color: var(--main-purple-color);
-    }
+.custom-transfer-user-row-title-container[data-selected="true"],
+.custom-transfer-user-row-title-application-container[data-selected="true"],
+.transfer-user-child-application-title[data-selected="true"],
+.transfer-user-child-application-container[data-selected="true"],
+.transfer-user-child-rp-user-title[data-selected="true"]>div {
+    font-weight: bold;
+    color: var(--main-purple-color);
 }

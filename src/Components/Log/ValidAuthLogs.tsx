@@ -30,7 +30,7 @@ const ValidAuthLogs = () => {
         })
     }
 
-    return <CustomTable<ValidAuthLogDataType, {}>
+    return <CustomTable<ValidAuthLogDataType>
         onSearchChange={(data) => {
             GetDatas(data)
         }}

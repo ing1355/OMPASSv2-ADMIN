@@ -62,7 +62,7 @@ const UserManagement = () => {
         <ContentsHeader title="USER_LIST" subTitle="USER_LIST">
         </ContentsHeader>
         <div className="contents-header-container">
-            <CustomTable<UserDataType, UserListParamsType>
+            <CustomTable<UserDataType>
                 className='tab_table_list'
                 theme='table-st1'
                 datas={tableData}
@@ -120,7 +120,7 @@ const UserManagement = () => {
                             URL.revokeObjectURL(url)
                         })
                     }} icon={downloadIcon} hoverIcon={downloadIconWhite}>
-                        <FormattedMessage id="USER_EXCEL_DOWNLOAD_LABEL"/>
+                        <FormattedMessage id="USER_EXCEL_DOWNLOAD_LABEL" />
                     </Button>
                 </>}
                 pagination
@@ -165,7 +165,7 @@ const UserManagement = () => {
                 totalCount={totalCount}
             />
         </div>
-        <CustomModal open={addOpen} onCancel={() => {
+        <CustomModal noBtns open={addOpen} onCancel={() => {
             setAddOpen(false)
         }} title={<FormattedMessage id="USER_ADD_MODAL_TITLE" />} width={1000}>
             <div className="user-add-modal-contents-container">
@@ -176,8 +176,8 @@ const UserManagement = () => {
                     navigate('/UserManagement/excelUpload')
                 }} />
                 <UserAddItem title={<FormattedMessage id="USER_ADD_LDAP_SYNC_ITEM_LABEL" />} icon={ldapSyncIcon} onClick={() => {
-                    message.info("기능 준비중(LDAP SYNC)")
-                    // navigate('/UserManagement/ldapSync')
+                    // message.info("기능 준비중(LDAP SYNC)")
+                    navigate('/UserManagement/ldapSync')
                 }} />
             </div>
         </CustomModal>

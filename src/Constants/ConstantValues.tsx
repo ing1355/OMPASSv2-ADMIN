@@ -166,3 +166,6 @@ export const UserSignupMethod: {
 
 export const devUrl = process.env['REACT_APP_DEV_URL'] as string
 export const subDomain = isDev ? devUrl.replace('https://', '') : window.location.host.replace('www.', '');
+
+export const LDAPAuthenticationTypes: LdapAuthenticationType[] = ['PLAIN', 'NTLMv2']
+export const LDAPTransportTypes: LdapTransportType[] = ['CLEAR', 'LDAPS', 'STARTTLS']

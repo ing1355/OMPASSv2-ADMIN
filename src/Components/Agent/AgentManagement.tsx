@@ -45,7 +45,8 @@ const AgentManagement = () => {
     await GetAgentInstallerListFunc(_params, ({ results, totalCount }) => {
       setTableData(results.map(_ => ({
         ..._,
-        uploadDate: convertUTCStringToLocalDateString(_.uploadDate)
+        uploadDate: convertUTCStringToLocalDateString(_.uploadDate),
+        downloadTarget: false
       })))
       setTotalCount(totalCount)
     }).finally(() => {
@@ -65,7 +66,7 @@ const AgentManagement = () => {
         <ContentsHeader title="VERSION_MANAGEMENT" subTitle='VERSION_LIST'>
         </ContentsHeader>
         <div className="contents-header-container">
-          <CustomTable<AgentInstallerDataType, {}>
+          <CustomTable<AgentInstallerDataType>
             theme='table-st1'
             className="contents-header-container"
             onSearchChange={(data) => {
@@ -89,6 +90,7 @@ const AgentManagement = () => {
                 navigate('/AgentManagement/upload');
               }
             }}
+            hover
             pagination
             totalCount={totalCount}
             datas={tableData}
@@ -132,13 +134,10 @@ const AgentManagement = () => {
                 title: <FormattedMessage id='DOWNLOAD' />,
                 render: (_, index, data) => <a href={data.downloadUrl} download onClick={e => {
                   e.stopPropagation()
-                }} style={{
-                  padding: '10px'
                 }}>
                   <img
                     src={downloadIcon}
-                    style={{ pointerEvents: 'none' }}
-                    width='18px'
+                    className='agent-table-icon'
                   />
                 </a>
               }, {
@@ -151,7 +150,10 @@ const AgentManagement = () => {
                   onClick={(e) => {
                     e.stopPropagation()
                     CurrentAgentVersionChangeFunc(data.fileId, (newData) => {
-                      setTableData(tableData.map(t => t.fileId === newData.fileId ? newData : ({ ...t, downloadTarget: false })))
+                      setTableData(tableData.map(t => t.fileId === newData.fileId ? ({
+                        ...newData,
+                        uploadDate: convertUTCStringToLocalDateString(newData.uploadDate)
+                      }) : ({ ...t, downloadTarget: false })))
                       message.success(formatMessage({ id: 'CURRENT_VERSION_CHANGE_COMPLETE' }));
                       dispatch(subdomainInfoChange({
                         ...subdomainInfo,
@@ -187,7 +189,7 @@ const AgentManagement = () => {
                     setOpenFileDelete(-1);
                   }}
                 >
-                  <img src={deleteHover === row.fileId ? tableDeleteIconHover : tableDeleteIcon} width='25px' style={{ opacity: 0.44, position: 'relative', top: '2.5px', cursor: 'pointer' }}
+                  <img src={deleteHover === row.fileId ? tableDeleteIconHover : tableDeleteIcon} className='agent-table-icon'
                     onClick={(e) => {
                       e.preventDefault()
                       e.stopPropagation()

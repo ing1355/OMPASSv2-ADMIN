@@ -5,7 +5,7 @@ import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import UserTransfer from "Components/Group/UserTransfer"
-import { AddUserGroupDataFunc, DeleteUserGroupDataFunc, GetUserGroupDetailDataFunc, UpdateUserGroupDataFunc } from "Functions/ApiFunctions"
+import { AddUserGroupDataFunc, DeleteUserGroupDataFunc, GetPoliciesListFunc, GetUserGroupDetailDataFunc, UpdateUserGroupDataFunc } from "Functions/ApiFunctions"
 import { message, Radio, RadioChangeEvent, Space } from "antd"
 import { useEffect, useLayoutEffect, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
@@ -15,21 +15,31 @@ import groupPortalViewIcon from '../../assets/groupPortalViewIcon.png'
 import groupPortalViewIconColor from '../../assets/groupPortalViewIconColor.png'
 import groupApplicationViewIcon from '../../assets/groupApplicationViewIcon.png'
 import groupApplicationViewIconColor from '../../assets/groupApplicationViewIconColor.png'
+import closeIcon from '../../assets/closeIcon.png'
+import { applicationTypes, getApplicationTypeLabel } from "Constants/ConstantValues"
 import './GroupDetail.css'
-import ApplicationTypeSelect from "Components/CommonCustomComponents/ApplicationTypeSelect"
+import CustomSelect from "Components/CommonCustomComponents/CustomSelect"
 
 const GroupDetail = () => {
     const [inputName, setInputName] = useState('')
     const [inputDescription, setInputDescription] = useState('')
-    const [selectedPolicies, setSelectedPolicies] = useState<PolicyListDataType['id'][]>([])
+    const [selectedPolicies, setSelectedPolicies] = useState<UserGroupPolicyType[]>([])
+    const [selectedPolicy, setSelectedPolicy] = useState<PolicyListDataType['id']>('')
     const [selectedUsers, setSelectedUsers] = useState<UserHierarchyDataRpUserType['id'][]>([])
     const [selectedView, setSelectedView] = useState<UserGroupViewType>('portal')
-    const [selectedApplicationType, setSelectedApplicationType] = useState<ApplicationDataType['type']|''>('')
+    const [selectedApplicationType, setSelectedApplicationType] = useState<ApplicationDataType['type']>('')
     const [dataLoading, setDataLoading] = useState(false)
+    const [policiesData, setPoliciesData] = useState<PolicyListDataType[]>([])
     const [refresh, setRefresh] = useState(false)
     const navigate = useNavigate()
     const { uuid } = useParams()
     const { formatMessage } = useIntl()
+
+    const applicationTypeItems = applicationTypes.map(_ => ({
+        key: _,
+        label: getApplicationTypeLabel(_),
+        disabled: selectedPolicies.map(sp => sp.applicationType).includes(_)
+    }))
 
     const isAdd = !uuid
 
@@ -52,6 +62,9 @@ const GroupDetail = () => {
     }
 
     useLayoutEffect(() => {
+        GetPoliciesListFunc({}, ({ results, totalCount }) => {
+            setPoliciesData(results)
+        })
         GetDatas()
         setRefresh(true)
     }, [])
@@ -60,11 +73,22 @@ const GroupDetail = () => {
         if (refresh) setRefresh(false)
     }, [refresh])
 
+    useLayoutEffect(() => {
+        if (selectedPolicy) {
+            setSelectedPolicies(selectedPolicies.concat({
+                policyId: selectedPolicy,
+                applicationType: selectedApplicationType!
+            }))
+            setSelectedApplicationType('')
+            setSelectedPolicy('')
+        }
+    }, [selectedPolicy])
+
     return <Contents loading={dataLoading}>
         <ContentsHeader title="GROUP_MANAGEMENT" subTitle={isAdd ? "GROUP_ADD" : "GROUP_DETAIL"}>
             <Button className="st3" onClick={() => {
                 if (!inputName) {
-                    return message.error(formatMessage({id: 'PLEASE_INPUT_GROUP_NAME'}))
+                    return message.error(formatMessage({ id: 'PLEASE_INPUT_GROUP_NAME' }))
                 }
                 const params = {
                     name: inputName,
@@ -74,63 +98,80 @@ const GroupDetail = () => {
                 } as UserGroupParamsType
                 if (isAdd) {
                     AddUserGroupDataFunc(params, () => {
-                        message.success(formatMessage({id: 'GROUP_ADD_SUCCESS_MSG'}))
+                        message.success(formatMessage({ id: 'GROUP_ADD_SUCCESS_MSG' }))
                         navigate(-1)
                     })
                 } else {
                     UpdateUserGroupDataFunc(uuid, params, () => {
-                        message.success(formatMessage({id: 'GROUP_MODIFY_SUCCESS_MSG'}))
+                        message.success(formatMessage({ id: 'GROUP_MODIFY_SUCCESS_MSG' }))
                         setRefresh(true)
                     })
                 }
             }}>
-                <FormattedMessage id="SAVE"/>
+                <FormattedMessage id="SAVE" />
             </Button>
             {!isAdd && <Button className="st2" onClick={() => {
                 DeleteUserGroupDataFunc(uuid, () => {
-                    message.success(formatMessage({id: 'GROUP_MODIFY_DELETE_MSG'}))
+                    message.success(formatMessage({ id: 'GROUP_MODIFY_DELETE_MSG' }))
                 })
             }}>
-                <FormattedMessage id="DELETE"/>
+                <FormattedMessage id="DELETE" />
             </Button>}
         </ContentsHeader>
         <div className="contents-header-container">
-            <CustomInputRow title={<FormattedMessage id="GROUP_NAME_LABEL"/>} required>
+            <CustomInputRow title={<FormattedMessage id="GROUP_NAME_LABEL" />} required>
                 <Input
                     value={inputName}
                     valueChange={value => {
                         setInputName(value)
                     }}
-                    placeholder={formatMessage({id:"GROUP_NAME_PLACEHOLDER"})}
+                    placeholder={formatMessage({ id: "GROUP_NAME_PLACEHOLDER" })}
                     className="st1"
                     maxLength={32}
                     onInput={e => {
                         if (e.currentTarget.value.startsWith(' ')) e.currentTarget.value = e.currentTarget.value.trim()
                     }} />
             </CustomInputRow>
-            <CustomInputRow title={<FormattedMessage id="GROUP_DESCRIPTION_LABEL"/>}>
+            <CustomInputRow title={<FormattedMessage id="GROUP_DESCRIPTION_LABEL" />}>
                 <Input value={inputDescription} valueChange={value => {
                     setInputDescription(value)
-                }} placeholder={formatMessage({id:'GROUP_DESCRIPTION_PLACEHOLDER'})} className="st1" maxLength={192} />
+                }} placeholder={formatMessage({ id: 'GROUP_DESCRIPTION_PLACEHOLDER' })} className="st1" maxLength={192} />
             </CustomInputRow>
-            <CustomInputRow title={"정책 선택"}>
-                <ApplicationTypeSelect selectedType={selectedApplicationType} setSelectedType={setSelectedApplicationType}/>
-                {/* {selectedApplicationType && <PolicySelect selectedPolicy={selectedPolicy} setSelectedPolicy={setSelectedPolicy} applicationType={selectedApplicationType}/>} */}
+            <CustomInputRow title={"정책 선택"} isVertical>
+                <div className="group-policy-select-container">
+                <div className="custom-select-box-container">
+                    <CustomSelect items={applicationTypeItems} value={selectedApplicationType || ''} onChange={val => {
+                        setSelectedApplicationType(val as ApplicationDataType['type'])
+                    }} needSelect/>
+                    </div>
+                    {selectedApplicationType && <PolicySelect datas={policiesData} selectedPolicy={selectedPolicy} setSelectedPolicy={setSelectedPolicy} applicationType={selectedApplicationType} needSelect />}
+                </div>
+                <div className="group-policy-items-container">
+                    {selectedPolicies.map((_, ind) => {
+                        const target = policiesData.find(p => p.id === _.policyId)
+                        return <div key={ind} className="group-policy-items">
+                            {getApplicationTypeLabel(_.applicationType)}({target?.name})
+                            <img src={closeIcon} onClick={() => {
+                                setSelectedPolicies(selectedPolicies.filter(sp => !(sp.applicationType === _.applicationType && sp.policyId === _.policyId)))
+                            }}/>
+                        </div>
+                    })}
+                </div>
             </CustomInputRow>
-            <CustomInputRow title={<FormattedMessage id="GROUP_USER_LIST_LABEL"/>}>
+            <CustomInputRow title={<FormattedMessage id="GROUP_USER_LIST_LABEL" />}>
                 <Space className="group-view-container">
                     <div className="group-view-icon-container">
                         <img src={groupViewAlignIcon} />
                     </div>
-                    <FormattedMessage id="NORMAL_SORT_LABEL"/>
+                    <FormattedMessage id="NORMAL_SORT_LABEL" />
                     <Radio.Group value={selectedView} onChange={changeTabPosition} className="group-view-radio-group">
                         <Radio.Button value="portal" className="group-view-radio-item">
                             <img src={selectedView === 'portal' ? groupPortalViewIconColor : groupPortalViewIcon} />
-                            <FormattedMessage id="GROUP_PORTAL_VIEW_LABEL"/>
+                            <FormattedMessage id="GROUP_PORTAL_VIEW_LABEL" />
                         </Radio.Button>
                         <Radio.Button value="application" className="group-view-radio-item">
                             <img src={selectedView === 'application' ? groupApplicationViewIconColor : groupApplicationViewIcon} />
-                            <FormattedMessage id="GROUP_APPLICATION_VIEW_LABEL"/>
+                            <FormattedMessage id="GROUP_APPLICATION_VIEW_LABEL" />
                         </Radio.Button>
                     </Radio.Group>
                 </Space>

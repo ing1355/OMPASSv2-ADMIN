@@ -1,3 +1,12 @@
+.user-detail-section:not(.first) {
+    overflow: hidden;
+}
+
+.user-detail-section:not(:first-child).closed {
+    max-height: 42px;
+    transition: all .1s ease-out;
+}
+
 .user-detail-section {
     border-radius: 10px;
     padding: 5px 25px 25px;
@@ -6,28 +15,37 @@
     max-height: 2000px;
     transition: all .5s ease-out;
     box-shadow: 0 0 10px rgba(0, 0, 0, .15);
-    
-    &:not(.first) {
-        overflow: hidden;
-    }
-    
-    &:not(:first-child) {
-        &.closed {
-            max-height: 42px;
-            transition: all .1s ease-out;
-        }
-    }
+    position: relative;
 }
 
-/* .user-detail-section.withdrawal {
-    background-color: var(--sub-grey-color);
-    position: relative;
-    & > *:not(.withdrawal-text) {
-        pointer-events: none;
-        user-select: none;
-        opacity: 0.3;
-    }
-} */
+.user-detail-section:hover > .user-radius-register-container {
+    display: flex;
+}
+
+.user-radius-register-container {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: rgba(255,255,255, .4);
+    left: 0;
+    top: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.withdrawal-text>div:first-child {
+    font-weight: bold;
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+    color: var(--main-purple-color);
+}
+
+.withdrawal-text>div:last-child {
+    font-size: 1rem;
+    letter-spacing: 2px;
+}
 
 .withdrawal-text {
     position: absolute;
@@ -36,16 +54,10 @@
     transform: translate(-50%, -50%);
     text-align: center;
     z-index: 1;
-    & > div:first-child {
-        font-weight: bold;
-        font-size: 1.4rem;
-        margin-bottom: 12px;
-        color: var(--main-purple-color);
-    }
-    & > div:last-child {
-        font-size: 1rem;
-        letter-spacing: 2px;
-    }
+}
+
+.user-detail-header h4 {
+    margin: 0;
 }
 
 .user-detail-header {
@@ -57,10 +69,6 @@
     gap: 12px;
     height: 60px;
     box-sizing: border-box;
-
-    & h4 {
-        margin: 0;
-    }
 }
 
 .user-detail-header-btns {
@@ -70,16 +78,23 @@
     gap: 6px;
 }
 
+.user-detail-alias-container>img {
+    max-height: 24px;
+    width: auto;
+    border-radius: 6px;
+}
+
 .user-detail-alias-container {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 8px;
-    &>img {
-        max-height: 24px;
-        width: auto;
-        border-radius: 6px;
-    }
+}
+
+.user-detail-info-container:not(:last-child) {
+    border-bottom: 1px solid rgba(123, 123, 123, .5);
+    padding-bottom: 48px;
+    margin-bottom: 48px;
 }
 
 .user-detail-info-container {
@@ -88,37 +103,36 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+}
 
-    &:not(:last-child) {
-        border-bottom: 1px solid rgba(123, 123, 123, .5);
-        padding-bottom: 48px;
-        margin-bottom: 48px;
-    }
+.user-detail-content-passcode-container>div:first-child {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.user-detail-content-passcode-container>table {
+    width: 100%;
+}
+
+.user-detail-content-passcode-container h4 {
+    margin-bottom: 0;
+    margin-top: 0;
 }
 
 .user-detail-content-passcode-container {
     margin-top: 20px;
-    &>div:first-child {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    &>table {
-        width: 100%;
-    }
-
-    & h4 {
-        margin-bottom: 0;
-        margin-top: 0;
-    }
 }
 
 .user-detail-header-application-info {
     display: flex;
     align-items: center;
     gap: 24px;
+}
+
+.user-detail-info-device-info-title>h4 {
+    margin: 0;
 }
 
 .user-detail-info-device-info-title {
@@ -128,9 +142,6 @@
     align-items: center;
     position: relative;
     height: 30px;
-    & > h4 {
-        margin: 0;
-    }
 }
 
 .user-policy-select-container {
@@ -160,6 +171,10 @@
     position: relative;
 }
 
+.passcode-add:hover {
+    background-color: var(--main-purple-color);
+}
+
 .passcode-add {
     display: flex;
     justify-content: center;
@@ -170,16 +185,19 @@
     border-radius: 50%;
     padding: 8px;
     box-sizing: border-box;
-    
-    background-color: var(--sub-grey-color7);
-    &:hover {
-        background-color: var(--main-purple-color);
-    }
 
-    &>img {
-        width: 100%;
-        height: 100%;
-    }
+    background-color: var(--sub-grey-color7);
+}
+
+.user-detail-info-passcode-view-container>div:first-child {
+    flex: 1;
+    font-size: .9rem;
+}
+
+.user-detail-info-passcode-view-container>div:not(:first-child) {
+    cursor: pointer;
+    height: 18px;
+    width: 18px;
 }
 
 .user-detail-info-passcode-view-container {
@@ -188,44 +206,6 @@
     justify-content: space-around;
     align-items: center;
     gap: 4px;
-
-    &>div:first-child {
-        flex: 1;
-        font-size: .9rem;
-    }
-
-    &>div:not(:first-child) {
-        cursor: pointer;
-        height: 18px;
-        width: 18px;
-    }
-    & img {
-        width: 100%;
-        height: 100%;
-    }
-}
-
-.passcode-add-title {
-    text-align: center;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    height: 32px;
-    font-size: 1.5rem;
-    font-weight: bold;
-
-    &>div {
-        cursor: pointer;
-        padding: 6px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        &>img {
-            width: 100%;
-            height: 100%;
-        }
-    }
 }
 
 .passcode-add-content-container {
@@ -239,19 +219,23 @@
     font-size: 1rem;
 }
 
+.passcode-add-content-row>div:not(:first-child) {
+    flex: 1 auto;
+}
+
+.passcode-add-content-row>div:first-child {
+    flex: 0 0 110px;
+}
+
 .passcode-add-content-row {
     width: 100%;
     display: flex;
     flex-direction: row;
     gap: 8px;
+}
 
-    &>div:first-child {
-        flex: 0 0 110px;
-    }
-
-    &>div:not(:first-child) {
-        flex: 1 auto;
-    }
+.passcode-add-buttons>button {
+    flex: 1;
 }
 
 .passcode-add-buttons {
@@ -263,13 +247,10 @@
     width: 140px;
     justify-self: center;
     gap: 8px;
-
-    &>button {
-        flex: 1;
-    }
 }
 
 .passcode-add-contents {
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -283,33 +264,25 @@
     color: var(--sub-grey-color4);
 }
 
-.passcode-add-item {
-    /* display: flex;
-    flex-direction: row;
-    gap: 12px;
-    align-items: center; */
-}
-
 .user-passcode-delete-btn {
     width: 24px;
     height: 24px;
     cursor: pointer;
 }
 
-.passcode-add-form {
-}
+.passcode-add-form {}
 
 .passcode-add-input-label-container {
     padding-left: 14px;
 }
 
+.no-portal-signed .user-detail-header {
+    cursor: not-allowed;
+}
+
 .no-portal-signed {
     background-color: var(--sub-grey-color2);
     cursor: not-allowed;
-
-    & .user-detail-header {
-        cursor: not-allowed;
-    }
 }
 
 .has-password-confirm {
@@ -320,7 +293,7 @@
     width: 100%;
 }
 
-.user-unlock-password-row > div > .custom-input-wrapper {
+.user-unlock-password-row>div>.custom-input-wrapper {
     height: 18px;
 }
 
@@ -328,7 +301,7 @@
     margin-top: 8px;
 }
 
-.user-unlock-password-row > div:first-child {
+.user-unlock-password-row>div:first-child {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -363,6 +336,6 @@
     gap: 8px;
 }
 
-.user-recovery-code-row > span {
+.user-recovery-code-row>span {
     font: small-caption;
 }

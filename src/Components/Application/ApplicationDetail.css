@@ -1,3 +1,6 @@
+input.secret-key:hover {
+    background-color: var(--sub-purple-color);
+}
 input.secret-key {
     cursor: pointer;
     padding-right: 28px;
@@ -5,9 +8,6 @@ input.secret-key {
     background-repeat: no-repeat;
     background-position: right 10px center;
     background-size: 18px 18px;
-    &:hover {
-        background-color: var(--sub-purple-color);
-    }
 }
 
 .application-detail-input-sub-btn {

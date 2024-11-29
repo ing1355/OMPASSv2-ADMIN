@@ -59,7 +59,7 @@
 }
 
 .ompass-auth-remain-time-container {
-    margin: 12px 0 0 0;
+    margin: 12px 0;
     text-align: center;
 }
 
@@ -100,4 +100,13 @@
     height: 6px;
     border-radius: 100%;
     background-color: var(--sub-grey-color6);
+}
+
+.ompass-auth-description-text {
+    text-align: center;
+    background-color: var(--sub-purple-color2);
+    color: var(--main-purple-color);
+    padding: 2px 12px;
+    border-radius: 8px;
+    font-weight: bold;
 }

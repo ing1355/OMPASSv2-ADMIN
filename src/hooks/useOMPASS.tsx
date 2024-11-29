@@ -19,9 +19,9 @@ const useOMPASS = () => {
     }, [])
 
     const startAuth = useCallback(async ({
-        type, purpose, targetUserId
+        type, purpose, targetUserId, applicationId
     }: {
-        type: OMPASSAuthType, purpose: OMPASSAuthStartParamsType['purpose'], targetUserId?: string
+        type: OMPASSAuthType, purpose: OMPASSAuthStartParamsType['purpose'], targetUserId?: string, applicationId?: ApplicationDataType['id']
     }, readyCallback: (res: OMPASSAuthStartResponseDataType) => void, successCallback: (status: OMPASSAuthResultDataType['status'], token: OMPASSAuthResultDataType['token']) => void, errorCallback: Function) => {
         const { os, browser, ip } = await DeviceInfo()
         try {
@@ -53,6 +53,7 @@ const useOMPASS = () => {
             }
             OMPASSAuthStartFunc({
                 purpose: purpose,
+                applicationId: applicationId,
                 targetUserId: type === 'single' ? '' : targetUserId,
                 loginDeviceInfo: {
                     os,

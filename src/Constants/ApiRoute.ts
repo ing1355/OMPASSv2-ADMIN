@@ -95,3 +95,14 @@ export const ValidateRecoveryMailApi = '/v2/recovery-account/verification'
 // 인증 모듈
 export const OMPASSAuthStartApi = '/v2/enhanced-authentication'
 export const GetOMPASSAuthResultApi = (type: string, pollingKey: string) => `/v2/enhanced-authentication/type/${type}/polling-key/${pollingKey}`
+
+// LDAP
+export const GetLdapConfigListApi = '/v2/ldap-configs'
+export const AddLdapConfigListApi = '/v2/ldap-configs'
+export const UpdateLdapConfigListApi = '/v2/ldap-configs'
+export const DeleteLdapConfigListApi = (id: LdapConfigDataType['id']) => `/v2/ldap-configs/id/${id}`
+export const SyncLdapUserListApi = '/v2/ldap/sync'
+export const TestLdapConnectionApi = '/v2/ldap/test-connection'
+
+// RADIUS
+export const AddRadiusUserListApi = '/v2/radius-rp-users'

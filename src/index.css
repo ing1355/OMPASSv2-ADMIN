@@ -80,12 +80,10 @@ div {
   color: var(--main-font-color);
 }
 
-label {
-  &:has(input[type="radio"]) {
-    display: inline-flex;
-    align-items: center;
-    cursor: pointer;
-  }
+label:has(input[type="radio"]) {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
 }
 
 body {

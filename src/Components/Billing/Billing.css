@@ -109,15 +109,14 @@
     height: 24px;
 }
 
+.plan-description-icon>img {
+    height: 70%;
+}
 .plan-description-icon {
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-
-    &>img {
-        height: 70%;
-    }
 }
 
 .billing-user-nums-container {
@@ -186,12 +185,12 @@
     min-height: 30px;
 }
 
+.billing-a-tag:hover {
+    text-decoration: underline;
+}
 .billing-a-tag {
     color: var(--main-purple-color);
     text-decoration: none;
-    &:hover {
-        text-decoration: underline;
-    }
 }
 
 .billing-agree-text {

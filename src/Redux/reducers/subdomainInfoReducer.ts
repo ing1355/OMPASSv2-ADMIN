@@ -1,6 +1,5 @@
 import { UserSignupMethod } from 'Constants/ConstantValues';
 import types from '../types';
-import loginMainImage from '../../assets/loginMainImage.png'
 
 const subdomainInfo: ReduxStateType['subdomainInfo']|null = {
   backendVersion: {

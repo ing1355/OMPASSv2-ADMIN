@@ -29,7 +29,7 @@
     flex: 1;
 }
 
-.custom-calendar-header-item.has-data > .custom-calendar-header-contents{
+.custom-calendar-header-item.has-data>.custom-calendar-header-contents {
     border-color: var(--main-purple-color);
     background-image: url(../../assets//dashboardDateIconPurple.png);
 }
@@ -100,16 +100,16 @@
     border-bottom: 0.5px solid rgba(0, 0, 0, .2);
 }
 
+.custom-calendar-weekend>div:last-child {
+    color: var(--main-purple-color);
+}
+
+.custom-calendar-weekend>div:first-child {
+    color: var(--main-red-color2);
+}
+
 .custom-calendar-weekend>div {
     color: var(--main-grey-color);
-
-    &:first-child {
-        color: var(--main-red-color2);
-    }
-
-    &:last-child {
-        color: var(--main-purple-color);
-    }
 }
 
 .custom-calendar-days {
@@ -153,35 +153,32 @@
     }
 }
 
-.custom-calendar-day-item.is-start {
-    & .custom-calendar-day-item-inner {
-        background-color: var(--main-purple-color);
-        color: var(--main-white-color);
-    }
+.custom-calendar-day-item.is-start .custom-calendar-day-item-inner {
+    background-color: var(--main-purple-color);
+    color: var(--main-white-color);
 }
 
-.custom-calendar-day-item.is-end {
-    & .custom-calendar-day-item-inner {
-        background-color: var(--main-purple-color);
-        color: var(--main-white-color);
-    }
+.custom-calendar-day-item.is-end .custom-calendar-day-item-inner {
+    background-color: var(--main-purple-color);
+    color: var(--main-white-color);
 }
 
-.custom-calendar-day-item.in-boundary {
-    &.is-start .custom-calendar-day-item-inner-background {
-        border-top-left-radius: 50%;
-        border-bottom-left-radius: 50%;
-    }
-    &.is-end .custom-calendar-day-item-inner-background {
-        border-top-right-radius: 50%;
-        border-bottom-right-radius: 50%;
-    }
-    &:not(.is-start):not(.is-end) .custom-calendar-day-item-inner-background {
-        background-color: var(--sub-purple-color4);
-    }
-    &:not(.is-start):not(.is-end) .custom-calendar-day-item-inner {
-        color: var(--sub-grey-color5);
-    }
+.custom-calendar-day-item.in-boundary .is-start .custom-calendar-day-item-inner-background {
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
+}
+
+.custom-calendar-day-item.in-boundary.is-end .custom-calendar-day-item-inner-background {
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+}
+
+.custom-calendar-day-item.in-boundary:not(.is-start):not(.is-end) .custom-calendar-day-item-inner-background {
+    background-color: var(--sub-purple-color4);
+}
+
+.custom-calendar-day-item.in-boundary:not(.is-start):not(.is-end) .custom-calendar-day-item-inner {
+    color: var(--sub-grey-color5);
 }
 
 .custom-calendar-day-item-inner {
@@ -200,16 +197,16 @@
     height: 100%;
 }
 
+.custom-calendar-day-item-inner.in-month.sunday {
+    color: var(--main-red-color2);
+}
+
+.custom-calendar-day-item-inner.in-month.saturday {
+    color: var(--main-purple-color);
+}
+
 .custom-calendar-day-item-inner.in-month {
     color: black;
-
-    &.sunday {
-        color: var(--main-red-color2);
-    }
-
-    &.saturday {
-        color: var(--main-purple-color);
-    }
 }
 
 .custom-calendar-footer-buttons-container {

@@ -31,7 +31,7 @@ const InvalidAuthLogs = () => {
         })
     }
 
-    return <CustomTable<InvalidAuthLogDataType, {}>
+    return <CustomTable<InvalidAuthLogDataType>
         onSearchChange={(data) => {
             GetDatas(data)
         }}

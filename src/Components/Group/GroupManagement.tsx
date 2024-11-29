@@ -35,7 +35,7 @@ const GroupManagement = () => {
         <ContentsHeader title="GROUP_MANAGEMENT" subTitle="GROUP_LIST">
         </ContentsHeader>
         <div className="contents-header-container">
-        <CustomTable<UserGroupListDataType, {}>
+        <CustomTable<UserGroupListDataType>
             theme='table-st1'
             hover
             addBtn={{

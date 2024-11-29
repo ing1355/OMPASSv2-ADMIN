@@ -1,17 +1,19 @@
+.custom-detail-policy-navigate-text>a:hover {
+    text-decoration: underline;
+}
+
+.custom-detail-policy-navigate-text>a {
+    color: var(--main-purple-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
 .custom-detail-policy-navigate-text {
     position: absolute;
     left: 4px;
     top: 110%;
     height: 24px;
     font-size: .8rem;
-    & > a {
-        color: var(--main-purple-color);
-        text-decoration: none;
-        font-weight: bold;
-        &:hover {
-            text-decoration: underline;
-        }
-    }
 }
 
 .custom-select-box {
@@ -25,6 +27,6 @@
     margin-bottom: 8px;
 }
 
-.custom-select-box-container > div {
+.custom-select-box-container>div {
     white-space: nowrap;
 }

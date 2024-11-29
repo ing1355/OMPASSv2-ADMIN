@@ -4,7 +4,6 @@ import CustomModal from "Components/Modal/CustomModal"
 import { AddPasscodeFunc } from "Functions/ApiFunctions"
 import { useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
-import closeIcon from '../../assets/closeIcon.png';
 import { createRandom1Digit } from "Functions/GlobalFunctions"
 
 const passcodeInputHeight = '30px'
@@ -61,6 +60,7 @@ export const PasscodeAddComponent = ({ okCallback, cancelCallback, authId, modal
         open={modalOpen}
         width={520}
         noPadding
+        titleLeft
         buttonsType='small'
         okText={<FormattedMessage id="NORMAL_COMPLETE_LABEL" />}
         onSubmit={async e => {
@@ -90,15 +90,7 @@ export const PasscodeAddComponent = ({ okCallback, cancelCallback, authId, modal
         }}
         onCancel={() => {
             cancelCallback()
-        }}>
-        <div className='passcode-add-title'>
-            <FormattedMessage id="PASSCODE_ADD_MODAL_TITLE" />
-            <div onClick={() => {
-                cancelCallback()
-            }}>
-                <img src={closeIcon} />
-            </div>
-        </div>
+        }} title={<FormattedMessage id="PASSCODE_ADD_MODAL_TITLE" />}>
         <div className='passcode-add-contents'>
             <div className='passcode-add-content-container'>
                 <div className='passcode-add-content-title'>

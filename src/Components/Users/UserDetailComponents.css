@@ -1,3 +1,26 @@
+.user-detail-info-device-info-content-item>img {
+    width: 60px;
+    height: 60px;
+    max-height: 60px;
+    max-width: 60px;
+}
+
+.user-detail-info-device-info-content-item.linux>div:nth-last-child(2) {
+    flex: 0 0 20px;
+}
+
+.user-detail-info-device-info-content-item.linux>img {
+    width: var(--img-size);
+    height: var(--img-size);
+    max-width: var(--img-size);
+    max-height: var(--img-size);
+}
+
+.user-detail-info-device-info-content-item.linux {
+    --img-size: 46px;
+    gap: 12px;
+}
+
 .user-detail-info-device-info-content-item {
     height: 100%;
     flex: 0 0 16%;
@@ -6,40 +29,21 @@
     justify-content: center;
     align-items: center;
     gap: 20px;
-    & > img {
-        width: 60px;
-        height: 60px;
-        max-height: 60px;
-        max-width: 60px;
-    }
-    &.linux {
-        --img-size: 46px;
-        gap: 12px;
-        & > div {
-            &:nth-last-child(2) {
-                flex: 0 0 20px;
-            }
-        }
-        & > img {
-            width: var(--img-size);
-            height: var(--img-size);
-            max-width: var(--img-size);
-            max-height: var(--img-size);
-        }
-    }
 }
 
-.user-detail-info-device-info-content-item > div {
+.user-detail-info-device-info-content-item>div:nth-last-child(2) {
+    flex: 0 0 26px;
+}
+
+.user-detail-info-device-info-content-item>div:last-child {
+    flex: 1;
+    font-size: 1rem;
+    letter-spacing: 0px;
+    max-width: 160px;
+}
+
+.user-detail-info-device-info-content-item>div {
     text-align: center;
-    &:nth-last-child(2) {
-        flex: 0 0 26px;
-    }
-    &:last-child {
-        flex: 1;
-        font-size: 1rem;
-        letter-spacing: 0px;
-        max-width: 160px;
-    }
 }
 
 .user-detail-info-device-info-content-title {
@@ -47,20 +51,16 @@
     font-weight: bold;
 }
 
-.authenticators-container {
-    &>div:first-child {
-        height: 0px;
-        padding: 0;
-    }
+.authenticators-container>div:first-child {
+    height: 0px;
+    padding: 0;
 }
 
 .authenticators-container-inner {
     position: relative;
 }
 
-.user-detail-info-device-info-delete-btn {
-    
-}
+.user-detail-info-device-info-delete-btn {}
 
 .user-detail-info-row {
     display: flex;
@@ -69,25 +69,29 @@
     padding: 2px 0;
 }
 
+.user-detail-info-col:not(:has(.required-label)) {
+    padding-left: 17px;
+}
+
+.user-detail-info-col:first-child {
+    width: 120px;
+    position: relative;
+}
+
+.user-detail-info-col:last-child {
+    flex: 1;
+}
+
+.user-detail-info-col>.custom-input-wrapper {
+    min-height: 36px;
+    min-width: 200px;
+}
+
 .user-detail-info-col {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 6px;
-    &:not(:has(.required-label)) {
-        padding-left: 17px;
-    }
-    &:first-child {
-        width: 120px;
-        position: relative;
-    }
-    &:last-child {
-        flex: 1;
-    }
-    & > .custom-input-wrapper {
-        min-height: 36px;
-        min-width: 200px;
-    }
 }
 
 .ssh-icon-container {
@@ -103,6 +107,11 @@
     flex: 0 0 20px;
 }
 
+.user-detail-info-device-info-no-contents>div {
+    height: 40px;
+    margin-bottom: 16px;
+}
+
 .user-detail-info-device-info-no-contents {
     height: 140px;
     display: flex;
@@ -112,12 +121,4 @@
     background-color: var(--sub-grey-color);
     color: var(--sub-grey-color3);
     border-radius: 12px;
-    & > div {
-        height: 40px;
-        margin-bottom: 16px;
-        & > img {
-            width: 100%;
-            height: 100%;
-        }
-    }
 }

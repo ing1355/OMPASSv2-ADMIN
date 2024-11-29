@@ -78,7 +78,7 @@ const Settings = () => {
     useLayoutEffect(() => {
         getDatas()
     }, [])
-
+    console.log(noticeToAdmin)
     return <Contents loading={dataLoading}>
         <ContentsHeader title="SETTINGS_MANAGEMENT" subTitle="SETTINGS_MANAGEMENT">
             <Button className="st3" onClick={() => {

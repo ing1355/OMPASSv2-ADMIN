@@ -31,7 +31,7 @@ type SearchOptionType = {
 
 type CustomTableProps<T extends {
     [key: string]: any
-}, P> = {
+}> = {
     theme?: 'table-st1' | 'table-st2'
     className?: string
     columns: CustomTableColumnType<T>[]
@@ -60,7 +60,7 @@ type CustomTableProps<T extends {
 
 const CustomTable = <T extends {
     [key: string]: any
-}, P>({ pagination,
+}>({ pagination,
     totalCount,
     theme,
     className,
@@ -83,7 +83,7 @@ const CustomTable = <T extends {
     deleteBtn,
     customBtns,
     refresh,
-    hover }: CustomTableProps<T, P>) => {
+    hover }: CustomTableProps<T>) => {
         
     const [pageNum, setPageNum] = useState(0)
     const [tableSize, setTableSize] = useState<number>(userSelectPageSize());

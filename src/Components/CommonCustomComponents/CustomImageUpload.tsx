@@ -63,7 +63,7 @@ const CustomImageUpload = ({ callback, data, defaultImg }: CustomImageUploadProp
                     fileUploadCallback(file);
                 }
             }}>
-            <img src={data.image || defaultImg || ompassDefaultLogoImage} />
+            <img src={data.isDefaultImage ? (defaultImg || ompassDefaultLogoImage) : data.image} />
             {deleteShow && <div className='custom-image-delete-container'>
                 <img src={deleteIcon}/>
                 <FormattedMessage id="DELETE"/>

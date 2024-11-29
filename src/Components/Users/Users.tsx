@@ -3,7 +3,8 @@ import UserManagement from "./UserManagement"
 import UserDetail from "./UserDetail"
 import { useSelector } from "react-redux"
 import UserExcelUpload from "./UserExcelUpload"
-import UserLdapSync from "./UserLdapSync"
+import LdapManagement from "./Ldap/LdapManagement"
+import LdapSyncDetail from "./Ldap/LdapSyncDetail"
 
 const Users = () => {
     const { userInfo } = useSelector((state: ReduxStateType) => ({
@@ -15,7 +16,9 @@ const Users = () => {
     return role === "USER" ? <UserDetail/> : <>
         <Routes>
             <Route path="/excelUpload" element={<UserExcelUpload />} />
-            <Route path="/ldapSync" element={<UserLdapSync />} />
+            <Route path="/ldapSync" element={<LdapManagement />} />
+            <Route path="/ldapSync/detail" element={<LdapSyncDetail />} />
+            <Route path="/ldapSync/detail/:id" element={<LdapSyncDetail />} />
             <Route path="/detail/*" element={<UserDetail />} />
             <Route path="/detail/:uuid" element={<UserDetail />} />
             <Route

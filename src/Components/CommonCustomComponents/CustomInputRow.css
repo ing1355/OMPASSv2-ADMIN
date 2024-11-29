@@ -20,6 +20,17 @@
     gap: 6px;
 }
 
+.custom-detail-contents>.custom-input-wrapper {
+    flex: 0 0 85%;
+    height: 42px;
+}
+
+.custom-detail-contents>textarea {
+    flex: 0 0 82%;
+    height: 36px;
+    padding: 20px 12px;
+}
+
 .custom-detail-contents {
     flex: 1;
     position: relative;
@@ -30,17 +41,6 @@
     align-items: center;
     row-gap: 12px;
     column-gap: 16px;
-    
-    &>.custom-input-wrapper {
-        flex: 0 0 85%;
-        height: 42px;
-    }
-    
-    &>textarea {
-        flex: 0 0 82%;
-        height: 36px;
-        padding: 20px 12px;
-    }
 }
 
 .custom-detail-contents[data-vertical="true"] {
@@ -48,13 +48,13 @@
     align-items: flex-start;
 }
 
+.with-button-input-row>input {
+    height: 36px;
+    flex: 0 0 100%;
+}
+
 .with-button-input-row {
     height: 44px;
     flex: 0 0 80%;
     display: inline-flex;
-
-    &>input {
-        height: 36px;
-        flex: 0 0 100%;
-    }
 }

@@ -1,8 +1,7 @@
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from "Components/CommonCustomComponents/CustomAxios";
-import { AddApplicationListApi, AddPasscodeApi, AddPoliciesListApi, AddUserDataApi, AddUserGroupApi, AddUserWithCsvDataApi, ApprovalUserApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DuplicateUserNameCheckApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetGlobalConfigApi, GetOMPASSAuthResultApi, GetPasscodeHistoriesApi, GetPasscodeListApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, OMPASSAuthStartApi, PatchSessionTokenApi, PostLoginApi, ResetPasswordApi, ResetPasswordEmailCodeVerifyApi, ResetPasswordEmailSendApi, RoleSwappingApi, SendPasscodeEmailApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, UnlockUserApi, UpdateAgentNoteApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi } from "Constants/ApiRoute";
-import { DateTimeFormat, INT_MAX_VALUE } from "Constants/ConstantValues";
+import { AddApplicationListApi, AddLdapConfigListApi, AddPasscodeApi, AddPoliciesListApi, AddRadiusUserListApi, AddUserDataApi, AddUserGroupApi, AddUserWithCsvDataApi, ApprovalUserApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeleteLdapConfigListApi, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DuplicateUserNameCheckApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetGlobalConfigApi, GetLdapConfigListApi, GetOMPASSAuthResultApi, GetPasscodeHistoriesApi, GetPasscodeListApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, OMPASSAuthStartApi, PatchSessionTokenApi, PostLoginApi, ResetPasswordApi, ResetPasswordEmailCodeVerifyApi, ResetPasswordEmailSendApi, RoleSwappingApi, SendPasscodeEmailApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, SyncLdapUserListApi, TestLdapConnectionApi, UnlockUserApi, UpdateAgentNoteApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdateLdapConfigListApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi } from "Constants/ApiRoute";
+import { INT_MAX_VALUE } from "Constants/ConstantValues";
 import { convertDashboardDateParamsKSTtoUTC } from "Components/Dashboard/DashboardFunctions";
-import dayjs from "dayjs";
 import { convertUTCStringToLocalDateString } from "./GlobalFunctions";
 
 export const LoginFunc = (params: LoginApiParamsType, callback: (res: LoginApiResponseType, token: string) => void) => {
@@ -554,4 +553,43 @@ export const OMPASSAuthStartFunc = (params: OMPASSAuthStartParamsType, callback:
 
 export const GetOMPASSAuthResultFunc = (type: string, pollingKey: string, callback: (res: OMPASSAuthResultDataType) => void) => {
     return CustomAxiosGet(GetOMPASSAuthResultApi(type, pollingKey), callback)
+}
+
+export const GetLdapConfigListFunc = ({
+    page_size = 10,
+    page = 1,
+    sortDirection = "DESC",
+    ldapConfigId = undefined
+}: LdapConfigListParamsType, callback: ((data: GetListDataGeneralType<LdapConfigDataType>) => void)) => {
+    return CustomAxiosGet(GetLdapConfigListApi, (data: GetListDataGeneralType<LdapConfigDataType>) => {
+        callback(data)
+    }, {
+        page_size,
+        page,
+        sortDirection,
+        ldapConfigId
+    } as LdapConfigListParamsType)
+}
+export const AddLdapConfigListFunc = (params: LdapConfigParamsType, callback: (res: LdapConfigDataType) => void) => {
+    return CustomAxiosPost(AddLdapConfigListApi, callback, params)
+}
+export const UpdateLdapConfigListFunc = (params: LdapConfigParamsType, callback: (res: LdapConfigDataType) => void) => {
+    return CustomAxiosPost(UpdateLdapConfigListApi, callback, params)
+}
+export const DeleteLdapConfigListFunc = (id: LdapConfigDataType['id'], callback: () => void) => {
+    return CustomAxiosDelete(DeleteLdapConfigListApi(id), callback)
+}
+export const SyncLdapUserListFunc = (params: LdapConfigDataType['id'], callback: (res: LdapUserDataType[]) => void) => {
+    return CustomAxiosPost(SyncLdapUserListApi, callback, {
+        id: params
+    })
+}
+export const TestLdapConnectionFunc = (params: LdapTestConnectionParamsType, callback: (res: LdapConfigDataType) => void) => {
+    return CustomAxiosPost(TestLdapConnectionApi, callback, params)
+}
+export const AddRadiusUserListFunc = (params: {
+    radiusApplicationId: ApplicationDataType['id']
+    radiusRpUsers: RadiusUserDataType[]
+} ,callback: () => void) => {
+    return CustomAxiosPost(AddRadiusUserListApi, callback, params)
 }

@@ -1,5 +1,5 @@
 import { DateTimeFormat } from "Constants/ConstantValues"
-import { addDays, format } from "date-fns"
+import dayjs from "dayjs"
 import { convertLocalDateStringToUTCString, pad2Digit } from "Functions/GlobalFunctions"
 
 export const convertDashboardDateParamsKSTtoUTC = (params: DashboardDateSelectDataType): DashboardDateSelectDataType => {
@@ -11,7 +11,7 @@ export const convertDashboardDateParamsKSTtoUTC = (params: DashboardDateSelectDa
 }
 
 export const add1DayForEndDate = (date: string) => {
-    return format(addDays(new Date(date), 1), DateTimeFormat)
+    return dayjs(date).format(DateTimeFormat)
 }
 
 export const convertHourRangeByDate = (startDate: string, endDate: string, isLast: boolean) => {

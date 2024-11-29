@@ -39,7 +39,7 @@ const PolicyManagement = () => {
         <ContentsHeader title="POLICY_MANAGEMENT" subTitle="POLICY_LIST">
         </ContentsHeader>
         <div className="contents-header-container">
-        <CustomTable<PolicyListDataType, PoliciesListParamsType>
+        <CustomTable<PolicyListDataType>
                 className='tab_table_list'
                 theme='table-st1'
                 datas={tableData}

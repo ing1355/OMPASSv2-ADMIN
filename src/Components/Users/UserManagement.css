@@ -7,11 +7,13 @@
 }
 
 .user-add-modal-contents-container {
+    width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 64px;
     padding: 24px 60px 60px 60px;
+    box-sizing: border-box;
 }
 
 .user-add-modal-contents-item {
@@ -28,13 +30,14 @@
     font-size: 1rem;
     box-sizing: border-box;
     font-weight: bold;
+}
 
-    & > img {
-        width: 100px;
-        height: 100px;
-    }
-    &:hover {
-        box-shadow: none;
-        border: 1px solid var(--main-purple-color);
-    }
+.user-add-modal-contents-item > img {
+    width: 100px;
+    height: 100px;
+}
+
+.user-add-modal-contents-item:hover {
+    box-shadow: none;
+    border: 1px solid var(--main-purple-color);
 }

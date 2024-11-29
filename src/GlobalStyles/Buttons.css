@@ -15,13 +15,14 @@
     font-size: .9rem;
 }
 
-.custom-button > .button-icon {
+.custom-button>.button-icon {
     height: 18px;
     width: 18px;
 }
 
 .custom-button[data-loading=true] {
     cursor: not-allowed;
+    pointer-events: none;
 }
 
 .custom-button[data-loading=true]::after {
@@ -55,151 +56,112 @@
 .custom-button:disabled {
     background-color: var(--sub-purple-color6) !important;
     color: var(--main-white-color) !important;
-    cursor: not-allowed;
+    cursor: not-allowed !important;
+    border: none !important;
 }
 
 /* 테이블 데이터 추가 버튼 */
+.custom-button.st1:not(:disabled):hover {
+    background-color: var(--main-purple-color);
+    color: var(--main-white-color);
+}
+
 .custom-button.st1 {
     border: 1px solid var(--sub-grey-color3);
     background-color: var(--sub-grey-color7);
     color: var(--main-grey-color2);
-
-    &:not(:disabled):hover {
-        background-color: var(--main-purple-color);
-        color: var(--main-white-color);
-    }
-
-    &:disabled {
-        border: none;
-    }
 }
 
 /* 테이블 데이터 삭제 버튼 */
+.custom-button.st2:not(:disabled):hover {
+    background-color: var(--main-red-color3);
+    color: var(--main-white-color);
+}
+
 .custom-button.st2 {
     border: 1px solid var(--sub-grey-color3);
     background-color: var(--sub-grey-color7);
     color: var(--main-grey-color2);
-
-    &:not(:disabled):hover {
-        background-color: var(--main-red-color3);
-        color: var(--main-white-color);
-    }
-
-    &:disabled {
-        border: none;
-    }
 }
 
 /* 테이블 검색 버튼 */
+.custom-button.st3:not(:disabled):hover {
+    background-color: var(--main-purple-color);
+}
+
 .custom-button.st3 {
     background-color: var(--main-purple-color2);
     color: var(--main-white-color);
-
-    &:not(:disabled):hover {
-        background-color: var(--main-purple-color);
-    }
-
-    &:disabled {
-        border: none;
-    }
 }
 
 /* 테이블 검색 옆 초기화 버튼 */
+.custom-button.st4:not(:disabled):hover {
+    background-color: var(--main-purple-color);
+}
+
 .custom-button.st4 {
     background-color: var(--sub-grey-color3);
     color: var(--main-white-color);
-
-    &:not(:disabled):hover {
-        background-color: var(--main-purple-color);
-    }
-
-    &:disabled {
-        border: none;
-    }
 }
 
 /* 문서보기, 업로드, 전체 선택 등 액션 버튼 1 */
+.custom-button.st5:not(:disabled):hover {
+    background-color: var(--main-purple-color);
+    color: var(--main-white-color);
+}
+
 .custom-button.st5 {
     background-color: var(--main-white-color);
     border: 1px solid var(--main-purple-color);
     color: var(--main-purple-color);
-
-    &:not(:disabled):hover {
-        background-color: var(--main-purple-color);
-        color: var(--main-white-color);
-    }
-
-    &:disabled {
-        border: none;
-    }
 }
 
 /* 중복 확인 버튼 */
+.custom-button.st6:not(:disabled):hover {
+    background-color: var(--sub-purple-color2);
+}
+
 .custom-button.st6 {
     background-color: var(--sub-purple-color);
     color: var(--main-purple-color);
-
-    &:not(:disabled):hover {
-        background-color: var(--sub-purple-color2);
-    }
-
-    &:disabled {
-        border: none;
-    }
 }
 
 /* 취소 버튼 */
+.custom-button.st7:not(:disabled):hover {
+    background-color: var(--sub-grey-color3);
+}
+
 .custom-button.st7 {
     background-color: var(--sub-grey-color2);
     color: var(--main-white-color);
-
-    &:not(:disabled):hover {
-        background-color: var(--sub-grey-color3);
-    }
-
-    &:disabled {
-        border: none;
-    }
 }
 
 /* 회원 탈퇴 버튼 */
+.custom-button.st8:not(:disabled):hover {
+    background-color: var(--main-red-color3);
+    color: var(--main-white-color);
+}
+
 .custom-button.st8 {
     border: 1px solid var(--main-red-color3);
     color: var(--main-red-color3);
-
-    &:not(:disabled):hover {
-        background-color: var(--main-red-color3);
-
-        color: var(--main-white-color);
-    }
-
-    &:disabled {
-        border: none;
-    }
 }
 
 /* 비밀키 재발급 버튼 */
+.custom-button.st9:not(:disabled):hover {
+    border-color: var(--main-purple-color);
+    color: var(--main-purple-color);
+}
+
 .custom-button.st9 {
     border: 1px solid var(--sub-grey-color3);
     color: var(--sub-grey-color3);
-
-    &:not(:disabled):hover {
-        border-color: var(--main-purple-color);
-        color: var(--main-purple-color);
-    }
-
-    &:disabled {
-        border: none;
-    }
 }
 
 /* 윈도우즈 다운로드 버튼 */
 .custom-button.st10 {
     background-color: var(--main-black-color);
     color: var(--main-white-color);
-    &:disabled {
-        border: none;
-    }
 }
 
 /* 회원가입 쪽 버튼 */

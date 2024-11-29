@@ -11,13 +11,14 @@ type PolicySelectProps = {
     setSelectedPolicy: SetStateType<PolicyListDataType['id']>
     needSelect?: boolean
     applicationType?: ApplicationDataType['type']
+    datas?: PolicyListDataType[]
 }
 
-const PolicySelect = ({ selectedPolicy, setSelectedPolicy, needSelect, applicationType }: PolicySelectProps) => {
+const PolicySelect = ({ selectedPolicy, setSelectedPolicy, needSelect, applicationType, datas }: PolicySelectProps) => {
     const { lang } = useSelector((state: ReduxStateType) => ({
         lang: state.lang!
     }));
-    const [policiesData, setPoliciesData] = useState<PolicyListDataType[]>([])
+    const [policiesData, setPoliciesData] = useState<PolicyListDataType[]>(datas || [])
     const filteredPoliciesData = useMemo(() => {
         if(applicationType) {
             return policiesData.filter(_ => _.applicationType === applicationType || _.applicationType === 'ALL')
@@ -27,7 +28,7 @@ const PolicySelect = ({ selectedPolicy, setSelectedPolicy, needSelect, applicati
     },[policiesData, applicationType])
 
     useLayoutEffect(() => {
-        GetPoliciesListFunc({}, ({ results, totalCount }) => {
+        if(!datas) GetPoliciesListFunc({}, ({ results, totalCount }) => {
             setPoliciesData(results)
         })
     }, [])

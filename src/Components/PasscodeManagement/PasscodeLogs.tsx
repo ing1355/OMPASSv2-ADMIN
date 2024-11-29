@@ -32,7 +32,7 @@ const PasscodeLogs = () => {
         })
     }
 
-    return <CustomTable<PasscodeHistoryDataType, {}>
+    return <CustomTable<PasscodeHistoryDataType>
         theme='table-st1'
         datas={tableData}
         pagination

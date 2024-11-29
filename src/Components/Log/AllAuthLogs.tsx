@@ -30,7 +30,7 @@ const AllAuthLogs = () => {
         })
     }
 
-    return <CustomTable<AllAuthLogDataType, {}>
+    return <CustomTable<AllAuthLogDataType>
         onSearchChange={(data) => {
             GetDatas(data)
         }}

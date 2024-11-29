@@ -87,7 +87,7 @@ const UserExcelUpload = () => {
                 </Button>
             </ContentsHeader>
             <div className="contents-header-container">
-                {datas.length > 0 ? <CustomTable<UserExcelDataType, {}>
+                {datas.length > 0 ? <CustomTable<UserExcelDataType>
                     datas={tableData}
                     theme='table-st1'
                     pagination

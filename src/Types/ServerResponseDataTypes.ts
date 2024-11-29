@@ -17,7 +17,7 @@ type GetPutUsersApiType = {
   phoneNumber: string,
 }
 
-type AgentInstallerListDataType = Array<AgentInstallerDataType>
+type AgentInstallerListDataType = AgentInstallerDataType[]
 
 type AgentInstallerDataType = {
   fileId: number
@@ -227,4 +227,40 @@ type UserHierarchyDataServerResponseType = DefaultUserHierarchyDataType & {
 type UserHierarchyDataRpUserServerResponseType = DefaultUserHierarchyDataRpUserType & {
   applicationId: ApplicationListDataType['id']
   groupId: DefaultUserGroupDataType['id']
+}
+
+type LdapTransportType = "CLEAR" | "LDAPS" | "STARTTLS"
+type LdapAuthenticationType = "PLAIN" | "NTLMv2"
+type LdapProxyServerDataType = {
+  address: string
+  port: number
+}
+type LdapDirectoryServerDataType = {
+  address: string
+  port: number
+}
+
+type LdapConfigDataType = {
+  id: string
+  name: string
+  description: string
+  createdAt: string
+  secretKey: string
+  apiServerHost: string
+  directoryServers: LdapDirectoryServerDataType[]
+  proxyServer: LdapProxyServerDataType
+  baseDn: string
+  ldapAuthenticationType: LdapAuthenticationType
+  ldapTransportType: LdapTransportType
+  isConnected: boolean
+  lastUserSyncedAt: string
+}
+
+type LdapUserDataType = {
+  username: UserDataType['username']
+  name: UserDataType['name']
+  email: UserDataType['email']
+  phone: UserDataType['phone']
+  org: string
+  syncedUserStatus: string
 }

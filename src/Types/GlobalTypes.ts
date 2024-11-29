@@ -191,8 +191,9 @@ type PasscodeListDataType = {
 
 type DefaultApplicationDataType = {
     id: string
+    clientId: string
     // type: "DEFAULT" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "ADMIN" | "RADIUS" | "GOOROOM_LOGIN" | "REDMINE" | "ALL"
-    type: "DEFAULT" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "ADMIN" | "RADIUS" | "REDMINE" | "ALL"
+    type: "DEFAULT" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "ADMIN" | "RADIUS" | "REDMINE" | "ALL" | ''
     name: string
     domain?: string
     description?: string
@@ -201,13 +202,22 @@ type DefaultApplicationDataType = {
     createdAt: string
 }
 
+type RadiusDataType = {
+    host: string
+    secretKey: string
+    authenticationPort: string
+    accountingPort: string
+    authenticationMethod: string
+    authenticatorAttribute: boolean
+}
+
 type ApplicationDataType = DefaultApplicationDataType & {
-    clientId: string
     apiServerHost: string
     redirectUri?: string
     helpDeskMessage: string
     secretKey: string
     isTwoFactorAuthEnabled?: boolean
+    radiusProxyServer?: RadiusDataType
 }
 
 type ApplicationDataParamsType = {
@@ -383,11 +393,11 @@ type RPUserDetailAuthDataType = {
     id: string
     createdAt: string
     username: string
-    policy: PolicyListDataType & {
+    policy?: PolicyListDataType & {
         source: 'APPLICATION' | 'GROUP'
     }
     loginDeviceInfo: LoginDeviceInfoDataType
-    serverInfo: ServerMetaDataType
+    serverInfo?: ServerMetaDataType
     authenticators: AuthenticatorDataType[]
 }
 
@@ -480,8 +490,13 @@ type UserHierarchyDataGroupViewDataType = {
     })[]
 }
 
+type UserGroupPolicyType = {
+    applicationType: ApplicationDataType['type']
+    policyId: PolicyListDataType['id']
+}
+
 type UserGroupDataType = DefaultUserGroupDataType & {
-    policies: PolicyListDataType['id'][]
+    policies: UserGroupPolicyType[]
     rpUserIds: UserDataType['userId'][]
 }
 
@@ -493,7 +508,7 @@ type UserGroupListDataType = DefaultUserGroupDataType & {
 type UserGroupParamsType = {
     name: string
     description: string
-    policies: PolicyDataType['id'][]
+    policies: UserGroupPolicyType[]
     rpUserIds: UserDataType['userId'][]
 }
 
@@ -513,6 +528,10 @@ type AuthLogListParamsType = GeneralParamsType & {
     startDate?: string
     endDate?: string
     sortBy?: "CREATED_AT" | "AUTHENTICATION_TIME" | "USERNAME" | "APPLICATION_NAME" | "IS_PROCESS_SUCCESS"
+}
+
+type LdapConfigListParamsType = GeneralParamsType & {
+    ldapConfigId?: string
 }
 
 type ProtalLogListParamsType = GeneralParamsType & {
@@ -562,7 +581,7 @@ type AgentInstallerUploadParamsType = {
 }
 
 type UserDetailAuthInfoRowType = {
-    application: ApplicationDataType
+    application: DefaultApplicationDataType
     id: UserDetailDataType['id']
     username: UserDetailDataType['username']
     authenticationInfo: RPUserDetailAuthDataType
@@ -630,6 +649,7 @@ type PolicyItemsPropsType<T> = {
 type OMPASSAuthStartParamsType = {
     purpose: "ROLE_SWAPPING" | "ROLE_SWAPPING_SOURCE" | "ROLE_SWAPPING_TARGET" | "ADMIN_2FA" | "RADIUS_REGISTRATION" | "NONE"
     targetUserId?: string
+    applicationId?: ApplicationDataType['id']
     loginDeviceInfo: {
         os: {
             name: string,
@@ -677,4 +697,28 @@ type QRDataType<T> = {
 type QRDataDefaultBodyType = {
     url: string
     param: string
+}
+
+type LdapTestConnectionParamsType = {
+    id: LdapConfigDataType['id']
+    proxyServer: LdapProxyServerDataType
+    directoryServers: LdapDirectoryServerDataType[]
+    baseDn: LdapConfigDataType['baseDn']
+    ldapAuthenticationType: LdapConfigDataType['ldapAuthenticationType']
+    ldapTransportType: LdapConfigDataType['ldapTransportType']
+}
+
+type LdapConfigParamsType = {
+    name: LdapConfigDataType['name']
+    description: LdapConfigDataType['description']
+    directoryServers: LdapDirectoryServerDataType[]
+    proxyServer: LdapProxyServerDataType
+    baseDn: LdapConfigDataType['baseDn']
+    ldapAuthenticationType: LdapConfigDataType['ldapAuthenticationType']
+    ldapTransportType: LdapConfigDataType['ldapTransportType']
+}
+
+type RadiusUserDataType = {
+    username: string
+    email: string
 }

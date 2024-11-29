@@ -57,7 +57,7 @@ const AuthPolicyDetail = () => {
         key: _,
         label: getApplicationTypeLabel(_)
     }))
-
+    console.log(locationDatas)
     useLayoutEffect(() => {
         if (uuid) {
             setDataLoading(true)
@@ -68,7 +68,8 @@ const AuthPolicyDetail = () => {
                 setDetailData(data)
                 setAuthenticatorPolicies(data.enableAuthenticators)
                 setSelectedApplicationType(data.applicationType)
-                if (!isDefaultPolicy) {
+                const isDefault = data.policyType === 'DEFAULT'
+                if (!isDefault) {
                     setIpAddressValues(data.networkConfig)
                     if (data.enableBrowsers) setBrowserChecked(data.enableBrowsers)
                     if (data.locationConfig) {
@@ -149,7 +150,7 @@ const AuthPolicyDetail = () => {
     }, [initEvent])
 
     useEffect(() => {
-        dataInit()
+        if(isAdd) dataInit()
     }, [selectedApplicationType])
 
     return <Contents loading={dataLoading}>
@@ -174,7 +175,6 @@ const AuthPolicyDetail = () => {
                         if (accessTimeValues?.isEnabled && accessTimeValues.accessTimes.length === 0) {
                             return message.error("시간 접근 허용 정책을 1개 이상 설정해주세요.")
                         }
-                        console.log(noticeToAdmin)
                         if (noticeToAdmin?.isEnabled && noticeToAdmin.methods.length === 0) {
                             return message.error("위반 시 관리자 알림의 알림 방식을 1개 이상 설정해주세요.")
                         }
@@ -204,6 +204,7 @@ const AuthPolicyDetail = () => {
                             noticeToAdmin: isDefaultPolicy ? undefined : noticeToAdmin!,
                             noticeToThemselves
                         }, ({ enableAuthenticators, enableBrowsers, locationConfig, networkConfig, noticeToAdmin, noticeToThemselves, accessTimeConfig }) => {
+                            console.log(locationConfig)
                             if (!isDefaultPolicy) {
                                 if (locationUsed) setLocationDatas(locationConfig)
                                 if (authenticatorsUsed) setAuthenticatorPolicies(webauthnUsed ? enableAuthenticators : enableAuthenticators.filter(_ => _ !== 'WEBAUTHN'))

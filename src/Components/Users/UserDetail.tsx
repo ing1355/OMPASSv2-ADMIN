@@ -21,7 +21,7 @@ import RoleSelect from "Components/CommonCustomComponents/RoleSelect"
 import CustomModal from "Components/Modal/CustomModal"
 import Button from 'Components/CommonCustomComponents/Button'
 import { userInfoClear } from 'Redux/actions/userChange'
-import { UserDetailInfoAuthenticatorContent, UserDetailInfoAuthenticatorDeleteButton, UserDetailInfoDeviceInfoContent, UserDetailInfoETCInfoContent, UserInfoInputrow, UserInfoRow, ViewPasscode, ViewRecoveryCode } from './UserDetailComponents'
+import { RadiusDetailItem, UserDetailInfoAuthenticatorContent, UserDetailInfoAuthenticatorDeleteButton, UserDetailInfoDeviceInfoContent, UserDetailInfoETCInfoContent, UserInfoInputrow, UserInfoRow, ViewPasscode, ViewRecoveryCode } from './UserDetailComponents'
 import { autoHypenPhoneFun, convertUTCStringToLocalDateString, createRandom1Digit, logoImageWithDefaultImage } from 'Functions/GlobalFunctions'
 import Input from 'Components/CommonCustomComponents/Input'
 import BottomLineText from 'Components/CommonCustomComponents/BottomLineText'
@@ -120,6 +120,36 @@ const UserDetail = ({ }) => {
             authenticationInfo: __,
             groupName: _.groupName
         }) as UserDetailAuthInfoRowType))
+        const radiusTarget = userDetailDatas.find(_ => _.application.type === 'RADIUS')
+        if (radiusTarget && radiusTarget.authenticationInfo.length === 0) {
+            temp.push({
+                id: radiusTarget.id,
+                username: radiusTarget.username,
+                application: radiusTarget.application,
+                authenticationInfo: {
+                    authenticators: [],
+                    username: '',
+                    createdAt: '',
+                    id: '',
+                    loginDeviceInfo: {
+                        os: undefined,
+                        ip: undefined,
+                        id: undefined,
+                        browser: undefined,
+                        location: undefined,
+                        name: undefined,
+                        craetedAt: '',
+                        macAddress: undefined,
+                        agentVersion: undefined,
+                        updatedAt: '',
+                        lastLoginTime: ''
+                    },
+                    policy: undefined,
+                    serverInfo: undefined
+                },
+                groupName: radiusTarget.groupName
+            })
+        }
         temp = temp.sort((a, b) => new Date(a.authenticationInfo.createdAt).getTime() - new Date(b.authenticationInfo.createdAt).getTime())
         return temp;
     }, [userDetailDatas])
@@ -253,7 +283,7 @@ const UserDetail = ({ }) => {
     return <>
         <Contents loading={dataLoading}>
             <ContentsHeader title='USER_MANAGEMENT' subTitle={isAdd ? 'USER_REGISTRATION' : 'USER_REGISTRATION_INFO'} style={{
-                width: '1100px'
+                width: '1150px'
             }}>
                 {
                     userData?.status === 'WAIT_ADMIN_APPROVAL' && <Button className='st6' onClick={() => {
@@ -267,7 +297,7 @@ const UserDetail = ({ }) => {
                 }
                 {
                     // userInfo.role === 'ROOT' && <Button className='st5' onClick={() => {
-                        userInfo.role === 'ROOT' && <Button className='st5' onClick={() => {
+                    userInfo.role === 'ROOT' && <Button className='st5' onClick={() => {
                         setSureSwap(true)
                     }}>
                         권한 승계
@@ -313,7 +343,7 @@ const UserDetail = ({ }) => {
                                     })
                                 }
                             }}>
-                                <FormattedMessage id={isAdd ? "REGISTER" : "SAVE"} />
+                                <FormattedMessage id={isAdd ? "NORMAL_ADD_LABEL" : "SAVE"} />
                             </Button>
                         }
                         {(userData?.status === 'RUN' || userData?.status === 'LOCK') && canModify && !isAdd && !isDeleted && <Button icon={!isModify && editIcon} className={isModify ? "st7" : "st3"} onClick={() => {
@@ -505,7 +535,14 @@ const UserDetail = ({ }) => {
                     className={`user-detail-section mb20${portalSigned ? '' : ' no-portal-signed'}${!userDetailOpened.includes(_.authenticationInfo.id) ? ' closed' : ''}`}
                     ref={_ref => authInfoRef.current[_.authenticationInfo.id] = _ref as HTMLDivElement}
                 >
+                    {
+                        _.application.type === 'RADIUS' && !_.authenticationInfo.createdAt && <RadiusDetailItem appId={_.application.id} onComplete={() => {
+                            GetDatas()
+                            message.success("Radius OMPASS 등록에 성공하였습니다.")
+                        }}/>
+                    }
                     <div className="user-detail-header" onClick={() => {
+                        if(_.application.type === 'RADIUS' && !_.authenticationInfo.createdAt) return;
                         if (portalSigned) setUserDetailOpened(userDetailOpened.includes(_.authenticationInfo.id) ? userDetailOpened.filter(uOpened => uOpened !== _.authenticationInfo.id) : userDetailOpened.concat(_.authenticationInfo.id))
                     }}>
                         <div className="user-detail-header-application-info">
@@ -518,7 +555,9 @@ const UserDetail = ({ }) => {
                             </div>
                         </div>
                         <h5>
-                            {_.authenticationInfo.loginDeviceInfo.updatedAt} <FormattedMessage id="USER_INFO_UPDATED_LABEL" />
+                            {_.authenticationInfo.loginDeviceInfo.updatedAt ? <>
+                                {_.authenticationInfo.loginDeviceInfo.updatedAt} <FormattedMessage id="USER_INFO_UPDATED_LABEL" />
+                            </> : "등록 안됨"} 
                         </h5>
                     </div>
 
@@ -573,7 +612,7 @@ const UserDetail = ({ }) => {
                                     }} />}
                                 </div>
                             </div>
-                            <CustomTable<PasscodeAuthenticatorDataType, {}>
+                            <CustomTable<PasscodeAuthenticatorDataType>
                                 noSearch
                                 columns={columnsByRole(_.authenticationInfo.id)}
                                 noDataHeight="30px"
@@ -585,6 +624,9 @@ const UserDetail = ({ }) => {
                 </div>
             </Fragment>
             )}
+            {/* {userDetailDatas.find(detail => detail.application.type === 'RADIUS') && <div className={`user-detail-section${!userDetailOpened.includes(_.authenticationInfo.id) ? ' closed' : ''}`}>
+                test
+            </div>} */}
         </Contents >
         <PairOMPASSAuthModal opened={authView} onCancel={() => {
             setAuthView(false)
@@ -594,7 +636,7 @@ const UserDetail = ({ }) => {
                 setAuthView(false)
                 message.success("권한 승계에 성공하였습니다. 포탈을 이용하려면 다시 로그인해주세요.")
             })
-        }} userData={userData}/>
+        }} userData={userData} />
         <CustomModal
             open={sureSwap}
             onCancel={() => {

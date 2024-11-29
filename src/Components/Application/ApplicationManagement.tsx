@@ -57,9 +57,10 @@ const ApplicationManagement = () => {
         <ContentsHeader title="APPLICATION_MANAGEMENT" subTitle="APPLICATION_LIST">
         </ContentsHeader>
         <div className="contents-header-container">
-        <CustomTable<ApplicationListDataType, ApplicationListParamsType>
+        <CustomTable<ApplicationListDataType>
             theme='table-st1'
             className="contents-header-container"
+            hover
             searchOptions={[{
                 key: 'name',
                 type: 'string'
@@ -95,9 +96,6 @@ const ApplicationManagement = () => {
             onBodyRowMouseLeave={() => {
                 handleRowHover(-1)
             }}
-            bodyRowStyle={(_, index) => ({
-                background: hoveredRow === index ? 'var(--sub-blue-color-2)' : 'transparent'
-            })}
             columns={[
                 {
                     key: 'name',
