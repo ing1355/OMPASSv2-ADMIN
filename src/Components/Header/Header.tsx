@@ -2,7 +2,7 @@ import './Header.css';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { langChange } from 'Redux/actions/langChange';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import locale_image from '../../assets/locale_image.png';
 import menuIcon from '../../assets/menuIcon.png';
 import logout from '../../assets/logout.png';
@@ -48,14 +48,19 @@ const Header = () => {
     >
       <div className='header-container-contents'>
         <div className='header-contents-first-items'>
-          <div className='header-menu-icon' onClick={() => {
-            navigate('/Main')
-          }}>
-            {role !== 'USER' && <>
-              <img src={menuIcon} />
-            </>
-            }
-          </div>
+          <Tooltip
+            title={formatMessage({ id: 'MAIN_MENU_TOOLTIP_LABEL' })}
+            destroyTooltipOnHide
+          >
+            <div className='header-menu-icon' onClick={() => {
+              navigate('/Main')
+            }}>
+              {role !== 'USER' && <>
+                <img src={menuIcon} />
+              </>
+              }
+            </div>
+          </Tooltip>
           <div className='header-title-container' onClick={() => {
             navigate('/Dashboard');
           }}>
@@ -75,7 +80,7 @@ const Header = () => {
         <div className='header-contents-second-items'>
           <SessionTimeCount />
           <Tooltip
-            key='download_agent_file'
+            destroyTooltipOnHide
             title={formatMessage({ id: 'DOWNLOAD_FOR_WINDOWS_AGNET_FILE' })}
           >
             <a href={subdomainInfo.windowsAgentUrl} download>
@@ -85,8 +90,8 @@ const Header = () => {
           </Tooltip>
 
           <Tooltip
-            key='download_user_manual'
             title={formatMessage({ id: 'DOWNLOAD_USER_MANUAL' })}
+            destroyTooltipOnHide
           >
             <a
               href="/OMPASS_Portal_User_Manual.pdf"
@@ -96,8 +101,8 @@ const Header = () => {
             </a>
           </Tooltip>
           <Tooltip
-            key='download_admin_manual'
             title={formatMessage({ id: 'DOWNLOAD_ADMIN_MANUAL' })}
+            destroyTooltipOnHide
           >
             <a
               href="/OMPASS_Portal_Admin_Manual.pdf"
@@ -106,14 +111,19 @@ const Header = () => {
               <img src={adminManualDownloadIcon} />
             </a>
           </Tooltip>
-          <div
-            className='header_id'
-            onClick={() => {
-              navigate(`/UserManagement/detail/${userId}`);
-            }}
+          <Tooltip
+            title={formatMessage({ id: 'SELF_INFO_TOOLTIP_LABEL' })}
+            destroyTooltipOnHide
           >
-            {username}
-          </div>
+            <div
+              className='header_id'
+              onClick={() => {
+                navigate(`/UserManagement/detail/${userId}`);
+              }}
+            >
+              {username}
+            </div>
+          </Tooltip>
           <div className='header-locale-container'>
             <img src={locale_image} />
             <span
@@ -132,19 +142,20 @@ const Header = () => {
             >EN</span>
           </div>
           <Tooltip
-            key='logout_info'
             title={formatMessage({ id: 'LOGOUT' })}
+            destroyTooltipOnHide
           >
-            <Link to='/'>
-              <img src={logout} onClick={() => {
-                dispatch(userInfoClear());
+            <img src={logout} onClick={() => {
+              dispatch(userInfoClear());
+            }}
+              style={{
+                cursor: 'pointer'
               }}
-              />
-            </Link>
+            />
           </Tooltip>
         </div>
       </div>
-      
+
     </div>
   )
 }

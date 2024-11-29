@@ -1,8 +1,8 @@
 import './UserDetail.css'
-import { message } from "antd"
+import { message, Tooltip } from "antd"
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
-import { AddPasscodeFunc, AddUserDataFunc, DeleteAuthenticatorDataFunc, GetUserDataListFunc, GetUserDetailDataFunc, UpdateUserDataFunc, DeleteUserDataFunc, DuplicateUserNameCheckFunc, ApprovalUserFunc, SendPasscodeEmailFunc, RoleSwappingFunc } from "Functions/ApiFunctions"
+import { AddUserDataFunc, DeleteAuthenticatorDataFunc, GetUserDataListFunc, GetUserDetailDataFunc, UpdateUserDataFunc, DeleteUserDataFunc, DuplicateUserNameCheckFunc, ApprovalUserFunc, SendPasscodeEmailFunc, RoleSwappingFunc } from "Functions/ApiFunctions"
 import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 import { useLocation, useNavigate, useParams } from "react-router"
@@ -64,13 +64,18 @@ const PasscodeAddBtn = ({ added, onClick }: {
     onClick: React.DOMAttributes<HTMLDivElement>['onClick']
 }) => {
     const [hover, setHover] = useState(false)
-    return <div className="passcode-add" onClick={onClick} onMouseEnter={() => {
-        setHover(true)
-    }} onMouseLeave={() => {
-        setHover(false)
-    }}>
-        <img src={!added ? (hover ? addIconWhite : addIconGrey) : (hover ? passcodeEmailSendIcon : passcodeEmailSendIconGrey)} />
-    </div>
+    const { formatMessage } = useIntl()
+    return <Tooltip
+        title={formatMessage({ id: added ? 'PASSCODE_EMAIL_RE_SEND_TOOLTIP_LABEL' : 'PASSCODE_ADD_TOOLTIP_LABEL' })}
+        destroyTooltipOnHide>
+        <div className="passcode-add" onClick={onClick} onMouseEnter={() => {
+            setHover(true)
+        }} onMouseLeave={() => {
+            setHover(false)
+        }}>
+            <img src={!added ? (hover ? addIconWhite : addIconGrey) : (hover ? passcodeEmailSendIcon : passcodeEmailSendIconGrey)} />
+        </div>
+    </Tooltip>
 }
 
 const UserDetail = ({ }) => {
@@ -297,7 +302,7 @@ const UserDetail = ({ }) => {
                 }
                 {
                     // userInfo.role === 'ROOT' && <Button className='st5' onClick={() => {
-                    userInfo.role === 'ROOT' && <Button className='st5' onClick={() => {
+                    userInfo.role === 'ROOT' && !isSelf && <Button className='st5' onClick={() => {
                         setSureSwap(true)
                     }}>
                         권한 승계
@@ -539,10 +544,10 @@ const UserDetail = ({ }) => {
                         _.application.type === 'RADIUS' && !_.authenticationInfo.createdAt && <RadiusDetailItem appId={_.application.id} onComplete={() => {
                             GetDatas()
                             message.success("Radius OMPASS 등록에 성공하였습니다.")
-                        }}/>
+                        }} />
                     }
                     <div className="user-detail-header" onClick={() => {
-                        if(_.application.type === 'RADIUS' && !_.authenticationInfo.createdAt) return;
+                        if (_.application.type === 'RADIUS' && !_.authenticationInfo.createdAt) return;
                         if (portalSigned) setUserDetailOpened(userDetailOpened.includes(_.authenticationInfo.id) ? userDetailOpened.filter(uOpened => uOpened !== _.authenticationInfo.id) : userDetailOpened.concat(_.authenticationInfo.id))
                     }}>
                         <div className="user-detail-header-application-info">
@@ -557,7 +562,7 @@ const UserDetail = ({ }) => {
                         <h5>
                             {_.authenticationInfo.loginDeviceInfo.updatedAt ? <>
                                 {_.authenticationInfo.loginDeviceInfo.updatedAt} <FormattedMessage id="USER_INFO_UPDATED_LABEL" />
-                            </> : "등록 안됨"} 
+                            </> : "등록 안됨"}
                         </h5>
                     </div>
 

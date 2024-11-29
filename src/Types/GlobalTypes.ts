@@ -711,7 +711,6 @@ type LdapTestConnectionParamsType = {
 type LdapConfigParamsType = {
     name: LdapConfigDataType['name']
     description: LdapConfigDataType['description']
-    directoryServers: LdapDirectoryServerDataType[]
     proxyServer: LdapProxyServerDataType
     baseDn: LdapConfigDataType['baseDn']
     ldapAuthenticationType: LdapConfigDataType['ldapAuthenticationType']

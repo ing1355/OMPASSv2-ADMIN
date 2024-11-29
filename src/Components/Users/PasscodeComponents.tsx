@@ -45,8 +45,7 @@ export const PasscodeAddComponent = ({ okCallback, cancelCallback, authId, modal
     const [inputCurrentPasscodeValue, setInputCurrentPasscodeValue] = useState('')
     const [inputCurrentPasscodeTime, setInputCurrentPasscodeTime] = useState<number | string>(1)
     const [inputCurrentPasscodeCount, setInputCurrentPasscodeCount] = useState<number | string>(1)
-
-    const [addPasscodeLoading, setAddPasscodeLoading] = useState(false)
+    
     const { formatMessage } = useIntl()
 
     const radioChangeCallback = (name: string, value: string) => {
@@ -62,6 +61,7 @@ export const PasscodeAddComponent = ({ okCallback, cancelCallback, authId, modal
         noPadding
         titleLeft
         buttonsType='small'
+        buttonLoading
         okText={<FormattedMessage id="NORMAL_COMPLETE_LABEL" />}
         onSubmit={async e => {
             e.preventDefault();
@@ -76,7 +76,6 @@ export const PasscodeAddComponent = ({ okCallback, cancelCallback, authId, modal
             if (count.value === "select" && (!countValue.value || parseInt(countValue.value) < 1)) {
                 return message.error(formatMessage({ id: 'PASSCODE_NEED_MORE_THAN_1_TIMES' }))
             }
-            setAddPasscodeLoading(true)
             AddPasscodeFunc({
                 authenticationDataId: authId,
                 passcodeNumber: method.value === 'target' ? codeValue.value : Array.from({ length: 9 }).map(_ => createRandom1Digit()).join(''),
@@ -84,12 +83,13 @@ export const PasscodeAddComponent = ({ okCallback, cancelCallback, authId, modal
                 recycleCount: count.value === 'one' ? 1 : (count.value === 'select' ? countValue.value : -1)
             }, (data) => {
                 okCallback(data)
-            }).finally(() => {
-                setAddPasscodeLoading(false)
             })
         }}
         onCancel={() => {
             cancelCallback()
+            setInputCurrentPasscodeCount(1)
+            setInputCurrentPasscodeTime(1)
+            setInputCurrentPasscodeValue('')
         }} title={<FormattedMessage id="PASSCODE_ADD_MODAL_TITLE" />}>
         <div className='passcode-add-contents'>
             <div className='passcode-add-content-container'>

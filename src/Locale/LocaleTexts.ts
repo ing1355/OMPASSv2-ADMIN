@@ -454,7 +454,11 @@ const LocaleTexts = {
     RADIUS_NO_CONNECTED_MSG: 'Connection required',
     RADIUS_SYNC_TITLE: 'Radius User Add',
     RADIUS_SURE_SYNC_TITLE: 'Radius User Sync',
-    RADIUS_SURE_SYNC_SUBSCRIPTION: 'Synchronize the Radius user list to your portal.\nPreviously registered users will remain the same, \nand new users must log in to the portal and\nregister for OMPASS on the details page.\nDo you want to continue?'
+    RADIUS_SURE_SYNC_SUBSCRIPTION: 'Synchronize the Radius user list to your portal.\nPreviously registered users will remain the same, \nand new users must log in to the portal and\nregister for OMPASS on the details page.\nDo you want to continue?',
+    SELF_INFO_TOOLTIP_LABEL: 'My Info',
+    MAIN_MENU_TOOLTIP_LABEL: 'Main Menu',
+    PASSCODE_ADD_TOOLTIP_LABEL: 'Passcode Add',
+    PASSCODE_EMAIL_RE_SEND_TOOLTIP_LABEL: 'Passcode Email Re-Send',
   },
   'ko': {
     LOGIN: '로그인',
@@ -908,7 +912,11 @@ const LocaleTexts = {
     RADIUS_NO_CONNECTED_MSG: '연결 필요',
     RADIUS_SYNC_TITLE: 'Radius 사용자 추가',
     RADIUS_SURE_SYNC_TITLE: 'Radius 사용자 동기화',
-    RADIUS_SURE_SYNC_SUBSCRIPTION: 'Radius 사용자 목록을 포탈에 동기화 시킵니다.\n기존에 등록했던 사용자는 그대로 유지되며, 새로운 사용자는\n포탈 로그인 후 상세 정보 페이지에서 OMPASS 등록을 진행해야 합니다.\n계속 진행하시겠습니까?'
+    RADIUS_SURE_SYNC_SUBSCRIPTION: 'Radius 사용자 목록을 포탈에 동기화 시킵니다.\n기존에 등록했던 사용자는 그대로 유지되며, 새로운 사용자는\n포탈 로그인 후 상세 정보 페이지에서 OMPASS 등록을 진행해야 합니다.\n계속 진행하시겠습니까?',
+    SELF_INFO_TOOLTIP_LABEL: '내 정보',
+    MAIN_MENU_TOOLTIP_LABEL: '메인 메뉴',
+    PASSCODE_ADD_TOOLTIP_LABEL: '패스코드 추가',
+    PASSCODE_EMAIL_RE_SEND_TOOLTIP_LABEL: '패스코드 이메일 재전송',
   }
 }
 

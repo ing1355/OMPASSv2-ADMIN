@@ -26,10 +26,6 @@ const LdapSyncDetail = () => {
             port: 8111
         },
         baseDn: 'dc=example,dc=com',
-        directoryServers: [{
-            address: '192.168.182.75',
-            port: 389
-        }],
         ldapAuthenticationType: 'PLAIN',
         ldapTransportType: 'CLEAR'
     })
@@ -63,7 +59,6 @@ const LdapSyncDetail = () => {
                 name: data.name,
                 description: data.description,
                 proxyServer: data.proxyServer,
-                directoryServers: data.directoryServers,
                 baseDn: data.baseDn,
                 ldapAuthenticationType: data.ldapAuthenticationType,
                 ldapTransportType: data.ldapTransportType
@@ -134,28 +129,6 @@ const LdapSyncDetail = () => {
                             ...params.proxyServer,
                             port: val ? parseInt(val) : 0
                         }
-                    })
-                }} onlyNumber />
-            </CustomInputRow>
-            <CustomInputRow title="디렉토리 서버 주소">
-                <Input className="st1" value={params.directoryServers[0].address} valueChange={val => {
-                    setParams({
-                        ...params,
-                        directoryServers: [{
-                            ...params.directoryServers[0],
-                            address: val
-                        }]
-                    })
-                }} />
-            </CustomInputRow>
-            <CustomInputRow title="디렉토리 서버 PORT">
-                <Input className="st1" value={params.directoryServers[0].port || ''} valueChange={val => {
-                    setParams({
-                        ...params,
-                        directoryServers: [{
-                            ...params.directoryServers[0],
-                            port: val ? parseInt(val) : 0
-                        }]
                     })
                 }} onlyNumber />
             </CustomInputRow>

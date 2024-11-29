@@ -27,7 +27,7 @@ const LdapSyncButton = ({ id }: LdapSyncButtonProps) => {
     }, [syncDatas, pageSetting])
     const getFullName = useFullName()
     return <>
-        <BottomLineText title="LDAP 동기화" style={{
+        <BottomLineText title="LDAP 사용자 목록" style={{
             marginTop: '48px'
         }} buttons={<>
             <Button className="st3" onClick={() => {
@@ -40,9 +40,12 @@ const LdapSyncButton = ({ id }: LdapSyncButtonProps) => {
                     setDataLoading(false)
                 })
             }}>
-                사용자 목록 불러오기
+                불러오기
             </Button>
             <Button className="st3" onClick={() => {
+                if(syncDatas.length === 0) {
+                    return message.error("동기화 할 사용자가 존재하지 않습니다. 불러오기를 먼저 진행해주세요.")
+                }
                 setSureSync(true)
             }}>
                 동기화
