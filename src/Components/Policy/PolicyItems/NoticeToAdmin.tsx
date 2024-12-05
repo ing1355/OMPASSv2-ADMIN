@@ -43,7 +43,7 @@ const NoticeToAdmin = ({value={
             ...value,
             isEnabled: check
         })
-    }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
+    }}/>
     <div className="policy-contents-container" data-hidden={!isEnabled} >
         <div className="policy-input-container">
             <div className="notice-row-container">

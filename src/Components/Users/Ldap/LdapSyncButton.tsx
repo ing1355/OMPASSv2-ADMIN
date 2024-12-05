@@ -25,7 +25,7 @@ const LdapSyncButton = ({ id }: LdapSyncButtonProps) => {
         const { page, showPerPage } = pageSetting
         return syncDatas.slice((page - 1) * showPerPage, page * showPerPage)
     }, [syncDatas, pageSetting])
-    const getFullName = useFullName()
+    
     return <>
         <BottomLineText title="LDAP 사용자 목록" style={{
             marginTop: '48px'
@@ -71,9 +71,13 @@ const LdapSyncButton = ({ id }: LdapSyncButtonProps) => {
                         key: 'username',
                         title: '아이디'
                     }, {
-                        key: 'name',
+                        key: 'firstName',
+                        title: '성',
+                        render: (data, ind, row) => row.name.firstName ?? "-"
+                    }, {
+                        key: 'lastName',
                         title: '이름',
-                        render: (data, ind, row) => getFullName(data)
+                        render: (data, ind, row) => row.name.lastName ?? "-"
                     }, {
                         key: 'org',
                         title: '조직명'

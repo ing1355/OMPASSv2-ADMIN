@@ -262,9 +262,11 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
     const { serverInfo } = data.authenticationInfo
     const { os } = clientData
     const isBrowser = application.type === 'DEFAULT' || application.type === 'ADMIN'
+    const isWindow = application.type === 'WINDOWS_LOGIN'
+    const isPAM = application.type === 'LINUX_LOGIN'
     return <>
-        {application.type !== 'LINUX_LOGIN' && <UserDetailInfoContentItem imgSrc={imgSrcByOS(os?.name!)} title={<FormattedMessage id="USER_DETAIL_OS_LABEL" />} content={`${os?.name} ${os?.version}`} />}
-        {application.type === 'LINUX_LOGIN' && <>
+        {!isPAM && <UserDetailInfoContentItem imgSrc={imgSrcByOS(os?.name!)} title={<FormattedMessage id="USER_DETAIL_OS_LABEL" />} content={`${os?.name} ${os?.version}`} />}
+        {isPAM && <>
             <div className="user-detail-info-device-info-content-item linux">
                 <div className='linux-target-text'>Client</div>
                 <img src={clientIcon} />
@@ -278,24 +280,36 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
             <div className='ssh-icon-container'>
                 <img src={sshIcon} />
             </div>
-            <div className="user-detail-info-device-info-content-item linux">
+            <div className="user-detail-info-device-info-content-item linux server">
                 <div className='linux-target-text'>Server</div>
-                <img src={clientIcon} />
-                <div className="user-detail-info-device-info-content-title">
-                    <FormattedMessage id="USER_DETAIL_IP_ADDRESS_LABEL" />
-                </div>
-                <div>
-                    {serverInfo?.ip}
-                </div>
-            </div>
-            <div className="user-detail-info-device-info-content-item linux">
-                <div className='linux-target-text'>Server</div>
-                <img src={imgSrcByOS(serverInfo?.os?.name!)} />
-                <div className="user-detail-info-device-info-content-title">
-                    <FormattedMessage id="USER_DETAIL_OS_LABEL" />
-                </div>
-                <div>
-                    {createOSInfo(serverInfo?.os)}
+                <div className='user-detail-info-device-info-content-item-server-list'>
+                    <div className="user-detail-info-device-info-content-item linux">
+                        <img src={clientIcon} />
+                        <div className="user-detail-info-device-info-content-title">
+                            <FormattedMessage id="USER_DETAIL_IP_ADDRESS_LABEL" />
+                        </div>
+                        <div>
+                            {serverInfo?.ip}
+                        </div>
+                    </div>
+                    <div className="user-detail-info-device-info-content-item linux">
+                        <img src={imgSrcByOS(serverInfo?.os?.name!)} />
+                        <div className="user-detail-info-device-info-content-title">
+                            <FormattedMessage id="USER_DETAIL_OS_LABEL" />
+                        </div>
+                        <div>
+                            {createOSInfo(serverInfo?.os)}
+                        </div>
+                    </div>
+                    <div className="user-detail-info-device-info-content-item linux">
+                        <img src={agentVersionIcon} />
+                        <div className="user-detail-info-device-info-content-title">
+                            에이전트 버전 정보
+                        </div>
+                        <div>
+                            {serverInfo?.agentVersion}
+                        </div>
+                    </div>
                 </div>
             </div>
         </>}
@@ -334,7 +348,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
             </div>
         }
         {
-            application.type === 'WINDOWS_LOGIN' && <div className="user-detail-info-device-info-content-item">
+            isWindow && <div className="user-detail-info-device-info-content-item">
                 <img src={pcNameIcon} />
                 <div className="user-detail-info-device-info-content-title">
                     PC Name
@@ -345,7 +359,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
             </div>
         }
         {
-            application.type === 'WINDOWS_LOGIN' && <div className="user-detail-info-device-info-content-item">
+            isWindow && <div className="user-detail-info-device-info-content-item">
                 <img src={macAddressIcon} />
                 <div className="user-detail-info-device-info-content-title">
                     Mac Address
@@ -356,7 +370,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
             </div>
         }
         {
-            application.type === 'WINDOWS_LOGIN' && <div className="user-detail-info-device-info-content-item">
+            isWindow && <div className="user-detail-info-device-info-content-item">
                 <img src={agentVersionIcon} />
                 <div className="user-detail-info-device-info-content-title">
                     Agent Version
@@ -378,19 +392,19 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
     </>
 }
 
-export const RadiusDetailItem = ({onComplete, appId}: {
+export const RadiusDetailItem = ({ onComplete, appId }: {
     appId: ApplicationDataType['id']
     onComplete: () => void
 }) => {
     const [authView, setAuthView] = useState(false)
     return <>
-    <div className='user-radius-register-container' onClick={() => {
-        setAuthView(true)
-    }}>
-        Radius 등록하기
-    </div>
-    <RadiusUserRegisterOMPASSAuthModal radiusApplicationId={appId} opened={authView} onCancel={() => {
-        setAuthView(false)
-    }} successCallback={onComplete}/>
+        <div className='user-radius-register-container' onClick={() => {
+            setAuthView(true)
+        }}>
+            Radius 등록하기
+        </div>
+        <RadiusUserRegisterOMPASSAuthModal radiusApplicationId={appId} opened={authView} onCancel={() => {
+            setAuthView(false)
+        }} successCallback={onComplete} />
     </>
 }

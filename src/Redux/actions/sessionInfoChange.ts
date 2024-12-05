@@ -6,3 +6,10 @@ export function sessionCheckChange(sessionChecked: boolean) {
     payload: sessionChecked
   }
 }
+
+export function sessionTimeChange(time: number) {
+  return {
+    type: types.sessionTimeChange,
+    payload: time
+  }
+}

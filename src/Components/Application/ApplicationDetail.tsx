@@ -69,7 +69,7 @@ const ApplicationDetail = () => {
     const { formatMessage } = useIntl()
     const { uuid } = useParams()
     const isAdd = !uuid
-    const needDomains: ApplicationDataType['type'][] = ["DEFAULT", "ADMIN"]
+    const needDomains: ApplicationDataType['type'][] = ["DEFAULT", "ADMIN", "REDMINE"]
     const isRedmine = applicationType === 'REDMINE'
     const typeItems = applicationTypes.map(_ => ({
         key: _,
@@ -89,8 +89,12 @@ const ApplicationDetail = () => {
             await GetApplicationDetailFunc(uuid, (data) => {
                 setInputName(data.name)
                 setInputSecretKey(data.secretKey)
-                setInputDomain(data.domain ?? "")
-                setInputRedirectUrl(data.redirectUri ?? "")
+
+                if(data.domain) {
+                    setInputDomain(data.domain ?? "")
+                    setInputRedirectUrl(data.redirectUri ? data.redirectUri.replace(data.domain, "") : "")
+                }
+                // setInputRedirectUrl(data.redirectUri ?? "")
                 setLogoImage({
                     image: data.logoImage.url,
                     isDefaultImage: data.logoImage.isDefaultImage
@@ -122,7 +126,7 @@ const ApplicationDetail = () => {
     return <Contents loading={dataLoading}>
         <ContentsHeader title="APPLICATION_MANAGEMENT" subTitle={isAdd ? "APPLICATION_ADD" : "APPLICATION_MODIFY"}>
             <div className="custom-detail-header-items-container">
-                <Button className="st3" onClick={() => {
+                <Button className="st3" onClick={async () => {
                     if (!applicationType) {
                         return message.error(formatMessage({ id: 'PLEASE_SELECT_APPLICATION_TYPE' }))
                     }
@@ -135,10 +139,10 @@ const ApplicationDetail = () => {
                     if (needDomains.includes(applicationType) && !domainRegex.test(inputDomain)) {
                         return message.error("도메인 값이 올바르지 않습니다.")
                     }
-                    if (needDomains.includes(applicationType) && !redirectUriRegex.test(inputRedirectUrl)) {
+                    if (!isRedmine && needDomains.includes(applicationType) && !redirectUriRegex.test(inputRedirectUrl)) {
                         return message.error("리다이렉트 URI가 올바르지 않습니다.")
                     }
-                    if (!inputRedirectUrl && needDomains.includes(applicationType)) {
+                    if (!isRedmine && !inputRedirectUrl && needDomains.includes(applicationType)) {
                         return message.error(formatMessage({ id: 'PLEASE_INPUT_APPLICATION_REDIRECT_URI' }))
                     }
                     if (!selectedPolicy) {
@@ -152,7 +156,7 @@ const ApplicationDetail = () => {
                             redirectUri: isRedmine ? inputDomain + '/ompass' : inputRedirectUrl,
                             helpDeskMessage: helpMsg,
                             logoImage: {
-                                image: convertBase64FromClientToServerFormat(logoImage.image),
+                                image: await convertBase64FromClientToServerFormat(logoImage.image),
                                 isDefaultImage: logoImage.isDefaultImage
                             },
                             description: inputDescription,
@@ -169,7 +173,7 @@ const ApplicationDetail = () => {
                             redirectUri: isRedmine ? inputDomain + '/ompass' : inputRedirectUrl,
                             helpDeskMessage: helpMsg,
                             logoImage: {
-                                image: convertBase64FromClientToServerFormat(logoImage.image),
+                                image: await convertBase64FromClientToServerFormat(logoImage.image),
                                 isDefaultImage: logoImage.isDefaultImage
                             },
                             description: inputDescription,
@@ -264,15 +268,11 @@ const ApplicationDetail = () => {
                                     setInputDomain(value)
                                 }} placeholder="ex) https://omsecurity.kr:1234" readOnly={applicationType === 'ADMIN'} noGap />
                             </CustomInputRow>
-                            {!(isAdd && applicationType === 'REDMINE') && ((!isAdd && applicationType === 'REDMINE') ? <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_REDIRECT_URI_LABEL" />} required>
+                            {!isRedmine && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_REDIRECT_URI_LABEL" />} required>
                                 <Input className="st1" value={inputRedirectUrl} valueChange={value => {
                                     setInputRedirectUrl(value)
-                                }} placeholder="ex) /ompass" noGap />
-                            </CustomInputRow> : <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_REDIRECT_URI_LABEL" />} required>
-                                <Input className="st1" value={inputRedirectUrl} valueChange={value => {
-                                    setInputRedirectUrl(value)
-                                }} placeholder="ex) /ompass" readOnly={applicationType === 'ADMIN'} noGap />
-                            </CustomInputRow>)}
+                                }} placeholder="ex) /ompass" readOnly={['ADMIN', 'REDMINE'].includes(applicationType)} noGap />
+                            </CustomInputRow>}
                         </>
                     }
                     {applicationType === 'WINDOWS_LOGIN' && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_WINDOWS_PASSWORD_NEED_CHECK_LABEL" />}>

@@ -8,6 +8,10 @@
     font-weight: bold;
 }
 
+.remain-session-time-container.warning {
+    color: var(--main-red-color);
+}
+
 .remain-session-time-container:hover {
     /* color: var(--main-purple-color); */
 }

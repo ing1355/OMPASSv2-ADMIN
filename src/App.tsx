@@ -3,7 +3,6 @@ import React, { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import Login from 'Components/Login/Login';
 import OMPASSVerify from 'Components/OMPASS/OMPASSVerify';
 import Main from 'Components/Main/Main';
 import AxiosController from 'AxiosController';
@@ -27,7 +26,6 @@ import { subDomain } from 'Constants/ConstantValues';
 import { subdomainInfoChange } from 'Redux/actions/subdomainInfoChange';
 import SignUp from 'Components/SignUp/SignUp';
 import { globalDatasChange } from 'Redux/actions/globalDatasChange';
-import { userInfoChange } from 'Redux/actions/userChange';
 import Dashboard from 'Components/Dashboard/Dashboard';
 import LoginPage from 'Components/Login';
 
@@ -69,12 +67,10 @@ const App: React.FC = () => {
       })
       GetGlobalConfigFunc((data) => {
         dispatch(globalDatasChange({ ...globalDatas, ...data, loading: false }))
-      }).catch(err => {
-        dispatch(userInfoChange(''))
       })
     }
   }, [userInfo])
-
+  
   return <IntlProvider locale={convertLangToIntlVer(lang)} messages={Locale[lang]}>
     <AxiosController />
     <div className={userInfo ? 'contents-container' : ""}>

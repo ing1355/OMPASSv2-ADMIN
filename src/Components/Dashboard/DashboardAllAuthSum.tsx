@@ -38,7 +38,7 @@ const DashboardAllAuthSum = ({ applications }: {
       setDatas([])
     }
   }, [applications, params])
-  console.log(datas)
+  
   return <DashboardCardWithDateSelect title={<FormattedMessage id="DASHBOARD_ALL_AUTH_SUM"/>} onChange={(_) => {
     setParams(_)
   }}>

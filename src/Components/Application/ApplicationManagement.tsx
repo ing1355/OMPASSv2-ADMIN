@@ -62,15 +62,15 @@ const ApplicationManagement = () => {
             className="contents-header-container"
             hover
             searchOptions={[{
-                key: 'name',
-                type: 'string'
-            }, {
                 key: 'type',
                 type: 'select',
                 selectOptions: applicationTypes.map(_ => ({
                     key: _,
                     label: getApplicationTypeLabel(_)
                 }))
+            }, {
+                key: 'name',
+                type: 'string'
             }, {
                 key: 'policyName',
                 type: 'string',
@@ -98,15 +98,15 @@ const ApplicationManagement = () => {
             }}
             columns={[
                 {
-                    key: 'name',
-                    title: <FormattedMessage id="APPLICATION_INFO_NAME_LABEL"/>
-                },
-                {
                     key: 'type',
                     title: <FormattedMessage id="APPLICATION_INFO_TYPE_LABEL"/>,
                     render: (data) => {
                         return data ? getApplicationTypeLabel(data) : ""
                     }
+                },
+                {
+                    key: 'name',
+                    title: <FormattedMessage id="APPLICATION_INFO_NAME_LABEL"/>
                 },
                 {
                     key: 'domain',

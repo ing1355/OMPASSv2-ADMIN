@@ -22,7 +22,7 @@ import CustomModal from "Components/Modal/CustomModal"
 import Button from 'Components/CommonCustomComponents/Button'
 import { userInfoClear } from 'Redux/actions/userChange'
 import { RadiusDetailItem, UserDetailInfoAuthenticatorContent, UserDetailInfoAuthenticatorDeleteButton, UserDetailInfoDeviceInfoContent, UserDetailInfoETCInfoContent, UserInfoInputrow, UserInfoRow, ViewPasscode, ViewRecoveryCode } from './UserDetailComponents'
-import { autoHypenPhoneFun, convertUTCStringToLocalDateString, createRandom1Digit, logoImageWithDefaultImage } from 'Functions/GlobalFunctions'
+import { autoHypenPhoneFun, convertUTCStringToLocalDateString, logoImageWithDefaultImage } from 'Functions/GlobalFunctions'
 import Input from 'Components/CommonCustomComponents/Input'
 import BottomLineText from 'Components/CommonCustomComponents/BottomLineText'
 import { isDev2 } from 'Constants/ConstantValues'

@@ -7,9 +7,9 @@ const useFullName = () => {
 
     return (name: UserNameType) => {
         if(lang === 'KR') {
-            return `${name.firstName}${name.lastName}`
+            return `${name.firstName ?? ""}${name.lastName ?? ""}`
         } else {
-            return `${name.firstName} ${name.lastName}`
+            return `${name.firstName ?? ""} ${name.lastName ?? ""}`
         }
     }
 };

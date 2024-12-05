@@ -202,6 +202,10 @@ export const GetUserDataListFunc = ({
 }
 
 export const AddUserDataFunc = (params: UserDataAddLocalValuesType, callback: () => void) => {
+    if(!params.hasPassword) {
+        params.password = undefined
+        params.passwordConfirm = undefined
+    }
     return CustomAxiosPost(AddUserDataApi, callback, params)
 }
 

@@ -64,13 +64,18 @@ export const slicePrice = (price: string | number) => {
 };
 
 export const parseJwtToken = (token: string) => {
-    return (jwtDecode(token) as {
-        exp: number,
-        data: {
-            tanantId: string
-            user: UserDataType
-        }
-    }).data.user
+    try {
+        return (jwtDecode(token) as {
+            exp: number,
+            data: {
+                tanantId: string
+                user: UserDataType
+            }
+        }).data.user
+    } catch (e) {
+        console.log('parse jwt error ', e)
+        return null
+    }
 }
 
 export const autoHypenPhoneFun = (phone: string) => {
@@ -100,8 +105,35 @@ export const autoHypenPhoneFun = (phone: string) => {
     }
 };
 
-export const convertBase64FromClientToServerFormat = (b64str: string) => {
-    return b64str.startsWith('data:image') ? b64str.split(',')[1] : b64str
+function convertImageToBase64Sync(imagePath: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.src = imagePath;
+
+        image.onload = function () {
+            const canvas = document.createElement("canvas");
+            canvas.width = image.width;
+            canvas.height = image.height;
+            const context = canvas.getContext("2d");
+            context!.drawImage(image, 0, 0);
+
+            const base64String = canvas.toDataURL("image/png");
+            resolve(base64String); // 동기적으로 결과 반환
+        };
+
+        image.onerror = function (error) {
+            reject("이미지 로딩 실패");
+        };
+    });
+}
+
+export const convertBase64FromClientToServerFormat = async (b64str: string): Promise<string> => {
+    if (b64str.startsWith('/static')) {
+        let temp = await convertImageToBase64Sync(b64str)
+        return temp.startsWith('data:image') ? temp.split(',')[1] : temp
+    } else {
+        return b64str.startsWith('data:image') ? b64str.split(',')[1] : b64str
+    }
 }
 
 export const convertBase64FromServerFormatToClient = (str: string) => {
@@ -155,3 +187,22 @@ export const convertTimeFormat = (time: number) => {
         return { second };
     }
 };
+
+export const downloadExcelUserList = (rows: {
+    username: string
+    name: UserNameType
+    email: string
+    phone: string
+}[], isTemplete?: boolean) => {
+    const BOM = '\uFEFF'
+    let csvContent = "data:text/csv;charset=utf-8," + BOM;
+    let columns = ['사용자 아이디,성,이름,이메일,전화 번호']
+    csvContent += columns.join(',') + '\n';
+    csvContent += rows.map(_ => `${_.username},${_.name.firstName},${_.name.lastName},${_.email},${_.phone}`).join('\n')
+    let link = document.createElement('a');
+    link.download = `OMPASS_사용자_리스트${isTemplete ? '(템플릿)' : ''}.csv`;
+    // let blob = new Blob([text], { type: 'text/plain' });
+    // const url = URL.createObjectURL(blob);
+    link.href = encodeURI(csvContent);
+    link.click();
+}

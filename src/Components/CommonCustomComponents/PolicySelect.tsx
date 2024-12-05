@@ -28,7 +28,9 @@ const PolicySelect = ({ selectedPolicy, setSelectedPolicy, needSelect, applicati
     },[policiesData, applicationType])
 
     useLayoutEffect(() => {
-        if(!datas) GetPoliciesListFunc({}, ({ results, totalCount }) => {
+        if(!datas) GetPoliciesListFunc({
+            page_size: 9999
+        }, ({ results, totalCount }) => {
             setPoliciesData(results)
         })
     }, [])

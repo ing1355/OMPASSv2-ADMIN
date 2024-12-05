@@ -77,7 +77,7 @@ const PolicyLocationList = ({ value={
         }} checked={isEnabled} onChange={check => {
             if (check && authenticators!.some(auth => (['WEBAUTHN', 'OTP', 'PASSCODE'] as AuthenticatorPolicyType[]).includes(auth))) setSureChange('LOCATION')
             else setLocationChecked(check)
-        }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
+        }}/>
         <div className="policy-contents-container" data-hidden={!isEnabled}>
             <div className="policy-input-container">
                 <div className="current-location-policy-input-container">

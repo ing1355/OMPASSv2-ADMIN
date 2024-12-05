@@ -7,6 +7,7 @@ const OMPASSAuthenticators = ({ value, onChange, locationChecked, webauthnUsed, 
     webauthnUsed: boolean
     setSureChange: SetStateType<'LOCATION' | AuthenticatorPolicyType | null>
 }) => {
+    
     const AuthenticatorController = ({ type }: {
         type: AuthenticatorPolicyType
     }) => {
@@ -22,7 +23,8 @@ const OMPASSAuthenticators = ({ value, onChange, locationChecked, webauthnUsed, 
                         onChange(value.filter(_ => _ !== type))
                     }
                 }
-            }} checkedChildren={type === 'OMPASS' ? '필수' : '허용'} unCheckedChildren={'차단'} />
+            }}/>
+            {/* }} checkedChildren={type === 'OMPASS' ? '필수' : '허용'} unCheckedChildren={'차단'} /> */}
         </label>
     }
     return <CustomInputRow title="인증 방식 제어">

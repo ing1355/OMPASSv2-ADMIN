@@ -62,7 +62,7 @@ const DashboardAllAuth = ({ applications }: {
     return <DashboardCardWithDateSelect title={<FormattedMessage id="DASHBOARD_ALL_AUTH" />} onChange={(_) => {
         setParams(_)
     }}>
-        <DashBoardBarChart datas={datas} keys={applications.map(_ => _.name)} indexKey="date" customColor/>
+        <DashBoardBarChart datas={datas} keys={applications.map(_ => _.name)} indexKey="date" customColor isSum/>
     </DashboardCardWithDateSelect>
 }
 

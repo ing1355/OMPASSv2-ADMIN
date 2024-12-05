@@ -36,7 +36,7 @@ const Settings = () => {
         methods: []
     })
     const [canDelete, setCanDelete] = useState(false)
-    const [inputAlias, setInputAlias] = useState('회사명');
+    const [inputAlias, setInputAlias] = useState('테넌트 이름');
     const [logoImg, setLogoImg] = useState<updateLogoImageType>({
         image: loginMainImage,
         isDefaultImage: true
@@ -57,7 +57,7 @@ const Settings = () => {
                 role: 'ROOT'
             }, (root) => {
                 setAdminDatas(root.results.concat(results))
-                GetPortalSettingsDataFunc(({ noticeToAdmin, userSignupMethod, logoImage, noticeMessage, timeZone, companyName, isUserAllowedToRemoveAuthenticator, selfSignupEnabled }) => {
+                GetPortalSettingsDataFunc(({ noticeToAdmin, userSignupMethod, logoImage, noticeMessage, timeZone, name, isUserAllowedToRemoveAuthenticator, selfSignupEnabled }) => {
                     setSignupMethod(userSignupMethod)
                     setLogoImg({
                         image: logoImage.url,
@@ -66,7 +66,7 @@ const Settings = () => {
                     setNoticeToAdmin(noticeToAdmin)
                     setWelcomeText(noticeMessage)
                     setTimeZoneValue(timeZone)
-                    setInputAlias(companyName)
+                    setInputAlias(name)
                     setCanDelete(isUserAllowedToRemoveAuthenticator)
                     setCanSignUp(selfSignupEnabled)
                 }).finally(() => {
@@ -78,20 +78,29 @@ const Settings = () => {
     useLayoutEffect(() => {
         getDatas()
     }, [])
-    console.log(noticeToAdmin)
+    
     return <Contents loading={dataLoading}>
         <ContentsHeader title="SETTINGS_MANAGEMENT" subTitle="SETTINGS_MANAGEMENT">
             <Button className="st3" onClick={() => {
-                const callback = (data: updateLogoImageType) => {
+                const callback = async (data: updateLogoImageType) => {
+                    if(noticeToAdmin.isEnabled) {
+                        const { admins, methods } = noticeToAdmin
+                        if(methods.length === 0) {
+                            return message.error("관리자 알림 설정 중 알림 방식을 선택해주세요.")
+                        }
+                        if(admins.length === 0) {
+                            return message.error("관리자 알림 설정 중 알림 받을 관리자를 선택해주세요.")
+                        }
+                    }
                     UpdatePortalSettingsDataFunc({
                         timeZone: timeZoneValue,
                         logoImage: {
-                            image: convertBase64FromClientToServerFormat(data.image),
+                            image: await convertBase64FromClientToServerFormat(data.image),
                             isDefaultImage: data.isDefaultImage
                         },
                         noticeMessage: welcomeText,
                         userSignupMethod: signupMethod,
-                        companyName: inputAlias,
+                        name: inputAlias,
                         isUserAllowedToRemoveAuthenticator: canDelete,
                         noticeToAdmin: noticeToAdmin,
                         selfSignupEnabled: canSignUp
@@ -136,7 +145,7 @@ const Settings = () => {
             </Button>
         </ContentsHeader>
         <div className="contents-header-container">
-            <CustomInputRow title="회사명">
+            <CustomInputRow title="테넌트 이름">
                 <Input className="st1" value={inputAlias} valueChange={value => {
                     setInputAlias(value)
                 }} maxLength={20} />
@@ -171,7 +180,7 @@ const Settings = () => {
                 <CustomInputRow title="" isVertical>
                     <div className="admin-notice-setting-title">
                         <span>
-                            회원가입 요청 관리자에게 알림
+                            {signupMethod === UserSignupMethod.USER_SELF_ADMIN_ACCEPT ? '회원가입 승인 요청 관리자에게 알림' : '회원가입 관리자에게 알림'}
                         </span>
                     <Switch style={{
                     }} checked={noticeToAdmin.isEnabled} onChange={check => {
@@ -215,7 +224,6 @@ const Settings = () => {
                             <div className="notice-row-container">
                                 알림 받을 관리자 : <Select mode="multiple" allowClear value={noticeToAdmin.admins}
                                     onSelect={(value, option) => {
-                                        console.log(value, option)
                                         if (value === '_all_value_') {
                                             if (noticeToAdmin.admins.length === adminDatas.length) {
                                                 setNoticeToAdmin({
@@ -271,7 +279,7 @@ const Settings = () => {
                     </div>
                 </CustomInputRow>
             </div>
-            <CustomInputRow title="사용자 인증장치 삭제">
+            <CustomInputRow title={<>사용자가 직접 인증장치<br/>등록 해제 가능</>}>
                 <Switch checked={canDelete} onChange={check => {
                     setCanDelete(check)
                 }} checkedChildren={'허용'} unCheckedChildren={'거부'} />

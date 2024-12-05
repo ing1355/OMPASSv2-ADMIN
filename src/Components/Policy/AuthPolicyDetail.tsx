@@ -32,7 +32,7 @@ const AuthPolicyDetail = () => {
     const [authenticatorPolicies, setAuthenticatorPolicies] = useState<PolicyDataType['enableAuthenticators']>(['OMPASS', 'OTP', 'PASSCODE', 'WEBAUTHN'])
     const [selectedApplicationType, setSelectedApplicationType] = useState<ApplicationDataType['type'] | ''>(isAdd ? '' : 'DEFAULT')
     const [policyName, setPolicyName] = useState('')
-    const [dataLoading, setDataLoading] = useState(false)
+    const [dataLoading, setDataLoading] = useState(!(!uuid))
     const [initEvent, setInitEvent] = useState(false)
     const [inputDescription, setInputDescription] = useState('')
     const [locationDatas, setLocationDatas] = useState<PolicyDataType['locationConfig']>(undefined)
@@ -51,13 +51,13 @@ const AuthPolicyDetail = () => {
     const otpUsed = !isDefaultPolicy && selectedApplicationType ? !(["RADIUS"] as ApplicationDataType['type'][]).includes(selectedApplicationType) : false
     const browserUsed = !isDefaultPolicy && selectedApplicationType ? (["ADMIN", "DEFAULT", "REDMINE"] as ApplicationDataType['type'][]).includes(selectedApplicationType) : false
     const webauthnUsed = !isDefaultPolicy && browserUsed
-    const locationUsed = !isDefaultPolicy && (selectedApplicationType ? (["ADMIN", "DEFAULT", "WINDOWS_LOGIN", "REDMINE"] as ApplicationDataType['type'][]).includes(selectedApplicationType) : false)
+    const locationUsed = !isDefaultPolicy && (selectedApplicationType ? (["ADMIN", "DEFAULT", "WINDOWS_LOGIN", "REDMINE", 'LINUX_LOGIN', 'RADIUS', 'MAC_LOGIN'] as ApplicationDataType['type'][]).includes(selectedApplicationType) : false)
     const authenticatorsUsed = !isDefaultPolicy && selectedApplicationType ? !(["ALL", "RADIUS"] as ApplicationDataType['type'][]).includes(selectedApplicationType) : false
     const typeItems = applicationTypes.map(_ => ({
         key: _,
         label: getApplicationTypeLabel(_)
     }))
-    console.log(locationDatas)
+    
     useLayoutEffect(() => {
         if (uuid) {
             setDataLoading(true)
@@ -164,16 +164,16 @@ const AuthPolicyDetail = () => {
                     if (ompassControl === 'ACTIVE') {
                         if (browserUsed && browserChecked!.length === 0) return message.error("브라우저는 최소 1개 이상 허용해야 합니다.")
                         if (locationUsed && locationDatas?.isEnabled && locationDatas.locations.length === 0) {
-                            return message.error("사용자 위치 허용 정책을 1개 이상 설정해주세요.")
+                            return message.error("사용자 위치 정책을 1개 이상 설정해주세요.")
                         }
                         if (locationUsed && locationDatas?.isEnabled && locationDatas?.locations.some(_ => !_.alias)) {
-                            return message.error("사용자 위치 허용 정책은 위치명이 필수 입력 사항입니다.")
+                            return message.error("사용자 위치 정책은 위치명이 필수 입력 사항입니다.")
                         }
                         if (ipAddressValues?.isEnabled && ipAddressValues.networks.length === 0) {
-                            return message.error("IP 접근 허용 정책을 1개 이상 설정해주세요.")
+                            return message.error("IP 접근 정책을 1개 이상 설정해주세요.")
                         }
                         if (accessTimeValues?.isEnabled && accessTimeValues.accessTimes.length === 0) {
-                            return message.error("시간 접근 허용 정책을 1개 이상 설정해주세요.")
+                            return message.error("시간 접근 정책을 1개 이상 설정해주세요.")
                         }
                         if (noticeToAdmin?.isEnabled && noticeToAdmin.methods.length === 0) {
                             return message.error("위반 시 관리자 알림의 알림 방식을 1개 이상 설정해주세요.")
@@ -204,7 +204,6 @@ const AuthPolicyDetail = () => {
                             noticeToAdmin: isDefaultPolicy ? undefined : noticeToAdmin!,
                             noticeToThemselves
                         }, ({ enableAuthenticators, enableBrowsers, locationConfig, networkConfig, noticeToAdmin, noticeToThemselves, accessTimeConfig }) => {
-                            console.log(locationConfig)
                             if (!isDefaultPolicy) {
                                 if (locationUsed) setLocationDatas(locationConfig)
                                 if (authenticatorsUsed) setAuthenticatorPolicies(webauthnUsed ? enableAuthenticators : enableAuthenticators.filter(_ => _ !== 'WEBAUTHN'))
@@ -283,14 +282,13 @@ const AuthPolicyDetail = () => {
             type="info"
             typeTitle='안내'
             typeContent={sureChange === 'LOCATION' ? <>
-                사용자 위치 허용 정책은 OTP, PASSCODE, WEBAUTHN<br />인증 방식에 적용되지 않습니다.<br />
-                사용자 위치를 허용하시겠습니까?
+                사용자 위치 정책은 OTP, PASSCODE, WEBAUTHN<br />인증 방식에 적용되지 않습니다.<br />
+                계속 진행하시겠습니까?
             </> : <>
-                {sureChange} 인증 방식은 사용자 위치 허용 정책이 적용되지 않습니다.<br />
-                그래도 계속하시겠습니까?
+                {sureChange} 인증 방식은 사용자 위치 정책이 적용되지 않습니다.<br />
+                계속 진행하시겠습니까?
             </>}
-            cancelText={"취소"}
-            okText={"허용"}
+            yesOrNo
             okCallback={async () => {
                 if (sureChange === 'LOCATION') {
                     setLocationDatas({

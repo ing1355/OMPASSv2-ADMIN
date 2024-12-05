@@ -13,6 +13,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import * as XLSX from 'xlsx'
 import './UserExcelUpload.css'
 import { userSelectPageSize } from "Constants/ConstantValues";
+import { downloadExcelUserList } from "Functions/GlobalFunctions";
 
 type ExcelRegexErrorDataType = {
     row: number
@@ -74,14 +75,18 @@ const UserExcelUpload = () => {
                     <FormattedMessage id="NORMAL_RESET_LABEL" />
                 </Button>
                 <Button className="st5" onClick={async () => {
-                    let text = '사용자 아이디,성,이름,이메일,전화 번호\n'
-                    let link = document.createElement('a');
-                    link.download = 'OMPASS_사용자_리스트(템플릿).csv';
-                    let blob = new Blob([text], { type: 'text/plain' });
-                    const url = URL.createObjectURL(blob);
-                    link.href = url;
-                    link.click();
-                    URL.revokeObjectURL(url)
+                    downloadExcelUserList([], true)
+                    // const BOM = '\uFEFF'
+                    // let csvContent = "data:text/csv;charset=utf-8," + BOM;
+                    // let columns = ['사용자 아이디,성,이름,이메일,전화 번호']
+                    // csvContent += columns.join(',') + '\n';
+                    // let link = document.createElement('a');
+                    // link.download = 'OMPASS_사용자_리스트(템플릿).csv';
+                    // // let blob = new Blob([text], { type: 'text/plain' });
+                    // // const url = URL.createObjectURL(blob);
+                    // link.href = encodeURI(csvContent);
+                    // link.click();
+                    // // URL.revokeObjectURL(url)
                 }}>
                     템플릿 다운로드
                 </Button>
@@ -191,6 +196,7 @@ const UserExcelUpload = () => {
                                 if (errorTemp.key.length > 0) temp.push(errorTemp);
                                 return result;
                             }); // 데이터 저장
+                            console.log(resultData)
                             if (temp.length > 0) {
                                 setShowError(temp)
                                 message.error(formatMessage({ id: 'EXCEL_UPLOAD_FAIL_MSG' }));

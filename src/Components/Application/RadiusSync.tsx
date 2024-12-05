@@ -28,7 +28,7 @@ const RadiusSync = () => {
         showPerPage: userSelectPageSize()
     })
     const detailId = useParams().uuid
-    console.log(detailId)
+    
     const tableData = useMemo(() => {
         const { page, showPerPage } = pageSetting
         return userList.slice((page - 1) * showPerPage, page * showPerPage)

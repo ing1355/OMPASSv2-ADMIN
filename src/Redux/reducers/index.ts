@@ -3,12 +3,12 @@ import langReducer from './langReducer';
 import userReducer from './userReducer';
 import subdomainInfoReducer from './subdomainInfoReducer';
 import globalDatasReducer from './globalDatasReducer';
-import sessionCheckReducer from './sessionCheckReducer';
+import sessionInfoReducer from './sessionInfoReducer';
 
 export default combineReducers({
   lang: langReducer,
   userInfo: userReducer,
   subdomainInfo: subdomainInfoReducer,
   globalDatas: globalDatasReducer,
-  sessionChecked: sessionCheckReducer
+  sessionInfo: sessionInfoReducer
 });

@@ -309,6 +309,20 @@
   .login-body.account-recovery {
     width: 100%;
   }
+  .login-body.password-reset {
+    width: 100%;
+  }
+  .login-body.password-reset > form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .login-body.password-reset > form > div {
+    width: 100%;
+  }
 }
 
 @media (max-width:479px) {

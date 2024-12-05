@@ -42,7 +42,7 @@ const DashboardInvalidAuthSum = ({ applications }: {
     return <DashboardCardWithDateSelect title={<FormattedMessage id="DASHBOARD_INVALID_ALL_AUTH_SUM"/>} isCard={false} onChange={(d) => {
         setParams(d)
     }}>
-        <DashBoardBarChart datas={datas} keys={["count"]} indexKey="name"/>
+        <DashBoardBarChart datas={datas} keys={["count"]} indexKey="name" isSum/>
     </DashboardCardWithDateSelect>
 }
 

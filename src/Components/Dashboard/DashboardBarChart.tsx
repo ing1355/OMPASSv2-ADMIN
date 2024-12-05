@@ -8,9 +8,10 @@ type DashBoardBarChartProps = {
     keys: string[]
     indexKey: string
     customColor?: boolean
+    isSum?: boolean
 }
 
-const DashBoardBarChart = ({ datas, keys, indexKey, customColor }: DashBoardBarChartProps) => {
+const DashBoardBarChart = ({ datas, keys, indexKey, customColor, isSum }: DashBoardBarChartProps) => {
     const { formatMessage } = useIntl()
     const colors = useMemo(() => {
         let temp: {
@@ -27,25 +28,30 @@ const DashBoardBarChart = ({ datas, keys, indexKey, customColor }: DashBoardBarC
     }
 
     const maxValue = useMemo(() => {
-        let max = -Infinity
+        let max = 0
         keys.forEach(key => {
             datas.forEach(d => {
                 const target = d[key] as number
-                if(max < target) {
-                    max = target
+                if(isSum) {
+                    if(target) max += target
+                } else {
+                    if(max < target) {
+                        max = target
+                    }
                 }
             })
         })
         return max
-    },[datas, keys])
+    },[datas, keys, isSum])
 
     const yValues = useMemo(() => {
         const tick = Math.ceil(maxValue / 5)
-        return [0, ...Array.from({length: 5}).map((_, ind) => {
+        return [...new Set([0, ...Array.from({length: 5}).map((_, ind) => {
             return tick * (ind + 1)
-        })]
+        })])]
     },[maxValue])
-    return <>
+    
+    return datas.length > 0 ? <>
         <ResponsiveBar
             data={datas}
             keys={keys}
@@ -114,6 +120,7 @@ const DashBoardBarChart = ({ datas, keys, indexKey, customColor }: DashBoardBarC
             //     }
             // ]}
         />
+    </> : <>
     </>
 }
 

@@ -92,11 +92,13 @@
   flex-direction: row;
   align-items: center;
   gap: 8px;
-  & > img {
-    height: 30px;
-    position: relative;
-    bottom: 2px;
-  }
+}
+
+.header-title-container > img {
+  height: 30px;
+  width: 30px;
+  position: relative;
+  bottom: 2px;
 }
 
 @media (max-width:768px) {

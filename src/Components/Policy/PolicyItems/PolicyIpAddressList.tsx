@@ -40,7 +40,7 @@ const PolicyIpAddressList = ({ value, onChange, dataInit }: PolicyItemsPropsType
         marginBottom: !isEnabled ? 0 : '8px',
     }} checked={isEnabled} onChange={check => {
         setIpAddressChecked(check)
-    }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
+    }}/>
     <div className="policy-contents-container" data-hidden={!isEnabled}>
         <div className="policy-input-container">
             <div className="ip-address-policy-input-header">

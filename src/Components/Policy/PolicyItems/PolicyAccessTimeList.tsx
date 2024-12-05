@@ -55,7 +55,7 @@ const PolicyAccessTimeList = ({ value, onChange, dataInit }: PolicyItemsPropsTyp
                 ...value,
                 isEnabled: check
             })
-        }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
+        }}/>
         <div className="policy-contents-container" data-hidden={!isEnabled}>
             <div className="policy-input-container">
                 <div className="time-policy-container current">
@@ -142,7 +142,7 @@ const PolicyAccessTimeList = ({ value, onChange, dataInit }: PolicyItemsPropsTyp
                     </div>
                     <div className="time-policy-buttons-container">
                         <Button icon={addIconWhite} className="st3" onClick={() => {
-                            if (currentAccessTimeValue.timeRange.type === 'SPECIFIC_TIME' && (!currentAccessTimeValue.timeRange.startTime || !currentAccessTimeValue.timeRange.endTime)) return message.error("시간 접근 허용 정책에서 시간 선택을 확인해주세요.")
+                            if (currentAccessTimeValue.timeRange.type === 'SPECIFIC_TIME' && (!currentAccessTimeValue.timeRange.startTime || !currentAccessTimeValue.timeRange.endTime)) return message.error("시간 접근 정책에서 시간 선택을 확인해주세요.")
                             setAccessTimeValues([currentAccessTimeValue, ...accessTimes])
                             setCurrentAccessTimeValue(defaultTimePolicyData())
                         }} style={{

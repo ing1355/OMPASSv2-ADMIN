@@ -2,11 +2,17 @@ import { UserSignupMethod } from 'Constants/ConstantValues';
 import types from '../types';
 
 const subdomainInfo: ReduxStateType['subdomainInfo']|null = {
+  name: '',
   backendVersion: {
     fidoApp: 'unknown',
     portalApp: 'unknown',
     interfaceApp: 'unknown'
   },
+  securityQuestion: {
+    isRootAdminSignupComplete: false,
+    questions: []
+  },
+  serverType: 'ON_PREMISE',
   noticeMessage: '',
   logoImage: {
     isDefaultImage: true,

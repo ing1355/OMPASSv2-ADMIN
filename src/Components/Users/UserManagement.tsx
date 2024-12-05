@@ -20,6 +20,7 @@ import useFullName from "hooks/useFullName";
 import CustomModal from "Components/Modal/CustomModal";
 import { message } from "antd";
 import Button from "Components/CommonCustomComponents/Button";
+import { downloadExcelUserList } from "Functions/GlobalFunctions";
 
 const UserAddItem = ({ title, icon, onClick }: {
     title: React.ReactNode
@@ -109,15 +110,16 @@ const UserManagement = () => {
                             page_size: 999999,
                             page: 1
                         }, (res) => {
-                            let text = '사용자 아이디,성,이름,이메일,전화 번호\n'
-                            text += res.results.map(_ => `${_.username},${_.name.firstName},${_.name.lastName},${_.email},${_.phone}`).join('\n')
-                            let link = document.createElement('a');
-                            link.download = 'OMPASS_사용자_리스트.csv';
-                            let blob = new Blob([text], { type: 'text/plain' });
-                            const url = URL.createObjectURL(blob);
-                            link.href = url;
-                            link.click();
-                            URL.revokeObjectURL(url)
+                            downloadExcelUserList(res.results)
+                            // let text = '사용자 아이디,성,이름,이메일,전화 번호\n'
+                            // text += res.results.map(_ => `${_.username},${_.name.firstName},${_.name.lastName},${_.email},${_.phone}`).join('\n')
+                            // let link = document.createElement('a');
+                            // link.download = 'OMPASS_사용자_리스트.csv';
+                            // let blob = new Blob([text], { type: 'text/plain' });
+                            // const url = URL.createObjectURL(blob);
+                            // link.href = url;
+                            // link.click();
+                            // URL.revokeObjectURL(url)
                         })
                     }} icon={downloadIcon} hoverIcon={downloadIconWhite}>
                         <FormattedMessage id="USER_EXCEL_DOWNLOAD_LABEL" />

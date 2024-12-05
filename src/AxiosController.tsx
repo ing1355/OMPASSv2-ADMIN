@@ -28,9 +28,9 @@ const AxiosController = () => {
         const { data } = err.response
         if(data && data.code === 'ERR_B009') {
           dispatch(userInfoClear());
-          navigate('/', {
-            replace: true
-          });
+          // navigate('/', {
+          //   replace: true
+          // });
           if(data) {
             const { code } = err.response.data;
             // _message.error(formatMessage({id: code}))

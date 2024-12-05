@@ -5,76 +5,68 @@ import { getStorageAuth, setStorageAuth } from "Functions/GlobalFunctions"
 import jwtDecode from "jwt-decode"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { sessionCheckChange } from "Redux/actions/sessionCheckChange"
+import { sessionCheckChange, sessionTimeChange } from "Redux/actions/sessionInfoChange"
 import { userInfoChange, userInfoClear } from "Redux/actions/userChange"
 import './SessionTimeCount.css'
 import timeIcon from '../../assets/sessionTimeIcon.png'
 import CustomDropdown from "Components/CommonCustomComponents/CustomDropdown"
 
 const SessionTimeCount = () => {
-    const { sessionChecked, userInfo } = useSelector((state: ReduxStateType) => ({
-        sessionChecked: state.sessionChecked,
+    const { sessionInfo, userInfo } = useSelector((state: ReduxStateType) => ({
+        sessionInfo: state.sessionInfo!,
         userInfo: state.userInfo,
     }))
     const [sessionOpen, setSessionOpen] = useState(false)
-    const [remainSessionTime, setRemainSessionTime] = useState(0)
     const [showSession, setShowSession] = useState(false)
-    const remainSessionTimeRef = useRef(remainSessionTime)
+    const remainSessionTimeRef = useRef(sessionInfo.time)
     const dispatch = useDispatch()
     const sessionTimerRef = useRef<NodeJS.Timer>()
-    const sessionCheckedRef = useRef(sessionChecked)
+    const sessionCheckedRef = useRef(sessionInfo.checked)
     const remainTime = useMemo(() => {
         let result = ''
-        // let hours = Math.floor(remainSessionTime / 3600)
-        // let minutes = Math.floor(remainSessionTime >= 3600 ? ((remainSessionTime % 3600) / 60) : (remainSessionTime / 60))
-        let minutes = Math.floor(remainSessionTime / 60)
-        let seconds = remainSessionTime % 60
+        const _time = sessionInfo.time < 0 ? 0 : sessionInfo.time
+        let minutes = Math.floor(_time / 60)
+        let seconds = _time % 60
         result += `${minutes.toString().padStart(2, '0')}:`
         result += `${seconds.toString().padStart(2, '0')}`
-        // if (hours) result += `${hours.toString().padStart(2, '0')} 시간 `
-        // if (hours && minutes === 0) result += `00 분 `
-        // else if (minutes) result += `${minutes.toString().padStart(2, '0')} 분 `
-        // if (minutes || hours) result += `${seconds.toString().padStart(2, '0')} 초`
-        // else if (seconds) result += `${seconds.toString().padStart(2, '0')} 초`
-        // else result += '00 초'
         return result;
-    }, [remainSessionTime])
+    }, [sessionInfo.time])
 
     useEffect(() => {
-        remainSessionTimeRef.current = remainSessionTime
-    }, [remainSessionTime])
+        sessionCheckedRef.current = sessionInfo.checked
+        remainSessionTimeRef.current = sessionInfo.time
+    }, [sessionInfo])
 
-    useEffect(() => {
-        sessionCheckedRef.current = sessionChecked
-    }, [sessionChecked])
-
-    const settingTimer = useCallback(() => {
+    const settingTimer = useCallback((count?: number) => {
         if (sessionTimerRef.current) {
             clearInterval(sessionTimerRef.current)
         }
-        const temp = jwtDecode(getStorageAuth()!) as any
+        const token = getStorageAuth()
+        if(!token) return;
+        const temp = jwtDecode(token) as any
         let currentTime = Date.now();
         let expireTime = parseInt((temp.exp.toString()).padEnd((currentTime + "").length, "0"))
         let gap = expireTime - currentTime;
-        setRemainSessionTime(parseInt((gap / 1000).toFixed(0)))
+        dispatch(sessionTimeChange(count ?? parseInt((gap / 1000).toFixed(0))))
         sessionTimerRef.current = setInterval(() => {
             if (remainSessionTimeRef.current > 0 && remainSessionTimeRef.current <= 600 && !sessionCheckedRef.current) {
                 dispatch(sessionCheckChange(true))
                 setShowSession(true)
-                setRemainSessionTime(time => time - 1)
-            } else if (remainSessionTimeRef.current) {
-                setRemainSessionTime(time => time - 1)
+                dispatch(sessionTimeChange(remainSessionTimeRef.current - 1))
             } else if (remainSessionTimeRef.current <= 0) {
                 message.error('세션이 만료되었습니다.')
                 clearInterval(sessionTimerRef.current)
                 dispatch(sessionCheckChange(false))
                 dispatch(userInfoClear());
-            }
+            } else if (remainSessionTimeRef.current) {
+                dispatch(sessionTimeChange(remainSessionTimeRef.current - 1))
+            } 
         }, 1000);
     }, [])
 
     const visibilityChangeCallback = useCallback((e: Event) => {
         if (document.visibilityState === "visible") {
+            console.log("view focus on")
             settingTimer()
         }
     }, [])
@@ -108,7 +100,7 @@ const SessionTimeCount = () => {
                 },
             }
         ]}>
-            <div className="remain-session-time-container" onClick={() => {
+            <div className={`remain-session-time-container${sessionInfo.time < 60 ? " warning" : ""}`} onClick={() => {
                 setSessionOpen(true)
             }}>
                 <img src={timeIcon} /> {remainTime}
@@ -126,8 +118,7 @@ const SessionTimeCount = () => {
                 로그인 세션을 연장하시겠습니까?
             </>}
             noClose
-            okText={"예"}
-            cancelText={"아니오"}
+            yesOrNo
             okCallback={async () => {
                 return refreshCallback();
             }} buttonLoading />

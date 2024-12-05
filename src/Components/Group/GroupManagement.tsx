@@ -68,13 +68,13 @@ const GroupManagement = () => {
                     key: 'name',
                     title: <FormattedMessage id="GROUP_NAME_LABEL"/>
                 },
-                {
-                    key: 'policy',
-                    title: <FormattedMessage id="POLICY_NAME_LABEL"/>,
-                    render: (data, ind, row) => {
-                        return data ? (data.name === 'default policy' ? <FormattedMessage id={data.name} /> : data.name) : <FormattedMessage id="NO_POLICY_SELECTED_LABEL"/>
-                    }
-                },
+                // {
+                //     key: 'policy',
+                //     title: <FormattedMessage id="POLICY_NAME_LABEL"/>,
+                //     render: (data, ind, row) => {
+                //         return data ? (data.name === 'default policy' ? <FormattedMessage id={data.name} /> : data.name) : <FormattedMessage id="NO_POLICY_SELECTED_LABEL"/>
+                //     }
+                // },
                 {
                     key: 'description',
                     title: <FormattedMessage id="GROUP_DESCRIPTION_LABEL"/>,

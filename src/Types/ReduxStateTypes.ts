@@ -12,6 +12,10 @@ type LanguageStateType = "KR" | "EN";
 //   role: userRoleType;
 // }
 
+type SessionInfoStateType = {
+  checked: boolean
+  time: number
+}
 
 
 type ReduxStateType = {
@@ -20,5 +24,5 @@ type ReduxStateType = {
   subdomainInfo?: SubDomainInfoDataType
   globalDatas?: GlobalDatasType
   windowsAgentUrl?: string
-  sessionChecked?: boolean
+  sessionInfo?: SessionInfoStateType
 }

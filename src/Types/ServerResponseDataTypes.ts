@@ -154,8 +154,17 @@ type settingMgmtType = {
 }
 
 type UserSignUpMethodType = "USER_SELF_ADMIN_PASS" | "USER_SELF_ADMIN_ACCEPT"
+type SecurityQuestionsKeyType = "FIRST_PET_NAME" | "FAVORITE_CHILDHOOD_MOVIE" | "MOTHERS_MAIDEN_NAME" | "FAVORITE_BOOK_TITLE" | "FIRST_SCHOOL_NAME" | "FIRST_JOB_NAME" | "CHILDHOOD_NEIGHBORHOOD" | "FATHERS_NAME" | "FAVORITE_FOOD" | "FIRST_CAR_MODEL" | "FIRST_PHONE_MODEL" | "FAVORITE_COLOR" | "HOMETOWN_STREET" | "FIRST_FOREIGN_CITY" | "FAVORITE_CHILDHOOD_HOBBY" | "FIRST_FRIEND_NAME" | "FAVORITE_TRAVEL_DESTINATION" | "FAVORITE_SPORT" | "FAVORITE_SUBJECT" | "PARENTS_ANNIVERSARY" | "MEMORABLE_BIRTHDAY_GIFT" | "FAVORITE_SEASON" | "FIRST_SHOW_LOCATION" | "FAVORITE_MOVIE_GENRE" | "FREQUENT_CHILDHOOD_PLACE" | "FAVORITE_CHILDHOOD_CHARACTER" | "FIRST_FRIEND_ADDRESS" | "FAVORITE_CHILDHOOD_GAME" | "FAVORITE_MUSIC_GENRE" | "CLOSEST_FAMILY_MEMBER" | "MEMORABLE_TRAVEL_DESTINATION" | "FIRST_CONCERT_ARTIST" | "FAVORITE_TV_SHOW" | "PARENTS_MARRIAGE_LOCATION" | "FAVORITE_FLOWER" | "FIRST_BIKE_COLOR" | "FAVORITE_CELEBRITY" | "FAVORITE_CHILDHOOD_RIDE" | "PARENTS_MARRIAGE_PLACE" | "FAVORITE_CAR_BRAND" | "CHILDHOOD_NICKNAME" | "BEST_CHILDHOOD_FRIEND" | "FAVORITE_ANIMAL" | "FIRST_PIZZA_PLACE" | "FAVORITE_MOVIE_CHARACTER" | "PARENTS_BIRTHPLACE" | "MEMORABLE_FAMILY_TRIP" | "FIRST_OVERSEAS_COUNTRY" | "FAVORITE_COFFEE_DRINK" | "FIRST_HOME_FEATURE"
+
+type SecurityQuestionType = {
+  isRootAdminSignupComplete: boolean,
+  questions: SecurityQuestionsKeyType[]
+}
 
 type SubDomainInfoDataType = {
+  serverType: 'ON_PREMISE' | 'CLOUD',
+  securityQuestion: SecurityQuestionType
+  name: PortalSettingsDataType['name']
   logoImage: PortalSettingsDataType['logoImage']
   noticeMessage: PortalSettingsDataType['noticeMessage']
   userSignupMethod: PortalSettingsDataType['userSignupMethod']
@@ -169,13 +178,13 @@ type SubDomainInfoDataType = {
 }
 
 type PortalSettingsDataType = {
-  companyName: string
-  userSignupMethod: UserSignUpMethodType
+  name: string
   logoImage: logoImageType
   noticeMessage: string
+  userSignupMethod: UserSignUpMethodType
+  selfSignupEnabled: boolean
   timeZone: string
   isUserAllowedToRemoveAuthenticator: boolean
-  selfSignupEnabled: boolean
   noticeToAdmin: {
     isEnabled: RestrictionNoticeDataType['isEnabled'],
     admins: RestrictionNoticeDataType['admins'],
@@ -184,7 +193,7 @@ type PortalSettingsDataType = {
 }
 
 type UpdatePortalSettingsDataType = {
-  companyName: string
+  name: string
   userSignupMethod: UserSignUpMethodType
   logoImage: updateLogoImageType
   noticeMessage: string

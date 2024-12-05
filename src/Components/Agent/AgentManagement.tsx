@@ -45,8 +45,7 @@ const AgentManagement = () => {
     await GetAgentInstallerListFunc(_params, ({ results, totalCount }) => {
       setTableData(results.map(_ => ({
         ..._,
-        uploadDate: convertUTCStringToLocalDateString(_.uploadDate),
-        downloadTarget: false
+        uploadDate: convertUTCStringToLocalDateString(_.uploadDate)
       })))
       setTotalCount(totalCount)
     }).finally(() => {
@@ -59,7 +58,7 @@ const AgentManagement = () => {
       setRefresh(false)
     }
   }, [refresh])
-
+  
   return (
     <>
       <Contents loading={dataLoading}>
