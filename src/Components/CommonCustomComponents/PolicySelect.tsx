@@ -5,6 +5,7 @@ import './PolicySelect.css'
 import { FormattedMessage } from "react-intl"
 import CustomSelect from "./CustomSelect"
 import { useSelector } from "react-redux"
+import { INT_MAX_VALUE } from "Constants/ConstantValues"
 
 type PolicySelectProps = {
     selectedPolicy: PolicyListDataType['id']
@@ -29,7 +30,8 @@ const PolicySelect = ({ selectedPolicy, setSelectedPolicy, needSelect, applicati
 
     useLayoutEffect(() => {
         if(!datas) GetPoliciesListFunc({
-            page_size: 9999
+            page: 0,
+            page_size: INT_MAX_VALUE
         }, ({ results, totalCount }) => {
             setPoliciesData(results)
         })

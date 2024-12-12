@@ -1,7 +1,7 @@
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
-import { GetPortalSettingsDataFunc, GetUserDataListFunc, UpdatePortalSettingsDataFunc } from "Functions/ApiFunctions"
+import { GetPortalSettingsDataFunc, UpdatePortalSettingsDataFunc } from "Functions/ApiFunctions"
 import { useLayoutEffect, useState } from "react"
 import './Settings.css'
 import { timeZoneNames, UserSignupMethod } from "Constants/ConstantValues"
@@ -15,21 +15,18 @@ import { subdomainInfoChange } from "Redux/actions/subdomainInfoChange"
 import { globalDatasChange } from "Redux/actions/globalDatasChange"
 import loginMainImage from '../../assets/loginMainImage.png'
 import CustomImageUpload from "Components/CommonCustomComponents/CustomImageUpload"
-import closeIcon from '../../assets/closeIcon.png'
-import { FormattedMessage } from "react-intl"
+import CustomAdminSelect from "Components/CommonCustomComponents/CustomAdminSelect"
 
 const Settings = () => {
     const { subdomainInfo, globalDatas } = useSelector((state: ReduxStateType) => ({
         subdomainInfo: state.subdomainInfo,
         globalDatas: state.globalDatas!
     }));
+    const [dataLoading, setDataLoading] = useState(false)
     const [timeZoneValue, setTimeZoneValue] = useState('Asia/Seoul')
     const [welcomeText, setWelcomeText] = useState('')
     const [canSignUp, setCanSignUp] = useState(false)
-    const [dataLoading, setDataLoading] = useState(false)
     const [signupMethod, setSignupMethod] = useState(UserSignupMethod.USER_SELF_ADMIN_PASS)
-    const [adminDatas, setAdminDatas] = useState<UserDataType[]>([])
-    const [noticeAdminPopupOpened, setNoticeAdminPopupOpened] = useState(false)
     const [noticeToAdmin, setNoticeToAdmin] = useState<PortalSettingsDataType['noticeToAdmin']>({
         isEnabled: false,
         admins: [],
@@ -41,43 +38,32 @@ const Settings = () => {
         image: loginMainImage,
         isDefaultImage: true
     })
+    const [hasIncludeWithdrawal, setHasIncludeWithdrawal] = useState(false)
 
     const dispatch = useDispatch()
 
-    const getDatas = async () => {
+    const getDatas = () => {
         setDataLoading(true)
-        GetUserDataListFunc({
-            page: 1,
-            page_size: 9999,
-            role: 'ADMIN'
-        }, ({ results, totalCount }) => {
-            GetUserDataListFunc({
-                page: 1,
-                page_size: 9999,
-                role: 'ROOT'
-            }, (root) => {
-                setAdminDatas(root.results.concat(results))
-                GetPortalSettingsDataFunc(({ noticeToAdmin, userSignupMethod, logoImage, noticeMessage, timeZone, name, isUserAllowedToRemoveAuthenticator, selfSignupEnabled }) => {
-                    setSignupMethod(userSignupMethod)
-                    setLogoImg({
-                        image: logoImage.url,
-                        isDefaultImage: logoImage.isDefaultImage
-                    })
-                    setNoticeToAdmin(noticeToAdmin)
-                    setWelcomeText(noticeMessage)
-                    setTimeZoneValue(timeZone)
-                    setInputAlias(name)
-                    setCanDelete(isUserAllowedToRemoveAuthenticator)
-                    setCanSignUp(selfSignupEnabled)
-                }).finally(() => {
-                    setDataLoading(false)
-                })
+        GetPortalSettingsDataFunc(({ noticeToAdmin, userSignupMethod, logoImage, noticeMessage, timeZone, name, isUserAllowedToRemoveAuthenticator, selfSignupEnabled }) => {
+            setSignupMethod(userSignupMethod)
+            setLogoImg({
+                image: logoImage.url,
+                isDefaultImage: logoImage.isDefaultImage
             })
+            setNoticeToAdmin(noticeToAdmin)
+            setWelcomeText(noticeMessage)
+            setTimeZoneValue(timeZone)
+            setInputAlias(name)
+            setCanDelete(isUserAllowedToRemoveAuthenticator)
+            setCanSignUp(selfSignupEnabled)
+        }).finally(() => {
+            setDataLoading(false)
         })
     }
+
     useLayoutEffect(() => {
         getDatas()
-    }, [])
+    },[])
     
     return <Contents loading={dataLoading}>
         <ContentsHeader title="SETTINGS_MANAGEMENT" subTitle="SETTINGS_MANAGEMENT">
@@ -90,6 +76,9 @@ const Settings = () => {
                         }
                         if(admins.length === 0) {
                             return message.error("관리자 알림 설정 중 알림 받을 관리자를 선택해주세요.")
+                        }
+                        if (hasIncludeWithdrawal) {
+                            return message.error("알림 받을 관리자에 이미 탈퇴한 관리자가 포함되어 있습니다. 해당 관리자를 제외시켜 주세요.")
                         }
                     }
                     UpdatePortalSettingsDataFunc({
@@ -222,64 +211,18 @@ const Settings = () => {
                                 }} />
                             </div>
                             <div className="notice-row-container">
-                                알림 받을 관리자 : <Select mode="multiple" allowClear value={noticeToAdmin.admins}
-                                    onSelect={(value, option) => {
-                                        if (value === '_all_value_') {
-                                            if (noticeToAdmin.admins.length === adminDatas.length) {
-                                                setNoticeToAdmin({
-                                                    ...noticeToAdmin,
-                                                    admins: []
-                                                })
-                                            } else {
-                                                setNoticeToAdmin({
-                                                    ...noticeToAdmin,
-                                                    admins: adminDatas.map(_ => _.userId)
-                                                })
-                                            }
-                                        }
-                                    }}
-                                    onChange={value => {
-                                        setNoticeToAdmin({
-                                            ...noticeToAdmin,
-                                            admins: value
-                                        })
-                                    }} options={[{
-                                        label: noticeToAdmin.admins.length === adminDatas.length ? "전체 선택 해제" : "전체 선택",
-                                        value: "_all_value_"
-                                    }, ...adminDatas.map(opt => ({
-                                        label: opt.username,
-                                        value: opt.userId,
-                                        withdrawal: opt.status === 'WITHDRAWAL'
-                                    }))]} style={{
-                                        flex: 1,
-                                    }}
-                                    open={noticeAdminPopupOpened}
-                                    onBlur={() => {
-                                        setNoticeAdminPopupOpened(false)
-                                    }}
-                                    onFocus={() => {
-                                        setNoticeAdminPopupOpened(true)
-                                    }}
-                                    tagRender={({ label, disabled, closable, onClose, value }: any) => <div className={"policy-notice-admin-tag-container" + (adminDatas.find(admin => admin.userId === value)?.status === 'WITHDRAWAL' ? ' withdrawal' : '')} onClick={(e) => {
-
-                                    }}>
-                                        <div className="policy-notice-admin-tag-item">
-                                            <span className="policy-notice-admin-tag-text">
-                                                {label}
-                                            </span>
-                                            <img className="policy-notice-admin-tag-img" src={closeIcon} onClick={(e) => {
-                                                e.stopPropagation()
-                                                onClose(e)
-                                            }} />
-                                        </div>
-                                    </div>}
-                                />
+                                알림 받을 관리자 : <CustomAdminSelect data={noticeToAdmin.admins} onChange={value => {
+                                    setNoticeToAdmin({
+                                        ...noticeToAdmin,
+                                        admins: value
+                                    })
+                                }} hasIncludeWithdrawal={setHasIncludeWithdrawal}/>
                             </div>
                         </div>
                     </div>
                 </CustomInputRow>
             </div>
-            <CustomInputRow title={<>사용자가 직접 인증장치<br/>등록 해제 가능</>}>
+            <CustomInputRow title={<>사용자가 직접 인증장치<br/>등록 해제</>}>
                 <Switch checked={canDelete} onChange={check => {
                     setCanDelete(check)
                 }} checkedChildren={'허용'} unCheckedChildren={'거부'} />

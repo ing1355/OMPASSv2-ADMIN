@@ -128,7 +128,7 @@ const RadiusSync = () => {
                                 }, {
                                     key: 'firstName',
                                     title: '성',
-                                    render: (data, ind, row) => row.name.firstName || '-'
+                                    render: (data, ind, row) => row.name.firstName
                                 }, {
                                     key: 'lastName',
                                     title: '이름',
@@ -157,7 +157,7 @@ const RadiusSync = () => {
             yesOrNo
             okCallback={async () => {
                 setSureSync(false)
-                AddRadiusUserListFunc({
+                return AddRadiusUserListFunc({
                     radiusApplicationId: detailId!,
                     radiusRpUsers: userList.map(_ => ({
                         username: _.username,

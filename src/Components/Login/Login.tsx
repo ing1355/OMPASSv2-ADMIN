@@ -24,7 +24,6 @@ const Login = () => {
   const [inputChangePassword, setInputChangePassword] = useState('')
   const [inputChangePasswordConfirm, setInputChangePasswordConfirm] = useState('')
   const [needPasswordChange, setNeedPasswordChange] = useState(false)
-  const [ompassOpened, setOmpassOpened] = useState(false)
   const ompassWindowRef = useRef<Window | null | undefined>()
 
   const inputUesrnameRef = useRef<HTMLInputElement>()

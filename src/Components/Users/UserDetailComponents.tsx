@@ -4,6 +4,7 @@ import passcodeVisibleIcon from '../../assets/passwordVisibleIcon.png';
 import passcodeHiddenIcon from '../../assets/passwordHiddenIcon.png';
 import windowsOSIcon from '../../assets/windowsOSIcon.png';
 import macOSIcon from '../../assets/macOSIcon.png';
+import rockyOsIcon from '../../assets/rockyOsIcon.png';
 import androidOSIcon from '../../assets/androidOSIcon.png';
 import iOSIcon from '../../assets/iOSIcon.png';
 import ubuntuOSIcon from '../../assets/ubuntuOSIcon.png';
@@ -182,14 +183,14 @@ export const ViewRecoveryCode = ({ code, noView }: {
 
 export const UserInfoRow = ({ title, value }: {
     title: string
-    value: React.ReactNode
+    value?: React.ReactNode
 }) => {
     return <div className="user-detail-info-row">
         <div className="user-detail-info-col">
             <FormattedMessage id={title} />
         </div>
         <div className="user-detail-info-col">
-            {value}
+            {value || '-'}
         </div>
     </div>
 }
@@ -223,6 +224,8 @@ const imgSrcByOS = (os: OsNamesType) => {
             return iOSIcon
         case 'Ubuntu':
             return ubuntuOSIcon
+        case 'Rocky':
+            return rockyOsIcon
         case 'CentOS':
             return centOSIcon
         case 'Gooroom':
@@ -295,19 +298,21 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
                     <div className="user-detail-info-device-info-content-item linux">
                         <img src={imgSrcByOS(serverInfo?.os?.name!)} />
                         <div className="user-detail-info-device-info-content-title">
-                            <FormattedMessage id="USER_DETAIL_OS_LABEL" />
+                            <FormattedMessage id="USER_DETAIL_DEVICE_INFO_LABEL" />
                         </div>
                         <div>
-                            {createOSInfo(serverInfo?.os)}
+                            {serverInfo?.name}
+                            <br/>
+                            ({createOSInfo(serverInfo?.os)})
                         </div>
                     </div>
                     <div className="user-detail-info-device-info-content-item linux">
                         <img src={agentVersionIcon} />
                         <div className="user-detail-info-device-info-content-title">
-                            에이전트 버전 정보
+                            패키지 버전 정보
                         </div>
                         <div>
-                            {serverInfo?.agentVersion}
+                            {serverInfo?.packageVersion}
                         </div>
                     </div>
                 </div>

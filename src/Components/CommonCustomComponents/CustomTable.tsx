@@ -56,6 +56,7 @@ type CustomTableProps<T extends {
     deleteBtn?: CustomTableButtonType
     customBtns?: React.ReactNode
     refresh?: boolean
+    isNotDataInit?: boolean
 }
 
 const CustomTable = <T extends {
@@ -83,6 +84,7 @@ const CustomTable = <T extends {
     deleteBtn,
     customBtns,
     refresh,
+    isNotDataInit,
     hover }: CustomTableProps<T>) => {
         
     const [pageNum, setPageNum] = useState(0)
@@ -91,6 +93,7 @@ const CustomTable = <T extends {
     const [searchValue, setSearchValue] = useState('')
     const [hoverId, setHoverId] = useState(-1)
     const [_refresh, setRefresh] = useState(false)
+    const [isInit, setIsInit] = useState(false)
     const location = useLocation()
     const { formatMessage } = useIntl()
 
@@ -102,11 +105,14 @@ const CustomTable = <T extends {
         return null
     },[searchType])
 
-    const searchCallback = (page: number, size: number) => {
+    const searchCallback = (page: number, size: number, isReset?: boolean) => {
+        if(isNotDataInit && !isInit) {
+            return setIsInit(true)
+        }
         if(page === 1) window.history.replaceState("", "", location.pathname)
         if (onSearchChange) onSearchChange({
-            type: searchType,
-            value: searchValue,
+            type: isReset ? searchOptions![0].key : searchType,
+            value: isReset ? "" : searchValue,
             page,
             size
         })
@@ -185,11 +191,11 @@ const CustomTable = <T extends {
                     <FormattedMessage id="SEARCH"/>
                 </Button>
                 <Button className="st4" onClick={() => {
-                    setSearchType(searchOptions[0].key)
                     setSearchValue("")
+                    setSearchType(searchOptions[0].key)
                     setPageNum(1)
                     setTableSize(10)
-                    searchCallback(1, 10)
+                    searchCallback(1, 10, true)
                 }} icon={resetIcon}>
                     <FormattedMessage id="NORMAL_RESET_LABEL"/>
                 </Button>
@@ -250,16 +256,18 @@ const CustomTable = <T extends {
                         style={bodyRowStyle && (bodyRowStyle instanceof Function ? bodyRowStyle(_, ind, arr) : bodyRowStyle)}
                     >
                         {
-                            columns.map((__, _ind) => <td key={_ind} className={`${__.onClick ? 'poiner' : ''}`} style={{
-                                whiteSpace: (__.noWrap || __.maxWidth) ? 'nowrap' : 'initial',
-                                maxWidth: __.maxWidth,
-                                textOverflow: 'ellipsis',
-                                overflow: 'hidden'
-                            }}>
-                                {
-                                    __.render === null ? <></> : (__.render ? __.render(_[__.key], ind, _) : _[__.key])
-                                }
-                            </td>)
+                            columns.map((__, _ind) => {
+                                return <td key={_ind} className={`${__.onClick ? 'poiner' : ''}`} style={{
+                                    whiteSpace: (__.noWrap || __.maxWidth) ? 'nowrap' : 'initial',
+                                    maxWidth: __.maxWidth,
+                                    textOverflow: 'ellipsis',
+                                    overflow: 'hidden'
+                                }}>
+                                    {
+                                        __.render === null ? '-' : (__.render ? __.render(_[__.key], ind, _) : _[__.key] ? _[__.key] : '-')
+                                    }
+                                </td>
+                            })
                         }
                     </tr>) : <tr>
                         <td className="table-no-data" colSpan={columns.length} style={{

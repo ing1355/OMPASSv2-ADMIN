@@ -67,13 +67,11 @@ const LdapManagement = () => {
                     },
                     {
                         key: 'lastUserSyncedAt',
-                        title: "마지막 동기화 시각",
-                        render: data => data || '-'
+                        title: "마지막 동기화 시각"
                     },
                     {
                         key: 'createdAt',
                         title: "생성 시각",
-                        render: data => data || '-'
                     },
                 ]}
                 onBodyRowClick={(row, index, arr) => {

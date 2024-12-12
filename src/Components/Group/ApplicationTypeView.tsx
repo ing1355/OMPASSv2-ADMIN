@@ -65,7 +65,7 @@ const ApplicationTypeView = ({ datas, selected, setSelected }: ApplicationTypeVi
                             <div className='transfer-user-child-application-title application' data-selected={selected.includes(user.id)}>
                                 <img src={rpUesrIcon} />
                                 <div>
-                                    {user.portalUsername}({getFullName(user.portalName)}) - {user.username}({user.groupName ?? <FormattedMessage id="NO_GROUP_SELECTED_LABEL"/>})
+                                    {user.portalUsername}({getFullName(user.portalName)}) - {user.username}({user.groupName ? user.groupName : <FormattedMessage id="NO_GROUP_SELECTED_LABEL"/>})
                                 </div>
                             </div>
                             {/* {

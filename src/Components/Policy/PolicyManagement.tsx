@@ -74,7 +74,6 @@ const PolicyManagement = () => {
                     {
                         key: 'description',
                         title: <FormattedMessage id="POLICY_COLUMN_DESCRIPTION_LABEL"/>,
-                        render: (data) => data || "설명 없음"
                     },
                     {
                         key: 'createdAt',

@@ -9,6 +9,7 @@ import { useLocation, useNavigate, useParams } from "react-router"
 import { useDispatch, useSelector } from "react-redux"
 import userIcon from '../../assets/userIcon.png';
 import editIcon from '../../assets/editIcon.png';
+import arrowDownIcon from '../../assets/arrowDownIcon.png';
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import passcodeDeleteIcon from '../../assets/tableDeleteIcon.png';
 import passcodeDeleteIconHover from '../../assets/deleteIconRed.png';
@@ -29,6 +30,7 @@ import { isDev2 } from 'Constants/ConstantValues'
 import UnLockBtn from './UnLockBtn'
 import { PasscodeAddComponent } from './PasscodeComponents'
 import PairOMPASSAuthModal from 'Components/Modal/PairOMPASSAuthModal'
+import useFullName from 'hooks/useFullName'
 
 const initModifyValues: UserDataModifyLocalValuesType = {
     name: {
@@ -104,6 +106,7 @@ const UserDetail = ({ }) => {
     const navigate = useNavigate()
     const location = useLocation()
     const dispatch = useDispatch()
+    const getFullName = useFullName()
     const _uuid = useParams().uuid;
     const isDeleted = userData?.status === 'WITHDRAWAL'
     const uuid = userInfo.role === 'USER' ? userInfo.userId : _uuid
@@ -302,7 +305,7 @@ const UserDetail = ({ }) => {
                 }
                 {
                     // userInfo.role === 'ROOT' && <Button className='st5' onClick={() => {
-                    userInfo.role === 'ROOT' && !isSelf && <Button className='st5' onClick={() => {
+                    !isAdd && userInfo.role === 'ROOT' && !isSelf && <Button className='st5' onClick={() => {
                         setSureSwap(true)
                     }}>
                         권한 승계
@@ -384,7 +387,7 @@ const UserDetail = ({ }) => {
                         }}>
                             <FormattedMessage id="DUPLICATE_CHECK" />
                         </Button>
-                    </UserInfoInputrow> : <UserInfoRow title="ID" value={userData ? userData.username : ""} />}
+                    </UserInfoInputrow> : <UserInfoRow title="ID" value={userData?.username} />}
                     {/* {(isAdd || (isModify && (isSelf || (userData?.role === 'ADMIN' && userInfo.role === 'ROOT') || (userData?.role === 'USER' && isAdmin)))) && <> */}
                     {(isAdd || (isSelf && isModify)) && <>
                         <UserInfoInputrow title='PASSWORD' required>
@@ -475,7 +478,7 @@ const UserDetail = ({ }) => {
                             }
                         }} customType='name' noGap />
                     </UserInfoInputrow> :
-                        <UserInfoRow title="NAME" value={userData ? `${userData.name.firstName} ${userData.name.lastName}` : ""} />}
+                        <UserInfoRow title="NAME" value={userData ? getFullName(userData.name) : "-"} />}
                     {(isModify || isAdd) ? <UserInfoInputrow title="EMAIL" required>
                         <Input style={{
                             width: '406px'
@@ -492,7 +495,7 @@ const UserDetail = ({ }) => {
                                 })
                             }
                         }} maxLength={48} placeholder={formatMessage({ id: 'EMAIL_PLACEHOLDER' })} noGap />
-                    </UserInfoInputrow> : <UserInfoRow title="EMAIL" value={userData?.email || formatMessage({ id: 'NO_EMAIL_INPUT_LABEL' })} />}
+                    </UserInfoInputrow> : <UserInfoRow title="EMAIL" value={userData?.email} />}
 
                     {(isModify || isAdd) ? <UserInfoInputrow title="PHONE_NUMBER">
                         <Input className='st1' value={isAdd ? addValues.phone : modifyValues.phone} valueChange={value => {
@@ -509,7 +512,7 @@ const UserDetail = ({ }) => {
                                 })
                             }
                         }} maxLength={13} noGap />
-                    </UserInfoInputrow> : <UserInfoRow title="PHONE_NUMBER" value={userData?.phone || formatMessage({ id: 'NO_PHONE_INPUT_LABEL' })} />}
+                    </UserInfoInputrow> : <UserInfoRow title="PHONE_NUMBER" value={userData?.phone} />}
 
                     {((isModify && userInfo.role === 'ROOT') || (isAdd && isAdmin)) ? <UserInfoInputrow title="USER_ROLE">
                         <RoleSelect selectedGroup={isAdd ? addValues.role : modifyValues.role} setSelectedGroup={(role) => {
@@ -525,7 +528,7 @@ const UserDetail = ({ }) => {
                                 })
                             }
                         }} needSelect isRoot={userInfo.role === 'ROOT'} />
-                    </UserInfoInputrow> : <UserInfoRow title="USER_ROLE" value={(userData && userData.role) ? formatMessage({ id: userData.role + '_ROLE_VALUE' }) : "선택 안함"} />}
+                    </UserInfoInputrow> : <UserInfoRow title="USER_ROLE" value={(userData && userData.role) ? formatMessage({ id: userData.role + '_ROLE_VALUE' }) : "-"} />}
                     {!isAdd && userData?.recoveryCode && <UserInfoRow title="RECOVERY_CODE" value={<ViewRecoveryCode code={userData.recoveryCode} />} />}
                     {!isAdd && <UserInfoRow title="NORMAL_STATUS_LABEL" value={<>
                         {userData?.status && <FormattedMessage id={`USER_STATUS_${userData.status}`} />}
@@ -559,11 +562,14 @@ const UserDetail = ({ }) => {
                                 <img src={userIcon} /><h4>{_.username} {_.application.type === 'WINDOWS_LOGIN' ? `(${_.authenticationInfo.loginDeviceInfo.name})` : ''}</h4>
                             </div>
                         </div>
+                        <div className='user-detail-header-last-container'>
                         <h5>
                             {_.authenticationInfo.loginDeviceInfo.updatedAt ? <>
                                 {_.authenticationInfo.loginDeviceInfo.updatedAt} <FormattedMessage id="USER_INFO_UPDATED_LABEL" />
                             </> : "등록 안됨"}
                         </h5>
+                            <img className='user-detail-header-arrow-icon' src={arrowDownIcon}/>
+                        </div>
                     </div>
 
                     <div className="user-detail-info-container">

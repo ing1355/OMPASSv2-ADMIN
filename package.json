@@ -1,6 +1,6 @@
 {
   "name": "ompass_rp_admin",
-  "version": "2.0.0(72)",
+  "version": "2.0.0(77)",
   "proxy": "https://ompass.kr:54006",
   "private": true,
   "dependencies": {
@@ -19,6 +19,8 @@
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@types/styled-components": "^5.1.26",
+    "@uiw/react-markdown-editor": "^6.1.2",
+    "@uiw/react-md-editor": "^4.0.4",
     "@vis.gl/react-google-maps": "^1.1.0",
     "antd": "^5.14.1",
     "axios": "^1.4.0",
@@ -35,24 +37,30 @@
     "react-device-detect": "^2.2.3",
     "react-dom": "^18.2.0",
     "react-intl": "^6.4.2",
+    "react-markdown": "^9.0.1",
+    "react-multi-select-component": "^4.3.4",
     "react-redux": "^8.0.5",
     "react-router": "^6.10.0",
     "react-router-dom": "^6.10.0",
     "react-scripts": "5.0.1",
+    "react-select": "^5.9.0",
+    "react-syntax-highlighter": "^15.6.1",
     "redux": "^4.2.1",
+    "remark-gfm": "^4.0.0",
     "styled-components": "^6.0.0-rc.1",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5"
   },
   "scripts": {
-    "start": "cross-env HTTPS=true react-scripts start",
-    "build": "cross-env GENERATE_SOURCEMAP=false react-scripts build",
-    "build:dev": "cross-env REACT_APP_DEV=dev GENERATE_SOURCEMAP=false react-scripts build",
+    "start": "cross-env HTTPS=true react-app-rewired start",
+    "prebuild": "node fetchMdFiles.js",
+    "build": "cross-env GENERATE_SOURCEMAP=false react-app-rewired build",
+    "build:dev": "cross-env REACT_APP_DEV=dev GENERATE_SOURCEMAP=false react-app-rewired build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "__deploy": "scp -r ./build/* hozzi@192.168.182.140:/usr/local/ompass_agent_rp",
-    "deploy": "scp -r ./build/* hozzi@192.168.182.140:/opt/ompass2/fe/ompass_portal",
+    "deploy": "scp -r ./build/* hozzi@192.168.182.140:/opt/oms/ompass2/server/fe/ompass_portal",
     "deploy2": "scp -r ./build/* hozzi@192.168.182.140:/usr/local/ompass_agent_rp_dev",
     "testDeploy": "scp -r ./build/* hozzi@192.168.182.140:/usr/local/ompass_agent_rp_test",
     "awsInvalidation": "aws cloudfront create-invalidation --distribution-id E2ALB03P1N7UVH --paths \"/*\" --no-cli-pager",
@@ -60,7 +68,7 @@
     "awsDeploy": "aws s3 sync ./build s3://ompass-admin&&npm run awsInvalidation",
     "awsTestDeploy": "aws s3 sync ./build s3://ompass-admin-test&&npm run awsTestInvalidation",
     "deploy:dev": "scp -r ./build/* hozzi@192.168.182.141:~/admin",
-    "deploy:dev2": "scp -P 2222 -r ./build/* oms@192.168.182.75:/opt/ompass2/fe/ompass_portal"
+    "deploy:dev2": "scp -P 2222 -r ./build/* oms@192.168.182.75:/opt/oms/ompass2/server/fe/ompass_portal"
   },
   "eslintConfig": {
     "extends": [
@@ -85,7 +93,13 @@
     "@types/react-copy-to-clipboard": "^5.0.7",
     "@types/react-router": "^5.1.20",
     "@types/react-router-dom": "^5.3.3",
+    "@types/react-syntax-highlighter": "^15.5.13",
     "@types/redux": "^3.6.0",
-    "cross-env": "^7.0.3"
+    "cross-env": "^7.0.3",
+    "customize-cra": "^1.0.0",
+    "dotenv": "^16.4.7",
+    "node-ssh": "^13.2.0",
+    "raw-loader": "^4.0.2",
+    "react-app-rewired": "^2.2.1"
   }
 }

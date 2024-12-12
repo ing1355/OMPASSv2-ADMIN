@@ -1,14 +1,7 @@
 import Button from "Components/CommonCustomComponents/Button";
 import Input from "Components/CommonCustomComponents/Input";
-import { CopyRightText } from "Constants/ConstantValues";
 import { useEffect, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
-import locale_image from '../../assets/locale_image.png';
-import manualDownloadIcon from '../../assets/manualDownloadIcon.png'
-import downloadIconWhite from '../../assets/downloadIconWhite.png';
-import { useDispatch, useSelector } from "react-redux";
-import { langChange } from "Redux/actions/langChange";
-import { saveLocaleToLocalStorage } from "Functions/GlobalFunctions";
 import { ResetPasswordEmailCodeVerifyFunc, ResetPasswordEmailSendFunc, ResetPasswordFunc } from "Functions/ApiFunctions";
 import { FormattedMessage } from "react-intl";
 import { message } from "antd";

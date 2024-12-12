@@ -56,7 +56,7 @@ label:has(input[type="checkbox"]:checked)::after {
 label:has(input[type="checkbox"]) {
     display: flex;
     cursor: pointer;
-    padding-left: 14px;
+    padding-left: 16px;
 }
 
 label:has(input[type="checkbox"])::after {

@@ -88,7 +88,7 @@ type OmpassInfoType = {
   alias: string,
 }
 
-type OsNamesType = "Windows" | "Mac" | "Gooroom" | "Ubuntu" | "CentOS" | 'Android' | 'iOS';
+type OsNamesType = "Windows" | "Mac" | "Gooroom" | "Ubuntu" | "CentOS" | 'Android' | 'iOS' | 'Rocky';
 
 type GetPutSecretKeyApiType = {
   secretKey: string,
@@ -272,4 +272,23 @@ type LdapUserDataType = {
   phone: UserDataType['phone']
   org: string
   syncedUserStatus: string
+}
+
+type RpUserListDataType = {
+  portalUser: PortalUserType
+  rpUser: RPUserType
+  authenticationInfoId: AuthenticatorDataType['id']
+  groupName: UserGroupDataType['name']
+  application: {
+    type: ApplicationDataType['type']
+    name: ApplicationDataType['name']
+  }
+  ompassRegisteredAt: string
+  lastLoggedInAt: string
+  lastLoggedInAuthenticator: AuthenticatorDataType['type']
+  ompassDeviceName: string
+  ompassAppVersion: string
+  pcName?: string
+  windowsAgentVersion?: string
+  hasPasscode: boolean
 }

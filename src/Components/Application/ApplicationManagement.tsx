@@ -1,7 +1,7 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable";
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
-import { applicationTypes, getApplicationTypeLabel } from "Constants/ConstantValues";
+import { applicationTypes, getApplicationTypeLabel, INT_MAX_VALUE } from "Constants/ConstantValues";
 import { GetApplicationListFunc, GetPoliciesListFunc } from "Functions/ApiFunctions";
 import { useLayoutEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -41,7 +41,8 @@ const ApplicationManagement = () => {
     const getPolicyDatas = async () => {
         setDataLoading(true)
         GetPoliciesListFunc({
-            page_size: 9999
+            page: 0,
+            page_size: INT_MAX_VALUE
         }, ({ results, totalCount }) => {
             setPoliciesData(results)
         }).finally(() => {
@@ -111,12 +112,10 @@ const ApplicationManagement = () => {
                 {
                     key: 'domain',
                     title: <FormattedMessage id="APPLICATION_INFO_DOMAIN_LABEL"/>,
-                    render: (data) => data || <FormattedMessage id="APPLICATION_NO_DOMAIN_LABEL"/>
                 },
                 {
                     key: 'description',
                     title: <FormattedMessage id="APPLICATION_INFO_DESCRIPTION_LABEL"/>,
-                    render: (data) => data || <FormattedMessage id="APPLICATION_NO_DESCRIPTION_LABEL"/>
                 },
                 {
                     key: 'policyId',

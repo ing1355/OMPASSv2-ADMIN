@@ -56,6 +56,7 @@ export const UnlockUserApi = (userId: UserDataType['userId']) => `/v2/users/${us
 export const AddUserWithCsvDataApi = '/v2/users/csv'
 export const DuplicateUserNameCheckApi = (username: string) => `/v2/users/username/${username}/existence`;
 export const RoleSwappingApi = '/v2/users/role-swapping'
+export const GetRpUserListApi = 'v2/users/rp'
 
 // 인증장치 정책 업데이트
 export const UpdateUserAuthenticatorPolicyApi = (authId: string, policyId: string) => `/v2/rp/authentication-data/${authId}/policy/${policyId}`
@@ -99,7 +100,7 @@ export const GetOMPASSAuthResultApi = (type: string, pollingKey: string) => `/v2
 // LDAP
 export const GetLdapConfigListApi = '/v2/ldap-configs'
 export const AddLdapConfigListApi = '/v2/ldap-configs'
-export const UpdateLdapConfigListApi = '/v2/ldap-configs'
+export const UpdateLdapConfigListApi = (id: LdapConfigDataType['id']) => `/v2/ldap-configs/id/${id}`
 export const DeleteLdapConfigListApi = (id: LdapConfigDataType['id']) => `/v2/ldap-configs/id/${id}`
 export const SyncLdapUserListApi = '/v2/ldap/sync'
 export const TestLdapConnectionApi = '/v2/ldap/test-connection'

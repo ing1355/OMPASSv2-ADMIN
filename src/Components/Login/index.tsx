@@ -13,6 +13,7 @@ import manualDownloadIcon from '../../assets/manualDownloadIcon.png'
 import { useDispatch, useSelector } from "react-redux"
 import { CopyRightText } from "Constants/ConstantValues"
 import './index.css';
+import FindUsername from "./FindUsername"
 
 const LoginPage = () => {
     const { lang, subdomainInfo } = useSelector((state: ReduxStateType) => ({
@@ -20,7 +21,7 @@ const LoginPage = () => {
         subdomainInfo: state.subdomainInfo!
     }));
     const dispatch = useDispatch();
-    
+
     return <div
         className='login-container'
     >
@@ -38,6 +39,14 @@ const LoginPage = () => {
                     <ResetPassword />
                 }
             />
+
+            <Route
+                path="/findUsername"
+                element={
+                    <FindUsername />
+                }
+            />
+
             <Route
                 path="/"
                 element={

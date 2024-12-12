@@ -149,7 +149,7 @@
 
 .policy-contents-container {
     border: 1px solid var(--sub-grey-color5);
-    margin: 12px 0;
+    /* margin: 12px 0; */
     padding: 10px 12px;
     border-radius: 8px;
     flex: 0 0 85%;
@@ -337,47 +337,4 @@
     transition: all .25s ease-in-out;
     height: fit-content;
     overflow: hidden;
-}
-
-.policy-notice-admin-tag-container {
-    display: inline-flex;
-    flex: none;
-    align-self: center;
-}
-
-.policy-notice-admin-tag-container.withdrawal {
-    & .policy-notice-admin-tag-item {
-        background-color: var(--sub-red-color);
-    }
-
-    & .policy-notice-admin-tag-text {
-        text-decoration: line-through;
-    }
-}
-
-.policy-notice-admin-tag-item {
-    margin: 2px 0;
-    border-radius: 4px;
-    margin-inline-end: 4px;
-    padding-inline-start: 8px;
-    padding-inline-end: 4px;
-    box-sizing: border-box;
-    background-color: var(--sub-purple-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 4px;
-}
-
-.policy-notice-admin-tag-img {
-    height: 16px;
-    width: 16px;
-    padding: 2px;
-    box-sizing: border-box;
-    cursor: pointer;
-}
-
-:where(.css-dev-only-do-not-override-1xg9z9n).ant-select-outlined:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer):hover .ant-select-selector,
-.ant-select-focused:where(.css-dev-only-do-not-override-1xg9z9n).ant-select-outlined:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer) .ant-select-selector {
-    border-color: var(--main-purple-color);
 }

@@ -2,6 +2,7 @@ import Button from "Components/CommonCustomComponents/Button"
 import './AccountRecovery.css'
 import { useNavigate } from "react-router"
 import { FormattedMessage } from "react-intl"
+import userIcon from '../../assets/groupUserIcon.png'
 import accountRecoveryLockIcon from '../../assets/accountRecoveryLockIcon.png'
 import accountRecoveryPasswordIcon from '../../assets/accountRecoveryPasswordIcon.png'
 
@@ -29,8 +30,10 @@ const AccountRecovery = () => {
                 무엇을 도와드릴까요?
             </div>
             <div className="account-recovery-contents">
-                <AccountRecoveryRowItem title="계정이 잠겼습니까?" icon={accountRecoveryLockIcon} path="/resetPassword?type=LOCK"/>
+                <AccountRecoveryRowItem title="아이디를 잊으셨습니까?" icon={userIcon} path="/findUsername"/>
+                {/* <AccountRecoveryRowItem title="아이디를 잊으셨습니까?" icon={accountRecoveryLockIcon} path="/resetPassword?type=LOCK"/> */}
                 <AccountRecoveryRowItem title="비밀번호를 잊으셨습니까?" icon={accountRecoveryPasswordIcon} path="/resetPassword?type=PASSWORD"/>
+                <AccountRecoveryRowItem title="계정이 잠겼습니까?" icon={accountRecoveryLockIcon} path="/resetPassword?type=LOCK"/>
                 <Button className="st6 recovery-back-button" onClick={() => {
                     navigate(-1)
                 }}>

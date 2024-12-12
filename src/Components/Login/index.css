@@ -57,7 +57,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.1rem;
+  font-size: 1rem;
   text-align: center;
   padding: 0 24px;
   box-sizing: border-box;
@@ -107,7 +107,7 @@
   box-sizing: border-box;
 }
 
-.login-body.password-reset .code-confirm {
+.login-body.password-reset.code-confirm {
   height: 460px;
 }
 
@@ -182,6 +182,7 @@
 
 .quick-start-guide-text {
   text-decoration: none;
+  font-size: .9rem;
   color: var(--main-purple-color);
 }
 
@@ -198,7 +199,9 @@
 .login-action-row {
   display: flex;
   flex-direction: row;
-  gap: 8px;
+  align-items: center;
+  gap: 6px;
+  font-size: .9rem;
 }
 
 .signup:hover {
@@ -220,8 +223,8 @@
 }
 
 .login-action-vertical-line {
-  height: 100%;
-  border: .1px solid black;
+  height: 80%;
+  border: .1px solid var(--sub-grey-color3);
 }
 
 /* 반응형 */

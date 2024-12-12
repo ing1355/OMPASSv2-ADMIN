@@ -81,7 +81,7 @@ const RadiusUserRegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, 
                 _onCancel()
             }
         }, () => {
-            message.error("OMPASS 인증 실패")
+            _onCancel()
         })
     }}>
         <OMPASSAuthContents isRegister role={userInfo.role} name={userInfo.name} username={userInfo.username} status={authStatus} sessionData={sessionData} />

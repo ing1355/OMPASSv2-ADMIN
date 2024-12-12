@@ -77,12 +77,11 @@ const AllAuthLogs = () => {
             {
                 key: 'processType',
                 title: '유형',
-                render: (data) => <FormattedMessage id={data + '_VALUE'} />
+                render: (data, ind, row) => <FormattedMessage id={row.ompassData.authPurpose + '_LOG_VALUE'} />
             },
             {
                 key: 'authenticatorType',
                 title: '인증 수단',
-                render: (data) => data || '-'
             },
             {
                 key: 'policyAtTimeOfEvent',
@@ -92,7 +91,7 @@ const AllAuthLogs = () => {
             {
                 key: 'reason',
                 title: <FormattedMessage id="INVALID_REASON_LABEL"/>,
-                render: (d) => d !== 'NONE' ? <FormattedMessage id={"INVALID_" + d + '_LABEL'}/> : '-'
+                render: (d) => <FormattedMessage id={"INVALID_" + d + '_LABEL'}/>
             },
             {
                 key: 'authenticationTime',

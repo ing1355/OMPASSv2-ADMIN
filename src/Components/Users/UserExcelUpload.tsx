@@ -120,7 +120,6 @@ const UserExcelUpload = () => {
                         {
                             key: 'phone',
                             title: createHeaderColumn('PHONE_NUMBER'),
-                            render: data => data || <FormattedMessage id="USER_NO_PHONE_LABEL" />,
                             noWrap: true
                         },
                     ]}
@@ -151,8 +150,11 @@ const UserExcelUpload = () => {
                             const sheet = workbook.Sheets[sheetName];
 
                             // 시트를 JSON으로 변환
-                            const jsonData = XLSX.utils.sheet_to_json(sheet);
+                            const jsonData = XLSX.utils.sheet_to_json(sheet, {
+                                defval: ""
+                            });
                             let temp: ExcelRegexErrorDataType[] = []
+                            
                             const resultData = jsonData.map((_, ind) => {
                                 let errorTemp: ExcelRegexErrorDataType = {
                                     row: ind + 1,
@@ -166,7 +168,7 @@ const UserExcelUpload = () => {
                                         }
                                         pre["username"] = cur;
                                     } else if (ind === 1) {
-                                        if (!nameRegex.test(cur)) {
+                                        if (cur.length > 0 && !nameRegex.test(cur)) {
                                             errorTemp.key.push('firstName')
                                         }
                                         pre["name"] = {
@@ -186,7 +188,7 @@ const UserExcelUpload = () => {
                                         }
                                         pre["email"] = cur;
                                     } else if (ind === 4) {
-                                        if (!phoneRegex.test(cur)) {
+                                        if (cur.length > 0 && !phoneRegex.test(cur)) {
                                             errorTemp.key.push('phone')
                                         }
                                         pre["phone"] = cur;

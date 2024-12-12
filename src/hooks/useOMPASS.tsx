@@ -1,3 +1,4 @@
+import { isDev } from "Constants/ConstantValues";
 import { GetOMPASSAuthResultFunc, OMPASSAuthStartFunc } from "Functions/ApiFunctions";
 import { DeviceInfo } from "Functions/GetDeviceInfo";
 import { useCallback, useRef } from "react";
@@ -51,7 +52,9 @@ const useOMPASS = () => {
                     })
                 }, 1000);
             }
+            console.log(isDev)
             OMPASSAuthStartFunc({
+                isTest: isDev,
                 purpose: purpose,
                 applicationId: applicationId,
                 targetUserId: type === 'single' ? '' : targetUserId,

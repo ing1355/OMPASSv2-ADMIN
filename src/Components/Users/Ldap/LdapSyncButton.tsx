@@ -73,11 +73,11 @@ const LdapSyncButton = ({ id }: LdapSyncButtonProps) => {
                     }, {
                         key: 'firstName',
                         title: '성',
-                        render: (data, ind, row) => row.name.firstName ?? "-"
+                        render: (data, ind, row) => row.name.firstName
                     }, {
                         key: 'lastName',
                         title: '이름',
-                        render: (data, ind, row) => row.name.lastName ?? "-"
+                        render: (data, ind, row) => row.name.lastName
                     }, {
                         key: 'org',
                         title: '조직명'

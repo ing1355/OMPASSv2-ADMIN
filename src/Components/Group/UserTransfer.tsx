@@ -10,7 +10,7 @@ import { GetApplicationListFunc, GetUserGroupDataListFunc, GetUserHierarchyFunc 
 import { message } from 'antd'
 import TransferContainer from './TransferContainer'
 import { SetStateType } from 'Types/PropsTypes'
-import { applicationTypes } from 'Constants/ConstantValues'
+import { applicationTypes, INT_MAX_VALUE } from 'Constants/ConstantValues'
 import './UserTransfer.css'
 import CustomModal from 'Components/Modal/CustomModal'
 
@@ -126,9 +126,9 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
 
     const GetDatas = async () => {
         setDataLoading(true)
-        GetUserGroupDataListFunc({ page: 1, page_size: 99999 }, (groups) => {
+        GetUserGroupDataListFunc({ page: 0, page_size: INT_MAX_VALUE }, (groups) => {
             const groupDatas = groups.results
-            GetApplicationListFunc({ page: 1, page_size: 99999 }, ({ results }) => {
+            GetApplicationListFunc({ page: 0, page_size: INT_MAX_VALUE }, ({ results }) => {
                 setApplicationDatas(results)
                 GetUserHierarchyFunc(data => {
                     setUserDatas(data.filter(_ => _.rpUsers.length > 0).map(_ => {
@@ -147,7 +147,7 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
                                         id: rp.rpUserId,
                                         username: rp.rpUsername,
                                         groupId: rp.groupId,
-                                        groupName: groupDatas.find(gr => gr.id === rp.groupId)?.name || "그룹 없음"
+                                        groupName: groupDatas.find(gr => gr.id === rp.groupId)?.name || ""
                                     }))
                                 }
                             }).sort((a, b) => applicationTypes.findIndex(t => t === a.type) - applicationTypes.findIndex(t => t === b.type))

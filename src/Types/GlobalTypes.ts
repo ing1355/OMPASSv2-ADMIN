@@ -1,5 +1,5 @@
 type LanguageType = 'KR' | 'EN'
-type AuthPurposeType = "ADD_OTHER_AUTHENTICATOR" | "AUTH_LOGIN" | "REG_LOGIN"
+type AuthPurposeType = "ROLE_SWAPPING" | "ADD_OTHER_AUTHENTICATOR" | "AUTH_LOGIN" | "REG_LOGIN" | "ROLE_SWAPPING_SOURCE" | "ROLE_SWAPPING_TARGET" | "ADMIN_2FA_FOR_APPLICATION_DELETION" | "ADMIN_2FA_FOR_SECRET_KEY_UPDATE" | "RADIUS_REGISTRATION"
 type AuthenticationLogType = "ALLOW" | "DENY" | "ALLOW_OUT_OF_SCHEDULE"
 type UserGroupViewType = 'portal' | 'application' | 'group'
 type logoImageType = {
@@ -47,12 +47,13 @@ type ServerMetaDataType = {
     ip?: string
     macAddress?: string
     agentVersion?: string
+    packageVersion?: string
     createdAt?: string
     updatedAt?: string
 }
 type UserNameType = {
     lastName: string
-    firstName: string
+    firstName?: string
 }
 type HttpMethodType = "GET" | "POST" | "PUT" | "DELETE"
 type ProcessTypeType = "REGISTRATION" | "AUTHENTICATION" | "POLICY"
@@ -216,7 +217,7 @@ type ApplicationDataType = DefaultApplicationDataType & {
     redirectUri?: string
     helpDeskMessage: string
     secretKey: string
-    isTwoFactorAuthEnabled?: boolean
+    isPasswordlessEnabled?: boolean
     radiusProxyServer?: RadiusDataType
 }
 
@@ -227,14 +228,14 @@ type ApplicationDataParamsType = {
     helpDeskMessage: ApplicationDataType['helpDeskMessage']
     logoImage: updateLogoImageType
     description: ApplicationDataType['description']
-    isTwoFactorAuthEnabled: ApplicationDataType['isTwoFactorAuthEnabled']
+    isPasswordlessEnabled: ApplicationDataType['isPasswordlessEnabled']
     domain?: ApplicationDataType['domain']
     type?: ApplicationDataType['type']
 }
 
 type ApplicationListDataType = {
     id: ApplicationDataType['id']
-    type: ApplicationDataType['id']
+    type: ApplicationDataType['type']
     createdAt: string
     description: ApplicationDataType['description']
     domain: ApplicationDataType['domain']
@@ -634,8 +635,8 @@ type CustomTableColumnType<T> = {
 type UserTransferDataType = UserHierarchyDataType | UserHierarchyDataApplicationViewDataType | UserHierarchyDataGroupViewDataType
 
 type RecoverySendMailParamsType = {
-    type: "PASSWORD" | "LOCK"
-    username: string
+    type: "PASSWORD" | "LOCK" | 'USERNAME'
+    username?: string
     email: string
 }
 
@@ -647,7 +648,8 @@ type PolicyItemsPropsType<T> = {
 }
 
 type OMPASSAuthStartParamsType = {
-    purpose: "ROLE_SWAPPING" | "ROLE_SWAPPING_SOURCE" | "ROLE_SWAPPING_TARGET" | "ADMIN_2FA" | "RADIUS_REGISTRATION" | "NONE"
+    isTest?: boolean
+    purpose: AuthPurposeType
     targetUserId?: string
     applicationId?: ApplicationDataType['id']
     loginDeviceInfo: {
@@ -720,4 +722,11 @@ type LdapConfigParamsType = {
 type RadiusUserDataType = {
     username: string
     email: string
+}
+
+type RpUsersListParamsType = GeneralParamsType & {
+    applicationId?: ApplicationDataType['id']
+    portalUsername?: UserDataType['username']
+    rpUsername?: RPUserType['username']
+    groupName?: UserGroupDataType['name']
 }

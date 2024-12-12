@@ -8,16 +8,16 @@ import dayjs from "dayjs"
 import OMPASSAuthContents from "./OMPASSAuthContents"
 import { FormattedMessage } from "react-intl"
 import { convertTimeFormat } from "Functions/GlobalFunctions"
-import { DateTimeFormat } from "Constants/ConstantValues"
 
 
 type SingleOMPASSAuthModalProps = {
     opened: boolean
     onCancel: () => void
     successCallback: (token: string) => void
+    purpose: AuthPurposeType
 }
 
-const SingleOMPASSAuthModal = ({ opened, onCancel, successCallback }: SingleOMPASSAuthModalProps) => {
+const SingleOMPASSAuthModal = ({ opened, onCancel, successCallback, purpose }: SingleOMPASSAuthModalProps) => {
     const { userInfo } = useSelector((state: ReduxStateType) => ({
         userInfo: state.userInfo!
     }));
@@ -54,7 +54,7 @@ const SingleOMPASSAuthModal = ({ opened, onCancel, successCallback }: SingleOMPA
     return <CustomModal title="OMPASS 인증" open={opened} onCancel={() => {
         _onCancel()
     }} buttonsType="small" noClose onOpen={() => {
-        OMPASSAuth.startAuth({ type: 'single', purpose: 'ADMIN_2FA' }, ({ url, ntp, sessionExpiredAt, sourceNonce }) => {
+        OMPASSAuth.startAuth({ type: 'single', purpose }, ({ url, ntp, sessionExpiredAt, sourceNonce }) => {
             const ntpTime = dayjs.utc(parseInt(ntp))
             const expireTime = dayjs.utc(sessionExpiredAt)
             setSessionData({
@@ -80,7 +80,7 @@ const SingleOMPASSAuthModal = ({ opened, onCancel, successCallback }: SingleOMPA
                 tokenRef.current = token
             }
         }, () => {
-            message.error("OMPASS 인증 실패")
+            _onCancel()
         })
     }} okText={"완료"} okCallback={async () => {
         if (authStatus !== 'complete') return message.error("인증을 완료해야 합니다.")

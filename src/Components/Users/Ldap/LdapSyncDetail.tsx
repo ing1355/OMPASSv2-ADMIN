@@ -5,7 +5,7 @@ import Contents from "Components/Layout/Contents";
 import ContentsHeader from "Components/Layout/ContentsHeader";
 import { AddLdapConfigListFunc, DeleteLdapConfigListFunc, GetLdapConfigListFunc, UpdateLdapConfigListFunc } from "Functions/ApiFunctions";
 import { useEffect, useLayoutEffect, useState } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import './LdapSync.css'
 import { LDAPAuthenticationTypes, LDAPTransportTypes } from "Constants/ConstantValues";
 import { message } from "antd";
@@ -14,23 +14,25 @@ import BottomLineText from "Components/CommonCustomComponents/BottomLineText";
 import deleteIcon from '../../../assets/deleteIcon.png'
 import deleteIconHover from '../../../assets/deleteIconHover.png'
 import LdapSyncButton from "./LdapSyncButton";
+import CopyToClipboard from "react-copy-to-clipboard";
 
 const LdapSyncDetail = () => {
     const [dataLoading, setDataLoading] = useState(false)
     const [data, setData] = useState<LdapConfigDataType>()
     const [params, setParams] = useState<LdapConfigParamsType>({
-        name: 'test',
-        description: 'test',
+        name: '',
+        description: '',
         proxyServer: {
-            address: '192.168.182.133',
-            port: 8111
+            address: '',
+            port: 0
         },
-        baseDn: 'dc=example,dc=com',
+        baseDn: '',
         ldapAuthenticationType: 'PLAIN',
         ldapTransportType: 'CLEAR'
     })
     const navigate = useNavigate()
     const detailId = useParams().id;
+    const { formatMessage } = useIntl()
 
     const GetDatas = async () => {
         try {
@@ -70,7 +72,7 @@ const LdapSyncDetail = () => {
         <ContentsHeader title={detailId ? "LDAP_MODIFY_TITLE" : "LDAP_ADD_TITLE"} subTitle={detailId ? "LDAP_MODIFY_TITLE" : "LDAP_ADD_TITLE"}>
             <Button className="st3" onClick={() => {
                 if (detailId) {
-                    UpdateLdapConfigListFunc(params, (newData) => {
+                    UpdateLdapConfigListFunc(detailId, params, (newData) => {
                         message.success("LDAP 설정 수정에 성공하였습니다.")
                         setData(newData)
                     })
@@ -93,7 +95,33 @@ const LdapSyncDetail = () => {
             </Button>}
         </ContentsHeader>
         <div className="contents-header-container">
-            {detailId && <BottomLineText title="설정 정보" />}
+            {detailId && <BottomLineText title="상세 정보" />}
+            {data?.apiServerHost && <CustomInputRow title={<FormattedMessage id="API_SERVER_ADDRESS_LABEL" />}>
+                <CopyToClipboard text={data?.apiServerHost} onCopy={(value, result) => {
+                    if (result) {
+                        message.success(formatMessage({ id: 'API_SERVER_ADDRESS_COPY_SUCCESS' }))
+                    } else {
+                        message.success(formatMessage({ id: 'API_SERVER_ADDRESS_COPY_FAIL' }))
+                    }
+                }}>
+                    <Input className="st1 secret-key" value={data?.apiServerHost} readOnly />
+                </CopyToClipboard>
+            </CustomInputRow>}
+            {data?.secretKey && <CustomInputRow title={"시크릿 키"}>
+                <CopyToClipboard text={data.secretKey} onCopy={(value, result) => {
+                    console.log(value, result)
+                    if (result) {
+                        message.success(formatMessage({ id: 'APPLICATION_SECRET_KEY_COPY_SUCCESS_MSG' }))
+                    } else {
+                        message.success(formatMessage({ id: 'APPLICATION_SECRET_KEY_COPY_FAIL_MSG' }))
+                    }
+                }}>
+                    <Input className="st1 secret-key" value={data.secretKey} readOnly={true} />
+                </CopyToClipboard>
+            </CustomInputRow>}
+            {detailId && <BottomLineText title="설정 정보" style={{
+                marginTop: detailId ? '32px' : 0
+            }}/>}
             <CustomInputRow title="이름">
                 <Input className="st1" value={params.name} valueChange={val => {
                     setParams({
@@ -168,7 +196,7 @@ const LdapSyncDetail = () => {
                     }
                 </div>
             </CustomInputRow>
-            {detailId && <LdapSyncButton id={detailId}/>}
+            {detailId && <LdapSyncButton id={detailId} />}
         </div>
     </Contents>
 }

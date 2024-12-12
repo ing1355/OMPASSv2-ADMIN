@@ -12,8 +12,6 @@ import CustomSelect from "Components/CommonCustomComponents/CustomSelect"
 import Button from "Components/CommonCustomComponents/Button"
 import Input from "Components/CommonCustomComponents/Input"
 import { CopyToClipboard } from "react-copy-to-clipboard"
-import documentIcon from '../../assets/documentIcon.png'
-import documentIconHover from '../../assets/documentIconHover.png'
 import deleteIcon from '../../assets/deleteIcon.png'
 import deleteIconHover from '../../assets/deleteIconHover.png'
 import './ApplicationDetail.css'
@@ -24,6 +22,8 @@ import { domainRegex, redirectUriRegex } from "Components/CommonCustomComponents
 import CustomModal from "Components/Modal/CustomModal"
 import SingleOMPASSAuthModal from "Components/Modal/SingleOMPASSAuthModal"
 import RadiusDetailInfo from "./RadiusDetailInfo"
+import documentIcon from '../../assets/documentIcon.png'
+import documentIconHover from '../../assets/documentIconHover.png'
 
 const ApiServerAddressItem = ({ text }: {
     text: string
@@ -50,7 +50,7 @@ const ApplicationDetail = () => {
     })
     const [inputName, setInputName] = useState('')
     const [helpMsg, setHelpMsg] = useState('')
-    const [needPassword, setNeedPassword] = useState(false)
+    const [isPasswordlessEnabled, setIsPasswordlessEnabled] = useState(false)
     const [inputSecretKey, setInputSecretKey] = useState('')
     const [inputDomain, setInputDomain] = useState('')
     const [inputClientId, setInputClientId] = useState('')
@@ -70,6 +70,7 @@ const ApplicationDetail = () => {
     const { uuid } = useParams()
     const isAdd = !uuid
     const needDomains: ApplicationDataType['type'][] = ["DEFAULT", "ADMIN", "REDMINE"]
+    const passwordUsed: ApplicationDataType['type'][] = ['WINDOWS_LOGIN', 'LINUX_LOGIN']
     const isRedmine = applicationType === 'REDMINE'
     const typeItems = applicationTypes.map(_ => ({
         key: _,
@@ -106,7 +107,7 @@ const ApplicationDetail = () => {
                 setApplicationType(data.type)
                 setHelpMsg(data.helpDeskMessage || "")
                 setInputApiServerHost(data.apiServerHost)
-                setNeedPassword(data.isTwoFactorAuthEnabled ?? false)
+                setIsPasswordlessEnabled(data.isPasswordlessEnabled ?? false)
                 setRadiusData(data.radiusProxyServer)
             })
         } else {
@@ -124,7 +125,7 @@ const ApplicationDetail = () => {
     }, [])
 
     return <Contents loading={dataLoading}>
-        <ContentsHeader title="APPLICATION_MANAGEMENT" subTitle={isAdd ? "APPLICATION_ADD" : "APPLICATION_MODIFY"}>
+        <ContentsHeader title="APPLICATION_MANAGEMENT" subTitle={isAdd ? "APPLICATION_ADD" : "APPLICATION_MODIFY"} docsUrl="test">
             <div className="custom-detail-header-items-container">
                 <Button className="st3" onClick={async () => {
                     if (!applicationType) {
@@ -161,7 +162,7 @@ const ApplicationDetail = () => {
                             },
                             description: inputDescription,
                             type: applicationType,
-                            isTwoFactorAuthEnabled: needPassword
+                            isPasswordlessEnabled: isPasswordlessEnabled
                         }, () => {
                             message.success(formatMessage({ id: 'APPLICATION_MODIFY_SUCCESS_MSG' }))
                         })
@@ -178,7 +179,7 @@ const ApplicationDetail = () => {
                             },
                             description: inputDescription,
                             type: applicationType,
-                            isTwoFactorAuthEnabled: needPassword
+                            isPasswordlessEnabled: isPasswordlessEnabled
                         }, () => {
                             message.success(formatMessage({ id: 'APPLICATION_ADD_SUCCESS_MSG' }))
                             navigate(-1)
@@ -186,11 +187,6 @@ const ApplicationDetail = () => {
                     }
                 }}>
                     <FormattedMessage id="SAVE" />
-                </Button>
-                <Button className="st5" icon={documentIcon} hoverIcon={documentIconHover} onClick={() => {
-                    message.info("기능 준비중(페이지 이동)")
-                }}>
-                    <FormattedMessage id="APPLICATION_DOCS_VIEW_LABEL" />
                 </Button>
                 {uuid && <>
                     {applicationType !== 'ADMIN' && <Button icon={deleteIcon} hoverIcon={deleteIconHover} className="st2" onClick={() => {
@@ -243,6 +239,12 @@ const ApplicationDetail = () => {
                 {isAdd ? <CustomSelect value={applicationType} onChange={value => {
                     setApplicationType(value as ApplicationDataType['type'])
                 }} items={typeItems} needSelect /> : getApplicationTypeLabel(applicationType as ApplicationDataType['type'])}
+                {applicationType && <Button className="st5" icon={documentIcon} hoverIcon={documentIconHover} onClick={() => {
+                    message.info("기능 준비중(페이지 이동)")
+                    window.open(`/docs/${applicationType}`, '_blank');
+                }}>
+                    <FormattedMessage id="APPLICATION_DOCS_VIEW_LABEL" />
+                </Button>}
             </CustomInputRow>
             {
                 applicationType && <>
@@ -275,9 +277,9 @@ const ApplicationDetail = () => {
                             </CustomInputRow>}
                         </>
                     }
-                    {applicationType === 'WINDOWS_LOGIN' && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_WINDOWS_PASSWORD_NEED_CHECK_LABEL" />}>
-                        <Switch checked={needPassword} onChange={check => {
-                            setNeedPassword(check)
+                    {passwordUsed.includes(applicationType) && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_WINDOWS_PASSWORD_NEED_CHECK_LABEL" />}>
+                        <Switch checked={isPasswordlessEnabled} onChange={check => {
+                            setIsPasswordlessEnabled(check)
                         }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
                     </CustomInputRow>}
                     <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_POLICY_LABEL" />} required>
@@ -317,7 +319,7 @@ const ApplicationDetail = () => {
                 setSureReset(false)
                 setAuthPurpose('reset')
             }} buttonLoading />
-        <SingleOMPASSAuthModal opened={authPurpose !== ''} onCancel={() => {
+        <SingleOMPASSAuthModal purpose={authPurpose === 'reset' ? 'ADMIN_2FA_FOR_SECRET_KEY_UPDATE' : "ADMIN_2FA_FOR_APPLICATION_DELETION"} opened={authPurpose !== ''} onCancel={() => {
             setAuthPurpose('')
         }} successCallback={(token) => {
             console.log('complete token : ', token)

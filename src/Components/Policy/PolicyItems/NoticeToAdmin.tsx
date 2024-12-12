@@ -1,37 +1,19 @@
-import { Select, Switch } from "antd"
+import { Switch } from "antd"
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import Input from "Components/CommonCustomComponents/Input"
-import { GetUserDataListFunc } from "Functions/ApiFunctions"
-import { useLayoutEffect, useState } from "react"
-import closeIcon from '../../../assets/closeIcon.png'
 import { policyNoticeRestrictionTypes } from "Constants/ConstantValues"
 import { FormattedMessage } from "react-intl"
+import CustomAdminSelect from "Components/CommonCustomComponents/CustomAdminSelect"
 
-const NoticeToAdmin = ({value={
+const NoticeToAdmin = ({hasIncludeWithdrawal, value={
     isEnabled: false,
     methods: [],
     admins: [],
     targetPolicies: []
-}, onChange}: PolicyItemsPropsType<RestrictionNoticeDataType>) => {
-    const [adminDatas, setAdminDatas] = useState<UserDataType[]>([])
-    const [noticeAdminPopupOpened, setNoticeAdminPopupOpened] = useState(false)
+}, onChange}: PolicyItemsPropsType<RestrictionNoticeDataType> & {
+    hasIncludeWithdrawal: (has: boolean) => void
+}) => {
     const { isEnabled, admins, methods, targetPolicies } = value
-
-    useLayoutEffect(() => {
-        GetUserDataListFunc({
-            page: 1,
-            page_size: 9999,
-            role: 'ADMIN'
-        }, ({ results, totalCount }) => {
-            GetUserDataListFunc({
-                page: 1,
-                page_size: 9999,
-                role: 'ROOT'
-            }, (root) => {
-                setAdminDatas(root.results.concat(results))
-            })
-        })
-    },[])
 
     return <CustomInputRow title="위반 시 관리자 알림" noCenter isVertical>
     <Switch style={{
@@ -44,7 +26,7 @@ const NoticeToAdmin = ({value={
             isEnabled: check
         })
     }}/>
-    <div className="policy-contents-container" data-hidden={!isEnabled} >
+    <div className="policy-contents-container" data-hidden={!isEnabled}>
         <div className="policy-input-container">
             <div className="notice-row-container">
                 알림 방식 :
@@ -76,58 +58,12 @@ const NoticeToAdmin = ({value={
                 }} />
             </div>
             <div className="notice-row-container">
-                알림 받을 관리자 : <Select mode="multiple" allowClear value={admins}
-                    onSelect={(_value, option) => {
-                        if (_value === '_all_value_') {
-                            if (admins.length === adminDatas.length) {
-                                onChange({
-                                    ...value,
-                                    admins: []
-                                })
-                            } else {
-                                onChange({
-                                    ...value,
-                                    admins: adminDatas.map(_ => _.userId)
-                                })
-                            }
-                        }
-                    }}
-                    onChange={_value => {
-                        onChange({
-                            ...value,
-                            admins: _value
-                        })
-                    }} options={[{
-                        label: admins.length === adminDatas.length ? "전체 선택 해제" : "전체 선택",
-                        value: "_all_value_"
-                    }, ...adminDatas.map(opt => ({
-                        label: opt.username,
-                        value: opt.userId,
-                        withdrawal: opt.status === 'WITHDRAWAL'
-                    }))]} style={{
-                        flex: 1,
-                    }}
-                    open={noticeAdminPopupOpened}
-                    onBlur={() => {
-                        setNoticeAdminPopupOpened(false)
-                    }}
-                    onFocus={() => {
-                        setNoticeAdminPopupOpened(true)
-                    }}
-                    tagRender={({ label, disabled, closable, onClose, value }: any) => <div className={"policy-notice-admin-tag-container" + (adminDatas.find(admin => admin.userId === value)?.status === 'WITHDRAWAL' ? ' withdrawal' : '')} onClick={(e) => {
-
-                    }}>
-                        <div className="policy-notice-admin-tag-item">
-                            <span className="policy-notice-admin-tag-text">
-                                {label}
-                            </span>
-                            <img className="policy-notice-admin-tag-img" src={closeIcon} onClick={(e) => {
-                                e.stopPropagation()
-                                onClose(e)
-                            }} />
-                        </div>
-                    </div>}
-                />
+                알림 받을 관리자 : <CustomAdminSelect data={admins} onChange={adminValues => {
+                    onChange({
+                        ...value,
+                        admins: adminValues
+                    })
+                }} hasIncludeWithdrawal={hasIncludeWithdrawal}/>
             </div>
             <div className="notice-row-container">
                 알림 대상 정책 :

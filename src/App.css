@@ -14,10 +14,12 @@
 
 .ant-select-item.ant-select-item-option.ant-select-item-option-selected {
   background-color: var(--sub-purple-color5);
-  & > div {
-    color: var(--main-purple-color2);
-  }
 }
+
+.ant-select-item.ant-select-item-option.ant-select-item-option-selected>div {
+  color: var(--main-purple-color2);
+}
+
 .ant-select-item.ant-select-item-option-active {
   color: var(--sub-grey-color4);
   background-color: var(--sub-grey-color8);
@@ -25,4 +27,8 @@
 
 .ant-select-item-option-content {
   color: var(--main-grey-color2);
+}
+
+.ant-tabs-nav-operations {
+  display: none !important;
 }

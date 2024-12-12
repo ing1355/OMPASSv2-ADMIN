@@ -16,7 +16,6 @@ const SessionTimeCount = () => {
         sessionInfo: state.sessionInfo!,
         userInfo: state.userInfo,
     }))
-    const [sessionOpen, setSessionOpen] = useState(false)
     const [showSession, setShowSession] = useState(false)
     const remainSessionTimeRef = useRef(sessionInfo.time)
     const dispatch = useDispatch()
@@ -100,9 +99,7 @@ const SessionTimeCount = () => {
                 },
             }
         ]}>
-            <div className={`remain-session-time-container${sessionInfo.time < 60 ? " warning" : ""}`} onClick={() => {
-                setSessionOpen(true)
-            }}>
+            <div className={`remain-session-time-container${sessionInfo.time < 60 ? " warning" : ""}`}>
                 <img src={timeIcon} /> {remainTime}
             </div>
         </CustomDropdown>

@@ -8,7 +8,8 @@ import { Provider } from 'react-redux';
 import store from './Redux/store';
 import utc from 'dayjs/plugin/utc';
 import dayjs from 'dayjs';
-import { DateTimeFormat } from 'Constants/ConstantValues';
+import { Routes, Route } from 'react-router';
+import Document from 'Components/Document';
 
 dayjs.extend(utc)
 
@@ -16,7 +17,10 @@ const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
 root.render(
   <Provider store={store}>
     <BrowserRouter>
-      <App />
+      <Routes>
+        <Route path="/docs/:type" element={<Document />} />
+        <Route path="/*" element={<App />} />
+      </Routes>
     </BrowserRouter>
   </Provider>
 );

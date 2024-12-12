@@ -6,6 +6,9 @@ import { useNavigate } from "react-router"
 import { useSelector } from "react-redux"
 import backIcon from "../../assets/backIcon.png"
 import backIconHover from "../../assets/backIconHover.png"
+import { message } from "antd"
+import documentIcon from '../../assets/documentIcon.png'
+import documentIconHover from '../../assets/documentIconHover.png'
 
 type ContentsHeaderProps = {
     title?: React.ReactNode
@@ -14,9 +17,10 @@ type ContentsHeaderProps = {
     contentStyle?: CSSProperties
     className?: string
     noBack?: boolean
+    docsUrl?: string
 }
 
-const ContentsHeader = ({ title, subTitle, style, children, contentStyle, className, noBack }: PropsWithChildren<ContentsHeaderProps>) => {
+const ContentsHeader = ({ title, subTitle, style, children, contentStyle, className, noBack, docsUrl }: PropsWithChildren<ContentsHeaderProps>) => {
     const { userInfo } = useSelector((state: ReduxStateType) => ({
         userInfo: state.userInfo!
     }));
@@ -46,6 +50,11 @@ const ContentsHeader = ({ title, subTitle, style, children, contentStyle, classN
                 <h1>
                     {subTitle && <FormattedMessage id={subTitle} />}
                 </h1>
+                {/* {docsUrl && <Button className="st5" icon={documentIcon} hoverIcon={documentIconHover} onClick={() => {
+                    message.info("기능 준비중(페이지 이동)")
+                }}>
+                    <FormattedMessage id="APPLICATION_DOCS_VIEW_LABEL" />
+                </Button>} */}
                 {/* {!noBack && userInfo.role !== 'USER' && <Button className="st1" onClick={() => {
                     navigate(-1)
                 }} icon={backIcon}/>} */}

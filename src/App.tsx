@@ -40,7 +40,7 @@ const App: React.FC = () => {
     userInfo: state.userInfo,
     globalDatas: state.globalDatas
   }));
-
+  
   const getDomainInfo = () => {
     GetSubDomainInfoFunc(subDomain, (data) => {
       dispatch(subdomainInfoChange(data))

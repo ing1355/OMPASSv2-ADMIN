@@ -34,6 +34,11 @@
     align-items: center;
     justify-content: center;
     gap: 16px;
+    box-sizing: border-box;
+}
+
+.ompass-auth-content-progress-container:has(.complete) {
+    border: 1px solid var(--main-purple-color);
 }
 
 .ompass-auth-content-progress-icon {
@@ -56,6 +61,8 @@
 }
 .ompass-auth-content-progress-text.complete {
     color: var(--main-purple-color);
+
+    font-weight: bold;
 }
 
 .ompass-auth-remain-time-container {

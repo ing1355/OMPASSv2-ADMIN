@@ -13,7 +13,6 @@ type CustomInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
     zeroOk?: boolean
     nonZero?: boolean
     customType?: CustomType
-    onlyText?: boolean
     noGap?: boolean
     suffix?: string
     sliceNum?: boolean
@@ -35,7 +34,7 @@ const HasLabel = ({ children, label }: {
 </>}
     </div>
 
-const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyNumber, label, value, containerClassName, onInput, customType, rules, maxLength, required, className, noGap, type, suffix, style, onlyText, sliceNum, ...props }: CustomInputProps, ref) => {
+const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyNumber, label, value, containerClassName, onInput, customType, rules, maxLength, required, className, noGap, type, suffix, style, sliceNum, ...props }: CustomInputProps, ref) => {
     const [isAlert, _setIsAlert] = useState(false)
     const [alertMsg, setAlertMsg] = useState<string | React.ReactNode>('')
     const isAlertRef = useRef(isAlert)
@@ -150,6 +149,7 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                                     setIsAlert(false)
                                 }
                             }} onInput={(e) => {
+                                console.log(e.currentTarget.value)
                                 if (onlyNumber) {
                                     // if (!e.currentTarget.value) e.currentTarget.value = "0"
                                     // else e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')
@@ -163,16 +163,15 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                                         e.currentTarget.value = '1'
                                     }
                                 }
-                                if (onlyText) {
-                                    e.currentTarget.value = e.currentTarget.value.replace(/[0-9]/g, '')
-                                }
-                                if (customType === 'name') {
-                                    e.currentTarget.value = e.currentTarget.value.replace(/[^a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣0-9]/g, '')
-                                } else if (customType === 'username') {
-                                    e.currentTarget.value = e.currentTarget.value.replace(/[^0-9a-z]/g, '')
-                                }
-                                if (maxLength && e.currentTarget.value.length > maxLength) {
-                                    e.currentTarget.value = e.currentTarget.value.slice(0, maxLength)
+                                // if (customType === 'name') {
+                                //     e.currentTarget.value = e.currentTarget.value.replace(/[^a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣0-9]/g, '')
+                                // } else if (customType === 'username') {
+                                //     e.currentTarget.value = e.currentTarget.value.replace(/[^0-9a-z]/g, '')
+                                // }
+                                if(maxLength || maxLengthByCustomType()) {
+                                    if (e.currentTarget.value.length > (maxLength || maxLengthByCustomType())!) {
+                                        e.currentTarget.value = e.currentTarget.value.slice(0, (maxLength || maxLengthByCustomType())!)
+                                    }
                                 }
 
                                 // if (noGap && (e.currentTarget.value.startsWith(' ') || e.currentTarget.value.endsWith(' ')) && valueChange) e.currentTarget.value = e.currentTarget.value.trim()

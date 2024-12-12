@@ -44,6 +44,7 @@ const AuthPolicyDetail = () => {
     const [noticeToAdmin, setNoticeToAdmin] = useState<PolicyDataType['noticeToAdmin']>(undefined)
     const [detailData, setDetailData] = useState<PolicyDataType>()
     const [sureChange, setSureChange] = useState<'LOCATION' | AuthenticatorPolicyType | null>(null)
+    const [hasIncludeWithdrawal, setHasIncludeWithdrawal] = useState(false)
     const { formatMessage } = useIntl()
     const navigate = useNavigate()
     const isDefaultPolicy = detailData?.policyType === 'DEFAULT'
@@ -181,6 +182,9 @@ const AuthPolicyDetail = () => {
                         if (noticeToAdmin?.isEnabled && noticeToAdmin.admins.length === 0) {
                             return message.error("위반 시 관리자 알림의 알림 받을 관리자를 1명 이상 설정해주세요.")
                         }
+                        if (hasIncludeWithdrawal) {
+                            return message.error("위반 시 관리자 알림의 알림 받을 관리자에 이미 탈퇴한 관리자가 포함되어 있습니다. 해당 관리자를 제외시켜 주세요.")
+                        }
                         // if (noticeToAdmin?.isEnabled && noticeToAdmin.admins.some(_ => adminDatas.find(admin => admin.userId === _)?.status === 'WITHDRAWAL')) {
                         //     return message.error("위반 시 관리자 알림에 이미 탈퇴한 관리자가 포함되어 있습니다. 해당 관리자를 제외시켜 주세요.")
                         // }
@@ -261,7 +265,7 @@ const AuthPolicyDetail = () => {
                     {locationUsed && locationDatas && <PolicyLocationList value={locationDatas} onChange={setLocationDatas} authenticators={authenticatorPolicies} setSureChange={setSureChange} />}
                     {!isDefaultPolicy && ipAddressValues && <PolicyIpAddressList value={ipAddressValues} onChange={setIpAddressValues} />}
                     {!isDefaultPolicy && accessTimeValues && <PolicyAccessTimeList value={accessTimeValues} onChange={setAccessTimeValues} />}
-                    {!isDefaultPolicy && noticeToAdmin && <NoticeToAdmin value={noticeToAdmin} onChange={setNoticeToAdmin} />}
+                    {!isDefaultPolicy && noticeToAdmin && <NoticeToAdmin hasIncludeWithdrawal={setHasIncludeWithdrawal} value={noticeToAdmin} onChange={setNoticeToAdmin} />}
                     {!isDefaultPolicy && noticeToThemselves && <NoticeToThemselves value={noticeToThemselves} onChange={setNoticeToThemselves} />}
                     {/* <CustomInputRow title="사용자 국가">
                 <Switch style={{

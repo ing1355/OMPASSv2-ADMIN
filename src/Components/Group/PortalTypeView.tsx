@@ -4,6 +4,7 @@ import useFullName from "hooks/useFullName"
 import { logoImageWithDefaultImage } from "Functions/GlobalFunctions"
 import { SetStateType } from "Types/PropsTypes"
 import GroupOpen from "./GroupOpen"
+import { FormattedMessage } from "react-intl"
 
 type PortalTypeViewProps = {
     datas: UserHierarchyDataType[]
@@ -75,7 +76,7 @@ const PortalTypeView = ({ datas, selected, setSelected }: PortalTypeViewProps) =
                                     <div className='transfer-user-child-rp-user-title' data-selected={selected.includes(rp.id)}>
                                         <img src={rpUesrIcon} />
                                         <div>
-                                            {rp.username}({rp.groupName})
+                                            {rp.username}({rp.groupName ? rp.groupName : <FormattedMessage id="NO_GROUP_SELECTED_LABEL"/>})
                                         </div>
                                     </div>
                                 </div>)
