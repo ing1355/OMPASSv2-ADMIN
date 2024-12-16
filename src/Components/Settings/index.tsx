@@ -16,6 +16,7 @@ import { globalDatasChange } from "Redux/actions/globalDatasChange"
 import loginMainImage from '../../assets/loginMainImage.png'
 import CustomImageUpload from "Components/CommonCustomComponents/CustomImageUpload"
 import CustomAdminSelect from "Components/CommonCustomComponents/CustomAdminSelect"
+import { FormattedMessage, useIntl } from "react-intl"
 
 const Settings = () => {
     const { subdomainInfo, globalDatas } = useSelector((state: ReduxStateType) => ({
@@ -41,6 +42,7 @@ const Settings = () => {
     const [hasIncludeWithdrawal, setHasIncludeWithdrawal] = useState(false)
 
     const dispatch = useDispatch()
+    const { formatMessage } = useIntl()
 
     const getDatas = () => {
         setDataLoading(true)
@@ -63,22 +65,22 @@ const Settings = () => {
 
     useLayoutEffect(() => {
         getDatas()
-    },[])
-    
+    }, [])
+
     return <Contents loading={dataLoading}>
         <ContentsHeader title="SETTINGS_MANAGEMENT" subTitle="SETTINGS_MANAGEMENT">
             <Button className="st3" onClick={() => {
                 const callback = async (data: updateLogoImageType) => {
-                    if(noticeToAdmin.isEnabled) {
+                    if (noticeToAdmin.isEnabled) {
                         const { admins, methods } = noticeToAdmin
-                        if(methods.length === 0) {
-                            return message.error("관리자 알림 설정 중 알림 방식을 선택해주세요.")
+                        if (methods.length === 0) {
+                            return message.error(formatMessage({ id: 'SETTING_NOTICE_TO_ADMIN_METHOD_NEED_SELECT_MSG' }))
                         }
-                        if(admins.length === 0) {
-                            return message.error("관리자 알림 설정 중 알림 받을 관리자를 선택해주세요.")
+                        if (admins.length === 0) {
+                            return message.error(formatMessage({ id: 'SETTING_NOTICE_TO_ADMIN_TARGET_NEED_SELECT_MSG' }))
                         }
                         if (hasIncludeWithdrawal) {
-                            return message.error("알림 받을 관리자에 이미 탈퇴한 관리자가 포함되어 있습니다. 해당 관리자를 제외시켜 주세요.")
+                            return message.error(formatMessage({ id: 'SETTING_NOTI_TO_ADMIN_INCLUDE_WITHDRAWAL_ADMIN_MSG' }))
                         }
                     }
                     UpdatePortalSettingsDataFunc({
@@ -94,7 +96,7 @@ const Settings = () => {
                         noticeToAdmin: noticeToAdmin,
                         selfSignupEnabled: canSignUp
                     }, () => {
-                        message.success("설정 저장 성공!")
+                        message.success(formatMessage({ id: 'SETTING_SAVE_SUCCESS_MSG' }))
                         dispatch(globalDatasChange({
                             ...globalDatas,
                             isUserAllowedToRemoveAuthenticator: canDelete
@@ -130,16 +132,16 @@ const Settings = () => {
                     callback(logoImg)
                 }
             }}>
-                저장
+                <FormattedMessage id="SAVE" />
             </Button>
         </ContentsHeader>
         <div className="contents-header-container">
-            <CustomInputRow title="테넌트 이름">
+            <CustomInputRow title={<FormattedMessage id="SETTING_TENANT_NAME_LABEL" />}>
                 <Input className="st1" value={inputAlias} valueChange={value => {
                     setInputAlias(value)
                 }} maxLength={20} />
             </CustomInputRow>
-            <CustomInputRow title="타임존">
+            <CustomInputRow title={<FormattedMessage id="TIME_ZONE_LABEL" />}>
                 <CustomSelect value={timeZoneValue} onChange={e => {
                     setTimeZoneValue(e)
                 }} items={timeZoneNames.map(_ => ({
@@ -147,20 +149,20 @@ const Settings = () => {
                     label: _
                 }))} needSelect />
             </CustomInputRow>
-            <CustomInputRow title="사용자 직접 회원가입">
+            <CustomInputRow title={<FormattedMessage id="USER_SELF_SIGN_UP_LABEL" />}>
                 <Switch checked={canSignUp} onChange={check => {
                     setCanSignUp(check)
-                }} checkedChildren={'허용'} unCheckedChildren={'거부'} />
+                }} checkedChildren={formatMessage({ id: 'ALLOW_LABEL' })} unCheckedChildren={formatMessage({ id: 'DENY_LABEL' })} />
             </CustomInputRow>
             <div className={`admin-need${canSignUp ? ' visible' : ''}`}>
                 <CustomInputRow title="">
                     <div className="signup-field-container">
                         <Input type="radio" name="signupMethod" value={UserSignupMethod.USER_SELF_ADMIN_ACCEPT} checked={signupMethod === UserSignupMethod.USER_SELF_ADMIN_ACCEPT} onChange={e => {
                             if (e.currentTarget.checked) setSignupMethod(e.currentTarget.value as UserSignUpMethodType)
-                        }} label="관리자 승인 후 가입" />
+                        }} label={<FormattedMessage id="USER_SELF_ADMIN_ACCEPT_LABEL" />} />
                         <Input type="radio" name="signupMethod" value={UserSignupMethod.USER_SELF_ADMIN_PASS} checked={signupMethod === UserSignupMethod.USER_SELF_ADMIN_PASS} onChange={e => {
                             if (e.currentTarget.checked) setSignupMethod(e.currentTarget.value as UserSignUpMethodType)
-                        }} label="관리자 승인 없이 가입" />
+                        }} label={<FormattedMessage id="USER_SELF_ADMIN_PASS_LABEL" />} />
                     </div>
                 </CustomInputRow>
             </div>
@@ -169,21 +171,21 @@ const Settings = () => {
                 <CustomInputRow title="" isVertical>
                     <div className="admin-notice-setting-title">
                         <span>
-                            {signupMethod === UserSignupMethod.USER_SELF_ADMIN_ACCEPT ? '회원가입 승인 요청 관리자에게 알림' : '회원가입 관리자에게 알림'}
+                            <FormattedMessage id={signupMethod === UserSignupMethod.USER_SELF_ADMIN_ACCEPT ? 'USER_SIGN_UP_NEED_ADMIN_ACCEPT_NOTICE_TO_ADMIN_LABEL' : 'USER_SIGN_UP_NOTICE_TO_ADMIN_LABEL'} />
                         </span>
-                    <Switch style={{
-                    }} checked={noticeToAdmin.isEnabled} onChange={check => {
-                        setNoticeToAdmin({
-                            ...noticeToAdmin,
-                            isEnabled: check
-                        })
-                    }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
+                        <Switch style={{
+                        }} checked={noticeToAdmin.isEnabled} onChange={check => {
+                            setNoticeToAdmin({
+                                ...noticeToAdmin,
+                                isEnabled: check
+                            })
+                        }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
                     </div>
                     <div className="policy-contents-container" data-hidden={!noticeToAdmin.isEnabled}>
                         <div className="policy-input-container">
                             <div className="notice-row-container">
-                                알림 방식 :
-                                <Input type="checkbox" label="푸시 알림" checked={noticeToAdmin.methods.includes('PUSH')} onChange={e => {
+                                <FormattedMessage id="NOTICE_TO_ADMIN_METHOD_LABEL" /> :
+                                <Input type="checkbox" label={<FormattedMessage id="NOTICE_TO_ADMIN_METHOD_1_LABEL" />} checked={noticeToAdmin.methods.includes('PUSH')} onChange={e => {
                                     if (e.currentTarget.checked) {
                                         setNoticeToAdmin({
                                             ...noticeToAdmin,
@@ -196,7 +198,7 @@ const Settings = () => {
                                         })
                                     }
                                 }} />
-                                <Input type="checkbox" label="이메일" checked={noticeToAdmin.methods.includes('EMAIL')} onChange={e => {
+                                <Input type="checkbox" label={<FormattedMessage id="NOTICE_TO_ADMIN_METHOD_2_LABEL" />} checked={noticeToAdmin.methods.includes('EMAIL')} onChange={e => {
                                     if (e.currentTarget.checked) {
                                         setNoticeToAdmin({
                                             ...noticeToAdmin,
@@ -211,28 +213,28 @@ const Settings = () => {
                                 }} />
                             </div>
                             <div className="notice-row-container">
-                                알림 받을 관리자 : <CustomAdminSelect data={noticeToAdmin.admins} onChange={value => {
+                                <FormattedMessage id="NOTICE_TO_ADMIN_TARGET_LABEL" /> : <CustomAdminSelect data={noticeToAdmin.admins} onChange={value => {
                                     setNoticeToAdmin({
                                         ...noticeToAdmin,
                                         admins: value
                                     })
-                                }} hasIncludeWithdrawal={setHasIncludeWithdrawal}/>
+                                }} hasIncludeWithdrawal={setHasIncludeWithdrawal} />
                             </div>
                         </div>
                     </div>
                 </CustomInputRow>
             </div>
-            <CustomInputRow title={<>사용자가 직접 인증장치<br/>등록 해제</>}>
+            <CustomInputRow title={<FormattedMessage id="SETTING_USER_SELF_DEVICE_DELETE_LABEL" />}>
                 <Switch checked={canDelete} onChange={check => {
                     setCanDelete(check)
-                }} checkedChildren={'허용'} unCheckedChildren={'거부'} />
+                }} checkedChildren={formatMessage({ id: 'ALLOW_LABEL' })} unCheckedChildren={formatMessage({ id: 'DENY_LABEL' })} />
             </CustomInputRow>
-            <CustomInputRow title="메인 텍스트 설정">
+            <CustomInputRow title={<FormattedMessage id="SETTING_NOTICE_TEXT_LABEL" />}>
                 <Input className="st1" value={welcomeText} valueChange={value => {
                     setWelcomeText(value)
                 }} maxLength={50} />
             </CustomInputRow>
-            <CustomInputRow title="메인 이미지 설정" containerStyle={{
+            <CustomInputRow title={<FormattedMessage id="SETTING_NOTICE_IMAGE_LABEL" />} containerStyle={{
                 alignItems: 'flex-start'
             }}>
                 <CustomImageUpload data={logoImg} callback={(img) => {

@@ -1,5 +1,6 @@
 import { Switch } from "antd"
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
+import { FormattedMessage } from "react-intl"
 import { SetStateType } from "Types/PropsTypes"
 
 const OMPASSAuthenticators = ({ value, onChange, locationChecked, webauthnUsed, setSureChange }: PolicyItemsPropsType<PolicyDataType['enableAuthenticators']> & {
@@ -24,10 +25,9 @@ const OMPASSAuthenticators = ({ value, onChange, locationChecked, webauthnUsed, 
                     }
                 }
             }}/>
-            {/* }} checkedChildren={type === 'OMPASS' ? '필수' : '허용'} unCheckedChildren={'차단'} /> */}
         </label>
     }
-    return <CustomInputRow title="인증 방식 제어">
+    return <CustomInputRow title={<FormattedMessage id="OMPASS_AUTHENTICATOR_TITLE_LABEL"/>}>
     <div className="policy-contents-container">
         <AuthenticatorController type={"OTP"} />
         <AuthenticatorController type={"PASSCODE"} />

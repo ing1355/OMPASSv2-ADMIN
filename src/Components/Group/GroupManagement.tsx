@@ -49,10 +49,6 @@ const GroupManagement = () => {
             searchOptions={[{
                 key: 'name',
                 type: 'string'
-            }, {
-                key: 'policyName',
-                type: 'string',
-                label: <FormattedMessage id="POLICY_NAME_LABEL"/>
             }]}
             className="contents-header-container"
             onBodyRowClick={(row, index, arr) => {

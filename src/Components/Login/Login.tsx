@@ -19,7 +19,7 @@ const Login = () => {
   }));
   const [inputPassword, setInputPassword] = useState('')
   const [tempToken, setTempToken] = useState('')
-  const [cookies, setCookie, removeCookie] = useCookies(["rememberUserId"]); // Cookies 이름
+  const [cookies, setCookie, removeCookie] = useCookies(["rememberUserId"]);
   const [inputUsername, setInputUsername] = useState(cookies.rememberUserId || '')
   const [inputChangePassword, setInputChangePassword] = useState('')
   const [inputChangePasswordConfirm, setInputChangePasswordConfirm] = useState('')
@@ -44,20 +44,20 @@ const Login = () => {
     e.preventDefault();
     const { saveId } = e.currentTarget.elements as any
     if (needPasswordChange) {
-      if (inputChangePassword !== inputChangePasswordConfirm) return message.error('비밀번호가 일치하지 않습니다.')
+      if (inputChangePassword !== inputChangePasswordConfirm) return message.error(formatMessage({id: 'PASSWORD_NOT_MATCH'}))
       UpdatePasswordFunc(inputChangePassword, tempToken, () => {
         setNeedPasswordChange(false)
-        message.success('비밀번호 변경에 성공하였습니다. 다시 로그인해주세요.')
+        message.success(formatMessage({id: 'PASSWORD_CHANGE_SUCCESS_MSG'}))
         setTempToken('')
       })
     } else {
       if (!inputUsername) {
         inputUesrnameRef.current?.focus()
-        return message.error("아이디를 입력해주세요.")
+        return message.error(formatMessage({id: 'PLEASE_INPUT_ID_MSG'}))
       }
       if (!inputPassword) {
         inputPasswordRef.current?.focus()
-        return message.error("비밀번호를 입력해주세요.")
+        return message.error(formatMessage({id: 'PLEASE_INPUT_PASSWORD_MSG'}))
       }
       LoginFunc({
         domain: subDomain,
@@ -69,7 +69,7 @@ const Login = () => {
         if (status === 'WAIT_INIT_PASSWORD') {
           setInputPassword('')
           setTempToken(token)
-          message.info("비밀번호 초기화 대상입니다. 비밀번호 초기화를 진행해주세요.")
+          message.info(formatMessage({id: 'PASSWORD_CHANGE_NEED_MSG'}))
           return setNeedPasswordChange(true)
         }
         const temp = popupUri + `&authorization=${token}`

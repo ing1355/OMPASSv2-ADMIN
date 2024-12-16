@@ -149,7 +149,6 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                                     setIsAlert(false)
                                 }
                             }} onInput={(e) => {
-                                console.log(e.currentTarget.value)
                                 if (onlyNumber) {
                                     // if (!e.currentTarget.value) e.currentTarget.value = "0"
                                     // else e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')

@@ -1,7 +1,7 @@
 import { message, Switch } from "antd"
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import { policyNoticeRestrictionTypes } from "Constants/ConstantValues"
-import { FormattedMessage } from "react-intl"
+import { FormattedMessage, useIntl } from "react-intl"
 import locationModifyConfirmIcon from '../../../assets/locationModifyConfirmIcon.png'
 import locationModifyConfirmIconHover from '../../../assets/locationModifyConfirmIconHover.png'
 import locationModifyCancelIcon from '../../../assets/locationModifyCancelIcon.png'
@@ -43,6 +43,7 @@ const PolicyLocationList = ({ value={
         alias: ''
     })
     const { isEnabled, locations } = value
+    const { formatMessage } = useIntl()
     
     useEffect(() => {
         if (dataInit) {
@@ -136,11 +137,11 @@ const PolicyLocationList = ({ value={
                                                 console.log('현재 위치 획득 실패!', err)
                                                 switch (err.code) {
                                                     case err.PERMISSION_DENIED:
-                                                        message.error("위치 권한이 차단되어 있습니다.")
+                                                        message.error(formatMessage({id: 'LOCATION_PERMISSION_DENY_MSG'}))
                                                         break;
                                                     case err.POSITION_UNAVAILABLE:
                                                     case err.TIMEOUT:
-                                                        message.error("위치 정보를 획득할 수 없습니다. 잠시 후 다시 시도해주세요.")
+                                                        message.error(formatMessage({id: 'LOCATION_GET_TIMEOUT_MSG'}))
                                                         break;
                                                 }
                                             }, {
@@ -170,7 +171,7 @@ const PolicyLocationList = ({ value={
                                 borderRadius: '12px',
                                 boxSizing: 'border-box'
                             }}>
-                                지도 사용 불가
+                                <FormattedMessage id="MAP_NOT_AVAILABLE_LABEL"/>
                             </div>}
                         </div>
                     </div>
@@ -178,13 +179,13 @@ const PolicyLocationList = ({ value={
                         <div className="current-location-input-row first">
                             <div className="current-location-input-row-item">
                                 <div>
-                                    위도
+                                    <FormattedMessage id="LOCATION_LATITUDE"/>
                                 </div>
                                 <Input className="st1" value={currentLocation.lat} readOnly />
                             </div>
                             <div className="current-location-input-row-item">
                                 <div>
-                                    경도
+                                    <FormattedMessage id="LOCATION_LONGITUDE"/>
                                 </div>
                                 <Input className="st1" value={currentLocation.lng} readOnly />
                             </div>
@@ -192,7 +193,7 @@ const PolicyLocationList = ({ value={
                         <div className="current-location-input-row second">
                             <div className="current-location-input-row-item">
                                 <div>
-                                    반경
+                                    <FormattedMessage id="LOCATION_RADIUS"/>
                                 </div>
                                 <Input className="st1 policy-location-radius-input" onlyNumber value={currentRadius} valueChange={value => {
                                     setCurrentRadius(value ? value : '')
@@ -202,7 +203,7 @@ const PolicyLocationList = ({ value={
                         <div className="current-location-input-row third">
                             <div className="current-location-input-row-item">
                                 <div>
-                                    위치명
+                                    <FormattedMessage id="LOCATION_NAME_LABEL"/>
                                 </div>
                                 <Input className="st1" value={currentLocationName} valueChange={value => {
                                     setCurrentLocationName(value)
@@ -211,9 +212,9 @@ const PolicyLocationList = ({ value={
                         </div>
                         <div className="current-location-input-row fourth">
                             <Button className="st3" disabled={modifyLocationIndex !== -1} onClick={() => {
-                                if (!currentRadius) return message.error("반경은 최소 1m 이상 필수 입력 사항입니다.")
-                                if (!currentLocationName) return message.error("위치명은 필수 입력 사항입니다.")
-                                if (locations.find(_ => _.alias === currentLocationName)) return message.error("이미 존재하는 위치명입니다. 다른 위치명으로 다시 시도해주세요.")
+                                if (!currentRadius) return message.error(formatMessage({id: 'LOCATION_RADIUS_NEED_VALUE_MSG'}))
+                                if (!currentLocationName) return message.error(formatMessage({id: 'LOCATION_NAME_REQUIRED_MSG'}))
+                                if (locations.find(_ => _.alias === currentLocationName)) return message.error(formatMessage({id: 'LOCATION_NAME_ALREADY_EXIST_MSG'}))
                                 setLocationDatas([{
                                     alias: currentLocationName,
                                     radius: parseInt(currentRadius),
@@ -225,7 +226,7 @@ const PolicyLocationList = ({ value={
                                 setCurrentRadius('1')
                                 setCurrentLocationName('')
                             }}>
-                                추가
+                                <FormattedMessage id="NORMAL_ADD_LABEL"/>
                             </Button>
                         </div>
                     </div>
@@ -233,9 +234,9 @@ const PolicyLocationList = ({ value={
                 {
                     locations.map((_, ind) => <div key={ind}>
                         <div className="policy-location-input-row">
-                            <span className="policy-location-label">위도</span> <Input className="st1" value={modifyLocationIndex === ind ? modifyLocationTemp.coordinate.latitude : _.coordinate.latitude} readOnly />
-                            <span className="policy-location-label">경도</span> <Input className="st1" value={modifyLocationIndex === ind ? modifyLocationTemp.coordinate.longitude : _.coordinate.longitude} readOnly />
-                            <span className="policy-location-label">반경</span> <Input className="st1 policy-location-radius-input" value={modifyLocationIndex === ind ? modifyLocationTemp.radius : _.radius} readOnly={modifyLocationIndex !== ind} style={{
+                            <span className="policy-location-label"><FormattedMessage id="LOCATION_LATITUDE"/></span> <Input className="st1" value={modifyLocationIndex === ind ? modifyLocationTemp.coordinate.latitude : _.coordinate.latitude} readOnly />
+                            <span className="policy-location-label"><FormattedMessage id="LOCATION_LONGITUDE"/></span> <Input className="st1" value={modifyLocationIndex === ind ? modifyLocationTemp.coordinate.longitude : _.coordinate.longitude} readOnly />
+                            <span className="policy-location-label"><FormattedMessage id="LOCATION_RADIUS"/></span> <Input className="st1 policy-location-radius-input" value={modifyLocationIndex === ind ? modifyLocationTemp.radius : _.radius} readOnly={modifyLocationIndex !== ind} style={{
                                 width: '160px'
                             }} suffix="m" sliceNum valueChange={(val) => {
                                 setModifyLocationTemp({
@@ -243,7 +244,7 @@ const PolicyLocationList = ({ value={
                                     radius: parseInt(val)
                                 })
                             }} maxLength={10} />
-                            <span className="policy-location-label">위치명</span> <Input className="st1" value={modifyLocationIndex === ind ? modifyLocationTemp.alias : _.alias} readOnly={modifyLocationIndex !== ind} valueChange={(val) => {
+                            <span className="policy-location-label"><FormattedMessage id="LOCATION_NAME_LABEL"/></span> <Input className="st1" value={modifyLocationIndex === ind ? modifyLocationTemp.alias : _.alias} readOnly={modifyLocationIndex !== ind} valueChange={(val) => {
                                 setModifyLocationTemp({
                                     ...modifyLocationTemp,
                                     alias: val

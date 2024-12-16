@@ -170,9 +170,9 @@ export const ViewRecoveryCode = ({ code, noView }: {
         }}>
             <CopyToClipboard text={code} onCopy={(value, result) => {
                 if (result) {
-                    message.success("복구 코드 복사에 성공하였습니다.")
+                    message.success(formatMessage({id: 'RECOVERY_CODE_COPY_SUCCESS_MSG'}))
                 } else {
-                    message.success("복구 코드 복사에 실패하였습니다.")
+                    message.success(formatMessage({id: 'RECOVERY_CODE_COPY_FAIL_MSG'}))
                 }
             }}>
                 <img src={copyIcon} />
@@ -252,8 +252,8 @@ export const UserDetailInfoETCInfoContent = ({ data }: {
     const { groupName, authenticationInfo } = data
     const { policy } = authenticationInfo
     return <>
-        <UserDetailInfoContentItem imgSrc={groupMenuIcon} title="그룹" content={groupName || <FormattedMessage id="NO_GROUP_SELECTED_LABEL" />} />
-        <UserDetailInfoContentItem imgSrc={policyMenuIconBlack} title="정책" content={policy?.name || <FormattedMessage id="NO_POLICY_SELECTED_LABEL" />} />
+        <UserDetailInfoContentItem imgSrc={groupMenuIcon} title={<FormattedMessage id="GROUP"/>} content={groupName || <FormattedMessage id="NO_GROUP_SELECTED_LABEL" />} />
+        <UserDetailInfoContentItem imgSrc={policyMenuIconBlack} title={<FormattedMessage id="USER_DETAIL_ETC_INFO_POLICY_LABEL"/>} content={policy?.name || <FormattedMessage id="NO_POLICY_SELECTED_LABEL" />} />
     </>
 }
 
@@ -309,7 +309,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
                     <div className="user-detail-info-device-info-content-item linux">
                         <img src={agentVersionIcon} />
                         <div className="user-detail-info-device-info-content-title">
-                            패키지 버전 정보
+                            <FormattedMessage id="PACKAGE_VERSION_INFO_LABEL"/>
                         </div>
                         <div>
                             {serverInfo?.packageVersion}
@@ -406,7 +406,7 @@ export const RadiusDetailItem = ({ onComplete, appId }: {
         <div className='user-radius-register-container' onClick={() => {
             setAuthView(true)
         }}>
-            Radius 등록하기
+            <FormattedMessage id="REGISTER_RADIUS_LABEL"/>
         </div>
         <RadiusUserRegisterOMPASSAuthModal radiusApplicationId={appId} opened={authView} onCancel={() => {
             setAuthView(false)

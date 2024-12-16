@@ -102,6 +102,9 @@ type GeneralParamsType = {
     page?: number,
     sortDirection?: DirectionType
 }
+type AgentInstallerListParamsType = GeneralParamsType & {
+    fileType?: UploadFileTypes
+}
 type DirectionType = "DESC" | "ASC"
 type RPUserType = {
     username: string
@@ -574,11 +577,10 @@ type PortalLogDataType = {
 }
 
 type AgentInstallerUploadParamsType = {
+    type: UploadFileTypes
     multipartFile: File
     "metaData.hash": string
-    // "metaData.version": string
     "metaData.note": string
-    "metaData.os": OsNamesType
 }
 
 type UserDetailAuthInfoRowType = {
@@ -730,3 +732,5 @@ type RpUsersListParamsType = GeneralParamsType & {
     rpUsername?: RPUserType['username']
     groupName?: UserGroupDataType['name']
 }
+
+type UploadFileTypes = "APPLICATION_LOGO_IMAGE" | "PORTAL_SETTING_LOGO_IMAGE" | "WINDOWS_AGENT" | "LINUX_PAM" | "OMPASS_PROXY" | "FIDO_AGENT" | "APK" | "CSV"

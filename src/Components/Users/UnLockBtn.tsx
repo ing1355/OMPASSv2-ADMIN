@@ -61,8 +61,8 @@ const UnLockBtn = ({ userData, onSuccess }: {
                 </div>
                 <div className='user-unlock-password-row'>
                     <div>
-                        비밀번호 입력
-                        <Input type='checkbox' label="비밀번호 랜덤 생성" checked={unlockPasswordRandomChecked} onChange={e => {
+                        <FormattedMessage id="PASSWORD_CHANGE_PLACEHOLDER"/>
+                        <Input type='checkbox' label={<FormattedMessage id="PASSWORD_RANDOM_GENERATE_LABEL"/>} checked={unlockPasswordRandomChecked} onChange={e => {
                             setUnlockPasswordRandomChecked(e.target.checked)
                         }} style={{
                             height: '100%'
@@ -74,7 +74,7 @@ const UnLockBtn = ({ userData, onSuccess }: {
                 </div>
                 <div className='user-unlock-password-row'>
                     <div>
-                        비밀번호 재입력
+                        <FormattedMessage id="PASSWORD_CHANGE_CONFIRM_PLACEHOLDER"/>
                     </div>
                     <Input type="password" disabled={unlockPasswordRandomChecked} customType='password' className='st1' value={inputUnlockPasswordConfirm} valueChange={val => {
                         setInputUnlockPasswordConfirm(val)
@@ -96,7 +96,7 @@ const UnLockBtn = ({ userData, onSuccess }: {
             justConfirm>
             <>
                 <div>
-                    해당 사용자는 아래 비밀번호로 초기화 되었습니다.
+                    <FormattedMessage id="USER_UNLOCK_RANDOM_PASSWORD_COMPLETE_LABEL"/>
                 </div>
                 <div className="user-unlock-password-confirm-view">
                     {showRandomPassword}

@@ -9,7 +9,7 @@ import CustomModal from "Components/Modal/CustomModal"
 import { userSelectPageSize } from "Constants/ConstantValues"
 import { AddRadiusUserListFunc, GetLdapConfigListFunc, SyncLdapUserListFunc } from "Functions/ApiFunctions"
 import { useEffect, useMemo, useState } from "react"
-import { FormattedMessage } from "react-intl"
+import { FormattedMessage, useIntl } from "react-intl"
 import { useParams } from "react-router"
 
 type RadiusStorageType = 'LDAP' | 'etc'
@@ -28,6 +28,7 @@ const RadiusSync = () => {
         showPerPage: userSelectPageSize()
     })
     const detailId = useParams().uuid
+    const {formatMessage} = useIntl()
     
     const tableData = useMemo(() => {
         const { page, showPerPage } = pageSetting
@@ -72,11 +73,11 @@ const RadiusSync = () => {
                 <Button disabled={userList.length === 0} className="st3" onClick={() => {
                     setSureSync(true)
                 }}>
-                    동기화
+                    <FormattedMessage id="RADIUS_SYNC_LABEL"/>
                 </Button>
             </ContentsHeader>
             <div className="contents-header-container">
-                <CustomInputRow title="저장소 유형">
+                <CustomInputRow title={<FormattedMessage id="RADIUS_STORAGE_TYPE_LABEL"/>}>
                     <CustomSelect value={storageType} onChange={val => {
                         setStorageType(val as RadiusStorageType)
                     }} items={[
@@ -84,13 +85,13 @@ const RadiusSync = () => {
                             key: 'LDAP', label: 'LDAP'
                         },
                         {
-                            key: 'etc', label: '기타'
+                            key: 'etc', label: <FormattedMessage id="RADIUS_STORAGE_TYPE_ETC_LABEL"/>
                         }
                     ]} needSelect />
                 </CustomInputRow>
                 {
                     storageType === 'LDAP' && <>
-                        <CustomInputRow title="LDAP 설정 선택">
+                        <CustomInputRow title={<FormattedMessage id="RADIUS_LDAP_SETTING_SELECT_LABEL"/>}>
                             <CustomSelect value={selectedLdapConfig} onChange={val => {
                                 setSelectedLdapConfig(val as LdapConfigDataType['id'])
                             }} items={ldapConfigs.map(_ => ({
@@ -106,7 +107,7 @@ const RadiusSync = () => {
                                     setUserLoading(false)
                                 })
                             }}>
-                                사용자 목록 가져오기
+                                <FormattedMessage id="RADIUS_USER_LIST_GET_LABEL"/>
                             </Button>}
                         </CustomInputRow>
                         <CustomTable<LdapUserDataType>
@@ -124,21 +125,21 @@ const RadiusSync = () => {
                             columns={[
                                 {
                                     key: 'username',
-                                    title: '아이디'
+                                    title: <FormattedMessage id="ID"/>
                                 }, {
                                     key: 'firstName',
-                                    title: '성',
+                                    title: <FormattedMessage id="FIRST_NAME"/>,
                                     render: (data, ind, row) => row.name.firstName
                                 }, {
                                     key: 'lastName',
-                                    title: '이름',
+                                    title: <FormattedMessage id="LAST_NAME"/>,
                                     render: (data, ind, row) => row.name.lastName
                                 }, {
                                     key: 'org',
-                                    title: '조직명'
+                                    title: <FormattedMessage id="RADIUS_ORG_LABEL"/>
                                 }, {
                                     key: 'email',
-                                    title: '이메일'
+                                    title: <FormattedMessage id="EMAIL"/>
                                 }
                             ]}
                         />
@@ -164,7 +165,7 @@ const RadiusSync = () => {
                         email: _.email
                     }))
                 }, () => {
-                    message.success("Radius 사용자 동기화에 성공하였습니다.")
+                    message.success(formatMessage({id: 'RADIUS_USER_SYNC_SUCCESS_MSG'}))
                 })
             }} buttonLoading />
     </>

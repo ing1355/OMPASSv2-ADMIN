@@ -27,6 +27,7 @@
 
 .main_menu_card_img {
   height: 60%;
+  pointer-events: none;
 }
 
 .main_menu_card_title {

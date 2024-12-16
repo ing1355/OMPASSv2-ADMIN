@@ -10,6 +10,7 @@ import { userInfoChange, userInfoClear } from "Redux/actions/userChange"
 import './SessionTimeCount.css'
 import timeIcon from '../../assets/sessionTimeIcon.png'
 import CustomDropdown from "Components/CommonCustomComponents/CustomDropdown"
+import { FormattedMessage, useIntl } from "react-intl"
 
 const SessionTimeCount = () => {
     const { sessionInfo, userInfo } = useSelector((state: ReduxStateType) => ({
@@ -19,6 +20,7 @@ const SessionTimeCount = () => {
     const [showSession, setShowSession] = useState(false)
     const remainSessionTimeRef = useRef(sessionInfo.time)
     const dispatch = useDispatch()
+    const { formatMessage } = useIntl()
     const sessionTimerRef = useRef<NodeJS.Timer>()
     const sessionCheckedRef = useRef(sessionInfo.checked)
     const remainTime = useMemo(() => {
@@ -53,7 +55,7 @@ const SessionTimeCount = () => {
                 setShowSession(true)
                 dispatch(sessionTimeChange(remainSessionTimeRef.current - 1))
             } else if (remainSessionTimeRef.current <= 0) {
-                message.error('세션이 만료되었습니다.')
+                message.error(formatMessage({id: 'SESSION_EXPIRED_MSG'}))
                 clearInterval(sessionTimerRef.current)
                 dispatch(sessionCheckChange(false))
                 dispatch(userInfoClear());
@@ -86,14 +88,14 @@ const SessionTimeCount = () => {
             dispatch(userInfoChange(token))
             dispatch(sessionCheckChange(false))
             setShowSession(false)
-            message.success("세션 갱신에 성공하였습니다.")
+            message.success(formatMessage({id: 'SESSION_RENEWAL_SUCCESS_MSG'}))
         })
     }
 
     return <>
         <CustomDropdown hover items={[
             {
-                label: '세션 갱신',
+                label: <FormattedMessage id="SESSION_RENEWAL_TITLE_LABEL"/>,
                 callback: () => {
                     refreshCallback();
                 },
@@ -109,10 +111,10 @@ const SessionTimeCount = () => {
                 setShowSession(false);
             }}
             type="warning"
-            typeTitle='세션 만료'
+            typeTitle={<FormattedMessage id="SESSION_EXPIRED_MODAL_TITLE_LABEL"/>}
             typeContent={<>
-                로그인 세션 시간이 얼마 남지 않았습니다.<br />
-                로그인 세션을 연장하시겠습니까?
+                <FormattedMessage id="SESSION_EXPIRED_MODAL_SUBSCRIPTION_LABEL_1"/><br />
+                <FormattedMessage id="SESSION_EXPIRED_MODAL_SUBSCRIPTION_LABEL_2"/>
             </>}
             noClose
             yesOrNo

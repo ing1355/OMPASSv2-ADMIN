@@ -55,11 +55,11 @@ const PasscodeLogs = () => {
                 selectOptions: [
                     {
                         key: 'CREATE',
-                        label: '생성'
+                        label: <FormattedMessage id="PASSCODE_CREATE_ACTION_SEARCH_LABEL"/>
                     },
                     {
                         key: 'DELETE',
-                        label: '삭제'
+                        label: <FormattedMessage id="PASSCODE_DELETE_ACTION_SEARCH_LABEL"/>
                     }
                 ]
         }]}
@@ -77,7 +77,7 @@ const PasscodeLogs = () => {
         columns={[
             {
                 key: 'applicationName',
-                title: "어플리케이션명"
+                title: <FormattedMessage id="APPLICATION_NAME_COLUMN_LABEL"/>
             },
             {
                 key: 'issuerUsername',
@@ -86,12 +86,12 @@ const PasscodeLogs = () => {
             },
             {
                 key: 'portalUsername',
-                title: "포탈 아이디",
+                title: <FormattedMessage id="PORTAL_USERNAME_COLUMN_LABEL"/>,
                 render: (data, ind, row) => row.portalUser.username
             },
             {
                 key: 'rpUsername',
-                title: <FormattedMessage id="USER_ID" />,
+                title: <FormattedMessage id="RP_USERNAME_COLUMN_LABEL" />,
                 render: (data, ind, row) => row.rpUser.username
             },
             {
@@ -115,7 +115,9 @@ const PasscodeLogs = () => {
             {
                 key: 'recycleCount',
                 title: <FormattedMessage id="USES_COUNT" />,
-                render: (data, ind, row) => row.passcode.recycleCount === -1 ? "∞" : `${row.passcode.recycleCount} 회`
+                render: (data, ind, row) => row.passcode.recycleCount === -1 ? "∞" : <FormattedMessage id="PASSCODE_RECYCLE_COUNT_LABEL" values={{
+                    count: row.passcode.recycleCount
+                }}/>
             },
             {
                 key: 'createdAt',

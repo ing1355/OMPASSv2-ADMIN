@@ -73,12 +73,12 @@ const LdapSyncDetail = () => {
             <Button className="st3" onClick={() => {
                 if (detailId) {
                     UpdateLdapConfigListFunc(detailId, params, (newData) => {
-                        message.success("LDAP 설정 수정에 성공하였습니다.")
+                        message.success(formatMessage({id: 'LDAP_MODIFY_SUCCESS_MSG'}))
                         setData(newData)
                     })
                 } else {
                     AddLdapConfigListFunc(params, () => {
-                        message.success("LDAP 설정 추가에 성공하였습니다.")
+                        message.success(formatMessage({id: 'LDAP_ADD_SUCCESS_MSG'}))
                         navigate(-1)
                     })
                 }
@@ -87,7 +87,7 @@ const LdapSyncDetail = () => {
             </Button>
             {detailId && <Button icon={deleteIcon} hoverIcon={deleteIconHover} className="st2" onClick={() => {
                 DeleteLdapConfigListFunc(detailId, () => {
-                    message.success("LDAP 설정 삭제에 성공하였습니다.")
+                    message.success(formatMessage({id: 'LDAP_DELETE_SUCCESS_MSG'}))
                     navigate(-1)
                 })
             }}>
@@ -95,7 +95,7 @@ const LdapSyncDetail = () => {
             </Button>}
         </ContentsHeader>
         <div className="contents-header-container">
-            {detailId && <BottomLineText title="상세 정보" />}
+            {detailId && <BottomLineText title={<FormattedMessage id="LDAP_DETAIL_INFO_LABEL"/>}/>}
             {data?.apiServerHost && <CustomInputRow title={<FormattedMessage id="API_SERVER_ADDRESS_LABEL" />}>
                 <CopyToClipboard text={data?.apiServerHost} onCopy={(value, result) => {
                     if (result) {
@@ -107,7 +107,7 @@ const LdapSyncDetail = () => {
                     <Input className="st1 secret-key" value={data?.apiServerHost} readOnly />
                 </CopyToClipboard>
             </CustomInputRow>}
-            {data?.secretKey && <CustomInputRow title={"시크릿 키"}>
+            {data?.secretKey && <CustomInputRow title={<FormattedMessage id="LDAP_SECRET_KEY_LABEL"/>}>
                 <CopyToClipboard text={data.secretKey} onCopy={(value, result) => {
                     console.log(value, result)
                     if (result) {
@@ -119,10 +119,10 @@ const LdapSyncDetail = () => {
                     <Input className="st1 secret-key" value={data.secretKey} readOnly={true} />
                 </CopyToClipboard>
             </CustomInputRow>}
-            {detailId && <BottomLineText title="설정 정보" style={{
+            {detailId && <BottomLineText title={<FormattedMessage id="LDAP_SETTING_INFO_LABEL"/>} style={{
                 marginTop: detailId ? '32px' : 0
             }}/>}
-            <CustomInputRow title="이름">
+            <CustomInputRow title={<FormattedMessage id="LDAP_NAME_LABEL"/>}>
                 <Input className="st1" value={params.name} valueChange={val => {
                     setParams({
                         ...params,
@@ -130,7 +130,7 @@ const LdapSyncDetail = () => {
                     })
                 }} />
             </CustomInputRow>
-            <CustomInputRow title="설명">
+            <CustomInputRow title={<FormattedMessage id="DESCRIPTION_LABEL"/>}>
                 <Input className="st1" value={params.description} valueChange={val => {
                     setParams({
                         ...params,
@@ -138,7 +138,7 @@ const LdapSyncDetail = () => {
                     })
                 }} />
             </CustomInputRow>
-            <CustomInputRow title="프록시 서버 주소">
+            <CustomInputRow title={<FormattedMessage id="LDAP_PROXY_ADDRESS_LABEL"/>}>
                 <Input className="st1" value={params.proxyServer.address} valueChange={val => {
                     setParams({
                         ...params,
@@ -149,7 +149,7 @@ const LdapSyncDetail = () => {
                     })
                 }} />
             </CustomInputRow>
-            <CustomInputRow title="프록시 서버 PORT">
+            <CustomInputRow title={<FormattedMessage id="LDAP_PROXY_PORT_LABEL"/>}>
                 <Input className="st1" value={params.proxyServer.port || ''} valueChange={val => {
                     setParams({
                         ...params,
@@ -168,7 +168,7 @@ const LdapSyncDetail = () => {
                     })
                 }} />
             </CustomInputRow>
-            <CustomInputRow title="인증 유형">
+            <CustomInputRow title={<FormattedMessage id="LDAP_AUTH_TYPE_LABEL"/>}>
                 <div className="ldap-authentication-type-container">
                     {
                         LDAPAuthenticationTypes.map((_, ind) => <Input key={ind} className="st1" type="radio" checked={params.ldapAuthenticationType === _} onChange={e => {
@@ -182,7 +182,7 @@ const LdapSyncDetail = () => {
                     }
                 </div>
             </CustomInputRow>
-            <CustomInputRow title="전송 유형">
+            <CustomInputRow title={<FormattedMessage id="LDAP_TRANSPORT_TYPE_LABEL"/>}>
                 <div className="ldap-authentication-type-container">
                     {
                         LDAPTransportTypes.map((_, ind) => <Input key={ind} className="st1" type="radio" checked={params.ldapTransportType === _} onChange={e => {

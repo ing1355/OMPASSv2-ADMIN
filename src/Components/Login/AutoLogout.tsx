@@ -29,7 +29,6 @@ const AutoLogout = () => {
         <div className='mb10'><FormattedMessage id='AUTO_LOGOUT_INFO_CONTENT_1' /></div>
         <div className='mb40'><FormattedMessage id='AUTO_LOGOUT_INFO_CONTENT_2' /></div>
 
-        {/* 로그인 바로가기 */}
         <GoToLoginPageButton 
           className='button-st4' 
         />

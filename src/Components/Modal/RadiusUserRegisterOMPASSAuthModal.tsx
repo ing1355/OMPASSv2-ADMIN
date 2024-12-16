@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react"
 import { message } from "antd"
 import dayjs from "dayjs"
 import OMPASSAuthContents from "./OMPASSAuthContents"
-import { FormattedMessage } from "react-intl"
+import { FormattedMessage, useIntl } from "react-intl"
 import { convertTimeFormat } from "Functions/GlobalFunctions"
 
 type RadiusUserRegisterOMPASSAuthModalProps = {
@@ -30,6 +30,7 @@ const RadiusUserRegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, 
     const timeTimerRef = useRef<NodeJS.Timer>()
     const remainTimeRef = useRef(remainTime)
     const tokenRef = useRef<string>('')
+    const { formatMessage } = useIntl()
 
     useEffect(() => {
         remainTimeRef.current = remainTime
@@ -50,7 +51,7 @@ const RadiusUserRegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, 
         OMPASSAuth.stopAuth()
     }
 
-    return <CustomModal title="Radius OMPASS 등록" open={opened} onCancel={() => {
+    return <CustomModal title={<FormattedMessage id="RADIUS_OMPASS_REGISTER_MODAL_TITLE_LABEL"/>} open={opened} onCancel={() => {
         _onCancel()
     }} buttonsType="small" noBtns noClose onOpen={() => {
         OMPASSAuth.startAuth({ type: 'single', purpose: 'RADIUS_REGISTRATION', applicationId: radiusApplicationId }, ({ url, ntp, sessionExpiredAt, sourceNonce }) => {
@@ -67,7 +68,7 @@ const RadiusUserRegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, 
             timeTimerRef.current = setInterval(() => {
                 if (remainTimeRef.current < 1) {
                     _onCancel()
-                    message.error("시간이 초과되었습니다. 다시 진행해주세요.")
+                    message.error(formatMessage({id: 'OMPASS_MODULE_TIME_EXPIRED_MSG'}))
                 } else {
                     setRemainTime(time => time - 1)
                 }
@@ -86,13 +87,13 @@ const RadiusUserRegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, 
     }}>
         <OMPASSAuthContents isRegister role={userInfo.role} name={userInfo.name} username={userInfo.username} status={authStatus} sessionData={sessionData} />
         {sessionData.url && <div className="ompass-auth-description-text">
-            OMPASS App에서 QR 인식을 진행해주세요.<br />
-            등록이 완료되면 현재 창은 자동으로 제거됩니다.
+            <FormattedMessage id="RADIUS_OMPASS_REGISTER_MODAL_SUBSCRIPTION_1"/><br />
+            <FormattedMessage id="RADIUS_OMPASS_REGISTER_MODAL_SUBSCRIPTION_2"/>
         </div>}
         <div className="ompass-auth-remain-time-container">
             {
                 remainTime > 0 ? <>
-                    남은 시간
+                    <FormattedMessage id="OMPASS_MODULE_REMAIN_TIME_LABEL"/>
                     <span>
                         <FormattedMessage id={remainTime > 60 ? "WITH_MINUTE_SECONDS_TIME" : "ONLY_SECONDS_TIME"} values={{
                             ...convertTimeFormat(remainTime)

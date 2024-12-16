@@ -31,7 +31,7 @@ const LdapManagement = () => {
             setDataLoading(false)
         })
     }
-
+    console.log(tableData)
     return <Contents loading={dataLoading}>
         <ContentsHeader title="LDAP_MANAGEMENT_TITLE" subTitle="LDAP_MANAGEMENT_TITLE">
         </ContentsHeader>
@@ -55,23 +55,33 @@ const LdapManagement = () => {
                 columns={[
                     {
                         key: 'name',
-                        title: "이름"
+                        title: <FormattedMessage id="LDAP_NAME_LABEL"/>
                     },
                     {
-                        key: 'apiServerHost',
-                        title: "API 서버 주소"
+                        key: 'proxyIpAddress',
+                        title: <FormattedMessage id="LDAP_PROXY_ADDRESS_LABEL"/>,
+                        render: (data, ind, row) => row.proxyServer.address
+                    },
+                    {
+                        key: 'proxyPort',
+                        title: <FormattedMessage id="LDAP_PROXY_PORT_LABEL"/>,
+                        render: (data, ind, row) => row.proxyServer.port
+                    },
+                    {
+                        key: 'baseDn',
+                        title: "baseDn"
                     },
                     {
                         key: 'description',
-                        title: "설명"
+                        title: <FormattedMessage id="DESCRIPTION_LABEL"/>
                     },
                     {
                         key: 'lastUserSyncedAt',
-                        title: "마지막 동기화 시각"
+                        title: <FormattedMessage id="LDAP_LAST_SYNC_TIME_LABEL"/>
                     },
                     {
                         key: 'createdAt',
-                        title: "생성 시각",
+                        title: <FormattedMessage id="CREATE_AT_LABEL"/>,
                     },
                 ]}
                 onBodyRowClick={(row, index, arr) => {

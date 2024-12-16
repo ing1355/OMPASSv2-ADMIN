@@ -23,7 +23,6 @@ type AgentInstallerDataType = {
   fileId: number
   uploader: string
   version: string
-  os: string
   uploadDate: string
   downloadTarget: boolean
   downloadUrl: string
@@ -170,6 +169,8 @@ type SubDomainInfoDataType = {
   userSignupMethod: PortalSettingsDataType['userSignupMethod']
   selfSignupEnabled: PortalSettingsDataType['selfSignupEnabled']
   windowsAgentUrl?: string
+  linuxPamDownloadUrl?: string
+  ompassProxyDownloadUrl?: string
   backendVersion: {
     fidoApp: string
     interfaceApp: string

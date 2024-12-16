@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react"
 import { message } from "antd"
 import dayjs from "dayjs"
 import OMPASSAuthContents from "./OMPASSAuthContents"
-import { FormattedMessage } from "react-intl"
+import { FormattedMessage, useIntl } from "react-intl"
 import { convertTimeFormat } from "Functions/GlobalFunctions"
 import { DateTimeFormat } from "Constants/ConstantValues"
 
@@ -33,6 +33,7 @@ const PairOMPASSAuthModal = ({ opened, onCancel, successCallback, userData }: Pa
     const timeTimerRef = useRef<NodeJS.Timer>()
     const remainTimeRef = useRef(remainTime)
     const tokenRef = useRef<string>('')
+    const { formatMessage } = useIntl()
 
     useEffect(() => {
         remainTimeRef.current = remainTime
@@ -54,7 +55,7 @@ const PairOMPASSAuthModal = ({ opened, onCancel, successCallback, userData }: Pa
         OMPASSAuth.stopAuth()
     }
 
-    return <CustomModal title="OMPASS 인증" open={opened} onCancel={() => {
+    return <CustomModal title={<FormattedMessage id="OMPASS_MODULE_MODAL_TITLE_LABEL"/>} open={opened} onCancel={() => {
         _onCancel()
     }} buttonsType="small" noClose onOpen={() => {
         OMPASSAuth.startAuth({ type: 'pair', purpose: 'ROLE_SWAPPING', targetUserId: userData!.userId }, ({ url, ntp, sessionExpiredAt, sourceNonce }) => {
@@ -71,7 +72,7 @@ const PairOMPASSAuthModal = ({ opened, onCancel, successCallback, userData }: Pa
             timeTimerRef.current = setInterval(() => {
                 if (remainTimeRef.current < 1) {
                     _onCancel()
-                    message.error("시간이 초과되었습니다. 다시 진행해주세요.")
+                    message.error(formatMessage({id: 'OMPASS_MODULE_TIME_EXPIRED_MSG'}))
                 } else {
                     setRemainTime(time => time - 1)
                 }
@@ -91,8 +92,8 @@ const PairOMPASSAuthModal = ({ opened, onCancel, successCallback, userData }: Pa
         }, () => {
             _onCancel()
         })
-    }} okText={"완료"} okCallback={async () => {
-        if (!(sourceStatus === 'complete' && targetStatus === 'complete')) return message.error("인증을 완료해야 합니다.")
+    }} okText={<FormattedMessage id="NORMAL_COMPLETE_LABEL"/>} okCallback={async () => {
+        if (!(sourceStatus === 'complete' && targetStatus === 'complete')) return message.error(formatMessage({id: 'NEED_OMPASS_COMPLETE_MSG'}))
         else {
             successCallback(tokenRef.current)
             _onCancel()
@@ -110,7 +111,7 @@ const PairOMPASSAuthModal = ({ opened, onCancel, successCallback, userData }: Pa
         <div className="ompass-auth-remain-time-container">
             {
                 remainTime > 0 ? <>
-                    남은 시간
+                    <FormattedMessage id="OMPASS_MODULE_REMAIN_TIME_LABEL"/>
                     <span>
                         <FormattedMessage id={remainTime > 60 ? "WITH_MINUTE_SECONDS_TIME" : "ONLY_SECONDS_TIME"} values={{
                             ...convertTimeFormat(remainTime)

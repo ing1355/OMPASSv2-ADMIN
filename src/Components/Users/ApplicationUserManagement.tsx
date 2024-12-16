@@ -24,39 +24,39 @@ const ApplicationUserManagement = () => {
         let temp: CustomTableColumnType<RpUserListDataType>[] = [
             {
                 key: 'portalUser',
-                title: "포탈 아이디",
+                title: <FormattedMessage id="PORTAL_USERNAME_COLUMN_LABEL" />,
                 render: (data, ind, row) => row.portalUser.username
             },
             {
                 key: 'rpUser',
-                title: "사용자 아이디",
+                title: <FormattedMessage id="RP_USERNAME_COLUMN_LABEL" />,
                 render: (data, ind, row) => row.rpUser.username
             },
             {
                 key: 'groupName',
-                title: "그룹명",
+                title: <FormattedMessage id="GROUP_NAME_LABEL" />,
                 render: (data) => data ?? "-"
             },
         ]
         if (targetApplication?.type === 'WINDOWS_LOGIN') {
-            temp.push({ key: 'pcName', title: 'PC 이름' }, { key: 'windowsAgentVersion', title: 'Agent 버전' })
+            temp.push({ key: 'pcName', title: <FormattedMessage id="PC_NAME_LABEL" /> }, { key: 'windowsAgentVersion', title: <FormattedMessage id="AGENT_VERSION_LABEL" /> })
         }
         temp.push({
             key: 'lastLoggedInAuthenticator',
-            title: "마지막 로그인 방식"
+            title: <FormattedMessage id="LAST_LOGGED_IN_AUTHENTICATOR_LABEL" />
         },
             {
                 key: 'lastLoggedInAt',
-                title: "마지막 로그인 시각"
+                title: <FormattedMessage id="LAST_LOGGED_IN_TIME_LABEL" />
             },
             {
                 key: 'ompassRegisteredAt',
-                title: "사용자 등록일"
+                title: <FormattedMessage id="RP_OMPASS_REGISTED_AT_LABEL" />
             }, {
-                key: 'hasPasscode',
-                title: '패스코드 발급 여부',
-                render: (data) => data ? 'O' : 'X'
-            })
+            key: 'hasPasscode',
+            title: <FormattedMessage id="RP_HAS_PASSCODE_LABEL" />,
+            render: (data) => data ? 'O' : 'X'
+        })
         return temp
     }, [targetApplication])
 
@@ -112,12 +112,12 @@ const ApplicationUserManagement = () => {
     }, [targetApplication])
 
     useEffect(() => {
-        if(refresh) {
+        if (refresh) {
             setTimeout(() => {
                 setRefresh(false)
             }, 100);
         }
-    },[refresh])
+    }, [refresh])
 
     return <>
         <CustomInputRow title={<FormattedMessage id="USER_MANAGEMENT_APPLICATION_SELECT_LABEL" />}>
@@ -135,12 +135,12 @@ const ApplicationUserManagement = () => {
                 searchOptions={[
                     {
                         key: 'portalUsername',
-                        label: '포탈 아이디',
+                        label: <FormattedMessage id="PASSCODE_COLUMN_PORTAL_ID_LABEL" />,
                         type: 'string'
                     },
                     {
                         key: 'rpUsername',
-                        label: '사용자 아이디',
+                        label: <FormattedMessage id="PASSCODE_COLUMN_RP_ID_LABEL" />,
                         type: 'string'
                     },
                     {

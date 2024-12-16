@@ -1,0 +1,32 @@
+.find-username-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 0 0 200px;
+    gap: 24px;
+    flex: 1;
+}
+
+.find-username-title {
+    color: var(--sub-grey-color4);
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.find-username-subscription {
+    background-color: var(--sub-purple-color);
+    color: var(--main-purple-color);
+    font-size: 1rem;
+    letter-spacing: 2px;
+    font-weight: bold;
+    padding: 8px 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    height: 48px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}

@@ -3,7 +3,7 @@ import Input from "Components/CommonCustomComponents/Input";
 import { useEffect, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { ResetPasswordEmailCodeVerifyFunc, ResetPasswordEmailSendFunc, ResetPasswordFunc } from "Functions/ApiFunctions";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { message } from "antd";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
@@ -40,6 +40,7 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
     const mailCountRef = useRef(0)
     
     const navigate = useNavigate()
+    const { formatMessage } = useIntl()
 
     useEffect(() => {
         mailCountRef.current = mailCount
@@ -51,36 +52,32 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
             if(!randomPasswordCheck) {
                 if (!inputPassword) {
                     inputPasswordRef.current?.focus()
-                    return message.error("비밀번호 값을 입력해주세요.")
+                    return message.error(formatMessage({id: 'PLEASE_INPUT_PASSWORD_MSG'}))
                 }
                 if (passwordAlert) {
                     inputPasswordRef.current?.focus()
-                    return message.error("비밀번호 값을 확인해주세요.")
+                    return message.error(formatMessage({id: 'PASSWORD_CHECK'}))
                 }
                 if (!inputPasswordConfirm) {
                     inputPasswordConfirmRef.current?.focus()
-                    return message.error("비밀번호 확인 값을 입력해주세요.")
-                }
-                if (passwordConfirmAlert) {
-                    inputPasswordConfirmRef.current?.focus()
-                    return message.error("비밀번호 확인 값을 확인해주세요.")
+                    return message.error(formatMessage({id: 'PLEASE_INPUT_PASSWORD_CONFIRM_MSG'}))
                 }
             }
             ResetPasswordFunc(inputPassword, token, () => {
-                message.success("비밀번호 초기화 성공!")
+                message.success(formatMessage({id: 'PASSWORD_INIT_SUCCESS_MSG'}))
                 navigate('/')
             })
         } else {
             // return setCodeConfirm(true)
             if (!inputUsername) {
-                message.error("아이디를 입력해주세요")
+                message.error(formatMessage({id: 'PLEASE_INPUT_ID_MSG'}))
                 return inputUsernameRef.current?.focus()
             }
             if (usernameAlert) {
                 return inputUsernameRef.current?.focus()
             }
             if (!inputEmail) {
-                message.error("이메일을 입력해주세요")
+                message.error(formatMessage({id: 'PLEASE_INPUT_EMAIL_MSG'}))
                 return inputEmailRef.current?.focus()
             }
             if (!inputEmail || emailAlert) {
@@ -90,7 +87,7 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                 return inputCodeRef.current?.focus()
             }
             ResetPasswordEmailCodeVerifyFunc({ type, username: inputUsername, email: inputEmail, code: inputCode }, (_, _token) => {
-                message.success('인증 코드 검증 성공!')
+                message.success(formatMessage({id :'EMAIL_CODE_VERIFY_SUCCESS_MSG'}))
                 setToken(_token)
                 setCodeConfirm(true)
             }).catch(err => {
@@ -106,7 +103,7 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
             >
                 {!isMobile && <div className='login-form-header'>
                     <h1 className='login-form-title'>
-                        비밀번호 초기화
+                        <FormattedMessage id="PASSWORD_RESET"/>
                     </h1>
                 </div>}
                 {codeConfirm && <div
@@ -117,12 +114,7 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                         flexDirection: 'row',
                         justifyContent: 'space-between'
                     }}>
-                        <div>비밀번호</div>
-                        {/* <div>
-                            <Input type="checkbox" name="check" label="비밀번호 랜덤 생성" checked={randomPasswordCheck} onChange={e => {
-                                setRandomPasswordCheck(e.target.checked)
-                            }}/>
-                        </div> */}
+                        <div><FormattedMessage id="PASSWORD"/></div>
                     </div>
                     <Input
                         className='st1 login-input'
@@ -132,7 +124,7 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                         noGap
                         customType='password'
                         type="password"
-                        placeholder='비밀번호 입력'
+                        placeholder={formatMessage({id: 'PASSWORD_PLACEHOLDER'})}
                         ref={inputPasswordRef}
                         disabled={randomPasswordCheck}
                         valueChange={(value, alert) => {
@@ -145,7 +137,7 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                     className='login-input-container'
                 >
                     <label>
-                        비밀번호 확인
+                        <FormattedMessage id="PASSWORD_CONFIRM"/>
                     </label>
                     <Input
                         className='st1 login-input'
@@ -154,7 +146,7 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                         maxLength={16}
                         noGap
                         type="password"
-                        placeholder='비밀번호 확인 입력'
+                        placeholder={formatMessage({id: 'PASSWORD_CONFIRM_PLACEHOLDER'})}
                         disabled={randomPasswordCheck}
                         rules={[
                             {
@@ -165,7 +157,7 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                         ref={inputPasswordConfirmRef}
                         valueChange={(value, alert) => {
                             setInputPasswordConfirm(value)
-                            setPasswordConfirmAlert(alert)
+                            // setPasswordConfirmAlert(alert)
                         }}
                     />
                 </div>}
@@ -173,7 +165,7 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                     className='login-input-container'
                 >
                     <label>
-                        아이디
+                        <FormattedMessage id="ID"/>
                     </label>
                     <Input
                         className='st1 login-input'
@@ -182,7 +174,7 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                         maxLength={16}
                         noGap
                         customType='username'
-                        placeholder='초기화 할 아이디 입력'
+                        placeholder={formatMessage({id: 'INPUT_ID_FOR_RESET_PASSWORD_PLACEHOLDER'})}
                         ref={inputUsernameRef}
                         valueChange={(value, alert) => {
                             setInputUsername(value);
@@ -194,7 +186,7 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                     className='login-input-container'
                 >
                     <label>
-                        이메일
+                        <FormattedMessage id="EMAIL"/>
                     </label>
                     <Input
                         className='st1 login-input'
@@ -205,7 +197,7 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                         name="email"
                         maxLength={48}
 
-                        placeholder='가입 시 등록한 이메일 입력'
+                        placeholder={formatMessage({id: 'INPUT_EMAIL_WHEN_SIGN_UP_PLACEHOLDER'})}
                         valueChange={(value, alert) => {
                             setInputEmail(value);
                             setEmailAlert(alert || false)
@@ -227,7 +219,7 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                                     type
                                 }, () => {
                                     setEmailCodeSend(true)
-                                    message.success("인증 코드 발송 성공!")
+                                    message.success(formatMessage({id: 'EMAIL_SEND_FOR_CODE_VERIFY_SUCCESS_MSG'}))
                                     mailTimer.current = setInterval(() => {
                                         setMailCount(count => count + 1)
                                         if (mailCountRef.current >= 10) {
@@ -248,7 +240,7 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                     className='login-input-container'
                 >
                     <label>
-                        인증 코드
+                        <FormattedMessage id="EMAIL_CODE_LABEL"/>
                     </label>
                     <Input
                         className='st1 login-input'
@@ -258,7 +250,7 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                         noGap
                         ref={inputCodeRef}
                         customType='username'
-                        placeholder='인증 코드 입력'
+                        placeholder={formatMessage({id: 'INPUT_EMAIL_CODE_LABEL'})}
                         valueChange={value => {
                             setInputCode(value)
                         }}
@@ -271,7 +263,7 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                         margin: '0 0 8px 0'
                     }}
                 >
-                    {codeConfirm ? "완료" : "다음 단계로 진행"}
+                    <FormattedMessage id={codeConfirm ? "NORMAL_COMPLETE_LABEL" : "GO_TO_NEXT_STEP_LABEL"}/>
                 </Button>
                 <Button
                     className={'st6 login-button'}

@@ -50,14 +50,6 @@ const ContentsHeader = ({ title, subTitle, style, children, contentStyle, classN
                 <h1>
                     {subTitle && <FormattedMessage id={subTitle} />}
                 </h1>
-                {/* {docsUrl && <Button className="st5" icon={documentIcon} hoverIcon={documentIconHover} onClick={() => {
-                    message.info("기능 준비중(페이지 이동)")
-                }}>
-                    <FormattedMessage id="APPLICATION_DOCS_VIEW_LABEL" />
-                </Button>} */}
-                {/* {!noBack && userInfo.role !== 'USER' && <Button className="st1" onClick={() => {
-                    navigate(-1)
-                }} icon={backIcon}/>} */}
             </div>
             <div>
                 {children}

@@ -9,6 +9,7 @@ import useDebounce from "hooks/useDebounce"
 import useFullName from "hooks/useFullName"
 import PortalTypeView from "./PortalTypeView"
 import ApplicationTypeView from "./ApplicationTypeView"
+import { FormattedMessage, useIntl } from "react-intl"
 
 type TransferContainerProps = {
     datas: UserTransferDataType[]
@@ -56,6 +57,7 @@ const TransferContainer = ({ datas, selected, setSelected, viewStyle, title }: T
     const getFullName = useFullName();
     const searchInputRef = useRef(searchInput)
     const debounce = useDebounce()
+    const { formatMessage } = useIntl()
 
     const filteredDatas = useMemo(() => {
         if (searchFilter) {
@@ -115,7 +117,7 @@ const TransferContainer = ({ datas, selected, setSelected, viewStyle, title }: T
                         setSelected([...new Set(selected.concat(rpUserIds))])
                     }
                 }}>
-                    전체{rpUserNums === selected.length ? ' 선택 해제' : ' 선택'}
+                    <FormattedMessage id={rpUserNums === selected.length ? 'ALL_DESELECT_LABEL' : 'ALL_SELECT_LABEL'}/>
                 </Button>
                 <ClearBtn onClick={() => {
                     setSelected([])
@@ -132,7 +134,7 @@ const TransferContainer = ({ datas, selected, setSelected, viewStyle, title }: T
             <div>
                 <Input value={searchInput} valueChange={value => {
                     setSearchInput(value)
-                }} placeholder='사용자 이름 또는 아이디를 입력해주세요' className="custom-transfer-user-search"/>
+                }} placeholder={formatMessage({id: 'GROUP_USER_TRANSFER_SEARCH_PLACEHOLDER'})} className="custom-transfer-user-search"/>
             </div>
         </div>
     </div>

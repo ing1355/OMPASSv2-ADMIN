@@ -58,7 +58,7 @@ const AuthPolicyDetail = () => {
         key: _,
         label: getApplicationTypeLabel(_)
     }))
-    
+
     useLayoutEffect(() => {
         if (uuid) {
             setDataLoading(true)
@@ -139,7 +139,7 @@ const AuthPolicyDetail = () => {
             noticeToAdmin: noticeToAdmin!,
             noticeToThemselves
         }, () => {
-            message.success('추가 성공!')
+            message.success(formatMessage({ id: 'AUTH_POLICY_ADD_SUCCESS_MSG' }))
             navigate(-1)
         })
     }
@@ -151,45 +151,42 @@ const AuthPolicyDetail = () => {
     }, [initEvent])
 
     useEffect(() => {
-        if(isAdd) dataInit()
+        if (isAdd) dataInit()
     }, [selectedApplicationType])
 
     return <Contents loading={dataLoading}>
         <ContentsHeader title="POLICY_MANAGEMENT" subTitle={isAdd ? "AUTH_POLICY_ADD" : "AUTH_POLICY_DETAIL"}>
             <div className="custom-detail-header-items-container">
                 {!isDefaultPolicy && <Button className="st3" onClick={() => {
-                    if (!selectedApplicationType) return message.error("어플리케이션 유형은 필수 선택 사항입니다.")
+                    if (!selectedApplicationType) return message.error(formatMessage({ id: 'PLEASE_SELECT_APPLICATION_TYPE_MSG' }))
                     if (!policyName) {
-                        return message.error("정책명은 필수 입력 항목입니다.")
+                        return message.error(formatMessage({ id: 'PLEASE_INPUT_POLICY_NAME_MSG' }))
                     }
                     if (ompassControl === 'ACTIVE') {
-                        if (browserUsed && browserChecked!.length === 0) return message.error("브라우저는 최소 1개 이상 허용해야 합니다.")
+                        if (browserUsed && browserChecked!.length === 0) return message.error(formatMessage({ id: 'PLEASE_SELECT_BROWSER_POLICY_MSG' }))
                         if (locationUsed && locationDatas?.isEnabled && locationDatas.locations.length === 0) {
-                            return message.error("사용자 위치 정책을 1개 이상 설정해주세요.")
+                            return message.error(formatMessage({ id: 'PLEASE_SELECT_USER_LOCATION_POLICY_MSG' }))
                         }
                         if (locationUsed && locationDatas?.isEnabled && locationDatas?.locations.some(_ => !_.alias)) {
-                            return message.error("사용자 위치 정책은 위치명이 필수 입력 사항입니다.")
+                            return message.error(formatMessage({ id: 'PLEASE_INPOUT_LOCATION_NAME_MSG' }))
                         }
                         if (ipAddressValues?.isEnabled && ipAddressValues.networks.length === 0) {
-                            return message.error("IP 접근 정책을 1개 이상 설정해주세요.")
+                            return message.error(formatMessage({ id: 'PLEASE_SETTING_IP_ADDRESS_POLICY_MSG' }))
                         }
                         if (accessTimeValues?.isEnabled && accessTimeValues.accessTimes.length === 0) {
-                            return message.error("시간 접근 정책을 1개 이상 설정해주세요.")
+                            return message.error(formatMessage({ id: 'PLEASE_SETTING_TIME_POLICY_MSG' }))
                         }
                         if (noticeToAdmin?.isEnabled && noticeToAdmin.methods.length === 0) {
-                            return message.error("위반 시 관리자 알림의 알림 방식을 1개 이상 설정해주세요.")
+                            return message.error(formatMessage({ id: 'PLEASE_SETTING_NOTI_TO_ADMIN_POLICY_MSG' }))
                         }
                         if (noticeToAdmin?.isEnabled && noticeToAdmin.admins.length === 0) {
-                            return message.error("위반 시 관리자 알림의 알림 받을 관리자를 1명 이상 설정해주세요.")
+                            return message.error(formatMessage({ id: 'PLEASE_SETTING_NOTI_TO_ADMIN_ONE_MORE_MSG' }))
                         }
                         if (hasIncludeWithdrawal) {
-                            return message.error("위반 시 관리자 알림의 알림 받을 관리자에 이미 탈퇴한 관리자가 포함되어 있습니다. 해당 관리자를 제외시켜 주세요.")
+                            return message.error(formatMessage({ id: 'NOTI_TO_ADMIN_INCLUDE_WITHDRAWAL_ADMIN_MSG' }))
                         }
-                        // if (noticeToAdmin?.isEnabled && noticeToAdmin.admins.some(_ => adminDatas.find(admin => admin.userId === _)?.status === 'WITHDRAWAL')) {
-                        //     return message.error("위반 시 관리자 알림에 이미 탈퇴한 관리자가 포함되어 있습니다. 해당 관리자를 제외시켜 주세요.")
-                        // }
                         if (noticeToAdmin?.isEnabled && noticeToAdmin.targetPolicies.length === 0) {
-                            return message.error("위반 시 관리자 알림의 알림 대상 정책을 1개 이상 설정해주세요.")
+                            return message.error(formatMessage({ id: 'PLEASE_SETTING_NOTI_TO_ADMIN_POLICY_ONE_MORE_MSG' }))
                         }
                     }
                     if (uuid) {
@@ -217,48 +214,48 @@ const AuthPolicyDetail = () => {
                                 setNoticeToAdmin(noticeToAdmin)
                                 setNoticeToThemselves(noticeToThemselves)
                             }
-                            message.success('수정 성공!')
+                            message.success(formatMessage({ id: 'AUTH_POLICY_UPDATE_SUCCESS_MSG' }))
                         })
                     } else {
                         addAuthPolicyFunc()
                     }
                 }}>
-                    저장
+                    <FormattedMessage id="SAVE" />
                 </Button>}
                 {!isDefaultPolicy && <Button className="st5" icon={resetIcon} hoverIcon={resetIconWhite} onClick={() => {
                     dataInit()
                 }}>
-                    초기화
+                    <FormattedMessage id="NORMAL_RESET_LABEL" />
                 </Button>}
                 {!isAdd && !isDefaultPolicy && <Button className="st8" onClick={() =>
                     DeletePoliciesListFunc(uuid, () => {
-                        message.success('삭제 성공!')
+                        message.success(formatMessage({ id: 'AUTH_POLICY_DELETE_SUCCESS_MSG' }))
                         navigate(-1)
                     })}>
-                    삭제
+                    <FormattedMessage id="DELETE" />
                 </Button>}
             </div>
         </ContentsHeader>
         <div className="contents-header-container">
-            <CustomInputRow title={<FormattedMessage id="POLICY_COLUMN_APPLICATION_TYPE_LABEL"/>}>
+            <CustomInputRow title={<FormattedMessage id="POLICY_COLUMN_APPLICATION_TYPE_LABEL" />}>
                 {isAdd ? <CustomSelect value={selectedApplicationType} onChange={value => {
                     setSelectedApplicationType(value as ApplicationDataType['type'])
                 }} items={typeItems} needSelect /> : getApplicationTypeLabel(selectedApplicationType as ApplicationDataType['type'])}
             </CustomInputRow>
             {selectedApplicationType && <>
-                <CustomInputRow title="정책명" required>
+                <CustomInputRow title={<FormattedMessage id="POLICY_NAME_LABEL" />} required>
                     {
                         detailData?.policyType === 'DEFAULT' ? <Input className="st1" value={formatMessage({ id: 'default policy' })} readOnly /> : <Input className="st1" value={policyName} valueChange={value => {
                             setPolicyName(value)
-                        }} placeholder="정책명을 입력해주세요." />
+                        }} placeholder={formatMessage({ id: 'POLICY_NAME_PLACEHOLDER' })} />
                     }
                 </CustomInputRow>
-                <CustomInputRow title="설명">
-                    <Input className="st1" value={inputDescription} placeholder="설명을 입력해주세요.(선택)" valueChange={value => {
+                <CustomInputRow title={<FormattedMessage id="DESCRIPTION_LABEL" />}>
+                    <Input className="st1" value={inputDescription} placeholder={formatMessage({ id: 'DDESCRIPTION_PLACEHOLDER' })} valueChange={value => {
                         setInputDescription(value)
                     }} />
                 </CustomInputRow>
-                <OMPASSAuth value={ompassControl} onChange={setOmpassControl} isDefaultPolicy={isDefaultPolicy}/>
+                <OMPASSAuth value={ompassControl} onChange={setOmpassControl} isDefaultPolicy={isDefaultPolicy} />
                 <div className="auth-policy-validate-container" data-hidden={ompassControl !== 'ACTIVE'}>
                     {authenticatorsUsed && <OMPASSAuthenticators value={authenticatorPolicies} onChange={setAuthenticatorPolicies} locationChecked={locationDatas?.isEnabled || false} webauthnUsed={webauthnUsed} setSureChange={setSureChange} />}
                     {browserUsed && <PolicyBrowserSelect value={browserChecked} onChange={setBrowserChecked} />}
@@ -284,13 +281,15 @@ const AuthPolicyDetail = () => {
                 setSureChange(null)
             }}
             type="info"
-            typeTitle='안내'
+            typeTitle={<FormattedMessage id="POLICY_LOCATION_AUTHENTICATOR_MODAL_TITLE"/>}
             typeContent={sureChange === 'LOCATION' ? <>
-                사용자 위치 정책은 OTP, PASSCODE, WEBAUTHN<br />인증 방식에 적용되지 않습니다.<br />
-                계속 진행하시겠습니까?
+                <FormattedMessage id="POLICY_LOCATION_AUTHENTICATOR_MODAL_SUBSCRIPTION_1"/><br />
+                <FormattedMessage id="POLICY_LOCATION_AUTHENTICATOR_MODAL_SUBSCRIPTION_2"/>
             </> : <>
-                {sureChange} 인증 방식은 사용자 위치 정책이 적용되지 않습니다.<br />
-                계속 진행하시겠습니까?
+                <FormattedMessage id={"POLICY_LOCATION_AUTHENTICATOR_MODAL_SUBSCRIPTION_3"} values={{
+                    auth: sureChange
+                }} /><br />
+                <FormattedMessage id="POLICY_LOCATION_AUTHENTICATOR_MODAL_SUBSCRIPTION_2"/>
             </>}
             yesOrNo
             okCallback={async () => {
@@ -309,5 +308,5 @@ const AuthPolicyDetail = () => {
             }} buttonLoading />
     </Contents>
 }
-//미번
+
 export default AuthPolicyDetail

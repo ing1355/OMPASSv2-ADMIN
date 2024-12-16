@@ -51,11 +51,9 @@ const GuidePage = () => {
           <Col
             className='guide-buttons-container'
           >
-            {/* windows 다운로드 */}
             <Button
               className={'st10'}
               onClick={() => {
-                // AgentFileDownload(setIsFileDownloadDisable, formatMessage({ id: 'DOWNLOAD_FAILED' }));
               }}
             >
               <img src={downloadIcon}
@@ -65,7 +63,6 @@ const GuidePage = () => {
               {isFileDownloadDisable ? <FormattedMessage id='DOWNLOADING' /> : <FormattedMessage id='DOWNLOAD_FOR_WINDOWS' />}
             </Button>
 
-            {/* 사용자 매뉴얼 다운로드 */}
             <Button
               className='st5'
               onClick={() => {
@@ -85,7 +82,6 @@ const GuidePage = () => {
               <FormattedMessage id='DOWNLOAD_USER_MANUAL' />
             </Button>
 
-            {/* 로그인 바로가기 */}
             <GoToLoginPageButton/>
           </Col>
         </Row>

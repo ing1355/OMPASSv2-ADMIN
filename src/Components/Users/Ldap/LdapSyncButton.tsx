@@ -6,8 +6,8 @@ import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import CustomModal from "Components/Modal/CustomModal"
 import { userSelectPageSize } from "Constants/ConstantValues"
 import { AddUserWithCsvDataFunc, SyncLdapUserListFunc } from "Functions/ApiFunctions"
-import useFullName from "hooks/useFullName"
 import { useMemo, useState } from "react"
+import { FormattedMessage, useIntl } from "react-intl"
 
 type LdapSyncButtonProps = {
     id: LdapConfigDataType['id']
@@ -21,17 +21,18 @@ const LdapSyncButton = ({ id }: LdapSyncButtonProps) => {
         page: 1,
         showPerPage: userSelectPageSize()
     })
+    const { formatMessage } = useIntl()
     const tableData = useMemo(() => {
         const { page, showPerPage } = pageSetting
         return syncDatas.slice((page - 1) * showPerPage, page * showPerPage)
     }, [syncDatas, pageSetting])
     
     return <>
-        <BottomLineText title="LDAP 사용자 목록" style={{
+        <BottomLineText title={<FormattedMessage id="LDAP_USER_TITLE_LABEL"/>} style={{
             marginTop: '48px'
         }} buttons={<>
             <Button className="st3" onClick={() => {
-                message.info("사용자 목록을 불러옵니다.")
+                message.info(formatMessage({id: 'LDAP_USER_LOAD_SUCCESS_MSG'}))
                 setDataLoading(true)
                 SyncLdapUserListFunc(id, res => {
                     console.log(res)
@@ -40,21 +41,21 @@ const LdapSyncButton = ({ id }: LdapSyncButtonProps) => {
                     setDataLoading(false)
                 })
             }}>
-                불러오기
+                <FormattedMessage id="LOAD_LABEL"/>
             </Button>
             <Button className="st3" onClick={() => {
                 if(syncDatas.length === 0) {
-                    return message.error("동기화 할 사용자가 존재하지 않습니다. 불러오기를 먼저 진행해주세요.")
+                    return message.error(formatMessage({id: 'LDAP_USER_SYNC_FAIL_NO_USERS_MSG'}))
                 }
                 setSureSync(true)
             }}>
-                동기화
+                <FormattedMessage id="SYNC_LABEL"/>
             </Button>
         </>} />
         <div className="ldap-sync-user-list-container">
             {dataLoading ? <div className="ldap-sync-user-list-loading-container">
                 <CustomLoading />
-                데이터 불러오는 중...
+                <FormattedMessage id="CONTENTS_DATA_LOADING_LABEL"/>
             </div> : <CustomTable<LdapUserDataType>
                 theme="table-st1"
                 datas={tableData}
@@ -69,21 +70,21 @@ const LdapSyncButton = ({ id }: LdapSyncButtonProps) => {
                 columns={[
                     {
                         key: 'username',
-                        title: '아이디'
+                        title: <FormattedMessage id="ID"/>
                     }, {
                         key: 'firstName',
-                        title: '성',
+                        title: <FormattedMessage id="FIRST_NAME"/>,
                         render: (data, ind, row) => row.name.firstName
                     }, {
                         key: 'lastName',
-                        title: '이름',
+                        title: <FormattedMessage id="LAST_NAME"/>,
                         render: (data, ind, row) => row.name.lastName
                     }, {
                         key: 'org',
-                        title: '조직명'
+                        title: <FormattedMessage id="RADIUS_ORG_LABEL"/>
                     }, {
                         key: 'email',
-                        title: '이메일'
+                        title: <FormattedMessage id="EMAIL"/>
                     }
                 ]}
             />}
@@ -94,11 +95,11 @@ const LdapSyncButton = ({ id }: LdapSyncButtonProps) => {
                 setSureSync(false)
             }}
             type="info"
-            typeTitle='안내'
+            typeTitle={<FormattedMessage id="LDAP_SYNC_MODAL_TITLE"/>}
             typeContent={<>
-                LDAP에서 불러온 사용자 목록을 포탈 사용자로 등록합니다.<br />
-                기존에 등록했던 사용자는 최신 데이터로 갱신됩니다.<br/>
-                진행하시겠습니까?
+                <FormattedMessage id="LDAP_SYNC_MODAL_SUBSCRIPTION_1"/><br />
+                <FormattedMessage id="LDAP_SYNC_MODAL_SUBSCRIPTION_2"/><br/>
+                <FormattedMessage id="LDAP_SYNC_MODAL_SUBSCRIPTION_3"/>
             </>}
             yesOrNo
             okCallback={async () => {
@@ -109,7 +110,7 @@ const LdapSyncButton = ({ id }: LdapSyncButtonProps) => {
                     phone: _.phone,
                     role: 'USER'
                 })), () => {
-                    message.success("LDAP 사용자 목록 동기화에 성공하였습니다.")
+                    message.success(formatMessage({id: 'LDAP_USER_SYNC_SUCCESS_MSG'}))
                     setSureSync(false)
                 })
             }} buttonLoading />

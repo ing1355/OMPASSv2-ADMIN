@@ -137,7 +137,7 @@ const GroupDetail = () => {
                     setInputDescription(value)
                 }} placeholder={formatMessage({ id: 'GROUP_DESCRIPTION_PLACEHOLDER' })} className="st1" maxLength={192} />
             </CustomInputRow>
-            <CustomInputRow title={"정책 선택"} isVertical>
+            <CustomInputRow title={<FormattedMessage id="Policy selection"/>} isVertical>
                 <div className="group-policy-select-container">
                 <div className="custom-select-box-container">
                     <CustomSelect items={applicationTypeItems} value={selectedApplicationType || ''} onChange={val => {

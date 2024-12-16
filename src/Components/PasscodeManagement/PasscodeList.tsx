@@ -94,7 +94,9 @@ const PasscodeList = () => {
             {
                 key: 'recycleCount',
                 title: <FormattedMessage id="PASSCODE_COLUMN_RECYCLE_COUNT_LABEL" />,
-                render: (data, ind, row) => row.passcode.recycleCount === -1 ? "∞" : `${row.passcode.recycleCount} 회`
+                render: (data, ind, row) => row.passcode.recycleCount === -1 ? "∞" : <FormattedMessage id="PASSCODE_RECYCLE_COUNT_LABEL" values={{
+                    count: row.passcode.recycleCount
+                }}/>
             },
             {
                 key: 'createdAt',

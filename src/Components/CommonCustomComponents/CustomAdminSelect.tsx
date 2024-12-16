@@ -64,7 +64,7 @@ const CustomAdminSelect = ({ data, onChange, hasIncludeWithdrawal }: CustomAdmin
                 }
             }}
             options={[{
-                label: data.length === adminDatas.length ? "전체 선택 해제" : "전체 선택",
+                label: <FormattedMessage id={data.length === adminDatas.length ? "ALL_DESELECT_LABEL" : "ALL_SELECT_LABEL"}/>,
                 value: ""
             }, ...adminDatas.filter(_ => _.status !== 'WITHDRAWAL').map(opt => ({
                 label: opt.username,

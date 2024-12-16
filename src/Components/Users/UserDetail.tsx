@@ -259,7 +259,9 @@ const UserDetail = ({ }) => {
                 key: "recycleCount",
                 title: <FormattedMessage id="CAN_USES" />,
                 render: (data) => {
-                    return data === -1 ? "∞" : `${data} 회`
+                    return data === -1 ? "∞" : <FormattedMessage id="PASSCODE_RECYCLE_COUNT_LABEL" values={{
+                        count: data
+                    }}/>
                 }
             },
         ]
@@ -308,7 +310,7 @@ const UserDetail = ({ }) => {
                     !isAdd && userInfo.role === 'ROOT' && !isSelf && <Button className='st5' onClick={() => {
                         setSureSwap(true)
                     }}>
-                        권한 승계
+                        <FormattedMessage id="USER_AUTHORITY_SUCCESSION_LABEL"/>
                     </Button>
                 }
                 {(canDelete && !isAdd) && !isDeleted && <Button className='st8' onClick={() => {
@@ -343,7 +345,7 @@ const UserDetail = ({ }) => {
                                         navigate(-1)
                                     })
                                 } else {
-                                    // if (modifyValues.password !== modifyValues.passwordConfirm) return message.error("비밀번호가 일치하지 않습니다.")
+                                    if (modifyValues.hasPassword && (modifyValues.password !== modifyValues.passwordConfirm)) return message.error(formatMessage({id: 'PASSWORD_CONFIRM_CHECK'}))
                                     UpdateUserDataFunc(uuid!, modifyValues, (data) => {
                                         setUserData(data)
                                         message.success(formatMessage({ id: 'USER_MODIFY_SUCCESS_MSG' }))
@@ -546,7 +548,7 @@ const UserDetail = ({ }) => {
                     {
                         _.application.type === 'RADIUS' && !_.authenticationInfo.createdAt && <RadiusDetailItem appId={_.application.id} onComplete={() => {
                             GetDatas()
-                            message.success("Radius OMPASS 등록에 성공하였습니다.")
+                            message.success(formatMessage({id: 'RADIUS_OMPASS_REGISTRATION_SUCCESS_MSG'}))
                         }} />
                     }
                     <div className="user-detail-header" onClick={() => {
@@ -565,8 +567,10 @@ const UserDetail = ({ }) => {
                         <div className='user-detail-header-last-container'>
                         <h5>
                             {_.authenticationInfo.loginDeviceInfo.updatedAt ? <>
-                                {_.authenticationInfo.loginDeviceInfo.updatedAt} <FormattedMessage id="USER_INFO_UPDATED_LABEL" />
-                            </> : "등록 안됨"}
+                                <FormattedMessage id="USER_INFO_UPDATED_LABEL" values={{
+                                    date: _.authenticationInfo.loginDeviceInfo.updatedAt
+                                }}/>
+                            </> : <FormattedMessage id="RADIUS_NO_REGISTRATION_LABEL"/>}
                         </h5>
                             <img className='user-detail-header-arrow-icon' src={arrowDownIcon}/>
                         </div>
@@ -615,7 +619,7 @@ const UserDetail = ({ }) => {
                                     {userInfo.role !== "USER" && canModify && <PasscodeAddBtn added={_.authenticationInfo.authenticators.some(__ => __.type === 'PASSCODE')} onClick={() => {
                                         if (_.authenticationInfo.authenticators.some(__ => __.type === 'PASSCODE')) {
                                             SendPasscodeEmailFunc(passcodeData(_.authenticationInfo.id)[0].id, () => {
-                                                message.success("패스코드를 사용자 이메일로 재발송하였습니다.")
+                                                message.success(formatMessage({id: 'PASSCODE_RE_SEND_SUCCESS_MSG'}))
                                             })
                                         } else {
                                             setAddPasscode(_.authenticationInfo.id)
@@ -645,7 +649,7 @@ const UserDetail = ({ }) => {
             RoleSwappingFunc(token, () => {
                 dispatch(userInfoClear())
                 setAuthView(false)
-                message.success("권한 승계에 성공하였습니다. 포탈을 이용하려면 다시 로그인해주세요.")
+                message.success(formatMessage({id: 'USER_AUTHORITY_SUCCESSION_SUCCESS_MSG'}))
             })
         }} userData={userData} />
         <CustomModal

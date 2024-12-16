@@ -51,7 +51,7 @@ const OMPASSAuthContents = ({ isRegister, role, name, username, status, sessionD
                         }
                     </div>
                     <div className={`ompass-auth-content-progress-text ${status}`}>
-                        {status === 'ready' ? '인증 대기 중' : status === 'progress' ? '인증 진행 중' : '인증 완료'}
+                        <FormattedMessage id={status === 'ready' ? 'OMPASS_MODULE_READY_LABEL' : status === 'progress' ? 'OMPASS_MODULE_PROGRESS_LABEL' : 'OMPASS_MODULE_COMPLETE_LABEL'}/>                        
                     </div>
                 </>
             }

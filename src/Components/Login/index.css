@@ -110,6 +110,9 @@
 .login-body.password-reset.code-confirm {
   height: 460px;
 }
+.login-body.password-reset.find-id {
+  height: 360px;
+}
 
 .login-form-title {
   margin: 0;

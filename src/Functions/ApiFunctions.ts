@@ -1,5 +1,5 @@
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from "Components/CommonCustomComponents/CustomAxios";
-import { AddApplicationListApi, AddLdapConfigListApi, AddPasscodeApi, AddPoliciesListApi, AddRadiusUserListApi, AddUserDataApi, AddUserGroupApi, AddUserWithCsvDataApi, ApprovalUserApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeleteLdapConfigListApi, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DuplicateUserNameCheckApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetGlobalConfigApi, GetLdapConfigListApi, GetOMPASSAuthResultApi, GetPasscodeHistoriesApi, GetPasscodeListApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetRpUserListApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, OMPASSAuthStartApi, PatchSessionTokenApi, PostLoginApi, ResetPasswordApi, ResetPasswordEmailCodeVerifyApi, ResetPasswordEmailSendApi, RoleSwappingApi, SendPasscodeEmailApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, SyncLdapUserListApi, TestLdapConnectionApi, UnlockUserApi, UpdateAgentNoteApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdateLdapConfigListApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi } from "Constants/ApiRoute";
+import { AddApplicationListApi, AddLdapConfigListApi, AddPasscodeApi, AddPoliciesListApi, AddRadiusUserListApi, AddUserDataApi, AddUserGroupApi, AddUserWithCsvDataApi, ApprovalUserApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeleteLdapConfigListApi, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DuplicateUserNameCheckApi, FindPortalUsernameApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetGlobalConfigApi, GetLdapConfigListApi, GetOMPASSAuthResultApi, GetPasscodeHistoriesApi, GetPasscodeListApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetRpUserListApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, OMPASSAuthStartApi, PatchSessionTokenApi, PostLoginApi, ResetPasswordApi, ResetPasswordEmailCodeVerifyApi, ResetPasswordEmailSendApi, RoleSwappingApi, SendPasscodeEmailApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, SyncLdapUserListApi, TestLdapConnectionApi, UnlockUserApi, UpdateAgentNoteApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdateLdapConfigListApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi } from "Constants/ApiRoute";
 import { INT_MAX_VALUE } from "Constants/ConstantValues";
 import { convertDashboardDateParamsKSTtoUTC } from "Components/Dashboard/DashboardFunctions";
 import { convertUTCStringToLocalDateString } from "./GlobalFunctions";
@@ -298,8 +298,8 @@ export const DeleteUserGroupDataFunc = (groupId: UserGroupDataType['id'], callba
 export const GetAllAuthLogDataListFunc = ({
     page_size = 10,
     page = 1,
-    rpUsername = "",
     portalUsername = "",
+    rpUsername = "",
     applicationName = "",
     authenticatorType = undefined,
     processType = undefined,
@@ -417,18 +417,18 @@ export const AddUserWithCsvDataFunc = (datas: DefaultUserDataType[], callback: (
     return CustomAxiosPost(AddUserWithCsvDataApi, callback, datas)
 }
 
-export const GetAgentInstallerListFunc = ({
+export const GetAgentInstallerListFunc = (fileType: UploadFileTypes, {
     page_size = 10,
     page = 1,
     sortDirection = "DESC"
-}: GeneralParamsType, callback: ((data: GetListDataGeneralType<AgentInstallerDataType>) => void)) => {
-    return CustomAxiosGet(GetAgentInstallerListApi, (data: GetListDataGeneralType<AgentInstallerDataType>) => {
+}: AgentInstallerListParamsType, callback: ((data: GetListDataGeneralType<AgentInstallerDataType>) => void)) => {
+    return CustomAxiosGet(GetAgentInstallerListApi(fileType), (data: GetListDataGeneralType<AgentInstallerDataType>) => {
         callback(data)
     }, {
         page_size,
         page,
         sortDirection
-    } as GroupListParamsType)
+    } as AgentInstallerListParamsType)
 }
 
 export const UploadAgentInstallerFunc = (params: AgentInstallerUploadParamsType, callback: () => void) => {
@@ -439,8 +439,8 @@ export const UploadAgentInstallerFunc = (params: AgentInstallerUploadParamsType,
     })
 }
 
-export const CurrentAgentVersionChangeFunc = (fileId: AgentInstallerDataType['fileId'], callback: (newData: AgentInstallerDataType) => void) => {
-    return CustomAxiosPatch(CurrentAgentInstallerVersionChangeApi(fileId), callback)
+export const CurrentAgentVersionChangeFunc = (fileType: UploadFileTypes, fileId: AgentInstallerDataType['fileId'], callback: (newData: AgentInstallerDataType) => void) => {
+    return CustomAxiosPatch(CurrentAgentInstallerVersionChangeApi(fileType, fileId), callback)
 }
 
 export const DeleteAgentInstallerFunc = (fileIds: string, callback: () => void) => {
@@ -618,4 +618,12 @@ export const GetRpUsersListFunc = ({
         rpUsername,
         groupName
     } as RpUsersListParamsType)
+}
+
+export const FindPortalUsernameFunc = (token: string, callback: (data: {
+    username: string
+}) => void) => {
+    return CustomAxiosGet(FindPortalUsernameApi, callback, null, {
+        authorization: token
+    })
 }

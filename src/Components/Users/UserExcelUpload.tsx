@@ -21,7 +21,7 @@ type ExcelRegexErrorDataType = {
 }
 
 const decodeCSV = async (arrayBuffer: ArrayBuffer): Promise<string> => {
-    const textDecoder = new TextDecoder("utf-8"); // 기본적으로 UTF-8 시도
+    const textDecoder = new TextDecoder("utf-8");
     let text = textDecoder.decode(new Uint8Array(arrayBuffer));
 
     // 한글이 깨질 경우 EUC-KR로 재시도
@@ -60,7 +60,7 @@ const UserExcelUpload = () => {
                         ..._,
                         role: 'USER'
                     })), res => {
-                        message.success("사용자 추가에 성공하였습니다.")
+                        message.success(formatMessage({id: 'EXCEL_USER_ADD_SUCCESS_MSG'}))
                         setDatas([])
                     }).finally(() => {
                         setLoading(false)
@@ -70,25 +70,14 @@ const UserExcelUpload = () => {
                 </Button>
                 <Button disabled={datas.length === 0} className="st8" onClick={() => {
                     setDatas([])
-                    message.success("엑셀 데이터가 초기화 되었습니다.")
+                    message.success(formatMessage({id: 'EXCEL_DATA_INIT_MSG'}))
                 }}>
                     <FormattedMessage id="NORMAL_RESET_LABEL" />
                 </Button>
                 <Button className="st5" onClick={async () => {
                     downloadExcelUserList([], true)
-                    // const BOM = '\uFEFF'
-                    // let csvContent = "data:text/csv;charset=utf-8," + BOM;
-                    // let columns = ['사용자 아이디,성,이름,이메일,전화 번호']
-                    // csvContent += columns.join(',') + '\n';
-                    // let link = document.createElement('a');
-                    // link.download = 'OMPASS_사용자_리스트(템플릿).csv';
-                    // // let blob = new Blob([text], { type: 'text/plain' });
-                    // // const url = URL.createObjectURL(blob);
-                    // link.href = encodeURI(csvContent);
-                    // link.click();
-                    // // URL.revokeObjectURL(url)
                 }}>
-                    템플릿 다운로드
+                    <FormattedMessage id="EXCEL_TEMPLATE_DOWNLOAD_LABEL"/>
                 </Button>
             </ContentsHeader>
             <div className="contents-header-container">
@@ -129,7 +118,7 @@ const UserExcelUpload = () => {
                         const binaryStr = e.target?.result;
 
                         if (!binaryStr) {
-                            message.error("파일 읽기에 실패했습니다.");
+                            message.error(formatMessage({id: 'EXCEL_UPLOAD_FAIL_FILE_NOT_CORRECTED_MSG'}));
                             return;
                         }
 
@@ -226,21 +215,21 @@ const UserExcelUpload = () => {
             }}
             width={800}
             justConfirm
-            okText={"확인"}
+            okText={formatMessage({id: 'CONFIRM'})}
             okClassName="excel-errors-modal-button"
             type="warning"
             okCallback={async () => {
                 setShowError([])
             }}
-            typeTitle={"데이터 오류"}
+            typeTitle={<FormattedMessage id="EXCEL_UPLOAD_ERROR_MODAL_TITLE_LABEL"/>}
             typeContent={<>
                 <div className="excel-errors-container">
                     <div className="excel-errors-row header">
                         <div>
-                            행 수
+                            <FormattedMessage id="EXCEL_UPLOAD_ERROR_MODAL_SUBSCRIPTION_1_LABEL"/>
                         </div>
                         <div>
-                            실패한 값
+                            <FormattedMessage id="EXCEL_UPLOAD_ERROR_MODAL_SUBSCRIPTION_2_LABEL"/>
                         </div>
                     </div>
                     {

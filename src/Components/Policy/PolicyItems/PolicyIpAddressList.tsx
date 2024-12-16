@@ -20,6 +20,7 @@ const PolicyIpAddressList = ({ value, onChange, dataInit }: PolicyItemsPropsType
     const [currentIpNote, setCurrentIpNote] = useState('')
     const { isEnabled, networks } = value
     const { formatMessage } = useIntl()
+
     useEffect(() => {
         if (dataInit) {
             setCurrentIpAddress('')
@@ -44,27 +45,27 @@ const PolicyIpAddressList = ({ value, onChange, dataInit }: PolicyItemsPropsType
     <div className="policy-contents-container" data-hidden={!isEnabled}>
         <div className="policy-input-container">
             <div className="ip-address-policy-input-header">
-                IP 주소 목록<div data-valuetext={formatMessage({ id: 'IP_ADDRESS_CIDR_INFO' })}>
+                <FormattedMessage id="IP_ADDRESS_POLICY_ITEMS_LABEL"/><div data-valuetext={formatMessage({ id: 'IP_ADDRESS_CIDR_INFO' })}>
                     <img src={ipInfoIcon} />
                 </div>
             </div>
             <div className="location-policy-container">
                 <div className="location-item-container current">
-                    <Input className="st1 policy-ip-address-input" placeholder="IP 주소 또는 범위" value={currentIpAddress} valueChange={value => {
+                    <Input className="st1 policy-ip-address-input" placeholder={formatMessage({id: 'IP_ADDRESS_POLICY_INPUT_PLACEHOLDER_LABEL'})} value={currentIpAddress} valueChange={value => {
                         setCurrentIpAddress(value)
                     }} maxLength={16} rules={[
                         {
                             regExp: (value) => !(RegExp(ipAddressRegex).test(value) || RegExp(cidrRegex).test(value)),
-                            msg: 'IP 주소 형식(aaa.bbb.ccc.ddd) 혹은 CIDR 형식(aaa.bbb.0.0/24)을 입력해야 합니다.'
+                            msg: formatMessage({id: 'IP_ADDRESS_POLICY_INPUT'})
                         }
                     ]} onInput={ipAddressRestriction} />
-                    <Input className="st1 policy-ip-address-input" placeholder="메모" value={currentIpNote} valueChange={value => {
+                    <Input className="st1 policy-ip-address-input" placeholder={formatMessage({id: 'MEMO'})} value={currentIpNote} valueChange={value => {
                         setCurrentIpNote(value)
                     }} maxLength={30} />
                     <Button icon={addIconWhite} className="st3" onClick={() => {
-                        if (networks.find(_ => _.ip === currentIpAddress)) return message.error("동일한 ip가 이미 설정되어 있습니다.")
-                        if (!currentIpAddress) return message.error("IP 주소를 입력해주세요.")
-                        if (!ipAddressRegex.test(currentIpAddress)) return message.error("IP 주소 또는 범위 형식이 잘못되었습니다.")
+                        if (networks.find(_ => _.ip === currentIpAddress)) return message.error(formatMessage({id: 'IP_ADDRESS_DUPLICATE_MSG'}))
+                        if (!currentIpAddress) return message.error(formatMessage({id: 'IP_ADDRESS_NOT_CORRECTED_MSG'}))
+                        if (!ipAddressRegex.test(currentIpAddress)) return message.error(formatMessage({id: 'PLEASE_INPUT_IP_ADDRESS_MSG'}))
                         setIpAddressValues([...networks, {
                             ip: currentIpAddress,
                             note: currentIpNote
@@ -77,13 +78,13 @@ const PolicyIpAddressList = ({ value, onChange, dataInit }: PolicyItemsPropsType
                 </div>
                 {
                     networks.map(({ ip, note }, ipInd) => <div key={ipInd} className="location-item-container">
-                        <Input className="st1 policy-ip-address-input" placeholder="IP 주소 또는 범위" value={ip} onInput={ipAddressRestriction} maxLength={15} valueChange={(val) => {
+                        <Input className="st1 policy-ip-address-input" placeholder={formatMessage({id: 'IP_ADDRESS_POLICY_INPUT_PLACEHOLDER_LABEL'})} value={ip} onInput={ipAddressRestriction} maxLength={15} valueChange={(val) => {
                             setIpAddressValues(networks.map((_, _ind) => _ind === ipInd ? ({
                                 ip: val,
                                 note
                             }) : _))
                         }} />
-                        <Input className="st1 policy-ip-address-input" placeholder="메모" value={note} valueChange={(val) => {
+                        <Input className="st1 policy-ip-address-input" placeholder={formatMessage({id: 'MEMO'})} value={note} valueChange={(val) => {
                             setIpAddressValues(networks.map((_, _ind) => _ind === ipInd ? ({
                                 ip,
                                 note: val

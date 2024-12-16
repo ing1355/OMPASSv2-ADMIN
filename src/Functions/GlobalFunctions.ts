@@ -193,16 +193,18 @@ export const downloadExcelUserList = (rows: {
     name: UserNameType
     email: string
     phone: string
-}[], isTemplete?: boolean) => {
+}[], isTemplete?: boolean, locale?: LanguageType) => {
     const BOM = '\uFEFF'
     let csvContent = "data:text/csv;charset=utf-8," + BOM;
-    let columns = ['사용자 아이디,성,이름,이메일,전화 번호']
+    let columns = locale === 'KR' ? ['사용자 아이디,성,이름,이메일,전화 번호'] : ['User Id,First Name,Last Name,Email,Phone Number']
     csvContent += columns.join(',') + '\n';
     csvContent += rows.map(_ => `${_.username},${_.name.firstName},${_.name.lastName},${_.email},${_.phone}`).join('\n')
     let link = document.createElement('a');
-    link.download = `OMPASS_사용자_리스트${isTemplete ? '(템플릿)' : ''}.csv`;
-    // let blob = new Blob([text], { type: 'text/plain' });
-    // const url = URL.createObjectURL(blob);
+    if(locale === 'KR') {
+        link.download = `OMPASS_사용자_리스트${isTemplete ? '(템플릿)' : ''}.csv`;
+    } else {
+        link.download = `OMPASS_USER_LIST${isTemplete ? '(Form)' : ''}.csv`;
+    }
     link.href = encodeURI(csvContent);
     link.click();
 }

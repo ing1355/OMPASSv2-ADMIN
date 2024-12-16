@@ -79,15 +79,15 @@ const Header = () => {
         </div>
         <div className='header-contents-second-items'>
           <SessionTimeCount />
-          <Tooltip
+          {/* <Tooltip
             destroyTooltipOnHide
-            title={formatMessage({ id: 'DOWNLOAD_FOR_WINDOWS_AGNET_FILE' })}
+            title={formatMessage({ id: 'DOWNLOAD_FOR_WINDOWS_AGENT_FILE' })}
           >
             <a href={subdomainInfo.windowsAgentUrl} download>
               <img src={downloadIcon} />
 
             </a>
-          </Tooltip>
+          </Tooltip> */}
 
           <Tooltip
             title={formatMessage({ id: 'DOWNLOAD_USER_MANUAL' })}

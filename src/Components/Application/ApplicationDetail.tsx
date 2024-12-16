@@ -24,6 +24,7 @@ import SingleOMPASSAuthModal from "Components/Modal/SingleOMPASSAuthModal"
 import RadiusDetailInfo from "./RadiusDetailInfo"
 import documentIcon from '../../assets/documentIcon.png'
 import documentIconHover from '../../assets/documentIconHover.png'
+import ApplicationAgentDownload from "./ApplicationAgentDownload"
 
 const ApiServerAddressItem = ({ text }: {
     text: string
@@ -138,10 +139,10 @@ const ApplicationDetail = () => {
                         return message.error(formatMessage({ id: 'PLEASE_INPUT_APPLICATION_DOMAIN' }))
                     }
                     if (needDomains.includes(applicationType) && !domainRegex.test(inputDomain)) {
-                        return message.error("도메인 값이 올바르지 않습니다.")
+                        return message.error(formatMessage({id: 'INVALID_INPUT_DOMAIN_MSG'}))
                     }
                     if (!isRedmine && needDomains.includes(applicationType) && !redirectUriRegex.test(inputRedirectUrl)) {
-                        return message.error("리다이렉트 URI가 올바르지 않습니다.")
+                        return message.error(formatMessage({id: 'INVALID_INPUT_REDIRECT_URI_MSG'}))
                     }
                     if (!isRedmine && !inputRedirectUrl && needDomains.includes(applicationType)) {
                         return message.error(formatMessage({ id: 'PLEASE_INPUT_APPLICATION_REDIRECT_URI' }))
@@ -245,6 +246,7 @@ const ApplicationDetail = () => {
                 }}>
                     <FormattedMessage id="APPLICATION_DOCS_VIEW_LABEL" />
                 </Button>}
+                <ApplicationAgentDownload type={applicationType}/>
             </CustomInputRow>
             {
                 applicationType && <>

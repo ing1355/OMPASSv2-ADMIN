@@ -24,12 +24,12 @@ const RadiusDetailInfo = ({ data }: RadiusDetailInfoProps) => {
         }} buttons={<>
             <Button className="st3" onClick={() => {
                 if(!data) {
-                    message.error("연결된 Radius 어플리케이션이 없습니다.")
+                    message.error(formatMessage({id: 'NO_CONNECTED_RADIUS_APPLICATION_MSG'}))
                 } else {
                     navigate(`/Applications/detail/${uuid}/radius`)
                 }
             }}>
-                사용자 추가
+                <FormattedMessage id="RADIUS_USER_ADD_LABEL"/>
             </Button>
         </>}/>
         <CustomInputRow title="Host">
@@ -38,20 +38,12 @@ const RadiusDetailInfo = ({ data }: RadiusDetailInfoProps) => {
         <CustomInputRow title="Secret Key">
             <Input className="st1" readOnly value={secretKey} placeholder={noRadiusConnectedMsg}/>
         </CustomInputRow>
-        {/* <CustomInputRow title="Authentcation Method">
-            <Input className="st1" readOnly value={authenticationMethod} placeholder={noRadiusConnectedMsg}/>
-        </CustomInputRow> */}
         <CustomInputRow title="Authentication Port">
             <Input className="st1" readOnly value={authenticationPort} placeholder={noRadiusConnectedMsg}/>
         </CustomInputRow>
         <CustomInputRow title="Accounting Port">
             <Input className="st1" readOnly value={accountingPort} placeholder={noRadiusConnectedMsg}/>
         </CustomInputRow>
-        {/* <CustomInputRow title="Authenticator Attribute">
-            <Switch checked={authenticatorAttribute || false} checkedChildren={'ON'} unCheckedChildren={'OFF'} onChange={() => {
-                message.info("변경할 수 없는 값입니다.")
-            }}/>
-        </CustomInputRow> */}
     </>
 }
 

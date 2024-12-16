@@ -3,7 +3,7 @@ import Button from "Components/CommonCustomComponents/Button"
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import Input from "Components/CommonCustomComponents/Input"
 import { policyNoticeRestrictionTypes, timeZoneNames } from "Constants/ConstantValues"
-import { FormattedMessage } from "react-intl"
+import { FormattedMessage, useIntl } from "react-intl"
 import deleteIcon from '../../../assets/deleteIcon.png'
 import deleteIconHover from '../../../assets/deleteIconHover.png'
 import addIconWhite from '../../../assets/addIconWhite.png'
@@ -34,6 +34,8 @@ const PolicyAccessTimeList = ({ value, onChange, dataInit }: PolicyItemsPropsTyp
     const [currentAccessTimeValue, setCurrentAccessTimeValue] = useState<AccessTimeRestrictionValueType>(defaultTimePolicyData())
     const { isEnabled, accessTimes } = value
 
+    const { formatMessage } = useIntl()
+
     const setAccessTimeValues = (data: AccessTimeRestrictionType['accessTimes']) => {
         onChange({
             ...value,
@@ -55,13 +57,13 @@ const PolicyAccessTimeList = ({ value, onChange, dataInit }: PolicyItemsPropsTyp
                 ...value,
                 isEnabled: check
             })
-        }}/>
+        }} />
         <div className="policy-contents-container" data-hidden={!isEnabled}>
             <div className="policy-input-container">
                 <div className="time-policy-container current">
                     <div className="time-policy-inner-container">
                         <div className="time-policy-days-container">
-                            요일 선택 : <Input type="checkbox" checked={TimePolicyDayOfWeeksList.every(__ => currentAccessTimeValue.selectedDayOfWeeks.includes(__))} onChange={e => {
+                            <FormattedMessage id="ACCESS_TIME_DAY_SELECT_LABEL" /> : <Input type="checkbox" checked={TimePolicyDayOfWeeksList.every(__ => currentAccessTimeValue.selectedDayOfWeeks.includes(__))} onChange={e => {
                                 if (e.target.checked) {
                                     setCurrentAccessTimeValue({
                                         ...currentAccessTimeValue,
@@ -73,7 +75,7 @@ const PolicyAccessTimeList = ({ value, onChange, dataInit }: PolicyItemsPropsTyp
                                         selectedDayOfWeeks: []
                                     })
                                 }
-                            }} label="전체 선택" />
+                            }} label={<FormattedMessage id="ALL_SELECT_LABEL" />} />
                             {TimePolicyDayOfWeeksList.map(__ => <Input key={__} type="checkbox" checked={currentAccessTimeValue.selectedDayOfWeeks.includes(__)} onChange={e => {
                                 if (e.target.checked) {
                                     setCurrentAccessTimeValue({
@@ -94,7 +96,7 @@ const PolicyAccessTimeList = ({ value, onChange, dataInit }: PolicyItemsPropsTyp
                             alignItems: 'center',
                             gap: '12px'
                         }}>
-                            시간 선택 :
+                            <FormattedMessage id="ACCESS_TIME_TIME_SELECT_LABEL" /> :
                             {/* <TimePicker format={timepickerFormat} size="small" disabled={currentAccessTimeValue.timeRange.type === 'ALL_TIME'} value={currentAccessTimeValue.timeRange.startTime ? dayjs(currentAccessTimeValue.timeRange.startTime, timepickerFormat) : null} onChange={val => {
                         setCurrentAccessTimeValue({
                             ...currentAccessTimeValue,
@@ -122,11 +124,11 @@ const PolicyAccessTimeList = ({ value, onChange, dataInit }: PolicyItemsPropsTyp
                                         type: e.target.checked ? 'ALL_TIME' : 'SPECIFIC_TIME'
                                     }
                                 })
-                            }} label="선택 안함" />
+                            }} label={<FormattedMessage id="NO_SELECT_VALUE" />} />
                         </div>
                         <div>
                             <label>
-                                타임존 : <CustomSelect value={currentAccessTimeValue.timeZone} onChange={e => {
+                                <FormattedMessage id="ACCESS_TIME_TIME_ZONE_LABEL" /> : <CustomSelect value={currentAccessTimeValue.timeZone} onChange={e => {
                                     setCurrentAccessTimeValue({
                                         ...currentAccessTimeValue,
                                         timeZone: e
@@ -142,7 +144,7 @@ const PolicyAccessTimeList = ({ value, onChange, dataInit }: PolicyItemsPropsTyp
                     </div>
                     <div className="time-policy-buttons-container">
                         <Button icon={addIconWhite} className="st3" onClick={() => {
-                            if (currentAccessTimeValue.timeRange.type === 'SPECIFIC_TIME' && (!currentAccessTimeValue.timeRange.startTime || !currentAccessTimeValue.timeRange.endTime)) return message.error("시간 접근 정책에서 시간 선택을 확인해주세요.")
+                            if (currentAccessTimeValue.timeRange.type === 'SPECIFIC_TIME' && (!currentAccessTimeValue.timeRange.startTime || !currentAccessTimeValue.timeRange.endTime)) return message.error(formatMessage({ id: 'ACCESS_TIME_NO_SELECTED_TIME_MSG' }))
                             setAccessTimeValues([currentAccessTimeValue, ...accessTimes])
                             setCurrentAccessTimeValue(defaultTimePolicyData())
                         }} style={{
@@ -153,7 +155,7 @@ const PolicyAccessTimeList = ({ value, onChange, dataInit }: PolicyItemsPropsTyp
                 {accessTimes.map((_, ind) => <div key={ind} className="time-policy-container">
                     <div className="time-policy-inner-container">
                         <div className="time-policy-days-container">
-                            요일 선택 : <Input type="checkbox" checked={TimePolicyDayOfWeeksList.every(__ => _.selectedDayOfWeeks.includes(__))} onChange={e => {
+                            <FormattedMessage id="ACCESS_TIME_DAY_SELECT_LABEL" /> : <Input type="checkbox" checked={TimePolicyDayOfWeeksList.every(__ => _.selectedDayOfWeeks.includes(__))} onChange={e => {
                                 if (e.target.checked) {
                                     setAccessTimeValues(accessTimes.map((timeValue, tInd) => tInd === ind ? ({
                                         ...timeValue,
@@ -165,7 +167,7 @@ const PolicyAccessTimeList = ({ value, onChange, dataInit }: PolicyItemsPropsTyp
                                         selectedDayOfWeeks: []
                                     }) : timeValue))
                                 }
-                            }} label="전체 선택" />
+                            }} label={<FormattedMessage id="ALL_SELECT_LABEL" />} />
                             {TimePolicyDayOfWeeksList.map(__ => <Input key={__} type="checkbox" checked={_.selectedDayOfWeeks.includes(__)} onChange={e => {
                                 if (e.target.checked) {
                                     setAccessTimeValues(accessTimes.map((timeValue, tInd) => tInd === ind ? ({
@@ -186,7 +188,7 @@ const PolicyAccessTimeList = ({ value, onChange, dataInit }: PolicyItemsPropsTyp
                             alignItems: 'center',
                             gap: '12px'
                         }}>
-                            시간 선택 : <TimePicker.RangePicker format={timepickerFormat} size="small" disabled={_.timeRange.type === 'ALL_TIME'} value={[_.timeRange.startTime ? dayjs(_.timeRange.startTime, timepickerFormat) : null, _.timeRange.endTime ? dayjs(_.timeRange.endTime, timepickerFormat) : null]} onChange={val => {
+                            <FormattedMessage id="ACCESS_TIME_TIME_SELECT_LABEL" /> : <TimePicker.RangePicker format={timepickerFormat} size="small" disabled={_.timeRange.type === 'ALL_TIME'} value={[_.timeRange.startTime ? dayjs(_.timeRange.startTime, timepickerFormat) : null, _.timeRange.endTime ? dayjs(_.timeRange.endTime, timepickerFormat) : null]} onChange={val => {
                                 setAccessTimeValues(accessTimes.map((timeValue, tInd) => tInd === ind ? ({
                                     ...timeValue,
                                     timeRange: {
@@ -204,11 +206,11 @@ const PolicyAccessTimeList = ({ value, onChange, dataInit }: PolicyItemsPropsTyp
                                         type: e.target.checked ? 'ALL_TIME' : 'SPECIFIC_TIME'
                                     }
                                 }) : timeValue))
-                            }} label="선택 안함" />
+                            }} label={<FormattedMessage id="NO_SELECT_VALUE" />} />
                         </div>
                         <div>
                             <label>
-                                타임존 : <CustomSelect value={_.timeZone} onChange={e => {
+                                <FormattedMessage id="ACCESS_TIME_TIME_ZONE_LABEL" /> : <CustomSelect value={_.timeZone} onChange={e => {
                                     setAccessTimeValues(accessTimes.map((timeValue, tInd) => tInd === ind ? ({
                                         ...timeValue,
                                         timeZone: e

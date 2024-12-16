@@ -2,7 +2,7 @@ import './AgentManagement.css';
 import { FormattedMessage, useIntl } from "react-intl";
 import { message } from 'antd';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import Contents from 'Components/Layout/Contents';
 import ContentsHeader from 'Components/Layout/ContentsHeader';
 import { PatchSessionTokenFunc, UploadAgentInstallerFunc } from 'Functions/ApiFunctions';
@@ -28,36 +28,57 @@ const VersionUpload = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch()
   const navigate = useNavigate();
+  const type = useParams().type as UploadFileTypes
+  const fileExtensionByType = () => {
+    if (type === 'WINDOWS_AGENT') {
+      return ".zip"
+    } else if (type === 'OMPASS_PROXY') {
+      return ".zip"
+    } else if (type === 'LINUX_PAM') {
+      return ".deb"
+    } else return ''
+  }
+
+  const fileExtensionErrorMsgByType = () => {
+    if (type === 'WINDOWS_AGENT') {
+      return "ONLY_ZIP_FILES_CAN_BE_UPLOADED"
+    } else if (type === 'OMPASS_PROXY') {
+      return "ONLY_ZIP_FILES_CAN_BE_UPLOADED"
+    } else if (type === 'LINUX_PAM') {
+      return "ONLY_DEB_FILES_CAN_BE_UPLOADED"
+    } else return ''
+  }
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileInput = event.target;
     if (fileInput.files && fileInput.files[0]) {
       setInputFile(fileInput.files[0])
     }
   };
-  
+
   const completeCallback = () => {
     setShowSession(false)
     const maxFileSize = 200 * 1024 * 1024;
     const fileExtension = inputFile?.name.split('.').pop();
-    
+
     if (!inputHash) {
       return message.error(formatMessage({ id: 'PLEASE_INPUT_HASH' }));
     } else if (!inputFile) {
       return message.error(formatMessage({ id: 'PLEASE_UPLOAD_INPUT_FILE' }))
     } else if (inputFile.size > maxFileSize) {
       return message.error(formatMessage({ id: 'THE_FILE_SIZE_EXCEEDS_200MB' }));
-    } else if (fileExtension !== 'zip') {
-      return message.error(formatMessage({ id: 'ONLY_ZIP_FILES_CAN_BE_UPLOADED' }));
+    } else if (fileExtension !== fileExtensionByType().slice(1,)) {
+      return message.error(formatMessage({ id: fileExtensionErrorMsgByType() }));
     }
-    
-    if(sessionInfo.time < 30) {
-      return setShowSession(true) 
+
+    if (sessionInfo.time < 30) {
+      return setShowSession(true)
     }
 
     setIsUploadingFile(true);
     UploadAgentInstallerFunc({
+      type,
       "metaData.hash": inputHash,
-      "metaData.os": "Windows",
       // "metaData.version": inputVersion,
       "metaData.note": inputMemo,
       multipartFile: inputFile,
@@ -76,16 +97,17 @@ const VersionUpload = () => {
       dispatch(sessionCheckChange(false))
       setShowSession(false)
       setRefresh(true)
-      message.success("세션 갱신에 성공하였습니다.")
+
+      message.success(formatMessage({ id: 'SESSION_RENEWAL_SUCCESS_MSG' }))
     })
   }
 
   useEffect(() => {
-    if(refresh) {
+    if (refresh) {
       completeCallback()
       setRefresh(false)
     }
-  },[refresh])
+  }, [refresh])
 
   return (
     <>
@@ -154,7 +176,7 @@ const VersionUpload = () => {
                   id="uploadFile"
                   name="uploadFile"
                   type="file"
-                  accept=".zip"
+                  accept={fileExtensionByType()}
                   hidden
                   onChange={handleFileChange} />
               </div>
@@ -168,11 +190,11 @@ const VersionUpload = () => {
           setShowSession(false);
         }}
         type="warning"
-        typeTitle='세션 만료'
+        typeTitle={<FormattedMessage id="SESSION_EXPIRE_MODAL_TITLE"/>}
         typeContent={<>
-          로그인 세션 시간이 얼마 남지 않았습니다.<br />
-          업로드 시간에 따라 요청이 올바르게 종료되지 않을 수 있습니다.<br />
-          로그인 세션을 연장하고 계속하시겠습니까?
+          <FormattedMessage id="SESSION_EXPIRE_MODAL_SUBSCRIPTION_1"/><br />
+          <FormattedMessage id="SESSION_EXPIRE_MODAL_SUBSCRIPTION_2"/><br />
+          <FormattedMessage id="SESSION_EXPIRE_MODAL_SUBSCRIPTION_3"/>
         </>}
         noClose
         yesOrNo

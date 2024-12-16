@@ -14,7 +14,7 @@ const BrowserController = ({ type, checked, onChange }: {
 const PolicyBrowserSelect = ({ value=[], onChange }: PolicyItemsPropsType<PolicyDataType['enableBrowsers']>) => {
     return <CustomInputRow title={<FormattedMessage id={`${policyNoticeRestrictionTypes[1]}_LABEL`} />} noCenter required>
         <div className="policy-contents-container browsers">
-            <Input type="checkbox" label="전체 선택" checked={value.length === PolicyBrowsersList.length} onChange={e => {
+            <Input type="checkbox" label={<FormattedMessage id="ALL_SELECT_LABEL"/>} checked={value.length === PolicyBrowsersList.length} onChange={e => {
                 if (e.currentTarget.checked) {
                     onChange(PolicyBrowsersList)
                 } else {
@@ -30,7 +30,7 @@ const PolicyBrowserSelect = ({ value=[], onChange }: PolicyItemsPropsType<Policy
                     }
                 }} />)
             }
-            <Input type="checkbox" label="그 외 다른 브라우저" checked={value.includes('All other browsers')} onChange={e => {
+            <Input type="checkbox" label={<FormattedMessage id="All other browsers_LABEL"/>} checked={value.includes('All other browsers')} onChange={e => {
                 if (e.currentTarget.checked) {
                     onChange(value.concat('All other browsers'))
                 } else {

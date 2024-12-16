@@ -5,6 +5,7 @@ import PortalUserManagement from "./PortalUserManagement";
 import { Tabs } from "antd";
 import { useState } from "react";
 import ApplicationUserManagement from "./ApplicationUserManagement";
+import { FormattedMessage } from "react-intl";
 
 type UserViewType = 'portal' | 'application'
 
@@ -25,12 +26,12 @@ const UserManagement = () => {
                 type="card"
                 items={[
                     {
-                        label: '포탈 유저',
+                        label: <FormattedMessage id="USER_MANAGEMENT_TAB_TITLE_1"/>,
                         key: "portal",
                         children: <PortalUserManagement />
                     },
                     {
-                        label: '어플리케이션 별 유저',
+                        label: <FormattedMessage id="USER_MANAGEMENT_TAB_TITLE_2"/>,
                         key: "application",
                         children: <ApplicationUserManagement />
                     }

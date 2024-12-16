@@ -2,6 +2,7 @@ import { CSSProperties, PropsWithChildren } from 'react'
 import './Contents.css'
 import { CopyRightText } from 'Constants/ConstantValues';
 import { useSelector } from 'react-redux';
+import { FormattedMessage } from 'react-intl';
 
 type ContentsProps = PropsWithChildren & {
     copyRightStyle?: CSSProperties
@@ -18,7 +19,7 @@ const Contents = ({ children, containerStyle, copyRightStyle, loading }: Content
 
     return <>
         <div className={`loading-center${loading ? '' : ' hidden'}`}>
-            데이터 불러오는 중...
+            <FormattedMessage id="CONTENTS_DATA_LOADING_LABEL"/>
         </div>
         <div
             className={`content-center${loading ? ' hidden' : ''}`}

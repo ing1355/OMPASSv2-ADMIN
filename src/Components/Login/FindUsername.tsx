@@ -1,10 +1,11 @@
 import { message } from "antd";
 import Button from "Components/CommonCustomComponents/Button";
 import Input from "Components/CommonCustomComponents/Input";
-import { ResetPasswordEmailSendFunc } from "Functions/ApiFunctions";
-import { useRef, useState } from "react";
-import { FormattedMessage } from "react-intl";
+import { FindPortalUsernameFunc, ResetPasswordEmailCodeVerifyFunc, ResetPasswordEmailSendFunc } from "Functions/ApiFunctions";
+import { useEffect, useRef, useState } from "react";
+import { FormattedMessage, useIntl } from "react-intl";
 import { useNavigate } from "react-router";
+import './FindUsername.css'
 
 const FindUsername = () => {
     const [codeConfirm, setCodeConfirm] = useState(false)
@@ -18,29 +19,54 @@ const FindUsername = () => {
     const inputCodeRef = useRef<HTMLInputElement>()
     const mailTimer = useRef<NodeJS.Timer>()
     const mailCountRef = useRef(0)
+    const [findUsername, setFindUsername] = useState('')
     const navigate = useNavigate()
+    const { formatMessage } = useIntl()
     const type = 'USERNAME' as RecoverySendMailParamsType['type']
 
     const resetRequest = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
+        ResetPasswordEmailCodeVerifyFunc({ type, email: inputEmail, code: inputCode }, (_, _token) => {
+            message.success(formatMessage({id: 'EMAIL_CODE_VERIFY_SUCCESS_MSG'}))
+            FindPortalUsernameFunc(_token, ({username}) => {
+                setFindUsername(username)
+                setCodeConfirm(true)
+            })
+        }).catch(err => {
+            console.log('실패 ??', err)
+        })
     }
 
+    useEffect(() => {
+        mailCountRef.current = mailCount
+    }, [mailCount])
+
     return <>
-        <div className={`login-body password-reset code-confirm`}>
+        <div className={`login-body password-reset ${codeConfirm ? 'find-id' : 'code-confirm'}`}>
             <form
                 onSubmit={resetRequest}
             >
                 <div className='login-form-header'>
                     <h1 className='login-form-title'>
-                        아이디 찾기
+                        <FormattedMessage id="FIND_ID_TITLE_LABEL"/>
                     </h1>
                 </div>
-                {!codeConfirm && <div
+                {codeConfirm ? <div
+                    className='login-input-container'
+                >
+                    <div className="find-username-container">
+                        <div className="find-username-title">
+                            <FormattedMessage id="FIND_ID_SUBSCRIPTION_1"/>
+                        </div>
+                        <div className="find-username-subscription">
+                            {findUsername}
+                        </div>
+                    </div>
+                </div> : <div
                     className='login-input-container'
                 >
                     <label>
-                        이메일
+                        <FormattedMessage id="EMAIL"/>
                     </label>
                     <Input
                         className='st1 login-input'
@@ -51,7 +77,7 @@ const FindUsername = () => {
                         name="email"
                         maxLength={48}
 
-                        placeholder='가입 시 등록한 이메일 입력'
+                        placeholder={formatMessage({id: 'INPUT_EMAIL_WHEN_SIGN_UP_PLACEHOLDER'})}
                         valueChange={(value, alert) => {
                             setInputEmail(value);
                             setEmailAlert(alert || false)
@@ -72,7 +98,7 @@ const FindUsername = () => {
                                     type
                                 }, () => {
                                     setEmailCodeSend(true)
-                                    message.success("인증 코드 발송 성공!")
+                                    message.success(formatMessage({id: 'EMAIL_SEND_FOR_CODE_VERIFY_SUCCESS_MSG'}))
                                     mailTimer.current = setInterval(() => {
                                         setMailCount(count => count + 1)
                                         if (mailCountRef.current >= 10) {
@@ -93,7 +119,7 @@ const FindUsername = () => {
                     className='login-input-container'
                 >
                     <label>
-                        인증 코드
+                        <FormattedMessage id="INPUT_EMAIL_CODE_LABEL"/>
                     </label>
                     <Input
                         className='st1 login-input'
@@ -103,7 +129,7 @@ const FindUsername = () => {
                         noGap
                         ref={inputCodeRef}
                         customType='username'
-                        placeholder='인증 코드 입력'
+                        placeholder={formatMessage({id: 'EMAIL_CODE_LABEL'})}
                         valueChange={value => {
                             setInputCode(value)
                         }}
@@ -116,14 +142,17 @@ const FindUsername = () => {
                         margin: '0 0 8px 0'
                     }}
                 >
-                    아이디 찾기
+                    <FormattedMessage id="FIND_ID_BUTTON_LABEL"/>
                 </Button>}
                 <Button
                     className={'st6 login-button'}
                     onClick={() => {
-                        navigate(-1)
+                        navigate('/', {
+                            replace: true
+                        })
                     }}
-                ><FormattedMessage id='GO_BACK' />
+                >
+                    <FormattedMessage id="BACK_TO_LOGIN_PAGE_LABEL"/>
                 </Button>
             </form>
         </div>

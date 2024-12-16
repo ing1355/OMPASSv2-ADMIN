@@ -7,12 +7,12 @@ export const ResetPasswordEmailSendApi = `/v2/recovery-account/mail`
 export const ResetPasswordEmailCodeVerifyApi = `/v2/recovery-account/verification`
 
 // Windows agent 파일
-export const GetAgentInstallerListApi = `/v2/agent-installer`;
-export const CurrentAgentInstallerVersionChangeApi = (fileId: AgentInstallerDataType['fileId']) => `/v2/agent-installer/${fileId}/target`
-export const DeleteAgentInstallerApi = (fileIds: string) => `/v2/agent-installer/${fileIds}`;
+export const GetAgentInstallerListApi = (type: UploadFileTypes) => `/v2/agent-installer/type/${type}`;
+export const CurrentAgentInstallerVersionChangeApi = (type: UploadFileTypes, fileId: AgentInstallerDataType['fileId']) => `/v2/agent-installer/type/${type}/id/${fileId}/target`
+export const DeleteAgentInstallerApi = (fileIds: string) => `/v2/id/${fileIds}`;
 export const DownloadAgentInstallerApi = '/v2/agent-installer/download';
-export const UploadAgentInstallerApi = `/v2/agent-installer/upload`;
-export const UpdateAgentNoteApi = (fileId: AgentInstallerDataType['fileId']) => `/v2/agent-installer/${fileId}/note`
+export const UploadAgentInstallerApi = `/v2/upload`;
+export const UpdateAgentNoteApi = (fileId: AgentInstallerDataType['fileId']) => `/v2/id/${fileId}/note`
 
 // 패스코드 관리
 export const GetPasscodeHistoriesApi = '/v2/passcode-histories';
@@ -92,6 +92,7 @@ export const PatchSessionTokenApi = '/v2/refresh-session'
 // 계정 복구
 export const SendRecoveryMailApi = '/v2/recovery-account/mail'
 export const ValidateRecoveryMailApi = '/v2/recovery-account/verification'
+export const FindPortalUsernameApi = '/v2/username'
 
 // 인증 모듈
 export const OMPASSAuthStartApi = '/v2/enhanced-authentication'

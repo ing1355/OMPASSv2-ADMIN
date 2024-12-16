@@ -325,7 +325,7 @@ const SecondStep = () => {
                                 code: verifyCode
                             }, () => {
                                 setEmailVerify(true)
-                                message.success(formatMessage({id: 'SIGNUP_CODE_VERIFY_SUCCESS_MSG'}))
+                                message.success(formatMessage({id: 'EMAIL_CODE_VERIFY_SUCCESS_MSG'}))
                             })
                         }}
                     ><FormattedMessage id='EMAIL_CODE_VERIFY' />

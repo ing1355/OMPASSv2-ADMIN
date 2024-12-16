@@ -18,7 +18,7 @@ const Agent = () => {
         />
 
         <Route
-          path="/upload"
+          path="/upload/:type"
           element={
             <VersionUpload />
           }

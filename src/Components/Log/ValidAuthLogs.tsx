@@ -61,31 +61,31 @@ const ValidAuthLogs = () => {
             },
             {
                 key: 'applicationName',
-                title: '어플리케이션명',
+                title: <FormattedMessage id="APPLICATION_NAME_COLUMN_LABEL"/>,
                 render: (_, _ind, row) => row.ompassData.application.name
             },
             {
                 key: 'portalUsername',
-                title: '포탈 아이디',
+                title: <FormattedMessage id="PORTAL_USERNAME_COLUMN_LABEL"/>,
                 render: (_, _ind, row) => row.portalUser.username
             },
             {
                 key: 'rpUsername',
-                title: '사용자 아이디',
+                title: <FormattedMessage id="RP_USERNAME_COLUMN_LABEL"/>,
                 render: (_, _ind, row) => row.ompassData.rpUser.username
             },
             {
                 key: 'processType',
-                title: '유형',
-                render: (data) => <FormattedMessage id={data + '_VALUE'} />
+                title: <FormattedMessage id="AUTHPURPOSE_COLUMN_LABEL"/>,
+                render: (data, ind, row) => <FormattedMessage id={row.ompassData.authPurpose + '_LOG_VALUE'} />
             },
             {
                 key: 'authenticatorType',
-                title: '인증 수단'
+                title: <FormattedMessage id="AUTHENTICATOR_TYPE_COLUMN_LABEL"/>
             },
             {
                 key: 'authenticationTime',
-                title: '일시'
+                title: <FormattedMessage id="AUTHENTICATION_TIME_COLUMN_LABEL"/>
             }
         ]}
         theme="table-st1"

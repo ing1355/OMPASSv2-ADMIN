@@ -64,12 +64,12 @@ const PolicyManagement = () => {
                     {
                         key: 'applicationType',
                         title: <FormattedMessage id="POLICY_COLUMN_APPLICATION_TYPE_LABEL"/>,
-                        render: (data, ind, row) => data ? <FormattedMessage id={`${data}_APPLICATION_TYPE`}/> : "기능 준비 중"
+                        render: (data, ind, row) => <FormattedMessage id={`${data}_APPLICATION_TYPE`}/>
                     },
                     {
                         key: 'name',
                         title: <FormattedMessage id="POLICY_COLUMN_NAME_LABEL"/>,
-                        render: (data, ind, row) => row.policyType === 'DEFAULT' ? "기본 정책" : data
+                        render: (data, ind, row) => row.policyType === 'DEFAULT' ? <FormattedMessage id="default policy"/> : data
                     },
                     {
                         key: 'description',

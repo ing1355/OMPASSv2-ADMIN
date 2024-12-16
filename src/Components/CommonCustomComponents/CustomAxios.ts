@@ -21,11 +21,15 @@ export function CustomAxiosGet(url: string, callback?: Function, params?: any, c
     if (!callback) {
         return axios.get(url, _config)
     }
+    const headers = config ? {
+        ...defaultHeaders(),
+        authorization: config.authorization ? config.authorization : getStorageAuth(),
+        ...config.headers
+    } : defaultHeaders()
     return axios.get(url, {
         paramsSerializer: {
             indexes: null
-        },
-        params, headers: defaultHeaders()
+        }, params, headers
     }).then(res => {
         if (callback) callback(res.data);
         return res.data

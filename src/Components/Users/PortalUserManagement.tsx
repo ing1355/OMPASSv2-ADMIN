@@ -161,7 +161,6 @@ const PortalUserManagement = () => {
                     navigate('/UserManagement/excelUpload')
                 }} />
                 <UserAddItem title={<FormattedMessage id="USER_ADD_LDAP_SYNC_ITEM_LABEL" />} icon={ldapSyncIcon} onClick={() => {
-                    // message.info("기능 준비중(LDAP SYNC)")
                     navigate('/UserManagement/ldapSync')
                 }} />
             </div>

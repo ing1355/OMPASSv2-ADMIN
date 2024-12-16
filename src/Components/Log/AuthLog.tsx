@@ -7,6 +7,7 @@ import InvalidAuthLogs from "./InvalidAuthLogs"
 import { useLocation } from "react-router"
 import AllAuthLogs from "./AllAuthLogs"
 import './AuthLog.css'
+import { FormattedMessage } from "react-intl"
 
 type AuthLogType = 'all'|'valid'|'invalid'
 
@@ -34,17 +35,17 @@ const AuthLog = () => {
                 type="card"
                 items={[
                     {
-                        label: '전체 로그',
+                        label: <FormattedMessage id="ALL_AUTH_LOG_TAB_TITLE_LABEL"/>,
                         key: "all",
                         children: <AllAuthLogs />
                     },
                     {
-                        label: '정상 로그',
+                        label: <FormattedMessage id="VALID_AUTH_LOG_TAB_TITLE_LABEL"/>,
                         key: "valid",
                         children: <ValidAuthLogs />
                     },
                     {
-                        label: '비정상 로그',
+                        label: <FormattedMessage id="INVALID_AUTH_LOG_TAB_TITLE_LABEL"/>,
                         key: "invalid",
                         children: <InvalidAuthLogs />
                     }

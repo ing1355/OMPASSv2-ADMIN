@@ -34,7 +34,7 @@ export const getOMPASSAuthIconByProgressStatus = (status: OMPASSAuthStatusType) 
 export const timeZoneNames = tz.names()
 export const ompassDefaultLogoImage = ompassLogoIcon
 export const isDev = process.env.NODE_ENV === 'development'
-export const isDev2 = process.env.REACT_APP_DEV === 'dev' // 54006에만 적용
+export const isDev2 = process.env.REACT_APP_DEV === 'dev'
 export const CopyRightText = (info: SubDomainInfoDataType) => `OMPASS Portal v${process.env.REACT_APP_VERSION} © 2024. OneMoreSecurity Inc. All Rights Reserved. (backend versions : portal - ${info.backendVersion.portalApp}, fido - ${info.backendVersion.fidoApp}, interface - ${info.backendVersion.interfaceApp})`
 export const INT_MAX_VALUE = Math.pow(2, 31) - 1
 export const DateTimeFormat = "YYYY-MM-DD HH:mm:ss"

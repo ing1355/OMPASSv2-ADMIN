@@ -15,7 +15,7 @@ const NoticeToAdmin = ({hasIncludeWithdrawal, value={
 }) => {
     const { isEnabled, admins, methods, targetPolicies } = value
 
-    return <CustomInputRow title="위반 시 관리자 알림" noCenter isVertical>
+    return <CustomInputRow title={<FormattedMessage id="NOTICE_TO_ADMIN_TITLE_LABEL"/>} noCenter isVertical>
     <Switch style={{
         // marginBottom: !noticeAdminChecked ? 0 : '8px',
         marginBottom: !isEnabled ? 0 : '8px',
@@ -29,8 +29,8 @@ const NoticeToAdmin = ({hasIncludeWithdrawal, value={
     <div className="policy-contents-container" data-hidden={!isEnabled}>
         <div className="policy-input-container">
             <div className="notice-row-container">
-                알림 방식 :
-                <Input type="checkbox" label="푸시 알림" checked={methods.includes('PUSH')} onChange={e => {
+                <FormattedMessage id="NOTICE_TO_ADMIN_METHOD_LABEL"/> :
+                <Input type="checkbox" label={<FormattedMessage id="NOTICE_TO_ADMIN_METHOD_1_LABEL"/>} checked={methods.includes('PUSH')} onChange={e => {
                     if (e.currentTarget.checked) {
                         onChange({
                             ...value,
@@ -43,7 +43,7 @@ const NoticeToAdmin = ({hasIncludeWithdrawal, value={
                         })
                     }
                 }} />
-                <Input type="checkbox" label="이메일" checked={methods.includes('EMAIL')} onChange={e => {
+                <Input type="checkbox" label={<FormattedMessage id="NOTICE_TO_ADMIN_METHOD_2_LABEL"/>} checked={methods.includes('EMAIL')} onChange={e => {
                     if (e.currentTarget.checked) {
                         onChange({
                             ...value,
@@ -58,7 +58,7 @@ const NoticeToAdmin = ({hasIncludeWithdrawal, value={
                 }} />
             </div>
             <div className="notice-row-container">
-                알림 받을 관리자 : <CustomAdminSelect data={admins} onChange={adminValues => {
+                <FormattedMessage id="NOTICE_TO_ADMIN_TARGET_LABEL"/> : <CustomAdminSelect data={admins} onChange={adminValues => {
                     onChange({
                         ...value,
                         admins: adminValues
@@ -66,7 +66,7 @@ const NoticeToAdmin = ({hasIncludeWithdrawal, value={
                 }} hasIncludeWithdrawal={hasIncludeWithdrawal}/>
             </div>
             <div className="notice-row-container">
-                알림 대상 정책 :
+                <FormattedMessage id="NOTICE_TO_ADMIN_POLICY_LABEL"/> :
                 <Input type="checkbox" checked={policyNoticeRestrictionTypes.length === targetPolicies.length} onChange={e => {
                     if (e.currentTarget.checked) {
                         onChange({
@@ -79,7 +79,7 @@ const NoticeToAdmin = ({hasIncludeWithdrawal, value={
                             targetPolicies: []
                         })
                     }
-                }} label={"전체 선택"} />
+                }} label={<FormattedMessage id="ALL_SELECT_LABEL"/>} />
                 {
                     policyNoticeRestrictionTypes.filter(_ => _ !== 'ACCESS_CONTROL').map((_, ind) => <Input type="checkbox" checked={targetPolicies.includes(_)} onChange={e => {
                         if (e.currentTarget.checked) {

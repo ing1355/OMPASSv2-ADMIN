@@ -13,6 +13,7 @@ import { SetStateType } from 'Types/PropsTypes'
 import { applicationTypes, INT_MAX_VALUE } from 'Constants/ConstantValues'
 import './UserTransfer.css'
 import CustomModal from 'Components/Modal/CustomModal'
+import { FormattedMessage, useIntl } from 'react-intl'
 
 type UserTransferProps = {
     selectedUsers: UserHierarchyDataRpUserType['id'][]
@@ -31,6 +32,7 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
     const [sureChange, setSureChange] = useState(false)
     const [applicationDatas, setApplicationDatas] = useState<ApplicationListDataType[]>([])
     const [dataLoading, setDataLoading] = useState(false)
+    const { formatMessage } = useIntl()
 
     const filteredUserDatas = useMemo(() => {
         if (viewStyle === 'portal') {
@@ -167,7 +169,7 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
     }, [refresh])
 
     return <div className="custom-transfer-user-container">
-        <TransferContainer datas={filteredUserDatas as UserTransferDataType[]} selected={tempUsers} setSelected={setTempUsers} viewStyle={viewStyle} title="현재 그룹 미포함 사용자"/>
+        <TransferContainer datas={filteredUserDatas as UserTransferDataType[]} selected={tempUsers} setSelected={setTempUsers} viewStyle={viewStyle} title={<FormattedMessage id="GROUP_TRANSFER_NOT_INCLUDE_USER_LABEL"/>} />
         <div className='custom-transfer-buttons-container'>
             <img
                 src={onRight ? groupRightArrowIconHover : groupRightArrowIcon}
@@ -178,7 +180,7 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
                     setOnRight(false)
                 }}
                 onClick={() => {
-                    if (tempUsers.length === 0) return message.error("그룹에 추가할 사용자를 선택해주세요.")
+                    if (tempUsers.length === 0) return message.error(formatMessage({id: 'PLEASE_SELECT_FOR_GROUP_INCLUDE_MSG'}))
                     let hasGroup = false
                     if (viewStyle === 'portal') {
                         const temp = filteredUserDatas as UserHierarchyDataType[]
@@ -205,7 +207,7 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
                     setOnLeft(false)
                 }}
                 onClick={() => {
-                    if (selectedTempUsers.length === 0) return message.error("그룹에서 제거할 사용자를 선택해주세요.")
+                    if (selectedTempUsers.length === 0) return message.error(formatMessage({id: 'PLEASE_SELECT_FOR_GROUP_OUT_MSG'}))
                     setSelectedUsers(selectedUsers.filter(_ => !selectedTempUsers.includes(_)))
                     setSelectedTempUsers([])
                 }} />
@@ -221,20 +223,19 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
                     setSelectedUsers([])
                     setSelectedTempUsers([])
                     setTempUsers([])
-                    message.success("그룹 인원 초기화 성공!")
+                    message.success(formatMessage({id: 'GROUP_USER_RESET_SUCCESS_MSG'}))
                 }} />
         </div>
-        <TransferContainer datas={filteredSelectedUserDatas as UserTransferDataType[]} selected={selectedTempUsers} setSelected={setSelectedTempUsers} viewStyle={viewStyle} title="현재 그룹 포함 사용자"/>
+        <TransferContainer datas={filteredSelectedUserDatas as UserTransferDataType[]} selected={selectedTempUsers} setSelected={setSelectedTempUsers} viewStyle={viewStyle} title={<FormattedMessage id="GROUP_TRANSFER_INCLUDE_USER_LABEL"/>}/>
         <CustomModal
             open={sureChange}
             onCancel={() => {
                 setSureChange(false);
             }}
             type="warning"
-            typeTitle='그룹 이동 안내'
-            typeContent={<>다른 그룹에 이미 포함되어있는 사용자가 존재합니다.<br />선택한 사용자를 그룹에 추가시키시겠습니까?</>}
-            okText={"추가"}
-            cancelText={"취소"}
+            typeTitle={<FormattedMessage id="GROUP_TRANSFER_MODAL_TITLE_LABEL"/>}
+            typeContent={<><FormattedMessage id="GROUP_TRANSFER_MODAL_SUBSCRIPTION_LABEL_1"/><br /><FormattedMessage id="GROUP_TRANSFER_MODAL_SUBSCRIPTION_LABEL_2"/></>}
+            yesOrNo
             okCallback={async () => {
                 setSelectedUsers(selectedUsers.concat(tempUsers))
                 setTempUsers([])
@@ -242,5 +243,5 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
             }} buttonLoading />
     </div>
 }
-//미번
+
 export default UserTransfer
