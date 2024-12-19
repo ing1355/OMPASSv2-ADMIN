@@ -180,7 +180,7 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
                     setOnRight(false)
                 }}
                 onClick={() => {
-                    if (tempUsers.length === 0) return message.error(formatMessage({id: 'PLEASE_SELECT_FOR_GROUP_INCLUDE_MSG'}))
+                    if (tempUsers.length === 0) return message.error(formatMessage({id:'PLEASE_SELECT_FOR_GROUP_INCLUDE_MSG'}))
                     let hasGroup = false
                     if (viewStyle === 'portal') {
                         const temp = filteredUserDatas as UserHierarchyDataType[]
@@ -207,7 +207,7 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
                     setOnLeft(false)
                 }}
                 onClick={() => {
-                    if (selectedTempUsers.length === 0) return message.error(formatMessage({id: 'PLEASE_SELECT_FOR_GROUP_OUT_MSG'}))
+                    if (selectedTempUsers.length === 0) return message.error(formatMessage({id:'PLEASE_SELECT_FOR_GROUP_OUT_MSG'}))
                     setSelectedUsers(selectedUsers.filter(_ => !selectedTempUsers.includes(_)))
                     setSelectedTempUsers([])
                 }} />
@@ -223,7 +223,7 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
                     setSelectedUsers([])
                     setSelectedTempUsers([])
                     setTempUsers([])
-                    message.success(formatMessage({id: 'GROUP_USER_RESET_SUCCESS_MSG'}))
+                    message.success(formatMessage({id:'GROUP_USER_RESET_SUCCESS_MSG'}))
                 }} />
         </div>
         <TransferContainer datas={filteredSelectedUserDatas as UserTransferDataType[]} selected={selectedTempUsers} setSelected={setSelectedTempUsers} viewStyle={viewStyle} title={<FormattedMessage id="GROUP_TRANSFER_INCLUDE_USER_LABEL"/>}/>

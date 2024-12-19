@@ -8,7 +8,7 @@ const DashboardApplicationSelect = ({ selectedApplication, setSelectedApplicatio
 }) => {
     return <div className="dashboard-application-select-container">
         <div className="dashboard-application-select-title">
-            <FormattedMessage id="DASHBOARD_APPLICATION_SELECT" />
+            <FormattedMessage id="APPLICATION_SELECT_LABEL" />
         </div>
         <div className="dashboard-application-select-inner-container">
             <div className={`dashboard-application-select-item${selectedApplication.length === applications.length ? ' selected' : ''}`} onClick={() => {

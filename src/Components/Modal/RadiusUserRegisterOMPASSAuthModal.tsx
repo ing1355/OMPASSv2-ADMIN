@@ -17,9 +17,7 @@ type RadiusUserRegisterOMPASSAuthModalProps = {
 }
 
 const RadiusUserRegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, radiusApplicationId }: RadiusUserRegisterOMPASSAuthModalProps) => {
-    const { userInfo } = useSelector((state: ReduxStateType) => ({
-        userInfo: state.userInfo!
-    }));
+    const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     const [remainTime, setRemainTime] = useState(-1)
     const [sessionData, setSessionData] = useState<QRDataDefaultBodyType>({
         url: '',
@@ -68,7 +66,7 @@ const RadiusUserRegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, 
             timeTimerRef.current = setInterval(() => {
                 if (remainTimeRef.current < 1) {
                     _onCancel()
-                    message.error(formatMessage({id: 'OMPASS_MODULE_TIME_EXPIRED_MSG'}))
+                    message.error(formatMessage({id:'OMPASS_MODULE_TIME_EXPIRED_MSG'}))
                 } else {
                     setRemainTime(time => time - 1)
                 }

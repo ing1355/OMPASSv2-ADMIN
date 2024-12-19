@@ -126,22 +126,8 @@ export const menuDatas = (role: userRoleType): menuDataType[] => {
             whiteImg: SettingsMenuIconWhite,
             blackImg: settingsMenuIconBlack
         },
-        // {
-        //     label: 'USER_MANAGEMENT',
-        //     route: '/UserManagement',
-        //     whiteImg: admin_management_white,
-        //     blackImg: admin_management
-        // },
     ]
     if (role === 'ROOT') {
-        // return datas.concat([
-        //     {
-        //         label: 'OMPASS_SETTINGS',
-        //         route: '/SecretKey',
-        //         whiteImg: OMPASS_settings_white,
-        //         blackImg: OMPASS_settings
-        //     }
-        // ])
     }
     return datas
 }
@@ -169,3 +155,18 @@ export const subDomain = isDev ? devUrl.replace('https://', '') : window.locatio
 
 export const LDAPAuthenticationTypes: LdapAuthenticationType[] = ['PLAIN', 'NTLMv2']
 export const LDAPTransportTypes: LdapTransportType[] = ['CLEAR', 'LDAPS', 'STARTTLS']
+
+export const authProcessTypeList: AllAuthLogDataType['processType'][] = ['REGISTRATION', 'AUTHENTICATION', 'POLICY']
+export const logAuthPurposeList: LogAuthPurposeType[] = ['ADD_OTHER_AUTHENTICATOR', 'ADMIN_2FA_FOR_APPLICATION_DELETION', 'ADMIN_2FA_FOR_SECRET_KEY_UPDATE', 'AUTH_LOGIN', 'RADIUS_REGISTRATION', 'REG_LOGIN', 'ROLE_SWAPPING_SOURCE', 'ROLE_SWAPPING_TARGET']
+export const authenticatorList: AuthenticatorTypeType[] = ['OMPASS', 'PASSCODE', 'WEBAUTHN']
+export const authFailReasonList: InvalidAuthLogDataType['reason'][] = ['ACCESS_TIME', 'BROWSER', 'COUNTRY', 'INVALID_OTP', 'INVALID_PASSCODE', 'INVALID_SIGNATURE', 'IP_WHITE_LIST', 'LOCATION', 'NONE']
+
+export const convertLangToIntlVer = (lang: ReduxStateType['lang']) => {
+  if(lang === 'EN') {
+    return 'en-us'
+  } else if(lang === 'JP') {
+    return 'ja'
+  } else {
+    return 'ko-kr'
+  }
+}

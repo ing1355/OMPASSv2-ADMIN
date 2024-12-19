@@ -19,11 +19,8 @@ import Button from 'Components/CommonCustomComponents/Button';
 import { useWindowHeight } from 'hooks/useWindowHeight';
 
 const GuidePage = () => {
-  const { lang, subdomainInfo } = useSelector((state: ReduxStateType) => ({
-    lang: state.lang,
-    subdomainInfo: state.subdomainInfo!
-  }));
-
+  const lang = useSelector((state: ReduxStateType) => state.lang!);
+  const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
   const height = useWindowHeight();
   const dispatch = useDispatch();
 

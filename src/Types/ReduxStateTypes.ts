@@ -3,8 +3,6 @@ type DefaultReduxActionType<T> = {
   payload: T;
 };
 
-type LanguageStateType = "KR" | "EN";
-
 // export type UserInfoDetailType = {
 //   uuid: string;
 //   userId: string;
@@ -19,7 +17,7 @@ type SessionInfoStateType = {
 
 
 type ReduxStateType = {
-  lang?: LanguageStateType;
+  lang?: LanguageType;
   userInfo?: UserDataType;
   subdomainInfo?: SubDomainInfoDataType
   globalDatas?: GlobalDatasType

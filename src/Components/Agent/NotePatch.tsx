@@ -30,7 +30,7 @@ const NotePatch = () => {
             <ContentsHeader title="VERSION_MANAGEMENT" subTitle={'NOTE_PATCH'}>
                 <Button className='st3' onClick={() => {
                     UpdateAgentInstallerNoteFunc(fileId, inputMemo, () => {
-                        message.success(formatMessage({id: 'NOTE_PATCH_SUCCESS_MSG'}))
+                        message.success(formatMessage({id:'NOTE_PATCH_SUCCESS_MSG'}))
                         navigate(-1);
                     })
                 }}>

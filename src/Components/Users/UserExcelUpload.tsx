@@ -13,7 +13,8 @@ import { FormattedMessage, useIntl } from "react-intl";
 import * as XLSX from 'xlsx'
 import './UserExcelUpload.css'
 import { userSelectPageSize } from "Constants/ConstantValues";
-import { downloadExcelUserList } from "Functions/GlobalFunctions";
+import { useSelector } from "react-redux";
+import useExcelDownload from "hooks/useExcelDownload";
 
 type ExcelRegexErrorDataType = {
     row: number
@@ -35,6 +36,7 @@ const decodeCSV = async (arrayBuffer: ArrayBuffer): Promise<string> => {
 
 
 const UserExcelUpload = () => {
+    const lang = useSelector((state: ReduxStateType) => state.lang!);
     const [datas, setDatas] = useState<UserExcelDataType[]>([])
     const [showError, setShowError] = useState<ExcelRegexErrorDataType[]>([])
     const [pageSetting, setPageSetting] = useState({
@@ -45,6 +47,7 @@ const UserExcelUpload = () => {
     const createHeaderColumn = (formattedId: string) => <FormattedMessage id={formattedId} />
     const { formatMessage } = useIntl()
     const getFullName = useFullName()
+    const excelDownload = useExcelDownload()
 
     const tableData = useMemo(() => {
         const { page, showPerPage } = pageSetting
@@ -60,7 +63,7 @@ const UserExcelUpload = () => {
                         ..._,
                         role: 'USER'
                     })), res => {
-                        message.success(formatMessage({id: 'EXCEL_USER_ADD_SUCCESS_MSG'}))
+                        message.success(formatMessage({ id: 'EXCEL_USER_ADD_SUCCESS_MSG' }))
                         setDatas([])
                     }).finally(() => {
                         setLoading(false)
@@ -70,14 +73,14 @@ const UserExcelUpload = () => {
                 </Button>
                 <Button disabled={datas.length === 0} className="st8" onClick={() => {
                     setDatas([])
-                    message.success(formatMessage({id: 'EXCEL_DATA_INIT_MSG'}))
+                    message.success(formatMessage({ id: 'EXCEL_DATA_INIT_MSG' }))
                 }}>
                     <FormattedMessage id="NORMAL_RESET_LABEL" />
                 </Button>
                 <Button className="st5" onClick={async () => {
-                    downloadExcelUserList([], true)
+                    excelDownload([], true)
                 }}>
-                    <FormattedMessage id="EXCEL_TEMPLATE_DOWNLOAD_LABEL"/>
+                    <FormattedMessage id="EXCEL_TEMPLATE_DOWNLOAD_LABEL" />
                 </Button>
             </ContentsHeader>
             <div className="contents-header-container">
@@ -118,7 +121,7 @@ const UserExcelUpload = () => {
                         const binaryStr = e.target?.result;
 
                         if (!binaryStr) {
-                            message.error(formatMessage({id: 'EXCEL_UPLOAD_FAIL_FILE_NOT_CORRECTED_MSG'}));
+                            message.error(formatMessage({ id: 'EXCEL_UPLOAD_FAIL_FILE_NOT_CORRECTED_MSG' }));
                             return;
                         }
 
@@ -142,8 +145,9 @@ const UserExcelUpload = () => {
                             const jsonData = XLSX.utils.sheet_to_json(sheet, {
                                 defval: ""
                             });
+                            console.log(jsonData)
                             let temp: ExcelRegexErrorDataType[] = []
-                            
+
                             const resultData = jsonData.map((_, ind) => {
                                 let errorTemp: ExcelRegexErrorDataType = {
                                     row: ind + 1,
@@ -157,19 +161,38 @@ const UserExcelUpload = () => {
                                         }
                                         pre["username"] = cur;
                                     } else if (ind === 1) {
-                                        if (cur.length > 0 && !nameRegex.test(cur)) {
-                                            errorTemp.key.push('firstName')
-                                        }
-                                        pre["name"] = {
-                                            "firstName": cur
+                                        if(lang === 'KR') {
+                                            if (cur.length > 0 && !nameRegex.test(cur)) {
+                                                errorTemp.key.push('firstName')
+                                            }
+                                            pre["name"] = {
+                                                "firstName": cur
+                                            }
+                                        } else {
+                                            if (cur.length > 0 && !nameRegex.test(cur)) {
+                                                errorTemp.key.push('lastName')
+                                            }
+                                            pre["name"] = {
+                                                "lastName": cur
+                                            }
                                         }
                                     } else if (ind === 2) {
-                                        if (!nameRegex.test(cur)) {
-                                            errorTemp.key.push('lastName')
-                                        }
-                                        pre["name"] = {
-                                            ...pre["name"],
-                                            "lastName": cur
+                                        if(lang === 'KR') {
+                                            if (!nameRegex.test(cur)) {
+                                                errorTemp.key.push('lastName')
+                                            }
+                                            pre["name"] = {
+                                                ...pre["name"],
+                                                "lastName": cur
+                                            }
+                                        } else {
+                                            if (!nameRegex.test(cur)) {
+                                                errorTemp.key.push('firstName')
+                                            }
+                                            pre["name"] = {
+                                                ...pre["name"],
+                                                "firstName": cur
+                                            }
                                         }
                                     } else if (ind === 3) {
                                         if (!emailRegex.test(cur)) {
@@ -187,13 +210,16 @@ const UserExcelUpload = () => {
                                 if (errorTemp.key.length > 0) temp.push(errorTemp);
                                 return result;
                             }); // 데이터 저장
-                            console.log(resultData)
+                            
                             if (temp.length > 0) {
                                 setShowError(temp)
-                                message.error(formatMessage({ id: 'EXCEL_UPLOAD_FAIL_MSG' }));
                             } else {
-                                setDatas(resultData)
-                                message.success(formatMessage({ id: 'EXCEL_UPLOAD_SUCCESS_MSG' }));
+                                if(resultData.length === 0) {
+                                    message.error(formatMessage({ id: 'EXCEL_EMPTY_MSG' }));
+                                } else {
+                                    setDatas(resultData)
+                                    message.success(formatMessage({ id: 'EXCEL_UPLOAD_SUCCESS_MSG' }));
+                                }
                             }
                         } catch (error) {
                             console.error(error);
@@ -215,21 +241,21 @@ const UserExcelUpload = () => {
             }}
             width={800}
             justConfirm
-            okText={formatMessage({id: 'CONFIRM'})}
+            okText={formatMessage({ id: 'CONFIRM' })}
             okClassName="excel-errors-modal-button"
             type="warning"
             okCallback={async () => {
                 setShowError([])
             }}
-            typeTitle={<FormattedMessage id="EXCEL_UPLOAD_ERROR_MODAL_TITLE_LABEL"/>}
+            typeTitle={<FormattedMessage id="EXCEL_UPLOAD_ERROR_MODAL_TITLE_LABEL" />}
             typeContent={<>
                 <div className="excel-errors-container">
                     <div className="excel-errors-row header">
                         <div>
-                            <FormattedMessage id="EXCEL_UPLOAD_ERROR_MODAL_SUBSCRIPTION_1_LABEL"/>
+                            <FormattedMessage id="EXCEL_UPLOAD_ERROR_MODAL_SUBSCRIPTION_1_LABEL" />
                         </div>
                         <div>
-                            <FormattedMessage id="EXCEL_UPLOAD_ERROR_MODAL_SUBSCRIPTION_2_LABEL"/>
+                            <FormattedMessage id="EXCEL_UPLOAD_ERROR_MODAL_SUBSCRIPTION_2_LABEL" />
                         </div>
                     </div>
                     {

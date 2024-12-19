@@ -23,9 +23,6 @@ import NoticeToAdmin from "./PolicyItems/NoticeToAdmin";
 import PolicyAccessTimeList from "./PolicyItems/PolicyAccessTimeList";
 import NoticeToThemselves from "./PolicyItems/NoticeToThemselves";
 
-
-
-
 const AuthPolicyDetail = () => {
     const { uuid } = useParams()
     const isAdd = !uuid
@@ -237,7 +234,7 @@ const AuthPolicyDetail = () => {
             </div>
         </ContentsHeader>
         <div className="contents-header-container">
-            <CustomInputRow title={<FormattedMessage id="POLICY_COLUMN_APPLICATION_TYPE_LABEL" />}>
+            <CustomInputRow title={<FormattedMessage id="APPLICATION_TYPE_LABEL" />}>
                 {isAdd ? <CustomSelect value={selectedApplicationType} onChange={value => {
                     setSelectedApplicationType(value as ApplicationDataType['type'])
                 }} items={typeItems} needSelect /> : getApplicationTypeLabel(selectedApplicationType as ApplicationDataType['type'])}

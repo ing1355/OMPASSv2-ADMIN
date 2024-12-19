@@ -9,9 +9,7 @@ import { useNavigate } from "react-router";
 
 const PasscodeList = () => {
     const [dataLoading, setDataLoading] = useState(false)
-    const { userInfo } = useSelector((state: ReduxStateType) => ({
-        userInfo: state.userInfo!,
-    }));
+    const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     const navigate = useNavigate();
     const [totalCount, setTotalCount] = useState<number>(0);
     const [tableData, setTableData] = useState<PasscodeListDataType[]>([]);
@@ -64,7 +62,7 @@ const PasscodeList = () => {
         columns={[
             {
                 key: 'applicationName',
-                title: <FormattedMessage id="PASSCODE_COLUMN_APPLICATION_NAME_LABEL"/>
+                title: <FormattedMessage id="APPLICATION_NAME_COLUMN_LABEL"/>
             },
             {
                 key: 'issuerUsername',

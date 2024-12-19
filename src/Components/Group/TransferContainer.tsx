@@ -134,7 +134,7 @@ const TransferContainer = ({ datas, selected, setSelected, viewStyle, title }: T
             <div>
                 <Input value={searchInput} valueChange={value => {
                     setSearchInput(value)
-                }} placeholder={formatMessage({id: 'GROUP_USER_TRANSFER_SEARCH_PLACEHOLDER'})} className="custom-transfer-user-search"/>
+                }} placeholder={formatMessage({id:'GROUP_USER_TRANSFER_SEARCH_PLACEHOLDER'})} className="custom-transfer-user-search"/>
             </div>
         </div>
     </div>

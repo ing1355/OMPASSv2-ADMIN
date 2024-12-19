@@ -15,9 +15,7 @@ import { useNavigate } from 'react-router';
 import { convertUTCStringToLocalDateString } from 'Functions/GlobalFunctions';
 
 const WindowsAgentManagement = () => {
-    const { subdomainInfo } = useSelector((state: ReduxStateType) => ({
-        subdomainInfo: state.subdomainInfo!
-    }));
+    const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const [openFileDelete, setOpenFileDelete] = useState(-1);
     const [deleteHover, setDeleteHover] = useState(-1)
     const [dataLoading, setDataLoading] = useState(false)

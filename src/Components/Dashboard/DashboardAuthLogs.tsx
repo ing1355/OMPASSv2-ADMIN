@@ -46,7 +46,7 @@ const DashboardAuthLogs = ({ applications }: {
                 <FormattedMessage id="DASHBOARD_RECENT_INVALID_LOGS"/>
             </div>
             <Tooltip>
-            <div className="dashboard-invalid-auth-log-table-more-btn" data-valuetext={formatMessage({id: 'DASHBOARD_MORE_INVALID_LOG_LABEL'})} onClick={() => {
+            <div className="dashboard-invalid-auth-log-table-more-btn" data-valuetext={formatMessage({id:'DASHBOARD_MORE_INVALID_LOG_LABEL'})} onClick={() => {
                 navigate('/AuthLogs', {
                     state: {
                         type: 'invalid'

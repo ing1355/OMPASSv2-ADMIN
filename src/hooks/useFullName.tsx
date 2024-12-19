@@ -1,13 +1,11 @@
 import { useSelector } from "react-redux";
 
 const useFullName = () => {
-    const { lang } = useSelector((state: ReduxStateType) => ({
-        lang: state.lang
-      }));
+    const lang = useSelector((state: ReduxStateType) => state.lang!);
 
     return (name: UserNameType) => {
         if(lang === 'KR') {
-            return `${name.firstName ?? ""}${name.lastName ?? ""}`
+            return `${name.lastName ?? ""}${name.firstName ?? ""}`
         } else {
             return `${name.firstName ?? ""} ${name.lastName ?? ""}`
         }

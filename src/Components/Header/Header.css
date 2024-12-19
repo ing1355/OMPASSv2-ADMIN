@@ -60,18 +60,6 @@
   width: 20px;
 }
 
-.header-locale-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  & > div {
-    height: 30px;
-    padding: 2px;
-    box-sizing: border-box;
-  }
-}
-
-
 .header_logo_title {
   background: linear-gradient(to bottom, #5840d9, #4715FF);
   background-clip: text;

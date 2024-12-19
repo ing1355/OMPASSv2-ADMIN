@@ -73,12 +73,12 @@ const LdapSyncDetail = () => {
             <Button className="st3" onClick={() => {
                 if (detailId) {
                     UpdateLdapConfigListFunc(detailId, params, (newData) => {
-                        message.success(formatMessage({id: 'LDAP_MODIFY_SUCCESS_MSG'}))
+                        message.success(formatMessage({id:'LDAP_MODIFY_SUCCESS_MSG'}))
                         setData(newData)
                     })
                 } else {
                     AddLdapConfigListFunc(params, () => {
-                        message.success(formatMessage({id: 'LDAP_ADD_SUCCESS_MSG'}))
+                        message.success(formatMessage({id:'LDAP_ADD_SUCCESS_MSG'}))
                         navigate(-1)
                     })
                 }
@@ -87,7 +87,7 @@ const LdapSyncDetail = () => {
             </Button>
             {detailId && <Button icon={deleteIcon} hoverIcon={deleteIconHover} className="st2" onClick={() => {
                 DeleteLdapConfigListFunc(detailId, () => {
-                    message.success(formatMessage({id: 'LDAP_DELETE_SUCCESS_MSG'}))
+                    message.success(formatMessage({id:'LDAP_DELETE_SUCCESS_MSG'}))
                     navigate(-1)
                 })
             }}>

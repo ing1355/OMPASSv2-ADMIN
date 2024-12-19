@@ -19,10 +19,8 @@ import CustomAdminSelect from "Components/CommonCustomComponents/CustomAdminSele
 import { FormattedMessage, useIntl } from "react-intl"
 
 const Settings = () => {
-    const { subdomainInfo, globalDatas } = useSelector((state: ReduxStateType) => ({
-        subdomainInfo: state.subdomainInfo,
-        globalDatas: state.globalDatas!
-    }));
+    const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas!);
+      const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const [dataLoading, setDataLoading] = useState(false)
     const [timeZoneValue, setTimeZoneValue] = useState('Asia/Seoul')
     const [welcomeText, setWelcomeText] = useState('')

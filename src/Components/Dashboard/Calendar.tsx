@@ -72,8 +72,8 @@ const Calendar = ({ defaultValue, setShow, onChange, monthRestriction }: {
         startDate: setHours(setMinutes(setSeconds(new Date(defaultValue.startDate), 0), 0), 0),
         endDate: setHours(setMinutes(setSeconds(new Date(defaultValue.endDate), 0), 0), 0)
     } : {
-        startDate: null,
-        endDate: null
+        startDate: new Date(),
+        endDate: new Date()
     })
     const [showDate, setShowDate] = useState(new Date())
     const daysOfMonth = getDatesOfMonth(showDate)
@@ -168,7 +168,7 @@ const Calendar = ({ defaultValue, setShow, onChange, monthRestriction }: {
             <Button className='calendar-footer-button st3' onClick={() => {
                 if (data.startDate && data.endDate) {
                     if(monthRestriction && differenceInDays(new Date(data.endDate), new Date(data.startDate)) > 31) {
-                        return message.error(formatMessage({id: 'CALENDAR_MAXIMUM_RANGE_DATE_INVALID_MSG'}))
+                        return message.error(formatMessage({id:'CALENDAR_MAXIMUM_RANGE_DATE_INVALID_MSG'}))
                     }
                     setShow(false)
                     onChange({
@@ -176,7 +176,7 @@ const Calendar = ({ defaultValue, setShow, onChange, monthRestriction }: {
                         endDate: format(data.endDate, dateFormat)
                     })
                 } else {
-                    message.error(formatMessage({id: 'CALENDAR_PLEASE_SELECT_DATE_RANGE'}))
+                    message.error(formatMessage({id:'CALENDAR_PLEASE_SELECT_DATE_RANGE'}))
                 }
             }}>
                 <FormattedMessage id="APPLY"/>

@@ -1,27 +1,65 @@
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow";
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect";
 import CustomTable from "Components/CommonCustomComponents/CustomTable";
-import { INT_MAX_VALUE } from "Constants/ConstantValues";
+import { applicationTypes, authenticatorList, getApplicationTypeLabel, INT_MAX_VALUE } from "Constants/ConstantValues";
 import { GetApplicationListFunc, GetRpUsersListFunc } from "Functions/ApiFunctions";
-import { useEffect, useMemo, useState } from "react";
+import useFullName from "hooks/useFullName";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 
 const ApplicationUserManagement = () => {
+    const lang = useSelector((state: ReduxStateType) => state.lang!);
     const [dataLoading, setDataLoading] = useState(false)
     const [tableData, setTableData] = useState<RpUserListDataType[]>([])
     const [totalCount, setTotalCount] = useState<number>(0);
     const [appTypes, setAppTypes] = useState<ApplicationListDataType[]>([])
     const [refresh, setRefresh] = useState(false)
+    const [applicationType, setApplicationType] = useState<ApplicationDataType['type']>()
     const [targetApplication, setTargetApplication] = useState<ApplicationListDataType | undefined>()
     const navigate = useNavigate()
-    const typeItems = appTypes.map(_ => ({
+    const getFullName = useFullName()
+    const typeItems = (type: ApplicationDataType['type']) => appTypes.filter(_ => _.type === type).map(_ => ({
         key: _.id,
         label: _.name
     }))
 
+    const tableSearchOptions = useMemo(() => {
+        let temp: TableSearchOptionType[] = [
+            {
+                key: 'portalName',
+                label: <FormattedMessage id="NAME" />,
+                type: 'string'
+            },
+            {
+                key: 'portalUsername',
+                label: <FormattedMessage id="PASSCODE_COLUMN_PORTAL_ID_LABEL" />,
+                type: 'string'
+            },
+            {
+                key: 'rpUsername',
+                label: <FormattedMessage id="PASSCODE_COLUMN_RP_ID_LABEL" />,
+                type: 'string'
+            },
+            {
+                key: 'groupName',
+                type: 'string'
+            },
+        ]
+        if (targetApplication?.type === 'WINDOWS_LOGIN') {
+            temp.push({ key: 'pcName', type: 'string' }, { key: 'windowsAgentVersion', type: 'string' })
+        }
+        return temp
+    }, [targetApplication])
+
     const tableColumns: CustomTableColumnType<RpUserListDataType>[] = useMemo(() => {
         let temp: CustomTableColumnType<RpUserListDataType>[] = [
+            {
+                key: 'name',
+                title: <FormattedMessage id="NAME" />,
+                render: (data, ind, row) => row.portalUser.name ? getFullName(row.portalUser.name) : '-'
+            },
             {
                 key: 'portalUser',
                 title: <FormattedMessage id="PORTAL_USERNAME_COLUMN_LABEL" />,
@@ -43,7 +81,12 @@ const ApplicationUserManagement = () => {
         }
         temp.push({
             key: 'lastLoggedInAuthenticator',
-            title: <FormattedMessage id="LAST_LOGGED_IN_AUTHENTICATOR_LABEL" />
+            title: <FormattedMessage id="LAST_LOGGED_IN_AUTHENTICATOR_LABEL" />,
+            filterKey: 'lastLoggedInAuthenticator',
+            filterOption: authenticatorList.map(_ => ({
+                label: _,
+                value: _
+            }))
         },
             {
                 key: 'lastLoggedInAt',
@@ -55,10 +98,15 @@ const ApplicationUserManagement = () => {
             }, {
             key: 'hasPasscode',
             title: <FormattedMessage id="RP_HAS_PASSCODE_LABEL" />,
-            render: (data) => data ? 'O' : 'X'
+            render: (data) => data ? 'O' : 'X',
+            filterKey: 'isPasscodeCheckEnabled',
+            filterOption: [true, false].map(_ => ({
+                label: _ ? 'O' : 'X',
+                value: _
+            }))
         })
         return temp
-    }, [targetApplication])
+    }, [targetApplication, lang])
 
     const GetAppTypes = async (params: CustomTableSearchParams) => {
         // setDataLoading(true)
@@ -76,14 +124,19 @@ const ApplicationUserManagement = () => {
         })
     }
 
-    const GetDatas = async (params: RpUsersListParamsType) => {
+    const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
-        const _params: RpUsersListParamsType = {
+        const _params: GeneralParamsType = {
             page_size: params.size,
             page: params.page
         }
         if (params.type) {
             _params[params.type] = params.value
+        }
+        if (params.filterOptions) {
+            params.filterOptions.forEach(_ => {
+                _params[_.key] = _.value
+            })
         }
         _params.applicationId = targetApplication?.id
         GetRpUsersListFunc(_params, ({ results, totalCount }) => {
@@ -100,6 +153,16 @@ const ApplicationUserManagement = () => {
             size: INT_MAX_VALUE
         })
     }, [])
+
+    useLayoutEffect(() => {
+        if(applicationType === 'ADMIN') {
+            setTargetApplication(appTypes.find(_ => _.type === 'ADMIN'))
+        } else if(applicationType === 'WINDOWS_LOGIN') {
+            setTargetApplication(appTypes.find(_ => _.type === 'WINDOWS_LOGIN'))            
+        } else {
+            setTargetApplication(undefined)
+        }
+    }, [applicationType])
 
     useEffect(() => {
         if (targetApplication) {
@@ -120,10 +183,16 @@ const ApplicationUserManagement = () => {
     }, [refresh])
 
     return <>
-        <CustomInputRow title={<FormattedMessage id="USER_MANAGEMENT_APPLICATION_SELECT_LABEL" />}>
-            <CustomSelect value={targetApplication?.id} onChange={value => {
+        <CustomInputRow title={<FormattedMessage id="APPLICATION_SELECT_LABEL" />}>
+            <CustomSelect value={applicationType} onChange={value => {
+                setApplicationType(value as ApplicationDataType['type'])
+            }} items={applicationTypes.map(_ => ({
+                key: _,
+                label: getApplicationTypeLabel(_),
+            }))} needSelect />
+            {applicationType && <CustomSelect value={targetApplication?.id} onChange={value => {
                 setTargetApplication(appTypes.find(_ => _.id === value))
-            }} items={typeItems} needSelect />
+            }} items={typeItems(applicationType)} needSelect />}
         </CustomInputRow>
         {
             !refresh && targetApplication && <CustomTable<RpUserListDataType>
@@ -132,26 +201,10 @@ const ApplicationUserManagement = () => {
                 theme='table-st1'
                 datas={tableData}
                 hover
-                searchOptions={[
-                    {
-                        key: 'portalUsername',
-                        label: <FormattedMessage id="PASSCODE_COLUMN_PORTAL_ID_LABEL" />,
-                        type: 'string'
-                    },
-                    {
-                        key: 'rpUsername',
-                        label: <FormattedMessage id="PASSCODE_COLUMN_RP_ID_LABEL" />,
-                        type: 'string'
-                    },
-                    {
-                        key: 'groupName',
-                        type: 'string'
-                    },
-                ]}
+                searchOptions={tableSearchOptions}
                 isNotDataInit
                 onSearchChange={(data) => {
                     GetDatas(data)
-                    console.log(targetApplication)
                 }}
                 pagination
                 columns={tableColumns}

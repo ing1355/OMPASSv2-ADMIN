@@ -6,6 +6,7 @@ import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import CustomModal from "Components/Modal/CustomModal"
 import { userSelectPageSize } from "Constants/ConstantValues"
 import { AddUserWithCsvDataFunc, SyncLdapUserListFunc } from "Functions/ApiFunctions"
+import useFullName from "hooks/useFullName"
 import { useMemo, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 
@@ -21,6 +22,7 @@ const LdapSyncButton = ({ id }: LdapSyncButtonProps) => {
         page: 1,
         showPerPage: userSelectPageSize()
     })
+    const getFullName = useFullName()
     const { formatMessage } = useIntl()
     const tableData = useMemo(() => {
         const { page, showPerPage } = pageSetting
@@ -32,7 +34,7 @@ const LdapSyncButton = ({ id }: LdapSyncButtonProps) => {
             marginTop: '48px'
         }} buttons={<>
             <Button className="st3" onClick={() => {
-                message.info(formatMessage({id: 'LDAP_USER_LOAD_SUCCESS_MSG'}))
+                message.info(formatMessage({id:'LDAP_USER_LOAD_SUCCESS_MSG'}))
                 setDataLoading(true)
                 SyncLdapUserListFunc(id, res => {
                     console.log(res)
@@ -45,7 +47,7 @@ const LdapSyncButton = ({ id }: LdapSyncButtonProps) => {
             </Button>
             <Button className="st3" onClick={() => {
                 if(syncDatas.length === 0) {
-                    return message.error(formatMessage({id: 'LDAP_USER_SYNC_FAIL_NO_USERS_MSG'}))
+                    return message.error(formatMessage({id:'LDAP_USER_SYNC_FAIL_NO_USERS_MSG'}))
                 }
                 setSureSync(true)
             }}>
@@ -72,13 +74,9 @@ const LdapSyncButton = ({ id }: LdapSyncButtonProps) => {
                         key: 'username',
                         title: <FormattedMessage id="ID"/>
                     }, {
-                        key: 'firstName',
-                        title: <FormattedMessage id="FIRST_NAME"/>,
-                        render: (data, ind, row) => row.name.firstName
-                    }, {
-                        key: 'lastName',
+                        key: 'name',
                         title: <FormattedMessage id="LAST_NAME"/>,
-                        render: (data, ind, row) => row.name.lastName
+                        render: (data, ind, row) => getFullName(row.name)
                     }, {
                         key: 'org',
                         title: <FormattedMessage id="RADIUS_ORG_LABEL"/>
@@ -110,7 +108,7 @@ const LdapSyncButton = ({ id }: LdapSyncButtonProps) => {
                     phone: _.phone,
                     role: 'USER'
                 })), () => {
-                    message.success(formatMessage({id: 'LDAP_USER_SYNC_SUCCESS_MSG'}))
+                    message.success(formatMessage({id:'LDAP_USER_SYNC_SUCCESS_MSG'}))
                     setSureSync(false)
                 })
             }} buttonLoading />

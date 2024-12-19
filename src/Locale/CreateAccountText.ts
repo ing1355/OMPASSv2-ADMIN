@@ -1,5 +1,5 @@
 const CreateAccountTexts = {
-  'en': {
+  EN: {
     AGREE_POLICY_ALL: 'I have read and agree to both OMPASS Terms of Service and Privacy Policy below.',
     AGREE_SERVICE: 'I have read and agree to Terms of Service.',
     AGREE_PRIVACY_POLICY: 'I have read and agree to Privacy Policy.',
@@ -133,7 +133,7 @@ const CreateAccountTexts = {
     AGREE_PRIVACY_POLICY_CONTENT_SUB_INNER_10_1_3: 'Privacy Infringement Report Center (operated by KISA) https://privacy.kisa.or.kr/ Call +82-118',
     AGREE_PRIVACY_POLICY_CONTENT_SUB_INNER_10_1_4: 'Personal Information Dispute Mediation Committee (operated by KISA) https://www.kopico.go.kr/ Call +82-1833-6972',
   },
-  'ko': {
+  KR: {
     AGREE_POLICY_ALL: '원모어패스의 이용약관, 개인정보 수집 및 이용에 모두 동의합니다.',
     AGREE_SERVICE: '이용약관 동의 (필수)',
     AGREE_PRIVACY_POLICY: '개인 정보 수집 및 이용 동의 (필수)',
@@ -258,8 +258,8 @@ const CreateAccountTexts = {
     AGREE_PRIVACY_POLICY_TITLE_9: '9. 인터넷 접속정보파일 등 개인정보를 자동으로 수집하는 장치의 설치 · 운영 및 그 거부에 관한 사항',
     AGREE_PRIVACY_POLICY_CONTENT_9: "‘회사’는 이용자에게 개인화된 서비스를 제공하기 위하여 '쿠키(cookie)'를 사용합니다. '쿠키(cookie)'는 HTTP 서버에서 이용자의 브라우저에게 보내는 데이터파일로써 이용자의 기기에 저장됩니다. 쿠키(cookie)에는 사용한 웹사이트의 정보 및 이용자의 개인정보가 담길 수 있습니다. 이용자는 웹브라우저의 옵션을 조정하여 모든 쿠키를 다 받아들이거나, 쿠키가 설치될 때 통지를 보내도록 하거나, 아니면 모든 쿠키를 거부할 수 있습니다.",
     AGREE_PRIVACY_POLICY_TITLE_10: '10. 개인정보보호 책임자',
-    AGREE_PRIVACY_POLICY_CONTENT_10_1: '개인정보보호책임자：강누리 과장',
-    AGREE_PRIVACY_POLICY_CONTENT_10_2: '개인정보보호 관련 문의처 : 070-4298-3070, partner@omsecurity.kr',
+    AGREE_PRIVACY_POLICY_CONTENT_10_1: '개인정보보호책임자：김민식 대표',
+    AGREE_PRIVACY_POLICY_CONTENT_10_2: '개인정보보호 관련 문의처 : 070-4298-3070, ceo@omsecurity.kr',
     AGREE_PRIVACY_POLICY_CONTENT_10_3: '개인정보에 관하여 궁금한 사항이 있을 경우, 언제든지 위 연락처를 통해 문의하실 수 있습니다.',
     AGREE_PRIVACY_POLICY_CONTENT_10_4: '기타 개인정보침해에 대한 신고나 상담이 필요하신 경우에는 아래 기관에 문의하시기 바랍니다.',
     AGREE_PRIVACY_POLICY_CONTENT_SUB_INNER_10_1_1: '경찰청사이버수사국 https://cyberbureau.police.go.kr/ / 국번없이 182',

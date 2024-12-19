@@ -1,11 +1,4 @@
 .custom-dropdown-container {
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    width: 100%;
-    transform: translateX(-45%);
-    display: none;
-    gap: 2px;
     border-radius: 4px;
     box-sizing: border-box;
     padding-top: 12px;
@@ -25,25 +18,83 @@
     background-color: white;
     padding: 4px;
     box-sizing: border-box;
+    gap: 2px;
 }
 
 .custom-dropdown-select-item-row {
-    height: 36px;
-    line-height: 36px;
     text-align: center;
     font-size: .8rem;
     width: 100%;
     box-sizing: border-box;
     border-radius: 4px;
     cursor: pointer;
+    padding: 8px 12px;
+    padding-right: 24px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.custom-dropdown-select-item-row.activate {
+    background-color: var(--sub-purple-color);
+    font-weight: bold;
+}
+
+.custom-dropdown-select-item-row.activate>div {
+    color: var(--main-purple-color2);
 }
 
 .custom-dropdown-select-item-row:hover {
+    background-color: var(--sub-purple-color3);
+}
+
+.custom-dropdown-select-item-row:hover>div {
+    font-weight: bold;
     color: var(--main-purple-color2);
-    background-color: var(--sub-purple-color5);
-    padding: 0 4px;
+}
+
+.custom-dropdown-select-item-row:hover>div:after {
+    content: attr(title);
+    font-weight: bold;
+    display: block;
+    height: 0px;
+    visibility: hidden;
 }
 
 .custom-dropdown-children {
     position: relative;
+    cursor: pointer;
+}
+
+.custom-dropdown-multiple-check-icon {
+    width: 10px;
+    height: 10px;
+}
+
+.custom-dropdown-multiple-check-icon[data-hidden=true] {
+    visibility: hidden;
+}
+
+.custom-dropdown-select-item-row > div {
+    flex: 1;
+    text-align: center;
+}
+
+.custom-dropdown-multiple-save-container {
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    width: 100%;
+    font-size: .8rem;
+    font-weight: bold;
+    color: var(--sub-purple-color2);
+    background-color: var(--main-purple-color2);
+    border-radius: 6px;
+}
+
+.custom-dropdown-multiple-save-container:hover {
+    background-color: var(--main-purple-color);
 }

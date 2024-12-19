@@ -170,9 +170,9 @@ export const ViewRecoveryCode = ({ code, noView }: {
         }}>
             <CopyToClipboard text={code} onCopy={(value, result) => {
                 if (result) {
-                    message.success(formatMessage({id: 'RECOVERY_CODE_COPY_SUCCESS_MSG'}))
+                    message.success(formatMessage({id:'RECOVERY_CODE_COPY_SUCCESS_MSG'}))
                 } else {
-                    message.success(formatMessage({id: 'RECOVERY_CODE_COPY_FAIL_MSG'}))
+                    message.success(formatMessage({id:'RECOVERY_CODE_COPY_FAIL_MSG'}))
                 }
             }}>
                 <img src={copyIcon} />
@@ -318,7 +318,6 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
                 </div>
             </div>
         </>}
-        {/* <UserDetailInfoContentItem imgSrc={imgSrcByOS(os?.name.toUpperCase() as OsNamesType)} title="OS" content={"Gooroom v3.4"} /> */}
         {
             isBrowser && <div className="user-detail-info-device-info-content-item">
                 <img src={browserIcon} />
@@ -378,7 +377,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
             isWindow && <div className="user-detail-info-device-info-content-item">
                 <img src={agentVersionIcon} />
                 <div className="user-detail-info-device-info-content-title">
-                    Agent Version
+                    <FormattedMessage id="PACKAGE_VERSION_INFO_LABEL"/>
                 </div>
                 <div>
                     {clientData.agentVersion}

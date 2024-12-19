@@ -1,11 +1,13 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
-import { HttpMethodTypes, userSelectPageSize } from "Constants/ConstantValues"
+import { HttpMethodTypes } from "Constants/ConstantValues"
 import { GetPortalLogDataListFunc } from "Functions/ApiFunctions"
 import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions"
 import { useState } from "react"
 import { FormattedMessage } from "react-intl"
+
+const httpMethodList: HttpMethodType[] = ['POST', 'PUT', 'DELETE']
 
 const PortalLog = () => {
     const [tableData, setTableData] = useState<PortalLogDataType[]>([])
@@ -20,6 +22,11 @@ const PortalLog = () => {
         }
         if(params.type) {
             _params[params.type] = params.value
+        }
+        if(params.filterOptions) {
+            params.filterOptions.forEach(_ => {
+                _params[_.key] = _.value
+            })
         }
         GetPortalLogDataListFunc(_params, ({ results, totalCount }) => {
             setTableData(results.map(_ => ({
@@ -48,7 +55,12 @@ const PortalLog = () => {
                     },
                     {
                         key: 'httpMethod',
-                        title: 'METHOD'
+                        title: 'METHOD',
+                        filterKey: 'httpMethods',
+                        filterOption: httpMethodList.map(_ => ({
+                            label: _,
+                            value: _
+                        }))
                     },
                     {
                         key: 'apiUri',
@@ -63,13 +75,6 @@ const PortalLog = () => {
                 searchOptions={[{
                     key: 'username',
                     type: 'string'
-                }, {
-                    key: "httpMethod",
-                    type: 'select',
-                    selectOptions: HttpMethodTypes.map(_ => ({
-                        key: _,
-                        label: _
-                    }))
                 }, {
                     key: 'apiUri',
                     type: 'string'

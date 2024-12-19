@@ -7,9 +7,7 @@ import LdapManagement from "./Ldap/LdapManagement"
 import LdapSyncDetail from "./Ldap/LdapSyncDetail"
 
 const Users = () => {
-    const { userInfo } = useSelector((state: ReduxStateType) => ({
-        userInfo: state.userInfo!,
-      }))
+    const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     
       const { role } = userInfo
 

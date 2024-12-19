@@ -46,6 +46,11 @@
   font-weight: 500;
   padding: 10px;
   color: var(--main-grey-color2);
+  position: relative;
+}
+
+.table-st1 thead tr>th:has(.custom-table-filter-icon) {
+  padding-right: 28px;
 }
 
 .table-st1 thead tr {
@@ -63,7 +68,7 @@
 }
 
 .table-st1 td {
-  padding: 6px;
+  padding: 6px 10px;
   font-size: 1rem;
   text-align: center;
   font-weight: normal;
@@ -128,4 +133,16 @@
 .custom-pagination .ant-pagination-item-active {
   border: none;
   background-color: var(--main-purple-color);
+}
+
+.custom-table-filter-icon {
+  cursor: pointer;
+  width: 22px;
+  height: 22px;
+  position: absolute !important;
+  right: 6px;
+  padding: 2px;
+  box-sizing: border-box;
+  top: 50%;
+  transform: translateY(-50%);
 }

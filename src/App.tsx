@@ -11,7 +11,6 @@ import PasscodeManagement from 'Components/PasscodeManagement/PasscodeManagement
 import Agent from 'Components/Agent/Agent';
 import GuidePage from 'Components/Account/GuidePage';
 import AutoLogout from 'Components/Login/AutoLogout';
-import PermissionSettings from 'Components/PermissionSettings/PermissionSettings';
 import Header from 'Components/Header/Header';
 import Billing from 'Components/Billing/Billing';
 import Application from 'Components/Application/Application';
@@ -22,24 +21,18 @@ import AuthLog from 'Components/Log/AuthLog';
 import PortalLog from 'Components/Log/PortalLog';
 import Settings from 'Components/Settings';
 import { GetGlobalConfigFunc, GetSubDomainInfoFunc } from 'Functions/ApiFunctions';
-import { subDomain } from 'Constants/ConstantValues';
+import { convertLangToIntlVer, subDomain } from 'Constants/ConstantValues';
 import { subdomainInfoChange } from 'Redux/actions/subdomainInfoChange';
 import SignUp from 'Components/SignUp/SignUp';
 import { globalDatasChange } from 'Redux/actions/globalDatasChange';
 import Dashboard from 'Components/Dashboard/Dashboard';
 import LoginPage from 'Components/Login';
 
-const convertLangToIntlVer = (lang: ReduxStateType['lang']) => {
-  return lang === 'EN' ? 'en-us' : 'ko-kr'
-}
-
 const App: React.FC = () => {
   const dispatch = useDispatch();
-  const { lang, userInfo, globalDatas } = useSelector((state: ReduxStateType) => ({
-    lang: state.lang!,
-    userInfo: state.userInfo,
-    globalDatas: state.globalDatas
-  }));
+  const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
+  const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas);
+  const lang = useSelector((state: ReduxStateType) => state.lang!);
   
   const getDomainInfo = () => {
     GetSubDomainInfoFunc(subDomain, (data) => {
@@ -52,12 +45,12 @@ const App: React.FC = () => {
     const documentHeight = () => {
       const doc = document.documentElement
       doc.style.setProperty('--doc-height', `${window.innerHeight}px`)
-     }
-     window.addEventListener('resize', documentHeight)
-     documentHeight()
-     return () => {
+    }
+    window.addEventListener('resize', documentHeight)
+    documentHeight()
+    return () => {
       window.removeEventListener('resize', documentHeight)
-     }
+    }
   }, [])
 
   useEffect(() => {
@@ -70,11 +63,11 @@ const App: React.FC = () => {
       })
     }
   }, [userInfo])
-  
+
   return <IntlProvider locale={convertLangToIntlVer(lang)} messages={Locale[lang]}>
     <AxiosController />
     <div className={userInfo ? 'contents-container' : ""}>
-    {userInfo && <Header />}
+      {userInfo && <Header />}
       <Routes>
         <Route path='/ompass/*' element={<OMPASSVerify />} />
         <Route path='/GuidePage' element={<GuidePage />} />
@@ -87,7 +80,6 @@ const App: React.FC = () => {
               <Route path='/AgentManagement/*' element={<Agent />} />
               <Route path='/UserManagement/*' element={<Users />} />
               <Route path='/PasscodeManagement' element={<PasscodeManagement />} />
-              <Route path='/PermissionSettings' element={<PermissionSettings />} />
               <Route path='/Billing' element={<Billing />} />
               <Route path='/Applications/*' element={<Application />} />
               <Route path='/Policies/*' element={<Policies />} />

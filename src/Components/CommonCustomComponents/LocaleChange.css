@@ -1,0 +1,14 @@
+.header-locale-inner-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  gap: 6px;
+  font-weight: bold;
+}
+
+.header-locale-inner-container>img {
+  width: 16px;
+  height: 16px;
+}

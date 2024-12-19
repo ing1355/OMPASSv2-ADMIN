@@ -14,8 +14,8 @@ export const add1DayForEndDate = (date: string) => {
     return dayjs(date).format(DateTimeFormat)
 }
 
-export const convertHourRangeByDate = (startDate: string, endDate: string, isLast: boolean) => {
-    return `${pad2Digit(new Date(startDate).getHours())} ~ ${isLast ? '현재' : pad2Digit(new Date(endDate).getHours())}`
+export const convertHourRangeByDate = (startDate: string, endDate: string, isLast: boolean, locale?: LanguageType) => {
+    return `${pad2Digit(new Date(startDate).getHours())} ~ ${isLast ? (locale === 'KR' ? '현재' : 'Now') : pad2Digit(new Date(endDate).getHours())}`
 }
 
 export const convertDaysByDate = (startDate: string) => {

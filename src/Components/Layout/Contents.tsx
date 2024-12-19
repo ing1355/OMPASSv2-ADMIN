@@ -11,15 +11,13 @@ type ContentsProps = PropsWithChildren & {
 }
 
 const Contents = ({ children, containerStyle, copyRightStyle, loading }: ContentsProps) => {
-    const { subdomainInfo, globalDatas } = useSelector((state: ReduxStateType) => ({
-        subdomainInfo: state.subdomainInfo!,
-        globalDatas: state.globalDatas
-    }));
+    const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas);
+    const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     loading = globalDatas?.loading || loading
 
     return <>
         <div className={`loading-center${loading ? '' : ' hidden'}`}>
-            <FormattedMessage id="CONTENTS_DATA_LOADING_LABEL"/>
+            <FormattedMessage id="CONTENTS_DATA_LOADING_LABEL" />
         </div>
         <div
             className={`content-center${loading ? ' hidden' : ''}`}

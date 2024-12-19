@@ -1,32 +1,35 @@
 import CreateAccountTexts from "./CreateAccountText";
 import LocaleTexts from "./LocaleTexts";
-import ApplicationTypes from "./ApplicationTypes";
 import ServerErrorCodes from "./ServerErrorCodes";
 import CalendarText from "./CalendarText";
 import ValidationText from "./ValidationText";
 import MessageText from "./MessageText";
 import SecurityQuestions from "./SecurityQuestions";
+import ValuesText from "./ValuesText";
 
 const Locale = {
   EN: {
-    ...LocaleTexts.en,
-    ...CreateAccountTexts.en,
-    ...ApplicationTypes.EN,
+    ...LocaleTexts.EN,
+    ...CreateAccountTexts.EN,
     ...ServerErrorCodes.EN,
     ...CalendarText.EN,
     ...ValidationText.EN,
     ...MessageText.EN,
-    ...SecurityQuestions.EN
+    ...SecurityQuestions.EN,
+    ...ValuesText.EN
   },
   KR: {
-    ...LocaleTexts.ko,
-    ...CreateAccountTexts.ko,
-    ...ApplicationTypes.KR,
+    ...LocaleTexts.KR,
+    ...CreateAccountTexts.KR,
     ...ServerErrorCodes.KR,
     ...CalendarText.KR,
     ...ValidationText.KR,
     ...MessageText.KR,
-    ...SecurityQuestions.KR
+    ...SecurityQuestions.KR,
+    ...ValuesText.KR
+  },
+  JP: {
+    
   }
 };
 

@@ -1,27 +1,20 @@
 import './Header.css';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { langChange } from 'Redux/actions/langChange';
 import { useNavigate } from 'react-router-dom';
-import locale_image from '../../assets/locale_image.png';
 import menuIcon from '../../assets/menuIcon.png';
 import logout from '../../assets/logout.png';
 import manualDownloadIcon from '../../assets/manualDownloadIcon.png';
 import adminManualDownloadIcon from '../../assets/adminManualDownloadIcon.png';
-import downloadIcon from '../../assets/downloadIcon.png';
 import { useIntl } from 'react-intl';
 import { userInfoClear } from 'Redux/actions/userChange';
 import { Tooltip } from 'antd';
 import { ompassDefaultLogoImage } from 'Constants/ConstantValues';
-import { saveLocaleToLocalStorage } from 'Functions/GlobalFunctions';
 import SessionTimeCount from './SessionTimeCount';
+import LocaleChange from 'Components/CommonCustomComponents/LocaleChange';
 
 const Header = () => {
-  const { lang, userInfo, subdomainInfo } = useSelector((state: ReduxStateType) => ({
-    lang: state.lang,
-    userInfo: state.userInfo!,
-    subdomainInfo: state.subdomainInfo!
-  }));
+  const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const { username, role, userId } = userInfo! ?? {};
   const dropdownRef = useRef<any>(null);
@@ -41,6 +34,8 @@ const Header = () => {
       document.removeEventListener('mousedown', handleMouseDown);
     };
   }, [isMenuOpen]);
+
+  
 
   return (
     <div
@@ -81,7 +76,7 @@ const Header = () => {
           <SessionTimeCount />
           {/* <Tooltip
             destroyTooltipOnHide
-            title={formatMessage({ id: 'DOWNLOAD_FOR_WINDOWS_AGENT_FILE' })}
+            title={formatMessage({ id: 'DOWNLOAD_FOR_WINDOWS' })}
           >
             <a href={subdomainInfo.windowsAgentUrl} download>
               <img src={downloadIcon} />
@@ -124,23 +119,7 @@ const Header = () => {
               {username}
             </div>
           </Tooltip>
-          <div className='header-locale-container'>
-            <img src={locale_image} />
-            <span
-              className={'mlr5 locale-toggle' + (lang === 'KR' ? ' active' : '')}
-              onClick={() => {
-                dispatch(langChange('KR'));
-                saveLocaleToLocalStorage('KR')
-              }}
-            >KO</span>|
-            <span
-              className={'mlr5 locale-toggle' + (lang === 'EN' ? ' active' : '')}
-              onClick={() => {
-                dispatch(langChange('EN'));
-                saveLocaleToLocalStorage('EN')
-              }}
-            >EN</span>
-          </div>
+          <LocaleChange/>
           <Tooltip
             title={formatMessage({ id: 'LOGOUT' })}
             destroyTooltipOnHide

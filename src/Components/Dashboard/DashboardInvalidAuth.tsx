@@ -6,10 +6,12 @@ import { convertDaysByDate, convertHourRangeByDate } from "./DashboardFunctions"
 import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions"
 import { FormattedMessage } from "react-intl"
 import DashBoardBarChart from "./DashboardBarChart"
+import { useSelector } from "react-redux"
 
 const DashboardInvalidAuth = ({ applications }: {
     applications: ApplicationListDataType[]
 }) => {
+    const lang = useSelector((state: ReduxStateType) => state.lang!);
     const [params, setParams] = useState(dashboardDateInitialValue())
     const [datas, setDatas] = useState<{
         date: string
@@ -42,7 +44,7 @@ const DashboardInvalidAuth = ({ applications }: {
                         }
                     }, {})
                     return {
-                        date: convertHourRangeByDate(convertUTCStringToLocalDateString(_.startDate), convertUTCStringToLocalDateString(_.endDate), ind === arr.length - 1),
+                        date: convertHourRangeByDate(convertUTCStringToLocalDateString(_.startDate), convertUTCStringToLocalDateString(_.endDate), ind === arr.length - 1, lang),
                         ...values
                     }
                 }))
@@ -58,10 +60,10 @@ const DashboardInvalidAuth = ({ applications }: {
         }
     }, [applications, params])
 
-    return <DashboardCardWithDateSelect title={<FormattedMessage id="DASHBOARD_INVALID_ALL_AUTH"/>} isCard={false} onChange={(d) => {
+    return <DashboardCardWithDateSelect title={<FormattedMessage id="DASHBOARD_INVALID_ALL_AUTH" />} isCard={false} onChange={(d) => {
         setParams(d)
     }}>
-        <DashBoardBarChart datas={datas} keys={applications.map(_ => _.name)} indexKey="date" customColor/>
+        <DashBoardBarChart datas={datas} keys={applications.map(_ => _.name)} indexKey="date" customColor />
     </DashboardCardWithDateSelect>
 }
 

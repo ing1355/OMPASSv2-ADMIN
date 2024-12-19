@@ -9,10 +9,8 @@ import Contents from 'Components/Layout/Contents';
 
 
 const Main = () => {
-  const { userInfo, lang } = useSelector((state: ReduxStateType) => ({
-    userInfo: state.userInfo!,
-    lang: state.lang,
-  }))
+  const lang = useSelector((state: ReduxStateType) => state.lang!);
+    const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(-1)
 

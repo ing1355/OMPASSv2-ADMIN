@@ -4,7 +4,7 @@
 OMPASS Windows Logon 을 설치하여 Windows 운영 체제 로그온을 보호합니다.
 
 ## 중요 참고 사항
-> OMPASS Windows Logon 을 사용하기 위해서는 클라이언트 프로그램 설치 전에 컴퓨터에 로그인하기 위해 비밀번호를 반드시 확인해야 합니다. 
+> OMPASS Windows Logon 을 사용하기 위해서는 Windows 비밀번호를 반드시 확인해야 합니다. 
 
 ## 사전 작업
 1. **OMPASS Portal** 에 관리자 계정으로 로그인하세요.
@@ -26,17 +26,23 @@ OMPASS Windows Logon 을 설치하여 Windows 운영 체제 로그온을 보호�
 
 <img src="./setup-install.png" width="500"></br>
 
-4. **Install** 을 클릭합니다.
+4. OMPASS Windows Logon 을 설치하기 전에, 사용자가 Windows 비밀번호를 기억하고 있는지 확인합니다. </br>검증을 위해 로그온 한 계정 `Windows Account: `의 Windows 비밀번호를 입력하세요.
+
+<img src="./setup-install-password.png" width="500">
+
+<img src="./setup-install-password-verified.png" width="300">
+
+5. **Install** 을 클릭합니다.
 
 <img src="./setup-installing.png" width="500">
 
 <img src="./setup-finish.png" width="400"></br>
 
-5. 설치가 완료되면 완료 메시지와 Windows 설정창이 팝업됩니다. 
+6. 설치가 완료되면 완료 메시지와 Windows 설정창이 팝업됩니다. 
 > Windows 로그온 기본 인증수단이 Windows Password로 변경되오니 반드시 비밀번호를 확인하세요.</br>
 > (시작 → 설정 → 계정 → 로그인 옵션 → 암호 → 변경)
 
-6. Prerequisite으로 설치된 Microsoft Visual C++ 2015-2022 Redistributable 가 처음 설치되었다면 재부팅을 진행해주세요.
+7. Prerequisite으로 설치된 Microsoft Visual C++ 2015-2022 Redistributable 가 처음 설치되었다면 재부팅을 진행해주세요.
 * *기존 사용자는 재부팅을 하지 않아도 됩니다.*
 
 <img src="./setup-reboot.png" width="500">

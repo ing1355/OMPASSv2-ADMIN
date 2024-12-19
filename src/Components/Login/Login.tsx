@@ -13,10 +13,8 @@ import Input from 'Components/CommonCustomComponents/Input';
 import { message } from 'antd';
 
 const Login = () => {
-  const { lang, subdomainInfo } = useSelector((state: ReduxStateType) => ({
-    lang: state.lang,
-    subdomainInfo: state.subdomainInfo!
-  }));
+  const lang = useSelector((state: ReduxStateType) => state.lang!);
+  const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
   const [inputPassword, setInputPassword] = useState('')
   const [tempToken, setTempToken] = useState('')
   const [cookies, setCookie, removeCookie] = useCookies(["rememberUserId"]);
@@ -44,20 +42,20 @@ const Login = () => {
     e.preventDefault();
     const { saveId } = e.currentTarget.elements as any
     if (needPasswordChange) {
-      if (inputChangePassword !== inputChangePasswordConfirm) return message.error(formatMessage({id: 'PASSWORD_NOT_MATCH'}))
+      if (inputChangePassword !== inputChangePasswordConfirm) return message.error(formatMessage({ id: 'PASSWORD_NOT_MATCH' }))
       UpdatePasswordFunc(inputChangePassword, tempToken, () => {
         setNeedPasswordChange(false)
-        message.success(formatMessage({id: 'PASSWORD_CHANGE_SUCCESS_MSG'}))
+        message.success(formatMessage({ id: 'PASSWORD_CHANGE_SUCCESS_MSG' }))
         setTempToken('')
       })
     } else {
       if (!inputUsername) {
         inputUesrnameRef.current?.focus()
-        return message.error(formatMessage({id: 'PLEASE_INPUT_ID_MSG'}))
+        return message.error(formatMessage({ id: 'PLEASE_INPUT_ID_MSG' }))
       }
       if (!inputPassword) {
         inputPasswordRef.current?.focus()
-        return message.error(formatMessage({id: 'PLEASE_INPUT_PASSWORD_MSG'}))
+        return message.error(formatMessage({ id: 'PLEASE_INPUT_PASSWORD_MSG' }))
       }
       LoginFunc({
         domain: subDomain,
@@ -69,7 +67,7 @@ const Login = () => {
         if (status === 'WAIT_INIT_PASSWORD') {
           setInputPassword('')
           setTempToken(token)
-          message.info(formatMessage({id: 'PASSWORD_CHANGE_NEED_MSG'}))
+          message.info(formatMessage({ id: 'PASSWORD_CHANGE_NEED_MSG' }))
           return setNeedPasswordChange(true)
         }
         const temp = popupUri + `&authorization=${token}`
@@ -201,12 +199,16 @@ const Login = () => {
             }}>
               <FormattedMessage id="RECOVERY_ACCOUNT_LABEL" />
             </div>
-            {subdomainInfo.selfSignupEnabled && <div className='login-action-vertical-line' />}
-            {subdomainInfo.selfSignupEnabled && <div className='signup' onClick={() => {
-              navigate("/signup")
-            }}>
-              <FormattedMessage id="CREATE_ACCOUNT" />
-            </div>}
+            {
+              (subdomainInfo.selfSignupEnabled || !subdomainInfo.securityQuestion.isRootAdminSignupComplete) && <>
+                <div className='login-action-vertical-line' />
+                <div className='signup' onClick={() => {
+                  navigate("/signup")
+                }}>
+                  <FormattedMessage id="CREATE_ACCOUNT" />
+                </div>
+              </>
+            }
           </div>
         </div>}
         <Button

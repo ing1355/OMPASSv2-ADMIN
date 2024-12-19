@@ -14,7 +14,6 @@ import Input from "Components/CommonCustomComponents/Input"
 import { CopyToClipboard } from "react-copy-to-clipboard"
 import deleteIcon from '../../assets/deleteIcon.png'
 import deleteIconHover from '../../assets/deleteIconHover.png'
-import './ApplicationDetail.css'
 import { FormattedMessage, useIntl } from "react-intl"
 import CustomImageUpload from "Components/CommonCustomComponents/CustomImageUpload"
 import BottomLineText from "Components/CommonCustomComponents/BottomLineText"
@@ -25,6 +24,7 @@ import RadiusDetailInfo from "./RadiusDetailInfo"
 import documentIcon from '../../assets/documentIcon.png'
 import documentIconHover from '../../assets/documentIconHover.png'
 import ApplicationAgentDownload from "./ApplicationAgentDownload"
+import './ApplicationDetail.css'
 
 const ApiServerAddressItem = ({ text }: {
     text: string
@@ -112,7 +112,7 @@ const ApplicationDetail = () => {
                 setRadiusData(data.radiusProxyServer)
             })
         } else {
-            await GetApplicationListFunc({ type: 'WINDOWS_LOGIN' }, ({ results }) => {
+            await GetApplicationListFunc({ types: ['WINDOWS_LOGIN'] }, ({ results }) => {
                 if (results.length > 0) setHasWindowsLogin(true)
             })
         }
@@ -139,10 +139,10 @@ const ApplicationDetail = () => {
                         return message.error(formatMessage({ id: 'PLEASE_INPUT_APPLICATION_DOMAIN' }))
                     }
                     if (needDomains.includes(applicationType) && !domainRegex.test(inputDomain)) {
-                        return message.error(formatMessage({id: 'INVALID_INPUT_DOMAIN_MSG'}))
+                        return message.error(formatMessage({id:'INVALID_INPUT_DOMAIN_MSG'}))
                     }
                     if (!isRedmine && needDomains.includes(applicationType) && !redirectUriRegex.test(inputRedirectUrl)) {
-                        return message.error(formatMessage({id: 'INVALID_INPUT_REDIRECT_URI_MSG'}))
+                        return message.error(formatMessage({id:'INVALID_INPUT_REDIRECT_URI_MSG'}))
                     }
                     if (!isRedmine && !inputRedirectUrl && needDomains.includes(applicationType)) {
                         return message.error(formatMessage({ id: 'PLEASE_INPUT_APPLICATION_REDIRECT_URI' }))
@@ -240,11 +240,10 @@ const ApplicationDetail = () => {
                 {isAdd ? <CustomSelect value={applicationType} onChange={value => {
                     setApplicationType(value as ApplicationDataType['type'])
                 }} items={typeItems} needSelect /> : getApplicationTypeLabel(applicationType as ApplicationDataType['type'])}
-                {applicationType && <Button className="st5" icon={documentIcon} hoverIcon={documentIconHover} onClick={() => {
-                    message.info("기능 준비중(페이지 이동)")
-                    window.open(`/docs/${applicationType}`, '_blank');
+                {applicationType && applicationType !== 'ADMIN' && <Button className="st5" icon={documentIcon} hoverIcon={documentIconHover} onClick={() => {
+                    window.open(`/docs/application/${applicationType}`, '_blank');
                 }}>
-                    <FormattedMessage id="APPLICATION_DOCS_VIEW_LABEL" />
+                    <FormattedMessage id="DOCS_VIEW_LABEL" />
                 </Button>}
                 <ApplicationAgentDownload type={applicationType}/>
             </CustomInputRow>

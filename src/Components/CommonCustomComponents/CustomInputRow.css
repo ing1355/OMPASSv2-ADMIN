@@ -18,6 +18,7 @@
     align-items: center;
     justify-content: flex-start;
     gap: 6px;
+    white-space: pre;
 }
 
 .custom-detail-contents>.custom-input-wrapper {

@@ -1,10 +1,9 @@
 import Button from "Components/CommonCustomComponents/Button"
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import CustomModal from "Components/Modal/CustomModal"
-import { INT_MAX_VALUE, userStatusTypes } from "Constants/ConstantValues"
+import { INT_MAX_VALUE } from "Constants/ConstantValues"
 import { GetUserDataListFunc } from "Functions/ApiFunctions"
-import { downloadExcelUserList } from "Functions/GlobalFunctions"
-import { FormattedMessage } from "react-intl"
+import { FormattedMessage, useIntl } from "react-intl"
 import userAddIcon from './../../assets/userAddIcon.png'
 import userAddIconHover from './../../assets/userAddIconHover.png'
 import rootRoleIcon from './../../assets/rootRoleIcon.png'
@@ -17,6 +16,11 @@ import adminRoleIcon from './../../assets/adminRoleIcon.png'
 import { useState } from "react"
 import useFullName from "hooks/useFullName"
 import { useNavigate } from "react-router"
+import { useSelector } from "react-redux"
+import useExcelDownload from "hooks/useExcelDownload"
+
+const userStatusList: UserDataType['status'][] = ['LOCK', 'RUN', 'WAIT_ADMIN_APPROVAL', 'WAIT_EMAIL_VERIFICATION', 'WAIT_INIT_PASSWORD', 'WITHDRAWAL']
+const userRoleList = (role: UserDataType['role']): UserDataType['role'][] => role === 'ROOT' ? ['USER', 'ADMIN', 'ROOT'] : ['USER', 'ADMIN']
 
 const UserAddItem = ({ title, icon, onClick }: {
     title: React.ReactNode
@@ -30,12 +34,16 @@ const UserAddItem = ({ title, icon, onClick }: {
 }
 
 const PortalUserManagement = () => {
+    const lang = useSelector((state: ReduxStateType) => state.lang!);
+      const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     const [dataLoading, setDataLoading] = useState(false)
     const [tableData, setTableData] = useState<UserDataType[]>([])
     const [totalCount, setTotalCount] = useState<number>(0);
     const [addOpen, setAddOpen] = useState(false)
     const getFullName = useFullName()
     const navigate = useNavigate()
+    const excelDownload = useExcelDownload()
+    const { formatMessage } = useIntl()
     const createHeaderColumn = (formattedId: string) => <FormattedMessage id={formattedId} />
 
     const GetDatas = async (params: CustomTableSearchParams) => {
@@ -47,6 +55,12 @@ const PortalUserManagement = () => {
         if (params.type) {
             _params[params.type] = params.value
         }
+        if(params.filterOptions) {
+            params.filterOptions.forEach(_ => {
+                _params[_.key] = _.value
+            })
+        }
+        
         GetUserDataListFunc(_params, ({ results, totalCount }) => {
             setTableData(results)
             setTotalCount(totalCount)
@@ -77,15 +91,7 @@ const PortalUserManagement = () => {
                 {
                     key: 'phone',
                     type: 'string'
-                },
-                {
-                    key: 'status',
-                    type: 'select',
-                    selectOptions: userStatusTypes.map(_ => ({
-                        key: _,
-                        label: <FormattedMessage id={`USER_STATUS_${_}`} />
-                    }))
-                },
+                }
             ]}
             onSearchChange={(data) => {
                 GetDatas(data)
@@ -104,7 +110,7 @@ const PortalUserManagement = () => {
                         page_size: INT_MAX_VALUE,
                         page: 0
                     }, (res) => {
-                        downloadExcelUserList(res.results)
+                        excelDownload(res.results)
                     })
                 }} icon={downloadIcon} hoverIcon={downloadIconWhite}>
                     <FormattedMessage id="USER_EXCEL_DOWNLOAD_LABEL" />
@@ -122,7 +128,12 @@ const PortalUserManagement = () => {
                         <div>
                             {data}
                         </div>
-                    </div>
+                    </div>,
+                    filterKey: 'roles',
+                    filterOption: userRoleList(userInfo.role).map(_ => ({
+                        label: formatMessage({id: `${_}_ROLE_VALUE`}),
+                        value: _
+                    }))
                 },
                 {
                     key: 'name',
@@ -142,7 +153,12 @@ const PortalUserManagement = () => {
                     key: 'status',
                     title: <FormattedMessage id="NORMAL_STATUS_LABEL" />,
                     render: data => <FormattedMessage id={`USER_STATUS_${data}`} />,
-                    noWrap: true
+                    noWrap: true,
+                    filterKey: 'statuses',
+                    filterOption: userStatusList.map(_ => ({
+                        label: formatMessage({id: `USER_STATUS_${_}`}),
+                        value: _
+                    }))
                 }
             ]}
             onBodyRowClick={(row, index, arr) => {

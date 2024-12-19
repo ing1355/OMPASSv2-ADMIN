@@ -13,10 +13,8 @@ import CustomDropdown from "Components/CommonCustomComponents/CustomDropdown"
 import { FormattedMessage, useIntl } from "react-intl"
 
 const SessionTimeCount = () => {
-    const { sessionInfo, userInfo } = useSelector((state: ReduxStateType) => ({
-        sessionInfo: state.sessionInfo!,
-        userInfo: state.userInfo,
-    }))
+    const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
+    const sessionInfo = useSelector((state: ReduxStateType) => state.sessionInfo!);
     const [showSession, setShowSession] = useState(false)
     const remainSessionTimeRef = useRef(sessionInfo.time)
     const dispatch = useDispatch()
@@ -32,7 +30,7 @@ const SessionTimeCount = () => {
         result += `${seconds.toString().padStart(2, '0')}`
         return result;
     }, [sessionInfo.time])
-
+    
     useEffect(() => {
         sessionCheckedRef.current = sessionInfo.checked
         remainSessionTimeRef.current = sessionInfo.time
@@ -55,7 +53,7 @@ const SessionTimeCount = () => {
                 setShowSession(true)
                 dispatch(sessionTimeChange(remainSessionTimeRef.current - 1))
             } else if (remainSessionTimeRef.current <= 0) {
-                message.error(formatMessage({id: 'SESSION_EXPIRED_MSG'}))
+                message.error(formatMessage({id:'SESSION_EXPIRED_MSG'}))
                 clearInterval(sessionTimerRef.current)
                 dispatch(sessionCheckChange(false))
                 dispatch(userInfoClear());
@@ -88,17 +86,17 @@ const SessionTimeCount = () => {
             dispatch(userInfoChange(token))
             dispatch(sessionCheckChange(false))
             setShowSession(false)
-            message.success(formatMessage({id: 'SESSION_RENEWAL_SUCCESS_MSG'}))
+            message.success(formatMessage({id:'SESSION_RENEWAL_SUCCESS_MSG'}))
         })
     }
 
     return <>
-        <CustomDropdown hover items={[
+        <CustomDropdown onChange={val => {
+            refreshCallback();
+        }} items={[
             {
-                label: <FormattedMessage id="SESSION_RENEWAL_TITLE_LABEL"/>,
-                callback: () => {
-                    refreshCallback();
-                },
+                label: formatMessage({id: "SESSION_RENEWAL_TITLE_LABEL"}),
+                value: 'none'
             }
         ]}>
             <div className={`remain-session-time-container${sessionInfo.time < 60 ? " warning" : ""}`}>

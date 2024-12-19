@@ -27,7 +27,7 @@ const FindUsername = () => {
     const resetRequest = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         ResetPasswordEmailCodeVerifyFunc({ type, email: inputEmail, code: inputCode }, (_, _token) => {
-            message.success(formatMessage({id: 'EMAIL_CODE_VERIFY_SUCCESS_MSG'}))
+            message.success(formatMessage({id:'EMAIL_CODE_VERIFY_SUCCESS_MSG'}))
             FindPortalUsernameFunc(_token, ({username}) => {
                 setFindUsername(username)
                 setCodeConfirm(true)
@@ -77,7 +77,7 @@ const FindUsername = () => {
                         name="email"
                         maxLength={48}
 
-                        placeholder={formatMessage({id: 'INPUT_EMAIL_WHEN_SIGN_UP_PLACEHOLDER'})}
+                        placeholder={formatMessage({id:'INPUT_EMAIL_WHEN_SIGN_UP_PLACEHOLDER'})}
                         valueChange={(value, alert) => {
                             setInputEmail(value);
                             setEmailAlert(alert || false)
@@ -98,7 +98,7 @@ const FindUsername = () => {
                                     type
                                 }, () => {
                                     setEmailCodeSend(true)
-                                    message.success(formatMessage({id: 'EMAIL_SEND_FOR_CODE_VERIFY_SUCCESS_MSG'}))
+                                    message.success(formatMessage({id:'EMAIL_SEND_FOR_CODE_VERIFY_SUCCESS_MSG'}))
                                     mailTimer.current = setInterval(() => {
                                         setMailCount(count => count + 1)
                                         if (mailCountRef.current >= 10) {
@@ -129,7 +129,7 @@ const FindUsername = () => {
                         noGap
                         ref={inputCodeRef}
                         customType='username'
-                        placeholder={formatMessage({id: 'EMAIL_CODE_LABEL'})}
+                        placeholder={formatMessage({id:'EMAIL_CODE_LABEL'})}
                         valueChange={value => {
                             setInputCode(value)
                         }}

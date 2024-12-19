@@ -16,9 +16,7 @@ type PolicySelectProps = {
 }
 
 const PolicySelect = ({ selectedPolicy, setSelectedPolicy, needSelect, applicationType, datas }: PolicySelectProps) => {
-    const { lang } = useSelector((state: ReduxStateType) => ({
-        lang: state.lang!
-    }));
+    const lang = useSelector((state: ReduxStateType) => state.lang!);
     const [policiesData, setPoliciesData] = useState<PolicyListDataType[]>(datas || [])
     const filteredPoliciesData = useMemo(() => {
         if(applicationType) {

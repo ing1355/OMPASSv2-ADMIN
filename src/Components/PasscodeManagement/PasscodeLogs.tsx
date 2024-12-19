@@ -3,16 +3,17 @@ import { ViewPasscode } from "Components/Users/UserDetailComponents";
 import { GetPasscodeHistoriesFunc } from "Functions/ApiFunctions";
 import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions";
 import { useState } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 
+const actionList: PasscodeHistoryDataType['action'][] = ['CREATE', 'DELETE']
+
 const PasscodeLogs = () => {
     const [dataLoading, setDataLoading] = useState(false)
-    const { userInfo } = useSelector((state: ReduxStateType) => ({
-        userInfo: state.userInfo!,
-    }));
+    const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     const navigate = useNavigate();
+    const { formatMessage } = useIntl()
     const [totalCount, setTotalCount] = useState<number>(0);
     const [tableData, setTableData] = useState<PasscodeHistoryDataType[]>([]);
     const GetDatas = async (params: CustomTableSearchParams) => {
@@ -24,6 +25,11 @@ const PasscodeLogs = () => {
         if (params.type) {
             _params[params.type] = params.value
         }
+        if(params.filterOptions) {
+            params.filterOptions.forEach(_ => {
+                _params[_.key] = _.value
+            })
+        }
         GetPasscodeHistoriesFunc(_params, ({ results, totalCount }) => {
             setTableData(results)
             setTotalCount(totalCount)
@@ -34,6 +40,7 @@ const PasscodeLogs = () => {
 
     return <CustomTable<PasscodeHistoryDataType>
         theme='table-st1'
+        loading={dataLoading}
         datas={tableData}
         pagination
         totalCount={totalCount}
@@ -49,19 +56,6 @@ const PasscodeLogs = () => {
         }, {
             key: 'rpUsername',
             type: 'string'
-        }, {
-            key: 'action',
-            type: 'select',
-                selectOptions: [
-                    {
-                        key: 'CREATE',
-                        label: <FormattedMessage id="PASSCODE_CREATE_ACTION_SEARCH_LABEL"/>
-                    },
-                    {
-                        key: 'DELETE',
-                        label: <FormattedMessage id="PASSCODE_DELETE_ACTION_SEARCH_LABEL"/>
-                    }
-                ]
         }]}
         onSearchChange={(data) => {
             GetDatas(data)
@@ -97,10 +91,16 @@ const PasscodeLogs = () => {
             {
                 key: 'action',
                 title: <FormattedMessage id="ACTION" />,
-                render: (data, index, row) => row.createdAt >= row.passcode.expiredAt || row.passcode.recycleCount === 0 ?
-                    <FormattedMessage id='EXPIRED' />
-                    :
-                    <FormattedMessage id={data} />
+                // render: (data, index, row) => row.createdAt >= row.passcode.expiredAt || row.passcode.recycleCount === 0 ?
+                //     <FormattedMessage id='EXPIRED' />
+                //     :
+                //     <FormattedMessage id={data} />,
+                render: (data, index, row) => <FormattedMessage id={data} />,
+                filterKey: 'actions',
+                filterOption: actionList.map(_ => ({
+                    label: formatMessage({id: _}),
+                    value: _
+                }))
             },
             {
                 key: 'number',

@@ -16,7 +16,8 @@
 
 .plan-box {
     padding: 12px;
-    border: 2px solid var(--main-purple-color);
+    padding-top: 22px;
+    /* border: 2px solid var(--main-purple-color); */
     border-radius: 16px;
     width: 300px;
     position: relative;
@@ -28,7 +29,8 @@
 }
 
 .plan-box.selected {
-    padding-top: 28px;
+    /* padding-top: 28px; */
+    border: 2px solid var(--main-purple-color);
 }
 
 .plan-selected {
@@ -94,7 +96,6 @@
 .plan-description-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     gap: 6px;
     flex: 1;
 }
@@ -110,7 +111,7 @@
 }
 
 .plan-description-icon>img {
-    height: 70%;
+    height: 50%;
 }
 .plan-description-icon {
     height: 100%;

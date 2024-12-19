@@ -1,14 +1,15 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
-import { AuthenticationProcessTypes } from "Constants/ConstantValues"
+import { applicationTypes, AuthenticationProcessTypes, authenticatorList, getApplicationTypeLabel, logAuthPurposeList } from "Constants/ConstantValues"
 import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions"
 import { useEffect, useState } from "react"
-import { FormattedMessage } from "react-intl"
+import { FormattedMessage, useIntl } from "react-intl"
 import { GetValidAuthLogDataListFunc } from "Functions/ApiFunctions"
 
 const ValidAuthLogs = () => {
     const [tableData, setTableData] = useState<ValidAuthLogDataType[]>([])
     const [totalCount, setTotalCount] = useState(1)
     const [dataLoading, setDataLoading] = useState(false)
+    const { formatMessage } = useIntl()
 
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
@@ -16,8 +17,13 @@ const ValidAuthLogs = () => {
             page_size: params.size,
             page: params.page
         }
-        if(params.type) {
+        if (params.type) {
             _params[params.type] = params.value
+        }
+        if (params.filterOptions) {
+            params.filterOptions.forEach(_ => {
+                _params[_.key] = _.value
+            })
         }
         GetValidAuthLogDataListFunc(_params, ({ results, totalCount }) => {
             setTableData(results.map(_ => ({
@@ -47,12 +53,9 @@ const ValidAuthLogs = () => {
             key: 'rpUsername',
             type: 'string'
         }, {
-            key: 'processType',
-            type: 'select',
-            selectOptions: AuthenticationProcessTypes.map(_ => ({
-                key: _,
-                label: <FormattedMessage id={_ + '_VALUE'} />
-            })),
+            key: 'policyName',
+            label: <FormattedMessage id="POLICY_NAME_LABEL" />,
+            type: 'string'
         }]}
         columns={[
             {
@@ -60,32 +63,57 @@ const ValidAuthLogs = () => {
                 title: '#'
             },
             {
+                key: 'applicationType',
+                title: <FormattedMessage id="APPLICATION_TYPE_LABEL" />,
+                render: (_, _ind, row) => getApplicationTypeLabel(row.ompassData.application.type),
+                filterKey: 'applicationTypes',
+                filterOption: applicationTypes.map(_ => ({
+                    label: formatMessage({ id: _ + "_APPLICATION_TYPE" }),
+                    value: _
+                }))
+            },
+            {
                 key: 'applicationName',
-                title: <FormattedMessage id="APPLICATION_NAME_COLUMN_LABEL"/>,
+                title: <FormattedMessage id="APPLICATION_NAME_COLUMN_LABEL" />,
                 render: (_, _ind, row) => row.ompassData.application.name
             },
             {
                 key: 'portalUsername',
-                title: <FormattedMessage id="PORTAL_USERNAME_COLUMN_LABEL"/>,
+                title: <FormattedMessage id="PORTAL_USERNAME_COLUMN_LABEL" />,
                 render: (_, _ind, row) => row.portalUser.username
             },
             {
                 key: 'rpUsername',
-                title: <FormattedMessage id="RP_USERNAME_COLUMN_LABEL"/>,
+                title: <FormattedMessage id="RP_USERNAME_COLUMN_LABEL" />,
                 render: (_, _ind, row) => row.ompassData.rpUser.username
             },
             {
-                key: 'processType',
-                title: <FormattedMessage id="AUTHPURPOSE_COLUMN_LABEL"/>,
-                render: (data, ind, row) => <FormattedMessage id={row.ompassData.authPurpose + '_LOG_VALUE'} />
+                key: 'authPurpose',
+                title: <FormattedMessage id="AUTHPURPOSE_COLUMN_LABEL" />,
+                render: (data, ind, row) => <FormattedMessage id={row.ompassData.authPurpose + '_LOG_VALUE'} />,
+                filterKey: 'authPurposes',
+                filterOption: logAuthPurposeList.map(_ => ({
+                    label: formatMessage({ id: _ + '_LOG_VALUE' }),
+                    value: _
+                }))
             },
             {
                 key: 'authenticatorType',
-                title: <FormattedMessage id="AUTHENTICATOR_TYPE_COLUMN_LABEL"/>
+                title: <FormattedMessage id="AUTHENTICATOR_TYPE_COLUMN_LABEL" />,
+                filterKey: 'authenticatorTypes',
+                filterOption: authenticatorList.map(_ => ({
+                    label: _,
+                    value: _
+                }))
+            },
+            {
+                key: 'policyAtTimeOfEvent',
+                title: <FormattedMessage id="POLICY_NAME_LABEL" />,
+                render: (d, ind, row) => row.policyAtTimeOfEvent.name
             },
             {
                 key: 'authenticationTime',
-                title: <FormattedMessage id="AUTHENTICATION_TIME_COLUMN_LABEL"/>
+                title: <FormattedMessage id="AUTH_LOG_ACCESS_TIME_LABEL" />
             }
         ]}
         theme="table-st1"

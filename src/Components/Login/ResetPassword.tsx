@@ -52,32 +52,32 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
             if(!randomPasswordCheck) {
                 if (!inputPassword) {
                     inputPasswordRef.current?.focus()
-                    return message.error(formatMessage({id: 'PLEASE_INPUT_PASSWORD_MSG'}))
+                    return message.error(formatMessage({id:'PLEASE_INPUT_PASSWORD_MSG'}))
                 }
                 if (passwordAlert) {
                     inputPasswordRef.current?.focus()
-                    return message.error(formatMessage({id: 'PASSWORD_CHECK'}))
+                    return message.error(formatMessage({id:'PASSWORD_CHECK'}))
                 }
                 if (!inputPasswordConfirm) {
                     inputPasswordConfirmRef.current?.focus()
-                    return message.error(formatMessage({id: 'PLEASE_INPUT_PASSWORD_CONFIRM_MSG'}))
+                    return message.error(formatMessage({id:'PLEASE_INPUT_PASSWORD_CONFIRM_MSG'}))
                 }
             }
             ResetPasswordFunc(inputPassword, token, () => {
-                message.success(formatMessage({id: 'PASSWORD_INIT_SUCCESS_MSG'}))
+                message.success(formatMessage({id:'PASSWORD_INIT_SUCCESS_MSG'}))
                 navigate('/')
             })
         } else {
             // return setCodeConfirm(true)
             if (!inputUsername) {
-                message.error(formatMessage({id: 'PLEASE_INPUT_ID_MSG'}))
+                message.error(formatMessage({id:'PLEASE_INPUT_ID_MSG'}))
                 return inputUsernameRef.current?.focus()
             }
             if (usernameAlert) {
                 return inputUsernameRef.current?.focus()
             }
             if (!inputEmail) {
-                message.error(formatMessage({id: 'PLEASE_INPUT_EMAIL_MSG'}))
+                message.error(formatMessage({id:'PLEASE_INPUT_EMAIL_MSG'}))
                 return inputEmailRef.current?.focus()
             }
             if (!inputEmail || emailAlert) {
@@ -124,7 +124,7 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                         noGap
                         customType='password'
                         type="password"
-                        placeholder={formatMessage({id: 'PASSWORD_PLACEHOLDER'})}
+                        placeholder={formatMessage({id:'PASSWORD_PLACEHOLDER'})}
                         ref={inputPasswordRef}
                         disabled={randomPasswordCheck}
                         valueChange={(value, alert) => {
@@ -146,7 +146,7 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                         maxLength={16}
                         noGap
                         type="password"
-                        placeholder={formatMessage({id: 'PASSWORD_CONFIRM_PLACEHOLDER'})}
+                        placeholder={formatMessage({id:'PASSWORD_CONFIRM_PLACEHOLDER'})}
                         disabled={randomPasswordCheck}
                         rules={[
                             {
@@ -174,7 +174,7 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                         maxLength={16}
                         noGap
                         customType='username'
-                        placeholder={formatMessage({id: 'INPUT_ID_FOR_RESET_PASSWORD_PLACEHOLDER'})}
+                        placeholder={formatMessage({id:'INPUT_ID_FOR_RESET_PASSWORD_PLACEHOLDER'})}
                         ref={inputUsernameRef}
                         valueChange={(value, alert) => {
                             setInputUsername(value);
@@ -197,7 +197,7 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                         name="email"
                         maxLength={48}
 
-                        placeholder={formatMessage({id: 'INPUT_EMAIL_WHEN_SIGN_UP_PLACEHOLDER'})}
+                        placeholder={formatMessage({id:'INPUT_EMAIL_WHEN_SIGN_UP_PLACEHOLDER'})}
                         valueChange={(value, alert) => {
                             setInputEmail(value);
                             setEmailAlert(alert || false)
@@ -219,7 +219,7 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                                     type
                                 }, () => {
                                     setEmailCodeSend(true)
-                                    message.success(formatMessage({id: 'EMAIL_SEND_FOR_CODE_VERIFY_SUCCESS_MSG'}))
+                                    message.success(formatMessage({id:'EMAIL_SEND_FOR_CODE_VERIFY_SUCCESS_MSG'}))
                                     mailTimer.current = setInterval(() => {
                                         setMailCount(count => count + 1)
                                         if (mailCountRef.current >= 10) {
@@ -250,7 +250,7 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                         noGap
                         ref={inputCodeRef}
                         customType='username'
-                        placeholder={formatMessage({id: 'INPUT_EMAIL_CODE_LABEL'})}
+                        placeholder={formatMessage({id:'INPUT_EMAIL_CODE_LABEL'})}
                         valueChange={value => {
                             setInputCode(value)
                         }}

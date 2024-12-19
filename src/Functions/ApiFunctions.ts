@@ -1,5 +1,5 @@
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from "Components/CommonCustomComponents/CustomAxios";
-import { AddApplicationListApi, AddLdapConfigListApi, AddPasscodeApi, AddPoliciesListApi, AddRadiusUserListApi, AddUserDataApi, AddUserGroupApi, AddUserWithCsvDataApi, ApprovalUserApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeleteLdapConfigListApi, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DuplicateUserNameCheckApi, FindPortalUsernameApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetGlobalConfigApi, GetLdapConfigListApi, GetOMPASSAuthResultApi, GetPasscodeHistoriesApi, GetPasscodeListApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetRpUserListApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, OMPASSAuthStartApi, PatchSessionTokenApi, PostLoginApi, ResetPasswordApi, ResetPasswordEmailCodeVerifyApi, ResetPasswordEmailSendApi, RoleSwappingApi, SendPasscodeEmailApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, SyncLdapUserListApi, TestLdapConnectionApi, UnlockUserApi, UpdateAgentNoteApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdateLdapConfigListApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi } from "Constants/ApiRoute";
+import { AddApplicationListApi, AddLdapConfigListApi, AddPasscodeApi, AddPoliciesListApi, AddRadiusUserListApi, AddUserDataApi, AddUserGroupApi, AddUserWithCsvDataApi, ApprovalUserApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeleteLdapConfigListApi, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DuplicateUserNameCheckApi, FindPortalUsernameApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetGlobalConfigApi, GetLdapConfigListApi, GetOMPASSAuthResultApi, GetPasscodeHistoriesApi, GetPasscodeListApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetRpUserListApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, OMPASSAuthStartApi, PatchSessionTokenApi, PostLoginApi, ResetPasswordApi, ResetPasswordEmailCodeVerifyApi, ResetPasswordEmailSendApi, RoleSwappingApi, RootSignUpRequestApi, SendPasscodeEmailApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, SyncLdapUserListApi, TestLdapConnectionApi, UnlockUserApi, UpdateAgentNoteApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdateLdapConfigListApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi } from "Constants/ApiRoute";
 import { INT_MAX_VALUE } from "Constants/ConstantValues";
 import { convertDashboardDateParamsKSTtoUTC } from "Components/Dashboard/DashboardFunctions";
 import { convertUTCStringToLocalDateString } from "./GlobalFunctions";
@@ -33,7 +33,7 @@ export const GetPasscodeHistoriesFunc = ({
     issuerUsername = "",
     portalUsername = "",
     rpUsername = "",
-    action = undefined
+    actions = []
 }: PasscodeHistoriesParamsType, callback: (data: GetListDataGeneralType<PasscodeHistoryDataType>) => void) => {
     return CustomAxiosGet(GetPasscodeHistoriesApi, (data: GetListDataGeneralType<PasscodeHistoryDataType>) => {
         callback(data)
@@ -46,7 +46,7 @@ export const GetPasscodeHistoriesFunc = ({
         issuerUsername,
         portalUsername,
         rpUsername,
-        action
+        actions
     } as PasscodeHistoriesParamsType)
 }
 
@@ -86,7 +86,8 @@ export const GetApplicationListFunc = ({
     id = "",
     policyName = "",
     name = "",
-    type = "",
+    domain = "",
+    types = [],
     sortBy = "CREATED_AT",
     sortDirection = "DESC"
 }: ApplicationListParamsType, callback: (data: GetListDataGeneralType<ApplicationListDataType>) => void) => {
@@ -96,8 +97,9 @@ export const GetApplicationListFunc = ({
         id,
         policyName,
         name,
+        domain,
         sortBy,
-        type,
+        types,
         sortDirection
     } as ApplicationListParamsType)
 }
@@ -131,6 +133,7 @@ export const GetPoliciesListFunc = ({
     page = 1,
     policyId = "",
     name = "",
+    applicationTypes = [],
     sortBy = "CREATED_AT",
     sortDirection = "DESC"
 }: PoliciesListParamsType, callback: (data: GetListDataGeneralType<PolicyListDataType>) => void) => {
@@ -144,6 +147,7 @@ export const GetPoliciesListFunc = ({
         page,
         policyId,
         name,
+        applicationTypes,
         sortBy,
         sortDirection
     } as PoliciesListParamsType)
@@ -177,8 +181,8 @@ export const GetUserDataListFunc = ({
     name = "",
     email = "",
     phone = "",
-    status = "",
-    role = undefined,
+    statuses = [],
+    roles = [],
     hasGroup = undefined,
     sortBy = "CREATED_AT",
     sortDirection = "DESC"
@@ -189,12 +193,12 @@ export const GetUserDataListFunc = ({
         page_size,
         page,
         userId,
-        role,
+        roles,
         username,
         phone,
         name,
         sortBy,
-        status,
+        statuses,
         email,
         sortDirection,
         hasGroup
@@ -301,7 +305,11 @@ export const GetAllAuthLogDataListFunc = ({
     portalUsername = "",
     rpUsername = "",
     applicationName = "",
-    authenticatorType = undefined,
+    authenticatorTypes = [],
+    applicationTypes = [],
+    policyName = "",
+    authPurposes = [],
+    denyReasons = [],
     processType = undefined,
     sortBy = "CREATED_AT",
     sortDirection = "DESC"
@@ -314,7 +322,11 @@ export const GetAllAuthLogDataListFunc = ({
         rpUsername,
         portalUsername,
         applicationName,
-        authenticatorType,
+        applicationTypes,
+        authenticatorTypes,
+        authPurposes,
+        policyName,
+        denyReasons,
         processType,
         sortBy,
         sortDirection
@@ -327,8 +339,11 @@ export const GetInvalidAuthLogDataListFunc = ({
     rpUsername = "",
     portalUsername = "",
     applicationName = "",
-    authenticatorType = undefined,
-    processType = undefined,
+    applicationTypes = [],
+    policyName = "",
+    authenticatorTypes = [],
+    authPurposes = [],
+    denyReasons = [],
     sortBy = "CREATED_AT",
     sortDirection = "DESC"
 }: AuthLogListParamsType, callback: ((data: GetListDataGeneralType<InvalidAuthLogDataType>) => void)) => {
@@ -340,9 +355,12 @@ export const GetInvalidAuthLogDataListFunc = ({
         rpUsername,
         portalUsername,
         applicationName,
-        authenticatorType,
-        authenticationLogType: 'DENY',
-        processType,
+        applicationTypes,
+        policyName,
+        authenticatorTypes,
+        authenticationLogTypes: ['DENY'],
+        authPurposes,
+        denyReasons,
         sortBy,
         sortDirection
     } as AuthLogListParamsType)
@@ -353,9 +371,11 @@ export const GetValidAuthLogDataListFunc = ({
     page = 1,
     rpUsername = "",
     portalUsername = "",
+    policyName = "",
     applicationName = "",
-    authenticatorType = undefined,
-    processType = undefined,
+    applicationTypes = [],
+    authenticatorTypes = [],
+    authPurposes = [],
     sortBy = "CREATED_AT",
     sortDirection = "DESC"
 }: AuthLogListParamsType, callback: ((data: GetListDataGeneralType<ValidAuthLogDataType>) => void)) => {
@@ -366,10 +386,12 @@ export const GetValidAuthLogDataListFunc = ({
         page,
         rpUsername,
         portalUsername,
+        policyName,
         applicationName,
-        authenticatorType,
-        authenticationLogType: 'ALLOW',
-        processType,
+        applicationTypes,
+        authenticatorTypes,
+        authenticationLogTypes: ['ALLOW'],
+        authPurposes,
         sortBy,
         sortDirection
     } as AuthLogListParamsType)
@@ -379,7 +401,7 @@ export const GetPortalLogDataListFunc = ({
     page_size = 10,
     page = 1,
     username = "",
-    httpMethod = undefined,
+    httpMethods = [],
     apiUri = "",
     sortBy = "CREATED_AT",
     sortDirection = "DESC"
@@ -390,7 +412,7 @@ export const GetPortalLogDataListFunc = ({
         page_size,
         page,
         username,
-        httpMethod,
+        httpMethods,
         apiUri,
         sortBy,
         sortDirection
@@ -431,7 +453,7 @@ export const GetAgentInstallerListFunc = (fileType: UploadFileTypes, {
     } as AgentInstallerListParamsType)
 }
 
-export const UploadAgentInstallerFunc = (params: AgentInstallerUploadParamsType, callback: () => void) => {
+export const UploadAgentInstallerFunc = (params: AgentInstallerUploadParamsType, callback: (data: AgentInstallerDataType) => void) => {
     return CustomAxiosPost(UploadAgentInstallerApi, callback, params, {
         headers: {
             'Content-Type': 'multipart/form-data',
@@ -467,6 +489,10 @@ export const UpdatePortalSettingsDataFunc = (params: UpdatePortalSettingsDataTyp
 
 export const SignUpRequestFunc = (params: UserDataAddLocalValuesType, callback: () => void) => {
     return CustomAxiosPost(SignUpRequestApi, callback, params)
+}
+
+export const RootSignUpRequestFunc = (params: RootUserDataAddLocalValuesType, callback: () => void) => {
+    return CustomAxiosPost(RootSignUpRequestApi, callback, params)
 }
 
 export const SignUpVerificationCodeSendFunc = ({
@@ -604,6 +630,11 @@ export const GetRpUsersListFunc = ({
     sortDirection = "DESC",
     applicationId = "",
     portalUsername = "",
+    portalName = "",
+    pcName = "",
+    isPasscodeCheckEnabled = [],
+    lastLoggedInAuthenticator = [],
+    windowsAgentVersion = "",
     rpUsername = "",
     groupName = ""
 }: RpUsersListParamsType, callback: ((data: GetListDataGeneralType<RpUserListDataType>) => void)) => {
@@ -615,6 +646,11 @@ export const GetRpUsersListFunc = ({
         sortDirection,
         applicationId,
         portalUsername,
+        portalName,
+        pcName,
+        lastLoggedInAuthenticator,
+        isPasscodeCheckEnabled,
+        windowsAgentVersion,
         rpUsername,
         groupName
     } as RpUsersListParamsType)

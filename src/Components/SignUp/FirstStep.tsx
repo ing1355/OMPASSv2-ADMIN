@@ -29,9 +29,7 @@ const FirstStep = ({ checkedChange, children }: FirstStepProps) => {
         { id: 1, name: "agreeService", isChecked: false },
         { id: 2, name: "agreePrivacyPolicy", isChecked: false },
     ]);
-    const { lang } = useSelector((state: ReduxStateType) => ({
-        lang: state.lang,
-    }));
+    const lang = useSelector((state: ReduxStateType) => state.lang!);
     const navigate = useNavigate()
 
     const AgreePolicyList = (isService: boolean, number: number, count: number, innerNumber?: number[], innerCount?: number[]) => {

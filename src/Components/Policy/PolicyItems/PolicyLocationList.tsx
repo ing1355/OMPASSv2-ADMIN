@@ -10,7 +10,7 @@ import locationEditIcon from '../../../assets/locationEditIcon.png';
 import locationEditIconHover from '../../../assets/locationEditIconHover.png';
 import locationIcon from '../../../assets/locationIcon.png'
 import locationIconHover from '../../../assets/locationIconHover.png'
-import { APIProvider, Map, Marker, MapControl, ControlPosition } from '@vis.gl/react-google-maps';
+import { APIProvider, Map, MapControl, ControlPosition, AdvancedMarker } from '@vis.gl/react-google-maps';
 import { Circle } from "./GoogleCircle"
 import { useEffect, useState } from "react"
 import Button from "Components/CommonCustomComponents/Button"
@@ -26,9 +26,7 @@ const PolicyLocationList = ({ value={
 }, onChange, dataInit, authenticators, setSureChange }: PolicyItemsPropsType<LocationPolicyType> & {
     setSureChange: SetStateType<'LOCATION' | AuthenticatorPolicyType | null>
 }) => {
-    const { globalDatas } = useSelector((state: ReduxStateType) => ({
-        globalDatas: state.globalDatas
-    }));
+    const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas);
     const [currentLocation, setCurrentLocation] = useState<google.maps.LatLngLiteral>({ lat: 36.713889964770544, lng: 127.88793971566751 })
     const [currentRadius, setCurrentRadius] = useState('1')
     const [currentLocationName, setCurrentLocationName] = useState('')
@@ -85,6 +83,7 @@ const PolicyLocationList = ({ value={
                     <div className="policy-input-map-container">
                         <div className="map-layout">
                             {globalDatas?.googleApiKey ? <APIProvider apiKey={globalDatas?.googleApiKey!} onLoad={() => {
+                                console.log(globalDatas)
                                 navigator.geolocation.getCurrentPosition(function (position) {
                                     setCurrentLocation({
                                         lat: position.coords.latitude,
@@ -137,11 +136,11 @@ const PolicyLocationList = ({ value={
                                                 console.log('현재 위치 획득 실패!', err)
                                                 switch (err.code) {
                                                     case err.PERMISSION_DENIED:
-                                                        message.error(formatMessage({id: 'LOCATION_PERMISSION_DENY_MSG'}))
+                                                        message.error(formatMessage({id:'LOCATION_PERMISSION_DENY_MSG'}))
                                                         break;
                                                     case err.POSITION_UNAVAILABLE:
                                                     case err.TIMEOUT:
-                                                        message.error(formatMessage({id: 'LOCATION_GET_TIMEOUT_MSG'}))
+                                                        message.error(formatMessage({id:'LOCATION_GET_TIMEOUT_MSG'}))
                                                         break;
                                                 }
                                             }, {
@@ -151,7 +150,7 @@ const PolicyLocationList = ({ value={
                                             <img src={locationIcon} />
                                         </div>
                                     </MapControl>
-                                    <Marker position={modifyLocationIndex === -1 ? currentLocation : {
+                                    <AdvancedMarker position={modifyLocationIndex === -1 ? currentLocation : {
                                         lat: modifyLocationTemp.coordinate.latitude,
                                         lng: modifyLocationTemp.coordinate.longitude
                                     }} />
@@ -212,9 +211,9 @@ const PolicyLocationList = ({ value={
                         </div>
                         <div className="current-location-input-row fourth">
                             <Button className="st3" disabled={modifyLocationIndex !== -1} onClick={() => {
-                                if (!currentRadius) return message.error(formatMessage({id: 'LOCATION_RADIUS_NEED_VALUE_MSG'}))
-                                if (!currentLocationName) return message.error(formatMessage({id: 'LOCATION_NAME_REQUIRED_MSG'}))
-                                if (locations.find(_ => _.alias === currentLocationName)) return message.error(formatMessage({id: 'LOCATION_NAME_ALREADY_EXIST_MSG'}))
+                                if (!currentRadius) return message.error(formatMessage({id:'LOCATION_RADIUS_NEED_VALUE_MSG'}))
+                                if (!currentLocationName) return message.error(formatMessage({id:'LOCATION_NAME_REQUIRED_MSG'}))
+                                if (locations.find(_ => _.alias === currentLocationName)) return message.error(formatMessage({id:'LOCATION_NAME_ALREADY_EXIST_MSG'}))
                                 setLocationDatas([{
                                     alias: currentLocationName,
                                     radius: parseInt(currentRadius),

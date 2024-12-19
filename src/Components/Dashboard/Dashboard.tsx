@@ -56,7 +56,7 @@ const Dashboard = () => {
         paddingTop: 0,
         paddingBottom: 0
     }}>
-        <ContentsHeader title="test" subTitle="DASHBOARD_TITLE" contentStyle={{
+        <ContentsHeader title="DASHBOARD_TITLE" subTitle="DASHBOARD_TITLE" contentStyle={{
             marginBottom: 0,
             paddingTop: 0
         }} className="dashboard" noBack>

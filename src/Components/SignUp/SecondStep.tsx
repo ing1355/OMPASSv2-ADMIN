@@ -1,4 +1,4 @@
-import { DuplicateUserNameCheckFunc, SignUpRequestFunc, SignUpVerificationCodeSendFunc, SignUpVerificationCodeVerifyFunc } from "Functions/ApiFunctions";
+import { DuplicateUserNameCheckFunc, RootSignUpRequestFunc, SignUpRequestFunc, SignUpVerificationCodeSendFunc, SignUpVerificationCodeVerifyFunc } from "Functions/ApiFunctions";
 import { nameRegex } from "Components/CommonCustomComponents/CommonRegex";
 import { autoHypenPhoneFun } from "Functions/GlobalFunctions";
 import Button from "Components/CommonCustomComponents/Button";
@@ -9,6 +9,7 @@ import { message } from "antd";
 import Input from "Components/CommonCustomComponents/Input";
 import RequiredLabel from "Components/CommonCustomComponents/RequiredLabel";
 import { isDev } from "Constants/ConstantValues";
+import { useSelector } from "react-redux";
 
 const InputRow = ({ label, children, required }: PropsWithChildren<{
     label: string
@@ -25,7 +26,11 @@ const InputRow = ({ label, children, required }: PropsWithChildren<{
     </div>
 }
 
-const SecondStep = () => {
+const SecondStep = ({completeCallback}: {
+    completeCallback: () => void
+}) => {
+    const lang = useSelector((state: ReduxStateType) => state.lang!);
+    const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const [isIdAlert, setIsIdAlert] = useState(true)
     const [isPasswordAlert, setIsPasswordAlert] = useState(true)
     const [isPasswordConfirmAlert, setIsPasswordConfirmAlert] = useState(true)
@@ -45,8 +50,17 @@ const SecondStep = () => {
     const [inputPhone, setInputPhone] = useState('')
     const [inputEmail, setInputEmail] = useState('')
     const [mailCount, setMailCount] = useState(0)
+    const [rootConfirm, setRootConfirm] = useState(false)
 
     const [mailSendLoading, setMailSendLoading] = useState(false)
+
+    const [rootQuestion1, setRootQuestion1] = useState('')
+    const [rootQuestion2, setRootQuestion2] = useState('')
+    const [rootQuestion3, setRootQuestion3] = useState('')
+
+    const rootQuestionRef1 = useRef<HTMLInputElement>()
+    const rootQuestionRef2 = useRef<HTMLInputElement>()
+    const rootQuestionRef3 = useRef<HTMLInputElement>()
 
     const usernameRef = useRef<HTMLInputElement>(null)
     const passwordRef = useRef<HTMLInputElement>(null)
@@ -87,8 +101,77 @@ const SecondStep = () => {
         }
     }, [])
 
+    const _completeCallback = () => {
+        completeCallback()
+        message.success(formatMessage({ id: 'SUCCESS_REGISTER_MSG' }));
+    }
+
     return <div className="signup-content second">
-        <form
+        {rootConfirm ? <>
+            {
+                subdomainInfo.securityQuestion.questions.map((_, ind) => <InputRow key={ind} label={_} required>
+                <Input
+                    className='st1'
+                    required
+                    ref={ind === 0 ? rootQuestionRef1 : ind === 1 ? rootQuestionRef2 : rootQuestionRef3}
+                    value={ind === 0 ? rootQuestion1 : ind === 1 ? rootQuestion2 : rootQuestion3}
+                    valueChange={(value, isAlert) => {
+                        if(ind === 0) {
+                            setRootQuestion1(value)
+                        } else if(ind === 1) {
+                            setRootQuestion2(value)
+                        } else {
+                            setRootQuestion3(value)
+                        }
+                    }}
+                />
+            </InputRow>)
+            }
+            <Button
+                type={subdomainInfo.securityQuestion.isRootAdminSignupComplete ? 'submit' : 'button'}
+                className={'st3 agree-button signup-complete'}
+                onClick={() => {
+                    RootSignUpRequestFunc({
+                        name: {
+                            firstName: inputName1,
+                            lastName: inputName2
+                        },
+                        password: inputPassword,
+                        username: inputUsername,
+                        email: inputEmail,
+                        phone: inputPhone,
+                        role: 'ROOT',
+                        securityQnas: [
+                            {
+                                question: subdomainInfo.securityQuestion.questions[0],
+                                answer: rootQuestion1
+                            },
+                            {
+                                question: subdomainInfo.securityQuestion.questions[1],
+                                answer: rootQuestion2
+                            },
+                            {
+                                question: subdomainInfo.securityQuestion.questions[2],
+                                answer: rootQuestion3
+                            }
+                        ]
+                    }, () => {
+                        _completeCallback()
+                    })
+                }}
+            >
+                <FormattedMessage id='SIGN_UP' />
+            </Button>
+            <Button
+                className={'st6 agree-button signup-complete'}
+                onClick={() => {
+                    navigate('/', {
+                        replace: true
+                    })
+                }}
+            ><FormattedMessage id='GO_BACK' />
+            </Button>
+        </> : <form
             onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
                 e.preventDefault();
                 if (isIdAlert) {
@@ -113,13 +196,14 @@ const SecondStep = () => {
                     return emailRef.current?.focus()
                 }
                 if (!emailCodeSend) {
-                    return message.error(formatMessage({id: 'SEND_CODE_NEED_EMAIL_SEND_FIRST'}))
+                    return message.error(formatMessage({ id: 'SEND_CODE_NEED_EMAIL_SEND_FIRST' }))
                 }
                 if (!emailVerify) {
                     codeRef.current?.focus()
-                    return message.error(formatMessage({id: 'NEED_CODE_VERIFY_MSG'}))
+                    return message.error(formatMessage({ id: 'NEED_CODE_VERIFY_MSG' }))
                 }
                 if (inputUsername && inputName1 && inputName2 && inputEmail && inputPassword) {
+                    if(!subdomainInfo.securityQuestion.isRootAdminSignupComplete) return setRootConfirm(true)
                     SignUpRequestFunc({
                         name: {
                             firstName: inputName1,
@@ -131,12 +215,7 @@ const SecondStep = () => {
                         phone: inputPhone,
                         role: 'USER',
                     }, () => {
-                        message.success(formatMessage({ id: 'SUCCESS_REGISTER' }));
-                        navigate('/', {
-                            replace: true
-                        });
-                    }).catch(() => {
-                        message.error(formatMessage({ id: 'FAIL_REGISTER' }));
+                        _completeCallback()
                     })
                 } else {
                     message.error(formatMessage({ id: 'PLEASE_ENTER_ALL_THE_ITEMS' }));
@@ -214,7 +293,7 @@ const SecondStep = () => {
                     }}
                 />
             </InputRow>
-            <InputRow label="FIRST_NAME" required>
+            <InputRow label={lang === 'KR' ? "LAST_NAME" : "FIRST_NAME"} required>
                 <Input
                     className='st1'
                     required
@@ -224,17 +303,22 @@ const SecondStep = () => {
                     rules={[
                         {
                             regExp: nameRegex,
-                            msg: <FormattedMessage id="FIRST_NAME_CHECK" />
+                            msg: <FormattedMessage id={lang === 'KR' ? "LAST_NAME_CHECK" : "FIRST_NAME_CHECK"} />
                         }
                     ]}
-                    value={inputName1}
+                    value={lang === 'KR' ? inputName2 : inputName1}
                     valueChange={(value, isAlert) => {
-                        setInputName1(value)
-                        setIsNameAlert1(isAlert || false)
+                        if(lang === 'KR') {
+                            setInputName2(value)
+                            setIsNameAlert2(isAlert || false)
+                        } else {
+                            setInputName1(value)
+                            setIsNameAlert1(isAlert || false)
+                        }
                     }}
                 />
             </InputRow>
-            <InputRow label="LAST_NAME" required>
+            <InputRow label={lang === 'KR' ? "FIRST_NAME" : "LAST_NAME"} required>
                 <Input
                     className='st1'
                     required
@@ -243,14 +327,19 @@ const SecondStep = () => {
                     rules={[
                         {
                             regExp: nameRegex,
-                            msg: <FormattedMessage id="LAST_NAME_CHECK" />
+                            msg: <FormattedMessage id={lang === 'KR' ? "FIRST_NAME_CHECK" : "LAST_NAME_CHECK"} />
                         }
                     ]}
-                    value={inputName2}
+                    value={lang === 'KR' ? inputName1 : inputName2}
                     customType="name"
                     valueChange={(value, isAlert) => {
-                        setInputName2(value)
-                        setIsNameAlert2(isAlert || false)
+                        if(lang === 'KR') {
+                            setInputName1(value)
+                            setIsNameAlert1(isAlert || false)
+                        } else {
+                            setInputName2(value)
+                            setIsNameAlert2(isAlert || false)
+                        }
                     }}
                 />
             </InputRow>
@@ -282,7 +371,7 @@ const SecondStep = () => {
                             SignUpVerificationCodeSendFunc({
                                 email: inputEmail
                             }, () => {
-                                message.success(formatMessage({id: 'EMAIL_SEND_FOR_CODE_VERIFY_SUCCESS_MSG'}))
+                                message.success(formatMessage({ id: 'EMAIL_SEND_FOR_CODE_VERIFY_SUCCESS_MSG' }))
                                 mailTimer.current = setInterval(() => {
                                     setMailCount(count => count + 1)
                                     if (mailCountRef.current >= 10) {
@@ -299,7 +388,7 @@ const SecondStep = () => {
                     </Button>
                 </Input>
             </InputRow>
-            <InputRow label="EMAIL_CODE" required>
+            <InputRow label="EMAIL_CODE_LABEL" required>
                 <Input
                     className='st1 sign-up-readonly'
                     required
@@ -325,7 +414,7 @@ const SecondStep = () => {
                                 code: verifyCode
                             }, () => {
                                 setEmailVerify(true)
-                                message.success(formatMessage({id: 'EMAIL_CODE_VERIFY_SUCCESS_MSG'}))
+                                message.success(formatMessage({ id: 'EMAIL_CODE_VERIFY_SUCCESS_MSG' }))
                             })
                         }}
                     ><FormattedMessage id='EMAIL_CODE_VERIFY' />
@@ -350,24 +439,21 @@ const SecondStep = () => {
                 />
             </InputRow>
             <Button
-                type='submit'
-                style={{
-                    marginTop: '24px'
-                }}
+                type={'submit'}
                 className={'st3 agree-button signup-complete'}
-            ><FormattedMessage id='SIGN_UP' />
+            >
+                {subdomainInfo.securityQuestion.isRootAdminSignupComplete ? <FormattedMessage id='SIGN_UP' /> : <FormattedMessage id="GO_TO_NEXT_STEP_LABEL" />}
             </Button>
             <Button
-                type='submit'
                 className={'st6 agree-button signup-complete'}
                 onClick={() => {
-                    navigate('/' ,{
+                    navigate('/', {
                         replace: true
                     })
                 }}
             ><FormattedMessage id='GO_BACK' />
             </Button>
-        </form>
+        </form>}
     </div>
 }
 

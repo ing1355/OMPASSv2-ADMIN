@@ -62,6 +62,7 @@
     font-size: 1rem;
     letter-spacing: 0px;
     max-width: 160px;
+    word-break: break-word;
 }
 
 .user-detail-info-device-info-content-item>div {

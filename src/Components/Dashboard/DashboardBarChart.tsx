@@ -77,7 +77,7 @@ const DashBoardBarChart = ({ datas, keys, indexKey, customColor, isSum }: DashBo
                 tickSize: 0,
                 tickPadding: 5,
                 tickRotation: 0,
-                legend: formatMessage({id: 'DASHBOARD_AXIS_LEFT_AUTH_NUM_LABEL'}),
+                legend: formatMessage({id:'DASHBOARD_AXIS_LEFT_AUTH_NUM_LABEL'}),
                 legendPosition: 'middle',
                 legendOffset: -40,
                 truncateTickAt: 0,

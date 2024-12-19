@@ -6,10 +6,12 @@ import { convertDaysByDate, convertHourRangeByDate } from "./DashboardFunctions"
 import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions";
 import { FormattedMessage } from "react-intl";
 import DashBoardBarChart from "./DashboardBarChart";
+import { useSelector } from "react-redux";
 
 const DashboardAllAuthSum = ({ applications }: {
   applications: ApplicationListDataType[]
 }) => {
+  const lang = useSelector((state: ReduxStateType) => state.lang!);
   const [params, setParams] = useState(dashboardDateInitialValue())
   const [datas, setDatas] = useState<{ name: string, count: number }[]>([])
   
@@ -24,7 +26,7 @@ const DashboardAllAuthSum = ({ applications }: {
         }))
       } else {
         setDatas(data.map((_, ind, arr) => ({
-          name: convertHourRangeByDate(convertUTCStringToLocalDateString(_.startDate), convertUTCStringToLocalDateString(_.endDate), ind === arr.length - 1),
+          name: convertHourRangeByDate(convertUTCStringToLocalDateString(_.startDate), convertUTCStringToLocalDateString(_.endDate), ind === arr.length - 1, lang),
           count: _.count
         })))
       }

@@ -1,13 +1,20 @@
 /* Common */
 
+.login-footer-btns-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
 .create-account-input {
   width: 496px;
   height: 50px;
 }
 
 .login-agent-download-button {
-  height: 42px;
-  pointer-events: none;
+  height: 34px;
 }
 
 .login-container {
@@ -17,7 +24,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 36px;
+  gap: 24px;
 }
 
 .login-form-header>img {
@@ -161,9 +168,7 @@
 }
 
 .login-footer {
-  flex-direction: column;
   text-align: center;
-  margin: 1% 0;
 }
 
 .login-footer-locale-img {

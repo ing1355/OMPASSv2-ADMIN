@@ -7,9 +7,7 @@ import { message } from "antd";
 const ApplicationAgentDownload = ({ type }: {
     type: ApplicationDataType['type']
 }) => {
-    const { subdomainInfo } = useSelector((state: ReduxStateType) => ({
-        subdomainInfo: state.subdomainInfo!
-    }));
+    const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const { formatMessage } = useIntl()
     const needAgent = (['WINDOWS_LOGIN', 'LINUX_LOGIN', 'RADIUS'] as ApplicationDataType['type'][]).includes(type)
     const getLabelKeyByType = () => {
@@ -34,7 +32,7 @@ const ApplicationAgentDownload = ({ type }: {
         {needAgent && <a href={getDownloadUrlByType()} download onClick={e => {
             if(!getDownloadUrlByType()) {
                 e.preventDefault()
-                message.error(formatMessage({id: 'NO_DOWNLOAD_URL_MSG'}))
+                message.error(formatMessage({id:'NO_DOWNLOAD_URL_MSG'}))
             }
         }}>
             <Button className="st11" icon={downloadIcon}>

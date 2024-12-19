@@ -1,4 +1,4 @@
-import { message, Select } from "antd"
+import { Select } from "antd"
 import { INT_MAX_VALUE } from "Constants/ConstantValues"
 import { GetUserDataListFunc } from "Functions/ApiFunctions"
 import { useLayoutEffect, useMemo, useState } from "react"
@@ -21,15 +21,9 @@ const CustomAdminSelect = ({ data, onChange, hasIncludeWithdrawal }: CustomAdmin
         GetUserDataListFunc({
             page: 0,
             page_size: INT_MAX_VALUE,
-            role: 'ADMIN'
+            roles: ['ADMIN', 'ROOT']
         }, ({ results, totalCount }) => {
-            GetUserDataListFunc({
-                page: 0,
-                page_size: INT_MAX_VALUE,
-                role: 'ROOT'
-            }, (root) => {
-                setAdminDatas(root.results.concat(results))
-            })
+            setAdminDatas(results)
         })
     }
 

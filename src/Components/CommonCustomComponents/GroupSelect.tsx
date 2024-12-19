@@ -12,9 +12,7 @@ type GroupSelectProps = {
 }
 
 const GroupSelect = ({ selectedGroup, setSelectedGroup, needSelect }: GroupSelectProps) => {
-    const { lang } = useSelector((state: ReduxStateType) => ({
-        lang: state.lang!
-    }));
+    const lang = useSelector((state: ReduxStateType) => state.lang!);
     const [groupsData, setGroupsData] = useState<UserGroupListDataType[]>([])
 
     useLayoutEffect(() => {

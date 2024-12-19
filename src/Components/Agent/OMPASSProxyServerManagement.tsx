@@ -8,16 +8,12 @@ import { CurrentAgentVersionChangeFunc, DeleteAgentInstallerFunc, GetAgentInstal
 import { Popconfirm, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { convertUTCStringToLocalDateString } from 'Functions/GlobalFunctions';
 import Button from 'Components/CommonCustomComponents/Button';
-import { subdomainInfoChange } from 'Redux/actions/subdomainInfoChange';
 
 const OMPASSProxyServerManagement = () => {
-    const { subdomainInfo } = useSelector((state: ReduxStateType) => ({
-        subdomainInfo: state.subdomainInfo!
-    }));
     const [openFileDelete, setOpenFileDelete] = useState(-1);
     const [deleteHover, setDeleteHover] = useState(-1)
     const [dataLoading, setDataLoading] = useState(false)

@@ -81,11 +81,9 @@ const PasscodeAddBtn = ({ added, onClick }: {
 }
 
 const UserDetail = ({ }) => {
-    const { userInfo, globalDatas } = useSelector((state: ReduxStateType) => ({
-        lang: state.lang,
-        userInfo: state.userInfo!,
-        globalDatas: state.globalDatas,
-    }));
+    const lang = useSelector((state: ReduxStateType) => state.lang!);
+      const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
+      const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas);
     const [passcodeHover, setPasscodeHover] = useState("")
     const [duplicateIdCheck, setDuplicateIdCheck] = useState(false)
     const [usernameAlert, setUsernameAlert] = useState(false)
@@ -345,7 +343,7 @@ const UserDetail = ({ }) => {
                                         navigate(-1)
                                     })
                                 } else {
-                                    if (modifyValues.hasPassword && (modifyValues.password !== modifyValues.passwordConfirm)) return message.error(formatMessage({id: 'PASSWORD_CONFIRM_CHECK'}))
+                                    if (modifyValues.hasPassword && (modifyValues.password !== modifyValues.passwordConfirm)) return message.error(formatMessage({id:'PASSWORD_CONFIRM_CHECK'}))
                                     UpdateUserDataFunc(uuid!, modifyValues, (data) => {
                                         setUserData(data)
                                         message.success(formatMessage({ id: 'USER_MODIFY_SUCCESS_MSG' }))
@@ -406,7 +404,7 @@ const UserDetail = ({ }) => {
                                     })
                                 }
                             }} type="password" customType="password" noGap />
-                            <Input containerClassName='has-password-confirm' className='st1' checked={!targetValue.hasPassword} type="checkbox" onChange={e => {
+                            {!isSelf && <Input containerClassName='has-password-confirm' className='st1' checked={!targetValue.hasPassword} type="checkbox" onChange={e => {
                                 if (isAdd) {
                                     setAddValues({
                                         ...addValues,
@@ -418,7 +416,7 @@ const UserDetail = ({ }) => {
                                         hasPassword: !e.currentTarget.checked
                                     })
                                 }
-                            }} label={<FormattedMessage id="PASSWORD_RANDOM_GENERATE_LABEL" />} noGap />
+                            }} label={<FormattedMessage id="PASSWORD_RANDOM_GENERATE_LABEL" />} noGap />}
                         </UserInfoInputrow>
                         <UserInfoInputrow title='PASSWORD_CONFIRM' required>
                             <Input className='st1' value={targetValue.passwordConfirm} disabled={!targetValue.hasPassword} placeholder={formatMessage({ id: 'PASSWORD_CONFIRM' })} valueChange={value => {
@@ -441,13 +439,13 @@ const UserDetail = ({ }) => {
                             ]} maxLength={16} noGap />
                         </UserInfoInputrow></>}
                     {(isModify || isAdd) ? <UserInfoInputrow title="NAME" required>
-                        <Input className='st1' value={targetValue.name.firstName} placeholder={formatMessage({ id: 'FIRST_NAME_PLACEHOLDER' })} onChange={e => {
+                        <Input className='st1' value={lang === 'KR' ? targetValue.name.lastName : targetValue.name.firstName} placeholder={formatMessage({ id: lang === 'KR' ? 'LAST_NAME_PLACEHOLDER' : 'FIRST_NAME_PLACEHOLDER' })} onChange={e => {
                             if (isAdd) {
                                 setAddValues({
                                     ...addValues,
                                     name: {
                                         ...addValues.name,
-                                        firstName: e.target.value
+                                        [lang === 'KR' ? "lastName" : "firstName"]: e.target.value
                                     }
                                 })
                             } else {
@@ -455,18 +453,18 @@ const UserDetail = ({ }) => {
                                     ...modifyValues,
                                     name: {
                                         ...modifyValues.name,
-                                        firstName: e.target.value
+                                        [lang === 'KR' ? "lastName" : "firstName"]: e.target.value
                                     }
                                 })
                             }
                         }} customType='name' noGap />
-                        <Input className='st1' value={targetValue.name.lastName} placeholder={formatMessage({ id: 'LAST_NAME_PLACEHOLDER' })} onChange={e => {
+                        <Input className='st1' value={lang === 'KR' ? targetValue.name.firstName : targetValue.name.lastName} placeholder={formatMessage({ id: lang === 'KR' ? 'FIRST_NAME_PLACEHOLDER' : 'LAST_NAME_PLACEHOLDER' })} onChange={e => {
                             if (isAdd) {
                                 setAddValues({
                                     ...addValues,
                                     name: {
                                         ...addValues.name,
-                                        lastName: e.target.value
+                                        [lang === 'KR' ? "firstName" : "lastName"]: e.target.value
                                     }
                                 })
                             } else {
@@ -474,7 +472,7 @@ const UserDetail = ({ }) => {
                                     ...modifyValues,
                                     name: {
                                         ...modifyValues.name,
-                                        lastName: e.target.value
+                                        [lang === 'KR' ? "firstName" : "lastName"]: e.target.value
                                     }
                                 })
                             }
@@ -548,7 +546,7 @@ const UserDetail = ({ }) => {
                     {
                         _.application.type === 'RADIUS' && !_.authenticationInfo.createdAt && <RadiusDetailItem appId={_.application.id} onComplete={() => {
                             GetDatas()
-                            message.success(formatMessage({id: 'RADIUS_OMPASS_REGISTRATION_SUCCESS_MSG'}))
+                            message.success(formatMessage({id:'RADIUS_OMPASS_REGISTRATION_SUCCESS_MSG'}))
                         }} />
                     }
                     <div className="user-detail-header" onClick={() => {
@@ -619,7 +617,7 @@ const UserDetail = ({ }) => {
                                     {userInfo.role !== "USER" && canModify && <PasscodeAddBtn added={_.authenticationInfo.authenticators.some(__ => __.type === 'PASSCODE')} onClick={() => {
                                         if (_.authenticationInfo.authenticators.some(__ => __.type === 'PASSCODE')) {
                                             SendPasscodeEmailFunc(passcodeData(_.authenticationInfo.id)[0].id, () => {
-                                                message.success(formatMessage({id: 'PASSCODE_RE_SEND_SUCCESS_MSG'}))
+                                                message.success(formatMessage({id:'PASSCODE_RE_SEND_SUCCESS_MSG'}))
                                             })
                                         } else {
                                             setAddPasscode(_.authenticationInfo.id)
@@ -649,7 +647,7 @@ const UserDetail = ({ }) => {
             RoleSwappingFunc(token, () => {
                 dispatch(userInfoClear())
                 setAuthView(false)
-                message.success(formatMessage({id: 'USER_AUTHORITY_SUCCESSION_SUCCESS_MSG'}))
+                message.success(formatMessage({id:'USER_AUTHORITY_SUCCESSION_SUCCESS_MSG'}))
             })
         }} userData={userData} />
         <CustomModal

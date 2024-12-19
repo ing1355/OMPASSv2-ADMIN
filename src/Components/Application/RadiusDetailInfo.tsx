@@ -14,7 +14,7 @@ type RadiusDetailInfoProps = {
 const RadiusDetailInfo = ({ data }: RadiusDetailInfoProps) => {
     const { host, secretKey, authenticationMethod, authenticationPort, authenticatorAttribute, accountingPort } = data || {}
     const { formatMessage } = useIntl()
-    const noRadiusConnectedMsg = formatMessage({id: 'RADIUS_NO_CONNECTED_MSG'})
+    const noRadiusConnectedMsg = formatMessage({id:'RADIUS_NO_CONNECTED_MSG'})
     const navigate = useNavigate()
     const uuid = useParams().uuid
     
@@ -24,7 +24,7 @@ const RadiusDetailInfo = ({ data }: RadiusDetailInfoProps) => {
         }} buttons={<>
             <Button className="st3" onClick={() => {
                 if(!data) {
-                    message.error(formatMessage({id: 'NO_CONNECTED_RADIUS_APPLICATION_MSG'}))
+                    message.error(formatMessage({id:'NO_CONNECTED_RADIUS_APPLICATION_MSG'}))
                 } else {
                     navigate(`/Applications/detail/${uuid}/radius`)
                 }

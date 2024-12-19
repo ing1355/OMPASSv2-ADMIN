@@ -2,13 +2,23 @@ import React, { CSSProperties, useEffect, useMemo, useState } from "react"
 import './CustomTable.css'
 import { Pagination, PaginationProps } from "antd"
 import searchIcon from './../../assets/searchIcon.png'
+// import filterIcon from './../../assets/filterIcon.png'
+// import filterDefaultIcon from './../../assets/filterDefaultIcon.png'
+import filterIcon from './../../assets/filterIcon.svg'
+import filterDefaultIcon from './../../assets/filterDefaultIcon.svg'
 import resetIcon from './../../assets/resetIconWhite.png'
 import Button from "./Button"
 import CustomSelect from "./CustomSelect"
 import Input from "./Input"
 import { userSelectPageSize } from "Constants/ConstantValues"
 import { FormattedMessage, useIntl } from "react-intl"
-import { useLocation, useNavigate } from "react-router"
+import { useLocation } from "react-router"
+import CustomDropdown from "./CustomDropdown"
+
+type FilterOptionType = {
+    key: string
+    value: any | any[]
+}[]
 
 type CustomTableButtonType = {
     icon?: string
@@ -16,17 +26,6 @@ type CustomTableButtonType = {
     label: string | React.ReactNode
     style?: string
     callback?: (data: any) => void
-}
-
-type SearchOptionType = {
-    key: string
-    type: 'string' | 'select'
-    label?: React.ReactNode
-    needSelect?: boolean
-    selectOptions?: {
-        key: string
-        label: string | React.ReactNode
-    }[]
 }
 
 type CustomTableProps<T extends {
@@ -49,7 +48,7 @@ type CustomTableProps<T extends {
     totalCount?: number
     hover?: boolean
     noSearch?: boolean
-    searchOptions?: SearchOptionType[]
+    searchOptions?: TableSearchOptionType[]
     onPageChange?: (page: number, size: number) => void
     onSearchChange?: (val: CustomTableSearchParams) => void
     addBtn?: CustomTableButtonType
@@ -86,10 +85,15 @@ const CustomTable = <T extends {
     refresh,
     isNotDataInit,
     hover }: CustomTableProps<T>) => {
-        
+
     const [pageNum, setPageNum] = useState(0)
     const [tableSize, setTableSize] = useState<number>(userSelectPageSize());
     const [searchType, setSearchType] = useState((searchOptions && searchOptions[0].key) || "")
+    const [filterValues, setFilterValues] = useState<FilterOptionType>(columns.filter(_ => _.filterOption).map(_ => ({
+        key: _.filterKey || _.key,
+        value: []
+    })))
+    
     const [searchValue, setSearchValue] = useState('')
     const [hoverId, setHoverId] = useState(-1)
     const [_refresh, setRefresh] = useState(false)
@@ -98,29 +102,30 @@ const CustomTable = <T extends {
     const { formatMessage } = useIntl()
 
     const searchTarget = useMemo(() => {
-        if(searchOptions) {
+        if (searchOptions) {
             const target = searchOptions.find(_ => _.key === searchType)
             return target
-        } 
+        }
         return null
-    },[searchType])
+    }, [searchType])
 
-    const searchCallback = (page: number, size: number, isReset?: boolean) => {
-        if(isNotDataInit && !isInit) {
+    const searchCallback = (page: number, size: number, filter?: FilterOptionType, isReset?: boolean) => {
+        if (isNotDataInit && !isInit) {
             return setIsInit(true)
         }
-        if(page === 1) window.history.replaceState("", "", location.pathname)
+        if (page === 1) window.history.replaceState("", "", location.pathname)
         if (onSearchChange) onSearchChange({
             type: isReset ? searchOptions![0].key : searchType,
             value: isReset ? "" : searchValue,
             page,
-            size
+            size,
+            filterOptions: filter || filterValues
         })
     }
-    
+
     const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
         window.history.replaceState("", "", `${location.pathname}#${pageNumber}`)
-        if(tableSize !== pageSizeOptions) {
+        if (tableSize !== pageSizeOptions) {
             setPageNum(1);
             setTableSize(pageSizeOptions);
             searchCallback(1, pageSizeOptions)
@@ -130,43 +135,43 @@ const CustomTable = <T extends {
             searchCallback(pageNumber, pageSizeOptions)
         }
         localStorage.setItem('user_select_size', pageSizeOptions.toString())
-        if(onPageChange) onPageChange(pageNumber, pageSizeOptions)
+        if (onPageChange) onPageChange(pageNumber, pageSizeOptions)
     };
 
     useEffect(() => {
-        if(refresh) {
+        if (refresh) {
             setRefresh(true)
         }
-    },[refresh])
+    }, [refresh])
 
     useEffect(() => {
-        if(_refresh) {
+        if (_refresh) {
             setRefresh(false)
             searchCallback(pageNum, tableSize)
         }
-    },[_refresh])
+    }, [_refresh])
 
     useEffect(() => {
-        if(location.hash) {
-            const num = parseInt(location.hash.replace('#',''))
+        if (location.hash) {
+            const num = parseInt(location.hash.replace('#', ''))
             setPageNum(num)
             searchCallback(num, tableSize)
         } else {
             setPageNum(1)
             searchCallback(1, tableSize)
         }
-    },[location])
+    }, [location])
 
     useEffect(() => {
         setSearchValue('')
     }, [searchType])
-
+    
     useEffect(() => {
-        if(searchTarget && searchTarget.type === 'select' && searchTarget.needSelect) {
+        if (searchTarget && searchTarget.type === 'select' && searchTarget.needSelect) {
             setSearchValue(searchTarget.selectOptions![0].key)
         }
-    },[searchTarget])
-    
+    }, [searchTarget])
+
     return <div>
         <div className={`custom-table-header${(noSearch || !searchOptions) ? ' no-search' : ''}${(noSearch && !addBtn && deleteBtn) ? ' no-margin' : ''}`}>
             {!noSearch && searchOptions && <form onSubmit={e => {
@@ -179,25 +184,25 @@ const CustomTable = <T extends {
                     label: columns.find(__ => _.key === __.key)?.title || _.label
                 }))} value={searchType!} onChange={type => {
                     setSearchType(type)
-                }} needSelect/>
+                }} needSelect />
                 {
-                    searchTarget?.type === 'string' ? <Input containerClassName="table-search-input" className="st1" name="searchValue" value={searchValue} placeholder={formatMessage({id:'TABLE_SEARCH_PLACEHOLDER_LABEL'})} valueChange={value => {
+                    searchTarget?.type === 'string' ? <Input containerClassName="table-search-input" className="st1" name="searchValue" value={searchValue} placeholder={formatMessage({ id: 'TABLE_SEARCH_PLACEHOLDER_LABEL' })} valueChange={value => {
                         setSearchValue(value)
                     }} /> : <CustomSelect value={searchValue} onChange={value => {
                         setSearchValue(value)
-                    }} items={searchTarget?.selectOptions!} needSelect={searchTarget?.needSelect}/>
+                    }} items={searchTarget?.selectOptions!} needSelect={searchTarget?.needSelect} />
                 }
                 <Button className="st3" icon={searchIcon} type="submit">
-                    <FormattedMessage id="SEARCH"/>
+                    <FormattedMessage id="SEARCH" />
                 </Button>
                 <Button className="st4" onClick={() => {
                     setSearchValue("")
                     setSearchType(searchOptions[0].key)
                     setPageNum(1)
                     setTableSize(10)
-                    searchCallback(1, 10, true)
+                    searchCallback(1, 10, undefined, true)
                 }} icon={resetIcon}>
-                    <FormattedMessage id="NORMAL_RESET_LABEL"/>
+                    <FormattedMessage id="NORMAL_RESET_LABEL" />
                 </Button>
             </form>}
             <div className="custom-table-header-buttons">
@@ -226,6 +231,21 @@ const CustomTable = <T extends {
                         }} className={`${onHeaderColClick ? 'pointer' : ''}`}>
                             {/* {_.title instanceof Function ? _.title(datas && datas[ind] && datas[ind][_.key], ind, datas ? datas[ind] : undefined) : _.title} */}
                             {_.title}
+                            {_.filterOption && <CustomDropdown value={filterValues.find(values => values.key === _.filterKey)?.value} multiple onChange={val => {
+                                const result = filterValues.map(fVal => fVal.key === _.filterKey ? ({
+                                    key: fVal.key,
+                                    value: val
+                                }) : fVal)
+                                setFilterValues(result)
+                                searchCallback(pageNum, tableSize, result)
+                            }} items={_.filterOption.map(opt => ({
+                                label: opt.label,
+                                value: opt.value
+                            }))}>
+                                <div className="custom-table-filter-icon">
+                                    <img src={filterValues.find(f => f.key === _.filterKey && f.value.length > 0) ? filterIcon : filterDefaultIcon} />
+                                </div>
+                            </CustomDropdown>}
                         </th>)
                     }
                 </tr>
@@ -273,7 +293,7 @@ const CustomTable = <T extends {
                         <td className="table-no-data" colSpan={columns.length} style={{
                             height: noDataHeight
                         }}>
-                            {loading ? 'loading...' : <FormattedMessage id="NO_DATA_TEXT"/>}
+                            {loading ? 'loading...' : <FormattedMessage id="NO_DATA_TEXT" />}
                         </td>
                     </tr>
                 }

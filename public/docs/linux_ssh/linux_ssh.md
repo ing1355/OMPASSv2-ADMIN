@@ -26,24 +26,32 @@ dpkg -i ompass-pam_2.X.X-X.deb
 ### 설정 옵션
 |키             |필수여부   |설명                                   |
 |---            |---        |---                                    |
-|skey           |필수       |시크릿 키                              |
 |host           |필수       |API 서버 주소                          |
 |clientid       |필수       |클라이언트 아이디                      |
+|skey           |필수       |시크릿 키                              |
 |lang           |필수       |언어설정 (`kr` 또는 `en`)              |
 |passwordless   |읽기전용   |비밀번호 없이 로그인 서버 설정 상태     |
 
 ## 시스템 설정
->PAM 또는 sshd 구성을 변경할 때는 실수로 잠기지 않도록 루트 셸을 열어두는 것이 좋습니다.<br>또한 SSH 로그인으로 테스트하기 전에 PAM 구성이 로컬에서 작동하는지 항상 확인하세요.
+>**PAM 또는 sshd 구성을 변경할 때는 실수로 잠기지 않도록 루트 셸을 열어두는 것이 좋습니다.<br>또한 SSH 로그인으로 테스트하기 전에 PAM 구성이 로컬에서 작동하는지 항상 확인하세요.**
 
-OpenSSH와 함께 사용하려면, `/etc/ssh/sshd_config` 파일에서 **UsePAM** 과 **ChallengeResponseAuthentication** 를 모두 **yes** 로 설정해야 합니다. 
+### SSH 설정
+OpenSSH와 함께 사용하려면, `/etc/ssh/sshd_config` 파일에서 **UsePAM** 과 **ChallengeResponseAuthentication** 를 모두 **yes**로 설정해야 합니다. 
 
 ```sh
 ChallengeResponseAuthentication yes
 UsePAM yes
 ```
-SSH 서비스를 다시 시작하여 변경 내용을 적용하세요.
 
+**KbdInteractiveAuthentication** 이 있는 시스템(예: Ubuntu 22.04) 에서는 **ChallengeResponseAuthentication** 대신 **KbdInteractiveAuthentication**를 **yes**로 설정해야 합니다.
+```sh
+KbdInteractiveAuthentication yes
+UsePAM yes
+```
 
+SSH 서비스를 다시 시작하여 변경 내용을 적용하세요. ```systemctl restart ssh```
+
+### PAM 설정
 Linux 시스템의 PAM 설정 파일 `/etc/pam.d/sshd` 을 수정합니다. 설치된 `/etc/pam.d/sshd.example` 파일을 참고하세요.
 
 수정 전:

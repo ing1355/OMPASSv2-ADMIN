@@ -14,11 +14,11 @@ import CustomModal from 'Components/Modal/CustomModal';
 import { userInfoChange } from 'Redux/actions/userChange';
 import { setStorageAuth } from 'Functions/GlobalFunctions';
 import { sessionCheckChange } from 'Redux/actions/sessionInfoChange';
+import { subdomainInfoChange } from 'Redux/actions/subdomainInfoChange';
 
 const VersionUpload = () => {
-  const { sessionInfo } = useSelector((state: ReduxStateType) => ({
-    sessionInfo: state.sessionInfo!
-  }))
+  const sessionInfo = useSelector((state: ReduxStateType) => state.sessionInfo!);
+  const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
   const [isUploadingFile, setIsUploadingFile] = useState<boolean>(false);
   const [showSession, setShowSession] = useState(false)
   const [inputMemo, setInputMemo] = useState('')
@@ -82,7 +82,23 @@ const VersionUpload = () => {
       // "metaData.version": inputVersion,
       "metaData.note": inputMemo,
       multipartFile: inputFile,
-    }, () => {
+    }, (newData) => {
+      if(!subdomainInfo.windowsAgentUrl && type === 'WINDOWS_AGENT') {
+        dispatch(subdomainInfoChange({
+          ...subdomainInfo,
+          windowsAgentUrl: newData.downloadUrl
+        }))
+      } else if(!subdomainInfo.windowsAgentUrl && type === 'LINUX_PAM') {
+        dispatch(subdomainInfoChange({
+          ...subdomainInfo,
+          linuxPamDownloadUrl: newData.downloadUrl
+        }))
+      } else if(!subdomainInfo.windowsAgentUrl && type === 'OMPASS_PROXY') {
+        dispatch(subdomainInfoChange({
+          ...subdomainInfo,
+          ompassProxyDownloadUrl: newData.downloadUrl
+        }))
+      }
       navigate(-1);
     }).finally(() => {
       setIsUploadingFile(false)

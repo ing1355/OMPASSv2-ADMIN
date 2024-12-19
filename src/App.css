@@ -32,3 +32,8 @@
 .ant-tabs-nav-operations {
   display: none !important;
 }
+
+img {
+  object-fit: contain;
+  height: 100%;
+}

@@ -6,10 +6,12 @@ import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions"
 import { convertDaysByDate, convertHourRangeByDate } from "./DashboardFunctions"
 import { FormattedMessage } from "react-intl"
 import DashBoardBarChart from "./DashboardBarChart"
+import { useSelector } from "react-redux"
 
 const DashboardInvalidAuthSum = ({ applications }: {
     applications: ApplicationListDataType[]
 }) => {
+    const lang = useSelector((state: ReduxStateType) => state.lang!);
     const [params, setParams] = useState(dashboardDateInitialValue())
     const [datas, setDatas] = useState<{ name: string, count: number }[]>([])
 
@@ -24,7 +26,7 @@ const DashboardInvalidAuthSum = ({ applications }: {
                 }))
             } else {
                 setDatas(data.map((_, ind, arr) => ({
-                    name: convertHourRangeByDate(convertUTCStringToLocalDateString(_.startDate), convertUTCStringToLocalDateString(_.endDate), ind === arr.length - 1),
+                    name: convertHourRangeByDate(convertUTCStringToLocalDateString(_.startDate), convertUTCStringToLocalDateString(_.endDate), ind === arr.length - 1, lang),
                     count: _.count
                 })))
             }
@@ -38,11 +40,11 @@ const DashboardInvalidAuthSum = ({ applications }: {
             setDatas([])
         }
     }, [applications, params])
-    
-    return <DashboardCardWithDateSelect title={<FormattedMessage id="DASHBOARD_INVALID_ALL_AUTH_SUM"/>} isCard={false} onChange={(d) => {
+
+    return <DashboardCardWithDateSelect title={<FormattedMessage id="DASHBOARD_INVALID_ALL_AUTH_SUM" />} isCard={false} onChange={(d) => {
         setParams(d)
     }}>
-        <DashBoardBarChart datas={datas} keys={["count"]} indexKey="name" isSum/>
+        <DashBoardBarChart datas={datas} keys={["count"]} indexKey="name" isSum />
     </DashboardCardWithDateSelect>
 }
 

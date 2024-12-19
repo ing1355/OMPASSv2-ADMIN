@@ -1,14 +1,10 @@
 import { FormattedMessage } from "react-intl"
 import './ContentsHeader.css'
 import { CSSProperties, PropsWithChildren, useState } from "react"
-import Button from "Components/CommonCustomComponents/Button"
 import { useNavigate } from "react-router"
 import { useSelector } from "react-redux"
 import backIcon from "../../assets/backIcon.png"
 import backIconHover from "../../assets/backIconHover.png"
-import { message } from "antd"
-import documentIcon from '../../assets/documentIcon.png'
-import documentIconHover from '../../assets/documentIconHover.png'
 
 type ContentsHeaderProps = {
     title?: React.ReactNode
@@ -21,9 +17,7 @@ type ContentsHeaderProps = {
 }
 
 const ContentsHeader = ({ title, subTitle, style, children, contentStyle, className, noBack, docsUrl }: PropsWithChildren<ContentsHeaderProps>) => {
-    const { userInfo } = useSelector((state: ReduxStateType) => ({
-        userInfo: state.userInfo!
-    }));
+    const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     const [backHover, setBackHover] = useState(false)
     const navigate = useNavigate()
     return <div

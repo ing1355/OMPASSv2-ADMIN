@@ -23,21 +23,21 @@ const CustomSelect = ({ items, value, onChange, needSelect, noLabel, style }: Cu
     const selectRef = useRef<HTMLDivElement>(null)
     const scrollRef = useRef<HTMLDivElement>(null)
     const activeRef = useRef(active)
-    
+
     const _items: CustomSelectProps['items'] = needSelect ? items : [{
         key: '',
         label: noLabel || <FormattedMessage id="NO_SELECT_VALUE" />
-    },...items]
+    }, ...items]
     const itemsRef = useRef(_items)
-    
+
     useEffect(() => {
         activeRef.current = active
-    },[active])
+    }, [active])
 
     useEffect(() => {
         itemsRef.current = _items
-    },[_items])
-    
+    }, [_items])
+
     const handleMouseDown = useCallback((event: MouseEvent) => {
         if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
             setShowSelect(false);
@@ -47,25 +47,25 @@ const CustomSelect = ({ items, value, onChange, needSelect, noLabel, style }: Cu
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
         const index = itemsRef.current.findIndex(_ => _.key === activeRef.current)
         let target: CustomSelectItemType | undefined = undefined
-        if(event.key === 'ArrowDown') {
-            if(index < (itemsRef.current.length - 1)) {
+        if (event.key === 'ArrowDown') {
+            if (index < (itemsRef.current.length - 1)) {
                 target = itemsRef.current[index + 1]
             }
-        } else if(event.key === 'ArrowUp') {
-            if(index !== 0) {
+        } else if (event.key === 'ArrowUp') {
+            if (index !== 0) {
                 target = itemsRef.current[index - 1]
             }
-        } else if(event.key === 'Enter') {
+        } else if (event.key === 'Enter') {
             onChange(activeRef.current)
             setShowSelect(false)
         }
-        if(target && !target.disabled) {
+        if (target && !target.disabled) {
             setActive(target.key)
         }
-    },[])
+    }, [])
 
     useEffect(() => {
-        if(showSelect) {
+        if (showSelect) {
             document.addEventListener('mousedown', handleMouseDown);
             document.addEventListener('keydown', handleKeyDown)
             // document.addEventListener
@@ -82,13 +82,18 @@ const CustomSelect = ({ items, value, onChange, needSelect, noLabel, style }: Cu
     return <div className={`custom-select-container${showSelect ? ' opened' : ''}${_items.length > 5 ? ' scroll' : ''}`} onClick={() => {
         setShowSelect(!showSelect)
     }} ref={selectRef} style={style}>
-        {value ? _items.find(_ => _.key === value)?.label : (noLabel || <FormattedMessage id="NO_SELECT_VALUE"/>)}
+        {value ? _items.find(_ => _.key === value)?.label : (noLabel || <FormattedMessage id="NO_SELECT_VALUE" />)}
         {
             showSelect && <div className="custom-select-option-container" ref={scrollRef}>
                 {
+                    _items.length === 0 && <div className="custom-select-option-item no-item">
+                        <FormattedMessage id="CUSTOM_SELECT_NO_ITEM_LABEL"/>
+                    </div>
+                }
+                {
                     _items.map((_, ind) => {
                         return <div key={ind} className={`custom-select-option-item${_.key === active ? ' activate' : ''}${_.key === value ? ' selected' : ''}${_.disabled ? ' disabled' : ''}`} onClick={() => {
-                            if(!_.disabled) onChange(_.key)
+                            if (!_.disabled) onChange(_.key)
                         }} onMouseMove={() => {
                             setActive(_.key)
                         }}>

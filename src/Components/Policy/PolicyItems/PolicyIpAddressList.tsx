@@ -51,21 +51,21 @@ const PolicyIpAddressList = ({ value, onChange, dataInit }: PolicyItemsPropsType
             </div>
             <div className="location-policy-container">
                 <div className="location-item-container current">
-                    <Input className="st1 policy-ip-address-input" placeholder={formatMessage({id: 'IP_ADDRESS_POLICY_INPUT_PLACEHOLDER_LABEL'})} value={currentIpAddress} valueChange={value => {
+                    <Input className="st1 policy-ip-address-input" placeholder={formatMessage({id:'IP_ADDRESS_POLICY_INPUT_PLACEHOLDER_LABEL'})} value={currentIpAddress} valueChange={value => {
                         setCurrentIpAddress(value)
                     }} maxLength={16} rules={[
                         {
                             regExp: (value) => !(RegExp(ipAddressRegex).test(value) || RegExp(cidrRegex).test(value)),
-                            msg: formatMessage({id: 'IP_ADDRESS_POLICY_INPUT'})
+                            msg: formatMessage({id:'IP_ADDRESS_POLICY_INPUT'})
                         }
                     ]} onInput={ipAddressRestriction} />
-                    <Input className="st1 policy-ip-address-input" placeholder={formatMessage({id: 'MEMO'})} value={currentIpNote} valueChange={value => {
+                    <Input className="st1 policy-ip-address-input" placeholder={formatMessage({id:'MEMO'})} value={currentIpNote} valueChange={value => {
                         setCurrentIpNote(value)
                     }} maxLength={30} />
                     <Button icon={addIconWhite} className="st3" onClick={() => {
-                        if (networks.find(_ => _.ip === currentIpAddress)) return message.error(formatMessage({id: 'IP_ADDRESS_DUPLICATE_MSG'}))
-                        if (!currentIpAddress) return message.error(formatMessage({id: 'IP_ADDRESS_NOT_CORRECTED_MSG'}))
-                        if (!ipAddressRegex.test(currentIpAddress)) return message.error(formatMessage({id: 'PLEASE_INPUT_IP_ADDRESS_MSG'}))
+                        if (networks.find(_ => _.ip === currentIpAddress)) return message.error(formatMessage({id:'IP_ADDRESS_DUPLICATE_MSG'}))
+                        if (!currentIpAddress) return message.error(formatMessage({id:'IP_ADDRESS_NOT_CORRECTED_MSG'}))
+                        if (!ipAddressRegex.test(currentIpAddress)) return message.error(formatMessage({id:'PLEASE_INPUT_IP_ADDRESS_MSG'}))
                         setIpAddressValues([...networks, {
                             ip: currentIpAddress,
                             note: currentIpNote
@@ -78,13 +78,13 @@ const PolicyIpAddressList = ({ value, onChange, dataInit }: PolicyItemsPropsType
                 </div>
                 {
                     networks.map(({ ip, note }, ipInd) => <div key={ipInd} className="location-item-container">
-                        <Input className="st1 policy-ip-address-input" placeholder={formatMessage({id: 'IP_ADDRESS_POLICY_INPUT_PLACEHOLDER_LABEL'})} value={ip} onInput={ipAddressRestriction} maxLength={15} valueChange={(val) => {
+                        <Input className="st1 policy-ip-address-input" placeholder={formatMessage({id:'IP_ADDRESS_POLICY_INPUT_PLACEHOLDER_LABEL'})} value={ip} onInput={ipAddressRestriction} maxLength={15} valueChange={(val) => {
                             setIpAddressValues(networks.map((_, _ind) => _ind === ipInd ? ({
                                 ip: val,
                                 note
                             }) : _))
                         }} />
-                        <Input className="st1 policy-ip-address-input" placeholder={formatMessage({id: 'MEMO'})} value={note} valueChange={(val) => {
+                        <Input className="st1 policy-ip-address-input" placeholder={formatMessage({id:'MEMO'})} value={note} valueChange={(val) => {
                             setIpAddressValues(networks.map((_, _ind) => _ind === ipInd ? ({
                                 ip,
                                 note: val

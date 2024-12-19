@@ -8,6 +8,7 @@ import ContentsHeader from "Components/Layout/ContentsHeader"
 import CustomModal from "Components/Modal/CustomModal"
 import { userSelectPageSize } from "Constants/ConstantValues"
 import { AddRadiusUserListFunc, GetLdapConfigListFunc, SyncLdapUserListFunc } from "Functions/ApiFunctions"
+import useFullName from "hooks/useFullName"
 import { useEffect, useMemo, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 import { useParams } from "react-router"
@@ -27,6 +28,7 @@ const RadiusSync = () => {
         page: 1,
         showPerPage: userSelectPageSize()
     })
+    const getFullName = useFullName()
     const detailId = useParams().uuid
     const {formatMessage} = useIntl()
     
@@ -127,13 +129,9 @@ const RadiusSync = () => {
                                     key: 'username',
                                     title: <FormattedMessage id="ID"/>
                                 }, {
-                                    key: 'firstName',
-                                    title: <FormattedMessage id="FIRST_NAME"/>,
-                                    render: (data, ind, row) => row.name.firstName
-                                }, {
-                                    key: 'lastName',
+                                    key: 'name',
                                     title: <FormattedMessage id="LAST_NAME"/>,
-                                    render: (data, ind, row) => row.name.lastName
+                                    render: (data, ind, row) => getFullName(row.name)
                                 }, {
                                     key: 'org',
                                     title: <FormattedMessage id="RADIUS_ORG_LABEL"/>
@@ -165,7 +163,7 @@ const RadiusSync = () => {
                         email: _.email
                     }))
                 }, () => {
-                    message.success(formatMessage({id: 'RADIUS_USER_SYNC_SUCCESS_MSG'}))
+                    message.success(formatMessage({id:'RADIUS_USER_SYNC_SUCCESS_MSG'}))
                 })
             }} buttonLoading />
     </>

@@ -16,13 +16,22 @@ const CustomUpload = ({ className, onChange, accept }: CustomUploadProps) => {
 
     const changeCallback = (file: File) => {
         const specificTypes = file.type.split('/')
-        if(!(file.name.endsWith('.csv') && specificTypes.length > 1 && accept?.split(',').includes(specificTypes[1]))) {
-            return message.error(formatMessage({id: 'UPLOAD_NEED_ACCEPT_TYPE'}, {
-                param: accept
-            }))
+        if(accept) {
+            const acceptList = accept.split(',')
+            if(!acceptList.some(_ => file.name.endsWith(_))) {
+                console.log(`ishere?? ${accept} ${file.name} ${acceptList}`)
+                return message.error(formatMessage({id:'UPLOAD_NEED_ACCEPT_TYPE'}, {
+                    param: accept
+                }))
+            }
         }
+        // if(!(file.name.endsWith('.csv') && specificTypes.length > 1 && accept?.split(',').includes(specificTypes[1]))) {
+        //     return message.error(formatMessage({id:'UPLOAD_NEED_ACCEPT_TYPE'}, {
+        //         param: accept
+        //     }))
+        // }
         if(file.size >= 10 * 1024 * 1024) {
-            return message.error(formatMessage({id: 'UPLOAD_NEED_UNDER_10_MB_FILE'}))
+            return message.error(formatMessage({id:'UPLOAD_NEED_UNDER_10_MB_FILE'}))
         }
         onChange(file)
     }

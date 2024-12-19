@@ -5,22 +5,17 @@ import ResetPassword from "./ResetPassword"
 import { isMobile } from "react-device-detect"
 import Button from "Components/CommonCustomComponents/Button"
 import { FormattedMessage } from "react-intl"
-import { langChange } from "Redux/actions/langChange"
-import { saveLocaleToLocalStorage } from "Functions/GlobalFunctions"
-import locale_image from '../../assets/locale_image.png';
 import downloadIconWhite from '../../assets/downloadIconWhite.png';
-import manualDownloadIcon from '../../assets/manualDownloadIcon.png'
-import { useDispatch, useSelector } from "react-redux"
+import documentIcon from '../../assets/documentIcon.png'
+import documentIconHover from '../../assets/documentIconHover.png'
+import { useSelector } from "react-redux"
 import { CopyRightText } from "Constants/ConstantValues"
 import './index.css';
 import FindUsername from "./FindUsername"
+import LocaleChange from "Components/CommonCustomComponents/LocaleChange"
 
 const LoginPage = () => {
-    const { lang, subdomainInfo } = useSelector((state: ReduxStateType) => ({
-        lang: state.lang,
-        subdomainInfo: state.subdomainInfo!
-    }));
-    const dispatch = useDispatch();
+    const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
 
     return <div
         className='login-container'
@@ -56,50 +51,29 @@ const LoginPage = () => {
             <Route path='/*' element={<Navigate to='/' replace={true} />} />
 
         </Routes>
-        {!isMobile && <a href={subdomainInfo.windowsAgentUrl} download>
-            <Button
-                className='login-agent-download-button st10'
-                icon={downloadIconWhite}
-                style={{
-                    pointerEvents: 'none'
-                }}
-            >
-                <FormattedMessage id='DOWNLOAD_FOR_WINDOWS' />
+        <div className="login-footer-btns-container">
+            {!isMobile && <a href={subdomainInfo.windowsAgentUrl} download>
+                <Button
+                    className='login-agent-download-button st10'
+                    icon={downloadIconWhite}
+                    style={{
+                        pointerEvents: 'none'
+                    }}
+                >
+                    <FormattedMessage id='DOWNLOAD_FOR_WINDOWS' />
+                </Button>
+            </a>}
+            <Button className='login-agent-download-button st5' icon={documentIcon} hoverIcon={documentIconHover} onClick={() => {
+                window.open(`/docs`, '_blank');
+            }}>
+                <FormattedMessage id="DOCS_VIEW_LABEL" />
             </Button>
-        </a>}
+        </div>
 
+        <LocaleChange />
         <div
             className='login-footer'
         >
-            <div
-                className='mb10 login-footer-font'
-            >
-                <img className='login-footer-locale-img' src={locale_image} />
-                <span
-                    className={'mlr5 locale-toggle' + (lang === 'KR' ? ' active' : '')}
-                    onClick={() => {
-                        dispatch(langChange('KR'));
-                        saveLocaleToLocalStorage('KR')
-                    }}
-                >KO</span>|
-                <span
-                    className={'mlr5 locale-toggle' + (lang === 'EN' ? ' active' : '')}
-                    style={{ marginRight: '12px' }}
-                    onClick={() => {
-                        dispatch(langChange('EN'));
-                        saveLocaleToLocalStorage('EN')
-                    }}
-                >EN</span>
-                <a
-                    href="/OMPASS_Portal_User_Manual.pdf"
-                    download
-                >
-                    <img
-                        src={manualDownloadIcon}
-                        className='login-footer-manual-download-img'
-                    />
-                </a>
-            </div>
             <div
                 className='copyRight-style login-copyright'
             >

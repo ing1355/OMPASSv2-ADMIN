@@ -4,7 +4,6 @@ import { useIntl } from "react-intl";
 import { useDispatch, useSelector } from "react-redux";
 import { message as _message } from 'antd';
 import { userInfoClear } from "Redux/actions/userChange";
-import { useNavigate } from "react-router";
 import { controller } from "Components/CommonCustomComponents/CustomAxios";
 
 let oldInterceptorId = 0;
@@ -12,11 +11,7 @@ let oldInterceptorId = 0;
 const AxiosController = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const navigate = useNavigate()
-  // const history = useHistory()
-  const { lang } = useSelector((state: ReduxStateType) => ({
-    lang: state.lang!,
-  }));
+  const lang = useSelector((state: ReduxStateType) => state.lang!);
 
   useLayoutEffect(() => {
     axios.interceptors.response.eject(oldInterceptorId)

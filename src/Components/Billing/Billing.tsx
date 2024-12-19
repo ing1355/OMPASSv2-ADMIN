@@ -1,7 +1,6 @@
 import ContentsHeader from "Components/Layout/ContentsHeader"
 import Contents from 'Components/Layout/Contents';
 import { CSSProperties, PropsWithChildren, useMemo, useState } from "react";
-import planDatas from "./PlanDatas";
 import './Billing.css'
 import planIcon from '../../assets/planIcon.png'
 import checkIcon from '../../assets/checkIcon.png'
@@ -50,13 +49,35 @@ const BillingInputRow = ({ label, children, labelStyle, contentStyle }: PropsWit
 }
 
 const Billing = () => {
-    const userNumList = useMemo(() => new Array(990).fill(1), []);
-    const [inputUserNum, setInputUserNum] = useState(11);
+    const userNumList = useMemo(() => new Array(991).fill(1), []);
+    const [inputUserNum, setInputUserNum] = useState(10);
+
+    const planDatas = [
+        {
+            title: "무료 플랜",
+            status: "USED",
+            price: 0,
+            descriptions: Array.from({length: 3}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
+        },
+        {
+            title: "베이직 플랜",
+            status: "",
+            price: "1,100",
+            descriptions: Array.from({length: 5}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
+        },
+        {
+            title: "프리미엄 플랜",
+            status: "",
+            price: "2,200",
+            descriptions: Array.from({length: 10}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
+        }
+    ]
+
     return <>
         <Contents>
             <ContentsHeader title="BILLING_MANAGEMENT" subTitle="BILLING_DETAIL" />
             <div className="billing-contents-container">
-                <ItemContainer title={<FormattedMessage id="BILLING_PLAN"/>} border>
+                <ItemContainer title={<FormattedMessage id="BILLING_PLAN" />} border>
                     <div className="plans-description-container">
                         {planDatas.map((_, ind) => <div className={"plan-box" + (ind === 0 ? ' selected' : '')} key={ind}>
                             {_.status === 'USED' && <div className="plan-selected">
@@ -71,7 +92,9 @@ const Billing = () => {
                                     <div className="plan-price-number">{_.price}</div>
                                     <div className="plan-price-text">원 / 월</div>
                                 </div>
-                                <div className="plan_sub_price_text">*최소 10명 기준</div>
+                                <div className="plan_sub_price_text">
+                                    {ind === 0 ? "*최대 10명 가능" : "*최소 10명 기준"}
+                                </div>
                             </div>
                             <div className="plan-description-container">
                                 {
@@ -111,11 +134,11 @@ const Billing = () => {
                         flex: '0 0 200px'
                     }}>
                         <CustomSelect value={inputUserNum} items={userNumList.map((_, ind) => ({
-                            key: ind + 11,
-                            label: ind + 11
+                            key: ind + 10,
+                            label: ind + 10
                         }))} onChange={value => {
                             setInputUserNum(parseInt(value))
-                        }} needSelect/>
+                        }} needSelect />
                     </BillingInputRow>
                 </ItemContainer>
                 <ItemContainer title="" border bodyStyle={{
@@ -130,7 +153,7 @@ const Billing = () => {
                 }}>
                     <BillingInputRow label="이용 동의">
                         <div className="billing-agree-text">
-                            <Input type="checkbox" name="check" label={<><a className="billing-a-tag" href="#test">구매조건 및 환불 규정</a>에 동의</>}/>
+                            <Input type="checkbox" name="check" label={<><a className="billing-a-tag" href="#test">구매조건 및 환불 규정</a>에 동의</>} />
                         </div>
                         <br />
                         결제일로 부터 30일 간격으로 24,200원(이)가 자동으로 결제됩니다.
@@ -144,7 +167,7 @@ const Billing = () => {
                 }}>
                     <CustomTable
                         theme='table-st1'
-                        
+
                         columns={[
                             {
                                 key: 'plan',
@@ -165,7 +188,7 @@ const Billing = () => {
                             {
                                 key: 'date',
                                 title: '날짜',
-                                
+
                             },
                             {
                                 key: 'status',

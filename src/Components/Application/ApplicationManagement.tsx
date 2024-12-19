@@ -4,7 +4,7 @@ import ContentsHeader from "Components/Layout/ContentsHeader"
 import { applicationTypes, getApplicationTypeLabel, INT_MAX_VALUE } from "Constants/ConstantValues";
 import { GetApplicationListFunc, GetPoliciesListFunc } from "Functions/ApiFunctions";
 import { useLayoutEffect, useState } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { useNavigate } from "react-router";
 import applicationAddIcon from '../../assets/applicationAddIcon.png'
 import applicationAddIconHover from '../../assets/applicationAddIconHover.png'
@@ -16,6 +16,7 @@ const ApplicationManagement = () => {
     const [dataLoading, setDataLoading] = useState(false)
     const [hoveredRow, setHoveredRow] = useState<number>(-1)
     const navigate = useNavigate()
+    const { formatMessage } = useIntl()
 
     const handleRowHover = (index: number) => {
         setHoveredRow(index);
@@ -27,8 +28,13 @@ const ApplicationManagement = () => {
             page_size: params.size,
             page: params.page
         }
-        if(params.type) {
+        if (params.type) {
             _params[params.type] = params.value
+        }
+        if (params.filterOptions) {
+            params.filterOptions.forEach(_ => {
+                _params[_.key] = _.value
+            })
         }
         await GetApplicationListFunc(_params, ({ results, totalCount }) => {
             setTableData(results)
@@ -58,80 +64,81 @@ const ApplicationManagement = () => {
         <ContentsHeader title="APPLICATION_MANAGEMENT" subTitle="APPLICATION_LIST">
         </ContentsHeader>
         <div className="contents-header-container">
-        <CustomTable<ApplicationListDataType>
-            theme='table-st1'
-            className="contents-header-container"
-            hover
-            searchOptions={[{
-                key: 'type',
-                type: 'select',
-                selectOptions: applicationTypes.map(_ => ({
-                    key: _,
-                    label: getApplicationTypeLabel(_)
-                }))
-            }, {
-                key: 'name',
-                type: 'string'
-            }, {
-                key: 'policyName',
-                type: 'string',
-                label: <FormattedMessage id="POLICY_NAME_LABEL"/>
-            }]}
-            onSearchChange={(data) => {
-                GetDatas(data)
-            }}
-            addBtn={{
-                label: <FormattedMessage id="NORMAL_ADD_LABEL"/>,
-                icon: applicationAddIcon,
-                hoverIcon: applicationAddIconHover,
-                callback: () => {
-                    navigate('/Applications/detail')
-                }
-            }}
-            onBodyRowClick={(row, index, arr) => {
-                navigate('/Applications/detail/' + row.id)
-            }}
-            onBodyRowHover={(_, index) => {
-                handleRowHover(index)
-            }}
-            onBodyRowMouseLeave={() => {
-                handleRowHover(-1)
-            }}
-            columns={[
-                {
-                    key: 'type',
-                    title: <FormattedMessage id="APPLICATION_INFO_TYPE_LABEL"/>,
-                    render: (data) => {
-                        return data ? getApplicationTypeLabel(data) : ""
-                    }
-                },
-                {
+            <CustomTable<ApplicationListDataType>
+                theme='table-st1'
+                className="contents-header-container"
+                hover
+                searchOptions={[{
                     key: 'name',
-                    title: <FormattedMessage id="APPLICATION_INFO_NAME_LABEL"/>
-                },
-                {
+                    type: 'string'
+                }, {
+                    key: 'policyName',
+                    type: 'string',
+                    label: <FormattedMessage id="POLICY_NAME_LABEL" />
+                }, {
                     key: 'domain',
-                    title: <FormattedMessage id="APPLICATION_INFO_DOMAIN_LABEL"/>,
-                },
-                {
-                    key: 'description',
-                    title: <FormattedMessage id="APPLICATION_INFO_DESCRIPTION_LABEL"/>,
-                },
-                {
-                    key: 'policyId',
-                    title: <FormattedMessage id="POLICY_NAME_LABEL"/>,
-                    render: (data, ind, row) => {
-                        const target = policiesData.find(_ => _.id === data);
-                        if(target) {
-                            return target.policyType === 'DEFAULT' ? <FormattedMessage id='default policy' /> : target.name
-                        } else return ""
+                    type: 'string'
+                }]}
+                onSearchChange={(data) => {
+                    GetDatas(data)
+                }}
+                addBtn={{
+                    label: <FormattedMessage id="NORMAL_ADD_LABEL" />,
+                    icon: applicationAddIcon,
+                    hoverIcon: applicationAddIconHover,
+                    callback: () => {
+                        navigate('/Applications/detail')
                     }
-                }
-            ]}
-            datas={tableData}
-            pagination
-            totalCount={totalCount}
-        />
+                }}
+                onBodyRowClick={(row, index, arr) => {
+                    navigate('/Applications/detail/' + row.id)
+                }}
+                onBodyRowHover={(_, index) => {
+                    handleRowHover(index)
+                }}
+                onBodyRowMouseLeave={() => {
+                    handleRowHover(-1)
+                }}
+                columns={[
+                    {
+                        key: 'type',
+                        title: <FormattedMessage id="APPLICATION_INFO_TYPE_LABEL" />,
+                        render: (data) => {
+                            return data ? getApplicationTypeLabel(data) : ""
+                        },
+                        filterKey: 'types',
+                        filterOption: applicationTypes.map(_ => ({
+                            label: formatMessage({ id: _ + "_APPLICATION_TYPE" }),
+                            value: _
+                        }))
+                    },
+                    {
+                        key: 'name',
+                        title: <FormattedMessage id="APPLICATION_INFO_NAME_LABEL" />
+                    },
+                    {
+                        key: 'policyId',
+                        title: <FormattedMessage id="POLICY_NAME_LABEL" />,
+                        render: (data, ind, row) => {
+                            const target = policiesData.find(_ => _.id === data);
+                            if (target) {
+                                return target.policyType === 'DEFAULT' ? <FormattedMessage id='default policy' /> : target.name
+                            } else return ""
+                        }
+                    },
+                    {
+                        key: 'domain',
+                        title: <FormattedMessage id="APPLICATION_INFO_DOMAIN_LABEL" />,
+                    },
+                    {
+                        key: 'description',
+                        title: <FormattedMessage id="APPLICATION_INFO_DESCRIPTION_LABEL" />,
+                    },
+                ]}
+                datas={tableData}
+                pagination
+                totalCount={totalCount}
+            />
         </div>
     </Contents>
 }

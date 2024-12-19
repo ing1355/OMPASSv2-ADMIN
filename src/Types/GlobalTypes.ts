@@ -1,5 +1,7 @@
-type LanguageType = 'KR' | 'EN'
-type AuthPurposeType = "ROLE_SWAPPING" | "ADD_OTHER_AUTHENTICATOR" | "AUTH_LOGIN" | "REG_LOGIN" | "ROLE_SWAPPING_SOURCE" | "ROLE_SWAPPING_TARGET" | "ADMIN_2FA_FOR_APPLICATION_DELETION" | "ADMIN_2FA_FOR_SECRET_KEY_UPDATE" | "RADIUS_REGISTRATION"
+type LanguageType = 'KR' | 'EN' | 'JP'
+type AuthPurposeType = "ROLE_SWAPPING_SOURCE" | "ROLE_SWAPPING_TARGET" | "ADMIN_2FA_FOR_APPLICATION_DELETION" | "ADMIN_2FA_FOR_SECRET_KEY_UPDATE" | "RADIUS_REGISTRATION"
+type LogAuthPurposeType = AuthPurposeType | "ADD_OTHER_AUTHENTICATOR" | "AUTH_LOGIN" | "REG_LOGIN"
+type AuthPurposeForApiType = 'ROLE_SWAPPING' | AuthPurposeType
 type AuthenticationLogType = "ALLOW" | "DENY" | "ALLOW_OUT_OF_SCHEDULE"
 type UserGroupViewType = 'portal' | 'application' | 'group'
 type logoImageType = {
@@ -113,6 +115,7 @@ type RPUserType = {
 type PortalUserType = {
     id: string
     username: string
+    name?: UserNameType
 }
 
 type LoginApiParamsType = {
@@ -135,7 +138,7 @@ type PasscodeHistoriesParamsType = GeneralParamsType & {
     issuerUsername?: string
     portalUsername?: string
     rpUsername?: string
-    action?: 'CREATE' | 'DELETE'
+    actions?: ('CREATE' | 'DELETE')[]
 }
 
 type PasscodeDataType = {
@@ -250,7 +253,8 @@ type ApplicationListDataType = {
 type ApplicationListParamsType = GeneralParamsType & {
     id?: ApplicationDataType['id']
     name?: ApplicationDataType['name']
-    type?: ApplicationDataType['id'] | ""
+    types?: ApplicationDataType['type'][]
+    domain?: string
     sortBy?: "CREATED_AT" | "NAME"
     sortDirection?: DirectionType
     policyName?: string
@@ -348,6 +352,7 @@ type PolicyListDataType = {
 type PoliciesListParamsType = GeneralParamsType & {
     policyId?: string
     name?: string
+    applicationTypes?: ApplicationDataType['type'][]
     sortBy?: "CREATED_AT" | "NAME"
     sortDirection?: DirectionType
 }
@@ -388,7 +393,8 @@ type UserListParamsType = GeneralParamsType & {
     email?: UserDataType['email']
     username?: UserDataType['username']
     phone?: UserDataType['phone']
-    role?: UserDataType['role']
+    roles?: UserDataType['role'][]
+    statuses?: UserDataType['status'][]
     name?: string
     sortBy?: "CREATED_AT" | "USERNAME" | "NAME"
 }
@@ -437,6 +443,16 @@ type UserDataModifyLocalValuesType = UserDataModifyValuesType & {
 
 type UserDataAddLocalValuesType = UserDataModifyLocalValuesType & {
     username: UserDataType['username']
+}
+
+type SecurityQuestionDataType = {
+    question: SecurityQuestionsKeyType
+    answer: string
+}
+
+type RootUserDataAddLocalValuesType = UserDataModifyLocalValuesType & {
+    username: UserDataType['username']
+    securityQnas: SecurityQuestionDataType[]
 }
 
 type DefaultUserGroupDataType = {
@@ -527,8 +543,12 @@ type AuthLogListParamsType = GeneralParamsType & {
     rpUsername?: string
     applicationName?: string
     processType?: ProcessTypeType
-    authenticatorType?: AuthenticatorTypeType
-    authenticationLogType?: AuthenticationLogType
+    applicationTypes?: ApplicationDataType['type'][]
+    authenticatorTypes?: AuthenticatorTypeType[]
+    authPurposes?: AuthPurposeType[]
+    authenticationLogTypes?: AuthenticationLogType[]
+    denyReasons?: InvalidAuthLogDataType['reason'][]
+    policyName?: string
     startDate?: string
     endDate?: string
     sortBy?: "CREATED_AT" | "AUTHENTICATION_TIME" | "USERNAME" | "APPLICATION_NAME" | "IS_PROCESS_SUCCESS"
@@ -540,7 +560,7 @@ type LdapConfigListParamsType = GeneralParamsType & {
 
 type ProtalLogListParamsType = GeneralParamsType & {
     username?: string
-    httpMethod?: HttpMethodType
+    httpMethods?: HttpMethodType[]
     apiUri?: string
     sortBy?: 'CREATED_AT' | 'USERNAME' | 'API_URI' | 'HTTP_METHOD'
 }
@@ -563,7 +583,7 @@ type InvalidAuthLogDataType = {
     authenticationTime: string
     ompassData: OMPASSDataType
     policyAtTimeOfEvent: PolicyDataType
-    reason: 'INVALID_SIGNATURE' | 'INVALID_PASSCODE' | 'INVALID_OTP' | 'BROWSER' | 'ACCESS_TIME' | 'LOCATION_' | 'IP_WHITE_LIST' | 'COUNTRY' | 'NONE'
+    reason: 'INVALID_SIGNATURE' | 'INVALID_PASSCODE' | 'INVALID_OTP' | 'BROWSER' | 'ACCESS_TIME' | 'LOCATION' | 'IP_WHITE_LIST' | 'COUNTRY' | 'NONE'
 }
 
 type AllAuthLogDataType = ValidAuthLogDataType | InvalidAuthLogDataType
@@ -596,6 +616,10 @@ type CustomTableSearchParams = {
     size: number
     type?: string
     value?: string
+    filterOptions?: {
+        key: string
+        value: any | any[]
+    }[]
 }
 
 type DateSelectDataType = {
@@ -624,7 +648,7 @@ type SelectedDateType = {
 }
 
 type CustomTableColumnType<T> = {
-    key: keyof T | string
+    key: string
     // title: React.ReactNode | ((data: any, index: number, row?: T) => React.ReactNode)
     title: React.ReactNode
     width?: string | number
@@ -632,6 +656,11 @@ type CustomTableColumnType<T> = {
     render?: (data: any, index: number, row: T) => React.ReactNode
     noWrap?: boolean
     maxWidth?: string | number
+    filterKey?: string
+    filterOption?: {
+        label: string,
+        value: any
+    }[]
 }
 
 type UserTransferDataType = UserHierarchyDataType | UserHierarchyDataApplicationViewDataType | UserHierarchyDataGroupViewDataType
@@ -651,7 +680,7 @@ type PolicyItemsPropsType<T> = {
 
 type OMPASSAuthStartParamsType = {
     isTest?: boolean
-    purpose: AuthPurposeType
+    purpose: AuthPurposeForApiType
     targetUserId?: string
     applicationId?: ApplicationDataType['id']
     loginDeviceInfo: {
@@ -731,6 +760,22 @@ type RpUsersListParamsType = GeneralParamsType & {
     portalUsername?: UserDataType['username']
     rpUsername?: RPUserType['username']
     groupName?: UserGroupDataType['name']
+    pcName?: string
+    windowsAgentVersion?: string
+    portalName?: string
+    isPasscodeCheckEnabled?: boolean[]
+    lastLoggedInAuthenticator?: AuthenticatorTypeType[]
 }
 
 type UploadFileTypes = "APPLICATION_LOGO_IMAGE" | "PORTAL_SETTING_LOGO_IMAGE" | "WINDOWS_AGENT" | "LINUX_PAM" | "OMPASS_PROXY" | "FIDO_AGENT" | "APK" | "CSV"
+
+type TableSearchOptionType = {
+    key: string
+    type: 'string' | 'select'
+    label?: React.ReactNode
+    needSelect?: boolean
+    selectOptions?: {
+        key: string
+        label: string | React.ReactNode
+    }[]
+}

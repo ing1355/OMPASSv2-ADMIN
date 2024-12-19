@@ -128,7 +128,7 @@ const PolicyAccessTimeList = ({ value, onChange, dataInit }: PolicyItemsPropsTyp
                         </div>
                         <div>
                             <label>
-                                <FormattedMessage id="ACCESS_TIME_TIME_ZONE_LABEL" /> : <CustomSelect value={currentAccessTimeValue.timeZone} onChange={e => {
+                                <FormattedMessage id="TIME_ZONE_LABEL" /> : <CustomSelect value={currentAccessTimeValue.timeZone} onChange={e => {
                                     setCurrentAccessTimeValue({
                                         ...currentAccessTimeValue,
                                         timeZone: e
@@ -210,7 +210,7 @@ const PolicyAccessTimeList = ({ value, onChange, dataInit }: PolicyItemsPropsTyp
                         </div>
                         <div>
                             <label>
-                                <FormattedMessage id="ACCESS_TIME_TIME_ZONE_LABEL" /> : <CustomSelect value={_.timeZone} onChange={e => {
+                                <FormattedMessage id="TIME_ZONE_LABEL" /> : <CustomSelect value={_.timeZone} onChange={e => {
                                     setAccessTimeValues(accessTimes.map((timeValue, tInd) => tInd === ind ? ({
                                         ...timeValue,
                                         timeZone: e

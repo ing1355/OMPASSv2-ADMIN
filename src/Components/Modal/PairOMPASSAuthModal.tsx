@@ -19,9 +19,7 @@ type PairOMPASSAuthModalProps = {
 }
 
 const PairOMPASSAuthModal = ({ opened, onCancel, successCallback, userData }: PairOMPASSAuthModalProps) => {
-    const { userInfo } = useSelector((state: ReduxStateType) => ({
-        userInfo: state.userInfo!
-    }));
+    const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     const [remainTime, setRemainTime] = useState(-1)
     const [sessionData, setSessionData] = useState<QRDataDefaultBodyType>({
         url: '',
@@ -72,7 +70,7 @@ const PairOMPASSAuthModal = ({ opened, onCancel, successCallback, userData }: Pa
             timeTimerRef.current = setInterval(() => {
                 if (remainTimeRef.current < 1) {
                     _onCancel()
-                    message.error(formatMessage({id: 'OMPASS_MODULE_TIME_EXPIRED_MSG'}))
+                    message.error(formatMessage({id:'OMPASS_MODULE_TIME_EXPIRED_MSG'}))
                 } else {
                     setRemainTime(time => time - 1)
                 }
@@ -93,7 +91,7 @@ const PairOMPASSAuthModal = ({ opened, onCancel, successCallback, userData }: Pa
             _onCancel()
         })
     }} okText={<FormattedMessage id="NORMAL_COMPLETE_LABEL"/>} okCallback={async () => {
-        if (!(sourceStatus === 'complete' && targetStatus === 'complete')) return message.error(formatMessage({id: 'NEED_OMPASS_COMPLETE_MSG'}))
+        if (!(sourceStatus === 'complete' && targetStatus === 'complete')) return message.error(formatMessage({id:'NEED_OMPASS_COMPLETE_MSG'}))
         else {
             successCallback(tokenRef.current)
             _onCancel()

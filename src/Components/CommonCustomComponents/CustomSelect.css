@@ -45,6 +45,7 @@
 }
 
 .custom-select-option-container {
+  cursor: default;
   position: absolute;
   width: 100%;
   box-sizing: border-box;
@@ -62,17 +63,18 @@
 
 .custom-select-option-item {
   color: var(--main-grey-color2);
-  cursor: pointer;
   border-radius: 6px;
   margin: 2px 0;
 }
 
 .custom-select-option-item.activate {
+  cursor: pointer;
   color: var(--sub-grey-color4);
   background-color: var(--sub-grey-color8);
 }
 
 .custom-select-option-item.selected {
+  cursor: pointer;
   color: var(--main-purple-color2);
   background-color: var(--sub-purple-color5);
 }
@@ -80,5 +82,11 @@
 .custom-select-option-item.disabled {
   color: var(--sub-grey-color5);
   background-color: var(--sub-grey-color2);
+  cursor: not-allowed;
+}
+
+.custom-select-option-item.no-item {
+  background-color: var(--sub-grey-color6);
+  color: var(--main-grey-color);
   cursor: not-allowed;
 }
