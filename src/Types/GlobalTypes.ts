@@ -13,11 +13,25 @@ type updateLogoImageType = {
     image: string
 }
 type AuthMethodType = "U2F" | 'UAF'
+type PolicyValidationType = {
+    status: 'OK' | 'DENY' | 'INACTIVE'
+    type: 'ACCESS_CONTROL' | 'BROWSER' | 'ACCESS_TIME' | 'IP_WHITE_LIST' | 'LOCATION'
+    value: any
+}
+type PolicyValidationLocationValueType = {
+    currentUserLocation: CoordinateType
+    policyLocations: LocationPolicyRestrictionItemType[]
+}
 type OMPASSDataType = {
     authPurpose: AuthPurposeType
     method: AuthMethodType
     application: ApplicationDataType
-    rpUser: RPUserType
+    rpUser: RPUserType & {
+        authenticationInfoId: UserDetailAuthInfoRowType['id']
+        loginDeviceInfo: LoginDeviceInfoDataType
+        serverInfo: ServerMetaDataType
+    }
+    policyValidationResult: PolicyValidationType[]
     authenticators: AuthenticatorDataType[]
     sessionExpiredAt: string
     ntp: string
@@ -39,6 +53,7 @@ type LoginDeviceInfoDataType = {
     craetedAt: string
     macAddress?: string
     agentVersion?: string
+    packageVersion?: string
     updatedAt: string
     lastLoginTime: string
 }
@@ -129,6 +144,7 @@ type LoginApiResponseType = {
     popupUri: string
     username: string
     status: UserStatusType
+    questions: SecurityQuestionType[]
 }
 
 type PasscodeHistoriesParamsType = GeneralParamsType & {
@@ -225,6 +241,7 @@ type ApplicationDataType = DefaultApplicationDataType & {
     secretKey: string
     isPasswordlessEnabled?: boolean
     radiusProxyServer?: RadiusDataType
+    linuxPamBypass?: PAMPassDataType
 }
 
 type ApplicationDataParamsType = {
@@ -237,6 +254,7 @@ type ApplicationDataParamsType = {
     isPasswordlessEnabled: ApplicationDataType['isPasswordlessEnabled']
     domain?: ApplicationDataType['domain']
     type?: ApplicationDataType['type']
+    linuxPamBypass?: PAMPassDataType
 }
 
 type ApplicationListDataType = {
@@ -263,6 +281,7 @@ type ApplicationListParamsType = GeneralParamsType & {
 type CoordinateType = {
     latitude: number
     longitude: number
+    accuracy?: number
 }
 
 type LocationPolicyRestrictionItemType = {
@@ -368,7 +387,7 @@ type DefaultUserDataType = DefaultUserDataParamsType & {
     name: UserNameType
 }
 
-type UserStatusType = "WAIT_EMAIL_VERIFICATION" | "WAIT_ADMIN_APPROVAL" | "RUN" | "WITHDRAWAL" | "LOCK" | "WAIT_INIT_PASSWORD"
+type UserStatusType = "WAIT_EMAIL_VERIFICATION" | "WAIT_ADMIN_APPROVAL" | "RUN" | "WITHDRAWAL" | "LOCK" | "WAIT_INIT_PASSWORD" | "WAIT_SECURITY_QNA"
 
 type UserDataType = DefaultUserDataType & {
     userId: string
@@ -614,8 +633,8 @@ type UserDetailAuthInfoRowType = {
 type CustomTableSearchParams = {
     page: number
     size: number
-    type?: string
-    value?: string
+    searchType?: string
+    searchValue?: string
     filterOptions?: {
         key: string
         value: any | any[]
@@ -657,6 +676,7 @@ type CustomTableColumnType<T> = {
     noWrap?: boolean
     maxWidth?: string | number
     filterKey?: string
+    filterType?: 'string' | 'date'
     filterOption?: {
         label: string,
         value: any
@@ -778,4 +798,15 @@ type TableSearchOptionType = {
         key: string
         label: string | React.ReactNode
     }[]
+}
+
+type TableFilterOptionType = {
+    key: string
+    value: any | any[]
+}[]
+
+type PAMPassDataType = {
+    isEnabled: boolean
+    ip: string
+    username: string
 }

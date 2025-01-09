@@ -4,8 +4,7 @@
   padding-top: var(--header-height);
   box-sizing: border-box;
   width: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: auto;
 }
 
 .ant-switch.ant-switch-checked {

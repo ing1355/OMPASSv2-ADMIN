@@ -57,6 +57,7 @@
     padding: 6px 10px;
     border-radius: 8px;
     font-size: .8rem;
+    z-index: 1000;
 }
 
 .ip-address-policy-input-header>div {
@@ -92,10 +93,13 @@
     align-items: center;
     gap: 8px;
     width: 100%;
+    box-sizing: border-box;
     height: 36px;
+    padding: 0px 12px;
 }
 
 .location-item-container.current {
+    height: 60px;
     background-color: var(--sub-grey-color9);
     border-radius: 8px;
     padding: 12px 12px 12px 12px;

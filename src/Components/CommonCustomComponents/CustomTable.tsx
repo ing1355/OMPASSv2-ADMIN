@@ -1,4 +1,4 @@
-import React, { CSSProperties, useEffect, useMemo, useState } from "react"
+import React, { CSSProperties, useEffect, useMemo, useRef, useState } from "react"
 import './CustomTable.css'
 import { Pagination, PaginationProps } from "antd"
 import searchIcon from './../../assets/searchIcon.png'
@@ -10,15 +10,14 @@ import resetIcon from './../../assets/resetIconWhite.png'
 import Button from "./Button"
 import CustomSelect from "./CustomSelect"
 import Input from "./Input"
-import { userSelectPageSize } from "Constants/ConstantValues"
+import { DateTimeFormat, userSelectPageSize } from "Constants/ConstantValues"
 import { FormattedMessage, useIntl } from "react-intl"
-import { useLocation } from "react-router"
 import CustomDropdown from "./CustomDropdown"
-
-type FilterOptionType = {
-    key: string
-    value: any | any[]
-}[]
+import Calendar from "Components/Dashboard/Calendar"
+import { convertLocalDateStringToUTCString } from "Functions/GlobalFunctions"
+import dayjs from "dayjs"
+import { useSearchParams } from "react-router-dom"
+import useCustomRoute from "hooks/useCustomRoute"
 
 type CustomTableButtonType = {
     icon?: string
@@ -55,7 +54,6 @@ type CustomTableProps<T extends {
     deleteBtn?: CustomTableButtonType
     customBtns?: React.ReactNode
     refresh?: boolean
-    isNotDataInit?: boolean
 }
 
 const CustomTable = <T extends {
@@ -83,23 +81,93 @@ const CustomTable = <T extends {
     deleteBtn,
     customBtns,
     refresh,
-    isNotDataInit,
     hover }: CustomTableProps<T>) => {
 
-    const [pageNum, setPageNum] = useState(0)
+    const [searchParams] = useSearchParams()
+    const [temp, setTemp] = useState<DateSelectDataType | undefined>(undefined)
+    const [closeEvent, setCloseEvent] = useState(false)
+    const [pageNum, setPageNum] = useState(1)
     const [tableSize, setTableSize] = useState<number>(userSelectPageSize());
-    const [searchType, setSearchType] = useState((searchOptions && searchOptions[0].key) || "")
-    const [filterValues, setFilterValues] = useState<FilterOptionType>(columns.filter(_ => _.filterOption).map(_ => ({
-        key: _.filterKey || _.key,
-        value: []
-    })))
-    
-    const [searchValue, setSearchValue] = useState('')
+    const [searchType, setSearchType] = useState(searchParams.get('searchType') ?? ((searchOptions && searchOptions[0].key) || ""))
+    const [filterValues, setFilterValues] = useState<TableFilterOptionType>(columns.filter(_ => _.filterOption).map(_ => {
+        return {
+            key: _.filterKey || _.key,
+            value: (_.filterType === 'date' ? searchParams.get(_.filterKey || _.key) : [searchParams.get(_.filterKey || _.key)].filter(__ => __)) ?? []
+        }
+    }))
+    const [searchValue, setSearchValue] = useState(searchParams.get('searchValue') ?? '')
     const [hoverId, setHoverId] = useState(-1)
-    const [_refresh, setRefresh] = useState(false)
-    const [isInit, setIsInit] = useState(false)
-    const location = useLocation()
+    const resultRef = useRef<CustomTableSearchParams>()
     const { formatMessage } = useIntl()
+    const { customPushRoute } = useCustomRoute()
+
+    const createParams = ({page, size}: {
+        page: number
+        size: number
+    }) => {
+        const result: CustomTableSearchParams = {
+            page,
+            size
+        }
+        let values = [...filterValues]
+        if (searchParams.size > 0) {
+            let temp: CustomTableSearchParams['filterOptions'] = []
+            for (const key of searchParams.keys()) {
+                if (!['page', 'size', 'tabType', 'applicationType', 'applicationId', 'searchType', 'searchValue'].includes(key)) {
+                    temp.push({
+                        key,
+                        value: searchParams.getAll(key)
+                    })
+                    const target = values.find(_ => _.key === key)
+                    if (target) {
+                        target.value = searchParams.getAll(key).map(_ => _ === 'true' ? true : _ === 'false' ? false : _)
+                    }
+                }
+            }
+            if (temp.length > 0) {
+                result.filterOptions = temp
+            }
+        }
+        if (!result.filterOptions) {
+            setFilterValues(filterValues.map(_ => ({
+                key: _.key,
+                value: Array.isArray(_) ? [] : ''
+            })))
+        } else {
+            setFilterValues(values)
+        }
+        return result
+    }
+
+    useEffect(() => {
+        let pageParams = searchParams.get('page')
+        let sizeParams = searchParams.get('size')
+        let page = pageNum
+        let size = tableSize
+
+        if (pageParams) page = parseInt(pageParams)
+        else page = 1
+        if (sizeParams) size = parseInt(sizeParams)
+        else size = userSelectPageSize()
+        
+        setPageNum(page)
+        setTableSize(size)
+        const result = createParams({page, size})
+        if (searchParams.get('searchType')) {
+            result.searchType = searchParams.get('searchType')!
+            result.searchValue = searchParams.get('searchValue')!
+        }
+        else {
+            setSearchType((searchOptions && searchOptions[0].key) || "")
+            setSearchValue('')
+        }
+        if(onSearchChange) {
+            if(!resultRef.current || (JSON.stringify(resultRef.current) !== JSON.stringify(result))) {
+                onSearchChange(result)
+            }
+        }
+        resultRef.current = result
+    }, [searchParams])
 
     const searchTarget = useMemo(() => {
         if (searchOptions) {
@@ -109,22 +177,25 @@ const CustomTable = <T extends {
         return null
     }, [searchType])
 
-    const searchCallback = (page: number, size: number, filter?: FilterOptionType, isReset?: boolean) => {
-        if (isNotDataInit && !isInit) {
-            return setIsInit(true)
-        }
-        if (page === 1) window.history.replaceState("", "", location.pathname)
-        if (onSearchChange) onSearchChange({
-            type: isReset ? searchOptions![0].key : searchType,
-            value: isReset ? "" : searchValue,
+    const searchCallback = (page: number, size: number, filter?: TableFilterOptionType, isReset?: boolean) => {
+        const result: CustomTableSearchParams = {
             page,
             size,
-            filterOptions: filter || filterValues
-        })
+            filterOptions: filter || [...filterValues]
+        }
+        if (searchValue) {
+            result.searchType = searchType
+            result.searchValue = searchValue
+        }
+        if (isReset) {
+            customPushRoute({}, true, true)
+        } else {
+            customPushRoute({ ...result }, true)
+        }
     }
 
     const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSizeOptions) => {
-        window.history.replaceState("", "", `${location.pathname}#${pageNumber}`)
+        localStorage.setItem('user_select_size', pageSizeOptions.toString())
         if (tableSize !== pageSizeOptions) {
             setPageNum(1);
             setTableSize(pageSizeOptions);
@@ -134,49 +205,30 @@ const CustomTable = <T extends {
             setTableSize(pageSizeOptions);
             searchCallback(pageNumber, pageSizeOptions)
         }
-        localStorage.setItem('user_select_size', pageSizeOptions.toString())
         if (onPageChange) onPageChange(pageNumber, pageSizeOptions)
     };
 
     useEffect(() => {
-        if (refresh) {
-            setRefresh(true)
+        if (refresh && onSearchChange) {
+            const result = createParams({page: pageNum, size: tableSize})
+            onSearchChange(result)
         }
     }, [refresh])
 
-    useEffect(() => {
-        if (_refresh) {
-            setRefresh(false)
-            searchCallback(pageNum, tableSize)
-        }
-    }, [_refresh])
-
-    useEffect(() => {
-        if (location.hash) {
-            const num = parseInt(location.hash.replace('#', ''))
-            setPageNum(num)
-            searchCallback(num, tableSize)
-        } else {
-            setPageNum(1)
-            searchCallback(1, tableSize)
-        }
-    }, [location])
-
-    useEffect(() => {
-        setSearchValue('')
-    }, [searchType])
-    
     useEffect(() => {
         if (searchTarget && searchTarget.type === 'select' && searchTarget.needSelect) {
             setSearchValue(searchTarget.selectOptions![0].key)
         }
     }, [searchTarget])
 
+    useEffect(() => {
+        if (closeEvent) setCloseEvent(false)
+    }, [closeEvent])
+
     return <div>
         <div className={`custom-table-header${(noSearch || !searchOptions) ? ' no-search' : ''}${(noSearch && !addBtn && deleteBtn) ? ' no-margin' : ''}`}>
             {!noSearch && searchOptions && <form onSubmit={e => {
                 e.preventDefault()
-                setPageNum(1)
                 searchCallback(1, tableSize)
             }} className="table-search-container">
                 <CustomSelect items={searchOptions.map(_ => ({
@@ -184,22 +236,19 @@ const CustomTable = <T extends {
                     label: columns.find(__ => _.key === __.key)?.title || _.label
                 }))} value={searchType!} onChange={type => {
                     setSearchType(type)
+                    setSearchValue('')
                 }} needSelect />
                 {
                     searchTarget?.type === 'string' ? <Input containerClassName="table-search-input" className="st1" name="searchValue" value={searchValue} placeholder={formatMessage({ id: 'TABLE_SEARCH_PLACEHOLDER_LABEL' })} valueChange={value => {
                         setSearchValue(value)
                     }} /> : <CustomSelect value={searchValue} onChange={value => {
                         setSearchValue(value)
-                    }} items={searchTarget?.selectOptions!} needSelect={searchTarget?.needSelect} />
+                    }} items={searchTarget?.selectOptions || []} needSelect={searchTarget?.needSelect} />
                 }
                 <Button className="st3" icon={searchIcon} type="submit">
                     <FormattedMessage id="SEARCH" />
                 </Button>
                 <Button className="st4" onClick={() => {
-                    setSearchValue("")
-                    setSearchType(searchOptions[0].key)
-                    setPageNum(1)
-                    setTableSize(10)
                     searchCallback(1, 10, undefined, true)
                 }} icon={resetIcon}>
                     <FormattedMessage id="NORMAL_RESET_LABEL" />
@@ -229,19 +278,53 @@ const CustomTable = <T extends {
                             e.preventDefault()
                             if (onHeaderColClick) onHeaderColClick(_, e.currentTarget)
                         }} className={`${onHeaderColClick ? 'pointer' : ''}`}>
-                            {/* {_.title instanceof Function ? _.title(datas && datas[ind] && datas[ind][_.key], ind, datas ? datas[ind] : undefined) : _.title} */}
                             {_.title}
-                            {_.filterOption && <CustomDropdown value={filterValues.find(values => values.key === _.filterKey)?.value} multiple onChange={val => {
-                                const result = filterValues.map(fVal => fVal.key === _.filterKey ? ({
-                                    key: fVal.key,
-                                    value: val
-                                }) : fVal)
-                                setFilterValues(result)
-                                searchCallback(pageNum, tableSize, result)
-                            }} items={_.filterOption.map(opt => ({
-                                label: opt.label,
-                                value: opt.value
-                            }))}>
+                            {_.filterType === 'date' ? <CustomDropdown
+                                value={filterValues.find(values => values.key === _.filterKey)?.value}
+                                closeEvent={closeEvent}
+                                render={<Calendar
+                                    defaultValue={temp}
+                                    closeCallback={() => {
+                                        setCloseEvent(true)
+                                    }}
+                                    onChange={d => {
+                                        setTemp(d)
+                                        const convertedDate: DateSelectDataType = {
+                                            startDate: convertLocalDateStringToUTCString(d.startDate),
+                                            endDate: convertLocalDateStringToUTCString(dayjs(d.endDate).add(1, 'day').format(DateTimeFormat))
+                                        }
+                                        const result = [...filterValues.filter(_ => _.key !== 'startDate' && _.key !== 'endDate'),
+                                        {
+                                            key: 'startDate',
+                                            value: convertedDate.startDate
+                                        },
+                                        {
+                                            key: 'endDate',
+                                            value: convertedDate.endDate
+                                        }
+                                        ]
+                                        setFilterValues(result)
+                                        searchCallback(pageNum, tableSize, result)
+                                    }} />}>
+                                <div className="custom-table-filter-icon">
+                                    <img src={(filterValues.find(f => f.key === 'startDate') && filterValues.find(f => f.key === 'endDate')) ? filterIcon : filterDefaultIcon} />
+                                </div>
+                            </CustomDropdown> : _.filterOption && <CustomDropdown
+                                value={filterValues.find(values => values.key === _.filterKey)?.value}
+                                multiple
+                                onChange={val => {
+                                    const result = filterValues.map(fVal => {
+                                        return fVal.key === _.filterKey ? ({
+                                            key: fVal.key,
+                                            value: val
+                                        }) : fVal
+                                    })
+                                    setFilterValues(result)
+                                    searchCallback(pageNum, tableSize, result)
+                                }} items={_.filterOption.map(opt => ({
+                                    label: opt.label,
+                                    value: opt.value
+                                }))}>
                                 <div className="custom-table-filter-icon">
                                     <img src={filterValues.find(f => f.key === _.filterKey && f.value.length > 0) ? filterIcon : filterDefaultIcon} />
                                 </div>

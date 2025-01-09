@@ -150,7 +150,7 @@ const Settings = () => {
             <CustomInputRow title={<FormattedMessage id="USER_SELF_SIGN_UP_LABEL" />}>
                 <Switch checked={canSignUp} onChange={check => {
                     setCanSignUp(check)
-                }} checkedChildren={formatMessage({ id: 'ALLOW_LABEL' })} unCheckedChildren={formatMessage({ id: 'DENY_LABEL' })} />
+                }}/>
             </CustomInputRow>
             <div className={`admin-need${canSignUp ? ' visible' : ''}`}>
                 <CustomInputRow title="">
@@ -177,7 +177,7 @@ const Settings = () => {
                                 ...noticeToAdmin,
                                 isEnabled: check
                             })
-                        }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
+                        }}/>
                     </div>
                     <div className="policy-contents-container" data-hidden={!noticeToAdmin.isEnabled}>
                         <div className="policy-input-container">
@@ -225,7 +225,7 @@ const Settings = () => {
             <CustomInputRow title={<FormattedMessage id="SETTING_USER_SELF_DEVICE_DELETE_LABEL" />}>
                 <Switch checked={canDelete} onChange={check => {
                     setCanDelete(check)
-                }} checkedChildren={formatMessage({ id: 'ALLOW_LABEL' })} unCheckedChildren={formatMessage({ id: 'DENY_LABEL' })} />
+                }} />
             </CustomInputRow>
             <CustomInputRow title={<FormattedMessage id="SETTING_NOTICE_TEXT_LABEL" />}>
                 <Input className="st1" value={welcomeText} valueChange={value => {
@@ -233,7 +233,8 @@ const Settings = () => {
                 }} maxLength={50} />
             </CustomInputRow>
             <CustomInputRow title={<FormattedMessage id="SETTING_NOTICE_IMAGE_LABEL" />} containerStyle={{
-                alignItems: 'flex-start'
+                alignItems: 'flex-start',
+                marginTop: '12px'
             }}>
                 <CustomImageUpload data={logoImg} callback={(img) => {
                     setLogoImg(img)

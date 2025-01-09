@@ -3,6 +3,7 @@ import downloadIcon from '../../assets/downloadIcon.png';
 import { FormattedMessage, useIntl } from "react-intl";
 import { useSelector } from "react-redux";
 import { message } from "antd";
+import { downloadFileByLink } from "Functions/GlobalFunctions";
 
 const ApplicationAgentDownload = ({ type }: {
     type: ApplicationDataType['type']
@@ -29,16 +30,15 @@ const ApplicationAgentDownload = ({ type }: {
         }
     }
     return <>
-        {needAgent && <a href={getDownloadUrlByType()} download onClick={e => {
-            if(!getDownloadUrlByType()) {
-                e.preventDefault()
-                message.error(formatMessage({id:'NO_DOWNLOAD_URL_MSG'}))
+        {needAgent && <Button className="st11" icon={downloadIcon} onClick={() => {
+            if (!getDownloadUrlByType()) {
+                message.error(formatMessage({ id: 'NO_DOWNLOAD_URL_MSG' }))
+            } else {
+                downloadFileByLink(getDownloadUrlByType()!)
             }
         }}>
-            <Button className="st11" icon={downloadIcon}>
-                <FormattedMessage id={getLabelKeyByType()} />
-            </Button>
-        </a>}
+            <FormattedMessage id={getLabelKeyByType()} />
+        </Button>}
     </>
 }
 

@@ -151,23 +151,6 @@
     height: 30px;
 }
 
-.user-policy-select-container {
-    display: flex;
-    align-items: baseline;
-    flex-direction: row;
-    gap: 36px;
-}
-
-.user-policy-select-container>h3 {
-    margin: 0;
-}
-
-.user-policy-select-container>div {
-    display: flex;
-    flex-direction: row;
-    gap: 8px;
-}
-
 .user-detail-info-device-info-content {
     display: flex;
     flex-direction: row;

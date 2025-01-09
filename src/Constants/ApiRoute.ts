@@ -109,3 +109,6 @@ export const TestLdapConnectionApi = '/v2/ldap/test-connection'
 
 // RADIUS
 export const AddRadiusUserListApi = '/v2/radius-rp-users'
+
+// 보안 질문
+export const UpdateSecurityQuestionsApi = '/v2/users/security-qna'

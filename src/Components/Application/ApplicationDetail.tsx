@@ -17,13 +17,15 @@ import deleteIconHover from '../../assets/deleteIconHover.png'
 import { FormattedMessage, useIntl } from "react-intl"
 import CustomImageUpload from "Components/CommonCustomComponents/CustomImageUpload"
 import BottomLineText from "Components/CommonCustomComponents/BottomLineText"
-import { domainRegex, redirectUriRegex } from "Components/CommonCustomComponents/CommonRegex"
+import { domainRegex, ipAddressRegex, redirectUriRegex } from "Components/CommonCustomComponents/CommonRegex"
 import CustomModal from "Components/Modal/CustomModal"
 import SingleOMPASSAuthModal from "Components/Modal/SingleOMPASSAuthModal"
 import RadiusDetailInfo from "./RadiusDetailInfo"
 import documentIcon from '../../assets/documentIcon.png'
 import documentIconHover from '../../assets/documentIconHover.png'
 import ApplicationAgentDownload from "./ApplicationAgentDownload"
+import infoIcon from '../../assets/ipInfoIcon.png'
+import '../Policy/AuthPolicyDetail.css'
 import './ApplicationDetail.css'
 
 const ApiServerAddressItem = ({ text }: {
@@ -59,6 +61,11 @@ const ApplicationDetail = () => {
     const [selectedPolicy, setSelectedPolicy] = useState('')
     const [inputDescription, setInputDescription] = useState('')
     const [inputApiServerHost, setInputApiServerHost] = useState('')
+    const [pamPassData, setPamPassData] = useState<PAMPassDataType>({
+        isEnabled: false,
+        ip: '',
+        username: ''
+    })
     const [dataLoading, setDataLoading] = useState(false)
     const [sureDelete, setSureDelete] = useState(false)
     const [authPurpose, setAuthPurpose] = useState<'delete' | 'reset' | ''>('')
@@ -92,9 +99,12 @@ const ApplicationDetail = () => {
                 setInputName(data.name)
                 setInputSecretKey(data.secretKey)
 
-                if(data.domain) {
+                if (data.domain) {
                     setInputDomain(data.domain ?? "")
                     setInputRedirectUrl(data.redirectUri ? data.redirectUri.replace(data.domain, "") : "")
+                }
+                if(data.linuxPamBypass) {
+                    setPamPassData(data.linuxPamBypass)
                 }
                 // setInputRedirectUrl(data.redirectUri ?? "")
                 setLogoImage({
@@ -139,16 +149,21 @@ const ApplicationDetail = () => {
                         return message.error(formatMessage({ id: 'PLEASE_INPUT_APPLICATION_DOMAIN' }))
                     }
                     if (needDomains.includes(applicationType) && !domainRegex.test(inputDomain)) {
-                        return message.error(formatMessage({id:'INVALID_INPUT_DOMAIN_MSG'}))
+                        return message.error(formatMessage({ id: 'INVALID_INPUT_DOMAIN_MSG' }))
                     }
                     if (!isRedmine && needDomains.includes(applicationType) && !redirectUriRegex.test(inputRedirectUrl)) {
-                        return message.error(formatMessage({id:'INVALID_INPUT_REDIRECT_URI_MSG'}))
+                        return message.error(formatMessage({ id: 'INVALID_INPUT_REDIRECT_URI_MSG' }))
                     }
                     if (!isRedmine && !inputRedirectUrl && needDomains.includes(applicationType)) {
                         return message.error(formatMessage({ id: 'PLEASE_INPUT_APPLICATION_REDIRECT_URI' }))
                     }
                     if (!selectedPolicy) {
                         return message.error(formatMessage({ id: 'PLEASE_SELECT_APPLICATION_POLICY' }))
+                    }
+                    if (pamPassData.isEnabled) {
+                        if (!pamPassData.username) return message.error(formatMessage({ id: 'PAM_PASS_DATA_USERNAME_REQUIRED_MSG' }))
+                        if (!pamPassData.ip) return message.error(formatMessage({id: 'PAM_PASS_DATA_IP_ADDRESS_REQUIRED_MSG'}))
+                        if (pamPassData.ip && !ipAddressRegex.test(pamPassData.ip)) return message.error(formatMessage({ id: 'PAM_PASS_DATA_IP_ADDRESS_INVALID_MSG' }))
                     }
                     if (uuid) {
                         UpdateApplicationDataFunc(uuid!, {
@@ -163,7 +178,12 @@ const ApplicationDetail = () => {
                             },
                             description: inputDescription,
                             type: applicationType,
-                            isPasswordlessEnabled: isPasswordlessEnabled
+                            isPasswordlessEnabled: isPasswordlessEnabled,
+                            linuxPamBypass: {
+                                isEnabled: pamPassData.isEnabled,
+                                ip: pamPassData.isEnabled ? pamPassData.ip : '',
+                                username: pamPassData.isEnabled ? pamPassData.username : ''
+                            }
                         }, () => {
                             message.success(formatMessage({ id: 'APPLICATION_MODIFY_SUCCESS_MSG' }))
                         })
@@ -214,22 +234,22 @@ const ApplicationDetail = () => {
                             <Input className="st1 secret-key" value={inputClientId} disabled={isAdd} readOnly={!isAdd} />
                         </CopyToClipboard>
                     </CustomInputRow>}
-            {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_SECRET_KEY_LABEL" />}>
-                <CopyToClipboard text={inputSecretKey} onCopy={(value, result) => {
-                    if (result) {
-                        message.success(formatMessage({ id: 'APPLICATION_SECRET_KEY_COPY_SUCCESS_MSG' }))
-                    } else {
-                        message.success(formatMessage({ id: 'APPLICATION_SECRET_KEY_COPY_FAIL_MSG' }))
-                    }
-                }}>
-                    <Input className="st1 secret-key" value={inputSecretKey} onChange={e => {
-                        setInputSecretKey(e.target.value)
-                    }} readOnly />
-                </CopyToClipboard>
-                <Button className="st9 application-detail-input-sub-btn" onClick={() => {
-                    setSureReset(true)
-                }}><FormattedMessage id="APPLICATION_SECRET_KEY_RESET" /></Button>
-            </CustomInputRow>}
+                    {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_SECRET_KEY_LABEL" />}>
+                        <CopyToClipboard text={inputSecretKey} onCopy={(value, result) => {
+                            if (result) {
+                                message.success(formatMessage({ id: 'APPLICATION_SECRET_KEY_COPY_SUCCESS_MSG' }))
+                            } else {
+                                message.success(formatMessage({ id: 'APPLICATION_SECRET_KEY_COPY_FAIL_MSG' }))
+                            }
+                        }}>
+                            <Input className="st1 secret-key" value={inputSecretKey} onChange={e => {
+                                setInputSecretKey(e.target.value)
+                            }} readOnly />
+                        </CopyToClipboard>
+                        <Button className="st9 application-detail-input-sub-btn" onClick={() => {
+                            setSureReset(true)
+                        }}><FormattedMessage id="APPLICATION_SECRET_KEY_RESET" /></Button>
+                    </CustomInputRow>}
                 </>
             }
             {!isAdd && applicationType === 'RADIUS' && <RadiusDetailInfo data={radiusData} />}
@@ -245,7 +265,7 @@ const ApplicationDetail = () => {
                 }}>
                     <FormattedMessage id="DOCS_VIEW_LABEL" />
                 </Button>}
-                <ApplicationAgentDownload type={applicationType}/>
+                <ApplicationAgentDownload type={applicationType} />
             </CustomInputRow>
             {
                 applicationType && <>
@@ -281,13 +301,54 @@ const ApplicationDetail = () => {
                     {passwordUsed.includes(applicationType) && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_WINDOWS_PASSWORD_NEED_CHECK_LABEL" />}>
                         <Switch checked={isPasswordlessEnabled} onChange={check => {
                             setIsPasswordlessEnabled(check)
-                        }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
+                        }}/>
+                    </CustomInputRow>}
+                    {applicationType === 'LINUX_LOGIN' && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_PAM_PASS_LABEL" />} isVertical containerStyle={{
+                        alignItems: 'flex-start',
+                        marginTop: '12px'
+                    }}>
+                        <Switch checked={pamPassData.isEnabled} onChange={check => {
+                            setPamPassData({
+                                ...pamPassData,
+                                isEnabled: check
+                            })
+                        }}/>
+                        <div className="application-contents-container" data-hidden={!pamPassData.isEnabled}>
+                            <div className="application-contents-inner-container">
+                                <Input containerClassName="pam-pass-input" className="st1" placeholder={formatMessage({ id: 'APPLICATION_INFO_PAM_PASS_INFO_USERNAME_PLACEHOLDER' })} value={pamPassData.username} valueChange={(val) => {
+                                    setPamPassData({
+                                        ...pamPassData,
+                                        username: val
+                                    })
+                                }} maxLength={24} />
+                                <Input containerClassName="pam-pass-input" className="st1" placeholder={formatMessage({ id: 'APPLICATION_INFO_PAM_PASS_INFO_IP_PLACEHOLDER' })} value={pamPassData.ip} onInput={e => {
+                                    e.currentTarget.value = e.currentTarget.value.replace(/[^0-9.\/]/g, '')
+                                }} maxLength={16} valueChange={(val) => {
+                                    setPamPassData({
+                                        ...pamPassData,
+                                        ip: val
+                                    })
+                                }} rules={[
+                                    {
+                                        regExp: (value) => !RegExp(ipAddressRegex).test(value),
+                                        msg: formatMessage({ id: 'PAM_DATA_IP_ADDRESS_INPUT' })
+                                    }
+                                ]} />
+                            </div>
+                            <div className="pam-data-description-text">
+                                <FormattedMessage id="PAM_PASS_DESCRIPTION_TEXT"/>
+                            </div>
+                            <div className="pam-data-description-text">
+                                <FormattedMessage id="PAM_PASS_DESCRIPTION_TEXT2"/>
+                            </div>
+                        </div>
                     </CustomInputRow>}
                     <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_POLICY_LABEL" />} required>
                         <PolicySelect selectedPolicy={selectedPolicy} setSelectedPolicy={setSelectedPolicy} applicationType={applicationType} needSelect />
                     </CustomInputRow>
                     <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_LOGO_LABEL" />} containerStyle={{
-                        alignItems: 'flex-start'
+                        alignItems: 'flex-start',
+                        marginTop: '12px'
                     }}>
                         <CustomImageUpload data={logoImage} callback={handleFileSelect} />
                     </CustomInputRow>
@@ -323,7 +384,6 @@ const ApplicationDetail = () => {
         <SingleOMPASSAuthModal purpose={authPurpose === 'reset' ? 'ADMIN_2FA_FOR_SECRET_KEY_UPDATE' : "ADMIN_2FA_FOR_APPLICATION_DELETION"} opened={authPurpose !== ''} onCancel={() => {
             setAuthPurpose('')
         }} successCallback={(token) => {
-            console.log('complete token : ', token)
             if (authPurpose === 'reset') {
                 return UpdateApplicationSecretkeyFunc(uuid!, token, (appData) => {
                     setInputSecretKey(appData.secretKey)

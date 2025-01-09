@@ -1,5 +1,5 @@
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from "Components/CommonCustomComponents/CustomAxios";
-import { AddApplicationListApi, AddLdapConfigListApi, AddPasscodeApi, AddPoliciesListApi, AddRadiusUserListApi, AddUserDataApi, AddUserGroupApi, AddUserWithCsvDataApi, ApprovalUserApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeleteLdapConfigListApi, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DuplicateUserNameCheckApi, FindPortalUsernameApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetGlobalConfigApi, GetLdapConfigListApi, GetOMPASSAuthResultApi, GetPasscodeHistoriesApi, GetPasscodeListApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetRpUserListApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, OMPASSAuthStartApi, PatchSessionTokenApi, PostLoginApi, ResetPasswordApi, ResetPasswordEmailCodeVerifyApi, ResetPasswordEmailSendApi, RoleSwappingApi, RootSignUpRequestApi, SendPasscodeEmailApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, SyncLdapUserListApi, TestLdapConnectionApi, UnlockUserApi, UpdateAgentNoteApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdateLdapConfigListApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi } from "Constants/ApiRoute";
+import { AddApplicationListApi, AddLdapConfigListApi, AddPasscodeApi, AddPoliciesListApi, AddRadiusUserListApi, AddUserDataApi, AddUserGroupApi, AddUserWithCsvDataApi, ApprovalUserApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeleteLdapConfigListApi, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DuplicateUserNameCheckApi, FindPortalUsernameApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetGlobalConfigApi, GetLdapConfigListApi, GetOMPASSAuthResultApi, GetPasscodeHistoriesApi, GetPasscodeListApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetRpUserListApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, OMPASSAuthStartApi, PatchSessionTokenApi, PostLoginApi, ResetPasswordApi, ResetPasswordEmailCodeVerifyApi, ResetPasswordEmailSendApi, RoleSwappingApi, RootSignUpRequestApi, SendPasscodeEmailApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, SyncLdapUserListApi, TestLdapConnectionApi, UnlockUserApi, UpdateAgentNoteApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdateLdapConfigListApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateSecurityQuestionsApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi } from "Constants/ApiRoute";
 import { INT_MAX_VALUE } from "Constants/ConstantValues";
 import { convertDashboardDateParamsKSTtoUTC } from "Components/Dashboard/DashboardFunctions";
 import { convertUTCStringToLocalDateString } from "./GlobalFunctions";
@@ -311,6 +311,8 @@ export const GetAllAuthLogDataListFunc = ({
     authPurposes = [],
     denyReasons = [],
     processType = undefined,
+    startDate = undefined,
+    endDate = undefined,
     sortBy = "CREATED_AT",
     sortDirection = "DESC"
 }: AuthLogListParamsType, callback: ((data: GetListDataGeneralType<AllAuthLogDataType>) => void)) => {
@@ -328,6 +330,8 @@ export const GetAllAuthLogDataListFunc = ({
         policyName,
         denyReasons,
         processType,
+        startDate,
+        endDate,
         sortBy,
         sortDirection
     } as AuthLogListParamsType)
@@ -344,6 +348,8 @@ export const GetInvalidAuthLogDataListFunc = ({
     authenticatorTypes = [],
     authPurposes = [],
     denyReasons = [],
+    startDate = undefined,
+    endDate = undefined,
     sortBy = "CREATED_AT",
     sortDirection = "DESC"
 }: AuthLogListParamsType, callback: ((data: GetListDataGeneralType<InvalidAuthLogDataType>) => void)) => {
@@ -361,6 +367,8 @@ export const GetInvalidAuthLogDataListFunc = ({
         authenticationLogTypes: ['DENY'],
         authPurposes,
         denyReasons,
+        startDate,
+        endDate,
         sortBy,
         sortDirection
     } as AuthLogListParamsType)
@@ -376,6 +384,8 @@ export const GetValidAuthLogDataListFunc = ({
     applicationTypes = [],
     authenticatorTypes = [],
     authPurposes = [],
+    startDate = undefined,
+    endDate = undefined,
     sortBy = "CREATED_AT",
     sortDirection = "DESC"
 }: AuthLogListParamsType, callback: ((data: GetListDataGeneralType<ValidAuthLogDataType>) => void)) => {
@@ -392,6 +402,8 @@ export const GetValidAuthLogDataListFunc = ({
         authenticatorTypes,
         authenticationLogTypes: ['ALLOW'],
         authPurposes,
+        startDate,
+        endDate,
         sortBy,
         sortDirection
     } as AuthLogListParamsType)
@@ -403,6 +415,8 @@ export const GetPortalLogDataListFunc = ({
     username = "",
     httpMethods = [],
     apiUri = "",
+    startDate = undefined,
+    endDate = undefined,
     sortBy = "CREATED_AT",
     sortDirection = "DESC"
 }: ProtalLogListParamsType, callback: ((data: GetListDataGeneralType<PortalLogDataType>) => void)) => {
@@ -414,6 +428,8 @@ export const GetPortalLogDataListFunc = ({
         username,
         httpMethods,
         apiUri,
+        startDate,
+        endDate,
         sortBy,
         sortDirection
     })
@@ -660,6 +676,15 @@ export const FindPortalUsernameFunc = (token: string, callback: (data: {
     username: string
 }) => void) => {
     return CustomAxiosGet(FindPortalUsernameApi, callback, null, {
+        authorization: token
+    })
+}
+
+export const UpdateSecurityQuestionsFunc = (questions: SecurityQuestionDataType[], token: string, callback: () => void) => {
+    console.log(token)
+    return CustomAxiosPut(UpdateSecurityQuestionsApi, callback, {
+        securityQnas: questions
+    }, {
         authorization: token
     })
 }

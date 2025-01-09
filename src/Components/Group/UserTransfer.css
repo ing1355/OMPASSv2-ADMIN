@@ -1,7 +1,8 @@
 .custom-transfer-user-container {
+    flex: 0 0 85%;
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: space-between;
     gap: 32px;
     align-items: center;
 }
@@ -9,7 +10,7 @@
 .custom-transfer-user-content-box {
     width: 433.5px;
     height: 800px;
-    border: 1px solid var(--sub-grey-color5);
+    border: 1.4px solid var(--sub-grey-color5);
     border-radius: 8px;
 }
 

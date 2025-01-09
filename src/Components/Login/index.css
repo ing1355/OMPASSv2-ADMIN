@@ -15,6 +15,7 @@
 
 .login-agent-download-button {
   height: 34px;
+  border: none !important;
 }
 
 .login-container {

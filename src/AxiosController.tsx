@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { message as _message } from 'antd';
 import { userInfoClear } from "Redux/actions/userChange";
 import { controller } from "Components/CommonCustomComponents/CustomAxios";
+import { getStorageAuth } from "Functions/GlobalFunctions";
 
 let oldInterceptorId = 0;
 
@@ -22,6 +23,7 @@ const AxiosController = () => {
       if (err && err.response && err.response) {
         const { data } = err.response
         if(data && data.code === 'ERR_B009') {
+          console.log('why session expired ?', getStorageAuth(), err.config.headers)
           dispatch(userInfoClear());
           // navigate('/', {
           //   replace: true

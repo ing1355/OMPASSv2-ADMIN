@@ -92,7 +92,15 @@
 @media (max-width:768px) {
 
   .header-container-contents {
-    
+    padding-right: 12px;
+  }
+
+  .header-contents-second-items {
+    /* display: none; */
+  }
+
+  .header-title-container {
+    display: none;
   }
 
   .header_logo_title {

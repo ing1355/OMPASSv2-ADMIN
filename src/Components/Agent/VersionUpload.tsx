@@ -29,6 +29,7 @@ const VersionUpload = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate();
   const type = useParams().type as UploadFileTypes
+  
   const fileExtensionByType = () => {
     if (type === 'WINDOWS_AGENT') {
       return ".zip"

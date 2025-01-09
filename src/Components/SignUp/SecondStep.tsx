@@ -10,6 +10,7 @@ import Input from "Components/CommonCustomComponents/Input";
 import RequiredLabel from "Components/CommonCustomComponents/RequiredLabel";
 import { isDev } from "Constants/ConstantValues";
 import { useSelector } from "react-redux";
+import SecurityQuestionLayout from "./SecurityQuestionLayout";
 
 const InputRow = ({ label, children, required }: PropsWithChildren<{
     label: string
@@ -26,7 +27,7 @@ const InputRow = ({ label, children, required }: PropsWithChildren<{
     </div>
 }
 
-const SecondStep = ({completeCallback}: {
+const SecondStep = ({ completeCallback }: {
     completeCallback: () => void
 }) => {
     const lang = useSelector((state: ReduxStateType) => state.lang!);
@@ -54,13 +55,6 @@ const SecondStep = ({completeCallback}: {
 
     const [mailSendLoading, setMailSendLoading] = useState(false)
 
-    const [rootQuestion1, setRootQuestion1] = useState('')
-    const [rootQuestion2, setRootQuestion2] = useState('')
-    const [rootQuestion3, setRootQuestion3] = useState('')
-
-    const rootQuestionRef1 = useRef<HTMLInputElement>()
-    const rootQuestionRef2 = useRef<HTMLInputElement>()
-    const rootQuestionRef3 = useRef<HTMLInputElement>()
 
     const usernameRef = useRef<HTMLInputElement>(null)
     const passwordRef = useRef<HTMLInputElement>(null)
@@ -106,72 +100,36 @@ const SecondStep = ({completeCallback}: {
         message.success(formatMessage({ id: 'SUCCESS_REGISTER_MSG' }));
     }
 
-    return <div className="signup-content second">
-        {rootConfirm ? <>
-            {
-                subdomainInfo.securityQuestion.questions.map((_, ind) => <InputRow key={ind} label={_} required>
-                <Input
-                    className='st1'
-                    required
-                    ref={ind === 0 ? rootQuestionRef1 : ind === 1 ? rootQuestionRef2 : rootQuestionRef3}
-                    value={ind === 0 ? rootQuestion1 : ind === 1 ? rootQuestion2 : rootQuestion3}
-                    valueChange={(value, isAlert) => {
-                        if(ind === 0) {
-                            setRootQuestion1(value)
-                        } else if(ind === 1) {
-                            setRootQuestion2(value)
-                        } else {
-                            setRootQuestion3(value)
-                        }
-                    }}
-                />
-            </InputRow>)
-            }
-            <Button
-                type={subdomainInfo.securityQuestion.isRootAdminSignupComplete ? 'submit' : 'button'}
-                className={'st3 agree-button signup-complete'}
-                onClick={() => {
-                    RootSignUpRequestFunc({
-                        name: {
-                            firstName: inputName1,
-                            lastName: inputName2
-                        },
-                        password: inputPassword,
-                        username: inputUsername,
-                        email: inputEmail,
-                        phone: inputPhone,
-                        role: 'ROOT',
-                        securityQnas: [
-                            {
-                                question: subdomainInfo.securityQuestion.questions[0],
-                                answer: rootQuestion1
-                            },
-                            {
-                                question: subdomainInfo.securityQuestion.questions[1],
-                                answer: rootQuestion2
-                            },
-                            {
-                                question: subdomainInfo.securityQuestion.questions[2],
-                                answer: rootQuestion3
-                            }
-                        ]
-                    }, () => {
-                        _completeCallback()
-                    })
-                }}
-            >
-                <FormattedMessage id='SIGN_UP' />
-            </Button>
-            <Button
-                className={'st6 agree-button signup-complete'}
-                onClick={() => {
-                    navigate('/', {
-                        replace: true
-                    })
-                }}
-            ><FormattedMessage id='GO_BACK' />
-            </Button>
-        </> : <form
+    return rootConfirm ? <SecurityQuestionLayout onComplete={(ques1, ques2, ques3) => {
+        RootSignUpRequestFunc({
+            name: {
+                firstName: inputName1,
+                lastName: inputName2
+            },
+            password: inputPassword,
+            username: inputUsername,
+            email: inputEmail,
+            phone: inputPhone,
+            role: 'ROOT',
+            securityQnas: [
+                {
+                    question: subdomainInfo.securityQuestion.questions[0],
+                    answer: ques1
+                },
+                {
+                    question: subdomainInfo.securityQuestion.questions[1],
+                    answer: ques2
+                },
+                {
+                    question: subdomainInfo.securityQuestion.questions[2],
+                    answer: ques3
+                }
+            ]
+        }, () => {
+            _completeCallback()
+        })
+    }} /> : <div className="signup-content second">
+        <form
             onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
                 e.preventDefault();
                 if (isIdAlert) {
@@ -203,7 +161,7 @@ const SecondStep = ({completeCallback}: {
                     return message.error(formatMessage({ id: 'NEED_CODE_VERIFY_MSG' }))
                 }
                 if (inputUsername && inputName1 && inputName2 && inputEmail && inputPassword) {
-                    if(!subdomainInfo.securityQuestion.isRootAdminSignupComplete) return setRootConfirm(true)
+                    if (!subdomainInfo.securityQuestion.isRootAdminSignupComplete) return setRootConfirm(true)
                     SignUpRequestFunc({
                         name: {
                             firstName: inputName1,
@@ -308,7 +266,7 @@ const SecondStep = ({completeCallback}: {
                     ]}
                     value={lang === 'KR' ? inputName2 : inputName1}
                     valueChange={(value, isAlert) => {
-                        if(lang === 'KR') {
+                        if (lang === 'KR') {
                             setInputName2(value)
                             setIsNameAlert2(isAlert || false)
                         } else {
@@ -333,7 +291,7 @@ const SecondStep = ({completeCallback}: {
                     value={lang === 'KR' ? inputName1 : inputName2}
                     customType="name"
                     valueChange={(value, isAlert) => {
-                        if(lang === 'KR') {
+                        if (lang === 'KR') {
                             setInputName1(value)
                             setIsNameAlert1(isAlert || false)
                         } else {
@@ -453,7 +411,7 @@ const SecondStep = ({completeCallback}: {
                 }}
             ><FormattedMessage id='GO_BACK' />
             </Button>
-        </form>}
+        </form>
     </div>
 }
 

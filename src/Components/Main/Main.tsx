@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { menuDatas } from 'Constants/ConstantValues';
 import { Col, Row } from 'antd';
 import Contents from 'Components/Layout/Contents';
+import { isMobile } from 'react-device-detect';
 
 
 const Main = () => {
@@ -64,9 +65,10 @@ const Main = () => {
   return (
     <>
       <Contents containerStyle={{
-        justifyContent: 'center',
-        height: 'calc(100% - 120px)',
-        paddingBottom: 48
+        justifyContent: isMobile ? 'start' : 'center',
+        alignItems: 'center',
+        paddingBottom: 48,
+        paddingTop: isMobile ? 48 : 0
       }}>
         {menuInfoFun()}
       </Contents>

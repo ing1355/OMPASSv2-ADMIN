@@ -40,7 +40,8 @@ const ValidationText = {
         PASSCODE_NEED_MORE_THAN_1_TIMES: '패스코드 사용 횟수는 1회 이상 설정되어야 합니다.',
         UPLOAD_NEED_ACCEPT_TYPE: '{param} 형식의 파일만 업로드 가능합니다.',
         UPLOAD_NEED_UNDER_10_MB_FILE: '10MB 미만의 파일만 업로드 가능합니다.',
-        IP_ADDRESS_POLICY_INPUT: 'IP 주소 형식(aaa.bbb.ccc.ddd) 혹은 CIDR 형식(aaa.bbb.0.0/24)을 입력해야 합니다.'
+        IP_ADDRESS_POLICY_INPUT: 'IP 주소 형식(aaa.bbb.ccc.ddd) 혹은 CIDR 형식(aaa.bbb.0.0/24)을 입력해야 합니다.',
+        PAM_DATA_IP_ADDRESS_INPUT: 'IP 주소 형식(aaa.bbb.ccc.ddd)을 입력해야 합니다.'
     },
     'EN': {
         USERNAME_CHECK: 'Only lowercase letters and numbers are allowed, with a length of 4 to 16 characters',
@@ -83,7 +84,8 @@ const ValidationText = {
         PASSCODE_NEED_MORE_THAN_1_TIMES: 'The passcode must be used more than once',
         UPLOAD_NEED_ACCEPT_TYPE: 'Only files in {param} format can be uploaded',
         UPLOAD_NEED_UNDER_10_MB_FILE: 'Only files smaller than 10MB can be uploaded',
-        IP_ADDRESS_POLICY_INPUT: 'You must enter the IP address format (aaa.bbb.ccc.ddd) or CIDR format (aaa.bbb.0.0/24)'
+        IP_ADDRESS_POLICY_INPUT: 'You must enter the IP address format (aaa.bbb.ccc.ddd) or CIDR format (aaa.bbb.0.0/24)',
+        PAM_DATA_IP_ADDRESS_INPUT: 'You must enter the IP address format (aaa.bbb.ccc.ddd)'
     }
 }
 

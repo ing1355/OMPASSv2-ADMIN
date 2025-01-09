@@ -1,78 +1,100 @@
-import React, { Children, CSSProperties, forwardRef, PropsWithChildren, ReactElement, useCallback, useEffect, useRef, useState } from 'react'
+import React, { Children, forwardRef, PropsWithChildren, ReactElement, useCallback, useEffect, useRef, useState } from 'react'
 import './CustomDropdown.css'
 import { FormattedMessage, IntlProvider } from 'react-intl'
 import { convertLangToIntlVer } from 'Constants/ConstantValues'
 import Locale from 'Locale'
-import { Provider, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { createRoot } from 'react-dom/client'
 import checkIcon from '../../assets/checkIcon.png'
-import store from 'Redux/store'
 
 type CustomDropdownProps = PropsWithChildren<{
     items?: {
         label: string
         value: any
     }[]
-    onChange: (value: any) => void
+    render?: React.ReactNode
+    onChange?: (value: any) => void
     children: ReactElement
     multiple?: boolean
+    closeEvent?: boolean
     value?: any | any[]
 }>
 
-const DropdownContainer = forwardRef(({ lang, effectCallback, items, onChange, value, multiple, closeCallback }: PropsWithChildren & {
+const DropdownContainer = forwardRef(({ lang, effectCallback, items, onChange, value, multiple, closeCallback, render }: PropsWithChildren & {
     effectCallback: () => void
     items?: {
         label: string
         value: any
     }[]
+    render?: React.ReactNode
     lang: LanguageType
     closeCallback: () => void
     multiple?: boolean
     value?: any | any[]
-    onChange: (value: any) => void
+    onChange?: (value: any) => void
 }, ref) => {
     const [tempValues, setTempValues] = useState<any[]>(value || [])
 
     useEffect(() => {
         effectCallback()
+        if (ref) {
+            const target = ((ref as any).current as HTMLDivElement)
+            target.style.maxWidth = target.clientWidth + 'px'
+        }
     }, [])
 
     return <>
         <IntlProvider locale={convertLangToIntlVer(lang)} messages={Locale[lang]}>
             <div className="custom-dropdown-container" ref={ref as any}>
-                <div className='custom-dropdown-inner-container'>
+                <div className={`custom-dropdown-inner-container${multiple ? ' multiple' : ''}`}>
                     {
-                        items && items.map((_, ind) => <div key={ind} className={`custom-dropdown-select-item-row${((Array.isArray(tempValues) && multiple) ? tempValues.includes(_.value) : tempValues === _.value) ? ' activate' : ''}`} onClick={() => {
-                            if (multiple) {
-                                if (tempValues.includes(_.value)) {
-                                    setTempValues(tempValues.filter(t => t !== _.value))
+                        items ? <>
+                            {multiple && items.length > 0 && <div className={`custom-dropdown-select-item-row${tempValues.length === items.length ? ' activate' : ''}`} onClick={() => {
+                                if (tempValues.length === items.length) {
+                                    setTempValues([])
                                 } else {
-                                    setTempValues(tempValues.concat(_.value))
+                                    setTempValues(items.map(_ => _.value))
                                 }
-                            } else {
-                                onChange(_.value)
-                                closeCallback()
+                            }}>
+                                <img src={checkIcon} className='custom-dropdown-multiple-check-icon' data-hidden={tempValues.length !== items.length} />
+                                <div>
+                                    <FormattedMessage id={tempValues.length === items.length ? "ALL_DESELECT_LABEL" : "ALL_SELECT_LABEL"} />
+                                </div>
+                            </div>}
+                            {
+                                items && items.map((_, ind) => <div key={ind} className={`custom-dropdown-select-item-row${((Array.isArray(tempValues) && multiple) ? tempValues.includes(_.value) : tempValues === _.value) ? ' activate' : ''}`} onClick={() => {
+                                    if (multiple) {
+                                        if (tempValues.includes(_.value)) {
+                                            setTempValues(tempValues.filter(t => t !== _.value))
+                                        } else {
+                                            setTempValues(tempValues.concat(_.value))
+                                        }
+                                    } else {
+                                        if (onChange) onChange(_.value)
+                                        closeCallback()
+                                    }
+                                }}>
+                                    {multiple && <img src={checkIcon} className='custom-dropdown-multiple-check-icon' data-hidden={!tempValues.includes(_.value)} />}
+                                    <div title={_.label}>
+                                        {_.label}
+                                    </div>
+                                </div>)
                             }
-                        }}>
-                            {multiple && <img src={checkIcon} className='custom-dropdown-multiple-check-icon' data-hidden={!tempValues.includes(_.value)}/>}
-                            <div title={_.label}>
-                                {_.label}
-                            </div>
-                        </div>)
+                            {multiple && <div className='custom-dropdown-multiple-save-container' onClick={() => {
+                                if (onChange) onChange(tempValues)
+                                closeCallback()
+                            }}>
+                                <FormattedMessage id="CUSTOM_DROPDOWN_MULTIPLE_SAVE_TEXT" />
+                            </div>}
+                        </> : render
                     }
-                    {multiple && <div className='custom-dropdown-multiple-save-container' onClick={() => {
-                        onChange(tempValues)
-                        closeCallback()
-                    }}>
-                        <FormattedMessage id="CUSTOM_DROPDOWN_MULTIPLE_SAVE_TEXT" />
-                    </div>}
                 </div>
             </div>
         </IntlProvider>
     </>
 })
 
-const CustomDropdown = ({ value, onChange, items, children, multiple }: CustomDropdownProps) => {
+const CustomDropdown = ({ value, onChange, items, children, multiple, render, closeEvent }: CustomDropdownProps) => {
     const lang = useSelector((state: ReduxStateType) => state.lang!);
     const parentRef = useRef<HTMLElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
@@ -90,7 +112,7 @@ const CustomDropdown = ({ value, onChange, items, children, multiple }: CustomDr
             closeCallback()
         }
     }, []);
-    
+
     useEffect(() => {
         if (false) {
             // if (hover) {
@@ -113,6 +135,12 @@ const CustomDropdown = ({ value, onChange, items, children, multiple }: CustomDr
         };
     }, [handleMouseDown]);
 
+    useEffect(() => {
+        if (closeEvent) {
+            closeCallback()
+        }
+    }, [closeEvent])
+
     return React.cloneElement(Children.only(children), {
         ...children.props,
         ref: parentRef,
@@ -133,10 +161,17 @@ const CustomDropdown = ({ value, onChange, items, children, multiple }: CustomDr
                     document.body.appendChild(div)
                     divRef.current = div
                     const root = createRoot(div as HTMLElement);
-                    root.render(<DropdownContainer lang={lang} closeCallback={closeCallback} items={items} multiple={multiple} value={value} onChange={onChange} effectCallback={() => {
-                        const diff = parentRef.current!.clientWidth - containerRef.current!.clientWidth
-                        div.style.transform = `translateX(${diff / 2}px)`
-                    }} ref={containerRef}/>)
+                    if (items) {
+                        root.render(<DropdownContainer lang={lang} closeCallback={closeCallback} items={items} multiple={multiple} value={value} onChange={onChange} effectCallback={() => {
+                            const diff = parentRef.current!.clientWidth - containerRef.current!.clientWidth
+                            div.style.transform = `translateX(${diff / 2}px)`
+                        }} ref={containerRef} />)
+                    } else {
+                        root.render(<DropdownContainer lang={lang} closeCallback={closeCallback} render={render} value={value} onChange={onChange} effectCallback={() => {
+                            const diff = parentRef.current!.clientWidth - containerRef.current!.clientWidth
+                            div.style.transform = `translateX(${diff / 2}px)`
+                        }} ref={containerRef} />)
+                    }
                 }
             }
         },

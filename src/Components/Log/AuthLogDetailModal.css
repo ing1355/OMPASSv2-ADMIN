@@ -1,0 +1,111 @@
+.auth-detail-modal-container {
+    width: 100%;
+    margin-top: 24px;
+}
+
+.auth-detail-modal-contents-row {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+}
+
+.auth-detail-modal-contents-row:not(:last-child) {
+    margin-bottom: 12px;
+}
+
+.auth-detail-modal-contents-container {
+    flex: 1;
+    border: 1.4px solid var(--sub-grey-color5);
+    padding: 12px;
+    border-radius: 8px;
+    position: relative;
+    padding-top: 16px;
+}
+
+.auth-detail-modal-contents-container::before {
+    position: absolute;
+    content: attr(data-title);
+    font-weight: bold;
+    top: -12px;
+    left: 16px;
+    background-color: white;
+    box-sizing: border-box;
+    padding: 0 6px;
+}
+
+.auth-detail-modal-contents-container.map {    
+    padding: 8px;
+    flex: 1;
+}
+
+.auth-detail-modal-contents-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.auth-detail-modal-contents-item-title {
+    flex: 0 0 160px;
+}
+
+.auth-detail-modal-contents-item-content {
+    flex: 1;
+    text-align: center;
+}
+
+.auth-detail-modal-contents-item:not(:last-child) {
+    margin-bottom: 4px;
+}
+
+.custom-current-position-check {
+    background-color: var(--main-white-color);
+    top: 8px;
+    position: relative;
+    right: 8px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 6px;
+    box-sizing: border-box;
+}
+
+.auth-detail-modal-title {
+    font-size: .9rem;
+}
+
+.auth-detail-modal-title.valid {
+    color: var(--main-purple-color);
+}
+
+.auth-detail-modal-title.invalid {
+    color: var(--main-red-color);
+}
+
+.auth-detail-modal-contents-map-container {
+    height: 180px;
+    width: 360px;
+}
+
+.auth-detail-modal-contents-map-label {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 8px;
+    height: 16px;
+    gap: 16px;
+}
+
+.auth-detail-modal-contents-map-label > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: .75rem;
+    font-weight: bold;
+    height: 16px;
+    gap: 4px;
+}

@@ -5,7 +5,8 @@ import { useLocation, useNavigate } from 'react-router';
 import queryString from 'query-string';
 import { useDispatch } from 'react-redux';
 import { userInfoChange } from 'Redux/actions/userChange';
-import { setStorageAuth } from 'Functions/GlobalFunctions';
+import { getStorageAuth, setStorageAuth } from 'Functions/GlobalFunctions';
+import { MainRouteByDeviceType } from 'Constants/ConstantValues';
 
 const OMPASSVerify = () => {
   const location = useLocation();
@@ -20,9 +21,10 @@ const OMPASSVerify = () => {
       (data: {
         username: string
       }, token: string) => {
+        console.log('token verification : ', authorization, token, getStorageAuth())
         setStorageAuth(token)
         dispatch(userInfoChange(token))
-        navigate('/Dashboard', {replace: true})
+        navigate(MainRouteByDeviceType, {replace: true})
       },
       {
         username: username,
@@ -36,7 +38,7 @@ const OMPASSVerify = () => {
       authorization
     }
     ).catch(err => {
-      navigate('/Dashboard')
+      navigate('/')
     });
   }, [])
   return (

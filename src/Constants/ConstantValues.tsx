@@ -24,6 +24,7 @@ import ompassLogoIcon from '../assets/ompassLogoIcon.png'
 import readyIcon from '../assets/ompassLogoIcon.png'
 import progressIcon from '../assets/ompassAuthProgressIcon.png'
 import completeIcon from '../assets/ompassAuthCompleteIcon.png'
+import { isMobile } from "react-device-detect";
 
 export const getOMPASSAuthIconByProgressStatus = (status: OMPASSAuthStatusType) => {
     if(status === 'ready') return readyIcon
@@ -152,6 +153,8 @@ export const UserSignupMethod: {
 
 export const devUrl = process.env['REACT_APP_DEV_URL'] as string
 export const subDomain = isDev ? devUrl.replace('https://', '') : window.location.host.replace('www.', '');
+
+export const MainRouteByDeviceType = isMobile ? '/Main' : '/Dashboard'
 
 export const LDAPAuthenticationTypes: LdapAuthenticationType[] = ['PLAIN', 'NTLMv2']
 export const LDAPTransportTypes: LdapTransportType[] = ['CLEAR', 'LDAPS', 'STARTTLS']

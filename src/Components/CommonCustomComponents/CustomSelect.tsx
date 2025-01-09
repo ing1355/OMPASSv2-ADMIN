@@ -19,10 +19,11 @@ type CustomSelectProps = {
 
 const CustomSelect = ({ items, value, onChange, needSelect, noLabel, style }: CustomSelectProps) => {
     const [showSelect, setShowSelect] = useState(false)
-    const [active, setActive] = useState<any>(items.length > 0 ? items.find(_ => _.key === value)?.key || items[0].key : '')
+    const [active, setActive] = useState<any>(items && items.length > 0 ? items.find(_ => _.key === value)?.key || items[0].key : '')
     const selectRef = useRef<HTMLDivElement>(null)
     const scrollRef = useRef<HTMLDivElement>(null)
     const activeRef = useRef(active)
+    const valueRef = useRef(value)
 
     const _items: CustomSelectProps['items'] = needSelect ? items : [{
         key: '',
@@ -37,6 +38,10 @@ const CustomSelect = ({ items, value, onChange, needSelect, noLabel, style }: Cu
     useEffect(() => {
         itemsRef.current = _items
     }, [_items])
+
+    useEffect(() => {
+        valueRef.current = value
+    }, [value])
 
     const handleMouseDown = useCallback((event: MouseEvent) => {
         if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
@@ -56,7 +61,7 @@ const CustomSelect = ({ items, value, onChange, needSelect, noLabel, style }: Cu
                 target = itemsRef.current[index - 1]
             }
         } else if (event.key === 'Enter') {
-            onChange(activeRef.current)
+            if (activeRef.current !== valueRef.current) onChange(activeRef.current)
             setShowSelect(false)
         }
         if (target && !target.disabled) {
@@ -87,13 +92,13 @@ const CustomSelect = ({ items, value, onChange, needSelect, noLabel, style }: Cu
             showSelect && <div className="custom-select-option-container" ref={scrollRef}>
                 {
                     _items.length === 0 && <div className="custom-select-option-item no-item">
-                        <FormattedMessage id="CUSTOM_SELECT_NO_ITEM_LABEL"/>
+                        <FormattedMessage id="CUSTOM_SELECT_NO_ITEM_LABEL" />
                     </div>
                 }
                 {
                     _items.map((_, ind) => {
                         return <div key={ind} className={`custom-select-option-item${_.key === active ? ' activate' : ''}${_.key === value ? ' selected' : ''}${_.disabled ? ' disabled' : ''}`} onClick={() => {
-                            if (!_.disabled) onChange(_.key)
+                            if (!_.disabled && _.key !== value) onChange(_.key)
                         }} onMouseMove={() => {
                             setActive(_.key)
                         }}>

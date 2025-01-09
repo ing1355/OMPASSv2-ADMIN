@@ -6,6 +6,7 @@ import ValidationText from "./ValidationText";
 import MessageText from "./MessageText";
 import SecurityQuestions from "./SecurityQuestions";
 import ValuesText from "./ValuesText";
+import BillingText from "./BillingText";
 
 const Locale = {
   EN: {
@@ -16,7 +17,8 @@ const Locale = {
     ...ValidationText.EN,
     ...MessageText.EN,
     ...SecurityQuestions.EN,
-    ...ValuesText.EN
+    ...ValuesText.EN,
+    ...BillingText.EN
   },
   KR: {
     ...LocaleTexts.KR,
@@ -26,7 +28,8 @@ const Locale = {
     ...ValidationText.KR,
     ...MessageText.KR,
     ...SecurityQuestions.KR,
-    ...ValuesText.KR
+    ...ValuesText.KR,
+    ...BillingText.KR
   },
   JP: {
     

@@ -1,6 +1,5 @@
 import Button from 'Components/CommonCustomComponents/Button'
 import './Calendar.css'
-import { SetStateType } from 'Types/PropsTypes'
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useState } from 'react';
 import { addDays, addMonths, addYears, differenceInDays, endOfMonth, format, isBefore, isSameDay, isSameMonth, isSaturday, isSunday, isWithinInterval, setHours, setMinutes, setSeconds, startOfMonth, subDays, subMonths, subYears } from 'date-fns';
@@ -24,6 +23,7 @@ const ArrowIcon = ({ src, onClick }: {
 
 const getItemClassname = (showDate: Date, target: Date, data: SelectedDateType) => {
     let result = ''
+    if(data.startDate && data.endDate && (data.startDate.getTime() !== data.endDate.getTime())) result += ' is-completed'
     if (isSunday(target)) result += ' sunday'
     if (isSaturday(target)) result += ' saturday'
     if (data.startDate && isSameDay(target, data.startDate)) result += ' is-start'
@@ -61,9 +61,9 @@ const getDatesOfMonth = (date: Date) => {
     return results as Date[][]
 }
 
-const Calendar = ({ defaultValue, setShow, onChange, monthRestriction }: {
+const Calendar = ({ defaultValue, closeCallback, onChange, monthRestriction }: {
     defaultValue: DateSelectDataType | undefined
-    setShow: SetStateType<boolean>
+    closeCallback: () => void
     onChange: (data: DateSelectDataType) => void
     monthRestriction?: boolean
 }) => {
@@ -161,7 +161,7 @@ const Calendar = ({ defaultValue, setShow, onChange, monthRestriction }: {
         </div>
         <div className='custom-calendar-footer-buttons-container'>
             <Button className='calendar-footer-button st4' onClick={() => {
-                setShow(false)
+                closeCallback()
             }}>
                 <FormattedMessage id="CANCEL"/>
             </Button>
@@ -170,7 +170,7 @@ const Calendar = ({ defaultValue, setShow, onChange, monthRestriction }: {
                     if(monthRestriction && differenceInDays(new Date(data.endDate), new Date(data.startDate)) > 31) {
                         return message.error(formatMessage({id:'CALENDAR_MAXIMUM_RANGE_DATE_INVALID_MSG'}))
                     }
-                    setShow(false)
+                    closeCallback()
                     onChange({
                         startDate: format(data.startDate, dateFormat),
                         endDate: format(data.endDate, dateFormat)

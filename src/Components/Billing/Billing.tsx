@@ -69,7 +69,7 @@ const Billing = () => {
             title: "프리미엄 플랜",
             status: "",
             price: "2,200",
-            descriptions: Array.from({length: 10}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
+            descriptions: Array.from({length: 9}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
         }
     ]
 

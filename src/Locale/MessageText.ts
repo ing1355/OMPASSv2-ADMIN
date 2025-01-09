@@ -116,6 +116,11 @@ const MessageText = {
         UNAVAILABLE_USERNAME: '사용 불가능한 아이디입니다.',
         CURRENT_VERSION_CHANGE_COMPLETE: '현재 버전 변경을 완료하였습니다.',
         VERSION_DELETE: '버전 삭제를 완료하였습니다.',
+        PLEASE_INPUT_SECURITY_QUESTION_MSG: '보안 질문에 대한 답변을 입력해주세요.',
+        SECURITY_QUESTION_UPDATE_SUCCESS_MSG: '보안 질문 변경에 성공하였습니다.',
+        PAM_PASS_DATA_USERNAME_REQUIRED_MSG: '바이패스 설정의 계정명을 입력해주세요.',
+        PAM_PASS_DATA_IP_ADDRESS_REQUIRED_MSG: '바이패스 설정의 IP 주소를 입력해주세요.',
+        PAM_PASS_DATA_IP_ADDRESS_INVALID_MSG: '바이패스 설정의 IP 주소가 올바르지 않습니다.'
     },
     'EN': {
         USERNAME_CHECK: 'Only lowercase letters and numbers are allowed, with a length of 4 to 16 characters',
@@ -234,6 +239,11 @@ const MessageText = {
         UNAVAILABLE_USERNAME: 'The username is unavailable',
         CURRENT_VERSION_CHANGE_COMPLETE: 'Current version change complete',
         VERSION_DELETE: 'The version has been deleted',
+        PLEASE_INPUT_SECURITY_QUESTION_MSG: 'Please enter your answer to your security question.',
+        SECURITY_QUESTION_UPDATE_SUCCESS_MSG: 'You have successfully changed your security questions.',
+        PAM_PASS_DATA_USERNAME_REQUIRED_MSG: 'Please enter the username for bypass settings.',
+        PAM_PASS_DATA_IP_ADDRESS_REQUIRED_MSG: 'Please enter the IP address for bypass settings.',
+        PAM_PASS_DATA_IP_ADDRESS_INVALID_MSG: 'The IP address in bypass settings is incorrect.'
     }
 }
 

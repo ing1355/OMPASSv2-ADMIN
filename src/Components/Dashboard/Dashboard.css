@@ -69,6 +69,7 @@
 }
 
 .dashboard-top-disabled-user-num-item {
+    cursor: pointer;
     background-color: #FFF8F8;
     padding: 6px 12px;
     border-radius: 8px;

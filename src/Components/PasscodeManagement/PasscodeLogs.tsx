@@ -16,14 +16,15 @@ const PasscodeLogs = () => {
     const { formatMessage } = useIntl()
     const [totalCount, setTotalCount] = useState<number>(0);
     const [tableData, setTableData] = useState<PasscodeHistoryDataType[]>([]);
+
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
         const _params: GeneralParamsType = {
             page_size: params.size,
             page: params.page
         }
-        if (params.type) {
-            _params[params.type] = params.value
+        if (params.searchType) {
+            _params[params.searchType] = params.searchValue
         }
         if(params.filterOptions) {
             params.filterOptions.forEach(_ => {

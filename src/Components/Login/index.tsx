@@ -13,6 +13,7 @@ import { CopyRightText } from "Constants/ConstantValues"
 import './index.css';
 import FindUsername from "./FindUsername"
 import LocaleChange from "Components/CommonCustomComponents/LocaleChange"
+import { downloadFileByLink } from "Functions/GlobalFunctions"
 
 const LoginPage = () => {
     const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
@@ -52,17 +53,15 @@ const LoginPage = () => {
 
         </Routes>
         <div className="login-footer-btns-container">
-            {!isMobile && <a href={subdomainInfo.windowsAgentUrl} download>
-                <Button
-                    className='login-agent-download-button st10'
-                    icon={downloadIconWhite}
-                    style={{
-                        pointerEvents: 'none'
-                    }}
-                >
-                    <FormattedMessage id='DOWNLOAD_FOR_WINDOWS' />
-                </Button>
-            </a>}
+            {!isMobile && <Button
+                className='login-agent-download-button st10'
+                icon={downloadIconWhite}
+                onClick={() => {
+                    downloadFileByLink(subdomainInfo.windowsAgentUrl!)
+                }}
+            >
+                <FormattedMessage id='DOWNLOAD_FOR_WINDOWS' />
+            </Button>}
             <Button className='login-agent-download-button st5' icon={documentIcon} hoverIcon={documentIconHover} onClick={() => {
                 window.open(`/docs`, '_blank');
             }}>

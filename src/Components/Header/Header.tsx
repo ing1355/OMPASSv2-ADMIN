@@ -4,17 +4,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import menuIcon from '../../assets/menuIcon.png';
 import logout from '../../assets/logout.png';
+import downloadIcon from '../../assets/downloadIcon.png';
 import manualDownloadIcon from '../../assets/manualDownloadIcon.png';
 import adminManualDownloadIcon from '../../assets/adminManualDownloadIcon.png';
 import { useIntl } from 'react-intl';
 import { userInfoClear } from 'Redux/actions/userChange';
 import { Tooltip } from 'antd';
-import { ompassDefaultLogoImage } from 'Constants/ConstantValues';
+import { MainRouteByDeviceType, ompassDefaultLogoImage } from 'Constants/ConstantValues';
 import SessionTimeCount from './SessionTimeCount';
 import LocaleChange from 'Components/CommonCustomComponents/LocaleChange';
 
 const Header = () => {
   const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
+  const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const { username, role, userId } = userInfo! ?? {};
   const dropdownRef = useRef<any>(null);
@@ -57,7 +59,7 @@ const Header = () => {
             </div>
           </Tooltip>
           <div className='header-title-container' onClick={() => {
-            navigate('/Dashboard');
+            navigate(MainRouteByDeviceType);
           }}>
             <img
               src={ompassDefaultLogoImage}
@@ -74,7 +76,7 @@ const Header = () => {
         </div>
         <div className='header-contents-second-items'>
           <SessionTimeCount />
-          {/* <Tooltip
+          <Tooltip
             destroyTooltipOnHide
             title={formatMessage({ id: 'DOWNLOAD_FOR_WINDOWS' })}
           >
@@ -82,7 +84,7 @@ const Header = () => {
               <img src={downloadIcon} />
 
             </a>
-          </Tooltip> */}
+          </Tooltip>
 
           <Tooltip
             title={formatMessage({ id: 'DOWNLOAD_USER_MANUAL' })}

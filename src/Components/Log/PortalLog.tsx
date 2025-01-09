@@ -1,7 +1,6 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
-import { HttpMethodTypes } from "Constants/ConstantValues"
 import { GetPortalLogDataListFunc } from "Functions/ApiFunctions"
 import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions"
 import { useState } from "react"
@@ -20,8 +19,8 @@ const PortalLog = () => {
             page_size: params.size,
             page: params.page
         }
-        if(params.type) {
-            _params[params.type] = params.value
+        if(params.searchType) {
+            _params[params.searchType] = params.searchValue
         }
         if(params.filterOptions) {
             params.filterOptions.forEach(_ => {
@@ -68,7 +67,8 @@ const PortalLog = () => {
                     },
                     {
                         key: 'createdAt',
-                        title: <FormattedMessage id="PORTAL_LOG_CREATED_AT_LABEL"/>
+                        title: <FormattedMessage id="PORTAL_LOG_CREATED_AT_LABEL"/>,
+                        filterType: 'date'
                     }
                 ]}
                 pagination

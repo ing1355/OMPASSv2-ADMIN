@@ -1,5 +1,6 @@
 import { slicePrice } from "Functions/GlobalFunctions"
 import { CSSProperties } from "react"
+import { useNavigate } from "react-router"
 
 const ApplicationUserNum = ({ title, num, color }: {
     title: string
@@ -38,11 +39,15 @@ const DashboardTopUserNumItem = ({ title, num, icon, type }: {
     </div>
 }
 
-const DashboardTopDisabledUserNumItem = ({ title, num }: {
+const DashboardTopDisabledUserNumItem = ({ title, num, type }: {
     title: React.ReactNode
     num: number
+    type: UserStatusType
 }) => {
-    return <div className="dashboard-top-disabled-user-num-item">
+    const navigate = useNavigate()
+    return <div className="dashboard-top-disabled-user-num-item" onClick={() => {
+        navigate(`/UserManagement?statuses=${type}`)
+    }}>
         <div className="dashboard-top-disabled-user-num-item-title">
             {title}
         </div>

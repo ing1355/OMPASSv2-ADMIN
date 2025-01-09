@@ -1,5 +1,5 @@
 import { FormattedMessage, useIntl } from 'react-intl';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { OMPASS } from 'ompass';
 import { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
@@ -63,12 +63,21 @@ const Login = () => {
         password: inputPassword,
         language: lang!,
         loginClientType: "ADMIN"
-      }, ({ popupUri, status }, token) => {
+      }, ({ popupUri, status, questions }, token) => {
+        // status = 'WAIT_SECURITY_QNA'
         if (status === 'WAIT_INIT_PASSWORD') {
+        // if (false) {
           setInputPassword('')
           setTempToken(token)
           message.info(formatMessage({ id: 'PASSWORD_CHANGE_NEED_MSG' }))
           return setNeedPasswordChange(true)
+        } else if (status === 'WAIT_SECURITY_QNA') {
+          return navigate('/SecurityQuestion', {
+            state: {
+              token,
+              questions
+            }
+          })
         }
         const temp = popupUri + `&authorization=${token}`
         if (isDev) {

@@ -8,31 +8,19 @@ import { useLocation } from "react-router"
 import AllAuthLogs from "./AllAuthLogs"
 import './AuthLog.css'
 import { FormattedMessage } from "react-intl"
+import CustomTabs from "Components/CommonCustomComponents/CustomTabs"
 
 type AuthLogType = 'all'|'valid'|'invalid'
 
 const AuthLog = () => {
-    const [active, setActive] = useState<AuthLogType>('all')
     const { type } = useLocation().state || {}
-
-    useEffect(() => {
-        if (type === 'invalid') {
-            setActive(type)
-        }
-    }, [])
 
     return <Contents>
         <ContentsHeader title="AUTH_LOG_MANAGEMENT" subTitle="AUTH_LOG_LIST">
         </ContentsHeader>
         <div className="contents-header-container">
-            <Tabs
-                activeKey={active}
-                onChange={act => {
-                    setActive(act as AuthLogType)
-                }}
-                className="auth-log-tab"
-                centered
-                type="card"
+        <CustomTabs<AuthLogType>
+                defaultKey={type ?? 'all'}
                 items={[
                     {
                         label: <FormattedMessage id="ALL_AUTH_LOG_TAB_TITLE_LABEL"/>,

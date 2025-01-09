@@ -35,3 +35,10 @@
     box-sizing: border-box;
     cursor: pointer;
 }
+
+@media (max-width:768px) {
+    .contents-header-container {
+        padding: 0 12px;
+        box-sizing: border-box;
+    }
+}

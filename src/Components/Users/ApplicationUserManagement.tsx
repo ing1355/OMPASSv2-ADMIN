@@ -3,27 +3,33 @@ import CustomSelect from "Components/CommonCustomComponents/CustomSelect";
 import CustomTable from "Components/CommonCustomComponents/CustomTable";
 import { applicationTypes, authenticatorList, getApplicationTypeLabel, INT_MAX_VALUE } from "Constants/ConstantValues";
 import { GetApplicationListFunc, GetRpUsersListFunc } from "Functions/ApiFunctions";
+import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions";
+import useCustomRoute from "hooks/useCustomRoute";
 import useFullName from "hooks/useFullName";
-import { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
+import { useSearchParams } from "react-router-dom";
 
 const ApplicationUserManagement = () => {
+    const [searchParams] = useSearchParams()
     const lang = useSelector((state: ReduxStateType) => state.lang!);
     const [dataLoading, setDataLoading] = useState(false)
     const [tableData, setTableData] = useState<RpUserListDataType[]>([])
     const [totalCount, setTotalCount] = useState<number>(0);
     const [appTypes, setAppTypes] = useState<ApplicationListDataType[]>([])
     const [refresh, setRefresh] = useState(false)
-    const [applicationType, setApplicationType] = useState<ApplicationDataType['type']>()
+    const [applicationType, setApplicationType] = useState<ApplicationDataType['type']>(searchParams.get('applicationType') as ApplicationDataType['type'] ?? undefined)
     const [targetApplication, setTargetApplication] = useState<ApplicationListDataType | undefined>()
     const navigate = useNavigate()
     const getFullName = useFullName()
+    const { customPushRoute } = useCustomRoute()
     const typeItems = (type: ApplicationDataType['type']) => appTypes.filter(_ => _.type === type).map(_ => ({
         key: _.id,
         label: _.name
     }))
+    const targetApplicationRef = useRef(targetApplication)
 
     const tableSearchOptions = useMemo(() => {
         let temp: TableSearchOptionType[] = [
@@ -47,8 +53,9 @@ const ApplicationUserManagement = () => {
                 type: 'string'
             },
         ]
+        console.log(targetApplication?.type)
         if (targetApplication?.type === 'WINDOWS_LOGIN') {
-            temp.push({ key: 'pcName', type: 'string' }, { key: 'windowsAgentVersion', type: 'string' })
+            temp.push({ key: 'pcName', type: 'string' }, { key: 'windowsPackageVersion', type: 'string' })
         }
         return temp
     }, [targetApplication])
@@ -77,7 +84,10 @@ const ApplicationUserManagement = () => {
             },
         ]
         if (targetApplication?.type === 'WINDOWS_LOGIN') {
-            temp.push({ key: 'pcName', title: <FormattedMessage id="PC_NAME_LABEL" /> }, { key: 'windowsAgentVersion', title: <FormattedMessage id="AGENT_VERSION_LABEL" /> })
+            temp.push({ key: 'pcName', title: <FormattedMessage id="PC_NAME_LABEL" /> }, { key: 'windowsPackageVersion', title: <FormattedMessage id="AGENT_VERSION_LABEL" /> })
+        }
+        if (targetApplication?.type === 'LINUX_LOGIN') {
+            temp.push({ key: 'hostname', title: <FormattedMessage id="HOST_NAME_LABEL" /> }, { key: 'linuxPamPackageVersion', title: <FormattedMessage id="AGENT_VERSION_LABEL" /> })
         }
         temp.push({
             key: 'lastLoggedInAuthenticator',
@@ -109,29 +119,32 @@ const ApplicationUserManagement = () => {
     }, [targetApplication, lang])
 
     const GetAppTypes = async (params: CustomTableSearchParams) => {
-        // setDataLoading(true)
         const _params: GeneralParamsType = {
             page_size: params.size,
             page: params.page
         }
-        if (params.type) {
-            _params[params.type] = params.value
+        if (params.searchType) {
+            _params[params.searchType] = params.searchValue
         }
         GetApplicationListFunc(_params, ({ results, totalCount }) => {
             setAppTypes(results)
+            if (searchParams.get('applicationType') && searchParams.get('applicationId')) {
+                const target = results.find(_ => _.id === searchParams.get('applicationId'))
+                setTargetApplication(target)
+            }
         }).finally(() => {
             // setDataLoading(false)
         })
     }
-
+    
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
         const _params: GeneralParamsType = {
             page_size: params.size,
             page: params.page
         }
-        if (params.type) {
-            _params[params.type] = params.value
+        if (params.searchType) {
+            _params[params.searchType] = params.searchValue
         }
         if (params.filterOptions) {
             params.filterOptions.forEach(_ => {
@@ -140,7 +153,11 @@ const ApplicationUserManagement = () => {
         }
         _params.applicationId = targetApplication?.id
         GetRpUsersListFunc(_params, ({ results, totalCount }) => {
-            setTableData(results)
+            setTableData(results.map(_ => ({
+                ..._,
+                lastLoggedInAt: convertUTCStringToLocalDateString(_.lastLoggedInAt),
+                ompassRegisteredAt: convertUTCStringToLocalDateString(_.ompassRegisteredAt)
+            })))
             setTotalCount(totalCount)
         }).finally(() => {
             setDataLoading(false)
@@ -154,26 +171,6 @@ const ApplicationUserManagement = () => {
         })
     }, [])
 
-    useLayoutEffect(() => {
-        if(applicationType === 'ADMIN') {
-            setTargetApplication(appTypes.find(_ => _.type === 'ADMIN'))
-        } else if(applicationType === 'WINDOWS_LOGIN') {
-            setTargetApplication(appTypes.find(_ => _.type === 'WINDOWS_LOGIN'))            
-        } else {
-            setTargetApplication(undefined)
-        }
-    }, [applicationType])
-
-    useEffect(() => {
-        if (targetApplication) {
-            setRefresh(true)
-            GetDatas({
-                page: 0,
-                size: INT_MAX_VALUE
-            })
-        }
-    }, [targetApplication])
-
     useEffect(() => {
         if (refresh) {
             setTimeout(() => {
@@ -182,27 +179,59 @@ const ApplicationUserManagement = () => {
         }
     }, [refresh])
 
+    useEffect(() => {
+        if(targetApplicationRef.current && targetApplication) {
+            setRefresh(true)
+        }
+        targetApplicationRef.current = targetApplication
+    },[targetApplication])
+    
     return <>
         <CustomInputRow title={<FormattedMessage id="APPLICATION_SELECT_LABEL" />}>
             <CustomSelect value={applicationType} onChange={value => {
                 setApplicationType(value as ApplicationDataType['type'])
+                let target: ApplicationListDataType | undefined
+                applicationTypes.forEach((_: ApplicationDataType['type']) => {
+                    if (_ === value) {
+                        target = appTypes.find(__ => __.type === value)
+                    }
+                })
+                if (target) {
+                    setRefresh(true)
+                }
+                if (target) {
+                    customPushRoute({
+                        applicationType: target.type,
+                        applicationId: target.id
+                    }, true)
+                } else {
+                    customPushRoute({}, true, true)
+                }
+                setTargetApplication(target)
             }} items={applicationTypes.map(_ => ({
                 key: _,
                 label: getApplicationTypeLabel(_),
             }))} needSelect />
             {applicationType && <CustomSelect value={targetApplication?.id} onChange={value => {
-                setTargetApplication(appTypes.find(_ => _.id === value))
+                const target = appTypes.find(_ => _.id === value)
+                if (target) {
+                    setTargetApplication(target)
+                    customPushRoute({
+                        applicationType: target.type,
+                        applicationId: target.id
+                    }, true)
+                }
             }} items={typeItems(applicationType)} needSelect />}
         </CustomInputRow>
         {
             !refresh && targetApplication && <CustomTable<RpUserListDataType>
                 className='tab_table_list'
-                loading={dataLoading}
+                loading={dataLoading || !(!refresh && targetApplication)}
                 theme='table-st1'
                 datas={tableData}
                 hover
+                refresh={refresh}
                 searchOptions={tableSearchOptions}
-                isNotDataInit
                 onSearchChange={(data) => {
                     GetDatas(data)
                 }}

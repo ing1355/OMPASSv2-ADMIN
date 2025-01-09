@@ -141,7 +141,7 @@ export const convertBase64FromServerFormatToClient = (str: string) => {
 }
 
 export const createOSInfo = (os?: OSInfoType) => {
-    return os ? `${os.name} ${os.version}` : 'Unknown'
+    return os ? `${os.name} ${os.version}` : '-'
 }
 
 export const logoImageWithDefaultImage = (img: logoImageType) => {
@@ -187,3 +187,12 @@ export const convertTimeFormat = (time: number) => {
         return { second };
     }
 };
+
+export const downloadFileByLink = (link: string, fileName?: string) => {
+    const downloadLink = document.createElement('a');
+    downloadLink.href = link
+    if(fileName) downloadLink.download = fileName;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+}

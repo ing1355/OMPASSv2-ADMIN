@@ -20,8 +20,8 @@ const GroupManagement = () => {
             page_size: params.size,
             page: params.page
         }
-        if(params.type) {
-            _params[params.type] = params.value
+        if(params.searchType) {
+            _params[params.searchType] = params.searchValue
         }
         await GetUserGroupDataListFunc(_params, ({ results, totalCount }) => {
             setTableData(results)

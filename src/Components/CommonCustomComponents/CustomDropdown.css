@@ -21,6 +21,10 @@
     gap: 2px;
 }
 
+.custom-dropdown-inner-container.multiple {
+    min-width: 140px;
+}
+
 .custom-dropdown-select-item-row {
     text-align: center;
     font-size: .8rem;
@@ -54,14 +58,6 @@
     color: var(--main-purple-color2);
 }
 
-.custom-dropdown-select-item-row:hover>div:after {
-    content: attr(title);
-    font-weight: bold;
-    display: block;
-    height: 0px;
-    visibility: hidden;
-}
-
 .custom-dropdown-children {
     position: relative;
     cursor: pointer;
@@ -79,6 +75,7 @@
 .custom-dropdown-select-item-row > div {
     flex: 1;
     text-align: center;
+    white-space: nowrap;
 }
 
 .custom-dropdown-multiple-save-container {

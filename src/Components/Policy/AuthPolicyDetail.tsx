@@ -248,7 +248,7 @@ const AuthPolicyDetail = () => {
                     }
                 </CustomInputRow>
                 <CustomInputRow title={<FormattedMessage id="DESCRIPTION_LABEL" />}>
-                    <Input className="st1" value={inputDescription} placeholder={formatMessage({ id: 'DDESCRIPTION_PLACEHOLDER' })} valueChange={value => {
+                    <Input className="st1" value={inputDescription} placeholder={formatMessage({ id: 'DESCRIPTION_PLACEHOLDER' })} valueChange={value => {
                         setInputDescription(value)
                     }} />
                 </CustomInputRow>
@@ -261,13 +261,6 @@ const AuthPolicyDetail = () => {
                     {!isDefaultPolicy && accessTimeValues && <PolicyAccessTimeList value={accessTimeValues} onChange={setAccessTimeValues} />}
                     {!isDefaultPolicy && noticeToAdmin && <NoticeToAdmin hasIncludeWithdrawal={setHasIncludeWithdrawal} value={noticeToAdmin} onChange={setNoticeToAdmin} />}
                     {!isDefaultPolicy && noticeToThemselves && <NoticeToThemselves value={noticeToThemselves} onChange={setNoticeToThemselves} />}
-                    {/* <CustomInputRow title="사용자 국가">
-                <Switch style={{
-                    marginBottom: !locationChecked ? 0 : '8px',
-                }} checked={locationChecked} onChange={check => {
-                    setLocationChecked(check)
-                }} checkedChildren={'ON'} unCheckedChildren={'OFF'} />
-            </CustomInputRow> */}
                 </div>
             </>}
 

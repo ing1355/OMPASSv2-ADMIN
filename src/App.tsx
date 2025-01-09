@@ -1,7 +1,7 @@
 import './App.css';
 import React, { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import OMPASSVerify from 'Components/OMPASS/OMPASSVerify';
 import Main from 'Components/Main/Main';
@@ -21,17 +21,19 @@ import AuthLog from 'Components/Log/AuthLog';
 import PortalLog from 'Components/Log/PortalLog';
 import Settings from 'Components/Settings';
 import { GetGlobalConfigFunc, GetSubDomainInfoFunc } from 'Functions/ApiFunctions';
-import { convertLangToIntlVer, subDomain } from 'Constants/ConstantValues';
+import { convertLangToIntlVer, MainRouteByDeviceType, subDomain } from 'Constants/ConstantValues';
 import { subdomainInfoChange } from 'Redux/actions/subdomainInfoChange';
 import SignUp from 'Components/SignUp/SignUp';
 import { globalDatasChange } from 'Redux/actions/globalDatasChange';
 import Dashboard from 'Components/Dashboard/Dashboard';
 import LoginPage from 'Components/Login';
+import SecurityQuestionPage from 'Components/Login/SecurityQuestionPage';
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
+  const location = useLocation()
   const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
-  const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas);
+  const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas)!;
   const lang = useSelector((state: ReduxStateType) => state.lang!);
   
   const getDomainInfo = () => {
@@ -39,6 +41,10 @@ const App: React.FC = () => {
       dispatch(subdomainInfoChange(data))
     })
   }
+
+  useEffect(() => {
+    // console.log('route change : ', location.pathname + location.search)
+  },[location])
 
   useEffect(() => {
     getDomainInfo()
@@ -58,6 +64,8 @@ const App: React.FC = () => {
       window.addEventListener('storage', () => {
         window.location.reload()
       })
+      console.log('userInfo Change : ', userInfo)
+      dispatch(globalDatasChange({ ...globalDatas, loading: true }))
       GetGlobalConfigFunc((data) => {
         dispatch(globalDatasChange({ ...globalDatas, ...data, loading: false }))
       })
@@ -72,6 +80,7 @@ const App: React.FC = () => {
         <Route path='/ompass/*' element={<OMPASSVerify />} />
         <Route path='/GuidePage' element={<GuidePage />} />
         <Route path='/AutoLogout' element={<AutoLogout />} />
+        <Route path='/SecurityQuestion' element={<SecurityQuestionPage />} />
         {
           userInfo ? (
             userInfo.role! !== 'USER' ? <>
@@ -87,7 +96,7 @@ const App: React.FC = () => {
               <Route path='/AuthLogs' element={<AuthLog />} />
               <Route path='/PortalLogs' element={<PortalLog />} />
               <Route path='/Settings' element={<Settings />} />
-              <Route path='/*' element={<Navigate to='/Dashboard' replace={true} />} />
+              <Route path='/*' element={<Navigate to={MainRouteByDeviceType} replace={true} />} />
             </>
               : <>
                 <Route path='/Main' element={<Users />} />

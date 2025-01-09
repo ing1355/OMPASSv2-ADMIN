@@ -18,6 +18,7 @@ const CustomAdminSelect = ({ data, onChange, hasIncludeWithdrawal }: CustomAdmin
     const [adminDatas, setAdminDatas] = useState<UserDataType[]>([])
     const getDatas = async () => {
         setDataLoading(true)
+        
         GetUserDataListFunc({
             page: 0,
             page_size: INT_MAX_VALUE,

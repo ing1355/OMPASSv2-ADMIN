@@ -82,8 +82,8 @@ const PolicyLocationList = ({ value={
                 <div className="current-location-policy-input-container">
                     <div className="policy-input-map-container">
                         <div className="map-layout">
-                            {globalDatas?.googleApiKey ? <APIProvider apiKey={globalDatas?.googleApiKey!} onLoad={() => {
-                                console.log(globalDatas)
+                            {globalDatas?.googleApiKey ? <APIProvider apiKey={globalDatas.googleApiKey} onLoad={() => {
+                                console.log(globalDatas.googleApiKey)
                                 navigator.geolocation.getCurrentPosition(function (position) {
                                     setCurrentLocation({
                                         lat: position.coords.latitude,
@@ -94,6 +94,7 @@ const PolicyLocationList = ({ value={
                                 <Map
                                     defaultZoom={10}
                                     fullscreenControl={null}
+                                    mapId='24ce68fbca231158'
                                     mapTypeControl={null}
                                     streetViewControl={false}
                                     center={modifyLocationIndex === -1 ? currentLocation : {

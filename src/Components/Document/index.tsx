@@ -43,7 +43,7 @@ const Document = () => {
                     OMPASSv2.0 Docs
                 </div>
                 <div>
-                    Last Updated: 2024. 12. 17.
+                    {/* Last Updated: 2024. 12. 17. */}
                 </div>
             </div>
             <div className="document-body">

@@ -18,7 +18,6 @@ const FixedItem = ({ type, selected, setSelected, onChange }: {
     const selectRef = useRef<HTMLDivElement>(null)
     const showSelectRef = useRef(showSelect)
     const lastChanged = useRef<DashboardDateSelectDataType>(dashboardDateInitialValue())
-    const timerRef = useRef<NodeJS.Timer>()
 
     const handleMouseDown = useCallback((event: MouseEvent) => {
         if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
@@ -33,15 +32,7 @@ const FixedItem = ({ type, selected, setSelected, onChange }: {
     const _onChange = (type: DashboardDateSelectDataType) => {
         lastChanged.current = type
         onChange(type)
-        // registerTimer()
     }
-
-    // const registerTimer = () => {
-    //     if(timerRef.current) clearInterval(timerRef.current)
-    //     timerRef.current = setInterval(() => {
-    //         onChange(lastChanged.current!)
-    //     }, 3000);
-    // }
 
     useEffect(() => {
         showSelectRef.current = showSelect
@@ -58,13 +49,6 @@ const FixedItem = ({ type, selected, setSelected, onChange }: {
             document.removeEventListener('keydown', handleKeyDown);
         };
     }, [showSelect]);
-
-    // useEffect(() => {
-    //     registerTimer()
-    //     return () => {
-    //         if(timerRef.current) clearInterval(timerRef.current)
-    //     }
-    // },[])
 
     return <div ref={selectRef} className={`dashboard-date-select-fixed-item-container${selected === type ? ' selected' : ''}${type === 'user' ? ' user' : ''}`} onClick={(e) => {
         let startDate = new Date()
@@ -139,8 +123,10 @@ const FixedItem = ({ type, selected, setSelected, onChange }: {
         {
             type === 'user' && showSelect ? <Calendar
                 defaultValue={temp}
-                setShow={setShowSelect}
-                onChange={d => {                    
+                closeCallback={() => {
+                    setShowSelect(false)
+                }}
+                onChange={d => {   
                     setSelected('user')
                     setTemp(d)
                     _onChange({

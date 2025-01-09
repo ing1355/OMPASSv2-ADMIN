@@ -1,3 +1,11 @@
+.admin-need > .custom-detail-label-input-row, .admin-need2 > .custom-detail-label-input-row {
+   min-height: 14px;
+}
+
+.custom-detail-label-input-row.margin {
+    margin-top: 12px;
+}
+
 .custom-detail-label-input-row {
     display: flex;
     flex-direction: row;
@@ -7,6 +15,8 @@
     padding: 12px 0;
     width: 100%;
     position: relative;
+    min-height: 66px;
+    box-sizing: border-box;
 }
 
 .custom-detail-label {

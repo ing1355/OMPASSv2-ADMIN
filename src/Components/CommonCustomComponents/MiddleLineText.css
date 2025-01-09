@@ -1,0 +1,15 @@
+.middle-line-text {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    font-weight: bold;
+    margin: 4px 0;
+}
+
+.middle-line-text::before,
+.middle-line-text::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #ccc;
+    /* margin: 0 2px; */
+}

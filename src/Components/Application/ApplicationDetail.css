@@ -20,3 +20,30 @@ input.secret-key {
     flex-direction: row;
     gap: 12px;
 }
+
+.application-contents-container {
+}
+
+.application-contents-container[data-hidden=true] {
+    display: none;
+}
+
+.pam-pass-input {
+    width: 160px !important;
+    height: 36px !important;
+}
+
+.application-contents-inner-container {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+}
+
+.pam-data-description-text {
+    letter-spacing: -0.5px;
+    color: var(--main-purple-color);
+    font-weight: bold;
+    font-size: .75rem;
+    margin-top: 2px;
+    padding-left: 4px;
+}
