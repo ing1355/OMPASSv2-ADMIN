@@ -2,11 +2,11 @@ import DashboardCardWithDateSelect from "./DashboardCardWithDateSelect"
 import { useEffect, useState } from "react";
 import { GetDashboardApplicationAuthSumFunc } from "Functions/ApiFunctions";
 import { dashboardDateInitialValue } from "./Dashboard";
-import { convertDaysByDate, convertHourRangeByDate } from "./DashboardFunctions";
 import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions";
 import { FormattedMessage } from "react-intl";
 import DashBoardBarChart from "./DashboardBarChart";
 import { useSelector } from "react-redux";
+import useDsashboardFunctions from "hooks/useDashboardFunctions";
 
 const DashboardAllAuthSum = ({ applications }: {
   applications: ApplicationListDataType[]
@@ -14,6 +14,7 @@ const DashboardAllAuthSum = ({ applications }: {
   const lang = useSelector((state: ReduxStateType) => state.lang!);
   const [params, setParams] = useState(dashboardDateInitialValue())
   const [datas, setDatas] = useState<{ name: string, count: number }[]>([])
+  const {convertDaysByDate, convertHourRangeByDate} = useDsashboardFunctions()
   
   const getDatas = () => {
     GetDashboardApplicationAuthSumFunc(applications.map(_ => _.id), params, (data) => {

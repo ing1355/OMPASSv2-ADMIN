@@ -75,7 +75,7 @@ const LdapSyncButton = ({ id }: LdapSyncButtonProps) => {
                         title: <FormattedMessage id="ID"/>
                     }, {
                         key: 'name',
-                        title: <FormattedMessage id="LAST_NAME"/>,
+                        title: <FormattedMessage id="FIRST_NAME"/>,
                         render: (data, ind, row) => getFullName(row.name)
                     }, {
                         key: 'org',

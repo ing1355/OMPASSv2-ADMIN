@@ -36,7 +36,7 @@ const AccountRecovery = () => {
                 <Button className="st6 recovery-back-button" onClick={() => {
                     navigate(-1)
                 }}>
-                    <FormattedMessage id="GO_BACK" />
+                    <FormattedMessage id="BACK_TO_LOGIN_PAGE_LABEL" />
                 </Button>
             </div>
         </div>

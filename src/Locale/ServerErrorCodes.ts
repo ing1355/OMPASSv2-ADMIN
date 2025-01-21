@@ -35,6 +35,10 @@ const ServerErrorCodes = {
         ERR_B036: "사용자(대상)의 OMPASS 등록이 되어 있지 않습니다.",
         ERR_B037: "사용자(대상)의 계정이 잠겨있습니다.",
         ERR_B038: "사용자(대상)의 계정이 탈퇴되었습니다.",
+
+        ERR_B041: "이미 존재하는 이메일 입니다.",
+        ERR_B042: "이메일을 확인해주세요.",
+        ERR_B043: "이미 존재하는 어플리케이션명 입니다.",
     },
     'EN': {
         ERR_B002: "Please check your ID and email",
@@ -72,6 +76,10 @@ const ServerErrorCodes = {
         ERR_B036: "The user (target) is not registered with OMPASS",
         ERR_B037: "The user's (target) account is locked",
         ERR_B038: "The user's (target) account has been canceled",
+
+        ERR_B041: "Already exists email",
+        ERR_B042: "Please check your email",
+        ERR_B043: "Already exists application name",
     }
 }
 

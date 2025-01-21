@@ -1,7 +1,29 @@
+* v2.0.0(94)
+  - popupUri -> ompassUrl 키값 변경
+  - Windows Agent -> Windows Logon, OMPASS Proxy Agent -> OMPASS 프록시 서버 문구 변경
+  - Ldap 이름 컬럼명 수정
+  - Header에 windows 다운로드 버튼 제거
+  - docs Last Modified 스크립트 버그 수정
+
+* v2.0.0(93)
+  - 사용자 상태 enum 추가(이메일 변경 인증 대기중)
+  - 그룹 삭제 후 페이지 이동 안되던 이슈 수정
+
+* v2.0.0(92)
+  - 이메일 중복 검사 구현
+
+* v2.0.0(91)
+  - md파일 기울임체 안되던 이슈 수정
+  - 엑셀 업로드 다운로드 시 성, 이름 뒤바뀌던 이슈 수정
+  - 사용자 잠금 해제 시 비밀번호 일치 여부 확인 추가
+
+* v2.0.0(90)
+  - 인증 상세 로그 지도 zoom 최소값 조절
+
 * v2.0.0(89)
   - 인증 상세 로그, 어플리케이션 별 유저 UTC -> KST 변환
   - 일부 Input Row 정렬
-  - docs Last Modified 추가
+  - docs 어플리케이션 별 Last Modified 추가
 
 * v2.0.0(88)
   - 버전 삭제 시 갱신 안되던 이슈 수정
@@ -14,7 +36,6 @@
   - md파일 코드 블럭 내 줄바꿈 안되던 이슈 수정
   - 인증 로그 상세 구현
   - 모든 Input Row min height 66px
-
 
 * v2.0.0(87)
   - 테이블 렌더링 개선

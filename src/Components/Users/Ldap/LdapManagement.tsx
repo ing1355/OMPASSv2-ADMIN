@@ -31,7 +31,7 @@ const LdapManagement = () => {
             setDataLoading(false)
         })
     }
-    console.log(tableData)
+    
     return <Contents loading={dataLoading}>
         <ContentsHeader title="LDAP_MANAGEMENT_TITLE" subTitle="LDAP_MANAGEMENT_TITLE">
         </ContentsHeader>

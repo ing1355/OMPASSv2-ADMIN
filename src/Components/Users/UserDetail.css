@@ -329,3 +329,12 @@
 .user-recovery-code-row>span {
     font: small-caption;
 }
+
+.user-email-change-modal-btn {
+    height: 100%;
+    margin-left: 8px;
+}
+
+.user-email-change-description {
+    font-weight: bold;
+}

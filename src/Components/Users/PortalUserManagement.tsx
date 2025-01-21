@@ -1,7 +1,7 @@
 import Button from "Components/CommonCustomComponents/Button"
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import CustomModal from "Components/Modal/CustomModal"
-import { INT_MAX_VALUE } from "Constants/ConstantValues"
+import { INT_MAX_VALUE, userStatusTypes } from "Constants/ConstantValues"
 import { GetUserDataListFunc } from "Functions/ApiFunctions"
 import { FormattedMessage, useIntl } from "react-intl"
 import userAddIcon from './../../assets/userAddIcon.png'
@@ -19,7 +19,7 @@ import { useNavigate } from "react-router"
 import { useSelector } from "react-redux"
 import useExcelDownload from "hooks/useExcelDownload"
 
-const userStatusList: UserDataType['status'][] = ['LOCK', 'RUN', 'WAIT_ADMIN_APPROVAL', 'WAIT_EMAIL_VERIFICATION', 'WAIT_INIT_PASSWORD', 'WITHDRAWAL']
+// const userStatusList: UserDataType['status'][] = ['LOCK', 'RUN', 'WAIT_ADMIN_APPROVAL', 'USER_PENDING_SIGNUP_VERIFICATION', 'USER_PENDING_EMAIL_UPDATE_VERIFICATION', 'WAIT_INIT_PASSWORD', 'WITHDRAWAL']
 const userRoleList = (role: UserDataType['role']): UserDataType['role'][] => role === 'ROOT' ? ['USER', 'ADMIN', 'ROOT'] : ['USER', 'ADMIN']
 
 const UserAddItem = ({ title, icon, onClick }: {
@@ -110,7 +110,7 @@ const PortalUserManagement = () => {
                         page_size: INT_MAX_VALUE,
                         page: 0
                     }, (res) => {
-                        excelDownload(res.results)
+                        excelDownload(res.results.filter(_ => _.status !== 'WITHDRAWAL'))
                     })
                 }} icon={downloadIcon} hoverIcon={downloadIconWhite}>
                     <FormattedMessage id="USER_EXCEL_DOWNLOAD_LABEL" />
@@ -155,7 +155,7 @@ const PortalUserManagement = () => {
                     render: data => <FormattedMessage id={`USER_STATUS_${data}`} />,
                     noWrap: true,
                     filterKey: 'statuses',
-                    filterOption: userStatusList.map(_ => ({
+                    filterOption: userStatusTypes.map(_ => ({
                         label: formatMessage({id: `USER_STATUS_${_}`}),
                         value: _
                     }))

@@ -15,6 +15,7 @@ import { userInfoChange } from 'Redux/actions/userChange';
 import { setStorageAuth } from 'Functions/GlobalFunctions';
 import { sessionCheckChange } from 'Redux/actions/sessionInfoChange';
 import { subdomainInfoChange } from 'Redux/actions/subdomainInfoChange';
+import AgentTitleByType from './AgentTitleByType';
 
 const VersionUpload = () => {
   const sessionInfo = useSelector((state: ReduxStateType) => state.sessionInfo!);
@@ -129,7 +130,7 @@ const VersionUpload = () => {
   return (
     <>
       <Contents>
-        <ContentsHeader title="VERSION_MANAGEMENT" subTitle='VERSION_LIST'>
+        <ContentsHeader title="VERSION_MANAGEMENT" subTitle={<AgentTitleByType type={type}/>}>
           <Button className='st3'
             type={!isUploadingFile ? "submit" : "button"}
             form={!isUploadingFile ? 'addVersionForm' : ''}

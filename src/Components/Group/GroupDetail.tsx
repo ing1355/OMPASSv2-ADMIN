@@ -113,6 +113,7 @@ const GroupDetail = () => {
             {!isAdd && <Button className="st2" onClick={() => {
                 DeleteUserGroupDataFunc(uuid, () => {
                     message.success(formatMessage({ id: 'GROUP_MODIFY_DELETE_MSG' }))
+                    navigate(-1)
                 })
             }}>
                 <FormattedMessage id="DELETE" />

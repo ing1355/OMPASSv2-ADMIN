@@ -10,7 +10,8 @@ import checkIcon from '../../assets/checkIcon.png'
 type CustomDropdownProps = PropsWithChildren<{
     items?: {
         label: string
-        value: any
+        value: any,
+        style?: React.CSSProperties
     }[]
     render?: React.ReactNode
     onChange?: (value: any) => void
@@ -24,7 +25,8 @@ const DropdownContainer = forwardRef(({ lang, effectCallback, items, onChange, v
     effectCallback: () => void
     items?: {
         label: string
-        value: any
+        value: any,
+        style?: React.CSSProperties
     }[]
     render?: React.ReactNode
     lang: LanguageType
@@ -75,7 +77,9 @@ const DropdownContainer = forwardRef(({ lang, effectCallback, items, onChange, v
                                     }
                                 }}>
                                     {multiple && <img src={checkIcon} className='custom-dropdown-multiple-check-icon' data-hidden={!tempValues.includes(_.value)} />}
-                                    <div title={_.label}>
+                                    <div title={_.label} style={{
+                                        ..._.style
+                                    }}>
                                         {_.label}
                                     </div>
                                 </div>)

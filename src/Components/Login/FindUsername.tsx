@@ -147,12 +147,10 @@ const FindUsername = () => {
                 <Button
                     className={'st6 login-button'}
                     onClick={() => {
-                        navigate('/', {
-                            replace: true
-                        })
+                        navigate(-1)
                     }}
                 >
-                    <FormattedMessage id="BACK_TO_LOGIN_PAGE_LABEL"/>
+                    <FormattedMessage id="GO_BACK"/>
                 </Button>
             </form>
         </div>

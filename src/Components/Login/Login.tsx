@@ -63,7 +63,7 @@ const Login = () => {
         password: inputPassword,
         language: lang!,
         loginClientType: "ADMIN"
-      }, ({ popupUri, status, questions }, token) => {
+      }, ({ ompassUrl, status, questions }, token) => {
         // status = 'WAIT_SECURITY_QNA'
         if (status === 'WAIT_INIT_PASSWORD') {
         // if (false) {
@@ -79,7 +79,7 @@ const Login = () => {
             }
           })
         }
-        const temp = popupUri + `&authorization=${token}`
+        const temp = ompassUrl + `&authorization=${token}`
         if (isDev) {
           const targetUrl = "192.168.182.120:9002"
           const resultUri = temp.replace("www.ompass.kr:54007", targetUrl).replace("www.ompass.kr:54012", targetUrl).replace("192.168.182.75:9001", targetUrl).replace("ompass.kr:59001", targetUrl)
@@ -242,7 +242,7 @@ const Login = () => {
         {/* {!needPasswordChange && <Link to='/GuidePage' className='quick-start-guide-text'>
           <FormattedMessage id='GO_TO_QUICK_GUIDE' />
         </Link>} */}
-        {!needPasswordChange && <>
+        {/* {!needPasswordChange && <>
           <br />
           <span className='quick-start-guide-text' onClick={() => {
             message.info("기능 준비중(가이드 페이지로 이동)")
@@ -251,7 +251,7 @@ const Login = () => {
           }}>
             <FormattedMessage id='GO_TO_QUICK_GUIDE' />
           </span>
-        </>}
+        </>} */}
       </form>
     </div>
   </>

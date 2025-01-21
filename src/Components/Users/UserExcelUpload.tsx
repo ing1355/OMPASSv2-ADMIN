@@ -15,6 +15,7 @@ import './UserExcelUpload.css'
 import { userSelectPageSize } from "Constants/ConstantValues";
 import { useSelector } from "react-redux";
 import useExcelDownload from "hooks/useExcelDownload";
+import Locale from '../../Locale';
 
 type ExcelRegexErrorDataType = {
     row: number
@@ -53,6 +54,14 @@ const UserExcelUpload = () => {
         const { page, showPerPage } = pageSetting
         return datas.slice((page - 1) * showPerPage, page * showPerPage)
     }, [datas, pageSetting])
+
+    const findColumnWithLocale = (key: string, columns: string[]) => {
+        
+        const locales = Object.keys(Locale).map((_) => (Locale as {
+            [key: string]: any
+        })[_][key])
+        return columns.findIndex(_ => locales.includes(_))
+    }
 
     return <>
         <Contents>
@@ -146,7 +155,23 @@ const UserExcelUpload = () => {
                                 defval: ""
                             });
                             console.log(jsonData)
+
+                            if(jsonData.length === 0) {
+                                return message.error(formatMessage({ id: 'EXCEL_EMPTY_MSG' }));
+                            }
                             let temp: ExcelRegexErrorDataType[] = []
+
+                            const columns = Object.keys(jsonData[0] as object)
+
+                            const usernameInd = findColumnWithLocale('USER_EXCEL_USER_ID_LABEL', columns)
+                            const firstNameInd = findColumnWithLocale('FIRST_NAME', columns)
+                            const lastNameInd = findColumnWithLocale('LAST_NAME', columns)
+                            const emailInd = findColumnWithLocale('EMAIL', columns)
+                            const phoneInd = findColumnWithLocale('PHONE_NUMBER', columns)
+
+                            if(usernameInd === -1 || firstNameInd === -1 || lastNameInd === -1 || emailInd === -1 || phoneInd === -1) {
+                                return message.error(formatMessage({id: 'EXCEL_UPLOAD_FAIL_MSG'}))
+                            }
 
                             const resultData = jsonData.map((_, ind) => {
                                 let errorTemp: ExcelRegexErrorDataType = {
@@ -155,51 +180,33 @@ const UserExcelUpload = () => {
                                 }
                                 let result = Object.values(_ as Object).reduce((pre, cur, ind) => {
                                     cur = (cur as string).trim()
-                                    if (ind === 0) {
+                                    if (ind === usernameInd) {
                                         if (!idRegex.test(cur)) {
                                             errorTemp.key.push('username')
                                         }
                                         pre["username"] = cur;
-                                    } else if (ind === 1) {
-                                        if(lang === 'KR') {
-                                            if (cur.length > 0 && !nameRegex.test(cur)) {
-                                                errorTemp.key.push('firstName')
-                                            }
-                                            pre["name"] = {
-                                                "firstName": cur
-                                            }
-                                        } else {
-                                            if (cur.length > 0 && !nameRegex.test(cur)) {
-                                                errorTemp.key.push('lastName')
-                                            }
-                                            pre["name"] = {
-                                                "lastName": cur
-                                            }
+                                    } else if (ind === firstNameInd) {
+                                        if (cur.length > 0 && !nameRegex.test(cur)) {
+                                            errorTemp.key.push('firstName')
                                         }
-                                    } else if (ind === 2) {
-                                        if(lang === 'KR') {
-                                            if (!nameRegex.test(cur)) {
-                                                errorTemp.key.push('lastName')
-                                            }
-                                            pre["name"] = {
-                                                ...pre["name"],
-                                                "lastName": cur
-                                            }
-                                        } else {
-                                            if (!nameRegex.test(cur)) {
-                                                errorTemp.key.push('firstName')
-                                            }
-                                            pre["name"] = {
-                                                ...pre["name"],
-                                                "firstName": cur
-                                            }
+                                        pre["name"] = {
+                                            ...pre["name"],
+                                            "firstName": cur
                                         }
-                                    } else if (ind === 3) {
+                                    } else if (ind === lastNameInd) {
+                                        if (!nameRegex.test(cur)) {
+                                            errorTemp.key.push('lastName')
+                                        }
+                                        pre["name"] = {
+                                            ...pre["name"],
+                                            "lastName": cur
+                                        }
+                                    } else if (ind === emailInd) {
                                         if (!emailRegex.test(cur)) {
                                             errorTemp.key.push('email')
                                         }
                                         pre["email"] = cur;
-                                    } else if (ind === 4) {
+                                    } else if (ind === phoneInd) {
                                         if (cur.length > 0 && !phoneRegex.test(cur)) {
                                             errorTemp.key.push('phone')
                                         }

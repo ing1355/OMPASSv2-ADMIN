@@ -57,7 +57,7 @@
   line-height: 32px;
   font-weight: bold;
   padding: 12px 36px;
-  white-space: pre;
+  white-space: pre-wrap;
   box-sizing: border-box;
   width: 100%;
 }

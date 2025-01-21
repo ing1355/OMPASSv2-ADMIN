@@ -140,7 +140,7 @@ const Settings = () => {
                 }} maxLength={20} />
             </CustomInputRow>
             <CustomInputRow title={<FormattedMessage id="TIME_ZONE_LABEL" />}>
-                <CustomSelect value={timeZoneValue} onChange={e => {
+                <CustomSelect readOnly value={timeZoneValue} onChange={e => {
                     setTimeZoneValue(e)
                 }} items={timeZoneNames.map(_ => ({
                     key: _,

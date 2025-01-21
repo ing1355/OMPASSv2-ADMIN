@@ -43,15 +43,19 @@ const UnLockBtn = ({ userData, onSuccess }: {
             onOpen={() => {
                 inputUnlockPasswordRef.current?.focus()
             }}
-            onSubmit={() => {
+            onSubmit={async () => {
                 const randomChecked = unlockPasswordRandomChecked;
-                return UnlockUserFunc(userData.userId, unlockPasswordRandomChecked, inputUnlockPassword, ({ password }) => {
+                if(!randomChecked && (inputUnlockPassword !== inputUnlockPasswordConfirm)) {
+                    message.error(formatMessage({id: 'PASSWORD_NOT_MATCH'}))
+                } else {
+                    return UnlockUserFunc(userData.userId, unlockPasswordRandomChecked, inputUnlockPassword, ({ password }) => {
                     setSureUnlock(false)
-                    message.success(formatMessage({ id: 'USER_UNLOCK_SUCCESS_MSG' }))
-                    if (randomChecked) setShowRandomPassword(password)
-                    else onSuccess()
-
-                })
+                        message.success(formatMessage({ id: 'USER_UNLOCK_SUCCESS_MSG' }))
+                        if (randomChecked) setShowRandomPassword(password)
+                        else onSuccess()
+    
+                    })
+                }
             }} buttonLoading>
             <>
                 <div style={{
@@ -64,9 +68,7 @@ const UnLockBtn = ({ userData, onSuccess }: {
                         <FormattedMessage id="PASSWORD_CHANGE_PLACEHOLDER"/>
                         <Input type='checkbox' label={<FormattedMessage id="PASSWORD_RANDOM_GENERATE_LABEL"/>} checked={unlockPasswordRandomChecked} onChange={e => {
                             setUnlockPasswordRandomChecked(e.target.checked)
-                        }} style={{
-                            height: '100%'
-                        }} />
+                        }}/>
                     </div>
                     <Input type="password" disabled={unlockPasswordRandomChecked} customType='password' className='st1' value={inputUnlockPassword} valueChange={val => {
                         setInputUnlockPassword(val)

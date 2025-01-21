@@ -34,7 +34,7 @@ const ApplicationAgentDownload = ({ type }: {
             if (!getDownloadUrlByType()) {
                 message.error(formatMessage({ id: 'NO_DOWNLOAD_URL_MSG' }))
             } else {
-                downloadFileByLink(getDownloadUrlByType()!)
+                downloadFileByLink(getDownloadUrlByType())
             }
         }}>
             <FormattedMessage id={getLabelKeyByType()} />

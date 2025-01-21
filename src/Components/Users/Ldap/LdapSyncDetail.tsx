@@ -1,6 +1,7 @@
 import Button from "Components/CommonCustomComponents/Button";
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow";
 import Input from "Components/CommonCustomComponents/Input";
+import downloadIcon from '../../../assets/downloadIcon.png';
 import Contents from "Components/Layout/Contents";
 import ContentsHeader from "Components/Layout/ContentsHeader";
 import { AddLdapConfigListFunc, DeleteLdapConfigListFunc, GetLdapConfigListFunc, UpdateLdapConfigListFunc } from "Functions/ApiFunctions";
@@ -15,8 +16,11 @@ import deleteIcon from '../../../assets/deleteIcon.png'
 import deleteIconHover from '../../../assets/deleteIconHover.png'
 import LdapSyncButton from "./LdapSyncButton";
 import CopyToClipboard from "react-copy-to-clipboard";
+import { useSelector } from "react-redux";
+import { downloadFileByLink } from "Functions/GlobalFunctions";
 
 const LdapSyncDetail = () => {
+    const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const [dataLoading, setDataLoading] = useState(false)
     const [data, setData] = useState<LdapConfigDataType>()
     const [params, setParams] = useState<LdapConfigParamsType>({
@@ -69,16 +73,35 @@ const LdapSyncDetail = () => {
     }, [data])
 
     return <Contents loading={dataLoading}>
-        <ContentsHeader title={detailId ? "LDAP_MODIFY_TITLE" : "LDAP_ADD_TITLE"} subTitle={detailId ? "LDAP_MODIFY_TITLE" : "LDAP_ADD_TITLE"}>
+        <ContentsHeader title={detailId ? "LDAP_MODIFY_TITLE" : "LDAP_ADD_TITLE"} subTitle={<div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'row',
+            gap: '8px'
+        }}>
+            <FormattedMessage id={detailId ? "LDAP_MODIFY_TITLE" : "LDAP_ADD_TITLE"} />
+            <div>
+                <Button className="st11" icon={downloadIcon} onClick={() => {
+                    if (!subdomainInfo.ompassProxyDownloadUrl) {
+                        message.error(formatMessage({ id: 'NO_DOWNLOAD_URL_MSG' }))
+                    } else {
+                        downloadFileByLink(subdomainInfo.ompassProxyDownloadUrl)
+                    }
+                }}>
+                    <FormattedMessage id={"RADIUS_AGENT_DOWNLOAD_LABEL"} />
+                </Button>
+            </div>
+        </div>}>
             <Button className="st3" onClick={() => {
                 if (detailId) {
                     UpdateLdapConfigListFunc(detailId, params, (newData) => {
-                        message.success(formatMessage({id:'LDAP_MODIFY_SUCCESS_MSG'}))
+                        message.success(formatMessage({ id: 'LDAP_MODIFY_SUCCESS_MSG' }))
                         setData(newData)
                     })
                 } else {
                     AddLdapConfigListFunc(params, () => {
-                        message.success(formatMessage({id:'LDAP_ADD_SUCCESS_MSG'}))
+                        message.success(formatMessage({ id: 'LDAP_ADD_SUCCESS_MSG' }))
                         navigate(-1)
                     })
                 }
@@ -87,7 +110,7 @@ const LdapSyncDetail = () => {
             </Button>
             {detailId && <Button icon={deleteIcon} hoverIcon={deleteIconHover} className="st2" onClick={() => {
                 DeleteLdapConfigListFunc(detailId, () => {
-                    message.success(formatMessage({id:'LDAP_DELETE_SUCCESS_MSG'}))
+                    message.success(formatMessage({ id: 'LDAP_DELETE_SUCCESS_MSG' }))
                     navigate(-1)
                 })
             }}>
@@ -95,7 +118,7 @@ const LdapSyncDetail = () => {
             </Button>}
         </ContentsHeader>
         <div className="contents-header-container">
-            {detailId && <BottomLineText title={<FormattedMessage id="LDAP_DETAIL_INFO_LABEL"/>}/>}
+            {detailId && <BottomLineText title={<FormattedMessage id="LDAP_DETAIL_INFO_LABEL" />} />}
             {data?.apiServerHost && <CustomInputRow title={<FormattedMessage id="API_SERVER_ADDRESS_LABEL" />}>
                 <CopyToClipboard text={data?.apiServerHost} onCopy={(value, result) => {
                     if (result) {
@@ -107,7 +130,7 @@ const LdapSyncDetail = () => {
                     <Input className="st1 secret-key" value={data?.apiServerHost} readOnly />
                 </CopyToClipboard>
             </CustomInputRow>}
-            {data?.secretKey && <CustomInputRow title={<FormattedMessage id="LDAP_SECRET_KEY_LABEL"/>}>
+            {data?.secretKey && <CustomInputRow title={<FormattedMessage id="LDAP_SECRET_KEY_LABEL" />}>
                 <CopyToClipboard text={data.secretKey} onCopy={(value, result) => {
                     console.log(value, result)
                     if (result) {
@@ -119,10 +142,10 @@ const LdapSyncDetail = () => {
                     <Input className="st1 secret-key" value={data.secretKey} readOnly={true} />
                 </CopyToClipboard>
             </CustomInputRow>}
-            {detailId && <BottomLineText title={<FormattedMessage id="LDAP_SETTING_INFO_LABEL"/>} style={{
+            {detailId && <BottomLineText title={<FormattedMessage id="LDAP_SETTING_INFO_LABEL" />} style={{
                 marginTop: detailId ? '32px' : 0
-            }}/>}
-            <CustomInputRow title={<FormattedMessage id="LDAP_NAME_LABEL"/>}>
+            }} />}
+            <CustomInputRow title={<FormattedMessage id="LDAP_NAME_LABEL" />}>
                 <Input className="st1" value={params.name} valueChange={val => {
                     setParams({
                         ...params,
@@ -130,7 +153,7 @@ const LdapSyncDetail = () => {
                     })
                 }} />
             </CustomInputRow>
-            <CustomInputRow title={<FormattedMessage id="DESCRIPTION_LABEL"/>}>
+            <CustomInputRow title={<FormattedMessage id="DESCRIPTION_LABEL" />}>
                 <Input className="st1" value={params.description} valueChange={val => {
                     setParams({
                         ...params,
@@ -138,7 +161,7 @@ const LdapSyncDetail = () => {
                     })
                 }} />
             </CustomInputRow>
-            <CustomInputRow title={<FormattedMessage id="LDAP_PROXY_ADDRESS_LABEL"/>}>
+            <CustomInputRow title={<FormattedMessage id="LDAP_PROXY_ADDRESS_LABEL" />}>
                 <Input className="st1" value={params.proxyServer.address} valueChange={val => {
                     setParams({
                         ...params,
@@ -149,7 +172,7 @@ const LdapSyncDetail = () => {
                     })
                 }} />
             </CustomInputRow>
-            <CustomInputRow title={<FormattedMessage id="LDAP_PROXY_PORT_LABEL"/>}>
+            <CustomInputRow title={<FormattedMessage id="LDAP_PROXY_PORT_LABEL" />}>
                 <Input className="st1" value={params.proxyServer.port || ''} valueChange={val => {
                     setParams({
                         ...params,
@@ -168,7 +191,7 @@ const LdapSyncDetail = () => {
                     })
                 }} />
             </CustomInputRow>
-            <CustomInputRow title={<FormattedMessage id="LDAP_AUTH_TYPE_LABEL"/>}>
+            <CustomInputRow title={<FormattedMessage id="LDAP_AUTH_TYPE_LABEL" />}>
                 <div className="ldap-authentication-type-container">
                     {
                         LDAPAuthenticationTypes.map((_, ind) => <Input key={ind} className="st1" type="radio" checked={params.ldapAuthenticationType === _} onChange={e => {
@@ -182,7 +205,7 @@ const LdapSyncDetail = () => {
                     }
                 </div>
             </CustomInputRow>
-            <CustomInputRow title={<FormattedMessage id="LDAP_TRANSPORT_TYPE_LABEL"/>}>
+            <CustomInputRow title={<FormattedMessage id="LDAP_TRANSPORT_TYPE_LABEL" />}>
                 <div className="ldap-authentication-type-container">
                     {
                         LDAPTransportTypes.map((_, ind) => <Input key={ind} className="st1" type="radio" checked={params.ldapTransportType === _} onChange={e => {

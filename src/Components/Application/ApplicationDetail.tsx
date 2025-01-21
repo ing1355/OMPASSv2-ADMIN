@@ -61,6 +61,9 @@ const ApplicationDetail = () => {
     const [selectedPolicy, setSelectedPolicy] = useState('')
     const [inputDescription, setInputDescription] = useState('')
     const [inputApiServerHost, setInputApiServerHost] = useState('')
+    const [MSEntraTenantId, setMSEntraTenantId] = useState('')
+    const [MSEntraDiscoveryEndpoint, setMSEntraDiscoveryEndpoint] = useState('')
+    const [MSEntraAppId, setMSEntraAppId] = useState('')
     const [pamPassData, setPamPassData] = useState<PAMPassDataType>({
         isEnabled: false,
         ip: '',
@@ -107,6 +110,15 @@ const ApplicationDetail = () => {
                     setPamPassData(data.linuxPamBypass)
                 }
                 // setInputRedirectUrl(data.redirectUri ?? "")
+                if(data.msEntraTenantId) {
+                    setMSEntraTenantId(data.msEntraTenantId)
+                }
+                if(data.discoveryEndpoint) {
+                    setMSEntraDiscoveryEndpoint(data.discoveryEndpoint)
+                }
+                if(data.msAppId) {
+                    setMSEntraAppId(data.msAppId)
+                }
                 setLogoImage({
                     image: data.logoImage.url,
                     isDefaultImage: data.logoImage.isDefaultImage
@@ -222,7 +234,19 @@ const ApplicationDetail = () => {
             {
                 applicationType !== 'ADMIN' && <>
                     {!isAdd && <BottomLineText title={<FormattedMessage id="APPLICATION_INFO_DETAIL_LABELS" />} />}
-                    {!isAdd && <ApiServerAddressItem text={inputApiServerHost} />}
+                    {!isAdd && applicationType !== 'MS_ENTRA' && <ApiServerAddressItem text={inputApiServerHost} />}
+
+                    {MSEntraTenantId && <CustomInputRow title={<FormattedMessage id="MS_ENTRA_TENANT_ID_LABEL" />}>
+                        <CopyToClipboard text={MSEntraTenantId} onCopy={(value, result) => {
+                            if (result) {
+                                message.success(formatMessage({ id: 'APPLICATION_MS_ENTRA_APP_ID_COPY_SUCCESS_MSG' }))
+                            } else {
+                                message.success(formatMessage({ id: 'APPLICATION_MS_ENTRA_APP_ID_COPY_FAIL_MSG' }))
+                            }
+                        }}>
+                            <Input className="st1 secret-key" value={MSEntraTenantId} disabled={isAdd} readOnly={!isAdd} />
+                        </CopyToClipboard>
+                    </CustomInputRow>}
                     {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_CLIENT_ID_LABEL" />}>
                         <CopyToClipboard text={inputClientId} onCopy={(value, result) => {
                             if (result) {
@@ -234,7 +258,29 @@ const ApplicationDetail = () => {
                             <Input className="st1 secret-key" value={inputClientId} disabled={isAdd} readOnly={!isAdd} />
                         </CopyToClipboard>
                     </CustomInputRow>}
-                    {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_SECRET_KEY_LABEL" />}>
+                    {MSEntraDiscoveryEndpoint && <CustomInputRow title={<FormattedMessage id="MS_ENTRA_DISCOVERY_ENDPOINT_LABEL" />}>
+                        <CopyToClipboard text={MSEntraDiscoveryEndpoint} onCopy={(value, result) => {
+                            if (result) {
+                                message.success(formatMessage({ id: 'APPLICATION_MS_ENTRA_DISCOVERY_ENDPOINT_COPY_SUCCESS_MSG' }))
+                            } else {
+                                message.success(formatMessage({ id: 'APPLICATION_MS_ENTRA_DISCOVERY_ENDPOINT_COPY_FAIL_MSG' }))
+                            }
+                        }}>
+                            <Input className="st1 secret-key" value={MSEntraDiscoveryEndpoint} disabled={isAdd} readOnly={!isAdd} />
+                        </CopyToClipboard>
+                    </CustomInputRow>}
+                    {MSEntraAppId && <CustomInputRow title={<FormattedMessage id="MS_ENTRA_APP_ID_LABEL" />}>
+                        <CopyToClipboard text={MSEntraAppId} onCopy={(value, result) => {
+                            if (result) {
+                                message.success(formatMessage({ id: 'APPLICATION_MS_ENTRA_TENANT_ID_COPY_SUCCESS_MSG' }))
+                            } else {
+                                message.success(formatMessage({ id: 'APPLICATION_MS_ENTRA_TENANT_ID_COPY_FAIL_MSG' }))
+                            }
+                        }}>
+                            <Input className="st1 secret-key" value={MSEntraAppId} disabled={isAdd} readOnly={!isAdd} />
+                        </CopyToClipboard>
+                    </CustomInputRow>}
+                    {!isAdd && applicationType !== 'MS_ENTRA' && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_SECRET_KEY_LABEL" />}>
                         <CopyToClipboard text={inputSecretKey} onCopy={(value, result) => {
                             if (result) {
                                 message.success(formatMessage({ id: 'APPLICATION_SECRET_KEY_COPY_SUCCESS_MSG' }))
@@ -256,7 +302,7 @@ const ApplicationDetail = () => {
             {!isAdd && <BottomLineText title={<FormattedMessage id="APPLICATION_INFO_SETTING_LABELS" />} style={{
                 marginTop: applicationType === 'ADMIN' ? 0 : '36px',
             }} />}
-            <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_TYPE_LABEL" />}>
+            <CustomInputRow required title={<FormattedMessage id="APPLICATION_INFO_TYPE_LABEL" />}>
                 {isAdd ? <CustomSelect value={applicationType} onChange={value => {
                     setApplicationType(value as ApplicationDataType['type'])
                 }} items={typeItems} needSelect /> : getApplicationTypeLabel(applicationType as ApplicationDataType['type'])}

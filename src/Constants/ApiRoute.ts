@@ -57,6 +57,9 @@ export const AddUserWithCsvDataApi = '/v2/users/csv'
 export const DuplicateUserNameCheckApi = (username: string) => `/v2/users/username/${username}/existence`;
 export const RoleSwappingApi = '/v2/users/role-swapping'
 export const GetRpUserListApi = 'v2/users/rp'
+export const EmailChangeCodeVerificationApi = '/v2/users/email/code-verification'
+export const SendEmailChangeEmailByAdminApi = '/v2/users/email/update-auth'
+export const VerificationEmailChangeApi = '/v2/users/email/token-verification'
 
 // 인증장치 정책 업데이트
 export const UpdateUserAuthenticatorPolicyApi = (authId: string, policyId: string) => `/v2/rp/authentication-data/${authId}/policy/${policyId}`

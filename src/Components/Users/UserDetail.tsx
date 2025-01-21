@@ -31,6 +31,7 @@ import UnLockBtn from './UnLockBtn'
 import { PasscodeAddComponent } from './PasscodeComponents'
 import PairOMPASSAuthModal from 'Components/Modal/PairOMPASSAuthModal'
 import useFullName from 'hooks/useFullName'
+import EmailChangeBtn from './EmailChangeBtn'
 
 const initModifyValues: UserDataModifyLocalValuesType = {
     name: {
@@ -82,8 +83,8 @@ const PasscodeAddBtn = ({ added, onClick }: {
 
 const UserDetail = ({ }) => {
     const lang = useSelector((state: ReduxStateType) => state.lang!);
-      const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
-      const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas);
+    const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
+    const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas);
     const [passcodeHover, setPasscodeHover] = useState("")
     const [duplicateIdCheck, setDuplicateIdCheck] = useState(false)
     const [usernameAlert, setUsernameAlert] = useState(false)
@@ -259,7 +260,7 @@ const UserDetail = ({ }) => {
                 render: (data) => {
                     return data === -1 ? "∞" : <FormattedMessage id="PASSCODE_RECYCLE_COUNT_LABEL" values={{
                         count: data
-                    }}/>
+                    }} />
                 }
             },
         ]
@@ -308,7 +309,7 @@ const UserDetail = ({ }) => {
                     !isAdd && userInfo.role === 'ROOT' && !isSelf && <Button className='st5' onClick={() => {
                         setSureSwap(true)
                     }}>
-                        <FormattedMessage id="USER_AUTHORITY_SUCCESSION_LABEL"/>
+                        <FormattedMessage id="USER_AUTHORITY_SUCCESSION_LABEL" />
                     </Button>
                 }
                 {(canDelete && !isAdd) && !isDeleted && <Button className='st8' onClick={() => {
@@ -343,7 +344,7 @@ const UserDetail = ({ }) => {
                                         navigate(-1)
                                     })
                                 } else {
-                                    if (modifyValues.hasPassword && (modifyValues.password !== modifyValues.passwordConfirm)) return message.error(formatMessage({id:'PASSWORD_CONFIRM_CHECK'}))
+                                    if (modifyValues.hasPassword && (modifyValues.password !== modifyValues.passwordConfirm)) return message.error(formatMessage({ id: 'PASSWORD_CONFIRM_CHECK' }))
                                     UpdateUserDataFunc(uuid!, modifyValues, (data) => {
                                         setUserData(data)
                                         message.success(formatMessage({ id: 'USER_MODIFY_SUCCESS_MSG' }))
@@ -351,7 +352,7 @@ const UserDetail = ({ }) => {
                                     })
                                 }
                             }}>
-                                <FormattedMessage id={isAdd ? "NORMAL_ADD_LABEL" : "SAVE"} />
+                                <FormattedMessage id={isAdd ? "NORMAL_REGISTER_LABEL" : "SAVE"} />
                             </Button>
                         }
                         {(userData?.status === 'RUN' || userData?.status === 'LOCK') && canModify && !isAdd && !isDeleted && <Button icon={!isModify && editIcon} className={isModify ? "st7" : "st3"} onClick={() => {
@@ -439,13 +440,13 @@ const UserDetail = ({ }) => {
                             ]} maxLength={16} noGap />
                         </UserInfoInputrow></>}
                     {(isModify || isAdd) ? <UserInfoInputrow title="NAME" required>
-                        <Input className='st1' value={lang === 'KR' ? targetValue.name.lastName : targetValue.name.firstName} placeholder={formatMessage({ id: lang === 'KR' ? 'LAST_NAME_PLACEHOLDER' : 'FIRST_NAME_PLACEHOLDER' })} onChange={e => {
+                        <Input className='st1' value={lang === 'EN' ? targetValue.name.firstName : targetValue.name.lastName} placeholder={formatMessage({ id: lang === 'EN' ? 'FIRST_NAME_PLACEHOLDER' : 'LAST_NAME_PLACEHOLDER' })} onChange={e => {
                             if (isAdd) {
                                 setAddValues({
                                     ...addValues,
                                     name: {
                                         ...addValues.name,
-                                        [lang === 'KR' ? "lastName" : "firstName"]: e.target.value
+                                        [lang === 'EN' ? "firstName" : "lastName"]: e.target.value
                                     }
                                 })
                             } else {
@@ -453,18 +454,18 @@ const UserDetail = ({ }) => {
                                     ...modifyValues,
                                     name: {
                                         ...modifyValues.name,
-                                        [lang === 'KR' ? "lastName" : "firstName"]: e.target.value
+                                        [lang === 'EN' ? "firstName" : "lastName"]: e.target.value
                                     }
                                 })
                             }
                         }} customType='name' noGap />
-                        <Input className='st1' value={lang === 'KR' ? targetValue.name.firstName : targetValue.name.lastName} placeholder={formatMessage({ id: lang === 'KR' ? 'FIRST_NAME_PLACEHOLDER' : 'LAST_NAME_PLACEHOLDER' })} onChange={e => {
+                        <Input className='st1' value={lang === 'EN' ? targetValue.name.lastName : targetValue.name.firstName} placeholder={formatMessage({ id: lang === 'EN' ? 'LAST_NAME_PLACEHOLDER' : 'FIRST_NAME_PLACEHOLDER' })} onChange={e => {
                             if (isAdd) {
                                 setAddValues({
                                     ...addValues,
                                     name: {
                                         ...addValues.name,
-                                        [lang === 'KR' ? "firstName" : "lastName"]: e.target.value
+                                        [lang === 'EN' ? "lastName" : "firstName"]: e.target.value
                                     }
                                 })
                             } else {
@@ -472,30 +473,37 @@ const UserDetail = ({ }) => {
                                     ...modifyValues,
                                     name: {
                                         ...modifyValues.name,
-                                        [lang === 'KR' ? "firstName" : "lastName"]: e.target.value
+                                        [lang === 'EN' ? "lastName" : "firstName"]: e.target.value
                                     }
                                 })
                             }
                         }} customType='name' noGap />
                     </UserInfoInputrow> :
                         <UserInfoRow title="NAME" value={userData ? getFullName(userData.name) : "-"} />}
-                    {(isModify || isAdd) ? <UserInfoInputrow title="EMAIL" required>
-                        <Input style={{
-                            width: '406px'
-                        }} className='st1' value={isAdd ? addValues.email : modifyValues.email} onChange={e => {
-                            if (isAdd) {
-                                setAddValues({
-                                    ...addValues,
-                                    email: e.target.value
-                                })
-                            } else {
-                                setModifyValues({
-                                    ...modifyValues,
-                                    email: e.target.value
-                                })
-                            }
-                        }} maxLength={48} placeholder={formatMessage({ id: 'EMAIL_PLACEHOLDER' })} noGap />
-                    </UserInfoInputrow> : <UserInfoRow title="EMAIL" value={userData?.email} />}
+                    {
+                        isAdd ? <UserInfoInputrow title="EMAIL" required>
+                            <Input style={{
+                                width: '406px'
+                            }} className='st1' value={isAdd ? addValues.email : modifyValues.email} onChange={e => {
+                                if (isAdd) {
+                                    setAddValues({
+                                        ...addValues,
+                                        email: e.target.value
+                                    })
+                                } else {
+                                    setModifyValues({
+                                        ...modifyValues,
+                                        email: e.target.value
+                                    })
+                                }
+                            }} maxLength={48} placeholder={formatMessage({ id: 'EMAIL_PLACEHOLDER' })} noGap />
+                        </UserInfoInputrow> : <UserInfoRow title="EMAIL" value={
+                            <>
+                                {userData?.email} {userData && canModify && <EmailChangeBtn isSelf={isSelf} username={userData!.username} successCallback={() => {
+                                    GetDatas()
+                                }} />}
+                            </>} />
+                    }
 
                     {(isModify || isAdd) ? <UserInfoInputrow title="PHONE_NUMBER">
                         <Input className='st1' value={isAdd ? addValues.phone : modifyValues.phone} valueChange={value => {
@@ -546,7 +554,7 @@ const UserDetail = ({ }) => {
                     {
                         _.application.type === 'RADIUS' && !_.authenticationInfo.createdAt && <RadiusDetailItem appId={_.application.id} onComplete={() => {
                             GetDatas()
-                            message.success(formatMessage({id:'RADIUS_OMPASS_REGISTRATION_SUCCESS_MSG'}))
+                            message.success(formatMessage({ id: 'RADIUS_OMPASS_REGISTRATION_SUCCESS_MSG' }))
                         }} />
                     }
                     <div className="user-detail-header" onClick={() => {
@@ -563,14 +571,14 @@ const UserDetail = ({ }) => {
                             </div>
                         </div>
                         <div className='user-detail-header-last-container'>
-                        <h5>
-                            {_.authenticationInfo.loginDeviceInfo.updatedAt ? <>
-                                <FormattedMessage id="USER_INFO_UPDATED_LABEL" values={{
-                                    date: _.authenticationInfo.loginDeviceInfo.updatedAt
-                                }}/>
-                            </> : <FormattedMessage id="RADIUS_NO_REGISTRATION_LABEL"/>}
-                        </h5>
-                            <img className='user-detail-header-arrow-icon' src={arrowDownIcon}/>
+                            <h5>
+                                {_.authenticationInfo.loginDeviceInfo.updatedAt ? <>
+                                    <FormattedMessage id="USER_INFO_UPDATED_LABEL" values={{
+                                        date: _.authenticationInfo.loginDeviceInfo.updatedAt
+                                    }} />
+                                </> : <FormattedMessage id="RADIUS_NO_REGISTRATION_LABEL" />}
+                            </h5>
+                            <img className='user-detail-header-arrow-icon' src={arrowDownIcon} />
                         </div>
                     </div>
 
@@ -617,7 +625,7 @@ const UserDetail = ({ }) => {
                                     {userInfo.role !== "USER" && canModify && <PasscodeAddBtn added={_.authenticationInfo.authenticators.some(__ => __.type === 'PASSCODE')} onClick={() => {
                                         if (_.authenticationInfo.authenticators.some(__ => __.type === 'PASSCODE')) {
                                             SendPasscodeEmailFunc(passcodeData(_.authenticationInfo.id)[0].id, () => {
-                                                message.success(formatMessage({id:'PASSCODE_RE_SEND_SUCCESS_MSG'}))
+                                                message.success(formatMessage({ id: 'PASSCODE_RE_SEND_SUCCESS_MSG' }))
                                             })
                                         } else {
                                             setAddPasscode(_.authenticationInfo.id)
@@ -647,7 +655,7 @@ const UserDetail = ({ }) => {
             RoleSwappingFunc(token, () => {
                 dispatch(userInfoClear())
                 setAuthView(false)
-                message.success(formatMessage({id:'USER_AUTHORITY_SUCCESSION_SUCCESS_MSG'}))
+                message.success(formatMessage({ id: 'USER_AUTHORITY_SUCCESSION_SUCCESS_MSG' }))
             })
         }} userData={userData} />
         <CustomModal

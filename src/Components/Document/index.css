@@ -1,5 +1,5 @@
 .document-container {
-    width: 60%;
+    width: 75%;
     margin: 0 auto;
     background-color: white;
     padding: 24px;
@@ -105,7 +105,10 @@
 }
 
 .document-contents-container img {
-    border: 1px solid var(--color-canvas-subtle);
+    border: 1.4px solid var(--sub-grey-color5);
+    box-sizing: border-box !important;
+    border-style: solid !important;
+    border-radius: 6px;
 }
 
 .application-docs-modify-time-container {

@@ -9,7 +9,6 @@ import AxiosController from 'AxiosController';
 import Locale from './Locale/index';
 import PasscodeManagement from 'Components/PasscodeManagement/PasscodeManagement';
 import Agent from 'Components/Agent/Agent';
-import GuidePage from 'Components/Account/GuidePage';
 import AutoLogout from 'Components/Login/AutoLogout';
 import Header from 'Components/Header/Header';
 import Billing from 'Components/Billing/Billing';
@@ -28,6 +27,8 @@ import { globalDatasChange } from 'Redux/actions/globalDatasChange';
 import Dashboard from 'Components/Dashboard/Dashboard';
 import LoginPage from 'Components/Login';
 import SecurityQuestionPage from 'Components/Login/SecurityQuestionPage';
+import EmailChangeVerification from 'Components/Users/EmailChangeVerification';
+import Document from 'Components/Document';
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
@@ -35,7 +36,7 @@ const App: React.FC = () => {
   const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
   const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas)!;
   const lang = useSelector((state: ReduxStateType) => state.lang!);
-  
+
   const getDomainInfo = () => {
     GetSubDomainInfoFunc(subDomain, (data) => {
       dispatch(subdomainInfoChange(data))
@@ -44,7 +45,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     // console.log('route change : ', location.pathname + location.search)
-  },[location])
+  }, [location])
 
   useEffect(() => {
     getDomainInfo()
@@ -74,42 +75,45 @@ const App: React.FC = () => {
 
   return <IntlProvider locale={convertLangToIntlVer(lang)} messages={Locale[lang]}>
     <AxiosController />
-    <div className={userInfo ? 'contents-container' : ""}>
-      {userInfo && <Header />}
-      <Routes>
-        <Route path='/ompass/*' element={<OMPASSVerify />} />
-        <Route path='/GuidePage' element={<GuidePage />} />
-        <Route path='/AutoLogout' element={<AutoLogout />} />
-        <Route path='/SecurityQuestion' element={<SecurityQuestionPage />} />
-        {
-          userInfo ? (
-            userInfo.role! !== 'USER' ? <>
-              <Route path='/Main' element={<Main />} />
-              <Route path='/Dashboard' element={<Dashboard />} />
-              <Route path='/AgentManagement/*' element={<Agent />} />
-              <Route path='/UserManagement/*' element={<Users />} />
-              <Route path='/PasscodeManagement' element={<PasscodeManagement />} />
-              <Route path='/Billing' element={<Billing />} />
-              <Route path='/Applications/*' element={<Application />} />
-              <Route path='/Policies/*' element={<Policies />} />
-              <Route path='/Groups/*' element={<Groups />} />
-              <Route path='/AuthLogs' element={<AuthLog />} />
-              <Route path='/PortalLogs' element={<PortalLog />} />
-              <Route path='/Settings' element={<Settings />} />
-              <Route path='/*' element={<Navigate to={MainRouteByDeviceType} replace={true} />} />
-            </>
-              : <>
-                <Route path='/Main' element={<Users />} />
-                <Route path='/*' element={<Navigate to='/Main' replace={true} />} />
+    <Routes>
+      <Route path="/docs/*" element={<Document />} />
+      <Route path='/*' element={<div className={userInfo ? 'contents-container' : ""}>
+        {userInfo && <Header />}
+        <Routes>
+          <Route path='/ompass/*' element={<OMPASSVerify />} />
+          <Route path='/emailChangeConfirm' element={<EmailChangeVerification />} />
+          <Route path='/AutoLogout' element={<AutoLogout />} />
+          <Route path='/SecurityQuestion' element={<SecurityQuestionPage />} />
+          {
+            userInfo ? (
+              userInfo.role! !== 'USER' ? <>
+                <Route path='/Main' element={<Main />} />
+                <Route path='/Dashboard' element={<Dashboard />} />
+                <Route path='/AgentManagement/*' element={<Agent />} />
+                <Route path='/UserManagement/*' element={<Users />} />
+                <Route path='/PasscodeManagement' element={<PasscodeManagement />} />
+                <Route path='/Billing' element={<Billing />} />
+                <Route path='/Applications/*' element={<Application />} />
+                <Route path='/Policies/*' element={<Policies />} />
+                <Route path='/Groups/*' element={<Groups />} />
+                <Route path='/AuthLogs' element={<AuthLog />} />
+                <Route path='/PortalLogs' element={<PortalLog />} />
+                <Route path='/Settings' element={<Settings />} />
+                <Route path='/*' element={<Navigate to={MainRouteByDeviceType} replace={true} />} />
               </>
-          ) : <>
-            <Route path='/*' element={<LoginPage />} />
-            <Route path='/signup' element={<SignUp />} />
-          </>
-        }
-      </Routes>
+                : <>
+                  <Route path='/Main' element={<Users />} />
+                  <Route path='/*' element={<Navigate to='/Main' replace={true} />} />
+                </>
+            ) : <>
+              <Route path='/*' element={<LoginPage />} />
+              <Route path='/signup' element={<SignUp />} />
+            </>
+          }
+        </Routes>
+      </div>} />
+    </Routes>
 
-    </div>
   </IntlProvider>;
 }
 

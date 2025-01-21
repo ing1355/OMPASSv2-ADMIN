@@ -19,15 +19,15 @@ const PolicySelect = ({ selectedPolicy, setSelectedPolicy, needSelect, applicati
     const lang = useSelector((state: ReduxStateType) => state.lang!);
     const [policiesData, setPoliciesData] = useState<PolicyListDataType[]>(datas || [])
     const filteredPoliciesData = useMemo(() => {
-        if(applicationType) {
+        if (applicationType) {
             return policiesData.filter(_ => _.applicationType === applicationType || _.applicationType === 'ALL')
         } else {
             return policiesData
         }
-    },[policiesData, applicationType])
+    }, [policiesData, applicationType])
 
     useLayoutEffect(() => {
-        if(!datas) GetPoliciesListFunc({
+        if (!datas) GetPoliciesListFunc({
             page: 0,
             page_size: INT_MAX_VALUE
         }, ({ results, totalCount }) => {
@@ -51,11 +51,11 @@ const PolicySelect = ({ selectedPolicy, setSelectedPolicy, needSelect, applicati
                 setSelectedPolicy(id)
             }} needSelect={needSelect} />
         {filteredPoliciesData.length > 0 && selectedPolicy && <div className="custom-detail-policy-navigate-text">
-            {lang === 'KR' ? <>
-                <a target="_blank" href={`/Policies/auth/detail/${selectedPolicy}`}><FormattedMessage id="POLICY_TAREGT_LINK_DESCRIPTION_1" /></a><FormattedMessage id="POLICY_TAREGT_LINK_DESCRIPTION_2" />
-            </> : <>
-                <FormattedMessage id="POLICY_TAREGT_LINK_DESCRIPTION_2" /> <a target="_blank" href={`/Policies/auth/detail/${selectedPolicy}`}><FormattedMessage id="POLICY_TAREGT_LINK_DESCRIPTION_1" /></a>
-            </>}
+            <FormattedMessage id="POLICY_TAREGT_LINK_DESCRIPTION_2" values={{
+                here: <a target="_blank" href={`/Policies/auth/detail/${selectedPolicy}`}>
+                    <FormattedMessage id="POLICY_TAREGT_LINK_DESCRIPTION_1" />
+                </a>
+            }} />
         </div>}
     </div>
 }

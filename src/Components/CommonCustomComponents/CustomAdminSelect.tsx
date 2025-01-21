@@ -1,7 +1,7 @@
 import { Select } from "antd"
 import { INT_MAX_VALUE } from "Constants/ConstantValues"
 import { GetUserDataListFunc } from "Functions/ApiFunctions"
-import { useLayoutEffect, useMemo, useState } from "react"
+import { useEffect, useLayoutEffect, useMemo, useState } from "react"
 import closeIcon from '../../assets/closeIcon.png'
 import { FormattedMessage } from "react-intl"
 import './CustomAdminSelect.css'
@@ -28,17 +28,20 @@ const CustomAdminSelect = ({ data, onChange, hasIncludeWithdrawal }: CustomAdmin
         })
     }
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         getDatas()
     }, [])
 
     const selectData = useMemo(() => {
         if (adminDatas.length > 0) {
             const result = data.map(_ => adminDatas.find(__ => __.userId === _)!.username)
-            hasIncludeWithdrawal(!(!adminDatas.find(_ => data.includes(_.userId) && _.status === 'WITHDRAWAL')))
             return result
         } else return []
     }, [data, adminDatas])
+
+    useEffect(() => {
+        if(adminDatas.length > 0) hasIncludeWithdrawal(!(!adminDatas.find(_ => data.includes(_.userId) && _.status === 'WITHDRAWAL')))
+    },[adminDatas])
     
     return <>
         <Select mode="multiple"

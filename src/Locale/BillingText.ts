@@ -5,7 +5,7 @@ const BillingText = {
         BILLING_DESCRIPTION_ITEM_3: "웹 인증 (PC/모바일)",
         BILLING_DESCRIPTION_ITEM_4: "이메일/푸시 알림을 통한 관리자 알림 기능",
         BILLING_DESCRIPTION_ITEM_5: "대시보드 기능",
-        BILLING_DESCRIPTION_ITEM_6: "Windows Logon",
+        BILLING_DESCRIPTION_ITEM_6: "Windows 로그인",
         BILLING_DESCRIPTION_ITEM_7: "Linux PAM (SSH)",
         BILLING_DESCRIPTION_ITEM_8: "Radius 프로토콜",
         BILLING_DESCRIPTION_ITEM_9: "LDAP 연동"

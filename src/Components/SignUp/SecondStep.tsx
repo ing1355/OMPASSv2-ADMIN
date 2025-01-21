@@ -251,7 +251,7 @@ const SecondStep = ({ completeCallback }: {
                     }}
                 />
             </InputRow>
-            <InputRow label={lang === 'KR' ? "LAST_NAME" : "FIRST_NAME"} required>
+            <InputRow label={lang === 'EN' ? "FIRST_NAME" : "LAST_NAME"} required>
                 <Input
                     className='st1'
                     required
@@ -261,22 +261,22 @@ const SecondStep = ({ completeCallback }: {
                     rules={[
                         {
                             regExp: nameRegex,
-                            msg: <FormattedMessage id={lang === 'KR' ? "LAST_NAME_CHECK" : "FIRST_NAME_CHECK"} />
+                            msg: <FormattedMessage id={lang === 'EN' ? "FIRST_NAME_CHECK" : "LAST_NAME_CHECK"} />
                         }
                     ]}
-                    value={lang === 'KR' ? inputName2 : inputName1}
+                    value={lang === 'EN' ? inputName1 : inputName2}
                     valueChange={(value, isAlert) => {
-                        if (lang === 'KR') {
-                            setInputName2(value)
-                            setIsNameAlert2(isAlert || false)
-                        } else {
+                        if (lang === 'EN') {
                             setInputName1(value)
                             setIsNameAlert1(isAlert || false)
+                        } else {
+                            setInputName2(value)
+                            setIsNameAlert2(isAlert || false)
                         }
                     }}
                 />
             </InputRow>
-            <InputRow label={lang === 'KR' ? "FIRST_NAME" : "LAST_NAME"} required>
+            <InputRow label={lang === 'EN' ? "LAST_NAME" : "FIRST_NAME"} required>
                 <Input
                     className='st1'
                     required
@@ -285,18 +285,18 @@ const SecondStep = ({ completeCallback }: {
                     rules={[
                         {
                             regExp: nameRegex,
-                            msg: <FormattedMessage id={lang === 'KR' ? "FIRST_NAME_CHECK" : "LAST_NAME_CHECK"} />
+                            msg: <FormattedMessage id={lang === 'EN' ? "LAST_NAME_CHECK" : "FIRST_NAME_CHECK"} />
                         }
                     ]}
-                    value={lang === 'KR' ? inputName1 : inputName2}
+                    value={lang === 'EN' ? inputName2 : inputName1}
                     customType="name"
                     valueChange={(value, isAlert) => {
-                        if (lang === 'KR') {
-                            setInputName1(value)
-                            setIsNameAlert1(isAlert || false)
-                        } else {
+                        if (lang === 'EN') {
                             setInputName2(value)
                             setIsNameAlert2(isAlert || false)
+                        } else {
+                            setInputName1(value)
+                            setIsNameAlert1(isAlert || false)
                         }
                     }}
                 />
@@ -314,7 +314,6 @@ const SecondStep = ({ completeCallback }: {
                         setInputEmail(value)
                         setIsEmailAlert(isAlert || false)
                         setEmailCodeSend(false)
-                        // setMailSendLoading(false)
                     }}
                     readOnly={emailVerify}
                 >

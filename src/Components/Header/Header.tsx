@@ -4,9 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import menuIcon from '../../assets/menuIcon.png';
 import logout from '../../assets/logout.png';
-import downloadIcon from '../../assets/downloadIcon.png';
-import manualDownloadIcon from '../../assets/manualDownloadIcon.png';
-import adminManualDownloadIcon from '../../assets/adminManualDownloadIcon.png';
+import adminManualIcon from '../../assets/adminManualIcon.png';
 import { useIntl } from 'react-intl';
 import { userInfoClear } from 'Redux/actions/userChange';
 import { Tooltip } from 'antd';
@@ -16,7 +14,6 @@ import LocaleChange from 'Components/CommonCustomComponents/LocaleChange';
 
 const Header = () => {
   const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
-  const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const { username, role, userId } = userInfo! ?? {};
   const dropdownRef = useRef<any>(null);
@@ -76,38 +73,21 @@ const Header = () => {
         </div>
         <div className='header-contents-second-items'>
           <SessionTimeCount />
-          <Tooltip
-            destroyTooltipOnHide
-            title={formatMessage({ id: 'DOWNLOAD_FOR_WINDOWS' })}
-          >
-            <a href={subdomainInfo.windowsAgentUrl} download>
-              <img src={downloadIcon} />
 
-            </a>
-          </Tooltip>
-
-          <Tooltip
-            title={formatMessage({ id: 'DOWNLOAD_USER_MANUAL' })}
+          {userInfo.role !== 'USER' && <Tooltip
+            title={formatMessage({ id: 'SEE_ADMIN_MANUAL' })}
             destroyTooltipOnHide
           >
             <a
-              href="/OMPASS_Portal_User_Manual.pdf"
-              download
+              href="/docs/start/signup"
+              target='_blank'
+              style={{
+                display: 'flex'
+              }}
             >
-              <img src={manualDownloadIcon} />
+              <img src={adminManualIcon} />
             </a>
-          </Tooltip>
-          <Tooltip
-            title={formatMessage({ id: 'DOWNLOAD_ADMIN_MANUAL' })}
-            destroyTooltipOnHide
-          >
-            <a
-              href="/OMPASS_Portal_Admin_Manual.pdf"
-              download
-            >
-              <img src={adminManualDownloadIcon} />
-            </a>
-          </Tooltip>
+          </Tooltip>}
           <Tooltip
             title={formatMessage({ id: 'SELF_INFO_TOOLTIP_LABEL' })}
             destroyTooltipOnHide

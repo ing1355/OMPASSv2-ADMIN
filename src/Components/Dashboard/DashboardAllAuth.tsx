@@ -2,17 +2,18 @@ import { useEffect, useState } from "react"
 import DashboardCardWithDateSelect from "./DashboardCardWithDateSelect"
 import { dashboardDateInitialValue } from "./Dashboard"
 import { GetDashboardApplicationAuthFunc } from "Functions/ApiFunctions"
-import { convertDaysByDate, convertHourRangeByDate } from "./DashboardFunctions"
 import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions"
 import { FormattedMessage } from "react-intl"
 import DashBoardBarChart from "./DashboardBarChart"
 import { useSelector } from "react-redux"
+import useDsashboardFunctions from "hooks/useDashboardFunctions"
 
 const DashboardAllAuth = ({ applications }: {
     applications: ApplicationListDataType[]
 }) => {
     const lang = useSelector((state: ReduxStateType) => state.lang!);
     const [params, setParams] = useState(dashboardDateInitialValue())
+    const {convertDaysByDate, convertHourRangeByDate} = useDsashboardFunctions()
     const [datas, setDatas] = useState<{
         date: string
         [key: string]: any

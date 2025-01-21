@@ -141,7 +141,7 @@ type LoginApiParamsType = {
     language: LanguageType
 }
 type LoginApiResponseType = {
-    popupUri: string
+    ompassUrl: string
     username: string
     status: UserStatusType
     questions: SecurityQuestionType[]
@@ -216,7 +216,7 @@ type DefaultApplicationDataType = {
     id: string
     clientId: string
     // type: "DEFAULT" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "ADMIN" | "RADIUS" | "GOOROOM_LOGIN" | "REDMINE" | "ALL"
-    type: "DEFAULT" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "ADMIN" | "RADIUS" | "REDMINE" | "ALL" | ''
+    type: "DEFAULT" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "ADMIN" | "RADIUS" | "REDMINE" | 'MS_ENTRA' | "ALL" | ''
     name: string
     domain?: string
     description?: string
@@ -242,6 +242,9 @@ type ApplicationDataType = DefaultApplicationDataType & {
     isPasswordlessEnabled?: boolean
     radiusProxyServer?: RadiusDataType
     linuxPamBypass?: PAMPassDataType
+    msEntraTenantId?: string
+    discoveryEndpoint?: string
+    msAppId?: string
 }
 
 type ApplicationDataParamsType = {
@@ -387,7 +390,7 @@ type DefaultUserDataType = DefaultUserDataParamsType & {
     name: UserNameType
 }
 
-type UserStatusType = "WAIT_EMAIL_VERIFICATION" | "WAIT_ADMIN_APPROVAL" | "RUN" | "WITHDRAWAL" | "LOCK" | "WAIT_INIT_PASSWORD" | "WAIT_SECURITY_QNA"
+type UserStatusType = "USER_PENDING_EMAIL_UPDATE_VERIFICATION" | "USER_PENDING_SIGNUP_VERIFICATION" | "WAIT_ADMIN_APPROVAL" | "RUN" | "WITHDRAWAL" | "LOCK" | "WAIT_INIT_PASSWORD" | "WAIT_SECURITY_QNA"
 
 type UserDataType = DefaultUserDataType & {
     userId: string
@@ -809,4 +812,11 @@ type PAMPassDataType = {
     isEnabled: boolean
     ip: string
     username: string
+}
+
+type LocaleType = 'KR' | 'EN' | 'JP'
+
+type DocsMenuItemType = {
+    title: React.ReactNode
+    route: string
 }

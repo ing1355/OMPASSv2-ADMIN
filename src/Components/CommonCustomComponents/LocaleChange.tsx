@@ -6,6 +6,12 @@ import locale_image from '../../assets/locale_image.png';
 import { message } from "antd";
 import './LocaleChange.css'
 
+const localeLabel = (locale: LocaleType) => {
+    if(locale === 'EN') return 'English'
+    else if(locale === 'JP') return '日本語'
+    else return '한국어'
+}
+
 const LocaleChange = () => {
     const lang = useSelector((state: ReduxStateType) => state.lang!);
     const dispatch = useDispatch()
@@ -20,22 +26,25 @@ const LocaleChange = () => {
             languageCallback(val)
         }} items={[
             {
-                label: 'KO',
+                label: localeLabel('KR'),
                 value: 'KR'
             },
             {
-                label: 'EN',
+                label: localeLabel('EN'),
                 value: 'EN'
             },
             {
-                label: 'JP',
-                value: 'JP'
+                label: localeLabel('JP'),
+                value: 'JP',
+                style: {
+                    fontFamily: 'Noto Sans JP'
+                }
             }
         ]}>
             <div className='header-locale-inner-container'>
                 <img src={locale_image} />
                 <span>
-                    {lang === 'KR' ? 'KO' : lang}
+                    {localeLabel(lang)}
                 </span>
             </div>
         </CustomDropdown>

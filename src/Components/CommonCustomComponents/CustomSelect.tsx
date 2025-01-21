@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import './CustomSelect.css'
 import { FormattedMessage } from "react-intl"
 
@@ -15,9 +15,10 @@ type CustomSelectProps = {
     needSelect?: boolean
     noLabel?: React.ReactNode
     style?: React.HTMLAttributes<HTMLDivElement>['style']
+    readOnly?: boolean
 }
 
-const CustomSelect = ({ items, value, onChange, needSelect, noLabel, style }: CustomSelectProps) => {
+const CustomSelect = ({ items, value, onChange, needSelect, noLabel, style, readOnly }: CustomSelectProps) => {
     const [showSelect, setShowSelect] = useState(false)
     const [active, setActive] = useState<any>(items && items.length > 0 ? items.find(_ => _.key === value)?.key || items[0].key : '')
     const selectRef = useRef<HTMLDivElement>(null)
@@ -84,8 +85,10 @@ const CustomSelect = ({ items, value, onChange, needSelect, noLabel, style }: Cu
         };
     }, [showSelect]);
 
-    return <div className={`custom-select-container${showSelect ? ' opened' : ''}${_items.length > 5 ? ' scroll' : ''}`} onClick={() => {
-        setShowSelect(!showSelect)
+    return <div className={`custom-select-container${readOnly ? ' read-only' : ''}${showSelect ? ' opened' : ''}${_items.length > 5 ? ' scroll' : ''}`} onClick={() => {
+        if(!readOnly) {
+            setShowSelect(!showSelect)
+        }
     }} ref={selectRef} style={style}>
         {value ? _items.find(_ => _.key === value)?.label : (noLabel || <FormattedMessage id="NO_SELECT_VALUE" />)}
         {

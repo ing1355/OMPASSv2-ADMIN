@@ -2,17 +2,18 @@ import { GetDashboardApplicationInvalidAuthFunc } from "Functions/ApiFunctions"
 import DashboardCardWithDateSelect from "./DashboardCardWithDateSelect"
 import { useEffect, useState } from "react"
 import { dashboardDateInitialValue } from "./Dashboard"
-import { convertDaysByDate, convertHourRangeByDate } from "./DashboardFunctions"
 import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions"
 import { FormattedMessage } from "react-intl"
 import DashBoardBarChart from "./DashboardBarChart"
 import { useSelector } from "react-redux"
+import useDsashboardFunctions from "hooks/useDashboardFunctions"
 
 const DashboardInvalidAuth = ({ applications }: {
     applications: ApplicationListDataType[]
 }) => {
     const lang = useSelector((state: ReduxStateType) => state.lang!);
     const [params, setParams] = useState(dashboardDateInitialValue())
+    const {convertDaysByDate, convertHourRangeByDate} = useDsashboardFunctions()
     const [datas, setDatas] = useState<{
         date: string
     }[]>([])

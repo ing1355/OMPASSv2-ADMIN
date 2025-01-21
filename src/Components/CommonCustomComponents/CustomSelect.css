@@ -5,6 +5,11 @@
   background-image: url(../../assets/arrowUpIcon.png);
   z-index: 98;
 }
+.custom-select-container.read-only {
+  background-image: none;
+  padding-right: 12px;
+  cursor: not-allowed;
+}
 .custom-select-container {
   display: inline-block;
   background-image: url(../../assets/arrowDownIcon.png);

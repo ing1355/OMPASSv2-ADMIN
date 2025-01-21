@@ -256,7 +256,7 @@ const CreateAccountTexts = {
     AGREE_PRIVACY_POLICY_CONTENT_SUB_INNER_8_1_2: '기술적 대책：개인정보처리시스템에 대한 접근권한 관리, 암호화 및 보안프로그램 설치 등',
     AGREE_PRIVACY_POLICY_CONTENT_SUB_INNER_8_1_3: '물리적 대책：서버실, 자료보관실 등의 개인정보 보관장소에 대한 접근통제',
     AGREE_PRIVACY_POLICY_TITLE_9: '9. 인터넷 접속정보파일 등 개인정보를 자동으로 수집하는 장치의 설치 · 운영 및 그 거부에 관한 사항',
-    AGREE_PRIVACY_POLICY_CONTENT_9: "‘회사’는 이용자에게 개인화된 서비스를 제공하기 위하여 '쿠키(cookie)'를 사용합니다. '쿠키(cookie)'는 HTTP 서버에서 이용자의 브라우저에게 보내는 데이터파일로써 이용자의 기기에 저장됩니다. 쿠키(cookie)에는 사용한 웹사이트의 정보 및 이용자의 개인정보가 담길 수 있습니다. 이용자는 웹브라우저의 옵션을 조정하여 모든 쿠키를 다 받아들이거나, 쿠키가 설치될 때 통지를 보내도록 하거나, 아니면 모든 쿠키를 거부할 수 있습니다.",
+    AGREE_PRIVACY_POLICY_CONTENT_9: "‘회사’는 이용자에게 개인화된 서비스를 제공하기 위하여 '쿠키(cookie)'를 사용합니다. '쿠키(cookie)'는 HTTP 서버에서 이용자의 브라우저에게 보내는 데이터파일로써 이용자의 기기에 저장됩니다. 쿠키(cookie)에는 사용한 웹사이트의 정보 및 이용자의 개인정보가 담길 수 있습니다. 이용자는 웹 브라우저의 옵션을 조정하여 모든 쿠키를 다 받아들이거나, 쿠키가 설치될 때 통지를 보내도록 하거나, 아니면 모든 쿠키를 거부할 수 있습니다.",
     AGREE_PRIVACY_POLICY_TITLE_10: '10. 개인정보보호 책임자',
     AGREE_PRIVACY_POLICY_CONTENT_10_1: '개인정보보호책임자：김민식 대표',
     AGREE_PRIVACY_POLICY_CONTENT_10_2: '개인정보보호 관련 문의처 : 070-4298-3070, ceo@omsecurity.kr',

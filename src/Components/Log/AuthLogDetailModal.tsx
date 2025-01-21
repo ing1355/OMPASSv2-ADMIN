@@ -39,16 +39,8 @@ const TextComponent = ({ title, content }: {
     </div>
 }
 
-const TestComponent = () => {
-    const map = useMap('24ce68fbca231158')
-
-    useEffect(() => {
-        console.log('map : ', map)
-    }, [map])
-    return <></>
-}
-
 const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
+    console.log(data)
     const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas);
     const { ompassData, policyAtTimeOfEvent } = data || {}
     const { rpUser, application, sessionExpiredAt, createdAt, policyValidationResult } = ompassData || {}
@@ -70,7 +62,7 @@ const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
     const locationData: PolicyValidationLocationValueType = policyValidationResult?.find(_ => _.type === 'LOCATION' && _.value)?.value || {}
 
     return <>
-        <CustomModal open={!(!data)} onCancel={close} noBtns title={<>인증 로그 상세<span className={`auth-detail-modal-title ${data && isValidLogType(data) ? 'valid' : 'invalid'}`}>({data && isValidLogType(data) ? '정상' : '비정상'})</span></>} titleLeft width={1200}>
+        <CustomModal open={!(!data)} onCancel={close} noBtns title={<>인증 로그 상세 <span className={`auth-detail-modal-title ${data && isValidLogType(data) ? 'valid' : 'invalid'}`}>({data && isValidLogType(data) ? '정상' : '비정상'})</span></>} titleLeft width={1200}>
             <div className="auth-detail-modal-container">
                 <div className="auth-detail-modal-contents-row">
                     <div className="auth-detail-modal-contents-container map" data-title="위치 정보">
@@ -78,7 +70,6 @@ const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
                             {globalDatas?.googleApiKey ? <APIProvider apiKey={globalDatas.googleApiKey} onLoad={() => {
 
                             }}>
-                                <TestComponent />
                                 <Map
                                     defaultZoom={10}
                                     style={{
@@ -89,6 +80,7 @@ const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
                                     mapId='24ce68fbca231158'
                                     mapTypeControl={null}
                                     reuseMaps={false}
+                                    maxZoom={17}
                                     streetViewControl={false}
                                     onIdle={({ map }) => {
                                         if (!mapInitRef.current) {
@@ -188,7 +180,7 @@ const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
                         </div>
                         <div className="auth-detail-modal-contents-map-label">
                             <div>
-                                <img src={locationInvalidIcon} /> : 인증 시도한 위치
+                                <img src={locationInvalidIcon} /> : 인증 요청한 위치
                             </div>
                             <div>
                                 <img src={locationValidIcon} /> : 인증 가능한 위치
@@ -218,13 +210,13 @@ const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
                     </div>
                     {isPam && <div className="auth-detail-modal-contents-container" data-title="대상 기기 정보(Server)">
                         <TextComponent title="기기명" content={serverInfo?.name} />
-                        <TextComponent title="IP 주소" content={serverInfo?.ip} />
+                        <TextComponent title="IP" content={serverInfo?.ip} />
                         <TextComponent title="운영체제" content={createOSInfo(serverInfo?.os)} />
                         <TextComponent title="패키지 버전" content={serverInfo?.packageVersion} />
                     </div>}
                     <div className="auth-detail-modal-contents-container" data-title={`대상 기기 정보${isPam ? '(Client)' : ''}`}>
                         <TextComponent title="기기명" content={loginDeviceInfo?.name} />
-                        <TextComponent title="IP 주소" content={loginDeviceInfo?.ip} />
+                        <TextComponent title="IP" content={loginDeviceInfo?.ip} />
                         <TextComponent title="브라우저" content={loginDeviceInfo?.browser} />
                         <TextComponent title="운영체제" content={createOSInfo(loginDeviceInfo?.os)} />
                         <TextComponent title="패키지 버전" content={loginDeviceInfo?.packageVersion} />

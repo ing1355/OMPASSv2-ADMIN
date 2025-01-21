@@ -8,7 +8,7 @@ import backIconHover from "../../assets/backIconHover.png"
 
 type ContentsHeaderProps = {
     title?: React.ReactNode
-    subTitle: string
+    subTitle: React.ReactNode
     style?: CSSProperties
     contentStyle?: CSSProperties
     className?: string
@@ -42,7 +42,7 @@ const ContentsHeader = ({ title, subTitle, style, children, contentStyle, classN
                     <img src={backHover ? backIconHover : backIcon} />
                 </div>}
                 <h1>
-                    {subTitle && <FormattedMessage id={subTitle} />}
+                    {subTitle && typeof subTitle === 'string' ? <FormattedMessage id={subTitle} /> : subTitle}
                 </h1>
             </div>
             <div>

@@ -188,11 +188,13 @@ export const convertTimeFormat = (time: number) => {
     }
 };
 
-export const downloadFileByLink = (link: string, fileName?: string) => {
-    const downloadLink = document.createElement('a');
-    downloadLink.href = link
-    if(fileName) downloadLink.download = fileName;
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
+export const downloadFileByLink = (link?: string, fileName?: string) => {
+    if(link) {
+        const downloadLink = document.createElement('a');
+        downloadLink.href = link
+        if(fileName) downloadLink.download = fileName;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    }
 }

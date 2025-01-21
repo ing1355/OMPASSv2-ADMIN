@@ -12,7 +12,7 @@ import { useNavigate } from "react-router";
 const SignUp = () => {
     const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const [stepOneComplete, setStepOneComplete] = useState(false);
-    const [signUpComplete, setSignUpComplete] = useState(false)
+    const [signUpComplete, setSignUpComplete] = useState(true)
     const navigate =useNavigate()
 
     return (
@@ -36,7 +36,7 @@ const SignUp = () => {
                                 replace: true
                             })
                         }}
-                    ><FormattedMessage id='BACK_TO_LOGIN_PAGE_LABEL' />
+                    ><FormattedMessage id='GO_TO_LOGIN_PAGE_LABEL' />
                     </Button>
                 </div> :
                     (!stepOneComplete ? <FirstStep checkedChange={complete => {
