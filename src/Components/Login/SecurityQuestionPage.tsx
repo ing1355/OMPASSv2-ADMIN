@@ -4,14 +4,13 @@ import { CopyRightText, ompassDefaultLogoImage } from "Constants/ConstantValues"
 import { UpdateSecurityQuestionsFunc } from "Functions/ApiFunctions";
 import { useIntl } from "react-intl";
 import { useSelector } from "react-redux";
-import { useLocation, useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 const SecurityQuestionPage = () => {
     const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const { token, questions } = useLocation().state
     const { formatMessage } = useIntl()
     const navigate = useNavigate()
-    console.log(questions)
 
     return <>
         <div className="signup-container">

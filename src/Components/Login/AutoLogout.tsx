@@ -22,7 +22,7 @@ const AutoLogout = () => {
           />
           <span 
             className='mlr5 auto_logout_title'
-          >OMPASS portal</span>
+          >OMPASS Portal</span>
         </div>
       </Link>
         <h1 className='mb40'><FormattedMessage id='AUTO_LOGOUT_INFO_TITLE' /></h1>

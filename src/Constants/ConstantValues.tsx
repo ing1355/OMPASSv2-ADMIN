@@ -46,16 +46,17 @@ export const policyNoticeRestrictionTypes: NoticeRestrictionTypes[] = ["ACCESS_C
 export const userStatusTypes: UserStatusType[] = ["RUN", "WAIT_ADMIN_APPROVAL", "USER_PENDING_SIGNUP_VERIFICATION", "USER_PENDING_EMAIL_UPDATE_VERIFICATION", "WITHDRAWAL", "LOCK", "WAIT_INIT_PASSWORD"]
 
 export const PolicyBrowsersList: BrowserPolicyType[] = [
-    "Chrome",
-    "Chrome Mobile",
-    "Microsoft Edge",
-    "FireFox",
-    "Safari",
-    "Mobile Safari",
-    "Whale Browser",
-    "Whale Browser Mobile",
-    "Samsung Browser",
-    "All other browsers",
+    "CHROME",
+    "CHROME_MOBILE",
+    "MICROSOFT_EDGE",
+    "FIREFOX",
+    "SAFARI",
+    "MOBILE_SAFARI",
+    "WHALE_BROWSER",
+    "WHALE_BROWSER_MOBILE",
+    "SAMSUNG_BROWSER",
+    "INTERNET_EXPLORER",
+    "ALL_OTHER_BROWSERS"
 ];
 
 type menuDataType = {
@@ -65,7 +66,7 @@ type menuDataType = {
     blackImg?: string
 }
 
-export const menuDatas = (role: userRoleType): menuDataType[] => {
+export const menuDatas = (role: userRoleType, isOnPremise: boolean): menuDataType[] => {
     const datas: menuDataType[] = [
         {
             label: 'USER_MANAGEMENT',
@@ -115,7 +116,12 @@ export const menuDatas = (role: userRoleType): menuDataType[] => {
             whiteImg: versionManagementMenuIconWhite,
             blackImg: versionManagementMenuIconBlack
         },
-        {
+        isOnPremise ? {
+            label: 'LICENSE_MANAGEMENT',
+            route: '/License',
+            whiteImg: billingMenuIconWhite,
+            blackImg: billingMenuIconBlack
+        } : {
             label: 'BILLING_MANAGEMENT',
             route: '/Billing',
             whiteImg: billingMenuIconWhite,
@@ -135,10 +141,10 @@ export const menuDatas = (role: userRoleType): menuDataType[] => {
 
 // export const applicationTypes: ApplicationDataType['applicationType'][] = ["DEFAULT", "WINDOWS_LOGIN", "LINUX_LOGIN", "MAC_LOGIN", "ADMIN"]
 // const appTypes: ApplicationDataType['type'][] = ["ADMIN", "WINDOWS_LOGIN", "DEFAULT", "LINUX_LOGIN", "RADIUS", "REDMINE", "GOOROOM_LOGIN"]
-const appTypes: ApplicationDataType['type'][] = ["ADMIN", "WINDOWS_LOGIN", "DEFAULT", "LINUX_LOGIN", "RADIUS", "REDMINE", "MS_ENTRA"]
+const appTypes: ApplicationDataType['type'][] = ["ADMIN", "WINDOWS_LOGIN", "DEFAULT", "LINUX_LOGIN", "RADIUS", "REDMINE", "MS_ENTRA_ID"]
 // export const applicationTypes = (hasWindowsLogin: boolean): ApplicationDataType['type'][] => !hasWindowsLogin ? appTypes : appTypes.filter(_ => _ !== 'WINDOWS_LOGIN')
 export const applicationTypes: ApplicationDataType['type'][] = appTypes
-// 어플리케이션 타입 다국어 매칭해놨으나 타입 지정은 불가능하므로 값 바뀌면 다국어 키값도 바뀌어야함
+// 애플리케이션 타입 다국어 매칭해놨으나 타입 지정은 불가능하므로 값 바뀌면 다국어 키값도 바뀌어야함
 export const AuthenticationProcessTypes: ProcessTypeType[] = ["POLICY", "REGISTRATION", "AUTHENTICATION"]
 export const HttpMethodTypes: HttpMethodType[] = ["POST", "PUT", "DELETE"]
 

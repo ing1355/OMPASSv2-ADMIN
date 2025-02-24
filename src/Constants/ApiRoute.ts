@@ -14,19 +14,20 @@ export const DownloadAgentInstallerApi = '/v2/agent-installer/download';
 export const UploadAgentInstallerApi = `/v2/upload`;
 export const UpdateAgentNoteApi = (fileId: AgentInstallerDataType['fileId']) => `/v2/id/${fileId}/note`
 
-// 패스코드 관리
+// PASSCODE 관리
 export const GetPasscodeHistoriesApi = '/v2/passcode-histories';
 export const GetPasscodeListApi = '/v2/passcode'
 export const AddPasscodeApi = '/v2/rp/users/passcode'
 export const SendPasscodeEmailApi = '/v2/passcode/email'
 
-// 어플리케이션
+// 애플리케이션
 export const GetApplicationListApi = '/v2/applications'
 export const GetApplicationDetailApi = (applicationId: ApplicationDataType['id']) => `/v2/applications/${applicationId}/detail`
 export const AddApplicationListApi = '/v2/applications'
 export const UpdateApplicationListApi = (applicationId: ApplicationDataType['id']) => `/v2/applications/${applicationId}`
 export const DeleteApplicationListApi = (applicationId: ApplicationDataType['id']) => `/v2/applications/${applicationId}`
 export const UpdateApplicationSecretkeyApi = (applicationId: ApplicationDataType['id']) => `/v2/applications/${applicationId}/reissuance`
+export const GetAuthorizeMSEntraUriApi = (applicationId: ApplicationDataType['id']) => `/v2/applications/ms-entra-id/${applicationId}/authorize`
 
 // 정책 관리
 export const GetPoliciesListApi = '/v2/policies'

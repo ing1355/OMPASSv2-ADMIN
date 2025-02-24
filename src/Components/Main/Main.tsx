@@ -11,6 +11,7 @@ import { isMobile } from 'react-device-detect';
 
 const Main = () => {
   const lang = useSelector((state: ReduxStateType) => state.lang!);
+  const subdomainInfob = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(-1)
@@ -33,7 +34,7 @@ const Main = () => {
         justify={'center'}
       >
         {
-          menuDatas(role).map((data, index: number) => (
+          menuDatas(role, subdomainInfob.serverType === 'ON_PREMISE').map((data, index: number) => (
             <Col
               xs={{ flex: '100%' }}
               sm={{ flex: '50%' }}

@@ -199,7 +199,7 @@ const UserDetail = ({ }) => {
         if (uuid) {
             GetDatas()
         }
-    }, [])
+    }, [uuid])
 
     useEffect(() => {
         if (authInfoDatas.length > 0 && targetId && authInfoRef.current[targetId] && portalSigned) {
@@ -339,9 +339,9 @@ const UserDetail = ({ }) => {
                                     return message.error(formatMessage({ id: 'PLEASE_INPUT_EMAIL' }));
                                 }
                                 if (isAdd) {
-                                    AddUserDataFunc(addValues, () => {
+                                    AddUserDataFunc(addValues, (res) => {
                                         message.success(formatMessage({ id: 'USER_ADD_SUCCESS_MSG' }))
-                                        navigate(-1)
+                                        navigate(`/UserManagement/detail/${res.userId}`)
                                     })
                                 } else {
                                     if (modifyValues.hasPassword && (modifyValues.password !== modifyValues.passwordConfirm)) return message.error(formatMessage({ id: 'PASSWORD_CONFIRM_CHECK' }))

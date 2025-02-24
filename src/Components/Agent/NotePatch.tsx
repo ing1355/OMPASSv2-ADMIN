@@ -36,14 +36,14 @@ const NotePatch = () => {
                 }}>
                     <span><FormattedMessage id='SAVE' /></span>
                 </Button>
-                <Button className='st1'
+                {/* <Button className='st1'
                     type='button'
                     onClick={() => {
                         navigate(-1);
                     }}
                 >
                     <span><FormattedMessage id='GO_BACK' /></span>
-                </Button>
+                </Button> */}
             </ContentsHeader>
             <div className="contents-header-container">
                 <div className='agent-input-row-container'>

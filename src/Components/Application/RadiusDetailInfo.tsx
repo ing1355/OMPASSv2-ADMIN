@@ -33,16 +33,16 @@ const RadiusDetailInfo = ({ data }: RadiusDetailInfoProps) => {
             </Button>
         </>}/>
         <CustomInputRow title="Host">
-            <Input className="st1" readOnly value={host} placeholder={noRadiusConnectedMsg}/>
+            <Input className="st1" readOnly value={host || ''} placeholder={noRadiusConnectedMsg}/>
         </CustomInputRow>
         <CustomInputRow title="Secret Key">
-            <Input className="st1" readOnly value={secretKey} placeholder={noRadiusConnectedMsg}/>
+            <Input className="st1" readOnly value={secretKey || ''} placeholder={noRadiusConnectedMsg}/>
         </CustomInputRow>
         <CustomInputRow title="Authentication Port">
-            <Input className="st1" readOnly value={authenticationPort} placeholder={noRadiusConnectedMsg}/>
+            <Input className="st1" readOnly value={authenticationPort || ''} placeholder={noRadiusConnectedMsg}/>
         </CustomInputRow>
         <CustomInputRow title="Accounting Port">
-            <Input className="st1" readOnly value={accountingPort} placeholder={noRadiusConnectedMsg}/>
+            <Input className="st1" readOnly value={accountingPort || ''} placeholder={noRadiusConnectedMsg}/>
         </CustomInputRow>
     </>
 }

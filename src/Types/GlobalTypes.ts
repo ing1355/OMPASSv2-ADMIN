@@ -216,7 +216,7 @@ type DefaultApplicationDataType = {
     id: string
     clientId: string
     // type: "DEFAULT" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "ADMIN" | "RADIUS" | "GOOROOM_LOGIN" | "REDMINE" | "ALL"
-    type: "DEFAULT" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "ADMIN" | "RADIUS" | "REDMINE" | 'MS_ENTRA' | "ALL" | ''
+    type: "DEFAULT" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "ADMIN" | "RADIUS" | "REDMINE" | 'MS_ENTRA_ID' | "ALL" | ''
     name: string
     domain?: string
     description?: string
@@ -242,9 +242,11 @@ type ApplicationDataType = DefaultApplicationDataType & {
     isPasswordlessEnabled?: boolean
     radiusProxyServer?: RadiusDataType
     linuxPamBypass?: PAMPassDataType
-    msEntraTenantId?: string
+    msTenantId?: string
+    msClientId?: string
     discoveryEndpoint?: string
     msAppId?: string
+    isAuthorized?: boolean
 }
 
 type ApplicationDataParamsType = {
@@ -300,13 +302,17 @@ type LocationPolicyType = {
 type IpAddressPolicyType = {
     isEnabled: boolean
     // ips: PolicyRestrictionItemType[]
-    networks: networkPolicyType[]
+    // networks: networkPolicyType[]
+    require2faForIps: networkPolicyType[]
+    notRequire2faForIps: networkPolicyType[]
+    deny2faForIps: networkPolicyType[]
 }
 type networkPolicyType = {
     ip: string
     note: string
 }
-type BrowserPolicyType = "FireFox" | "Safari" | "Chrome Mobile" | "Chrome" | "Microsoft Edge" | "Mobile Safari" | "Samsung Browser" | "Whale Browser" | "Whale Browser Mobile" | "All other browsers"
+// type BrowserPolicyType = "FireFox" | "Safari" | "Chrome Mobile" | "Chrome" | "Microsoft Edge" | "Mobile Safari" | "Samsung Browser" | "Whale Browser" | "Whale Browser Mobile" | "All other browsers"
+type BrowserPolicyType = "FIREFOX" | "SAFARI" | "CHROME_MOBILE" | "CHROME" | "MICROSOFT_EDGE" | "MOBILE_SAFARI" | "SAMSUNG_BROWSER" | "WHALE_BROWSER" | "WHALE_BROWSER_MOBILE" | "INTERNET_EXPLORER" | "ALL_OTHER_BROWSERS"
 type AuthenticatorPolicyType = "WEBAUTHN" | "PASSCODE" | "OMPASS" | "OTP"
 type DayOfWeeksType = "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY"
 type AccessTimeRestrictionTimeRangeTypeType = "SPECIFIC_TIME" | "ALL_TIME"
@@ -790,7 +796,7 @@ type RpUsersListParamsType = GeneralParamsType & {
     lastLoggedInAuthenticator?: AuthenticatorTypeType[]
 }
 
-type UploadFileTypes = "APPLICATION_LOGO_IMAGE" | "PORTAL_SETTING_LOGO_IMAGE" | "WINDOWS_AGENT" | "LINUX_PAM" | "OMPASS_PROXY" | "FIDO_AGENT" | "APK" | "CSV"
+type UploadFileTypes = "APPLICATION_LOGO_IMAGE" | "PORTAL_SETTING_LOGO_IMAGE" | "WINDOWS_AGENT" | "LINUX_PAM" | "OMPASS_PROXY" | "FIDO_AGENT" | "APK" | "CSV" | "REDMINE_PLUGIN"
 
 type TableSearchOptionType = {
     key: string

@@ -12,8 +12,8 @@ import { useNavigate } from "react-router";
 const SignUp = () => {
     const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const [stepOneComplete, setStepOneComplete] = useState(false);
-    const [signUpComplete, setSignUpComplete] = useState(true)
-    const navigate =useNavigate()
+    const [signUpComplete, setSignUpComplete] = useState(false)
+    const navigate = useNavigate()
 
     return (
         <div className="signup-container">

@@ -264,7 +264,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
     const clientData = data.authenticationInfo.loginDeviceInfo
     const { serverInfo } = data.authenticationInfo
     const { os } = clientData
-    const isBrowser = application.type === 'DEFAULT' || application.type === 'ADMIN'
+    const isBrowser = (['DEFAULT', 'ADMIN', 'MS_ENTRA_ID', ''] as ApplicationDataType['type'][]).includes(application.type)
     const isWindow = application.type === 'WINDOWS_LOGIN'
     const isPAM = application.type === 'LINUX_LOGIN'
     return <>
@@ -325,7 +325,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
                     <FormattedMessage id="USER_DETAIL_BROWSER_LABEL" />
                 </div>
                 <div>
-                    {clientData.browser}
+                    {clientData.browser ? <FormattedMessage id={clientData.browser + "_LABEL"}/> : '-'}
                 </div>
             </div>
         }
@@ -380,7 +380,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
                     <FormattedMessage id="PACKAGE_VERSION_INFO_LABEL"/>
                 </div>
                 <div>
-                    {clientData.agentVersion}
+                    {clientData.packageVersion}
                 </div>
             </div>
         }

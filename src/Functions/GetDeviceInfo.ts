@@ -1,5 +1,5 @@
 import { browser_json, os_json } from "Constants/ClientInfoValue";
-
+ 
 let _navigator:Navigator&{
     userAgentData?: {
         brands: {
@@ -11,7 +11,7 @@ let _navigator:Navigator&{
         getHighEntropyValues: any
     };
 } = navigator
-
+ 
 export async function DeviceInfo() {
     const ua = _navigator.userAgent;
         const info: ClientInfoType = {
@@ -76,27 +76,46 @@ export async function DeviceInfo() {
                 const result = variable_replacement(browser.name, match);
                 info.browser = result + (isMobile && !result.includes('Mobile') ? ' Mobile' : '');
                 info.browser = info.browser.replace("Samsung Browser Mobile", "Samsung Browser")
+                info.browser.replace(/\s/g, '_').toUpperCase()
                 return;
             }
         }
     
         const getRegexInstance = (rawRegex: string) => {
-            const regexInstance = RegExp(`(?:^|[^A-Z0-9-_]|[^A-Z0-9-]_|sprd-)(?:${rawRegex})`, "i");
+            // 잘못된 수량자 패턴을 감지하고 수정
+            const fixedRegex = rawRegex.replace(/(\+\+|\*\*|\?\?)/g, ""); // ++, **, ?? 제거
+            const regexInstance = RegExp(`(?:^|[^A-Z0-9-_]|[^A-Z0-9-]_|sprd-)(?:${fixedRegex})`, "i");
             return regexInstance;
         };
+        // const getRegexInstance = (rawRegex: string) => {
+        //     const regexInstance = RegExp(`(?:^|[^A-Z0-9-_]|[^A-Z0-9-]_|sprd-)(?:${rawRegex})`, "i");
+        //     return regexInstance;
+        // };
     
+        // const variable_replacement = (template: string, variables: string[]) => {
+        //     const regex = new RegExp(`\\$\\d`, "g");
+        //     if (template === null)
+        //         return "";
+        //     return template.replace(regex, (match) => {
+        //         const index = parseInt(match.substr(1), 10);
+        //         const variable = variables[index - 1];
+        //         return variable || "";
+        //     });
+        // }
         const variable_replacement = (template: string, variables: string[]) => {
-            const regex = new RegExp(`\\$\\d`, "g");
-            if (template === null)
-                return "";
-            return template.replace(regex, (match) => {
+            if (!template) return "";
+            return template.replace(/\$\d/g, (match) => {
                 const index = parseInt(match.substr(1), 10);
-                const variable = variables[index - 1];
-                return variable || "";
-            });
-        }
+                return variables[index - 1] || "";
+            }).replace(/\+\+/g, "").replace(/\?\?/g, ""); // 추가된 방어 로직
+        };
+
+        const fixLookbehind = (regexStr: string) => {
+            return regexStr.replace(/\(\?<=.+?\)/g, "").replace(/\(\?<!.+?\)/g, "");
+        };
     
-        const uaParser = (rawRegex: string, userAgent: string): string[]|null => {
+        const uaParser = (_rawRegex: string, userAgent: string): string[]|null => {
+            const rawRegex = fixLookbehind(_rawRegex)
             try {
                 const regexInstance = getRegexInstance(rawRegex);
                 const match = regexInstance.exec(userAgent);

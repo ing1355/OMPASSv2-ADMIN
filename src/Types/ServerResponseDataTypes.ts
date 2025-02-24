@@ -73,9 +73,12 @@ type UpdatePortalSettingsDataType = {
   }
 }
 
-type GlobalDatasType = {
+type ServerGlobalConfigDataType = {
   isUserAllowedToRemoveAuthenticator: boolean
   googleApiKey: string
+}
+
+type GlobalDatasType = ServerGlobalConfigDataType & {
   loading: boolean
 }
 

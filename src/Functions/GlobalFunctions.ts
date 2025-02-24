@@ -198,3 +198,26 @@ export const downloadFileByLink = (link?: string, fileName?: string) => {
         document.body.removeChild(downloadLink);
     }
 }
+
+function getIpBytes(ip: string) {
+    return ip.split('.').map(Number);
+}
+
+export function isValidIpRange(range: string) {
+    const parts = range.split('~');
+    if (parts.length === 2) {
+        const start = getIpBytes(parts[0]);
+        const end = getIpBytes(parts[1]);
+        if (start.length !== 4 || start.length !== end.length) {
+            return false;
+        }
+        
+        for (let i = 0; i < 4; i++) {
+            if (start[i] < end[i]) return true;
+            if (start[i] > end[i]) return false;
+        }
+        
+        return true;
+    }
+    return false;
+}

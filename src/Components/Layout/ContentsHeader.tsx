@@ -1,10 +1,10 @@
 import { FormattedMessage } from "react-intl"
 import './ContentsHeader.css'
 import { CSSProperties, PropsWithChildren, useState } from "react"
-import { useNavigate } from "react-router"
 import { useSelector } from "react-redux"
 import backIcon from "../../assets/backIcon.png"
 import backIconHover from "../../assets/backIconHover.png"
+import useCustomRoute from "hooks/useCustomRoute"
 
 type ContentsHeaderProps = {
     title?: React.ReactNode
@@ -19,7 +19,8 @@ type ContentsHeaderProps = {
 const ContentsHeader = ({ title, subTitle, style, children, contentStyle, className, noBack, docsUrl }: PropsWithChildren<ContentsHeaderProps>) => {
     const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     const [backHover, setBackHover] = useState(false)
-    const navigate = useNavigate()
+    const { goBack } = useCustomRoute()
+
     return <div
         className={'contents-header-container' + `${className ? (' ' + className) : ''}`}
         style={style}
@@ -33,7 +34,11 @@ const ContentsHeader = ({ title, subTitle, style, children, contentStyle, classN
         >
             <div>
                 {!noBack && userInfo.role !== 'USER' && <div className="contents-header-back-button" onClick={() => {
-                    navigate(-1)
+                    // navigate(-1)
+                    // navigate(location.pathname.split('/').slice(0, -1 - hasParams).join('/') || '/Main', {
+                    //     replace: true
+                    // })
+                    goBack()
                 }} onMouseEnter={() => {
                     setBackHover(true)
                 }} onMouseLeave={() => {

@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router"
 import { useLayoutEffect, useState } from "react"
 import { Switch, message } from "antd"
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
-import { AddApplicationDataFunc, DeleteApplicationListFunc, GetApplicationDetailFunc, GetApplicationListFunc, UpdateApplicationDataFunc, UpdateApplicationSecretkeyFunc } from "Functions/ApiFunctions"
+import { AddApplicationDataFunc, DeleteApplicationListFunc, GetApplicationDetailFunc, GetApplicationListFunc, GetAuthorizeMSEntraUriFunc, UpdateApplicationDataFunc, UpdateApplicationSecretkeyFunc } from "Functions/ApiFunctions"
 import PolicySelect from "Components/CommonCustomComponents/PolicySelect"
 import { applicationTypes, getApplicationTypeLabel, ompassDefaultLogoImage } from "Constants/ConstantValues"
 import { convertBase64FromClientToServerFormat } from "Functions/GlobalFunctions"
@@ -24,7 +24,6 @@ import RadiusDetailInfo from "./RadiusDetailInfo"
 import documentIcon from '../../assets/documentIcon.png'
 import documentIconHover from '../../assets/documentIconHover.png'
 import ApplicationAgentDownload from "./ApplicationAgentDownload"
-import infoIcon from '../../assets/ipInfoIcon.png'
 import '../Policy/AuthPolicyDetail.css'
 import './ApplicationDetail.css'
 
@@ -69,6 +68,7 @@ const ApplicationDetail = () => {
         ip: '',
         username: ''
     })
+    const [isAuthorized, setIsAuthorized] = useState(false)
     const [dataLoading, setDataLoading] = useState(false)
     const [sureDelete, setSureDelete] = useState(false)
     const [authPurpose, setAuthPurpose] = useState<'delete' | 'reset' | ''>('')
@@ -106,17 +106,17 @@ const ApplicationDetail = () => {
                     setInputDomain(data.domain ?? "")
                     setInputRedirectUrl(data.redirectUri ? data.redirectUri.replace(data.domain, "") : "")
                 }
-                if(data.linuxPamBypass) {
+                if (data.linuxPamBypass) {
                     setPamPassData(data.linuxPamBypass)
                 }
                 // setInputRedirectUrl(data.redirectUri ?? "")
-                if(data.msEntraTenantId) {
-                    setMSEntraTenantId(data.msEntraTenantId)
+                if (data.msTenantId) {
+                    setMSEntraTenantId(data.msTenantId)
                 }
-                if(data.discoveryEndpoint) {
+                if (data.discoveryEndpoint) {
                     setMSEntraDiscoveryEndpoint(data.discoveryEndpoint)
                 }
-                if(data.msAppId) {
+                if (data.msAppId) {
                     setMSEntraAppId(data.msAppId)
                 }
                 setLogoImage({
@@ -124,7 +124,11 @@ const ApplicationDetail = () => {
                     isDefaultImage: data.logoImage.isDefaultImage
                 })
                 setInputDescription(data.description ?? "")
-                setInputClientId(data.clientId)
+                if (data.msClientId) {
+                    setInputClientId(data.msClientId)
+                } else {
+                    setInputClientId(data.clientId)
+                }
                 setInputApiServerHost(data.apiServerHost)
                 setSelectedPolicy(data.policyId)
                 setApplicationType(data.type)
@@ -132,6 +136,9 @@ const ApplicationDetail = () => {
                 setInputApiServerHost(data.apiServerHost)
                 setIsPasswordlessEnabled(data.isPasswordlessEnabled ?? false)
                 setRadiusData(data.radiusProxyServer)
+                if (data.isAuthorized) {
+                    setIsAuthorized(data.isAuthorized)
+                }
             })
         } else {
             await GetApplicationListFunc({ types: ['WINDOWS_LOGIN'] }, ({ results }) => {
@@ -145,10 +152,10 @@ const ApplicationDetail = () => {
         GetDatas().finally(() => {
             setDataLoading(false)
         })
-    }, [])
+    }, [uuid])
 
     return <Contents loading={dataLoading}>
-        <ContentsHeader title="APPLICATION_MANAGEMENT" subTitle={isAdd ? "APPLICATION_ADD" : "APPLICATION_MODIFY"} docsUrl="test">
+        <ContentsHeader title="APPLICATION_MANAGEMENT" subTitle={isAdd ? "APPLICATION_ADD" : "APPLICATION_MODIFY"}>
             <div className="custom-detail-header-items-container">
                 <Button className="st3" onClick={async () => {
                     if (!applicationType) {
@@ -174,7 +181,7 @@ const ApplicationDetail = () => {
                     }
                     if (pamPassData.isEnabled) {
                         if (!pamPassData.username) return message.error(formatMessage({ id: 'PAM_PASS_DATA_USERNAME_REQUIRED_MSG' }))
-                        if (!pamPassData.ip) return message.error(formatMessage({id: 'PAM_PASS_DATA_IP_ADDRESS_REQUIRED_MSG'}))
+                        if (!pamPassData.ip) return message.error(formatMessage({ id: 'PAM_PASS_DATA_IP_ADDRESS_REQUIRED_MSG' }))
                         if (pamPassData.ip && !ipAddressRegex.test(pamPassData.ip)) return message.error(formatMessage({ id: 'PAM_PASS_DATA_IP_ADDRESS_INVALID_MSG' }))
                     }
                     if (uuid) {
@@ -213,9 +220,9 @@ const ApplicationDetail = () => {
                             description: inputDescription,
                             type: applicationType,
                             isPasswordlessEnabled: isPasswordlessEnabled
-                        }, () => {
+                        }, (res) => {
                             message.success(formatMessage({ id: 'APPLICATION_ADD_SUCCESS_MSG' }))
-                            navigate(-1)
+                            navigate(`/Applications/detail/${res.id}`)
                         })
                     }
                 }}>
@@ -234,19 +241,8 @@ const ApplicationDetail = () => {
             {
                 applicationType !== 'ADMIN' && <>
                     {!isAdd && <BottomLineText title={<FormattedMessage id="APPLICATION_INFO_DETAIL_LABELS" />} />}
-                    {!isAdd && applicationType !== 'MS_ENTRA' && <ApiServerAddressItem text={inputApiServerHost} />}
+                    {!isAdd && applicationType !== 'MS_ENTRA_ID' && <ApiServerAddressItem text={inputApiServerHost} />}
 
-                    {MSEntraTenantId && <CustomInputRow title={<FormattedMessage id="MS_ENTRA_TENANT_ID_LABEL" />}>
-                        <CopyToClipboard text={MSEntraTenantId} onCopy={(value, result) => {
-                            if (result) {
-                                message.success(formatMessage({ id: 'APPLICATION_MS_ENTRA_APP_ID_COPY_SUCCESS_MSG' }))
-                            } else {
-                                message.success(formatMessage({ id: 'APPLICATION_MS_ENTRA_APP_ID_COPY_FAIL_MSG' }))
-                            }
-                        }}>
-                            <Input className="st1 secret-key" value={MSEntraTenantId} disabled={isAdd} readOnly={!isAdd} />
-                        </CopyToClipboard>
-                    </CustomInputRow>}
                     {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_CLIENT_ID_LABEL" />}>
                         <CopyToClipboard text={inputClientId} onCopy={(value, result) => {
                             if (result) {
@@ -255,7 +251,7 @@ const ApplicationDetail = () => {
                                 message.success(formatMessage({ id: 'APPLICATION_CLIENT_ID_COPY_FAIL_MSG' }))
                             }
                         }}>
-                            <Input className="st1 secret-key" value={inputClientId} disabled={isAdd} readOnly={!isAdd} />
+                            <Input className="st1 secret-key" value={inputClientId.length > 100 ? (inputClientId.slice(0, 100) + '...') : inputClientId} disabled={isAdd} readOnly={!isAdd} />
                         </CopyToClipboard>
                     </CustomInputRow>}
                     {MSEntraDiscoveryEndpoint && <CustomInputRow title={<FormattedMessage id="MS_ENTRA_DISCOVERY_ENDPOINT_LABEL" />}>
@@ -272,15 +268,15 @@ const ApplicationDetail = () => {
                     {MSEntraAppId && <CustomInputRow title={<FormattedMessage id="MS_ENTRA_APP_ID_LABEL" />}>
                         <CopyToClipboard text={MSEntraAppId} onCopy={(value, result) => {
                             if (result) {
-                                message.success(formatMessage({ id: 'APPLICATION_MS_ENTRA_TENANT_ID_COPY_SUCCESS_MSG' }))
+                                message.success(formatMessage({ id: 'APPLICATION_MS_ENTRA_APP_ID_COPY_SUCCESS_MSG' }))
                             } else {
-                                message.success(formatMessage({ id: 'APPLICATION_MS_ENTRA_TENANT_ID_COPY_FAIL_MSG' }))
+                                message.success(formatMessage({ id: 'APPLICATION_MS_ENTRA_APP_ID_COPY_FAIL_MSG' }))
                             }
                         }}>
                             <Input className="st1 secret-key" value={MSEntraAppId} disabled={isAdd} readOnly={!isAdd} />
                         </CopyToClipboard>
                     </CustomInputRow>}
-                    {!isAdd && applicationType !== 'MS_ENTRA' && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_SECRET_KEY_LABEL" />}>
+                    {!isAdd && applicationType !== 'MS_ENTRA_ID' && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_SECRET_KEY_LABEL" />}>
                         <CopyToClipboard text={inputSecretKey} onCopy={(value, result) => {
                             if (result) {
                                 message.success(formatMessage({ id: 'APPLICATION_SECRET_KEY_COPY_SUCCESS_MSG' }))
@@ -299,6 +295,32 @@ const ApplicationDetail = () => {
                 </>
             }
             {!isAdd && applicationType === 'RADIUS' && <RadiusDetailInfo data={radiusData} />}
+
+            {!isAdd && applicationType === 'MS_ENTRA_ID' && <BottomLineText title={<FormattedMessage id="MS_ENTRA_ID_DETAIL_INFO_LABEL" />} buttons={<>
+                {!isAuthorized && <Button className="st5" onClick={() => {
+                    if (uuid) {
+                        GetAuthorizeMSEntraUriFunc(uuid, ({ redirectUri }) => {
+                            window.location.href = redirectUri
+                        })
+                    }
+                }}>
+                    <FormattedMessage id="MS_ENTRA_ID_AUTHORIZE_LABEL" />
+                </Button>}
+            </>} style={{
+                marginTop: '36px',
+            }}/>}
+            {!isAdd && applicationType && applicationType === 'MS_ENTRA_ID' && <CustomInputRow title={<FormattedMessage id="MS_ENTRA_TENANT_ID_LABEL" />}>
+                <CopyToClipboard text={MSEntraTenantId} onCopy={(value, result) => {
+                    if (result) {
+                        message.success(formatMessage({ id: 'APPLICATION_MS_ENTRA_TENANT_ID_COPY_SUCCESS_MSG' }))
+                    } else {
+                        message.success(formatMessage({ id: 'APPLICATION_MS_ENTRA_TENANT_ID_COPY_FAIL_MSG' }))
+                    }
+                }}>
+                    <Input className="st1 secret-key" value={MSEntraTenantId || formatMessage({ id: 'MS_ENTRA_ID_TENANT_EMPTY_VALUE' })} disabled={isAdd} readOnly={!isAdd} />
+                </CopyToClipboard>
+            </CustomInputRow>}
+
             {!isAdd && <BottomLineText title={<FormattedMessage id="APPLICATION_INFO_SETTING_LABELS" />} style={{
                 marginTop: applicationType === 'ADMIN' ? 0 : '36px',
             }} />}
@@ -309,7 +331,7 @@ const ApplicationDetail = () => {
                 {applicationType && applicationType !== 'ADMIN' && <Button className="st5" icon={documentIcon} hoverIcon={documentIconHover} onClick={() => {
                     window.open(`/docs/application/${applicationType}`, '_blank');
                 }}>
-                    <FormattedMessage id="DOCS_VIEW_LABEL" />
+                    <FormattedMessage id="APPLICATION_MANUAL_LABEL" />
                 </Button>}
                 <ApplicationAgentDownload type={applicationType} />
             </CustomInputRow>
@@ -347,7 +369,7 @@ const ApplicationDetail = () => {
                     {passwordUsed.includes(applicationType) && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_WINDOWS_PASSWORD_NEED_CHECK_LABEL" />}>
                         <Switch checked={isPasswordlessEnabled} onChange={check => {
                             setIsPasswordlessEnabled(check)
-                        }}/>
+                        }} />
                     </CustomInputRow>}
                     {applicationType === 'LINUX_LOGIN' && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_PAM_PASS_LABEL" />} isVertical containerStyle={{
                         alignItems: 'flex-start',
@@ -358,7 +380,7 @@ const ApplicationDetail = () => {
                                 ...pamPassData,
                                 isEnabled: check
                             })
-                        }}/>
+                        }} />
                         <div className="application-contents-container" data-hidden={!pamPassData.isEnabled}>
                             <div className="application-contents-inner-container">
                                 <Input containerClassName="pam-pass-input" className="st1" placeholder={formatMessage({ id: 'APPLICATION_INFO_PAM_PASS_INFO_USERNAME_PLACEHOLDER' })} value={pamPassData.username} valueChange={(val) => {
@@ -382,10 +404,10 @@ const ApplicationDetail = () => {
                                 ]} />
                             </div>
                             <div className="pam-data-description-text">
-                                <FormattedMessage id="PAM_PASS_DESCRIPTION_TEXT"/>
+                                <FormattedMessage id="PAM_PASS_DESCRIPTION_TEXT" />
                             </div>
                             <div className="pam-data-description-text">
-                                <FormattedMessage id="PAM_PASS_DESCRIPTION_TEXT2"/>
+                                <FormattedMessage id="PAM_PASS_DESCRIPTION_TEXT2" />
                             </div>
                         </div>
                     </CustomInputRow>}
@@ -439,7 +461,9 @@ const ApplicationDetail = () => {
                 return DeleteApplicationListFunc(uuid!, token, () => {
                     setSureDelete(false)
                     message.success(formatMessage({ id: 'APPLICATION_DELETE_SUCCESS_MSG' }))
-                    navigate(-1)
+                    navigate('/Applications', {
+                        replace: true
+                    })
                 })
             }
         }} />

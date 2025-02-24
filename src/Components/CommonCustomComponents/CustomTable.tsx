@@ -2,10 +2,10 @@ import React, { CSSProperties, useEffect, useMemo, useRef, useState } from "reac
 import './CustomTable.css'
 import { Pagination, PaginationProps } from "antd"
 import searchIcon from './../../assets/searchIcon.png'
-// import filterIcon from './../../assets/filterIcon.png'
-// import filterDefaultIcon from './../../assets/filterDefaultIcon.png'
-import filterIcon from './../../assets/filterIcon.svg'
-import filterDefaultIcon from './../../assets/filterDefaultIcon.svg'
+import filterIcon from './../../assets/filterIcon.png'
+import filterDefaultIcon from './../../assets/filterDefaultIcon.png'
+// import filterIcon from './../../assets/filterIcon.svg'
+// import filterDefaultIcon from './../../assets/filterDefaultIcon.svg'
 import resetIcon from './../../assets/resetIconWhite.png'
 import Button from "./Button"
 import CustomSelect from "./CustomSelect"

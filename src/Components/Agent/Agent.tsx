@@ -5,8 +5,6 @@ import NotePatch from "./NotePatch";
 
 
 const Agent = () => {
-
-
   return (
     <>
       <Routes>

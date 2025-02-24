@@ -43,44 +43,6 @@
     transition: height .1s ease-out;
 }
 
-.ip-address-policy-input-header>div:hover:after {
-    content: attr(data-valuetext);
-    position: absolute;
-    border-radius: 4px;
-    left: 100%;
-    top: 50%;
-    transform: translateY(-50%);
-    line-height: 18px;
-    color: var(--main-purple-color);
-    white-space: nowrap;
-    background-color: var(--sub-purple-color);
-    padding: 6px 10px;
-    border-radius: 8px;
-    font-size: .8rem;
-    z-index: 1000;
-}
-
-.ip-address-policy-input-header>div {
-    height: 24px;
-    width: 24px;
-    cursor: help;
-    position: relative;
-    padding: 2px;
-    margin-left: 4px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
-}
-
-.ip-address-policy-input-header {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    /* justify-content: space-between; */
-    justify-content: flex-start;
-}
-
 .location-policy-container {
     display: flex;
     align-items: center;

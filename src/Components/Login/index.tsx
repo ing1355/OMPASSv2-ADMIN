@@ -63,7 +63,7 @@ const LoginPage = () => {
                 <FormattedMessage id='DOWNLOAD_FOR_WINDOWS' />
             </Button>}
             <Button className='login-agent-download-button st5' icon={documentIcon} hoverIcon={documentIconHover} onClick={() => {
-                window.open(`/docs/user/started/signup`, '_blank');
+                window.open(`/docs/user/start/signup`, '_blank');
             }}>
                 <FormattedMessage id="DOCS_VIEW_LABEL" />
             </Button>

@@ -212,10 +212,15 @@ export const os_json = [
   { regex: "CFNetwork/485\\.2", name: "iOS", version: "4.0" },
   { regex: "CFNetwork/467\\.12", name: "iOS", version: "3.2" },
   { regex: "CFNetwork/459", name: "iOS", version: "3.1" },
+  // {
+  //   regex: "(?:CPU OS|iPh(?:one)?[ _]OS|iOS)[ _/](\\d+(?:[_\\.]\\d+)*)",
+  //   name: "iOS",
+  //   version: "$1",
+  // },
   {
-    regex: "(?:CPU OS|iPh(?:one)?[ _]OS|iOS)[ _/](\\d+(?:[_\\.]\\d+)*)",
+    regex: "(CPU OS|iPh(?:one)?[ _]OS|iOS)[ _/](\\d+(?:[_\\.]\\d+)*)",
     name: "iOS",
-    version: "$1",
+    version: "$2", // 그룹을 조정하여 Lookbehind 제거
   },
   { regex: "FBIOS.*FBSV/(\\d+[\\.\\d]*);", name: "iOS", version: "$1" },
   {
@@ -379,6 +384,18 @@ export const os_json = [
 ];
 
 export const browser_json = [
+  {
+    regex: "MSIE (\\d+[\\.\\d]+)",
+    name: "Internet Explorer",
+    version: "$1",
+    engine: { default: "Trident" }
+  },
+  {
+    regex: "Trident.*rv:(\\d+[\\.\\d]+)",
+    name: "Internet Explorer",
+    version: "$1",
+    engine: { default: "Trident" }
+  },
   {
     regex: "Web Explorer/(\\d+[\\.\\d]+).*Chrome",
     name: "Web Explorer",

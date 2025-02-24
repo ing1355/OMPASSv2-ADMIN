@@ -1,0 +1,99 @@
+.ip-address-policy-item-container {
+    background-color: var(--sub-purple-color3);
+    padding: 12px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+}
+
+.ip-address-policy-item-container>.title {
+    color: var(--main-purple-color);
+    font-size: 16px;
+    flex: 0 0 220px;
+    padding-top: 5.5px;
+}
+
+.ip-address-policy-item-container>.contents {
+    flex: 1;
+}
+
+.ip-address-policy-item-container>.contents>.description {
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+.ip-address-form-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.ip-address-form-container:not(:last-child) {
+    margin-bottom: 6px;
+}
+
+.ip-address-form-container>*:not(button) {
+    flex: 1;
+    height: 30px;
+}
+
+.ip-address-policy-input-header>div:hover:after {
+    content: attr(data-valuetext);
+    position: absolute;
+    border-radius: 4px;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    line-height: 18px;
+    color: var(--main-purple-color);
+    white-space: nowrap;
+    background-color: var(--sub-purple-color);
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: .8rem;
+    z-index: 1000;
+}
+
+.ip-address-policy-input-header>div:first-child {
+    height: 24px;
+    width: 24px;
+    cursor: help;
+    position: relative;
+    padding: 2px;
+    margin-left: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.ip-address-policy-input-header {
+    /* display: flex;
+    flex-direction: row;
+    align-items: center; */
+    /* justify-content: space-between; */
+    /* justify-content: flex-start; */
+    background-color: var(--sub-grey-color9);
+    padding: 12px;
+    border-radius: 6px;
+}
+
+.ip-address-policy-input-header-description {
+    margin: 8px 0;
+}
+
+.ip-address-policy-input-header-sub-row {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+}
+
+.ip-address-policy-input-header-sub-row-1 {
+    color: var(--main-grey-color);
+}
+
+.ip-address-policy-input-header-sub-row-2 > div {
+    color: var(--main-grey-color);
+}

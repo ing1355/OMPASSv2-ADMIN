@@ -21,8 +21,8 @@ const ValidationText = {
         ID_CHECK: '아이디 중복 확인은 필수입니다.',
         PLEASE_ENTER_ALL_THE_ITEMS: '항목을 모두 입력해주세요.',
         PLEASE_UPLOAD_INPUT_FILE: '파일을 업로드해주세요.',
-        PLEASE_SELECT_APPLICATION_TYPE: '어플리케이션 타입을 선택해주세요.',
-        PLEASE_INPUT_APPLICATION_NAME: '어플리케이션 이름을 입력해주세요.',
+        PLEASE_SELECT_APPLICATION_TYPE: '애플리케이션 타입을 선택해주세요.',
+        PLEASE_INPUT_APPLICATION_NAME: '애플리케이션 이름을 입력해주세요.',
         PLEASE_INPUT_APPLICATION_DOMAIN: '도메인을 입력해주세요.',
         PLEASE_INPUT_APPLICATION_REDIRECT_URI: '리다이렉트 URI을 입력해주세요.',
         PLEASE_SELECT_APPLICATION_POLICY: '정책을 설정해주세요.',
@@ -35,13 +35,14 @@ const ValidationText = {
         PLEASE_INPUT_FIRST_NAME: '성을 입력해주세요.',
         PLEASE_INPUT_LAST_NAME: '이름을 입력해주세요.',
         PLEASE_INPUT_EMAIL: '이메일을 입력해주세요.',
-        PASSCODE_NEED_9_DIGIT_NUMBERS: '패스코드 지정 생성은 9자리 필수 입니다.',
-        PASSCODE_NEED_MORE_THAN_1_MINUTES: '패스코드 만료 기간은 1분 이상 설정되어야 합니다.',
-        PASSCODE_NEED_MORE_THAN_1_TIMES: '패스코드 사용 횟수는 1회 이상 설정되어야 합니다.',
+        PASSCODE_NEED_9_DIGIT_NUMBERS: 'PASSCODE 지정 생성은 9자리 필수 입니다.',
+        PASSCODE_NEED_MORE_THAN_1_MINUTES: 'PASSCODE 만료 기간은 1분 이상 설정되어야 합니다.',
+        PASSCODE_NEED_MORE_THAN_1_TIMES: 'PASSCODE 사용 횟수는 1회 이상 설정되어야 합니다.',
         UPLOAD_NEED_ACCEPT_TYPE: '{param} 형식의 파일만 업로드 가능합니다.',
         UPLOAD_NEED_UNDER_10_MB_FILE: '10MB 미만의 파일만 업로드 가능합니다.',
-        IP_ADDRESS_POLICY_INPUT: 'IP 주소 형식(aaa.bbb.ccc.ddd) 혹은 CIDR 형식(aaa.bbb.0.0/24)을 입력해야 합니다.',
-        PAM_DATA_IP_ADDRESS_INPUT: 'IP 주소 형식(aaa.bbb.ccc.ddd)을 입력해야 합니다.'
+        IP_ADDRESS_POLICY_INPUT: 'IP 주소 형식(AAA.BBB.CCC.DDD) 혹은 CIDR 형식(AAA.BBB.0.0/24)을 입력해야 합니다.',
+        PLEASE_INPUT_CORRECT_IP_ADDRESS: '올바른 IP 주소 형식을 입력해야 합니다.',
+        PAM_DATA_IP_ADDRESS_INPUT: 'IP 주소 형식(AAA.BBB.CCC.DDD)을 입력해야 합니다.'
     },
     'EN': {
         USERNAME_CHECK: 'Only lowercase letters and numbers are allowed, with a length of 4 to 16 characters',
@@ -84,8 +85,9 @@ const ValidationText = {
         PASSCODE_NEED_MORE_THAN_1_TIMES: 'The passcode must be used more than once',
         UPLOAD_NEED_ACCEPT_TYPE: 'Only files in {param} format can be uploaded',
         UPLOAD_NEED_UNDER_10_MB_FILE: 'Only files smaller than 10MB can be uploaded',
-        IP_ADDRESS_POLICY_INPUT: 'You must enter the IP address format (aaa.bbb.ccc.ddd) or CIDR format (aaa.bbb.0.0/24)',
-        PAM_DATA_IP_ADDRESS_INPUT: 'You must enter the IP address format (aaa.bbb.ccc.ddd)'
+        IP_ADDRESS_POLICY_INPUT: 'You must enter the IP address format (AAA.BBB.CCC.DDD) or CIDR format (AAA.BBB.0.0/24)',
+        PLEASE_INPUT_CORRECT_IP_ADDRESS: 'You must enter the correct IP address format.',
+        PAM_DATA_IP_ADDRESS_INPUT: 'You must enter the IP address format (AAA.BBB.CCC.DDD)'
     }
 }
 

@@ -192,7 +192,7 @@ input:-webkit-autofill {
     background-color: var(--main-purple-color);
 }
 
-input.st1 {
+textarea.st1, input.st1 {
     border-radius: 8px;
     border: 1.4px solid var(--sub-grey-color5);
 }

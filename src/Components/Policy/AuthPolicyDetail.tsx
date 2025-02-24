@@ -22,9 +22,13 @@ import PolicyIpAddressList from "./PolicyItems/PolicyIpAddressList";
 import NoticeToAdmin from "./PolicyItems/NoticeToAdmin";
 import PolicyAccessTimeList from "./PolicyItems/PolicyAccessTimeList";
 import NoticeToThemselves from "./PolicyItems/NoticeToThemselves";
+import useCustomRoute from "hooks/useCustomRoute";
+import { cidrRegex, ipAddressRegex } from "Components/CommonCustomComponents/CommonRegex";
+import { isValidIpRange } from "Functions/GlobalFunctions";
 
 const AuthPolicyDetail = () => {
     const { uuid } = useParams()
+    const { goBack } = useCustomRoute()
     const isAdd = !uuid
     const [authenticatorPolicies, setAuthenticatorPolicies] = useState<PolicyDataType['enableAuthenticators']>(['OMPASS', 'OTP', 'PASSCODE', 'WEBAUTHN'])
     const [selectedApplicationType, setSelectedApplicationType] = useState<ApplicationDataType['type'] | ''>(isAdd ? '' : 'DEFAULT')
@@ -47,9 +51,9 @@ const AuthPolicyDetail = () => {
     const isDefaultPolicy = detailData?.policyType === 'DEFAULT'
     const passcodeUsed = !isDefaultPolicy && selectedApplicationType ? !(["ALL", "RADIUS"] as ApplicationDataType['type'][]).includes(selectedApplicationType) : false
     const otpUsed = !isDefaultPolicy && selectedApplicationType ? !(["RADIUS"] as ApplicationDataType['type'][]).includes(selectedApplicationType) : false
-    const browserUsed = !isDefaultPolicy && selectedApplicationType ? (["ADMIN", "DEFAULT", "REDMINE"] as ApplicationDataType['type'][]).includes(selectedApplicationType) : false
+    const browserUsed = !isDefaultPolicy && selectedApplicationType ? (["ADMIN", "DEFAULT", "REDMINE", "MS_ENTRA_ID"] as ApplicationDataType['type'][]).includes(selectedApplicationType) : false
     const webauthnUsed = !isDefaultPolicy && browserUsed
-    const locationUsed = !isDefaultPolicy && (selectedApplicationType ? (["ADMIN", "DEFAULT", "WINDOWS_LOGIN", "REDMINE", 'LINUX_LOGIN', 'RADIUS', 'MAC_LOGIN'] as ApplicationDataType['type'][]).includes(selectedApplicationType) : false)
+    const locationUsed = !isDefaultPolicy && (selectedApplicationType ? (["ADMIN", "DEFAULT", "WINDOWS_LOGIN", "REDMINE", 'LINUX_LOGIN', 'RADIUS', 'MAC_LOGIN', 'MS_ENTRA_ID'] as ApplicationDataType['type'][]).includes(selectedApplicationType) : false)
     const authenticatorsUsed = !isDefaultPolicy && selectedApplicationType ? !(["ALL", "RADIUS"] as ApplicationDataType['type'][]).includes(selectedApplicationType) : false
     const typeItems = applicationTypes.map(_ => ({
         key: _,
@@ -83,7 +87,7 @@ const AuthPolicyDetail = () => {
                 setDataLoading(false)
             })
         }
-    }, [])
+    }, [uuid])
 
     const dataInit = () => {
         const tempAuthPolices: AuthenticatorPolicyType[] = ['OMPASS']
@@ -101,7 +105,9 @@ const AuthPolicyDetail = () => {
             }
             setIpAddressValues({
                 isEnabled: false,
-                networks: []
+                require2faForIps: [],
+                notRequire2faForIps: [],
+                deny2faForIps: []
             })
             setNoticeToAdmin({
                 isEnabled: false,
@@ -135,9 +141,9 @@ const AuthPolicyDetail = () => {
             accessTimeConfig: accessTimeValues,
             noticeToAdmin: noticeToAdmin!,
             noticeToThemselves
-        }, () => {
+        }, (res) => {
             message.success(formatMessage({ id: 'AUTH_POLICY_ADD_SUCCESS_MSG' }))
-            navigate(-1)
+            navigate(`/Policies/detail/${res.id}`)
         })
     }
 
@@ -167,7 +173,7 @@ const AuthPolicyDetail = () => {
                         if (locationUsed && locationDatas?.isEnabled && locationDatas?.locations.some(_ => !_.alias)) {
                             return message.error(formatMessage({ id: 'PLEASE_INPOUT_LOCATION_NAME_MSG' }))
                         }
-                        if (ipAddressValues?.isEnabled && ipAddressValues.networks.length === 0) {
+                        if (ipAddressValues?.isEnabled && ipAddressValues.notRequire2faForIps.length === 0 && ipAddressValues.require2faForIps.length === 0 && ipAddressValues.deny2faForIps.length === 0) {
                             return message.error(formatMessage({ id: 'PLEASE_SETTING_IP_ADDRESS_POLICY_MSG' }))
                         }
                         if (accessTimeValues?.isEnabled && accessTimeValues.accessTimes.length === 0) {
@@ -184,6 +190,24 @@ const AuthPolicyDetail = () => {
                         }
                         if (noticeToAdmin?.isEnabled && noticeToAdmin.targetPolicies.length === 0) {
                             return message.error(formatMessage({ id: 'PLEASE_SETTING_NOTI_TO_ADMIN_POLICY_ONE_MORE_MSG' }))
+                        }
+                    }
+                    if (ipAddressValues?.isEnabled) {
+                        const ips = ipAddressValues.require2faForIps.map(_ => _.ip).concat(ipAddressValues.notRequire2faForIps.map(_ => _.ip).concat(ipAddressValues.deny2faForIps.map(_ => _.ip)))
+                        const ipTest = ips.some(ip => {
+                            if (!ip) {
+                                return false
+                            }
+                            if ((ip.includes('~') && !isValidIpRange(ip)) || (ip.includes('/') && !RegExp(cidrRegex).test(ip))) {
+                                return false
+                            }
+                            if (!ip.includes('~') && !ip.includes('/') && !RegExp(ipAddressRegex).test(ip)) {
+                                return false
+                            }
+                            return true
+                        })
+                        if(!ipTest) {
+                            return message.error(formatMessage({ id: 'PLEASE_INPUT_CORRECT_IP_ADDRESS' }))
                         }
                     }
                     if (uuid) {
@@ -221,13 +245,14 @@ const AuthPolicyDetail = () => {
                 </Button>}
                 {!isDefaultPolicy && <Button className="st5" icon={resetIcon} hoverIcon={resetIconWhite} onClick={() => {
                     dataInit()
+                    setInitEvent(true)
                 }}>
                     <FormattedMessage id="NORMAL_RESET_LABEL" />
                 </Button>}
                 {!isAdd && !isDefaultPolicy && <Button className="st8" onClick={() =>
                     DeletePoliciesListFunc(uuid, () => {
                         message.success(formatMessage({ id: 'AUTH_POLICY_DELETE_SUCCESS_MSG' }))
-                        navigate(-1)
+                        goBack()
                     })}>
                     <FormattedMessage id="DELETE" />
                 </Button>}
@@ -257,7 +282,7 @@ const AuthPolicyDetail = () => {
                     {authenticatorsUsed && <OMPASSAuthenticators value={authenticatorPolicies} onChange={setAuthenticatorPolicies} locationChecked={locationDatas?.isEnabled || false} webauthnUsed={webauthnUsed} setSureChange={setSureChange} />}
                     {browserUsed && <PolicyBrowserSelect value={browserChecked} onChange={setBrowserChecked} />}
                     {locationUsed && locationDatas && <PolicyLocationList value={locationDatas} onChange={setLocationDatas} authenticators={authenticatorPolicies} setSureChange={setSureChange} />}
-                    {!isDefaultPolicy && ipAddressValues && <PolicyIpAddressList value={ipAddressValues} onChange={setIpAddressValues} />}
+                    {!isDefaultPolicy && ipAddressValues && <PolicyIpAddressList value={ipAddressValues} onChange={setIpAddressValues} dataInit={initEvent}/>}
                     {!isDefaultPolicy && accessTimeValues && <PolicyAccessTimeList value={accessTimeValues} onChange={setAccessTimeValues} />}
                     {!isDefaultPolicy && noticeToAdmin && <NoticeToAdmin hasIncludeWithdrawal={setHasIncludeWithdrawal} value={noticeToAdmin} onChange={setNoticeToAdmin} />}
                     {!isDefaultPolicy && noticeToThemselves && <NoticeToThemselves value={noticeToThemselves} onChange={setNoticeToThemselves} />}

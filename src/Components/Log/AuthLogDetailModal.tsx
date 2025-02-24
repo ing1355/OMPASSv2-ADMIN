@@ -203,9 +203,9 @@ const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
                     </div>
                 </div>
                 <div className="auth-detail-modal-contents-row">
-                    <div className="auth-detail-modal-contents-container" data-title="어플리케이션 정보">
-                        <TextComponent title="어플리케이션 유형" content={getApplicationTypeLabel(data?.ompassData.application.type ?? "")} />
-                        <TextComponent title="어플리케이션명" content={data?.ompassData.application.name} />
+                    <div className="auth-detail-modal-contents-container" data-title="애플리케이션 정보">
+                        <TextComponent title="애플리케이션 유형" content={getApplicationTypeLabel(data?.ompassData.application.type ?? "")} />
+                        <TextComponent title="애플리케이션명" content={data?.ompassData.application.name} />
                         <TextComponent title="도메인" content={data?.ompassData.application.domain} />
                     </div>
                     {isPam && <div className="auth-detail-modal-contents-container" data-title="대상 기기 정보(Server)">
@@ -217,7 +217,7 @@ const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
                     <div className="auth-detail-modal-contents-container" data-title={`대상 기기 정보${isPam ? '(Client)' : ''}`}>
                         <TextComponent title="기기명" content={loginDeviceInfo?.name} />
                         <TextComponent title="IP" content={loginDeviceInfo?.ip} />
-                        <TextComponent title="브라우저" content={loginDeviceInfo?.browser} />
+                        <TextComponent title="브라우저" content={loginDeviceInfo?.browser && <FormattedMessage id={loginDeviceInfo?.browser + "_LABEL"}/>} />
                         <TextComponent title="운영체제" content={createOSInfo(loginDeviceInfo?.os)} />
                         <TextComponent title="패키지 버전" content={loginDeviceInfo?.packageVersion} />
                     </div>

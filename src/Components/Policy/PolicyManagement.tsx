@@ -61,7 +61,7 @@ const PolicyManagement = () => {
                     icon: policyAddIcon,
                     hoverIcon: policyAddIconHover,
                     callback: () => {
-                        navigate('/Policies/auth/detail')
+                        navigate('/Policies/detail')
                     }
                 }}
                 pagination
@@ -91,7 +91,7 @@ const PolicyManagement = () => {
                     }
                 ]}
                 onBodyRowClick={(row, index, arr) => {
-                    navigate(`/Policies/auth/detail/${row.id}`);
+                    navigate(`/Policies/detail/${row.id}`);
                 }}
                 totalCount={totalCount}
             />

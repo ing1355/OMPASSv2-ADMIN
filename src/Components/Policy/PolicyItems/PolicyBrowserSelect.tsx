@@ -30,11 +30,11 @@ const PolicyBrowserSelect = ({ value=[], onChange }: PolicyItemsPropsType<Policy
                     }
                 }} />)
             }
-            <Input type="checkbox" label={<FormattedMessage id="All other browsers_LABEL"/>} checked={value.includes('All other browsers')} onChange={e => {
+            <Input type="checkbox" label={<FormattedMessage id="ALL_OTHER_BROWSERS_LABEL"/>} checked={value.includes('ALL_OTHER_BROWSERS')} onChange={e => {
                 if (e.currentTarget.checked) {
-                    onChange(value.concat('All other browsers'))
+                    onChange(value.concat('ALL_OTHER_BROWSERS'))
                 } else {
-                    onChange(value.filter(_ => _ !== 'All other browsers'))
+                    onChange(value.filter(_ => _ !== 'ALL_OTHER_BROWSERS'))
                 }
             }} />
         </div>

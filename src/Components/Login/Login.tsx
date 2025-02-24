@@ -82,11 +82,11 @@ const Login = () => {
         const temp = ompassUrl + `&authorization=${token}`
         if (isDev) {
           const targetUrl = "192.168.182.120:9002"
-          const resultUri = temp.replace("www.ompass.kr:54007", targetUrl).replace("www.ompass.kr:54012", targetUrl).replace("192.168.182.75:9001", targetUrl).replace("ompass.kr:59001", targetUrl)
+          const resultUri = temp.replace("ompass.kr:54007", targetUrl).replace("ompass.kr:54012", targetUrl).replace("192.168.182.75:9001", targetUrl).replace("ompass.kr:59001", targetUrl)
           if (!ompassWindowRef.current?.closed) {
             ompassWindowRef.current?.close()
           }
-          ompassWindowRef.current = OMPASS(resultUri.replace("www.ompass.kr:54007", targetUrl).replace("www.ompass.kr:54012", targetUrl).replace("192.168.182.75:9001", targetUrl).replace("ompass.kr:59001", targetUrl));
+          ompassWindowRef.current = OMPASS(resultUri.replace("ompass.kr:54007", targetUrl).replace("ompass.kr:54012", targetUrl).replace("192.168.182.75:9001", targetUrl).replace("ompass.kr:59001", targetUrl));
         } else {
           ompassWindowRef.current = OMPASS(temp);
         }

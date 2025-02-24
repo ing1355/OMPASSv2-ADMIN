@@ -21,28 +21,28 @@
 
 @font-face {
   font-family: NEXON Lv2 Gothic OTF;
-  src: url('./fonts/NEXON Lv2 Gothic OTF Light.otf') format('opentype');
+  src: url('./fonts/NEXON Lv2 Gothic Light.woff') format('woff');
   font-weight: lighter;
   font-style: normal;
 }
 
 @font-face {
   font-family: NEXON Lv2 Gothic OTF;
-  src: url('./fonts/NEXON Lv2 Gothic OTF.otf') format('opentype');
+  src: url('./fonts/NEXON Lv2 Gothic.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: NEXON Lv2 Gothic OTF;
-  src: url('./fonts/NEXON Lv2 Gothic OTF Medium.otf') format('opentype');
+  src: url('./fonts/NEXON Lv2 Gothic Medium.woff') format('woff');
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
   font-family: NEXON Lv2 Gothic OTF;
-  src: url('./fonts/NEXON Lv2 Gothic OTF Bold.otf') format('opentype');
+  src: url('./fonts/NEXON Lv2 Gothic Bold.woff') format('woff');
   font-weight: bold;
   font-style: normal;
 }

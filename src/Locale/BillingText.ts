@@ -7,7 +7,7 @@ const BillingText = {
         BILLING_DESCRIPTION_ITEM_5: "대시보드 기능",
         BILLING_DESCRIPTION_ITEM_6: "Windows 로그인",
         BILLING_DESCRIPTION_ITEM_7: "Linux PAM (SSH)",
-        BILLING_DESCRIPTION_ITEM_8: "Radius 프로토콜",
+        BILLING_DESCRIPTION_ITEM_8: "RADIUS 프로토콜",
         BILLING_DESCRIPTION_ITEM_9: "LDAP 연동"
     },
     'EN': {
@@ -18,7 +18,7 @@ const BillingText = {
         BILLING_DESCRIPTION_ITEM_5: "Dashboard",
         BILLING_DESCRIPTION_ITEM_6: "Windows Logon",
         BILLING_DESCRIPTION_ITEM_7: "Linux PAM (SSH)",
-        BILLING_DESCRIPTION_ITEM_8: "Radius Protocol",
+        BILLING_DESCRIPTION_ITEM_8: "RADIUS Protocol",
         BILLING_DESCRIPTION_ITEM_9: "LDAP Integration"
     }
 }

@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router"
+import { Navigate, useLocation, useNavigate } from "react-router"
 import { Route, Routes } from "react-router"
 import './index.css'
 import { convertLangToIntlVer, ompassDefaultLogoImage } from "Constants/ConstantValues";
@@ -10,9 +10,11 @@ import { ApplicationMenuItems, ApplicationUserMenuItems, EtcMenuItems, EtcUserMe
 
 const Document = () => {
     const lang = useSelector((state: ReduxStateType) => state.lang!);
+    const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     const location = useLocation()
     const navigate = useNavigate()
-    const isUserDocs = location.pathname.startsWith('/docs/user')
+    const pathName = location.pathname
+    const isUserDocs = pathName.startsWith('/docs/user')
 
     const MenuItem = ({ title, items }: {
         title: string
@@ -54,12 +56,12 @@ const Document = () => {
                         {
                             isUserDocs ? <>
                                 <MenuItem title="시작하기" items={StartUserMenuItems} />
-                                <MenuItem title="어플리케이션" items={ApplicationUserMenuItems} />
+                                <MenuItem title="애플리케이션" items={ApplicationUserMenuItems} />
                                 <MenuItem title="기타" items={EtcUserMenuItems} />
                             </> : <>
                                 <MenuItem title="시작하기" items={StartAdminMenuItems} />
                                 <MenuItem title="포탈 메뉴" items={PortalMenuItems} />
-                                <MenuItem title="어플리케이션" items={ApplicationMenuItems} />
+                                <MenuItem title="애플리케이션" items={ApplicationMenuItems} />
                                 <MenuItem title="기타" items={EtcMenuItems} />
                             </>
                         }
@@ -69,11 +71,12 @@ const Document = () => {
                     <Routes>
                         <Route path="/:category/:type" element={<LoadMdFileComponent key={location.pathname} />} />
                         <Route
-                            path="/"
+                            path="/*"
                             element={
-                                <div className="document-no-content-container">
-                                    메인입니다.(내용 준비 중)
-                                </div>
+                                <Navigate to={(userInfo && userInfo.role !== 'USER') ? "/docs/start/signup" : "/docs/user/start/signup"}/>
+                                // <div className="document-no-content-container">
+                                //     메인입니다.(내용 준비 중)
+                                // </div>
                             }
                         />
                     </Routes>

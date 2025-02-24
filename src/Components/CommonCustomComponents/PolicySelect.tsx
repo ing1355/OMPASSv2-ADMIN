@@ -52,7 +52,7 @@ const PolicySelect = ({ selectedPolicy, setSelectedPolicy, needSelect, applicati
             }} needSelect={needSelect} />
         {filteredPoliciesData.length > 0 && selectedPolicy && <div className="custom-detail-policy-navigate-text">
             <FormattedMessage id="POLICY_TAREGT_LINK_DESCRIPTION_2" values={{
-                here: <a target="_blank" href={`/Policies/auth/detail/${selectedPolicy}`}>
+                here: <a target="_blank" href={`/Policies/detail/${selectedPolicy}`}>
                     <FormattedMessage id="POLICY_TAREGT_LINK_DESCRIPTION_1" />
                 </a>
             }} />

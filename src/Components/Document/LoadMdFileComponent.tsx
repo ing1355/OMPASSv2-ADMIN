@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router"
+import { useLocation, useNavigate, useParams } from "react-router"
 import MarkdownPreview from '@uiw/react-markdown-preview'
+import { useSelector } from "react-redux";
 
 type DocumentCategoryType = 'application' | 'start'
 
@@ -15,19 +16,21 @@ const pathByApplicationType: {
     'RADIUS': 'radius',
     'REDMINE': 'redmine',
     'WINDOWS_LOGIN': 'windows_logon',
-    'MS_ENTRA': 'ms_entra',
+    'MS_ENTRA_ID': 'ms_entra_id',
     'ADMIN': '',
     'ALL': '',
     'MAC_LOGIN': '',
 }
 
 const LoadMdFileComponent = () => {
+    const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     const [isReady, setIsReady] = useState(false)
     const [data, setData] = useState('')
     const [mTime, setMTime] = useState('')
     const type = useParams().type as DocumentSubType
     const category = useParams().category as DocumentCategoryType
     const startedUrl = useLocation().pathname.startsWith('/docs/user') ? '/docs/user' : '/docs'
+    const navigate = useNavigate()
     const transformImgSrc = (imgSrc: string | undefined) => {
         // 상대 경로에서 'test.png'를 '/docsImage/.../test.png' 형식으로 변환
         if (imgSrc?.startsWith('./')) {
@@ -40,17 +43,26 @@ const LoadMdFileComponent = () => {
         try {
             // GET 요청으로 원격 파일 읽기
             const response = await axios.get(url, {
-                responseType: 'text', // 텍스트 형식으로 응답 처리
-            });
-            // console.log(response.data); // 파일 내용을 텍스트로 출력
+                responseType: 'text', // 텍스트 형식으로 응답 처리,
+                headers: {
+                    'Cache-Control': 'no-cache', // 최신 데이터 요청
+                    Pragma: 'no-cache',          // 일부 브라우저에서 추가 필요
+                    Expires: '0',                // 즉시 만료 처리
+                },
+            })
             const result = (response.data as string).replace(/<img [^>]*src="(\.\/[^"]*)"[^>]*>/g, (match, p1) => {
                 const regex = /[^/]+$/;  // 마지막 슬래시 이후의 문자열을 추출
                 const filename = p1.match(regex)[0];
                 const newSrc = `${startedUrl}/${category}/${(!startedUrl.includes('/user') && category === 'application') ? pathByApplicationType[type] : type}/${filename}`;
                 return match.replace(p1, newSrc);
             })
-
-            setData(result)
+            if (result.startsWith('<!doctype html>')) {
+                navigate((userInfo && userInfo.role !== 'USER') ? "/docs/start/signup" : "/docs/user/start/signup", {
+                    replace: true
+                })
+            } else {
+                setData(result)
+            }
         } catch (error) {
             console.error('Error fetching the markdown file:', error);
             setIsReady(true)
@@ -72,7 +84,7 @@ const LoadMdFileComponent = () => {
             console.error('Error fetching the markdown file:', error);
         }
     }
-    
+
     useEffect(() => {
         // if ((category === 'start' && type === 'ompass') || (category === 'start' && type === 'signup')) {
         //     fetchMarkdownFile(`/docs/user/${category}/${pathByApplicationType[type]}/${pathByApplicationType[type]}.md`)

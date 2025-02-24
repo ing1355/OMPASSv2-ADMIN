@@ -67,7 +67,7 @@ const GroupDetail = () => {
         })
         GetDatas()
         setRefresh(true)
-    }, [])
+    }, [uuid])
 
     useEffect(() => {
         if (refresh) setRefresh(false)
@@ -97,9 +97,9 @@ const GroupDetail = () => {
                     rpUserIds: selectedUsers
                 } as UserGroupParamsType
                 if (isAdd) {
-                    AddUserGroupDataFunc(params, () => {
+                    AddUserGroupDataFunc(params, (res) => {
                         message.success(formatMessage({ id: 'GROUP_ADD_SUCCESS_MSG' }))
-                        navigate(-1)
+                        navigate(`/Groups/detail/${res.id}`)
                     })
                 } else {
                     UpdateUserGroupDataFunc(uuid, params, () => {
@@ -113,7 +113,9 @@ const GroupDetail = () => {
             {!isAdd && <Button className="st2" onClick={() => {
                 DeleteUserGroupDataFunc(uuid, () => {
                     message.success(formatMessage({ id: 'GROUP_MODIFY_DELETE_MSG' }))
-                    navigate(-1)
+                    navigate('/Groups', {
+                        replace: true
+                    })
                 })
             }}>
                 <FormattedMessage id="DELETE" />

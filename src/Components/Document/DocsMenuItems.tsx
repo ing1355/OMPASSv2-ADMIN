@@ -19,30 +19,34 @@ export const ApplicationUserMenuItems: DocsMenuItemType[] = [
     {
         title: 'Linux SSH',
         route: '/user/application/linux_ssh_user'
+    },
+    {
+        title: 'RADIUS',
+        route: '/user/application/radius_user'
     }
 ]
 
 export const StartUserMenuItems: DocsMenuItemType[] = [
     {
         title: '회원가입 및 로그인',
-        route: '/user/started/signup'
+        route: '/user/start/signup'
     },
     {
         title: 'OMPASS 인증',
-        route: '/user/started/ompass'
+        route: '/user/start/ompass'
     }
 ]
 
 export const EtcUserMenuItems: DocsMenuItemType[] = [
     {
-        title: 'OMPASS App',
+        title: 'OMPASS 앱',
         route: '/user/etc/app'
     }
 ]
 
 export const EtcMenuItems: DocsMenuItemType[] = [
     {
-        title: 'OMPASS Proxy',
+        title: 'OMPASS 프록시',
         route: '/etc/ompass_proxy'
     },
     {
@@ -61,7 +65,7 @@ export const PortalMenuItems: DocsMenuItemType[] = [
         route: '/portal/group'
     },
     {
-        title: '패스코드 관리',
+        title: 'PASSCODE 관리',
         route: '/portal/passcode'
     },
     {
@@ -73,7 +77,7 @@ export const PortalMenuItems: DocsMenuItemType[] = [
         route: '/portal/userLog'
     },
     {
-        title: '어플리케이션',
+        title: '애플리케이션',
         route: '/portal/application'
     },
     {
