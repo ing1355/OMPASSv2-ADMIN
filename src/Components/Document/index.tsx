@@ -2,11 +2,15 @@ import { Navigate, useLocation, useNavigate } from "react-router"
 import { Route, Routes } from "react-router"
 import './index.css'
 import { convertLangToIntlVer, ompassDefaultLogoImage } from "Constants/ConstantValues";
-import LoadMdFileComponent from "./LoadMdFileComponent";
+// import LoadMdFileComponent from "./LoadMdFileComponent";
 import { IntlProvider } from "react-intl";
 import Locale from "Locale";
 import { useSelector } from "react-redux";
 import { ApplicationMenuItems, ApplicationUserMenuItems, EtcMenuItems, EtcUserMenuItems, PortalMenuItems, StartAdminMenuItems, StartUserMenuItems } from "./DocsMenuItems";
+import { isMobile } from "react-device-detect";
+import { lazy, Suspense } from "react";
+
+const LoadMdFile = lazy(() => import('./LoadMdFileComponent'))
 
 const Document = () => {
     const lang = useSelector((state: ReduxStateType) => state.lang!);
@@ -69,7 +73,7 @@ const Document = () => {
                 </div>
                 <div className="document-contents-container">
                     <Routes>
-                        <Route path="/:category/:type" element={<LoadMdFileComponent key={location.pathname} />} />
+                        {!isMobile && <Route path="/:category/:type" element={<Suspense fallback={<div>Loading...</div>}><LoadMdFile key={location.pathname} /></Suspense>} />}
                         <Route
                             path="/*"
                             element={

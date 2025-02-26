@@ -14,7 +14,62 @@ import './PolicyIpAddressList.css'
 import { isValidIpRange } from "Functions/GlobalFunctions"
 
 const ipAddressRestriction: React.FormEventHandler<HTMLInputElement> = (e) => {
-    e.currentTarget.value = e.currentTarget.value.replace(/[^0-9\~.\/]/g, '')
+    e.currentTarget.value = e.currentTarget.value.replace(/[^0-9\-.\/]/g, '')
+}
+
+const InputRow = ({ title, policyKey, value, setValue, onComplete }: {
+    value: IpAddressPolicyType
+    setValue: (key: keyof IpAddressPolicyType, data: networkPolicyType[]) => void
+    onComplete: (e: React.FormEvent<HTMLFormElement>, key: keyof IpAddressPolicyType) => void
+    title: React.ReactNode
+    policyKey: keyof IpAddressPolicyType
+}) => {
+    const { formatMessage } = useIntl()
+    return <div className="ip-address-policy-item-container">
+        <div className="title">
+            <b>
+                {title}
+            </b>
+        </div>
+        <div className="contents">
+            <form className="ip-address-form-container" onSubmit={(e) => {
+                onComplete(e, policyKey)
+            }}>
+                <Input className="st1 policy-ip-address-input" name="ip" placeholder={formatMessage({ id: 'IP_ADDRESS_POLICY_INPUT_PLACEHOLDER_LABEL' })} maxLength={31} rules={[
+                    {
+                        regExp: (value) => !(RegExp(ipAddressRegex).test(value) || RegExp(cidrRegex).test(value)),
+                        msg: formatMessage({ id: 'IP_ADDRESS_POLICY_INPUT' })
+                    }
+                ]} onInput={ipAddressRestriction} />
+                <Input className="st1 policy-ip-address-input" name="note" placeholder={formatMessage({ id: 'MEMO' })} maxLength={30} />
+                <Button icon={addIconWhite} type="submit" className="st3" style={{
+                    width: '16px'
+                }} />
+            </form>
+            {
+                (value[policyKey] as networkPolicyType[]).map(({ ip, note }, ipInd) => <div key={ipInd} className="ip-address-form-container">
+                    <Input className="st1 policy-ip-address-input" placeholder={formatMessage({ id: 'IP_ADDRESS_POLICY_INPUT_PLACEHOLDER_LABEL' })} value={ip} maxLength={31} valueChange={(val) => {
+                        setValue(policyKey, (value[policyKey] as networkPolicyType[]).map((_, _ind) => _ind === ipInd ? ({
+                            ip: val,
+                            note
+                        }) : _))
+                    }} onInput={ipAddressRestriction} />
+                    <Input className="st1 policy-ip-address-input" placeholder={formatMessage({ id: 'MEMO' })} value={note} valueChange={(val) => {
+                        setValue(policyKey, (value[policyKey] as networkPolicyType[]).map((_, _ind) => _ind === ipInd ? ({
+                            ip,
+                            note: val
+                        }) : _))
+                    }} />
+                    <Button className="st2" onClick={() => {
+                        setValue(policyKey, (value[policyKey] as networkPolicyType[]).filter((_, _ind) => _ind !== ipInd))
+                    }} icon={deleteIcon} hoverIcon={deleteIconHover} style={{
+                        width: '16px'
+                    }} />
+                </div>
+                )
+            }
+        </div>
+    </div>
 }
 
 const PolicyIpAddressList = ({ value, onChange, dataInit }: PolicyItemsPropsType<IpAddressPolicyType>) => {
@@ -47,10 +102,10 @@ const PolicyIpAddressList = ({ value, onChange, dataInit }: PolicyItemsPropsType
         if (!ip.value) {
             return message.error(formatMessage({ id: 'PLEASE_INPUT_CORRECT_IP_ADDRESS' }))
         }
-        if ((ip.value.includes('~') && !isValidIpRange(ip.value)) || (ip.value.includes('/') && !RegExp(cidrRegex).test(ip.value))) {
+        if ((ip.value.includes('-') && !isValidIpRange(ip.value)) || (ip.value.includes('/') && !RegExp(cidrRegex).test(ip.value))) {
             return message.error(formatMessage({ id: 'PLEASE_INPUT_CORRECT_IP_ADDRESS' }))
         }
-        if (!ip.value.includes('~') && !ip.value.includes('/') && !RegExp(ipAddressRegex).test(ip.value)) {
+        if (!ip.value.includes('-') && !ip.value.includes('/') && !RegExp(ipAddressRegex).test(ip.value)) {
             return message.error(formatMessage({ id: 'PLEASE_INPUT_CORRECT_IP_ADDRESS' }))
         }
         const data = {
@@ -60,57 +115,6 @@ const PolicyIpAddressList = ({ value, onChange, dataInit }: PolicyItemsPropsType
         onChange({ ...value, [key]: [data, ...(value[key] as networkPolicyType[])] })
         ip.value = ''
         note.value = ''
-    }
-
-    const InputRow = ({ title, policyKey }: {
-        title: React.ReactNode
-        policyKey: keyof IpAddressPolicyType
-    }) => {
-        return <div className="ip-address-policy-item-container">
-            <div className="title">
-                <b>
-                    {title}
-                </b>
-            </div>
-            <div className="contents">
-                <form className="ip-address-form-container" onSubmit={(e) => {
-                    addFormCallback(e, policyKey)
-                }}>
-                    <Input className="st1 policy-ip-address-input" name="ip" placeholder={formatMessage({ id: 'IP_ADDRESS_POLICY_INPUT_PLACEHOLDER_LABEL' })} maxLength={31} rules={[
-                        {
-                            regExp: (value) => !(RegExp(ipAddressRegex).test(value) || RegExp(cidrRegex).test(value)),
-                            msg: formatMessage({ id: 'IP_ADDRESS_POLICY_INPUT' })
-                        }
-                    ]} onInput={ipAddressRestriction} />
-                    <Input className="st1 policy-ip-address-input" name="note" placeholder={formatMessage({ id: 'MEMO' })} maxLength={30} />
-                    <Button icon={addIconWhite} type="submit" className="st3" style={{
-                        width: '16px'
-                    }} />
-                </form>
-                {
-                    (value[policyKey] as networkPolicyType[]).map(({ ip, note }, ipInd) => <div key={ipInd} className="ip-address-form-container">
-                        <Input className="st1 policy-ip-address-input" placeholder={formatMessage({ id: 'IP_ADDRESS_POLICY_INPUT_PLACEHOLDER_LABEL' })} value={ip} maxLength={31} valueChange={(val) => {
-                            setIpAddressValue(policyKey, (value[policyKey] as networkPolicyType[]).map((_, _ind) => _ind === ipInd ? ({
-                                ip: val,
-                                note
-                            }) : _))
-                        }} onInput={ipAddressRestriction} />
-                        <Input className="st1 policy-ip-address-input" placeholder={formatMessage({ id: 'MEMO' })} value={note} valueChange={(val) => {
-                            setIpAddressValue(policyKey, (value[policyKey] as networkPolicyType[]).map((_, _ind) => _ind === ipInd ? ({
-                                ip,
-                                note: val
-                            }) : _))
-                        }} />
-                        <Button className="st2" onClick={() => {
-                            setIpAddressValue(policyKey, (value[policyKey] as networkPolicyType[]).filter((_, _ind) => _ind !== ipInd))
-                        }} icon={deleteIcon} hoverIcon={deleteIconHover} style={{
-                            width: '16px'
-                        }} />
-                    </div>
-                    )
-                }
-            </div>
-        </div>
     }
 
     return <CustomInputRow title={<FormattedMessage id={`${policyNoticeRestrictionTypes[3]}_LABEL`} />} noCenter isVertical>
@@ -140,10 +144,10 @@ const PolicyIpAddressList = ({ value, onChange, dataInit }: PolicyItemsPropsType
                                 127.0.0.1
                             </div>
                             <div>
-                                127.0.0.1~127.0.0.100
+                                192.168.1.1-192.168.1.100  
                             </div>
                             <div>
-                                127.0.0.1/32
+                            10.0.0.0/8
                             </div>
                         </div>
                     </div>
@@ -151,9 +155,9 @@ const PolicyIpAddressList = ({ value, onChange, dataInit }: PolicyItemsPropsType
                         <img src={ipInfoIcon} />
                     </div> */}
                 </div>
-                <InputRow title={<FormattedMessage id="OMPASS_ACCESS_CONTROL_ITEM_1_TITLE_LABEL" />} policyKey="require2faForIps" />
-                <InputRow title={<FormattedMessage id="OMPASS_ACCESS_CONTROL_ITEM_2_TITLE_LABEL" />} policyKey="notRequire2faForIps" />
-                <InputRow title={<FormattedMessage id="OMPASS_ACCESS_CONTROL_ITEM_3_TITLE_LABEL" />} policyKey="deny2faForIps" />
+                <InputRow value={value} setValue={setIpAddressValue} onComplete={addFormCallback} title={<FormattedMessage id="OMPASS_ACCESS_CONTROL_ITEM_1_TITLE_LABEL" />} policyKey="require2faForIps" />
+                <InputRow value={value} setValue={setIpAddressValue} onComplete={addFormCallback} title={<FormattedMessage id="OMPASS_ACCESS_CONTROL_ITEM_2_TITLE_LABEL" />} policyKey="notRequire2faForIps" />
+                <InputRow value={value} setValue={setIpAddressValue} onComplete={addFormCallback} title={<FormattedMessage id="OMPASS_ACCESS_CONTROL_ITEM_3_TITLE_LABEL" />} policyKey="deny2faForIps" />
             </div>
         </div>
     </CustomInputRow>

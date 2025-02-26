@@ -1,10 +1,10 @@
 import './Main.css';
 import { useNavigate } from 'react-router-dom';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { menuDatas } from 'Constants/ConstantValues';
-import { Col, Row } from 'antd';
+import { isDev, menuDatas } from 'Constants/ConstantValues';
+import { Col, message, Row } from 'antd';
 import Contents from 'Components/Layout/Contents';
 import { isMobile } from 'react-device-detect';
 
@@ -12,7 +12,8 @@ import { isMobile } from 'react-device-detect';
 const Main = () => {
   const lang = useSelector((state: ReduxStateType) => state.lang!);
   const subdomainInfob = useSelector((state: ReduxStateType) => state.subdomainInfo!);
-    const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
+  const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
+  const { formatMessage } = useIntl();
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(-1)
 
@@ -50,7 +51,11 @@ const Main = () => {
                 }}
                 onMouseLeave={handleMouseLeave}
                 onClick={() => {
-                  navigate(data.route);
+                  if (!isDev && data.route === '/License') {
+                    message.info(formatMessage({ id: 'PREPARING_MSG' }))
+                  } else {
+                    navigate(data.route);
+                  }
                 }}
               >
                 <img src={isHovered === index ? data.whiteImg : data.blackImg} className='main_menu_card_img' />

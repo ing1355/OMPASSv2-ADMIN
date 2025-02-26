@@ -204,7 +204,7 @@ function getIpBytes(ip: string) {
 }
 
 export function isValidIpRange(range: string) {
-    const parts = range.split('~');
+    const parts = range.split('-');
     if (parts.length === 2) {
         const start = getIpBytes(parts[0]);
         const end = getIpBytes(parts[1]);

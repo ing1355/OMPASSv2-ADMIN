@@ -198,10 +198,10 @@ const AuthPolicyDetail = () => {
                             if (!ip) {
                                 return false
                             }
-                            if ((ip.includes('~') && !isValidIpRange(ip)) || (ip.includes('/') && !RegExp(cidrRegex).test(ip))) {
+                            if ((ip.includes('-') && !isValidIpRange(ip)) || (ip.includes('/') && !RegExp(cidrRegex).test(ip))) {
                                 return false
                             }
-                            if (!ip.includes('~') && !ip.includes('/') && !RegExp(ipAddressRegex).test(ip)) {
+                            if (!ip.includes('-') && !ip.includes('/') && !RegExp(ipAddressRegex).test(ip)) {
                                 return false
                             }
                             return true

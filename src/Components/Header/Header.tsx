@@ -7,10 +7,11 @@ import logout from '../../assets/logout.png';
 import adminManualIcon from '../../assets/adminManualIcon.png';
 import { useIntl } from 'react-intl';
 import { userInfoClear } from 'Redux/actions/userChange';
-import { Tooltip } from 'antd';
+import { message, Tooltip } from 'antd';
 import { MainRouteByDeviceType, ompassDefaultLogoImage } from 'Constants/ConstantValues';
 import SessionTimeCount from './SessionTimeCount';
 import LocaleChange from 'Components/CommonCustomComponents/LocaleChange';
+import { isMobile } from 'react-device-detect';
 
 const Header = () => {
   const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
@@ -78,15 +79,20 @@ const Header = () => {
             title={formatMessage({ id: 'SEE_ADMIN_MANUAL' })}
             destroyTooltipOnHide
           >
-            <a
-              href="/docs/start/signup"
-              target='_blank'
+            <div
               style={{
                 display: 'flex'
               }}
+              onClick={() => {
+                if(isMobile) {
+                  message.info(formatMessage({ id: 'PLEASE_USE_PC_ENVIRONMENT_MSG' }))
+                } else {
+                  window.open(`/docs/start/signup`, '_blank');
+                }
+              }}
             >
               <img src={adminManualIcon} />
-            </a>
+            </div>
           </Tooltip>}
           <Tooltip
             title={formatMessage({ id: 'SELF_INFO_TOOLTIP_LABEL' })}

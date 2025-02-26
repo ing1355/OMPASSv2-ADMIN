@@ -552,7 +552,7 @@ const UserDetail = ({ }) => {
                     ref={_ref => authInfoRef.current[_.authenticationInfo.id] = _ref as HTMLDivElement}
                 >
                     {
-                        _.application.type === 'RADIUS' && !_.authenticationInfo.createdAt && <RadiusDetailItem appId={_.application.id} onComplete={() => {
+                        isSelf && _.application.type === 'RADIUS' && !_.authenticationInfo.createdAt && <RadiusDetailItem appId={_.application.id} onComplete={() => {
                             GetDatas()
                             message.success(formatMessage({ id: 'RADIUS_OMPASS_REGISTRATION_SUCCESS_MSG' }))
                         }} />

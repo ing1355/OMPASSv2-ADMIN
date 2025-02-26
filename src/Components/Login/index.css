@@ -251,13 +251,16 @@
   /* 모바일 가로, 타블렛 세로 */
 }
 
-@media (min-width: 768px) {}
-
 @media (max-width:767px) {
-
+  .login-agent-download-button {
+    font-size: 12px;
+  }
+  .login-agent-download-button.st5 {
+    background-color: var(--sub-purple-color);
+  }
   /* 모바일 세로 */
   .login-footer {
-    height: 100px;
+    height: 20px;
   }
 
   .login-container {
@@ -268,12 +271,16 @@
     justify-content: center;
     background-color: white;
     gap: 12px;
+    overflow-y: auto;
+  }
+
+  .login-body {
+    justify-content: start;
   }
 
   .login-body>div {
-    height: 200px;
-    flex: 0 0 200px;
-    padding-top: 15px;
+    /* height: 200px;
+    flex: 0 0 200px; */
   }
 
   .login-body>form {
@@ -295,7 +302,7 @@
 
   .login-logo-img {
     padding: 0;
-    height: 100px;
+    height: 140px;
     /* height: 40%; */
   }
 
@@ -307,6 +314,7 @@
   .login-hello-container {
     width: 95%;
     gap: 12px;
+    flex-direction: row;
   }
 
   .login-form-header {
@@ -316,6 +324,10 @@
 
   .login-hello-text {
     padding: 16px 6px;
+    font-size: 12px;
+    max-height: 200px;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 
   .login-body.account-recovery {
@@ -334,6 +346,14 @@
   }
   .login-body.password-reset > form > div {
     width: 100%;
+  }
+
+  .login-footer-mobile-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 8px;
+    align-items: center;
   }
 }
 

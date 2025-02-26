@@ -127,7 +127,9 @@ const MessageText = {
         SECURITY_QUESTION_UPDATE_SUCCESS_MSG: '보안 질문 변경에 성공하였습니다.',
         PAM_PASS_DATA_USERNAME_REQUIRED_MSG: '바이패스 설정의 계정명을 입력해주세요.',
         PAM_PASS_DATA_IP_ADDRESS_REQUIRED_MSG: '바이패스 설정의 IP 주소를 입력해주세요.',
-        PAM_PASS_DATA_IP_ADDRESS_INVALID_MSG: '바이패스 설정의 IP 주소가 올바르지 않습니다.'
+        PAM_PASS_DATA_IP_ADDRESS_INVALID_MSG: '바이패스 설정의 IP 주소가 올바르지 않습니다.',
+        PLEASE_USE_PC_ENVIRONMENT_MSG: 'PC 환경에서 매뉴얼을 참고해주세요.',
+        PREPARING_MSG: '준비중인 기능입니다.'
     },
     'EN': {
         USERNAME_CHECK: 'Only lowercase letters and numbers are allowed, with a length of 4 to 16 characters',
@@ -257,7 +259,9 @@ const MessageText = {
         SECURITY_QUESTION_UPDATE_SUCCESS_MSG: 'You have successfully changed your security questions.',
         PAM_PASS_DATA_USERNAME_REQUIRED_MSG: 'Please enter the username for bypass settings.',
         PAM_PASS_DATA_IP_ADDRESS_REQUIRED_MSG: 'Please enter the IP address for bypass settings.',
-        PAM_PASS_DATA_IP_ADDRESS_INVALID_MSG: 'The IP address in bypass settings is incorrect.'
+        PAM_PASS_DATA_IP_ADDRESS_INVALID_MSG: 'The IP address in bypass settings is incorrect.',
+        PLEASE_USE_PC_ENVIRONMENT_MSG: 'Please use the PC environment to access the manual.',
+        PREPARING_MSG: '준비중인 기능입니다.'
     }
 }
 

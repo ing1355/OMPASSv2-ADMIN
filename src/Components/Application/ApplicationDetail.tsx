@@ -26,6 +26,7 @@ import documentIconHover from '../../assets/documentIconHover.png'
 import ApplicationAgentDownload from "./ApplicationAgentDownload"
 import '../Policy/AuthPolicyDetail.css'
 import './ApplicationDetail.css'
+import { isMobile } from "react-device-detect"
 
 const ApiServerAddressItem = ({ text }: {
     text: string
@@ -329,7 +330,11 @@ const ApplicationDetail = () => {
                     setApplicationType(value as ApplicationDataType['type'])
                 }} items={typeItems} needSelect /> : getApplicationTypeLabel(applicationType as ApplicationDataType['type'])}
                 {applicationType && applicationType !== 'ADMIN' && <Button className="st5" icon={documentIcon} hoverIcon={documentIconHover} onClick={() => {
-                    window.open(`/docs/application/${applicationType}`, '_blank');
+                    if(isMobile) {
+                        message.info(formatMessage({ id: 'PLEASE_USE_PC_ENVIRONMENT_MSG' }))
+                    } else {
+                        window.open(`/docs/application/${applicationType}`, '_blank');
+                    }
                 }}>
                     <FormattedMessage id="APPLICATION_MANUAL_LABEL" />
                 </Button>}

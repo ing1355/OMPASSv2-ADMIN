@@ -448,7 +448,10 @@ const LocaleTexts = {
     SEE_ADMIN_MANUAL: 'Admin Documents',
     MS_ENTRA_ID_AUTHORIZE_LABEL: 'Authorize',
     MS_ENTRA_ID_TENANT_EMPTY_VALUE: 'You can check after authorize',
-    MS_ENTRA_ID_DETAIL_INFO_LABEL: 'Microsoft Entra ID Information'
+    MS_ENTRA_ID_DETAIL_INFO_LABEL: 'Microsoft Entra ID Information',
+    LICENSE_REQUEST_FILE_DOWNLOAD_LABEL: 'License Request File Download',
+    LICENSE_FILE_UPLOAD_LABEL: 'License File Upload',
+    APK_DOWNLOAD_LABEL: 'APK Download'
   },
   KR: {
     LOGIN: '로그인',
@@ -899,7 +902,10 @@ const LocaleTexts = {
     SEE_ADMIN_MANUAL: '관리자 매뉴얼',
     MS_ENTRA_ID_AUTHORIZE_LABEL: '권한 획득',
     MS_ENTRA_ID_TENANT_EMPTY_VALUE: '권한 획득 이후 확인 가능합니다',
-    MS_ENTRA_ID_DETAIL_INFO_LABEL: 'Microsoft Entra ID 정보'
+    MS_ENTRA_ID_DETAIL_INFO_LABEL: 'Microsoft Entra ID 정보',
+    LICENSE_REQUEST_FILE_DOWNLOAD_LABEL: '라이선스 요청 파일 다운로드',
+    LICENSE_FILE_UPLOAD_LABEL: '라이선스 파일 업로드',
+    APK_DOWNLOAD_LABEL: 'APK 다운로드'
   }
 }
 

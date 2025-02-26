@@ -15,6 +15,8 @@ import userManagementMenuIconBlack from '../assets/userManagementMenuIconBlack.p
 import userManagementMenuIconWhite from '../assets/userManagementMenuIconWhite.png';
 import versionManagementMenuIconBlack from '../assets/versionManagementMenuIconBlack.png';
 import versionManagementMenuIconWhite from '../assets/versionManagementMenuIconWhite.png';
+import licenseManagementMenuIconWhite from '../assets/licenseManagementMenuIconWhite.png';
+import licenseManagementMenuIconBlack from '../assets/licenseManagementMenuIconBlack.png';
 import passcodeHistoryMenuIconBlack from '../assets/passcodeHistoryMenuIconBlack.png';
 import passcodeHistoryMenuIconWhite from '../assets/passcodeHistoryMenuIconWhite.png';
 import settingsMenuIconBlack from '../assets/settingsMenuIconBlack.png';
@@ -119,8 +121,8 @@ export const menuDatas = (role: userRoleType, isOnPremise: boolean): menuDataTyp
         isOnPremise ? {
             label: 'LICENSE_MANAGEMENT',
             route: '/License',
-            whiteImg: billingMenuIconWhite,
-            blackImg: billingMenuIconBlack
+            whiteImg: licenseManagementMenuIconWhite,
+            blackImg: licenseManagementMenuIconBlack
         } : {
             label: 'BILLING_MANAGEMENT',
             route: '/Billing',
@@ -162,7 +164,7 @@ export const subDomain = isDev ? devUrl.replace('https://', '') : window.locatio
 
 export const MainRouteByDeviceType = isMobile ? '/Main' : '/Dashboard'
 
-export const LDAPAuthenticationTypes: LdapAuthenticationType[] = ['PLAIN', 'NTLMv2']
+export const LDAPAuthenticationTypes: LdapAuthenticationEnumType[] = ['PLAIN', 'NTLMv2']
 export const LDAPTransportTypes: LdapTransportType[] = ['CLEAR', 'LDAPS', 'STARTTLS']
 
 export const authProcessTypeList: AllAuthLogDataType['processType'][] = ['REGISTRATION', 'AUTHENTICATION', 'POLICY']

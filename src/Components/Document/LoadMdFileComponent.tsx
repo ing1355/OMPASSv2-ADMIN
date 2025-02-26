@@ -31,14 +31,7 @@ const LoadMdFileComponent = () => {
     const category = useParams().category as DocumentCategoryType
     const startedUrl = useLocation().pathname.startsWith('/docs/user') ? '/docs/user' : '/docs'
     const navigate = useNavigate()
-    const transformImgSrc = (imgSrc: string | undefined) => {
-        // 상대 경로에서 'test.png'를 '/docsImage/.../test.png' 형식으로 변환
-        if (imgSrc?.startsWith('./')) {
-            console.log(imgSrc)
-            //   return `/docsImage//${fileName}`;
-        }
-        return imgSrc;
-    };
+    
     async function fetchMarkdownFile(url: string) {
         try {
             // GET 요청으로 원격 파일 읽기
@@ -100,7 +93,7 @@ const LoadMdFileComponent = () => {
             fetchMTime(`${startedUrl}/${category}/${type}/modifyTime`)
         }
     }, [type])
-
+    
     return <>
         {
             isReady && <div>
@@ -117,7 +110,7 @@ const LoadMdFileComponent = () => {
         {data && <MarkdownPreview source={data} style={{
             padding: '16px 32px 128px 32px',
             overflowY: 'auto',
-        }} />}
+        }}/>}
     </>
 }
 

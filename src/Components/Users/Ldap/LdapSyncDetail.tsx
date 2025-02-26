@@ -31,7 +31,11 @@ const LdapSyncDetail = () => {
             port: 0
         },
         baseDn: '',
-        ldapAuthenticationType: 'PLAIN',
+        ldapAuthenticationType: {
+            type: 'PLAIN',
+            ntlmDomain: null,
+            ntlmWorkstation: null
+        },
         ldapTransportType: 'CLEAR'
     })
     const navigate = useNavigate()
@@ -194,11 +198,15 @@ const LdapSyncDetail = () => {
             <CustomInputRow title={<FormattedMessage id="LDAP_AUTH_TYPE_LABEL" />}>
                 <div className="ldap-authentication-type-container">
                     {
-                        LDAPAuthenticationTypes.map((_, ind) => <Input key={ind} className="st1" type="radio" checked={params.ldapAuthenticationType === _} onChange={e => {
+                        LDAPAuthenticationTypes.map((_, ind) => <Input key={ind} className="st1" type="radio" checked={params.ldapAuthenticationType.type === _} onChange={e => {
                             if (e.target.checked) {
                                 setParams({
                                     ...params,
-                                    ldapAuthenticationType: _
+                                    ldapAuthenticationType: {
+                                        type: _,
+                                        ntlmDomain: null,
+                                        ntlmWorkstation: null
+                                    }
                                 })
                             }
                         }} label={_} />)

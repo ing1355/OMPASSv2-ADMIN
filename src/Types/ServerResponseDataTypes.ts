@@ -108,7 +108,12 @@ type UserHierarchyDataRpUserServerResponseType = DefaultUserHierarchyDataRpUserT
 }
 
 type LdapTransportType = "CLEAR" | "LDAPS" | "STARTTLS"
-type LdapAuthenticationType = "PLAIN" | "NTLMv2"
+type LdapAuthenticationEnumType = "PLAIN" | "NTLMv2"
+type LdapAuthenticationType = {
+  type: LdapAuthenticationEnumType
+  ntlmDomain?: string | null
+  ntlmWorkstation?: string | null
+}
 type LdapProxyServerDataType = {
   address: string
   port: number

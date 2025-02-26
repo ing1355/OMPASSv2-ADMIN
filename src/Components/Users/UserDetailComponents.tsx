@@ -267,8 +267,9 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
     const isBrowser = (['DEFAULT', 'ADMIN', 'MS_ENTRA_ID', ''] as ApplicationDataType['type'][]).includes(application.type)
     const isWindow = application.type === 'WINDOWS_LOGIN'
     const isPAM = application.type === 'LINUX_LOGIN'
+    const isRadius = application.type === 'RADIUS'
     return <>
-        {!isPAM && <UserDetailInfoContentItem imgSrc={imgSrcByOS(os?.name!)} title={<FormattedMessage id="USER_DETAIL_OS_LABEL" />} content={`${os?.name} ${os?.version}`} />}
+        {!isPAM && !isRadius && <UserDetailInfoContentItem imgSrc={imgSrcByOS(os?.name!)} title={<FormattedMessage id="USER_DETAIL_OS_LABEL" />} content={`${os?.name} ${os?.version}`} />}
         {isPAM && <>
             <div className="user-detail-info-device-info-content-item linux">
                 <div className='linux-target-text'>Client</div>

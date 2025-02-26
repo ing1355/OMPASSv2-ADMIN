@@ -59,9 +59,9 @@ const App: React.FC = () => {
     window.addEventListener('resize', documentHeight)
     documentHeight()
 
-    setInterval(() => {
-      console.log('getStorageAuth : ', getStorageAuth())
-    }, 1000);
+    // setInterval(() => {
+    //   console.log('getStorageAuth : ', getStorageAuth())
+    // }, 1000);
     return () => {
       window.removeEventListener('resize', documentHeight)
     }
