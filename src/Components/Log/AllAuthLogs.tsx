@@ -1,5 +1,5 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
-import { applicationTypes, AuthenticationProcessTypes, authenticatorList, authFailReasonList, getApplicationTypeLabel, logAuthPurposeList } from "Constants/ConstantValues"
+import { applicationTypes, authenticatorList, authFailReasonList, getApplicationTypeLabel, logAuthPurposeList } from "Constants/ConstantValues"
 import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions"
 import { useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"

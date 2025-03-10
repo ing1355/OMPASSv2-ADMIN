@@ -9,7 +9,7 @@ import Button from "Components/CommonCustomComponents/Button";
 
 type CustomModalProps = ModalProps & {
     type?: 'info' | 'warning'
-    cancelText?: string
+    cancelText?: React.ReactNode
     okText?: React.ReactNode
     noClose?: boolean
     okCallback?: (e?: React.FormEvent<HTMLFormElement>) => Promise<any>

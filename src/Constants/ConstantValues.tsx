@@ -118,12 +118,7 @@ export const menuDatas = (role: userRoleType, isOnPremise: boolean): menuDataTyp
             whiteImg: versionManagementMenuIconWhite,
             blackImg: versionManagementMenuIconBlack
         },
-        isOnPremise ? {
-            label: 'LICENSE_MANAGEMENT',
-            route: '/License',
-            whiteImg: licenseManagementMenuIconWhite,
-            blackImg: licenseManagementMenuIconBlack
-        } : {
+        {
             label: 'BILLING_MANAGEMENT',
             route: '/Billing',
             whiteImg: billingMenuIconWhite,
@@ -150,7 +145,7 @@ export const applicationTypes: ApplicationDataType['type'][] = appTypes
 export const AuthenticationProcessTypes: ProcessTypeType[] = ["POLICY", "REGISTRATION", "AUTHENTICATION"]
 export const HttpMethodTypes: HttpMethodType[] = ["POST", "PUT", "DELETE"]
 
-export const getApplicationTypeLabel = (type: ApplicationDataType['type']) => type ? <FormattedMessage id={type + '_APPLICATION_TYPE'} /> : ""
+export const getApplicationTypeLabel = (type: LocalApplicationTypes) => type ? <FormattedMessage id={type + '_APPLICATION_TYPE'} /> : ""
 
 export const UserSignupMethod: {
     [key in UserSignUpMethodType]: UserSignUpMethodType

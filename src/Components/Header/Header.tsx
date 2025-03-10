@@ -81,7 +81,8 @@ const Header = () => {
           >
             <div
               style={{
-                display: 'flex'
+                display: 'flex',
+                cursor: 'pointer'
               }}
               onClick={() => {
                 if(isMobile) {

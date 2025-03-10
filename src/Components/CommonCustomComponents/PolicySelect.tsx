@@ -11,7 +11,7 @@ type PolicySelectProps = {
     selectedPolicy: PolicyListDataType['id']
     setSelectedPolicy: SetStateType<PolicyListDataType['id']>
     needSelect?: boolean
-    applicationType?: ApplicationDataType['type']
+    applicationType?: LocalApplicationTypes
     datas?: PolicyListDataType[]
 }
 

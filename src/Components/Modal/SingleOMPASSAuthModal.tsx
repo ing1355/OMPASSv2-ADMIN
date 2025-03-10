@@ -53,12 +53,13 @@ const SingleOMPASSAuthModal = ({ opened, onCancel, successCallback, purpose }: S
     return <CustomModal title={<FormattedMessage id="OMPASS_MODULE_MODAL_TITLE_LABEL"/>} open={opened} onCancel={() => {
         _onCancel()
     }} buttonsType="small" noClose onOpen={() => {
-        OMPASSAuth.startAuth({ type: 'single', purpose }, ({ url, ntp, sessionExpiredAt, sourceNonce }) => {
+        OMPASSAuth.startAuth({ type: 'single', purpose }, ({ url, ntp, sessionExpiredAt, sourceNonce, sessionId }) => {
             const ntpTime = dayjs.utc(parseInt(ntp))
             const expireTime = dayjs.utc(sessionExpiredAt)
+            
             setSessionData({
                 url,
-                param: sourceNonce
+                param: sessionId ?? sourceNonce ?? ""
             })
             setRemainTime(expireTime.diff(ntpTime, 'seconds'))
             if (timeTimerRef.current) {

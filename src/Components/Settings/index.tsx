@@ -5,7 +5,7 @@ import { GetPortalSettingsDataFunc, UpdatePortalSettingsDataFunc } from "Functio
 import { useLayoutEffect, useState } from "react"
 import './Settings.css'
 import { timeZoneNames, UserSignupMethod } from "Constants/ConstantValues"
-import { message, Select, Switch } from "antd"
+import { message, Switch } from "antd"
 import { convertBase64FromClientToServerFormat } from "Functions/GlobalFunctions"
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect"
 import Button from "Components/CommonCustomComponents/Button"

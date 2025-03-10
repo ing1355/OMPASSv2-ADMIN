@@ -32,6 +32,7 @@ import { PasscodeAddComponent } from './PasscodeComponents'
 import PairOMPASSAuthModal from 'Components/Modal/PairOMPASSAuthModal'
 import useFullName from 'hooks/useFullName'
 import EmailChangeBtn from './EmailChangeBtn'
+import NewDeviceBtn from './NewDeviceBtn'
 
 const initModifyValues: UserDataModifyLocalValuesType = {
     name: {
@@ -229,7 +230,7 @@ const UserDetail = ({ }) => {
             setModifyValues(initModifyValues)
         }
     }, [isModify, userData])
-
+    
     const columnsByRole = (id: RPUserDetailAuthDataType['id']) => {
         let columns: CustomTableColumnType<PasscodeAuthenticatorDataType>[] = [
             {
@@ -544,6 +545,9 @@ const UserDetail = ({ }) => {
                             setUserData({ ...userData!, status: 'WAIT_INIT_PASSWORD' })
                         }} />}
                     </>} />}
+                    {authInfoDatas.length > 0 && <UserInfoRow value={<NewDeviceBtn onComplete={() => {
+                        GetDatas()
+                    }}/>} title='OMPASS_DEVICE_CHANGE_LABEL'/>}
                 </div>
             </div>
             {authInfoDatas.map((_, index) => <Fragment key={index}>

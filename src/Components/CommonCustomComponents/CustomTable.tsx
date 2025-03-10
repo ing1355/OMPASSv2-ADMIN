@@ -101,7 +101,7 @@ const CustomTable = <T extends {
     const { formatMessage } = useIntl()
     const { customPushRoute } = useCustomRoute()
 
-    const createParams = ({page, size}: {
+    const createParams = ({ page, size }: {
         page: number
         size: number
     }) => {
@@ -128,6 +128,7 @@ const CustomTable = <T extends {
                 result.filterOptions = temp
             }
         }
+
         if (!result.filterOptions) {
             setFilterValues(filterValues.map(_ => ({
                 key: _.key,
@@ -149,10 +150,10 @@ const CustomTable = <T extends {
         else page = 1
         if (sizeParams) size = parseInt(sizeParams)
         else size = userSelectPageSize()
-        
+
         setPageNum(page)
         setTableSize(size)
-        const result = createParams({page, size})
+        const result = createParams({ page, size })
         if (searchParams.get('searchType')) {
             result.searchType = searchParams.get('searchType')!
             result.searchValue = searchParams.get('searchValue')!
@@ -161,8 +162,8 @@ const CustomTable = <T extends {
             setSearchType((searchOptions && searchOptions[0].key) || "")
             setSearchValue('')
         }
-        if(onSearchChange) {
-            if(!resultRef.current || (JSON.stringify(resultRef.current) !== JSON.stringify(result))) {
+        if (onSearchChange) {
+            if (!resultRef.current || (JSON.stringify(resultRef.current) !== JSON.stringify(result))) {
                 onSearchChange(result)
             }
         }
@@ -210,7 +211,7 @@ const CustomTable = <T extends {
 
     useEffect(() => {
         if (refresh && onSearchChange) {
-            const result = createParams({page: pageNum, size: tableSize})
+            const result = createParams({ page: pageNum, size: tableSize })
             onSearchChange(result)
         }
     }, [refresh])
@@ -250,6 +251,7 @@ const CustomTable = <T extends {
                 </Button>
                 <Button className="st4" onClick={() => {
                     searchCallback(1, 10, undefined, true)
+                    setTemp(undefined)
                 }} icon={resetIcon}>
                     <FormattedMessage id="NORMAL_RESET_LABEL" />
                 </Button>
@@ -301,13 +303,12 @@ const CustomTable = <T extends {
                                         {
                                             key: 'endDate',
                                             value: convertedDate.endDate
-                                        }
-                                        ]
+                                        }]
                                         setFilterValues(result)
                                         searchCallback(pageNum, tableSize, result)
                                     }} />}>
                                 <div className="custom-table-filter-icon">
-                                    <img src={(filterValues.find(f => f.key === 'startDate') && filterValues.find(f => f.key === 'endDate')) ? filterIcon : filterDefaultIcon} />
+                                    <img src={(filterValues.find(f => f.key === 'startDate' && f.value) && filterValues.find(f => f.key === 'endDate' && f.value)) ? filterIcon : filterDefaultIcon} />
                                 </div>
                             </CustomDropdown> : _.filterOption && <CustomDropdown
                                 value={filterValues.find(values => values.key === _.filterKey)?.value}

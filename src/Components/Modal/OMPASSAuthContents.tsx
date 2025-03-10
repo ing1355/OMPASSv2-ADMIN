@@ -21,9 +21,11 @@ const OMPASSAuthContents = ({ isRegister, role, name, username, status, sessionD
     const getFullName = useFullName()
     const [qrView, setQrView] = useState(false)
     const qrData: QRDataType<QRDataDefaultBodyType> = {
-        type: 'DEFAULT',
-        body: sessionData
+        // type: 'DEFAULT',
+        type: 'DEVICE_CHANGE',
+        body: {...sessionData, param: 'test'}
     }
+    
     return <div className="ompass-auth-content-container">
         <div className="ompass-auth-content-title">
             <div className="ompass-auth-content-title-text">
@@ -43,7 +45,7 @@ const OMPASSAuthContents = ({ isRegister, role, name, username, status, sessionD
             </div>}
             {
                 ((isRegister || qrView) && !isComplete) ? <div className="ompass-auth-qr-code-container">
-                    {(isRegister && !qrData.body.url) ? <CustomLoading /> : <QRCode data={qrData} size={isRegister ? 160 : 100} />}
+                    {(isRegister && !qrData.body.url) ? <CustomLoading /> : <QRCode data={qrData} size={isRegister ? 160 : 120} />}
                 </div> : <>
                     <div className="ompass-auth-content-progress-icon">
                         {

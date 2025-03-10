@@ -51,8 +51,8 @@ const Main = () => {
                 }}
                 onMouseLeave={handleMouseLeave}
                 onClick={() => {
-                  if (!isDev && data.route === '/License') {
-                    message.info(formatMessage({ id: 'PREPARING_MSG' }))
+                  if (subdomainInfob.serverType === 'ON_PREMISE' && data.route === '/Billing') {
+                    message.info(formatMessage({ id: 'CLOUD_ENVIRONMENT_ONLY_MENU_LABEL' }))
                   } else {
                     navigate(data.route);
                   }

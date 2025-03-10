@@ -31,7 +31,7 @@ const AuthPolicyDetail = () => {
     const { goBack } = useCustomRoute()
     const isAdd = !uuid
     const [authenticatorPolicies, setAuthenticatorPolicies] = useState<PolicyDataType['enableAuthenticators']>(['OMPASS', 'OTP', 'PASSCODE', 'WEBAUTHN'])
-    const [selectedApplicationType, setSelectedApplicationType] = useState<ApplicationDataType['type'] | ''>(isAdd ? '' : 'DEFAULT')
+    const [selectedApplicationType, setSelectedApplicationType] = useState<LocalApplicationTypes>(isAdd ? '' : 'DEFAULT')
     const [policyName, setPolicyName] = useState('')
     const [dataLoading, setDataLoading] = useState(!(!uuid))
     const [initEvent, setInitEvent] = useState(false)
@@ -49,12 +49,12 @@ const AuthPolicyDetail = () => {
     const { formatMessage } = useIntl()
     const navigate = useNavigate()
     const isDefaultPolicy = detailData?.policyType === 'DEFAULT'
-    const passcodeUsed = !isDefaultPolicy && selectedApplicationType ? !(["ALL", "RADIUS"] as ApplicationDataType['type'][]).includes(selectedApplicationType) : false
-    const otpUsed = !isDefaultPolicy && selectedApplicationType ? !(["RADIUS"] as ApplicationDataType['type'][]).includes(selectedApplicationType) : false
-    const browserUsed = !isDefaultPolicy && selectedApplicationType ? (["ADMIN", "DEFAULT", "REDMINE", "MS_ENTRA_ID"] as ApplicationDataType['type'][]).includes(selectedApplicationType) : false
+    const passcodeUsed = !isDefaultPolicy && selectedApplicationType ? !(["ALL", "RADIUS"] as LocalApplicationTypes[]).includes(selectedApplicationType) : false
+    const otpUsed = !isDefaultPolicy && selectedApplicationType ? !(["RADIUS"] as LocalApplicationTypes[]).includes(selectedApplicationType) : false
+    const browserUsed = !isDefaultPolicy && selectedApplicationType ? (["ADMIN", "DEFAULT", "REDMINE", "MS_ENTRA_ID"] as LocalApplicationTypes[]).includes(selectedApplicationType) : false
     const webauthnUsed = !isDefaultPolicy && browserUsed
-    const locationUsed = !isDefaultPolicy && (selectedApplicationType ? (["ADMIN", "DEFAULT", "WINDOWS_LOGIN", "REDMINE", 'LINUX_LOGIN', 'RADIUS', 'MAC_LOGIN', 'MS_ENTRA_ID'] as ApplicationDataType['type'][]).includes(selectedApplicationType) : false)
-    const authenticatorsUsed = !isDefaultPolicy && selectedApplicationType ? !(["ALL", "RADIUS"] as ApplicationDataType['type'][]).includes(selectedApplicationType) : false
+    const locationUsed = !isDefaultPolicy && (selectedApplicationType ? (["ADMIN", "DEFAULT", "WINDOWS_LOGIN", "REDMINE", 'LINUX_LOGIN', 'RADIUS', 'MAC_LOGIN', 'MS_ENTRA_ID'] as LocalApplicationTypes[]).includes(selectedApplicationType) : false)
+    const authenticatorsUsed = !isDefaultPolicy && selectedApplicationType ? !(["ALL", "RADIUS"] as LocalApplicationTypes[]).includes(selectedApplicationType) : false
     const typeItems = applicationTypes.map(_ => ({
         key: _,
         label: getApplicationTypeLabel(_)

@@ -12,7 +12,6 @@ const LdapManagement = () => {
     const [tableData, setTableData] = useState<LdapConfigDataType[]>([])
     const [totalCount, setTotalCount] = useState<number>(0);
     const [dataLoading, setDataLoading] = useState(false)
-    const [addOpen, setAddOpen] = useState(false)
     const navigate = useNavigate()
 
     const GetDatas = async (params: CustomTableSearchParams) => {

@@ -6,11 +6,11 @@ import { message } from "antd";
 import { downloadFileByLink } from "Functions/GlobalFunctions";
 
 const ApplicationAgentDownload = ({ type }: {
-    type: ApplicationDataType['type']
+    type: LocalApplicationTypes
 }) => {
     const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const { formatMessage } = useIntl()
-    const needAgent = (['WINDOWS_LOGIN', 'LINUX_LOGIN', 'RADIUS'] as ApplicationDataType['type'][]).includes(type)
+    const needAgent = (['WINDOWS_LOGIN', 'LINUX_LOGIN', 'RADIUS'] as LocalApplicationTypes[]).includes(type)
     const getLabelKeyByType = () => {
         if (type === 'WINDOWS_LOGIN') {
             return 'WINDOWS_LOGIN_AGENT_DOWNLOAD_LABEL'

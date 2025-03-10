@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from "react-router"
 import Login from "./Login"
 import AccountRecovery from "./AccountRecovery"
 import ResetPassword from "./ResetPassword"
-import { isAndroid, isMobile } from "react-device-detect"
+import { isMobile } from "react-device-detect"
 import Button from "Components/CommonCustomComponents/Button"
 import { FormattedMessage, useIntl } from "react-intl"
 import downloadIconWhite from '../../assets/downloadIconWhite.png';

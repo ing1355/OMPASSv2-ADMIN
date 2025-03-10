@@ -34,11 +34,9 @@ const SecondStep = ({ completeCallback }: {
     const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const [isIdAlert, setIsIdAlert] = useState(true)
     const [isPasswordAlert, setIsPasswordAlert] = useState(true)
-    const [isPasswordConfirmAlert, setIsPasswordConfirmAlert] = useState(true)
     const [isNameAlert1, setIsNameAlert1] = useState(true)
     const [isNameAlert2, setIsNameAlert2] = useState(true)
     const [isEmailAlert, setIsEmailAlert] = useState(true)
-    const [isPhoneAlert, setIsPhoneAlert] = useState(true)
     const [idExist, setIdExist] = useState<boolean>(true)
     const [emailVerify, setEmailVerify] = useState(false)
     const [verifyCode, setVerifyCode] = useState('')
@@ -241,13 +239,12 @@ const SecondStep = ({ completeCallback }: {
                     value={inputPasswordConfirm}
                     rules={[
                         {
-                            regExp: (val) => val != inputPassword,
+                            regExp: (val) => val !== inputPassword,
                             msg: <FormattedMessage id="PASSWORD_CONFIRM_CHECK" />
                         }
                     ]}
                     valueChange={(value, isAlert) => {
                         setInputPasswordConfirm(value)
-                        setIsPasswordConfirmAlert(isAlert || false)
                     }}
                 />
             </InputRow>
@@ -387,11 +384,6 @@ const SecondStep = ({ completeCallback }: {
                     valueChange={value => {
                         value = autoHypenPhoneFun(value);
                         setInputPhone(value)
-                        if (value.length < 12) {
-                            setIsPhoneAlert(true);
-                        } else {
-                            setIsPhoneAlert(false);
-                        }
                     }}
                 />
             </InputRow>

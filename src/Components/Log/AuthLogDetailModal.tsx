@@ -40,7 +40,6 @@ const TextComponent = ({ title, content }: {
 }
 
 const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
-    console.log(data)
     const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas);
     const { ompassData, policyAtTimeOfEvent } = data || {}
     const { rpUser, application, sessionExpiredAt, createdAt, policyValidationResult } = ompassData || {}

@@ -27,7 +27,7 @@ const GroupDetail = () => {
     const [selectedPolicy, setSelectedPolicy] = useState<PolicyListDataType['id']>('')
     const [selectedUsers, setSelectedUsers] = useState<UserHierarchyDataRpUserType['id'][]>([])
     const [selectedView, setSelectedView] = useState<UserGroupViewType>('portal')
-    const [selectedApplicationType, setSelectedApplicationType] = useState<ApplicationDataType['type']>('')
+    const [selectedApplicationType, setSelectedApplicationType] = useState<LocalApplicationTypes>('')
     const [dataLoading, setDataLoading] = useState(false)
     const [policiesData, setPoliciesData] = useState<PolicyListDataType[]>([])
     const [refresh, setRefresh] = useState(false)

@@ -76,13 +76,13 @@ const ApplicationDetail = () => {
     const [sureReset, setSureReset] = useState(false)
     const [hasWindowsLogin, setHasWindowsLogin] = useState(false)
     const [radiusData, setRadiusData] = useState<RadiusDataType>()
-    const [applicationType, setApplicationType] = useState<ApplicationDataType['type'] | ''>('')
+    const [applicationType, setApplicationType] = useState<LocalApplicationTypes>('')
     const navigate = useNavigate()
     const { formatMessage } = useIntl()
     const { uuid } = useParams()
     const isAdd = !uuid
-    const needDomains: ApplicationDataType['type'][] = ["DEFAULT", "ADMIN", "REDMINE"]
-    const passwordUsed: ApplicationDataType['type'][] = ['WINDOWS_LOGIN', 'LINUX_LOGIN']
+    const needDomains: LocalApplicationTypes[] = ["DEFAULT", "ADMIN", "REDMINE"]
+    const passwordUsed: LocalApplicationTypes[] = ['WINDOWS_LOGIN', 'LINUX_LOGIN']
     const isRedmine = applicationType === 'REDMINE'
     const typeItems = applicationTypes.map(_ => ({
         key: _,

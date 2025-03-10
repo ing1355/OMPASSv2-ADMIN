@@ -1,6 +1,4 @@
-import axios from "axios";
-import { DeviceInfo } from "Functions/GetDeviceInfo";
-import React, { Component, ErrorInfo, ReactNode } from "react";
+import { Component, ErrorInfo, ReactNode } from "react";
 
 interface Props {
     children: ReactNode;

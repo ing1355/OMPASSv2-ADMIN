@@ -57,7 +57,7 @@ const useOMPASS = () => {
                 isTest: isDev,
                 purpose: purpose,
                 applicationId: applicationId,
-                targetUserId: type === 'single' ? '' : targetUserId,
+                targetUserId,
                 loginDeviceInfo: {
                     os,
                     browser,

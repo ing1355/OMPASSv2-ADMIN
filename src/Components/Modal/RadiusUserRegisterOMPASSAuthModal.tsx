@@ -57,7 +57,7 @@ const RadiusUserRegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, 
             const expireTime = dayjs.utc(sessionExpiredAt)
             setSessionData({
                 url,
-                param: sourceNonce
+                param: sourceNonce ?? ""
             })
             setRemainTime(expireTime.diff(ntpTime, 'seconds'))
             if (timeTimerRef.current) {

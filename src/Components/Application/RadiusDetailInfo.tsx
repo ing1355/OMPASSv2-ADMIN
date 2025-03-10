@@ -1,9 +1,8 @@
-import { message, Switch } from "antd"
+import { message } from "antd"
 import BottomLineText from "Components/CommonCustomComponents/BottomLineText"
 import Button from "Components/CommonCustomComponents/Button"
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import Input from "Components/CommonCustomComponents/Input"
-import { useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 import { useNavigate, useParams } from "react-router"
 
@@ -12,7 +11,7 @@ type RadiusDetailInfoProps = {
 }
 
 const RadiusDetailInfo = ({ data }: RadiusDetailInfoProps) => {
-    const { host, secretKey, authenticationMethod, authenticationPort, authenticatorAttribute, accountingPort } = data || {}
+    const { host, secretKey, authenticationPort, accountingPort } = data || {}
     const { formatMessage } = useIntl()
     const noRadiusConnectedMsg = formatMessage({id:'RADIUS_NO_CONNECTED_MSG'})
     const navigate = useNavigate()

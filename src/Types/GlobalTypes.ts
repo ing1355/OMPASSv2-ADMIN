@@ -1,5 +1,5 @@
 type LanguageType = 'KR' | 'EN' | 'JP'
-type AuthPurposeType = "ROLE_SWAPPING_SOURCE" | "ROLE_SWAPPING_TARGET" | "ADMIN_2FA_FOR_APPLICATION_DELETION" | "ADMIN_2FA_FOR_SECRET_KEY_UPDATE" | "RADIUS_REGISTRATION"
+type AuthPurposeType = "ROLE_SWAPPING_SOURCE" | "ROLE_SWAPPING_TARGET" | "ADMIN_2FA_FOR_APPLICATION_DELETION" | "ADMIN_2FA_FOR_SECRET_KEY_UPDATE" | "RADIUS_REGISTRATION" | "DEVICE_CHANGE"
 type LogAuthPurposeType = AuthPurposeType | "ADD_OTHER_AUTHENTICATOR" | "AUTH_LOGIN" | "REG_LOGIN"
 type AuthPurposeForApiType = 'ROLE_SWAPPING' | AuthPurposeType
 type AuthenticationLogType = "ALLOW" | "DENY" | "ALLOW_OUT_OF_SCHEDULE"
@@ -42,6 +42,8 @@ type OSInfoType = {
     name: OsNamesType
     version: string
 }
+
+type ClientTypeType = "OMPASS_APP" | "OMPASS_APP_SESSION_INIT" | "OMPASS_APP_SESSION_REFRESH" | "OMPASS_APP_REG" | "OMPASS_APP_AUTH" | "BROWSER" | "DESKTOP_APP" | "WINDOWS_LOGIN" | "OMPASS_PROXY" | "LINUX_LOGIN" | "PORTAL_ENHANCED_AUTH"
 
 type LoginDeviceInfoDataType = {
     os?: OSInfoType
@@ -212,11 +214,14 @@ type PasscodeListDataType = {
     authenticationInfoId: RPUserDetailAuthDataType['id']
 }
 
+type ApplicationTypes = "DEFAULT" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "ADMIN" | "RADIUS" | "REDMINE" | 'MS_ENTRA_ID'
+type LocalApplicationTypes = ApplicationTypes | 'ALL' | ''
+
 type DefaultApplicationDataType = {
     id: string
     clientId: string
     // type: "DEFAULT" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "ADMIN" | "RADIUS" | "GOOROOM_LOGIN" | "REDMINE" | "ALL"
-    type: "DEFAULT" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "ADMIN" | "RADIUS" | "REDMINE" | 'MS_ENTRA_ID' | "ALL" | ''
+    type: ApplicationTypes
     name: string
     domain?: string
     description?: string
@@ -258,7 +263,7 @@ type ApplicationDataParamsType = {
     description: ApplicationDataType['description']
     isPasswordlessEnabled: ApplicationDataType['isPasswordlessEnabled']
     domain?: ApplicationDataType['domain']
-    type?: ApplicationDataType['type']
+    type?: LocalApplicationTypes
     linuxPamBypass?: PAMPassDataType
 }
 
@@ -355,7 +360,7 @@ type DefaultPolicyDataType = {
     policyType: 'DEFAULT' | 'CUSTOM'
     enableAuthenticators: AuthenticatorPolicyType[]
     description?: string
-    applicationType: ApplicationDataType['type']
+    applicationType: LocalApplicationTypes
 }
 
 type RestrictionNoticeMethodType = 'EMAIL' | 'PUSH'
@@ -375,7 +380,7 @@ type PolicyListDataType = {
     policyType: DefaultPolicyDataType['policyType']
     description: string
     createdAt: string
-    applicationType?: ApplicationDataType['type']
+    applicationType?: LocalApplicationTypes
 }
 type PoliciesListParamsType = GeneralParamsType & {
     policyId?: string
@@ -539,7 +544,7 @@ type UserHierarchyDataGroupViewDataType = {
 }
 
 type UserGroupPolicyType = {
-    applicationType: ApplicationDataType['type']
+    applicationType: LocalApplicationTypes
     policyId: PolicyListDataType['id']
 }
 
@@ -746,13 +751,14 @@ type OMPASSAuthStartResponseDataType = {
     ntp: string
     url: string
     pollingKey: string
-    sourceNonce: string
+    sourceNonce?: string
     targetNonce?: string
+    sessionId?: string
     sessionExpiredAt: string
 }
 
 type QRDataType<T> = {
-    type: "DEFAULT"
+    type: "DEFAULT" | 'DEVICE_CHANGE'
     body: T
 }
 

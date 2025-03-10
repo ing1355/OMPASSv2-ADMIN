@@ -77,7 +77,6 @@ const LocaleTexts = {
     APPLICATION_MODIFY: 'Application Detail Information',
     APPLICATION_DELETE: 'Application Delete',
     APPLICATION_LIST: 'Application List',
-    LICENSE_MANAGEMENT: 'License',
     BILLING_MANAGEMENT: 'Billing',
     BILLING_DETAIL: 'Billing Detail',
     SETTINGS_MANAGEMENT: 'Settings',
@@ -449,9 +448,12 @@ const LocaleTexts = {
     MS_ENTRA_ID_AUTHORIZE_LABEL: 'Authorize',
     MS_ENTRA_ID_TENANT_EMPTY_VALUE: 'You can check after authorize',
     MS_ENTRA_ID_DETAIL_INFO_LABEL: 'Microsoft Entra ID Information',
-    LICENSE_REQUEST_FILE_DOWNLOAD_LABEL: 'License Request File Download',
-    LICENSE_FILE_UPLOAD_LABEL: 'License File Upload',
-    APK_DOWNLOAD_LABEL: 'APK Download'
+    APK_DOWNLOAD_LABEL: 'APK Download',
+    OMPASS_DEVICE_CHANGE_LABEL: 'Device Change',
+    OMPASS_DEVICE_CHANGE_NEW_DEVICE_LABEL: 'New Device',
+    OMPASS_DEVICE_CHANGE_MODAL_TITLE: 'Device Change',
+    OMPASS_DEVICE_CHANGE_MODAL_SUBSCRIPTION: 'After the change, OMPASS authentication for the existing device registered with the current tenant will be revoked.',
+    CLOUD_ENVIRONMENT_ONLY_MENU_LABEL: 'This menu is only supported in the cloud environment.',
   },
   KR: {
     LOGIN: '로그인',
@@ -531,7 +533,6 @@ const LocaleTexts = {
     APPLICATION_MODIFY: '애플리케이션 상세 정보',
     APPLICATION_DELETE: '애플리케이션 삭제',
     APPLICATION_LIST: '애플리케이션',
-    LICENSE_MANAGEMENT: '라이선스',
     BILLING_MANAGEMENT: '요금',
     BILLING_DETAIL: '요금 상세',
     SETTINGS_MANAGEMENT: '설정',
@@ -903,9 +904,12 @@ const LocaleTexts = {
     MS_ENTRA_ID_AUTHORIZE_LABEL: '권한 획득',
     MS_ENTRA_ID_TENANT_EMPTY_VALUE: '권한 획득 이후 확인 가능합니다',
     MS_ENTRA_ID_DETAIL_INFO_LABEL: 'Microsoft Entra ID 정보',
-    LICENSE_REQUEST_FILE_DOWNLOAD_LABEL: '라이선스 요청 파일 다운로드',
-    LICENSE_FILE_UPLOAD_LABEL: '라이선스 파일 업로드',
-    APK_DOWNLOAD_LABEL: 'APK 다운로드'
+    APK_DOWNLOAD_LABEL: 'APK 다운로드',
+    OMPASS_DEVICE_CHANGE_LABEL: '등록 기기 변경',
+    OMPASS_DEVICE_CHANGE_NEW_DEVICE_LABEL: '새 기기로 변경',
+    OMPASS_DEVICE_CHANGE_MODAL_TITLE: '등록 기기 변경',
+    OMPASS_DEVICE_CHANGE_MODAL_SUBSCRIPTION: '변경 후, 현재 테넌트에 등록했던 기존 기기의 OMPASS 인증은 폐기됩니다.',
+    CLOUD_ENVIRONMENT_ONLY_MENU_LABEL: '클라우드 환경에서 지원되는 메뉴 입니다.',
   }
 }
 

@@ -16,7 +16,6 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
     const [inputPassword, setInputPassword] = useState('')
     const [inputPasswordConfirm, setInputPasswordConfirm] = useState('')
     const [passwordAlert, setPasswordAlert] = useState(false)
-    const [passwordConfirmAlert, setPasswordConfirmAlert] = useState(false)
     const [mailSendLoading, setMailSendLoading] = useState(false)
     const [emailCodeSend, setEmailCodeSend] = useState(false)
     const [inputUsername, setInputUsername] = useState('')
@@ -27,7 +26,6 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
     const [mailCount, setMailCount] = useState(0)
     const [codeConfirm, setCodeConfirm] = useState(false)
     const [token, setToken] = useState('')
-    const [randomPasswordCheck, setRandomPasswordCheck] = useState(false)
     const [searchParams] = useSearchParams()
     const type = searchParams.get('type') as RecoverySendMailParamsType['type']
 
@@ -49,19 +47,17 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
     const resetRequest = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (codeConfirm) {
-            if(!randomPasswordCheck) {
-                if (!inputPassword) {
-                    inputPasswordRef.current?.focus()
-                    return message.error(formatMessage({id:'PLEASE_INPUT_PASSWORD_MSG'}))
-                }
-                if (passwordAlert) {
-                    inputPasswordRef.current?.focus()
-                    return message.error(formatMessage({id:'PASSWORD_CHECK'}))
-                }
-                if (!inputPasswordConfirm) {
-                    inputPasswordConfirmRef.current?.focus()
-                    return message.error(formatMessage({id:'PLEASE_INPUT_PASSWORD_CONFIRM_MSG'}))
-                }
+            if (!inputPassword) {
+                inputPasswordRef.current?.focus()
+                return message.error(formatMessage({id:'PLEASE_INPUT_PASSWORD_MSG'}))
+            }
+            if (passwordAlert) {
+                inputPasswordRef.current?.focus()
+                return message.error(formatMessage({id:'PASSWORD_CHECK'}))
+            }
+            if (!inputPasswordConfirm) {
+                inputPasswordConfirmRef.current?.focus()
+                return message.error(formatMessage({id:'PLEASE_INPUT_PASSWORD_CONFIRM_MSG'}))
             }
             ResetPasswordFunc(inputPassword, token, () => {
                 message.success(formatMessage({id:'PASSWORD_INIT_SUCCESS_MSG'}))
@@ -126,7 +122,6 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                         type="password"
                         placeholder={formatMessage({id:'PASSWORD_PLACEHOLDER'})}
                         ref={inputPasswordRef}
-                        disabled={randomPasswordCheck}
                         valueChange={(value, alert) => {
                             setInputPassword(value)
                             setPasswordAlert(alert)
@@ -147,7 +142,6 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                         noGap
                         type="password"
                         placeholder={formatMessage({id:'PASSWORD_CONFIRM_PLACEHOLDER'})}
-                        disabled={randomPasswordCheck}
                         rules={[
                             {
                                 regExp: (val) => val != inputPassword,
@@ -157,7 +151,6 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                         ref={inputPasswordConfirmRef}
                         valueChange={(value, alert) => {
                             setInputPasswordConfirm(value)
-                            // setPasswordConfirmAlert(alert)
                         }}
                     />
                 </div>}

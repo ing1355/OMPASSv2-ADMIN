@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,9 +28,7 @@ import Dashboard from 'Components/Dashboard/Dashboard';
 import LoginPage from 'Components/Login';
 import SecurityQuestionPage from 'Components/Login/SecurityQuestionPage';
 import EmailChangeVerification from 'Components/Users/EmailChangeVerification';
-import License from 'Components/License';
 import Document from 'Components/Document';
-import { getStorageAuth } from 'Functions/GlobalFunctions';
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
@@ -100,7 +98,6 @@ const App: React.FC = () => {
                 <Route path='/UserManagement/*' element={<Users />} />
                 <Route path='/PasscodeManagement' element={<PasscodeManagement />} />
                 <Route path='/Billing' element={<Billing />} />
-                <Route path='/License' element={<License />} />
                 <Route path='/Applications/*' element={<Application />} />
                 <Route path='/Policies/*' element={<Policies />} />
                 <Route path='/Groups/*' element={<Groups />} />

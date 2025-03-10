@@ -61,7 +61,7 @@ const PairOMPASSAuthModal = ({ opened, onCancel, successCallback, userData }: Pa
             const expireTime = dayjs.utc(sessionExpiredAt)
             setSessionData({
                 url,
-                param: sourceNonce
+                param: sourceNonce ?? ""
             })
             setRemainTime(expireTime.diff(ntpTime, 'seconds'))
             if (timeTimerRef.current) {
