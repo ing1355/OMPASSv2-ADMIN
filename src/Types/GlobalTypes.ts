@@ -214,7 +214,7 @@ type PasscodeListDataType = {
     authenticationInfoId: RPUserDetailAuthDataType['id']
 }
 
-type ApplicationTypes = "DEFAULT" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "ADMIN" | "RADIUS" | "REDMINE" | 'MS_ENTRA_ID'
+type ApplicationTypes = "DEFAULT" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "ADMIN" | "RADIUS" | "REDMINE" | 'MS_ENTRA_ID' | 'KEYCLOAK' | 'LDAP'
 type LocalApplicationTypes = ApplicationTypes | 'ALL' | ''
 
 type DefaultApplicationDataType = {
@@ -319,6 +319,7 @@ type networkPolicyType = {
 // type BrowserPolicyType = "FireFox" | "Safari" | "Chrome Mobile" | "Chrome" | "Microsoft Edge" | "Mobile Safari" | "Samsung Browser" | "Whale Browser" | "Whale Browser Mobile" | "All other browsers"
 type BrowserPolicyType = "FIREFOX" | "SAFARI" | "CHROME_MOBILE" | "CHROME" | "MICROSOFT_EDGE" | "MOBILE_SAFARI" | "SAMSUNG_BROWSER" | "WHALE_BROWSER" | "WHALE_BROWSER_MOBILE" | "INTERNET_EXPLORER" | "ALL_OTHER_BROWSERS"
 type AuthenticatorPolicyType = "WEBAUTHN" | "PASSCODE" | "OMPASS" | "OTP"
+type OMPASSAppAuthenticatorType = "PIN" | "PATTERN"
 type DayOfWeeksType = "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY"
 type AccessTimeRestrictionTimeRangeTypeType = "SPECIFIC_TIME" | "ALL_TIME"
 type AccessTimeRestrictionValueType = {
@@ -359,6 +360,7 @@ type DefaultPolicyDataType = {
     accessControl: 'ACTIVE' | 'INACTIVE' | 'DENY'
     policyType: 'DEFAULT' | 'CUSTOM'
     enableAuthenticators: AuthenticatorPolicyType[]
+    enableAppAuthenticators: OMPASSAppAuthenticatorType[]
     description?: string
     applicationType: LocalApplicationTypes
 }
@@ -802,7 +804,7 @@ type RpUsersListParamsType = GeneralParamsType & {
     lastLoggedInAuthenticator?: AuthenticatorTypeType[]
 }
 
-type UploadFileTypes = "APPLICATION_LOGO_IMAGE" | "PORTAL_SETTING_LOGO_IMAGE" | "WINDOWS_AGENT" | "LINUX_PAM" | "OMPASS_PROXY" | "FIDO_AGENT" | "APK" | "CSV" | "REDMINE_PLUGIN"
+type UploadFileTypes = "APPLICATION_LOGO_IMAGE" | "PORTAL_SETTING_LOGO_IMAGE" | "WINDOWS_AGENT" | "LINUX_PAM" | "OMPASS_PROXY" | "FIDO_AGENT" | "APK" | "CSV" | "REDMINE_PLUGIN" | "KEYCLOAK_PLUGIN"
 
 type TableSearchOptionType = {
     key: string
@@ -831,4 +833,9 @@ type LocaleType = 'KR' | 'EN' | 'JP'
 type DocsMenuItemType = {
     title: React.ReactNode
     route: string
+}
+
+type PasswordVerificationRequestParamsType = {
+    password: string
+    purpose: "PROFILE_UPDATE" | "DEVICE_CHANGE"
 }

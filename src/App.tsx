@@ -53,7 +53,6 @@ const App: React.FC = () => {
       const doc = document.documentElement
       doc.style.setProperty('--doc-height', `${window.innerHeight}px`)
     }
-    document.documentElement.classList.add("force-light-mode");
     window.addEventListener('resize', documentHeight)
     documentHeight()
 

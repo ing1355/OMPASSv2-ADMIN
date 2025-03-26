@@ -227,21 +227,29 @@
 }
 
 .dashboard-middle-application-user-num-tag-item {
-    flex: 0 48%;
+    flex: 0 0 48%;
+    max-width: 48%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    gap: 20px;
 }
 
 .dashboard-middle-application-user-num-tag-item-title {
     flex: 1 80%;
+    max-width: 80%;
     font-size: .85rem;
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 6px;
+}
+
+.dashboard-middle-application-user-num-tag-item-title-text {
+    width: calc(100% - 10px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .dashboard-middle-application-user-num-tag-item-circle {

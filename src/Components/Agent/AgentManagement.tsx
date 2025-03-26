@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import RedminePluginManagement from './RedminePluginManagement';
 import { message } from 'antd';
+import KeycloakPluginManagement from './\bKecloakPluginManagement';
 
 const AgentManagement = () => {
   const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
@@ -35,6 +36,11 @@ const AgentManagement = () => {
       label: <FormattedMessage id="AGENT_REDMINE_LABEL" />,
       key: "REDMINE_PLUGIN" as UploadFileTypes,
       children: <RedminePluginManagement />
+    },
+    {
+      label: <FormattedMessage id="AGENT_KEYCLOAK_LABEL" />,
+      key: "KEYCLOAK_PLUGIN" as UploadFileTypes,
+      children: <KeycloakPluginManagement />
     }
   ]
   return (
@@ -47,7 +53,7 @@ const AgentManagement = () => {
             defaultKey='WINDOWS_AGENT'
             onChange={active => {
               setActive(active as UploadFileTypes)
-              if(active === 'REDMINE_PLUGIN' as UploadFileTypes) {
+              if(active === 'REDMINE_PLUGIN' as UploadFileTypes || active === 'KEYCLOAK_PLUGIN' as UploadFileTypes) {
                 message.info("준비중입니다.")
               }
             }}

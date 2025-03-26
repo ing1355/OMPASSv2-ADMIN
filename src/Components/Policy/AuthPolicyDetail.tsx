@@ -25,12 +25,14 @@ import NoticeToThemselves from "./PolicyItems/NoticeToThemselves";
 import useCustomRoute from "hooks/useCustomRoute";
 import { cidrRegex, ipAddressRegex } from "Components/CommonCustomComponents/CommonRegex";
 import { isValidIpRange } from "Functions/GlobalFunctions";
+import OMPASSAppAuthenticators from "./PolicyItems/OMPASSAppAuthenticator";
 
 const AuthPolicyDetail = () => {
     const { uuid } = useParams()
     const { goBack } = useCustomRoute()
     const isAdd = !uuid
     const [authenticatorPolicies, setAuthenticatorPolicies] = useState<PolicyDataType['enableAuthenticators']>(['OMPASS', 'OTP', 'PASSCODE', 'WEBAUTHN'])
+    const [appAuthenticatorPolicies, setAppAuthenticatorPolicies] = useState<PolicyDataType['enableAppAuthenticators']>([])
     const [selectedApplicationType, setSelectedApplicationType] = useState<LocalApplicationTypes>(isAdd ? '' : 'DEFAULT')
     const [policyName, setPolicyName] = useState('')
     const [dataLoading, setDataLoading] = useState(!(!uuid))
@@ -138,6 +140,7 @@ const AuthPolicyDetail = () => {
             enableBrowsers: browserUsed ? browserChecked : undefined,
             locationConfig: locationUsed ? locationDatas : undefined,
             enableAuthenticators: authenticatorPolicies,
+            enableAppAuthenticators: appAuthenticatorPolicies,
             accessTimeConfig: accessTimeValues,
             noticeToAdmin: noticeToAdmin!,
             noticeToThemselves
@@ -222,6 +225,7 @@ const AuthPolicyDetail = () => {
                             networkConfig: ipAddressValues,
                             locationConfig: locationUsed ? locationDatas : undefined,
                             enableAuthenticators: authenticatorPolicies,
+                            enableAppAuthenticators: appAuthenticatorPolicies,
                             accessTimeConfig: accessTimeValues,
                             noticeToAdmin: isDefaultPolicy ? undefined : noticeToAdmin!,
                             noticeToThemselves
@@ -280,6 +284,7 @@ const AuthPolicyDetail = () => {
                 <OMPASSAuth value={ompassControl} onChange={setOmpassControl} isDefaultPolicy={isDefaultPolicy} />
                 <div className="auth-policy-validate-container" data-hidden={ompassControl !== 'ACTIVE'}>
                     {authenticatorsUsed && <OMPASSAuthenticators value={authenticatorPolicies} onChange={setAuthenticatorPolicies} locationChecked={locationDatas?.isEnabled || false} webauthnUsed={webauthnUsed} setSureChange={setSureChange} />}
+                    <OMPASSAppAuthenticators value={appAuthenticatorPolicies} onChange={setAppAuthenticatorPolicies} />
                     {browserUsed && <PolicyBrowserSelect value={browserChecked} onChange={setBrowserChecked} />}
                     {locationUsed && locationDatas && <PolicyLocationList value={locationDatas} onChange={setLocationDatas} authenticators={authenticatorPolicies} setSureChange={setSureChange} />}
                     {!isDefaultPolicy && ipAddressValues && <PolicyIpAddressList value={ipAddressValues} onChange={setIpAddressValues} dataInit={initEvent}/>}

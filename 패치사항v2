@@ -1,3 +1,24 @@
+* v2.0.0(108)
+  - UAF 시나리오 추가
+  - 인증 로그 value들에 background, border 추가
+  - 인증 목적 중복 label 수정
+  - 대시보드 어플리케이션 별 사용자 수 title 길이 제한 적용
+  - 인증 로그 위치 정보 없을 시 텍스트로 대체(지도 의미 없음)
+
+* v2.0.0(107)
+  - helpMsg 최대 50자 제한
+  - 기기 변경 1차 패스워드 인증 구현
+  - Keycloak 애플리케이션 유형 추가
+  - Keycloak 애플리케이션 문서 추가
+  - Keycloak 플러그인 관리 추가
+
+* v2.0.0(106)
+  - 어플리케이션 WEB API 리다이렉트 uri Optional로 변경
+  - 정책 -> 앱 인증 수단 제어 추가
+
+* v2.0.0(105)
+  - 새 기기 변경 API 연동
+
 * v2.0.0(104)
   - loginDeviceInfo - clientType 추가
   - Table Filter Date 객체인 경우 초기화 해도 아이콘 변경되지 않던 이슈 수정

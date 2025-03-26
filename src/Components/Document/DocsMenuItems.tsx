@@ -94,7 +94,7 @@ export const PortalMenuItems: DocsMenuItemType[] = [
     },
 ]
 
-export const ApplicationMenuItems: DocsMenuItemType[] = [...applicationTypes.filter(_ => _ !== 'ADMIN').map(_ => ({
+export const ApplicationMenuItems: DocsMenuItemType[] = [...applicationTypes.filter(_ => _ !== 'ADMIN' && _ !== 'LDAP').map(_ => ({
     title: getApplicationTypeLabel(_),
     route: `/application/${_}`
 }))]

@@ -545,7 +545,7 @@ const UserDetail = ({ }) => {
                             setUserData({ ...userData!, status: 'WAIT_INIT_PASSWORD' })
                         }} />}
                     </>} />}
-                    {authInfoDatas.length > 0 && <UserInfoRow value={<NewDeviceBtn onComplete={() => {
+                    {authInfoDatas.length > 0 && isSelf && <UserInfoRow value={<NewDeviceBtn onComplete={() => {
                         GetDatas()
                     }}/>} title='OMPASS_DEVICE_CHANGE_LABEL'/>}
                 </div>

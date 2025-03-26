@@ -26,6 +26,7 @@ const ValuesText = {
         ALL_APPLICATION_TYPE: '공용',
         REDMINE_APPLICATION_TYPE: 'Redmine',
         MS_ENTRA_ID_APPLICATION_TYPE: 'Microsoft Entra ID',
+        KEYCLOAK_APPLICATION_TYPE: 'Keycloak',
 
         REGISTRATION_VALUE: '등록',
         AUTHENTICATION_VALUE: '인증',
@@ -109,7 +110,7 @@ const ValuesText = {
         ALL_APPLICATION_TYPE: 'Public',
         REDMINE_APPLICATION_TYPE: 'Redmine',
         MS_ENTRA_ID_APPLICATION_TYPE: 'Microsoft Entra ID',
-
+        KEYCLOAK_APPLICATION_TYPE: 'Keycloak',
         REGISTRATION_VALUE: 'Registration',
         AUTHENTICATION_VALUE: 'Authentication',
 

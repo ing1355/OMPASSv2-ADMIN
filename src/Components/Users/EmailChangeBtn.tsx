@@ -2,7 +2,7 @@ import { message } from "antd"
 import Button from "Components/CommonCustomComponents/Button"
 import Input from "Components/CommonCustomComponents/Input"
 import CustomModal from "Components/Modal/CustomModal"
-import { EmailChangeCodeVerificationFunc, SendEmailChangeEmailByAdminFunc, SignUpVerificationCodeVerifyFunc } from "Functions/ApiFunctions"
+import { EmailChangeCodeVerificationFunc, SendEmailChangeEmailByAdminFunc } from "Functions/ApiFunctions"
 import { useEffect, useRef, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 import { useSelector } from "react-redux"
@@ -46,7 +46,7 @@ const EmailChangeBtn = ({ isSelf, username, successCallback }: {
         }} onClick={() => {
             setModalOpen(true)
         }}>
-            변경
+            <FormattedMessage id="EMAIL_CHANGE_LABEL" />
         </Button>
         <CustomModal open={modalOpen} onCancel={() => {
             setModalOpen(false)
@@ -58,16 +58,16 @@ const EmailChangeBtn = ({ isSelf, username, successCallback }: {
             onSubmit={async () => {
                 if (isSelf) {
                     if (!emailCodeSend) {
-                        message.error("이메일 인증 코드 발송을 진행해주세요.")
+                        message.error(formatMessage({ id: 'EMAIL_CODE_SEND_FIRST_MSG' }))
                     } else if (!verifyCode) {
-                        message.error("인증 코드를 입력해주세요.")
+                        message.error(formatMessage({ id: 'NEED_EMAIL_CODE_VERIFY_MSG' }))
                     } else {
                         return EmailChangeCodeVerificationFunc({
                             code: verifyCode,
                             username,
                             email: emailInput
                         }, () => {
-                            message.success('변경 성공!')
+                            message.success(formatMessage({ id: 'EMAIL_CHANGE_SUCCESS_MSG' }))
                             setModalOpen(false)
                             successCallback()
                         })
@@ -78,7 +78,7 @@ const EmailChangeBtn = ({ isSelf, username, successCallback }: {
                         email: emailInput,
                         language: lang
                     }, () => {
-                        message.success('메일 전송 성공!')
+                        message.success(formatMessage({ id: 'EMAIL_CODE_SEND_SUCCESS_MSG' }))
                         setModalOpen(false)
                     })
                 }
@@ -96,13 +96,13 @@ const EmailChangeBtn = ({ isSelf, username, successCallback }: {
                     setEmailCodeSend(false)
                 }}>
                     {isSelf && <Button type="button" disabled={mailSendLoading} className="st11 user-email-change-modal-btn" onClick={() => {
-                        if (!emailInput) return message.error("이메일을 입력해주세요.")
+                        if (!emailInput) return message.error(formatMessage({ id: 'PLEASE_INPUT_EMAIL' }))
                         return SendEmailChangeEmailByAdminFunc({
                             username,
                             email: emailInput,
                             language: lang
                         }, () => {
-                            message.success('메일 전송 성공!')
+                            message.success(formatMessage({ id: 'EMAIL_CODE_SEND_SUCCESS_MSG' }))
                             setMailSendLoading(true)
                             setEmailCodeSend(true)
                             mailTimer.current = setInterval(() => {

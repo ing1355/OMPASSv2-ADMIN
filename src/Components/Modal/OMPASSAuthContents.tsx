@@ -13,17 +13,17 @@ type OMPASSAuthContentsProps = {
     username: string
     status: OMPASSAuthStatusType
     sessionData: QRDataDefaultBodyType
+    customQrData?: QRDataType<any>
     isRegister?: boolean
 }
 
-const OMPASSAuthContents = ({ isRegister, role, name, username, status, sessionData }: OMPASSAuthContentsProps) => {
+const OMPASSAuthContents = ({ isRegister, role, name, username, status, sessionData, customQrData }: OMPASSAuthContentsProps) => {
     const isComplete = status === 'complete'
     const getFullName = useFullName()
     const [qrView, setQrView] = useState(false)
     const qrData: QRDataType<QRDataDefaultBodyType> = {
-        // type: 'DEFAULT',
-        type: 'DEVICE_CHANGE',
-        body: {...sessionData, param: 'test'}
+        type: 'DEFAULT',
+        body: {...sessionData}
     }
     
     return <div className="ompass-auth-content-container">
@@ -45,7 +45,7 @@ const OMPASSAuthContents = ({ isRegister, role, name, username, status, sessionD
             </div>}
             {
                 ((isRegister || qrView) && !isComplete) ? <div className="ompass-auth-qr-code-container">
-                    {(isRegister && !qrData.body.url) ? <CustomLoading /> : <QRCode data={qrData} size={isRegister ? 160 : 120} />}
+                    {(isRegister && !qrData.body.url) ? <CustomLoading /> : <QRCode data={customQrData || qrData} size={isRegister ? 160 : 120} />}
                 </div> : <>
                     <div className="ompass-auth-content-progress-icon">
                         {

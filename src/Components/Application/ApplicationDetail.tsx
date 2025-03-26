@@ -81,9 +81,9 @@ const ApplicationDetail = () => {
     const { formatMessage } = useIntl()
     const { uuid } = useParams()
     const isAdd = !uuid
-    const needDomains: LocalApplicationTypes[] = ["DEFAULT", "ADMIN", "REDMINE"]
+    const needDomains: LocalApplicationTypes[] = ["DEFAULT", "ADMIN", "REDMINE", "KEYCLOAK"]
+    const noRedirectUri: LocalApplicationTypes[] = ["KEYCLOAK", "REDMINE"]
     const passwordUsed: LocalApplicationTypes[] = ['WINDOWS_LOGIN', 'LINUX_LOGIN']
-    const isRedmine = applicationType === 'REDMINE'
     const typeItems = applicationTypes.map(_ => ({
         key: _,
         label: getApplicationTypeLabel(_),
@@ -171,11 +171,11 @@ const ApplicationDetail = () => {
                     if (needDomains.includes(applicationType) && !domainRegex.test(inputDomain)) {
                         return message.error(formatMessage({ id: 'INVALID_INPUT_DOMAIN_MSG' }))
                     }
-                    if (!isRedmine && needDomains.includes(applicationType) && !redirectUriRegex.test(inputRedirectUrl)) {
-                        return message.error(formatMessage({ id: 'INVALID_INPUT_REDIRECT_URI_MSG' }))
-                    }
-                    if (!isRedmine && !inputRedirectUrl && needDomains.includes(applicationType)) {
+                    if (needDomains.includes(applicationType) && !noRedirectUri.includes(applicationType) && !inputRedirectUrl) {
                         return message.error(formatMessage({ id: 'PLEASE_INPUT_APPLICATION_REDIRECT_URI' }))
+                    }
+                    if (needDomains.includes(applicationType) && !noRedirectUri.includes(applicationType) && !redirectUriRegex.test(inputRedirectUrl)) {
+                        return message.error(formatMessage({ id: 'INVALID_INPUT_REDIRECT_URI_MSG' }))
                     }
                     if (!selectedPolicy) {
                         return message.error(formatMessage({ id: 'PLEASE_SELECT_APPLICATION_POLICY' }))
@@ -190,7 +190,7 @@ const ApplicationDetail = () => {
                             policyId: selectedPolicy,
                             name: inputName,
                             domain: inputDomain ?? "",
-                            redirectUri: isRedmine ? inputDomain + '/ompass' : inputRedirectUrl,
+                            redirectUri: noRedirectUri.includes(applicationType) ? inputDomain + '/ompass' : inputRedirectUrl,
                             helpDeskMessage: helpMsg,
                             logoImage: {
                                 image: await convertBase64FromClientToServerFormat(logoImage.image),
@@ -212,7 +212,7 @@ const ApplicationDetail = () => {
                             policyId: selectedPolicy,
                             name: inputName,
                             domain: inputDomain,
-                            redirectUri: isRedmine ? inputDomain + '/ompass' : inputRedirectUrl,
+                            redirectUri: noRedirectUri.includes(applicationType) ? inputDomain + '/ompass' : inputRedirectUrl,
                             helpDeskMessage: helpMsg,
                             logoImage: {
                                 image: await convertBase64FromClientToServerFormat(logoImage.image),
@@ -355,7 +355,7 @@ const ApplicationDetail = () => {
                     <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_NOTICE_LABEL" />}>
                         <Input className="st1" value={helpMsg} valueChange={value => {
                             setHelpMsg(value)
-                        }} />
+                        }} maxLength={50}/>
                     </CustomInputRow>
                     {
                         needDomains.includes(applicationType) && <>
@@ -364,7 +364,7 @@ const ApplicationDetail = () => {
                                     setInputDomain(value)
                                 }} placeholder="ex) https://omsecurity.kr:1234" readOnly={applicationType === 'ADMIN'} noGap />
                             </CustomInputRow>
-                            {!isRedmine && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_REDIRECT_URI_LABEL" />} required>
+                            {!noRedirectUri.includes(applicationType) && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_REDIRECT_URI_LABEL" />}>
                                 <Input className="st1" value={inputRedirectUrl} valueChange={value => {
                                     setInputRedirectUrl(value)
                                 }} placeholder="ex) /ompass" readOnly={['ADMIN', 'REDMINE'].includes(applicationType)} noGap />

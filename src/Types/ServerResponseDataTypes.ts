@@ -25,22 +25,36 @@ type SecurityQuestionType = {
   questions: SecurityQuestionsKeyType[]
 }
 
+type PlanFeatureType = "DASHBOARD" | "ADMIN_NOTIFICATION" | "USER_EXTERNAL_DIRECTORY_SYNC" | "ADMIN_APPLICATION" | "WEB_APPLICATION" | "WINDOWS_LOGIN_APPLICATION" | "LINUX_LOGIN_APPLICATION" | "RADIUS_APPLICATION" | "LDAP_APPLICATION" | "MICROSOFT_ENTRA_ID_APPLICATION" | "REDMINE_APPLICATION"
+
+type PlanDataType = {
+  type: "TRIAL_PLAN" | "SUBSCRIPTION_PLAN_L1" | "SUBSCRIPTION_PLAN_L2" | "SUBSCRIPTION_PLAN_L3" | "LICENSE_PLAN_L1" | "LICENSE_PLAN_L2",
+  status: "RUN" | "EXPIRED",
+  availableFeatures: PlanFeatureType[]
+  maxUserCount: number
+  maxApplicationCount: number
+  maxSessionCount: number
+  expiredDate: string
+  createdAt: string
+}
+
 type SubDomainInfoDataType = {
   serverType: 'ON_PREMISE' | 'CLOUD',
+  plan?: PlanDataType
   securityQuestion: SecurityQuestionType
   name: PortalSettingsDataType['name']
   logoImage: PortalSettingsDataType['logoImage']
   noticeMessage: PortalSettingsDataType['noticeMessage']
   userSignupMethod: PortalSettingsDataType['userSignupMethod']
   selfSignupEnabled: PortalSettingsDataType['selfSignupEnabled']
-  windowsAgentUrl?: string
-  linuxPamDownloadUrl?: string
-  ompassProxyDownloadUrl?: string
   backendVersion: {
     fidoApp: string
     interfaceApp: string
     portalApp: string
   }
+  windowsAgentUrl?: string
+  linuxPamDownloadUrl?: string
+  ompassProxyDownloadUrl?: string
 }
 
 type PortalSettingsDataType = {

@@ -31,7 +31,7 @@ const TextComponent = ({ title, content }: {
 }) => {
     return <div className="auth-detail-modal-contents-item">
         <div className="auth-detail-modal-contents-item-title">
-            {title}
+            <FormattedMessage id={title} />
         </div>
         <div className="auth-detail-modal-contents-item-content">
             {content || '-'}
@@ -61,164 +61,177 @@ const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
     const locationData: PolicyValidationLocationValueType = policyValidationResult?.find(_ => _.type === 'LOCATION' && _.value)?.value || {}
 
     return <>
-        <CustomModal open={!(!data)} onCancel={close} noBtns title={<>인증 로그 상세 <span className={`auth-detail-modal-title ${data && isValidLogType(data) ? 'valid' : 'invalid'}`}>({data && isValidLogType(data) ? '정상' : '비정상'})</span></>} titleLeft width={1200}>
+        <CustomModal
+            open={!(!data)}
+            onCancel={close}
+            noBtns
+            title={<>
+                <FormattedMessage id="AUTH_LOG_DETAIL_TITLE_LABEL" />&nbsp;
+                <span className={`auth-detail-modal-title ${data && isValidLogType(data) ? 'valid' : 'invalid'}`}>
+                    (<FormattedMessage id={data && isValidLogType(data) ? 'VALID_LABEL' : 'INVALID_LABEL'} />)
+                </span>
+            </>}
+            titleLeft
+            width={1200}>
             <div className="auth-detail-modal-container">
                 <div className="auth-detail-modal-contents-row">
-                    <div className="auth-detail-modal-contents-container map" data-title="위치 정보">
+                    <div className="auth-detail-modal-contents-container map" data-title={formatMessage({ id: "LOCATION_INFO_TITLE_LABEL" })}>
                         <div className="auth-detail-modal-contents-map-container">
-                            {globalDatas?.googleApiKey ? <APIProvider apiKey={globalDatas.googleApiKey} onLoad={() => {
+                            {
+                                locationData && locationData.currentUserLocation ? <>
+                                    {globalDatas?.googleApiKey ? <APIProvider apiKey={globalDatas.googleApiKey} onLoad={() => {
 
-                            }}>
-                                <Map
-                                    defaultZoom={10}
-                                    style={{
-                                        borderRadius: '12px',
-                                        overflow: 'hidden'
-                                    }}
-                                    fullscreenControl={null}
-                                    mapId='24ce68fbca231158'
-                                    mapTypeControl={null}
-                                    reuseMaps={false}
-                                    maxZoom={17}
-                                    streetViewControl={false}
-                                    onIdle={({ map }) => {
-                                        if (!mapInitRef.current) {
-                                            const bounds = new window.google.maps.LatLngBounds();
-                                            if (locationData.currentUserLocation) {
-                                                bounds.extend({
-                                                    lat: locationData.currentUserLocation.latitude,
-                                                    lng: locationData.currentUserLocation.longitude
-                                                })
-                                            }
-                                            policyAtTimeOfEvent?.locationConfig?.locations.forEach(_ => {
-                                                bounds.extend({
+                                    }}>
+                                        <Map
+                                            defaultZoom={10}
+                                            fullscreenControl={null}
+                                            mapId='24ce68fbca231158'
+                                            mapTypeControl={null}
+                                            reuseMaps={false}
+                                            maxZoom={17}
+                                            streetViewControl={false}
+                                            onIdle={({ map }) => {
+                                                if (!mapInitRef.current) {
+                                                    const bounds = new window.google.maps.LatLngBounds();
+                                                    if (locationData.currentUserLocation) {
+                                                        bounds.extend({
+                                                            lat: locationData.currentUserLocation.latitude,
+                                                            lng: locationData.currentUserLocation.longitude
+                                                        })
+                                                    }
+                                                    policyAtTimeOfEvent?.locationConfig?.locations.forEach(_ => {
+                                                        bounds.extend({
+                                                            lat: _.coordinate.latitude,
+                                                            lng: _.coordinate.longitude
+                                                        })
+                                                    })
+                                                    map.fitBounds(bounds)
+                                                    mapInitRef.current = true
+                                                    mapRef.current = map
+                                                }
+                                            }}
+                                            defaultCenter={{ lat: 36.713889964770544, lng: 127.88793971566751 }}
+                                        >
+                                            <MapControl position={ControlPosition.TOP_RIGHT}>
+                                                <div className="custom-current-position-check" onClick={() => {
+                                                    navigator.geolocation.getCurrentPosition(function (position) {
+                                                        mapRef.current?.setCenter({
+                                                            lat: position.coords.latitude,
+                                                            lng: position.coords.longitude
+                                                        })
+                                                    }, err => {
+                                                        console.log('현재 위치 획득 실패!', err)
+                                                        switch (err.code) {
+                                                            case err.PERMISSION_DENIED:
+                                                                message.error(formatMessage({ id: 'LOCATION_PERMISSION_DENY_MSG' }))
+                                                                break;
+                                                            case err.POSITION_UNAVAILABLE:
+                                                            case err.TIMEOUT:
+                                                                message.error(formatMessage({ id: 'LOCATION_GET_TIMEOUT_MSG' }))
+                                                                break;
+                                                        }
+                                                    }, {
+                                                        timeout: 10_000
+                                                    })
+                                                }}>
+                                                    <img src={locationIcon} />
+                                                </div>
+                                            </MapControl>
+                                            {locationData.currentUserLocation && <AdvancedMarker position={{
+                                                lat: locationData.currentUserLocation.latitude,
+                                                lng: locationData.currentUserLocation.longitude
+                                            }}>
+                                                <div style={{
+                                                    width: 22,
+                                                    height: 32,
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center'
+                                                }}>
+                                                    <img src={locationInvalidIcon} />
+                                                </div>
+                                            </AdvancedMarker>}
+                                            {(locationConfig?.locations || []).length > 0 && (locationConfig?.locations || []).map((_, ind) => <Fragment key={ind}>
+                                                <AdvancedMarker position={{
                                                     lat: _.coordinate.latitude,
                                                     lng: _.coordinate.longitude
-                                                })
-                                            })
-                                            map.fitBounds(bounds)
-                                            mapInitRef.current = true
-                                            mapRef.current = map
-                                        }
-                                    }}
-                                    defaultCenter={{ lat: 36.713889964770544, lng: 127.88793971566751 }}
-                                >
-                                    <MapControl position={ControlPosition.TOP_RIGHT}>
-                                        <div className="custom-current-position-check" onClick={() => {
-                                            navigator.geolocation.getCurrentPosition(function (position) {
-                                                mapRef.current?.setCenter({
-                                                    lat: position.coords.latitude,
-                                                    lng: position.coords.longitude
-                                                })
-                                            }, err => {
-                                                console.log('현재 위치 획득 실패!', err)
-                                                switch (err.code) {
-                                                    case err.PERMISSION_DENIED:
-                                                        message.error(formatMessage({ id: 'LOCATION_PERMISSION_DENY_MSG' }))
-                                                        break;
-                                                    case err.POSITION_UNAVAILABLE:
-                                                    case err.TIMEOUT:
-                                                        message.error(formatMessage({ id: 'LOCATION_GET_TIMEOUT_MSG' }))
-                                                        break;
-                                                }
-                                            }, {
-                                                timeout: 10_000
-                                            })
-                                        }}>
-                                            <img src={locationIcon} />
-                                        </div>
-                                    </MapControl>
-                                    {locationData.currentUserLocation && <AdvancedMarker position={{
-                                        lat: locationData.currentUserLocation.latitude,
-                                        lng: locationData.currentUserLocation.longitude
+                                                }}>
+                                                    <div style={{
+                                                        width: 16,
+                                                        height: 24,
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center'
+                                                    }}>
+                                                        <img src={locationValidIcon} />
+                                                    </div>
+                                                </AdvancedMarker>
+                                                <Circle radius={_.radius} center={{
+                                                    lat: _.coordinate.latitude,
+                                                    lng: _.coordinate.longitude
+                                                }} strokeOpacity={0} fillColor={'rgba(0,0,0,.5)'} />
+                                            </Fragment>)}
+                                        </Map>
+                                    </APIProvider> : <div style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        border: '1px solid black',
+                                        padding: '4px',
+                                        borderRadius: '12px',
+                                        boxSizing: 'border-box'
                                     }}>
-                                        <div style={{
-                                            width: 22,
-                                            height: 32,
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            alignItems: 'center'
-                                        }}>
-                                            <img src={locationInvalidIcon} />
-                                        </div>
-                                    </AdvancedMarker>}
-                                    {(locationConfig?.locations || []).length > 0 && (locationConfig?.locations || []).map((_, ind) => <Fragment key={ind}>
-                                        <AdvancedMarker position={{
-                                            lat: _.coordinate.latitude,
-                                            lng: _.coordinate.longitude
-                                        }}>
-                                            <div style={{
-                                                width: 16,
-                                                height: 24,
-                                                display: 'flex',
-                                                justifyContent: 'center',
-                                                alignItems: 'center'
-                                            }}>
-                                                <img src={locationValidIcon} />
-                                            </div>
-                                        </AdvancedMarker>
-                                        <Circle radius={_.radius} center={{
-                                            lat: _.coordinate.latitude,
-                                            lng: _.coordinate.longitude
-                                        }} strokeOpacity={0} fillColor={'rgba(0,0,0,.5)'} />
-                                    </Fragment>)}
-                                </Map>
-                            </APIProvider> : <div style={{
-                                width: '100%',
-                                height: '100%',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                border: '1px solid black',
-                                padding: '4px',
-                                borderRadius: '12px',
-                                boxSizing: 'border-box'
-                            }}>
-                                <FormattedMessage id="MAP_NOT_AVAILABLE_LABEL" />
-                            </div>}
+                                        <FormattedMessage id="MAP_NOT_AVAILABLE_LABEL" />
+                                    </div>}
+                                </> : <div className="no-location-data-container">
+                                    <FormattedMessage id="NO_LOCATION_DATA_LABEL" />
+                                </div>
+                            }
                         </div>
                         <div className="auth-detail-modal-contents-map-label">
                             <div>
-                                <img src={locationInvalidIcon} /> : 인증 요청한 위치
+                                <img src={locationInvalidIcon} /> : <FormattedMessage id="AUTH_LOG_DETAIL_INVALID_LOCATION_LABEL" />
                             </div>
                             <div>
-                                <img src={locationValidIcon} /> : 인증 가능한 위치
+                                <img src={locationValidIcon} /> : <FormattedMessage id="AUTH_LOG_DETAIL_VALID_LOCATION_LABEL" />
                             </div>
                         </div>
                     </div>
-                    <div className="auth-detail-modal-contents-container" data-title="사용자 정보">
-                        <TextComponent title="이름" content={data?.portalUser.name && getFullName(data?.portalUser.name)} />
-                        <TextComponent title="포탈 아이디" content={data?.portalUser.username} />
-                        <TextComponent title="사용자 아이디" content={data?.ompassData.rpUser.username} />
+                    <div className="auth-detail-modal-contents-container" data-title={formatMessage({ id: "USER_INFO_TITLE_LABEL" })}>
+                        <TextComponent title="NAME" content={data?.portalUser.name && getFullName(data?.portalUser.name)} />
+                        <TextComponent title="PORTAL_USERNAME_COLUMN_LABEL" content={data?.portalUser.username} />
+                        <TextComponent title="RP_USERNAME_COLUMN_LABEL" content={data?.ompassData.rpUser.username} />
                     </div>
-                    <div className="auth-detail-modal-contents-container" data-title="인증 정보">
-                        <TextComponent title="적용된 정책명" content={policyAtTimeOfEvent?.name} />
-                        <TextComponent title="인증 목적" content={<FormattedMessage id={data?.ompassData.authPurpose + '_LOG_VALUE'} />} />
-                        <TextComponent title="인증 유형" content={(data as ValidAuthLogDataType)?.authenticatorType} />
-                        {data && isInvalidLogType(data) && <TextComponent title="비정상 사유" content={<FormattedMessage id={"INVALID_" + data.reason + '_LABEL'} />} />}
-                        <TextComponent title="인증 시작 시각" content={createdAt} />
-                        <TextComponent title="인증 시각" content={data?.authenticationTime} />
-                        <TextComponent title="인증 만료 시각" content={sessionExpiredAt} />
+                    <div className="auth-detail-modal-contents-container authentication-info" data-title={formatMessage({ id: "AUTH_LOG_DETAIL_AUTH_INFO_TITLE_LABEL" })}>
+                        <TextComponent title="APPLIED_POLICY_NAME_COLUMN_LABEL" content={policyAtTimeOfEvent?.name} />
+                        <TextComponent title="AUTHENTICATION_PURPOSE_LABEL" content={<FormattedMessage id={data?.ompassData.authPurpose + '_LOG_VALUE'} />} />
+                        <TextComponent title="AUTHENTICATOR_TYPE_LABEL" content={(data as ValidAuthLogDataType)?.authenticatorType} />
+                        {data && isInvalidLogType(data) && <TextComponent title="INVALID_REASON_LABEL" content={<FormattedMessage id={"INVALID_" + data.reason + '_LABEL'} />} />}
+                        <TextComponent title="AUTHENTICATION_START_TIME_LABEL" content={createdAt} />
+                        <TextComponent title="AUTHENTICATION_TIME_LABEL" content={data?.authenticationTime} />
+                        <TextComponent title="SESSION_EXPIRED_AT_LABEL" content={sessionExpiredAt} />
                     </div>
                 </div>
                 <div className="auth-detail-modal-contents-row">
-                    <div className="auth-detail-modal-contents-container" data-title="애플리케이션 정보">
-                        <TextComponent title="애플리케이션 유형" content={getApplicationTypeLabel(data?.ompassData.application.type ?? "")} />
-                        <TextComponent title="애플리케이션명" content={data?.ompassData.application.name} />
-                        <TextComponent title="도메인" content={data?.ompassData.application.domain} />
+                    <div className="auth-detail-modal-contents-container" data-title={formatMessage({ id: "APPLICATION_INFO_TITLE_LABEL" })}>
+                        <TextComponent title="APPLICATION_TYPE_LABEL" content={getApplicationTypeLabel(data?.ompassData.application.type ?? "")} />
+                        <TextComponent title="APPLICATION_NAME_COLUMN_LABEL" content={data?.ompassData.application.name} />
+                        <TextComponent title="APPLICATION_INFO_DOMAIN_LABEL" content={data?.ompassData.application.domain} />
                     </div>
-                    {isPam && <div className="auth-detail-modal-contents-container" data-title="대상 기기 정보(Server)">
-                        <TextComponent title="기기명" content={serverInfo?.name} />
-                        <TextComponent title="IP" content={serverInfo?.ip} />
-                        <TextComponent title="운영체제" content={createOSInfo(serverInfo?.os)} />
-                        <TextComponent title="패키지 버전" content={serverInfo?.packageVersion} />
+                    {isPam && <div className="auth-detail-modal-contents-container" data-title={`${formatMessage({ id: "SERVER_DEVICE_INFO_TITLE_LABEL" })}(Server)`}>
+                        <TextComponent title="DEVICE_NAME_LABEL" content={serverInfo?.name} />
+                        <TextComponent title="IP_LABEL" content={serverInfo?.ip} />
+                        <TextComponent title="USER_DETAIL_OS_LABEL" content={createOSInfo(serverInfo?.os)} />
+                        <TextComponent title="PACKAGE_VERSION_INFO_LABEL" content={serverInfo?.packageVersion} />
                     </div>}
-                    <div className="auth-detail-modal-contents-container" data-title={`대상 기기 정보${isPam ? '(Client)' : ''}`}>
-                        <TextComponent title="기기명" content={loginDeviceInfo?.name} />
-                        <TextComponent title="IP" content={loginDeviceInfo?.ip} />
-                        <TextComponent title="브라우저" content={loginDeviceInfo?.browser && <FormattedMessage id={loginDeviceInfo?.browser + "_LABEL"}/>} />
-                        <TextComponent title="운영체제" content={createOSInfo(loginDeviceInfo?.os)} />
-                        <TextComponent title="패키지 버전" content={loginDeviceInfo?.packageVersion} />
+                    <div className="auth-detail-modal-contents-container" data-title={`${formatMessage({ id: "TARGET_DEVICE_INFO_TITLE_LABEL" })}${isPam ? '(Client)' : ''}`}>
+                        <TextComponent title="DEVICE_NAME_LABEL" content={loginDeviceInfo?.name} />
+                        <TextComponent title="IP_LABEL" content={loginDeviceInfo?.ip} />
+                        <TextComponent title="USER_DETAIL_BROWSER_LABEL" content={loginDeviceInfo?.browser && <FormattedMessage id={loginDeviceInfo?.browser + "_LABEL"} />} />
+                        <TextComponent title="USER_DETAIL_OS_LABEL" content={createOSInfo(loginDeviceInfo?.os)} />
+                        <TextComponent title="PACKAGE_VERSION_INFO_LABEL" content={loginDeviceInfo?.packageVersion} />
                     </div>
                 </div>
                 <div className="auth-detail-modal-contents-row">

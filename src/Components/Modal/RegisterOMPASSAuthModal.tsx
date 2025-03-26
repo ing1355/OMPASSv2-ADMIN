@@ -12,11 +12,12 @@ import { convertTimeFormat } from "Functions/GlobalFunctions"
 type RadiusUserRegisterOMPASSAuthModalProps = {
     opened: boolean
     onCancel: () => void
-    radiusApplicationId: ApplicationDataType['id']
+    radiusApplicationId?: ApplicationDataType['id']
     successCallback: (token: string) => void
+    purpose: AuthPurposeType
 }
 
-const RadiusUserRegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, radiusApplicationId }: RadiusUserRegisterOMPASSAuthModalProps) => {
+const RegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, radiusApplicationId, purpose }: RadiusUserRegisterOMPASSAuthModalProps) => {
     const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     const [remainTime, setRemainTime] = useState(-1)
     const [sessionData, setSessionData] = useState<QRDataDefaultBodyType>({
@@ -49,15 +50,15 @@ const RadiusUserRegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, 
         OMPASSAuth.stopAuth()
     }
 
-    return <CustomModal title={<FormattedMessage id="RADIUS_OMPASS_REGISTER_MODAL_TITLE_LABEL"/>} open={opened} onCancel={() => {
+    return <CustomModal title={<FormattedMessage id="OMPASS_REGISTER_MODAL_TITLE_LABEL"/>} open={opened} onCancel={() => {
         _onCancel()
     }} buttonsType="small" noBtns noClose onOpen={() => {
-        OMPASSAuth.startAuth({ type: 'single', purpose: 'RADIUS_REGISTRATION', applicationId: radiusApplicationId }, ({ url, ntp, sessionExpiredAt, sourceNonce }) => {
+        OMPASSAuth.startAuth({ type: 'single', purpose: purpose, applicationId: radiusApplicationId }, ({ url, ntp, sessionExpiredAt, sourceNonce, sessionId }) => {
             const ntpTime = dayjs.utc(parseInt(ntp))
             const expireTime = dayjs.utc(sessionExpiredAt)
             setSessionData({
                 url,
-                param: sourceNonce ?? ""
+                param: sessionId ?? sourceNonce ?? ""
             })
             setRemainTime(expireTime.diff(ntpTime, 'seconds'))
             if (timeTimerRef.current) {
@@ -73,9 +74,9 @@ const RadiusUserRegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, 
             }, 1000);
             setAuthStatus('progress')
         }, (status, token) => {
-            if (status.source && token) {
+            if (status.source) {
                 setAuthStatus('complete')
-                tokenRef.current = token
+                tokenRef.current = token ?? ''
                 successCallback(tokenRef.current)
                 _onCancel()
             }
@@ -83,10 +84,13 @@ const RadiusUserRegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, 
             _onCancel()
         })
     }}>
-        <OMPASSAuthContents isRegister role={userInfo.role} name={userInfo.name} username={userInfo.username} status={authStatus} sessionData={sessionData} />
+        <OMPASSAuthContents isRegister role={userInfo.role} name={userInfo.name} username={userInfo.username} status={authStatus} sessionData={sessionData} customQrData={purpose === 'DEVICE_CHANGE' ? {
+            type: 'DEVICE_CHANGE',
+            body: sessionData
+        } : undefined}/>
         {sessionData.url && <div className="ompass-auth-description-text">
-            <FormattedMessage id="RADIUS_OMPASS_REGISTER_MODAL_SUBSCRIPTION_1"/><br />
-            <FormattedMessage id="RADIUS_OMPASS_REGISTER_MODAL_SUBSCRIPTION_2"/>
+            <FormattedMessage id="OMPASS_REGISTER_MODAL_SUBSCRIPTION_1"/><br />
+            <FormattedMessage id="OMPASS_REGISTER_MODAL_SUBSCRIPTION_2"/>
         </div>}
         <div className="ompass-auth-remain-time-container">
             {
@@ -105,4 +109,4 @@ const RadiusUserRegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, 
     </CustomModal>
 }
 
-export default RadiusUserRegisterOMPASSAuthModal
+export default RegisterOMPASSAuthModal

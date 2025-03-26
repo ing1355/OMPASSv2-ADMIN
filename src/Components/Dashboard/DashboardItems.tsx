@@ -12,7 +12,9 @@ const ApplicationUserNum = ({ title, num, color }: {
             <div className="dashboard-middle-application-user-num-tag-item-circle" style={{
                 backgroundColor: color
             }}/>
-            {title}
+            <div className="dashboard-middle-application-user-num-tag-item-title-text">
+                {title}
+            </div>
         </div>
         <div className="dashboard-middle-application-user-num-tag-item-num">
             {slicePrice(num)}

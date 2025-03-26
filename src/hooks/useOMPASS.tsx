@@ -32,7 +32,7 @@ const useOMPASS = () => {
                 timerRef.current = setInterval(() => {
                     GetOMPASSAuthResultFunc(purpose, res.pollingKey, ({ status, token }) => {
                         if (type === 'single') {
-                            if (token && status.source) {
+                            if (status.source) {
                                 successCallback(status, token)
                                 clearTimer()
                             }

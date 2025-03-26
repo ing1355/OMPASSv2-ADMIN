@@ -34,7 +34,7 @@ import policyMenuIconBlack from '../../assets/policyMenuIconBlack.png';
 import { ompassDefaultLogoImage } from 'Constants/ConstantValues';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { message } from 'antd';
-import RadiusUserRegisterOMPASSAuthModal from 'Components/Modal/RadiusUserRegisterOMPASSAuthModal';
+import RegisterOMPASSAuthModal from 'Components/Modal/RegisterOMPASSAuthModal';
 
 const UserDetailInfoContentItem = ({ imgSrc, title, content, subContent }: {
     imgSrc: string
@@ -408,8 +408,8 @@ export const RadiusDetailItem = ({ onComplete, appId }: {
         }}>
             <FormattedMessage id="REGISTER_RADIUS_LABEL"/>
         </div>
-        <RadiusUserRegisterOMPASSAuthModal radiusApplicationId={appId} opened={authView} onCancel={() => {
+        <RegisterOMPASSAuthModal radiusApplicationId={appId} opened={authView} onCancel={() => {
             setAuthView(false)
-        }} successCallback={onComplete} />
+        }} successCallback={onComplete} purpose="RADIUS_REGISTRATION" />
     </>
 }

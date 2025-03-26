@@ -116,3 +116,6 @@ export const AddRadiusUserListApi = '/v2/radius-rp-users'
 
 // 보안 질문
 export const UpdateSecurityQuestionsApi = '/v2/users/security-qna'
+
+// 비밀번호 확인
+export const ConfirmPasswordApi = '/v2/users/password-verification'

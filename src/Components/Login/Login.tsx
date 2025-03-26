@@ -22,6 +22,7 @@ const Login = () => {
   const [inputChangePassword, setInputChangePassword] = useState('')
   const [inputChangePasswordConfirm, setInputChangePasswordConfirm] = useState('')
   const [needPasswordChange, setNeedPasswordChange] = useState(false)
+  const [isRegistered, setIsRegistered] = useState(false)
   const ompassWindowRef = useRef<Window | null | undefined>()
 
   const inputUesrnameRef = useRef<HTMLInputElement>()
@@ -36,7 +37,14 @@ const Login = () => {
     setInputChangePassword('')
     setInputChangePasswordConfirm('')
     setInputPassword('')
+    setIsRegistered(false)
   }, [needPasswordChange])
+
+  useEffect(() => {
+    if(isRegistered) {
+      inputPasswordRef.current?.focus()
+    }
+  },[isRegistered])
 
   const loginRequest = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -53,9 +61,15 @@ const Login = () => {
         inputUesrnameRef.current?.focus()
         return message.error(formatMessage({ id: 'PLEASE_INPUT_ID_MSG' }))
       }
-      if (!inputPassword) {
-        inputPasswordRef.current?.focus()
-        return message.error(formatMessage({ id: 'PLEASE_INPUT_PASSWORD_MSG' }))
+      if (isRegistered) {
+
+      } else {
+        message.info("먼저 등록하셔야 합니다.")
+        return setIsRegistered(true)
+        if (!inputPassword) {
+          inputPasswordRef.current?.focus()
+          return message.error(formatMessage({ id: 'PLEASE_INPUT_PASSWORD_MSG' }))
+        }
       }
       LoginFunc({
         domain: subDomain,
@@ -66,7 +80,7 @@ const Login = () => {
       }, ({ ompassUrl, status, questions }, token) => {
         // status = 'WAIT_SECURITY_QNA'
         if (status === 'WAIT_INIT_PASSWORD') {
-        // if (false) {
+          // if (false) {
           setInputPassword('')
           setTempToken(token)
           message.info(formatMessage({ id: 'PASSWORD_CHANGE_NEED_MSG' }))
@@ -83,6 +97,9 @@ const Login = () => {
         if (isDev) {
           const targetUrl = "192.168.182.120:9002"
           const resultUri = temp.replace("ompass.kr:54007", targetUrl).replace("ompass.kr:54012", targetUrl).replace("192.168.182.75:9001", targetUrl).replace("ompass.kr:59001", targetUrl)
+          const url = new URL(resultUri)
+          url.searchParams.delete('client_type')
+          console.log(url)
           if (!ompassWindowRef.current?.closed) {
             ompassWindowRef.current?.close()
           }
@@ -148,12 +165,14 @@ const Login = () => {
               valueChange={value => {
                 setInputChangePassword(value);
               }}
-            /> </> : <><label htmlFor='userId'><FormattedMessage id='ID' /></label>
+            /> </> : <>
+            <label htmlFor='userId'><FormattedMessage id='ID' /></label>
             <Input
               className='st1 login-input userId'
               value={inputUsername}
               maxLength={16}
               noGap
+              autoFocus
               ref={inputUesrnameRef}
               name="userId"
               valueChange={value => {
@@ -161,10 +180,10 @@ const Login = () => {
               }}
             /></>}
         </div>
-        <div
-          className='login-input-container'
-        >
-          {needPasswordChange ? <>
+        {needPasswordChange ?
+          <div
+            className='login-input-container'
+          >
             <label htmlFor='userId'><FormattedMessage id='PASSWORD_CONFIRM' /></label>
             <Input
               className='st1 login-input'
@@ -183,7 +202,7 @@ const Login = () => {
               valueChange={value => {
                 setInputChangePasswordConfirm(value);
               }}
-            /> </> : <>
+            /> </div> : <div className={`login-input-container password${isRegistered ? ' registered' : ''}`}>
             <label htmlFor='userPassword'><FormattedMessage id='PASSWORD' /></label>
             <Input
               className='st1 login-input password'
@@ -197,8 +216,7 @@ const Login = () => {
                 setInputPassword(value);
               }}
             />
-          </>}
-        </div>
+          </div>}
         {!needPasswordChange && <div className='login-action-row-container'>
           <div className='login-action-row'>
             <Input id='saveId' type='checkbox' className='mr10' defaultChecked={cookies.rememberUserId} label={<FormattedMessage id='SAVE_ID' />} />

@@ -17,6 +17,8 @@ const pathByApplicationType: {
     'REDMINE': 'redmine',
     'WINDOWS_LOGIN': 'windows_logon',
     'MS_ENTRA_ID': 'ms_entra_id',
+    'KEYCLOAK': 'keycloak',
+    // 'LDAP': 'ldap',
     'ADMIN': '',
     'ALL': '',
     'MAC_LOGIN': '',

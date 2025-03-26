@@ -129,6 +129,10 @@ const MessageText = {
         PAM_PASS_DATA_IP_ADDRESS_REQUIRED_MSG: '바이패스 설정의 IP 주소를 입력해주세요.',
         PAM_PASS_DATA_IP_ADDRESS_INVALID_MSG: '바이패스 설정의 IP 주소가 올바르지 않습니다.',
         PLEASE_USE_PC_ENVIRONMENT_MSG: 'PC 환경에서 매뉴얼을 참고해주세요.',
+        EMAIL_CODE_SEND_FIRST_MSG: '이메일 인증 코드 발송을 진행해주세요.',
+        NEED_EMAIL_CODE_VERIFY_MSG: '이메일 인증 코드를 입력해주세요.',
+        EMAIL_CHANGE_SUCCESS_MSG: '이메일 변경에 성공하였습니다.',
+        EMAIL_CODE_SEND_SUCCESS_MSG: '코드 발송에 성공하였습니다. 이메일을 확인해주세요.',
         PREPARING_MSG: '준비중인 기능입니다.'
     },
     'EN': {
@@ -261,6 +265,10 @@ const MessageText = {
         PAM_PASS_DATA_IP_ADDRESS_REQUIRED_MSG: 'Please enter the IP address for bypass settings.',
         PAM_PASS_DATA_IP_ADDRESS_INVALID_MSG: 'The IP address in bypass settings is incorrect.',
         PLEASE_USE_PC_ENVIRONMENT_MSG: 'Please use the PC environment to access the manual.',
+        EMAIL_CODE_SEND_FIRST_MSG: 'Please send the email verification code',
+        NEED_EMAIL_CODE_VERIFY_MSG: 'Please enter the email verification code',
+        EMAIL_CODE_SEND_SUCCESS_MSG: 'The verification code has been successfully sent. Please check your email.',
+        EMAIL_CHANGE_SUCCESS_MSG: 'Email change was successful.',
         PREPARING_MSG: '준비중인 기능입니다.'
     }
 }
