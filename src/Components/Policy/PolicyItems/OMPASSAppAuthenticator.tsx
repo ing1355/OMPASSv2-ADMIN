@@ -2,7 +2,7 @@ import { Switch } from "antd"
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import { FormattedMessage } from "react-intl"
 
-const OMPASSAppAuthenticators = ({ value, onChange }: PolicyItemsPropsType<PolicyDataType['enableAppAuthenticators']>) => {
+const OMPASSAppAuthenticators = ({ value, onChange }: PolicyItemsPropsType<PolicyDataType['enableAppAuthenticationMethods']>) => {
 
     const AuthenticatorController = ({ type }: {
         type: OMPASSAppAuthenticatorType

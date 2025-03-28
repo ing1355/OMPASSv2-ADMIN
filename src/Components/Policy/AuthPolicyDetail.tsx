@@ -32,7 +32,7 @@ const AuthPolicyDetail = () => {
     const { goBack } = useCustomRoute()
     const isAdd = !uuid
     const [authenticatorPolicies, setAuthenticatorPolicies] = useState<PolicyDataType['enableAuthenticators']>(['OMPASS', 'OTP', 'PASSCODE', 'WEBAUTHN'])
-    const [appAuthenticatorPolicies, setAppAuthenticatorPolicies] = useState<PolicyDataType['enableAppAuthenticators']>([])
+    const [appAuthenticatorPolicies, setAppAuthenticatorPolicies] = useState<PolicyDataType['enableAppAuthenticationMethods']>([])
     const [selectedApplicationType, setSelectedApplicationType] = useState<LocalApplicationTypes>(isAdd ? '' : 'DEFAULT')
     const [policyName, setPolicyName] = useState('')
     const [dataLoading, setDataLoading] = useState(!(!uuid))
@@ -140,7 +140,7 @@ const AuthPolicyDetail = () => {
             enableBrowsers: browserUsed ? browserChecked : undefined,
             locationConfig: locationUsed ? locationDatas : undefined,
             enableAuthenticators: authenticatorPolicies,
-            enableAppAuthenticators: appAuthenticatorPolicies,
+            enableAppAuthenticationMethods: appAuthenticatorPolicies,
             accessTimeConfig: accessTimeValues,
             noticeToAdmin: noticeToAdmin!,
             noticeToThemselves
@@ -225,7 +225,7 @@ const AuthPolicyDetail = () => {
                             networkConfig: ipAddressValues,
                             locationConfig: locationUsed ? locationDatas : undefined,
                             enableAuthenticators: authenticatorPolicies,
-                            enableAppAuthenticators: appAuthenticatorPolicies,
+                            enableAppAuthenticationMethods: appAuthenticatorPolicies,
                             accessTimeConfig: accessTimeValues,
                             noticeToAdmin: isDefaultPolicy ? undefined : noticeToAdmin!,
                             noticeToThemselves

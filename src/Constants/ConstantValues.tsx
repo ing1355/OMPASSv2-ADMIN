@@ -15,8 +15,8 @@ import userManagementMenuIconBlack from '../assets/userManagementMenuIconBlack.p
 import userManagementMenuIconWhite from '../assets/userManagementMenuIconWhite.png';
 import versionManagementMenuIconBlack from '../assets/versionManagementMenuIconBlack.png';
 import versionManagementMenuIconWhite from '../assets/versionManagementMenuIconWhite.png';
-import licenseManagementMenuIconWhite from '../assets/licenseManagementMenuIconWhite.png';
-import licenseManagementMenuIconBlack from '../assets/licenseManagementMenuIconBlack.png';
+// import licenseManagementMenuIconWhite from '../assets/licenseManagementMenuIconWhite.png';
+// import licenseManagementMenuIconBlack from '../assets/licenseManagementMenuIconBlack.png';
 import passcodeHistoryMenuIconBlack from '../assets/passcodeHistoryMenuIconBlack.png';
 import passcodeHistoryMenuIconWhite from '../assets/passcodeHistoryMenuIconWhite.png';
 import settingsMenuIconBlack from '../assets/settingsMenuIconBlack.png';

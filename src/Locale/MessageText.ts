@@ -133,7 +133,8 @@ const MessageText = {
         NEED_EMAIL_CODE_VERIFY_MSG: '이메일 인증 코드를 입력해주세요.',
         EMAIL_CHANGE_SUCCESS_MSG: '이메일 변경에 성공하였습니다.',
         EMAIL_CODE_SEND_SUCCESS_MSG: '코드 발송에 성공하였습니다. 이메일을 확인해주세요.',
-        PREPARING_MSG: '준비중인 기능입니다.'
+        NOT_REGISTERED_MSG: 'OMPASS 등록이 되지 않은 사용자입니다.',
+        PREPARING_MSG: '준비중인 기능입니다.',
     },
     'EN': {
         USERNAME_CHECK: 'Only lowercase letters and numbers are allowed, with a length of 4 to 16 characters',
@@ -269,7 +270,8 @@ const MessageText = {
         NEED_EMAIL_CODE_VERIFY_MSG: 'Please enter the email verification code',
         EMAIL_CODE_SEND_SUCCESS_MSG: 'The verification code has been successfully sent. Please check your email.',
         EMAIL_CHANGE_SUCCESS_MSG: 'Email change was successful.',
-        PREPARING_MSG: '준비중인 기능입니다.'
+        NOT_REGISTERED_MSG: 'This user is not registered with OMPASS.',
+        PREPARING_MSG: '준비중인 기능입니다.',
     }
 }
 

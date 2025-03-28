@@ -1,5 +1,5 @@
 import { CustomAxiosPost } from 'Components/CommonCustomComponents/CustomAxios';
-import { PostTokenVerifyApi } from 'Constants/ApiRoute';
+import { TokenVerifyApi } from 'Constants/ApiRoute';
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import queryString from 'query-string';
@@ -17,7 +17,7 @@ const OMPASSVerify = () => {
 
   useEffect(() => {
     CustomAxiosPost(
-      PostTokenVerifyApi,
+      TokenVerifyApi,
       (data: {
         username: string
       }, token: string) => {

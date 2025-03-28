@@ -135,7 +135,7 @@
   height: 65px;
 }
 
-.login-input-container + .login-input-container.password:not(.registered) {
+.login-input-container + .login-input-container.password:not(.not-registered) {
   margin-bottom: 0;
 }
 
@@ -148,7 +148,7 @@
   animation: login-input-container-collapse .3s ease-in-out;
 }
 
-.login-input-container.password:not(.registered) {
+.login-input-container.password:not(.not-registered) {
   display: none;
 }
 

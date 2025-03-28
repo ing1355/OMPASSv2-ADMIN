@@ -142,11 +142,29 @@ type LoginApiParamsType = {
     loginClientType?: ApplicationDataType['type'],
     language: LanguageType
 }
-type LoginApiResponseType = {
+
+type PasswordlessLoginApiParamsType = {
+    domain: string,
+    username: string,
+    language: LanguageType
+}
+
+type OmpassAuthenticationDataType = {
+    isRegisteredOmpass: boolean
     ompassUrl: string
+}
+
+type PasswordlessLoginApiResponseType = {
     username: string
     status: UserStatusType
-    questions: SecurityQuestionType[]
+    ompassAuthentication: OmpassAuthenticationDataType
+}
+
+type LoginApiResponseType = {
+    username: string
+    status: UserStatusType
+    securityQuestions?: SecurityQuestionType[]
+    ompassAuthentication: OmpassAuthenticationDataType
 }
 
 type PasscodeHistoriesParamsType = GeneralParamsType & {
@@ -360,7 +378,7 @@ type DefaultPolicyDataType = {
     accessControl: 'ACTIVE' | 'INACTIVE' | 'DENY'
     policyType: 'DEFAULT' | 'CUSTOM'
     enableAuthenticators: AuthenticatorPolicyType[]
-    enableAppAuthenticators: OMPASSAppAuthenticatorType[]
+    enableAppAuthenticationMethods: OMPASSAppAuthenticatorType[]
     description?: string
     applicationType: LocalApplicationTypes
 }

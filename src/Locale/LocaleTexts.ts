@@ -395,7 +395,7 @@ const LocaleTexts = {
     OMPASS_ACCESS_CONTROL_ITEM_3_TITLE_LABEL: 'Access Denied',
     OMPASS_ACCESS_CONTROL_ITEM_3_SUBSCRIPTION_LABEL: 'Deny OMPASS authentication for all users',
     OMPASS_AUTHENTICATOR_TITLE_LABEL: 'Authentication Method Control',
-    OMPASS_APP_AUTHENTICATOR_TITLE_LABEL: 'Authenticator Control\nIn App',
+    OMPASS_APP_AUTHENTICATOR_TITLE_LABEL: 'App Authenticator Control',
     PIN_LABEL: 'PIN',
     PATTERN_LABEL: 'Pattern',
     ACCESS_TIME_DAY_SELECT_LABEL: 'Select day of week',

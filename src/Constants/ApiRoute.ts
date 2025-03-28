@@ -1,6 +1,8 @@
 // 로그인
-export const PostLoginApi = '/v2/login';
-export const PostTokenVerifyApi = '/v2/login/token-verification';
+// export const PostLoginApi = '/v2/login';
+export const LoginApi = '/v2/new-login';
+export const PasswordlessLoginApi = '/v2/passwordless-login';
+export const TokenVerifyApi = '/v2/login/token-verification';
 export const UpdatePasswordApi = '/v2/users/password'
 export const ResetPasswordApi = `/v2/recovery-account`
 export const ResetPasswordEmailSendApi = `/v2/recovery-account/mail`

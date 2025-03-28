@@ -7,7 +7,7 @@ import { isMobile } from "react-device-detect";
 import { isDev, subDomain } from '../../Constants/ConstantValues';
 import loginMainImage from '../../assets/loginMainImage.png'
 import { useCookies } from 'react-cookie';
-import { LoginFunc, UpdatePasswordFunc } from 'Functions/ApiFunctions';
+import { LoginFunc, UpdatePasswordFunc, PasswordlessLoginFunc } from 'Functions/ApiFunctions';
 import Button from 'Components/CommonCustomComponents/Button';
 import Input from 'Components/CommonCustomComponents/Input';
 import { message } from 'antd';
@@ -22,7 +22,7 @@ const Login = () => {
   const [inputChangePassword, setInputChangePassword] = useState('')
   const [inputChangePasswordConfirm, setInputChangePasswordConfirm] = useState('')
   const [needPasswordChange, setNeedPasswordChange] = useState(false)
-  const [isRegistered, setIsRegistered] = useState(false)
+  const [notRegistered, setNotRegistered] = useState(false)
   const ompassWindowRef = useRef<Window | null | undefined>()
 
   const inputUesrnameRef = useRef<HTMLInputElement>()
@@ -37,94 +37,110 @@ const Login = () => {
     setInputChangePassword('')
     setInputChangePasswordConfirm('')
     setInputPassword('')
-    setIsRegistered(false)
+    setNotRegistered(false)
   }, [needPasswordChange])
 
   useEffect(() => {
-    if(isRegistered) {
+    if (notRegistered) {
       inputPasswordRef.current?.focus()
     }
-  },[isRegistered])
+  }, [notRegistered])
+
+  const saveIdFunction = (checked: boolean) => {
+    if (checked) {
+      setCookie("rememberUserId", inputUsername)
+    } else {
+      removeCookie("rememberUserId");
+    }
+  }
+
+  const ompassUrlCallback = (ompassUrl: string, token: string) => {
+    console.log(ompassUrl, token)
+    let temp = ompassUrl + `&authorization=${token}`
+    if (isDev) {
+      const targetUrl = "192.168.182.120:9002"
+      temp = temp.replace("ompass.kr:54007", targetUrl).replace("ompass.kr:54012", targetUrl).replace("192.168.182.75:9001", targetUrl).replace("ompass.kr:59001", targetUrl)
+    }
+    if (!ompassWindowRef.current?.closed) {
+      ompassWindowRef.current?.close()
+    }
+    console.log(temp)
+    ompassWindowRef.current = OMPASS(temp);
+  }
+
+  const loginSuccessCallback = ({ ompassAuthentication: { ompassUrl, isRegisteredOmpass }, status, securityQuestions }: LoginApiResponseType, token: string) => {
+    if (status === 'WAIT_INIT_PASSWORD') {
+      // if (false) {
+      setInputPassword('')
+      setTempToken(token)
+      message.info(formatMessage({ id: 'PASSWORD_CHANGE_NEED_MSG' }))
+      return setNeedPasswordChange(true)
+    } else if (status === 'WAIT_SECURITY_QNA') {
+      return navigate('/SecurityQuestion', {
+        state: {
+          token,
+          questions: securityQuestions
+        }
+      })
+    } else {
+      ompassUrlCallback(ompassUrl, token)
+    }
+  }
+
+  const passwordlessLoginRequest = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const { saveId } = e.currentTarget.elements as any
+    if (!inputUsername) {
+      inputUesrnameRef.current?.focus()
+      return message.error(formatMessage({ id: 'PLEASE_INPUT_ID_MSG' }))
+    }
+    if (notRegistered) {
+      if (needPasswordChange) {
+        if (inputChangePassword !== inputChangePasswordConfirm) return message.error(formatMessage({ id: 'PASSWORD_NOT_MATCH' }))
+        UpdatePasswordFunc(inputChangePassword, tempToken, () => {
+          setNeedPasswordChange(false)
+          message.success(formatMessage({ id: 'PASSWORD_CHANGE_SUCCESS_MSG' }))
+          setTempToken('')
+        })
+      } else {
+        if (!inputUsername) {
+          inputUesrnameRef.current?.focus()
+          return message.error(formatMessage({ id: 'PLEASE_INPUT_ID_MSG' }))
+        }
+        LoginFunc({
+          domain: subDomain,
+          username: inputUsername,
+          password: inputPassword,
+          language: lang!,
+          loginClientType: "ADMIN"
+        }, (res, token) => {
+          saveIdFunction(saveId.checked)
+          loginSuccessCallback(res, token)
+        }).catch(err => {
+          setInputPassword('')
+        })
+      }
+    } else {
+      PasswordlessLoginFunc({
+        domain: subDomain,
+        username: inputUsername,
+        language: lang!
+      }, (res, token) => {
+        saveIdFunction(saveId.checked)
+        if (res.ompassAuthentication.isRegisteredOmpass) {
+          loginSuccessCallback(res, token)
+        } else {
+          message.info(formatMessage({ id: 'NOT_REGISTERED_MSG' }))
+          setNotRegistered(true)
+        }
+      })
+    }
+  }
 
   const loginRequest = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { saveId } = e.currentTarget.elements as any
-    if (needPasswordChange) {
-      if (inputChangePassword !== inputChangePasswordConfirm) return message.error(formatMessage({ id: 'PASSWORD_NOT_MATCH' }))
-      UpdatePasswordFunc(inputChangePassword, tempToken, () => {
-        setNeedPasswordChange(false)
-        message.success(formatMessage({ id: 'PASSWORD_CHANGE_SUCCESS_MSG' }))
-        setTempToken('')
-      })
-    } else {
-      if (!inputUsername) {
-        inputUesrnameRef.current?.focus()
-        return message.error(formatMessage({ id: 'PLEASE_INPUT_ID_MSG' }))
-      }
-      if (isRegistered) {
 
-      } else {
-        message.info("먼저 등록하셔야 합니다.")
-        return setIsRegistered(true)
-        if (!inputPassword) {
-          inputPasswordRef.current?.focus()
-          return message.error(formatMessage({ id: 'PLEASE_INPUT_PASSWORD_MSG' }))
-        }
-      }
-      LoginFunc({
-        domain: subDomain,
-        username: inputUsername,
-        password: inputPassword,
-        language: lang!,
-        loginClientType: "ADMIN"
-      }, ({ ompassUrl, status, questions }, token) => {
-        // status = 'WAIT_SECURITY_QNA'
-        if (status === 'WAIT_INIT_PASSWORD') {
-          // if (false) {
-          setInputPassword('')
-          setTempToken(token)
-          message.info(formatMessage({ id: 'PASSWORD_CHANGE_NEED_MSG' }))
-          return setNeedPasswordChange(true)
-        } else if (status === 'WAIT_SECURITY_QNA') {
-          return navigate('/SecurityQuestion', {
-            state: {
-              token,
-              questions
-            }
-          })
-        }
-        const temp = ompassUrl + `&authorization=${token}`
-        if (isDev) {
-          const targetUrl = "192.168.182.120:9002"
-          const resultUri = temp.replace("ompass.kr:54007", targetUrl).replace("ompass.kr:54012", targetUrl).replace("192.168.182.75:9001", targetUrl).replace("ompass.kr:59001", targetUrl)
-          const url = new URL(resultUri)
-          url.searchParams.delete('client_type')
-          console.log(url)
-          if (!ompassWindowRef.current?.closed) {
-            ompassWindowRef.current?.close()
-          }
-          // ompassWindowRef.current = OMPASS(resultUri.replace("ompass.kr:54007", targetUrl).replace("ompass.kr:54012", targetUrl).replace("192.168.182.75:9001", targetUrl).replace("ompass.kr:59001", targetUrl));
-          ompassWindowRef.current = OMPASS(resultUri.replace("ompass.kr:54007", targetUrl).replace("ompass.kr:54012", targetUrl).replace("192.168.182.75:9001", targetUrl).replace("ompass.kr:59001", targetUrl));
-        } else {
-          ompassWindowRef.current = OMPASS(temp);
-        }
-        // if(ompassWindowRef.current) {
-        //   setOmpassOpened(true)
-        //   setInterval(() => {
-        //     if(ompassWindowRef.current?.closed) {
-        //       setOmpassOpened(false)
-        //     }
-        //   }, 500);
-        // }
-        if (saveId.checked) {
-          setCookie("rememberUserId", inputUsername)
-        } else {
-          removeCookie("rememberUserId");
-        }
-      }).catch(err => {
-        setInputPassword('')
-      })
-    }
   }
 
   useEffect(() => {
@@ -142,7 +158,7 @@ const Login = () => {
         </div>
       </div> : <></>}
       <form
-        onSubmit={loginRequest}
+        onSubmit={passwordlessLoginRequest}
       >
         {!isMobile && <div className='login-form-header'>
           <h1 className='login-form-title'><FormattedMessage id={needPasswordChange ? 'PASSWORD_CHANGE' : 'LOGIN'} /></h1>
@@ -202,7 +218,7 @@ const Login = () => {
               valueChange={value => {
                 setInputChangePasswordConfirm(value);
               }}
-            /> </div> : <div className={`login-input-container password${isRegistered ? ' registered' : ''}`}>
+            /> </div> : <div className={`login-input-container password${notRegistered ? ' not-registered' : ''}`}>
             <label htmlFor='userPassword'><FormattedMessage id='PASSWORD' /></label>
             <Input
               className='st1 login-input password'

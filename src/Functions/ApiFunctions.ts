@@ -1,12 +1,21 @@
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from "Components/CommonCustomComponents/CustomAxios";
-import { AddApplicationListApi, AddLdapConfigListApi, AddPasscodeApi, AddPoliciesListApi, AddRadiusUserListApi, AddUserDataApi, AddUserGroupApi, AddUserWithCsvDataApi, ApprovalUserApi, ConfirmPasswordApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeleteLdapConfigListApi, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DuplicateUserNameCheckApi, EmailChangeCodeVerificationApi, FindPortalUsernameApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetAuthorizeMSEntraUriApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetGlobalConfigApi, GetLdapConfigListApi, GetOMPASSAuthResultApi, GetPasscodeHistoriesApi, GetPasscodeListApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetRpUserListApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, OMPASSAuthStartApi, PatchSessionTokenApi, PostLoginApi, ResetPasswordApi, ResetPasswordEmailCodeVerifyApi, ResetPasswordEmailSendApi, RoleSwappingApi, RootSignUpRequestApi, SendEmailChangeEmailByAdminApi, SendPasscodeEmailApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, SyncLdapUserListApi, TestLdapConnectionApi, UnlockUserApi, UpdateAgentNoteApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdateLdapConfigListApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateSecurityQuestionsApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi, VerificationEmailChangeApi } from "Constants/ApiRoute";
+import { AddApplicationListApi, AddLdapConfigListApi, AddPasscodeApi, AddPoliciesListApi, AddRadiusUserListApi, AddUserDataApi, AddUserGroupApi, AddUserWithCsvDataApi, ApprovalUserApi, ConfirmPasswordApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeleteLdapConfigListApi, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DuplicateUserNameCheckApi, EmailChangeCodeVerificationApi, FindPortalUsernameApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetAuthorizeMSEntraUriApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetGlobalConfigApi, GetLdapConfigListApi, GetOMPASSAuthResultApi, GetPasscodeHistoriesApi, GetPasscodeListApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetRpUserListApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, LoginApi, OMPASSAuthStartApi, PasswordlessLoginApi, PatchSessionTokenApi, ResetPasswordApi, ResetPasswordEmailCodeVerifyApi, ResetPasswordEmailSendApi, RoleSwappingApi, RootSignUpRequestApi, SendEmailChangeEmailByAdminApi, SendPasscodeEmailApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, SyncLdapUserListApi, TestLdapConnectionApi, UnlockUserApi, UpdateAgentNoteApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdateLdapConfigListApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateSecurityQuestionsApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi, VerificationEmailChangeApi } from "Constants/ApiRoute";
 import { DateTimeFormat, INT_MAX_VALUE } from "Constants/ConstantValues";
 import { convertLocalDateStringToUTCString, convertUTCStringToLocalDateString } from "./GlobalFunctions";
 import dayjs from "dayjs";
 
 export const LoginFunc = (params: LoginApiParamsType, callback: (res: LoginApiResponseType, token: string) => void) => {
     return CustomAxiosPost(
-        PostLoginApi,
+        LoginApi,
+        (res: LoginApiResponseType, token: string) => {
+            callback(res, token)
+        }, params
+    )
+}
+
+export const PasswordlessLoginFunc = (params: PasswordlessLoginApiParamsType, callback: (res: LoginApiResponseType, token: string) => void) => {
+    return CustomAxiosPost(
+        PasswordlessLoginApi,
         (res: LoginApiResponseType, token: string) => {
             callback(res, token)
         }, params
@@ -138,10 +147,12 @@ export const GetPoliciesListFunc = ({
     sortDirection = "DESC"
 }: PoliciesListParamsType, callback: (data: GetListDataGeneralType<PolicyListDataType>) => void) => {
     return CustomAxiosGet(GetPoliciesListApi, (data: GetListDataGeneralType<PolicyListDataType>) => {
-        callback({...data, results: data.results.map(_ => ({
-            ..._,
-            createdAt: convertUTCStringToLocalDateString(_.createdAt)
-        }))})
+        callback({
+            ...data, results: data.results.map(_ => ({
+                ..._,
+                createdAt: convertUTCStringToLocalDateString(_.createdAt)
+            }))
+        })
     }, {
         page_size,
         page,
@@ -204,7 +215,7 @@ export const GetUserDataListFunc = ({
 }
 
 export const AddUserDataFunc = (params: UserDataAddLocalValuesType, callback: (res: UserDataType) => void) => {
-    if(!params.hasPassword) {
+    if (!params.hasPassword) {
         params.password = undefined
         params.passwordConfirm = undefined
     }
@@ -570,11 +581,11 @@ export const GetDashboardApplicationRPUserFunc = (params: ApplicationListDataTyp
 }
 
 const convertDashboardDateParamsKSTtoUTC = (params: DashboardDateSelectDataType): DashboardDateSelectDataType => {
-        return {
-            ...params,
-            startDate: convertLocalDateStringToUTCString(params.startDate),
-            endDate: convertLocalDateStringToUTCString(params.intervalValue === 24 ? dayjs(params.endDate).format(DateTimeFormat) : params.endDate)
-        }
+    return {
+        ...params,
+        startDate: convertLocalDateStringToUTCString(params.startDate),
+        endDate: convertLocalDateStringToUTCString(params.intervalValue === 24 ? dayjs(params.endDate).format(DateTimeFormat) : params.endDate)
+    }
 }
 
 export const GetDashboardApplicationAuthFunc = (params: ApplicationListDataType['id'][], params2: DashboardDateSelectDataType, callback: (data: DashboardChartDataEachApplicationType[]) => void) => {
@@ -611,7 +622,7 @@ export const ResetPasswordEmailSendFunc = (params: RecoverySendMailParamsType, c
 
 export const ResetPasswordEmailCodeVerifyFunc = (params: RecoverySendMailParamsType & {
     code: string
-}, callback: (a: any,b: any) => void) => {
+}, callback: (a: any, b: any) => void) => {
     return CustomAxiosPost(ResetPasswordEmailCodeVerifyApi, callback, params)
 }
 
@@ -664,7 +675,7 @@ export const TestLdapConnectionFunc = (params: LdapTestConnectionParamsType, cal
 export const AddRadiusUserListFunc = (params: {
     radiusApplicationId: ApplicationDataType['id']
     radiusRpUsers: RadiusUserDataType[]
-} ,callback: () => void) => {
+}, callback: () => void) => {
     return CustomAxiosPost(AddRadiusUserListApi, callback, params)
 }
 
