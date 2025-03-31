@@ -55,6 +55,8 @@ const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
     useEffect(() => {
         if (!data) {
             mapInitRef.current = false
+        } else {
+            console.log(data)
         }
     }, [data])
 
@@ -219,6 +221,7 @@ const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
                         <TextComponent title="APPLICATION_TYPE_LABEL" content={getApplicationTypeLabel(data?.ompassData.application.type ?? "")} />
                         <TextComponent title="APPLICATION_NAME_COLUMN_LABEL" content={data?.ompassData.application.name} />
                         <TextComponent title="APPLICATION_INFO_DOMAIN_LABEL" content={data?.ompassData.application.domain} />
+                        {data?.ompassData.application.redirectUri && <TextComponent title="APPLICATION_INFO_REDIRECT_URI_LABEL" content={data?.ompassData.application.redirectUri} />}
                     </div>
                     {isPam && <div className="auth-detail-modal-contents-container" data-title={`${formatMessage({ id: "SERVER_DEVICE_INFO_TITLE_LABEL" })}(Server)`}>
                         <TextComponent title="DEVICE_NAME_LABEL" content={serverInfo?.name} />

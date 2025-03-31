@@ -1,3 +1,11 @@
+* v2.0.0(110)
+  - 로그인 정렬 변경
+  - 인증 로그 상세에 리다이렉트 URI 추가
+  - Application Detail Info 타입별 정리
+  - 기기 변경 완료 시 상단에 메세지 출력
+  - ldap 프록시 데이터 추가
+  - ldap 어플리케이션 문서 아직 구현중 메세지 표시
+
 * v2.0.0(109)
   - enableAppAuthenticators -> enableAppAuthenticationMethods 키값 변경
 

@@ -161,6 +161,12 @@
   }
 }
 
+.login-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .login-input {
   font-size: 1rem;
   border-radius: 8px;

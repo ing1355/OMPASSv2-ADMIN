@@ -38,6 +38,7 @@
     background-color: white;
     box-sizing: border-box;
     padding: 0 6px;
+    color: var(--main-purple-color);
 }
 
 .auth-detail-modal-contents-container.map {
@@ -66,6 +67,7 @@
     background-color: var(--sub-grey-color8);
     padding: 2px 0;
     border-radius: 4px;
+    font-size: 14px;
 }
 
 .auth-detail-modal-contents-item:not(:last-child) {

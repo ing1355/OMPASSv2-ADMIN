@@ -38,7 +38,10 @@ const AuthPolicyDetail = () => {
     const [dataLoading, setDataLoading] = useState(!(!uuid))
     const [initEvent, setInitEvent] = useState(false)
     const [inputDescription, setInputDescription] = useState('')
-    const [locationDatas, setLocationDatas] = useState<PolicyDataType['locationConfig']>(undefined)
+    const [locationDatas, setLocationDatas] = useState<PolicyDataType['locationConfig']>({
+        isEnabled: false,
+        locations: []
+    })
     const [browserChecked, setBrowserChecked] = useState<BrowserPolicyType[] | undefined>(isAdd ? PolicyBrowsersList : [])
     const [ompassControl, setOmpassControl] = useState<PolicyDataType['accessControl']>('ACTIVE')
     const [noticeToThemselves, setNoticeToThemselves] = useState<PolicyDataType['noticeToThemselves']>(undefined)
@@ -138,7 +141,7 @@ const AuthPolicyDetail = () => {
             accessControl: ompassControl,
             networkConfig: ipAddressValues,
             enableBrowsers: browserUsed ? browserChecked : undefined,
-            locationConfig: locationUsed ? locationDatas : undefined,
+            locationConfig: locationDatas,
             enableAuthenticators: authenticatorPolicies,
             enableAppAuthenticationMethods: appAuthenticatorPolicies,
             accessTimeConfig: accessTimeValues,
@@ -223,7 +226,7 @@ const AuthPolicyDetail = () => {
                             accessControl: ompassControl,
                             enableBrowsers: browserUsed ? browserChecked : undefined,
                             networkConfig: ipAddressValues,
-                            locationConfig: locationUsed ? locationDatas : undefined,
+                            locationConfig: locationDatas,
                             enableAuthenticators: authenticatorPolicies,
                             enableAppAuthenticationMethods: appAuthenticatorPolicies,
                             accessTimeConfig: accessTimeValues,

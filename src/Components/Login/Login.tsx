@@ -159,6 +159,7 @@ const Login = () => {
       </div> : <></>}
       <form
         onSubmit={passwordlessLoginRequest}
+        className='login-form'
       >
         {!isMobile && <div className='login-form-header'>
           <h1 className='login-form-title'><FormattedMessage id={needPasswordChange ? 'PASSWORD_CHANGE' : 'LOGIN'} /></h1>

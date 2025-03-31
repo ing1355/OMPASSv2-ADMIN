@@ -11,40 +11,24 @@ import { convertBase64FromClientToServerFormat } from "Functions/GlobalFunctions
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect"
 import Button from "Components/CommonCustomComponents/Button"
 import Input from "Components/CommonCustomComponents/Input"
-import { CopyToClipboard } from "react-copy-to-clipboard"
 import deleteIcon from '../../assets/deleteIcon.png'
 import deleteIconHover from '../../assets/deleteIconHover.png'
 import { FormattedMessage, useIntl } from "react-intl"
 import CustomImageUpload from "Components/CommonCustomComponents/CustomImageUpload"
-import BottomLineText from "Components/CommonCustomComponents/BottomLineText"
 import { domainRegex, ipAddressRegex, redirectUriRegex } from "Components/CommonCustomComponents/CommonRegex"
 import CustomModal from "Components/Modal/CustomModal"
 import SingleOMPASSAuthModal from "Components/Modal/SingleOMPASSAuthModal"
-import RadiusDetailInfo from "./RadiusDetailInfo"
 import documentIcon from '../../assets/documentIcon.png'
 import documentIconHover from '../../assets/documentIconHover.png'
 import ApplicationAgentDownload from "./ApplicationAgentDownload"
 import '../Policy/AuthPolicyDetail.css'
 import './ApplicationDetail.css'
 import { isMobile } from "react-device-detect"
+import ApplicationDetailSubInfoByType from "./ApplicationDetailSubInfoByType"
+import ApplicationDetailHeaderInfo from "./ApplicationDetailHeaderInfo"
+import BottomLineText from "Components/CommonCustomComponents/BottomLineText"
 
-const ApiServerAddressItem = ({ text }: {
-    text: string
-}) => {
-    const { formatMessage } = useIntl()
-    return <CustomInputRow title={<FormattedMessage id="API_SERVER_ADDRESS_LABEL" />}>
-        <CopyToClipboard text={text} onCopy={(value, result) => {
-            if (result) {
-                message.success(formatMessage({ id: 'API_SERVER_ADDRESS_COPY_SUCCESS' }))
-            } else {
-                message.success(formatMessage({ id: 'API_SERVER_ADDRESS_COPY_FAIL' }))
-            }
-        }}>
-            <Input className="st1 secret-key" value={text} readOnly />
-        </CopyToClipboard>
 
-    </CustomInputRow>
-}
 
 const ApplicationDetail = () => {
     const [logoImage, setLogoImage] = useState<updateLogoImageType>({
@@ -64,6 +48,9 @@ const ApplicationDetail = () => {
     const [MSEntraTenantId, setMSEntraTenantId] = useState('')
     const [MSEntraDiscoveryEndpoint, setMSEntraDiscoveryEndpoint] = useState('')
     const [MSEntraAppId, setMSEntraAppId] = useState('')
+    const [ldapProxyServer, setLdapProxyServer] = useState<ApplicationDataType['ldapProxyServer']>({
+        host: ''
+    })
     const [pamPassData, setPamPassData] = useState<PAMPassDataType>({
         isEnabled: false,
         ip: '',
@@ -110,7 +97,6 @@ const ApplicationDetail = () => {
                 if (data.linuxPamBypass) {
                     setPamPassData(data.linuxPamBypass)
                 }
-                // setInputRedirectUrl(data.redirectUri ?? "")
                 if (data.msTenantId) {
                     setMSEntraTenantId(data.msTenantId)
                 }
@@ -137,6 +123,7 @@ const ApplicationDetail = () => {
                 setInputApiServerHost(data.apiServerHost)
                 setIsPasswordlessEnabled(data.isPasswordlessEnabled ?? false)
                 setRadiusData(data.radiusProxyServer)
+                setLdapProxyServer(data.ldapProxyServer)
                 if (data.isAuthorized) {
                     setIsAuthorized(data.isAuthorized)
                 }
@@ -240,98 +227,24 @@ const ApplicationDetail = () => {
         </ContentsHeader>
         <div className="contents-header-container">
             {
-                applicationType !== 'ADMIN' && <>
-                    {!isAdd && <BottomLineText title={<FormattedMessage id="APPLICATION_INFO_DETAIL_LABELS" />} />}
-                    {!isAdd && applicationType !== 'MS_ENTRA_ID' && <ApiServerAddressItem text={inputApiServerHost} />}
-
-                    {!isAdd && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_CLIENT_ID_LABEL" />}>
-                        <CopyToClipboard text={inputClientId} onCopy={(value, result) => {
-                            if (result) {
-                                message.success(formatMessage({ id: 'APPLICATION_CLIENT_ID_COPY_SUCCESS_MSG' }))
-                            } else {
-                                message.success(formatMessage({ id: 'APPLICATION_CLIENT_ID_COPY_FAIL_MSG' }))
-                            }
-                        }}>
-                            <Input className="st1 secret-key" value={inputClientId.length > 100 ? (inputClientId.slice(0, 100) + '...') : inputClientId} disabled={isAdd} readOnly={!isAdd} />
-                        </CopyToClipboard>
-                    </CustomInputRow>}
-                    {MSEntraDiscoveryEndpoint && <CustomInputRow title={<FormattedMessage id="MS_ENTRA_DISCOVERY_ENDPOINT_LABEL" />}>
-                        <CopyToClipboard text={MSEntraDiscoveryEndpoint} onCopy={(value, result) => {
-                            if (result) {
-                                message.success(formatMessage({ id: 'APPLICATION_MS_ENTRA_DISCOVERY_ENDPOINT_COPY_SUCCESS_MSG' }))
-                            } else {
-                                message.success(formatMessage({ id: 'APPLICATION_MS_ENTRA_DISCOVERY_ENDPOINT_COPY_FAIL_MSG' }))
-                            }
-                        }}>
-                            <Input className="st1 secret-key" value={MSEntraDiscoveryEndpoint} disabled={isAdd} readOnly={!isAdd} />
-                        </CopyToClipboard>
-                    </CustomInputRow>}
-                    {MSEntraAppId && <CustomInputRow title={<FormattedMessage id="MS_ENTRA_APP_ID_LABEL" />}>
-                        <CopyToClipboard text={MSEntraAppId} onCopy={(value, result) => {
-                            if (result) {
-                                message.success(formatMessage({ id: 'APPLICATION_MS_ENTRA_APP_ID_COPY_SUCCESS_MSG' }))
-                            } else {
-                                message.success(formatMessage({ id: 'APPLICATION_MS_ENTRA_APP_ID_COPY_FAIL_MSG' }))
-                            }
-                        }}>
-                            <Input className="st1 secret-key" value={MSEntraAppId} disabled={isAdd} readOnly={!isAdd} />
-                        </CopyToClipboard>
-                    </CustomInputRow>}
-                    {!isAdd && applicationType !== 'MS_ENTRA_ID' && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_SECRET_KEY_LABEL" />}>
-                        <CopyToClipboard text={inputSecretKey} onCopy={(value, result) => {
-                            if (result) {
-                                message.success(formatMessage({ id: 'APPLICATION_SECRET_KEY_COPY_SUCCESS_MSG' }))
-                            } else {
-                                message.success(formatMessage({ id: 'APPLICATION_SECRET_KEY_COPY_FAIL_MSG' }))
-                            }
-                        }}>
-                            <Input className="st1 secret-key" value={inputSecretKey} onChange={e => {
-                                setInputSecretKey(e.target.value)
-                            }} readOnly />
-                        </CopyToClipboard>
-                        <Button className="st9 application-detail-input-sub-btn" onClick={() => {
-                            setSureReset(true)
-                        }}><FormattedMessage id="APPLICATION_SECRET_KEY_RESET" /></Button>
-                    </CustomInputRow>}
+                !isAdd && <>
+                    {applicationType !== 'ADMIN' && <ApplicationDetailHeaderInfo applicationType={applicationType} inputApiServerHost={inputApiServerHost} inputClientId={inputClientId} MSEntraDiscoveryEndpoint={MSEntraDiscoveryEndpoint} MSEntraAppId={MSEntraAppId} inputSecretKey={inputSecretKey} setInputSecretKey={setInputSecretKey} setSureReset={setSureReset} />}
+                    <ApplicationDetailSubInfoByType isAuthorized={isAuthorized} applicationType={applicationType} data={radiusData} MSEntraTenantId={MSEntraTenantId} ldapProxyServer={ldapProxyServer} />
+                    <BottomLineText title={<FormattedMessage id="APPLICATION_INFO_SETTING_LABELS" />} style={{
+                        marginTop: applicationType === 'ADMIN' ? 0 : '36px',
+                    }} />
                 </>
             }
-            {!isAdd && applicationType === 'RADIUS' && <RadiusDetailInfo data={radiusData} />}
 
-            {!isAdd && applicationType === 'MS_ENTRA_ID' && <BottomLineText title={<FormattedMessage id="MS_ENTRA_ID_DETAIL_INFO_LABEL" />} buttons={<>
-                {!isAuthorized && <Button className="st5" onClick={() => {
-                    if (uuid) {
-                        GetAuthorizeMSEntraUriFunc(uuid, ({ redirectUri }) => {
-                            window.location.href = redirectUri
-                        })
-                    }
-                }}>
-                    <FormattedMessage id="MS_ENTRA_ID_AUTHORIZE_LABEL" />
-                </Button>}
-            </>} style={{
-                marginTop: '36px',
-            }}/>}
-            {!isAdd && applicationType && applicationType === 'MS_ENTRA_ID' && <CustomInputRow title={<FormattedMessage id="MS_ENTRA_TENANT_ID_LABEL" />}>
-                <CopyToClipboard text={MSEntraTenantId} onCopy={(value, result) => {
-                    if (result) {
-                        message.success(formatMessage({ id: 'APPLICATION_MS_ENTRA_TENANT_ID_COPY_SUCCESS_MSG' }))
-                    } else {
-                        message.success(formatMessage({ id: 'APPLICATION_MS_ENTRA_TENANT_ID_COPY_FAIL_MSG' }))
-                    }
-                }}>
-                    <Input className="st1 secret-key" value={MSEntraTenantId || formatMessage({ id: 'MS_ENTRA_ID_TENANT_EMPTY_VALUE' })} disabled={isAdd} readOnly={!isAdd} />
-                </CopyToClipboard>
-            </CustomInputRow>}
-
-            {!isAdd && <BottomLineText title={<FormattedMessage id="APPLICATION_INFO_SETTING_LABELS" />} style={{
-                marginTop: applicationType === 'ADMIN' ? 0 : '36px',
-            }} />}
             <CustomInputRow required title={<FormattedMessage id="APPLICATION_INFO_TYPE_LABEL" />}>
                 {isAdd ? <CustomSelect value={applicationType} onChange={value => {
                     setApplicationType(value as ApplicationDataType['type'])
                 }} items={typeItems} needSelect /> : getApplicationTypeLabel(applicationType as ApplicationDataType['type'])}
                 {applicationType && applicationType !== 'ADMIN' && <Button className="st5" icon={documentIcon} hoverIcon={documentIconHover} onClick={() => {
-                    if(isMobile) {
+                    if (isMobile) {
                         message.info(formatMessage({ id: 'PLEASE_USE_PC_ENVIRONMENT_MSG' }))
+                    } else if (applicationType === 'LDAP') {
+                        message.info(formatMessage({ id: 'PREPARING_MSG' }))
                     } else {
                         window.open(`/docs/application/${applicationType}`, '_blank');
                     }
@@ -355,7 +268,7 @@ const ApplicationDetail = () => {
                     <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_NOTICE_LABEL" />}>
                         <Input className="st1" value={helpMsg} valueChange={value => {
                             setHelpMsg(value)
-                        }} maxLength={50}/>
+                        }} maxLength={50} />
                     </CustomInputRow>
                     {
                         needDomains.includes(applicationType) && <>

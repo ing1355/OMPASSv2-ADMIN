@@ -270,6 +270,9 @@ type ApplicationDataType = DefaultApplicationDataType & {
     discoveryEndpoint?: string
     msAppId?: string
     isAuthorized?: boolean
+    ldapProxyServer: {
+        host?: string
+    }
 }
 
 type ApplicationDataParamsType = {
@@ -386,7 +389,7 @@ type DefaultPolicyDataType = {
 type RestrictionNoticeMethodType = 'EMAIL' | 'PUSH'
 
 type PolicyDataType = DefaultPolicyDataType & {
-    locationConfig?: LocationPolicyType
+    locationConfig: LocationPolicyType
     enableBrowsers?: BrowserPolicyType[]
     networkConfig?: IpAddressPolicyType
     accessTimeConfig?: AccessTimeRestrictionType

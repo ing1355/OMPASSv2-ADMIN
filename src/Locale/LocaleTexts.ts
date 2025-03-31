@@ -279,7 +279,7 @@ const LocaleTexts = {
     LDAP_MANAGEMENT_TITLE: 'LDAP Config List',
     LDAP_ADD_TITLE: 'LDAP Config Add',
     LDAP_MODIFY_TITLE: 'LDAP Config Detail',
-    RADIUS_NO_CONNECTED_MSG: 'Connection required',
+    NO_CONNECTED_MSG: 'Connection required',
     RADIUS_SYNC_TITLE: 'RADIUS User Add',
     RADIUS_SURE_SYNC_TITLE: 'RADIUS User Sync',
     RADIUS_SURE_SYNC_SUBSCRIPTION: 'Synchronize the RADIUS user list to the OMPASS Portal.\nPreviously registered users will remain the same, \nand new users must log in to the OMPASS Portal and\nregister for OMPASS on the details page.\nDo you want to continue?',
@@ -346,7 +346,7 @@ const LocaleTexts = {
     POLICY_LOCATION_AUTHENTICATOR_MODAL_SUBSCRIPTION_1: 'The user location policy does not apply to OTP, PASSCODE, and WEBAUTHN authentication methods',
     POLICY_LOCATION_AUTHENTICATOR_MODAL_SUBSCRIPTION_2: 'Do you want to continue?',
     POLICY_LOCATION_AUTHENTICATOR_MODAL_SUBSCRIPTION_3: '{auth} authentication method is not subject to user location policies',
-    LDAP_DETAIL_INFO_LABEL: 'Detail Info',
+    LDAP_DETAIL_INFO_LABEL: 'LDAP Detail Info',
     LDAP_SECRET_KEY_LABEL: 'Secret Key',
     LDAP_SETTING_INFO_LABEL: 'Setting Info',
     LDAP_NAME_LABEL: 'Name',
@@ -471,7 +471,7 @@ const LocaleTexts = {
     DEVICE_NAME_LABEL: 'Device Name',
     IP_LABEL: 'IP',
     AUTH_LOG_DETAIL_INVALID_LOCATION_LABEL: 'Invalid Location',
-    AUTH_LOG_DETAIL_VALID_LOCATION_LABEL: 'Valid Location',
+    AUTH_LOG_DETAIL_VALID_LOCATION_LABEL: 'Valid Location(Invalid)',
     AUTH_LOG_DETAIL_TITLE_LABEL: 'Authentication Log Detail',
     LOCATION_INFO_TITLE_LABEL: 'Location Information',
     VALID_LABEL: 'Valid',
@@ -479,7 +479,8 @@ const LocaleTexts = {
     EMAIL_CHANGE_LABEL: 'Change',
     ACCOUNT_PASSWORD_INPUT: 'Account Password Input',
     NO_LOCATION_DATA_LABEL: 'No Location Data',
-    AUTHENTICATOR_TYPE_LABEL: 'Authentication Method'
+    AUTHENTICATOR_TYPE_LABEL: 'Authentication Method',
+    OMPASS_PROXY_INSTALLED_IP_LABEL: 'OMPASS Proxy Server Installed IP'
 
   },
   KR: {
@@ -762,7 +763,7 @@ const LocaleTexts = {
     LDAP_MANAGEMENT_TITLE: 'LDAP 설정 목록',
     LDAP_ADD_TITLE: 'LDAP 설정 추가',
     LDAP_MODIFY_TITLE: 'LDAP 설정 상세 정보',
-    RADIUS_NO_CONNECTED_MSG: '연결 필요',
+    NO_CONNECTED_MSG: '연결 필요',
     RADIUS_SYNC_TITLE: 'RADIUS 사용자 추가',
     RADIUS_SURE_SYNC_TITLE: 'RADIUS 사용자 동기화',
     RADIUS_SURE_SYNC_SUBSCRIPTION: 'RADIUS 사용자 목록을 포탈에 동기화 시킵니다.\n기존에 등록했던 사용자는 그대로 유지되며, 새로운 사용자는\n포탈 로그인 후 상세 정보 페이지에서 OMPASS 등록을 진행해야 합니다.\n계속 진행하시겠습니까?',
@@ -829,7 +830,7 @@ const LocaleTexts = {
     POLICY_LOCATION_AUTHENTICATOR_MODAL_SUBSCRIPTION_1: '사용자 위치 정책은 OTP, PASSCODE, WEBAUTHN\n인증 방식에 적용되지 않습니다.',
     POLICY_LOCATION_AUTHENTICATOR_MODAL_SUBSCRIPTION_2: '계속 진행하시겠습니까?',
     POLICY_LOCATION_AUTHENTICATOR_MODAL_SUBSCRIPTION_3: '{auth} 인증 방식은 사용자 위치 정책이 적용되지 않습니다.',
-    LDAP_DETAIL_INFO_LABEL: '상세 정보',
+    LDAP_DETAIL_INFO_LABEL: 'LDAP 상세 정보',
     LDAP_SECRET_KEY_LABEL: '시크릿 키',
     LDAP_SETTING_INFO_LABEL: '설정 정보',
     LDAP_NAME_LABEL: '이름',
@@ -954,7 +955,7 @@ const LocaleTexts = {
     DEVICE_NAME_LABEL: '기기명',
     IP_LABEL: 'IP',
     AUTH_LOG_DETAIL_INVALID_LOCATION_LABEL: '인증 요청한 위치',
-    AUTH_LOG_DETAIL_VALID_LOCATION_LABEL: '인증 가능한 위치',
+    AUTH_LOG_DETAIL_VALID_LOCATION_LABEL: '인증 가능한 위치(비정상 시)',
     AUTH_LOG_DETAIL_TITLE_LABEL: '인증 로그 상세',
     LOCATION_INFO_TITLE_LABEL: '위치 정보',
     VALID_LABEL: '정상',
@@ -962,7 +963,8 @@ const LocaleTexts = {
     EMAIL_CHANGE_LABEL: '변경',
     ACCOUNT_PASSWORD_INPUT: '계정 비밀번호 입력',
     NO_LOCATION_DATA_LABEL: '위치 정보 없음',
-    AUTHENTICATOR_TYPE_LABEL: '인증 방식'
+    AUTHENTICATOR_TYPE_LABEL: '인증 방식',
+    OMPASS_PROXY_INSTALLED_IP_LABEL: 'OMPASS 프록시 설치 IP'
   }
 }
 

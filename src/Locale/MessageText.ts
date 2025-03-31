@@ -135,6 +135,7 @@ const MessageText = {
         EMAIL_CODE_SEND_SUCCESS_MSG: '코드 발송에 성공하였습니다. 이메일을 확인해주세요.',
         NOT_REGISTERED_MSG: 'OMPASS 등록이 되지 않은 사용자입니다.',
         PREPARING_MSG: '준비중인 기능입니다.',
+        OMPASS_DEVICE_CHANGE_SUCCESS_MSG: '등록 기기 변경에 성공하였습니다.',
     },
     'EN': {
         USERNAME_CHECK: 'Only lowercase letters and numbers are allowed, with a length of 4 to 16 characters',
@@ -271,7 +272,8 @@ const MessageText = {
         EMAIL_CODE_SEND_SUCCESS_MSG: 'The verification code has been successfully sent. Please check your email.',
         EMAIL_CHANGE_SUCCESS_MSG: 'Email change was successful.',
         NOT_REGISTERED_MSG: 'This user is not registered with OMPASS.',
-        PREPARING_MSG: '준비중인 기능입니다.',
+        PREPARING_MSG: 'This feature is under preparation.',
+        OMPASS_DEVICE_CHANGE_SUCCESS_MSG: 'The device registration has been changed successfully.',
     }
 }
 

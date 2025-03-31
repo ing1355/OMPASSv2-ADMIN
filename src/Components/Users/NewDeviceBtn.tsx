@@ -5,6 +5,7 @@ import CustomModal from "Components/Modal/CustomModal"
 import RegisterOMPASSAuthModal from "Components/Modal/RegisterOMPASSAuthModal"
 import Input from "Components/CommonCustomComponents/Input"
 import { ConfirmPasswordFunc } from "Functions/ApiFunctions"
+import { message } from "antd"
 
 const NewDeviceBtn = ({ onComplete }: {
     onComplete: () => void
@@ -72,7 +73,7 @@ const NewDeviceBtn = ({ onComplete }: {
                 setShowSingleOMPASSAuthModal(false)
             }}
             successCallback={() => {
-                console.log('successCallback')
+                message.success(formatMessage({ id: 'OMPASS_DEVICE_CHANGE_SUCCESS_MSG' }))
                 onComplete()
                 setShowSingleOMPASSAuthModal(false)
             }}

@@ -27,6 +27,7 @@ const ValuesText = {
         REDMINE_APPLICATION_TYPE: 'Redmine',
         MS_ENTRA_ID_APPLICATION_TYPE: 'Microsoft Entra ID',
         KEYCLOAK_APPLICATION_TYPE: 'Keycloak',
+        LDAP_APPLICATION_TYPE: 'LDAP',
 
         REGISTRATION_VALUE: '등록',
         AUTHENTICATION_VALUE: '인증',
@@ -111,6 +112,8 @@ const ValuesText = {
         REDMINE_APPLICATION_TYPE: 'Redmine',
         MS_ENTRA_ID_APPLICATION_TYPE: 'Microsoft Entra ID',
         KEYCLOAK_APPLICATION_TYPE: 'Keycloak',
+        LDAP_APPLICATION_TYPE: 'LDAP',
+        
         REGISTRATION_VALUE: 'Registration',
         AUTHENTICATION_VALUE: 'Authentication',
 
