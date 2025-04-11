@@ -22,7 +22,7 @@ const RadiusSync = () => {
     const [ldapConfigs, setLdapConfigs] = useState<LdapConfigDataType[]>([])
     const [selectedLdapConfig, setSelectedLdapConfig] = useState<LdapConfigDataType['id']>()
     const [storageType, setStorageType] = useState<RadiusStorageType>()
-    const [userList, setUserList] = useState<LdapUserDataType[]>([])
+    const [userList, setUserList] = useState<ExternalDirectoryUserDataType[]>([])
     const [sureSync, setSureSync] = useState(false)
     const [pageSetting, setPageSetting] = useState({
         page: 1,
@@ -112,7 +112,7 @@ const RadiusSync = () => {
                                 <FormattedMessage id="RADIUS_USER_LIST_GET_LABEL"/>
                             </Button>}
                         </CustomInputRow>
-                        <CustomTable<LdapUserDataType>
+                        <CustomTable<ExternalDirectoryUserDataType>
                             theme="table-st1"
                             datas={tableData}
                             loading={userLoading}

@@ -52,6 +52,10 @@ export const EtcMenuItems: DocsMenuItemType[] = [
     {
         title: 'Web API',
         route: '/etc/web_api'
+    },
+    {
+        title: 'OMPASS Interface Framework',
+        route: '/etc/ompass_interface_framework'
     }
 ]
 
@@ -94,7 +98,7 @@ export const PortalMenuItems: DocsMenuItemType[] = [
     },
 ]
 
-export const ApplicationMenuItems: DocsMenuItemType[] = [...applicationTypes.filter(_ => _ !== 'ADMIN' && _ !== 'LDAP').map(_ => ({
+export const ApplicationMenuItems: DocsMenuItemType[] = [...applicationTypes.filter(_ => _ !== 'PORTAL').map(_ => ({
     title: getApplicationTypeLabel(_),
     route: `/application/${_}`
 }))]

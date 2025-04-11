@@ -1,41 +1,25 @@
 import Button from "Components/CommonCustomComponents/Button"
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
-import CustomModal from "Components/Modal/CustomModal"
 import { INT_MAX_VALUE, userStatusTypes } from "Constants/ConstantValues"
 import { GetUserDataListFunc } from "Functions/ApiFunctions"
 import { FormattedMessage, useIntl } from "react-intl"
 import userAddIcon from './../../assets/userAddIcon.png'
 import userAddIconHover from './../../assets/userAddIconHover.png'
 import rootRoleIcon from './../../assets/rootRoleIcon.png'
-import singleUserAddIcon from './../../assets/singleUserAddIcon.png'
-import exceclUploadIcon from './../../assets/exceclUploadIcon.png'
 import downloadIcon from './../../assets/downloadIcon.png'
 import downloadIconWhite from './../../assets/downloadIconWhite.png'
-import ldapSyncIcon from './../../assets/ldapSyncIcon.png'
 import adminRoleIcon from './../../assets/adminRoleIcon.png'
 import { useState } from "react"
 import useFullName from "hooks/useFullName"
 import { useNavigate } from "react-router"
 import { useSelector } from "react-redux"
 import useExcelDownload from "hooks/useExcelDownload"
-
+import UserBulkAddModal from "./UserBulkAddModal"
 // const userStatusList: UserDataType['status'][] = ['LOCK', 'RUN', 'WAIT_ADMIN_APPROVAL', 'USER_PENDING_SIGNUP_VERIFICATION', 'USER_PENDING_EMAIL_UPDATE_VERIFICATION', 'WAIT_INIT_PASSWORD', 'WITHDRAWAL']
 const userRoleList = (role: UserDataType['role']): UserDataType['role'][] => role === 'ROOT' ? ['USER', 'ADMIN', 'ROOT'] : ['USER', 'ADMIN']
 
-const UserAddItem = ({ title, icon, onClick }: {
-    title: React.ReactNode
-    icon: string
-    onClick: React.DOMAttributes<HTMLDivElement>['onClick']
-}) => {
-    return <div className="user-add-modal-contents-item" onClick={onClick}>
-        <img src={icon} />
-        {title}
-    </div>
-}
-
 const PortalUserManagement = () => {
-    const lang = useSelector((state: ReduxStateType) => state.lang!);
-      const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
+    const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     const [dataLoading, setDataLoading] = useState(false)
     const [tableData, setTableData] = useState<UserDataType[]>([])
     const [totalCount, setTotalCount] = useState<number>(0);
@@ -55,12 +39,12 @@ const PortalUserManagement = () => {
         if (params.searchType) {
             _params[params.searchType] = params.searchValue
         }
-        if(params.filterOptions) {
+        if (params.filterOptions) {
             params.filterOptions.forEach(_ => {
                 _params[_.key] = _.value
             })
         }
-        
+
         GetUserDataListFunc(_params, ({ results, totalCount }) => {
             setTableData(results)
             setTotalCount(totalCount)
@@ -68,7 +52,7 @@ const PortalUserManagement = () => {
             setDataLoading(false)
         })
     }
-    
+
     return <>
         <CustomTable<UserDataType>
             className='tab_table_list'
@@ -131,7 +115,7 @@ const PortalUserManagement = () => {
                     </div>,
                     filterKey: 'roles',
                     filterOption: userRoleList(userInfo.role).map(_ => ({
-                        label: formatMessage({id: `${_}_ROLE_VALUE`}),
+                        label: formatMessage({ id: `${_}_ROLE_VALUE` }),
                         value: _
                     }))
                 },
@@ -156,7 +140,7 @@ const PortalUserManagement = () => {
                     noWrap: true,
                     filterKey: 'statuses',
                     filterOption: userStatusTypes.map(_ => ({
-                        label: formatMessage({id: `USER_STATUS_${_}`}),
+                        label: formatMessage({ id: `USER_STATUS_${_}` }),
                         value: _
                     }))
                 }
@@ -166,21 +150,7 @@ const PortalUserManagement = () => {
             }}
             totalCount={totalCount}
         />
-        <CustomModal noBtns open={addOpen} onCancel={() => {
-            setAddOpen(false)
-        }} title={<FormattedMessage id="USER_ADD_MODAL_TITLE" />} width={1000}>
-            <div className="user-add-modal-contents-container">
-                <UserAddItem title={<FormattedMessage id="USER_ADD_SINGLE_USER_ITEM_LABEL" />} icon={singleUserAddIcon} onClick={() => {
-                    navigate('/UserManagement/detail')
-                }} />
-                <UserAddItem title={<FormattedMessage id="USER_ADD_EXCEL_UPLOAD_ITEM_LABEL" />} icon={exceclUploadIcon} onClick={() => {
-                    navigate('/UserManagement/excelUpload')
-                }} />
-                <UserAddItem title={<FormattedMessage id="USER_ADD_LDAP_SYNC_ITEM_LABEL" />} icon={ldapSyncIcon} onClick={() => {
-                    navigate('/UserManagement/ldapSync')
-                }} />
-            </div>
-        </CustomModal>
+        <UserBulkAddModal addOpen={addOpen} setAddOpen={setAddOpen} />
     </>
 }
 

@@ -1,6 +1,5 @@
 import useOMPASS from "hooks/useOMPASS"
 import CustomModal from "./CustomModal"
-import './OMPASSAuthModal.css'
 import { useSelector } from "react-redux"
 import { useEffect, useRef, useState } from "react"
 import { message } from "antd"
@@ -8,8 +7,7 @@ import dayjs from "dayjs"
 import OMPASSAuthContents from "./OMPASSAuthContents"
 import { FormattedMessage, useIntl } from "react-intl"
 import { convertTimeFormat } from "Functions/GlobalFunctions"
-import { DateTimeFormat } from "Constants/ConstantValues"
-
+import './OMPASSAuthModal.css'
 
 type PairOMPASSAuthModalProps = {
     opened: boolean
@@ -21,9 +19,13 @@ type PairOMPASSAuthModalProps = {
 const PairOMPASSAuthModal = ({ opened, onCancel, successCallback, userData }: PairOMPASSAuthModalProps) => {
     const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     const [remainTime, setRemainTime] = useState(-1)
-    const [sessionData, setSessionData] = useState<QRDataDefaultBodyType>({
+    const [sourceSessionData, setSourceSessionData] = useState<QRDataDefaultBodyType>({
         url: '',
-        param: ''
+        nonce: ''
+    })
+    const [targetSessionData, setTargetSessionData] = useState<QRDataDefaultBodyType>({
+        url: '',
+        nonce: ''
     })
     const [sourceStatus, setSourceStatus] = useState<OMPASSAuthStatusType>('ready')
     const [targetStatus, setTargetStatus] = useState<OMPASSAuthStatusType>('ready')
@@ -42,9 +44,13 @@ const PairOMPASSAuthModal = ({ opened, onCancel, successCallback, userData }: Pa
         setSourceStatus('ready')
         setTargetStatus('ready')
         setRemainTime(-1)
-        setSessionData({
+        setSourceSessionData({
             url: '',
-            param: ''
+            nonce: ''
+        })
+        setTargetSessionData({
+            url: '',
+            nonce: ''
         })
         tokenRef.current = ''
         if (timeTimerRef.current) {
@@ -56,12 +62,16 @@ const PairOMPASSAuthModal = ({ opened, onCancel, successCallback, userData }: Pa
     return <CustomModal title={<FormattedMessage id="OMPASS_MODULE_MODAL_TITLE_LABEL"/>} open={opened} onCancel={() => {
         _onCancel()
     }} buttonsType="small" noClose onOpen={() => {
-        OMPASSAuth.startAuth({ type: 'pair', purpose: 'ROLE_SWAPPING', targetUserId: userData!.userId }, ({ url, ntp, sessionExpiredAt, sourceNonce }) => {
+        OMPASSAuth.startAuth({ type: 'pair', purpose: 'ROLE_SWAPPING', targetUserId: userData!.userId }, ({ url, ntp, sessionExpiredAt, sourceNonce, targetNonce }) => {
             const ntpTime = dayjs.utc(parseInt(ntp))
             const expireTime = dayjs.utc(sessionExpiredAt)
-            setSessionData({
+            setSourceSessionData({
                 url,
-                param: sourceNonce ?? ""
+                nonce: sourceNonce ?? ""
+            })
+            setTargetSessionData({
+                url,
+                nonce: targetNonce ?? ""
             })
             setRemainTime(expireTime.diff(ntpTime, 'seconds'))
             if (timeTimerRef.current) {
@@ -98,13 +108,13 @@ const PairOMPASSAuthModal = ({ opened, onCancel, successCallback, userData }: Pa
         }
     }} width={800}>
         <div className="pair-ompass-auth-contents-container">
-            <OMPASSAuthContents role={userInfo.role} name={userInfo.name} username={userInfo.username} status={sourceStatus} sessionData={sessionData} />
+            <OMPASSAuthContents role={userInfo.role} name={userInfo.name} username={userInfo.username} status={sourceStatus} sessionData={sourceSessionData} />
             <div className="pair-ompass-auth-animation-container">
                 {
                     Array.from({length: 20}).map((_,ind) => <div key={ind}/>)
                 }
             </div>
-            {userData && <OMPASSAuthContents role={userData.role} name={userData.name} username={userData.username} status={targetStatus} sessionData={sessionData} />}
+            {userData && <OMPASSAuthContents role={userData.role} name={userData.name} username={userData.username} status={targetStatus} sessionData={targetSessionData} />}
         </div>
         <div className="ompass-auth-remain-time-container">
             {

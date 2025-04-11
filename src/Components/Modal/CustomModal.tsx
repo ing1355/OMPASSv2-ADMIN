@@ -2,10 +2,11 @@ import { Modal, ModalProps } from "antd";
 import deleteModalIcon from '../../assets/deleteModalIcon.png';
 import infoModalIcon from '../../assets/infoModalIcon.png';
 import closeIcon from '../../assets/closeIcon.png';
-import './CustomModal.css'
-import { useEffect, useState } from "react";
+import backIcon from '../../assets/backIconGrey.png';
+import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 import Button from "Components/CommonCustomComponents/Button";
+import './CustomModal.css'
 
 type CustomModalProps = ModalProps & {
     type?: 'info' | 'warning'
@@ -13,6 +14,7 @@ type CustomModalProps = ModalProps & {
     okText?: React.ReactNode
     noClose?: boolean
     okCallback?: (e?: React.FormEvent<HTMLFormElement>) => Promise<any>
+    backCallback?: () => void
     onSubmit?: (e: React.FormEvent<HTMLFormElement>) => Promise<any>
     cancelCallback?: () => void
     okClassName?: string
@@ -32,7 +34,7 @@ type CustomModalProps = ModalProps & {
     titleLeft?: boolean
 }
 
-const CustomModal = ({ titleLeft, noBtns, title, buttonLoading, typeTitle, typeContent, type, children, okText, cancelText, okCallback, cancelCallback, okClassName, cancelClassName, onCancel, noPadding, noClose, yesOrNo, justConfirm, onOpen, onSubmit, buttonsType, icon, ...props }: CustomModalProps) => {
+const CustomModal = ({ titleLeft, noBtns, title, buttonLoading, typeTitle, typeContent, type, children, okText, cancelText, okCallback, cancelCallback, okClassName, cancelClassName, onCancel, noPadding, noClose, yesOrNo, justConfirm, onOpen, onSubmit, buttonsType, icon, backCallback, ...props }: CustomModalProps) => {
     const [okLoading, setOkLoading] = useState(false)
 
     const ButtonsComponent = () => {
@@ -100,7 +102,12 @@ const CustomModal = ({ titleLeft, noBtns, title, buttonLoading, typeTitle, typeC
                         <div className='type-modal-body-content'>
                             {typeContent}
                         </div>
-                        <div className="custom-modal-close-icon" onClick={() => {
+                        {backCallback && <div className="custom-modal-header-icon custom-modal-back-icon" onClick={() => {
+                            backCallback()
+                        }}>
+                            <img src={backIcon} />
+                        </div>}
+                        <div className="custom-modal-header-icon custom-modal-close-icon" onClick={() => {
                             if (onCancel) onCancel()
                         }}>
                             <img src={closeIcon} />
@@ -113,7 +120,12 @@ const CustomModal = ({ titleLeft, noBtns, title, buttonLoading, typeTitle, typeC
                         }}>
                             {title}
                         </div>}
-                        <div className="custom-modal-close-icon" onClick={() => {
+                        {backCallback && <div className="custom-modal-header-icon custom-modal-back-icon" onClick={() => {
+                            backCallback()
+                        }}>
+                            <img src={backIcon} />
+                        </div>}
+                        <div className="custom-modal-header-icon custom-modal-close-icon" onClick={() => {
                             if (onCancel) onCancel()
                         }}>
                             <img src={closeIcon} />

@@ -1,7 +1,7 @@
-.contents-container {
+ #root > div.contents-container {
   background-color: white;
   height: calc(100% - var(--header-height));
-  padding-top: var(--header-height);
+  margin-top: var(--header-height);
   box-sizing: border-box;
   width: 100%;
   overflow: auto;
@@ -35,4 +35,23 @@
 img {
   object-fit: contain;
   height: 100%;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: var(--main-purple-color);
+  border-radius: 15px;
+  outline: none;
+  border: 1px solid var(--main-purple-color);
+  background-clip: padding-box;
+  cursor: pointer;
+}
+*::-webkit-scrollbar-track {
+  border-radius: 15px;
+  background-color: var(--sub-purple-color);
+  outline: none;
+  background-clip: padding-box;
 }

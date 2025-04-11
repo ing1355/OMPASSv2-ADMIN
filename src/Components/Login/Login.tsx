@@ -68,13 +68,20 @@ const Login = () => {
     ompassWindowRef.current = OMPASS(temp);
   }
 
-  const loginSuccessCallback = ({ ompassAuthentication: { ompassUrl, isRegisteredOmpass }, status, securityQuestions }: LoginApiResponseType, token: string) => {
+  const loginSuccessCallback = (
+    {
+      ompassAuthentication = { ompassUrl: '', isRegisteredOmpass: false },
+      status = 'RUN',
+      securityQuestions = []
+    }: LoginApiResponseType,
+    token: string
+  ) => {
     if (status === 'WAIT_INIT_PASSWORD') {
       // if (false) {
       setInputPassword('')
       setTempToken(token)
       message.info(formatMessage({ id: 'PASSWORD_CHANGE_NEED_MSG' }))
-      return setNeedPasswordChange(true)
+      setNeedPasswordChange(true)
     } else if (status === 'WAIT_SECURITY_QNA') {
       return navigate('/SecurityQuestion', {
         state: {
@@ -83,7 +90,7 @@ const Login = () => {
         }
       })
     } else {
-      ompassUrlCallback(ompassUrl, token)
+      ompassUrlCallback(ompassAuthentication.ompassUrl, token)
     }
   }
 
@@ -94,15 +101,16 @@ const Login = () => {
       inputUesrnameRef.current?.focus()
       return message.error(formatMessage({ id: 'PLEASE_INPUT_ID_MSG' }))
     }
-    if (notRegistered) {
-      if (needPasswordChange) {
-        if (inputChangePassword !== inputChangePasswordConfirm) return message.error(formatMessage({ id: 'PASSWORD_NOT_MATCH' }))
-        UpdatePasswordFunc(inputChangePassword, tempToken, () => {
-          setNeedPasswordChange(false)
-          message.success(formatMessage({ id: 'PASSWORD_CHANGE_SUCCESS_MSG' }))
-          setTempToken('')
-        })
-      } else {
+    
+    if (needPasswordChange) {
+      if (inputChangePassword !== inputChangePasswordConfirm) return message.error(formatMessage({ id: 'PASSWORD_NOT_MATCH' }))
+      UpdatePasswordFunc(inputChangePassword, tempToken, () => {
+        setNeedPasswordChange(false)
+        message.success(formatMessage({ id: 'PASSWORD_CHANGE_SUCCESS_MSG' }))
+        setTempToken('')
+      })
+    } else {
+      if (notRegistered) {
         if (!inputUsername) {
           inputUesrnameRef.current?.focus()
           return message.error(formatMessage({ id: 'PLEASE_INPUT_ID_MSG' }))
@@ -112,28 +120,28 @@ const Login = () => {
           username: inputUsername,
           password: inputPassword,
           language: lang!,
-          loginClientType: "ADMIN"
+          loginClientType: "PORTAL"
         }, (res, token) => {
           saveIdFunction(saveId.checked)
           loginSuccessCallback(res, token)
         }).catch(err => {
           setInputPassword('')
         })
+      } else {
+        PasswordlessLoginFunc({
+          domain: subDomain,
+          username: inputUsername,
+          language: lang!
+        }, (res, token) => {
+          saveIdFunction(saveId.checked)
+          if (res.ompassAuthentication?.isRegisteredOmpass) {
+            loginSuccessCallback(res, token)
+          } else {
+            message.info(formatMessage({ id: 'NOT_REGISTERED_MSG' }))
+            setNotRegistered(true)
+          }
+        })
       }
-    } else {
-      PasswordlessLoginFunc({
-        domain: subDomain,
-        username: inputUsername,
-        language: lang!
-      }, (res, token) => {
-        saveIdFunction(saveId.checked)
-        if (res.ompassAuthentication.isRegisteredOmpass) {
-          loginSuccessCallback(res, token)
-        } else {
-          message.info(formatMessage({ id: 'NOT_REGISTERED_MSG' }))
-          setNotRegistered(true)
-        }
-      })
     }
   }
 

@@ -36,13 +36,15 @@ const Document = () => {
                     items.map((_, ind) => <div key={ind} className={`document-menu-inner-item-row${(location.pathname.endsWith('/') ? location.pathname.slice(0, -1) : location.pathname) === ('/docs' + _.route) ? ' selected' : ''}`} onClick={() => {
                         navigate('/docs' + _.route)
                     }}>
-                        {_.title}
+                        <div>
+                            {_.title}
+                        </div>
                     </div>)
                 }
             </div>
         </div>
     }
-    
+
     return <IntlProvider locale={convertLangToIntlVer(lang)} messages={Locale[lang]}>
         <div className="document-container">
             <div className="document-title">
@@ -77,7 +79,7 @@ const Document = () => {
                         <Route
                             path="/*"
                             element={
-                                <Navigate to={(userInfo && userInfo.role !== 'USER') ? "/docs/start/signup" : "/docs/user/start/signup"}/>
+                                <Navigate to={(userInfo && userInfo.role !== 'USER') ? "/docs/start/signup" : "/docs/user/start/signup"} />
                                 // <div className="document-no-content-container">
                                 //     메인입니다.(내용 준비 중)
                                 // </div>

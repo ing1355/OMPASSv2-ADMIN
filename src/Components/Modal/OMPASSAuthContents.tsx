@@ -1,5 +1,5 @@
 import QRCode from "Components/CommonCustomComponents/QRCode"
-import { getOMPASSAuthIconByProgressStatus } from "Constants/ConstantValues"
+import { DEEP_LINK_DOMAIN, getOMPASSAuthIconByProgressStatus } from "Constants/ConstantValues"
 import { convertTimeFormat } from "Functions/GlobalFunctions"
 import useFullName from "hooks/useFullName"
 import { useState } from "react"
@@ -13,18 +13,19 @@ type OMPASSAuthContentsProps = {
     username: string
     status: OMPASSAuthStatusType
     sessionData: QRDataDefaultBodyType
-    customQrData?: QRDataType<any>
     isRegister?: boolean
+    purpose?: AuthPurposeType
 }
 
-const OMPASSAuthContents = ({ isRegister, role, name, username, status, sessionData, customQrData }: OMPASSAuthContentsProps) => {
+const OMPASSAuthContents = ({ isRegister, role, name, username, status, sessionData, purpose }: OMPASSAuthContentsProps) => {
     const isComplete = status === 'complete'
     const getFullName = useFullName()
     const [qrView, setQrView] = useState(false)
-    const qrData: QRDataType<QRDataDefaultBodyType> = {
-        type: 'DEFAULT',
-        body: {...sessionData}
-    }
+    const qrData: string = `${DEEP_LINK_DOMAIN}/${purpose === 'DEVICE_CHANGE' ? 'device_change' : 'auth'}?${new URLSearchParams(sessionData).toString()}`
+    // const qrData: QRDataType<QRDataDefaultBodyType> = {
+    //     type: 'DEFAULT',
+    //     body: {...sessionData}
+    // }
     
     return <div className="ompass-auth-content-container">
         <div className="ompass-auth-content-title">
@@ -36,7 +37,7 @@ const OMPASSAuthContents = ({ isRegister, role, name, username, status, sessionD
             </div>
         </div>
         <div className="ompass-auth-content-progress-container">
-            {!isRegister && !isComplete && qrData.body.url && <div className="ompass-auth-qr-code-view-container" onMouseEnter={() => {
+            {!isRegister && !isComplete && qrData && <div className="ompass-auth-qr-code-view-container" onMouseEnter={() => {
                 setQrView(true)
             }} onMouseLeave={() => {
                 setQrView(false)
@@ -45,7 +46,7 @@ const OMPASSAuthContents = ({ isRegister, role, name, username, status, sessionD
             </div>}
             {
                 ((isRegister || qrView) && !isComplete) ? <div className="ompass-auth-qr-code-container">
-                    {(isRegister && !qrData.body.url) ? <CustomLoading /> : <QRCode data={customQrData || qrData} size={isRegister ? 160 : 120} />}
+                    {(isRegister && !qrData) ? <CustomLoading /> : <QRCode data={qrData} size={isRegister ? 160 : 120} />}
                 </div> : <>
                     <div className="ompass-auth-content-progress-icon">
                         {

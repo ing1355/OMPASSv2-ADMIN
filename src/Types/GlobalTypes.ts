@@ -1,5 +1,5 @@
 type LanguageType = 'KR' | 'EN' | 'JP'
-type AuthPurposeType = "ROLE_SWAPPING_SOURCE" | "ROLE_SWAPPING_TARGET" | "ADMIN_2FA_FOR_APPLICATION_DELETION" | "ADMIN_2FA_FOR_SECRET_KEY_UPDATE" | "RADIUS_REGISTRATION" | "DEVICE_CHANGE"
+type AuthPurposeType = "ROLE_SWAPPING_SOURCE" | "ROLE_SWAPPING_TARGET" | "ADMIN_2FA_FOR_APPLICATION_DELETION" | "ADMIN_2FA_FOR_SECRET_KEY_UPDATE" | "RADIUS_REGISTRATION" | "DEVICE_CHANGE" | "LDAP_REGISTRATION"
 type LogAuthPurposeType = AuthPurposeType | "ADD_OTHER_AUTHENTICATOR" | "AUTH_LOGIN" | "REG_LOGIN"
 type AuthPurposeForApiType = 'ROLE_SWAPPING' | AuthPurposeType
 type AuthenticationLogType = "ALLOW" | "DENY" | "ALLOW_OUT_OF_SCHEDULE"
@@ -164,7 +164,7 @@ type LoginApiResponseType = {
     username: string
     status: UserStatusType
     securityQuestions?: SecurityQuestionType[]
-    ompassAuthentication: OmpassAuthenticationDataType
+    ompassAuthentication?: OmpassAuthenticationDataType
 }
 
 type PasscodeHistoriesParamsType = GeneralParamsType & {
@@ -184,19 +184,6 @@ type PasscodeDataType = {
     id: string
     recycleCount: number
 }
-
-createdAt
-:
-"2024-11-21 09:23:11"
-lastAuthenticatedAt
-:
-"2024-11-21 10:24:32"
-status
-:
-"REGISTERED"
-type
-:
-"PASSCODE"
 
 type PasscodeParamsType = {
     authenticationDataId: string
@@ -232,7 +219,9 @@ type PasscodeListDataType = {
     authenticationInfoId: RPUserDetailAuthDataType['id']
 }
 
-type ApplicationTypes = "DEFAULT" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "ADMIN" | "RADIUS" | "REDMINE" | 'MS_ENTRA_ID' | 'KEYCLOAK' | 'LDAP'
+// type ApplicationTypes = "DEFAULT" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "ADMIN" | "RADIUS" | "REDMINE" | 'MS_ENTRA_ID' | 'KEYCLOAK' | 'LDAP'
+// type ApplicationTypes = "WEB" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "PORTAL" | "RADIUS" | "REDMINE" | 'MICROSOFT_ENTRA_ID' | 'KEYCLOAK' | 'LDAP'
+type ApplicationTypes = "WEB" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "PORTAL" | "RADIUS" | "REDMINE" | 'MICROSOFT_ENTRA_ID' | 'KEYCLOAK' | 'LDAP'
 type LocalApplicationTypes = ApplicationTypes | 'ALL' | ''
 
 type DefaultApplicationDataType = {
@@ -262,9 +251,7 @@ type ApplicationDataType = DefaultApplicationDataType & {
     redirectUri?: string
     helpDeskMessage: string
     secretKey: string
-    isPasswordlessEnabled?: boolean
     radiusProxyServer?: RadiusDataType
-    linuxPamBypass?: PAMPassDataType
     msTenantId?: string
     msClientId?: string
     discoveryEndpoint?: string
@@ -282,10 +269,8 @@ type ApplicationDataParamsType = {
     helpDeskMessage: ApplicationDataType['helpDeskMessage']
     logoImage: updateLogoImageType
     description: ApplicationDataType['description']
-    isPasswordlessEnabled: ApplicationDataType['isPasswordlessEnabled']
     domain?: ApplicationDataType['domain']
     type?: LocalApplicationTypes
-    linuxPamBypass?: PAMPassDataType
 }
 
 type ApplicationListDataType = {
@@ -321,12 +306,10 @@ type LocationPolicyRestrictionItemType = {
     radius: number
     alias: string
 }
-type LocationPolicyType = {
-    isEnabled: boolean
+type LocationPolicyType = PolicyEnabledDataType & {
     locations: LocationPolicyRestrictionItemType[]
 }
-type IpAddressPolicyType = {
-    isEnabled: boolean
+type IpAddressPolicyType = PolicyEnabledDataType & {
     // ips: PolicyRestrictionItemType[]
     // networks: networkPolicyType[]
     require2faForIps: networkPolicyType[]
@@ -357,15 +340,17 @@ type AccessTimeRestrictionValueType = {
         type: AccessTimeRestrictionTimeRangeTypeType
     }
 }
-type AccessTimeRestrictionType = {
-    isEnabled: boolean,
+
+type PolicyEnabledDataType = {
+    isEnabled: boolean
+}
+type AccessTimeRestrictionType = PolicyEnabledDataType & {
     accessTimes: AccessTimeRestrictionValueType[]
 }
 
 type NoticeRestrictionTypes = "ACCESS_CONTROL" | "BROWSER" | "COUNTRY" | "ACCESS_TIME" | "LOCATION" | "IP_WHITE_LIST"
 
-type RestrictionNoticeDataType = {
-    isEnabled: boolean,
+type RestrictionNoticeDataType = PolicyEnabledDataType & {
     admins: string[],
     methods: RestrictionNoticeMethodType[]
     targetPolicies: NoticeRestrictionTypes[]
@@ -395,6 +380,8 @@ type PolicyDataType = DefaultPolicyDataType & {
     accessTimeConfig?: AccessTimeRestrictionType
     noticeToAdmin?: RestrictionNoticeDataType
     noticeToThemselves?: RestrictionNoticeThemselvesDataType
+    linuxPamBypass?: PAMBypassDataType
+    passwordless?: PolicyEnabledDataType
 }
 
 type PolicyListDataType = {
@@ -480,7 +467,10 @@ type UserDetailDataType = RPUserDetailDataType & {
     application: DefaultApplicationDataType
     username: string
     createdAt: string
-    groupName: string
+    group: {
+        id: DefaultUserGroupDataType['id']
+        name: DefaultUserGroupDataType['name']
+    }
 }
 
 type UserDataModifyValuesType = {
@@ -664,7 +654,8 @@ type UserDetailAuthInfoRowType = {
     id: UserDetailDataType['id']
     username: UserDetailDataType['username']
     authenticationInfo: RPUserDetailAuthDataType
-    groupName: UserDetailDataType['groupName']
+    group?: UserDetailDataType['group']
+    createdAt: UserDetailDataType['createdAt']
 }
 
 type CustomTableSearchParams = {
@@ -787,12 +778,12 @@ type QRDataType<T> = {
 
 type QRDataDefaultBodyType = {
     url: string
-    param: string
+    nonce: string
 }
 
 type LdapTestConnectionParamsType = {
     id: LdapConfigDataType['id']
-    proxyServer: LdapProxyServerDataType
+    proxyServer: ProxyServerDataType
     directoryServers: LdapDirectoryServerDataType[]
     baseDn: LdapConfigDataType['baseDn']
     ldapAuthenticationType: LdapConfigDataType['ldapAuthenticationType']
@@ -802,7 +793,7 @@ type LdapTestConnectionParamsType = {
 type LdapConfigParamsType = {
     name: LdapConfigDataType['name']
     description: LdapConfigDataType['description']
-    proxyServer: LdapProxyServerDataType
+    proxyServer: ProxyServerDataType
     baseDn: LdapConfigDataType['baseDn']
     ldapAuthenticationType: LdapConfigDataType['ldapAuthenticationType']
     ldapTransportType: LdapConfigDataType['ldapTransportType']
@@ -825,6 +816,53 @@ type RpUsersListParamsType = GeneralParamsType & {
     lastLoggedInAuthenticator?: AuthenticatorTypeType[]
 }
 
+type ExternalDirectoryListParamsType = GeneralParamsType & {
+    sortBy?: "CREATED_AT" | "NAME" | "USERNAME"
+    sortDirection?: DirectionType
+    type: ExternalDirectoryType
+    id?: string
+    name?: string
+    proxyServerAddress?: string
+    baseDn?: string
+}
+
+type ExternalDirectoryType = "MICROSOFT_ENTRA_ID" | "OPEN_LDAP" | "ACTIVE_DIRECTORY"
+
+type ExternalDirectoryDataType = {
+    id: string
+    type: ExternalDirectoryType
+    name: string
+    description?: string
+    secretKey: string
+    apiServerHost: string
+    proxyServer: ProxyServerDataType
+    baseDn: string
+    ldapAuthenticationType: LdapAuthenticationType
+    ldapTransportType: LdapTransportType
+    isConnected: boolean
+    lastUserSyncedAt: string
+    createdAt: string
+}
+
+type ExternalDirectoryParamsType = {
+    type: ExternalDirectoryType
+    name: string
+    description?: string
+    proxyServer: ProxyServerDataType
+    baseDn: string
+    ldapAuthenticationType: LdapAuthenticationType
+    ldapTransportType: LdapTransportType
+}
+
+type ExternalDirectoryUserDataType = {
+    username: string
+    name: UserNameType
+    email: string
+    phone: string
+    org: string
+    syncedUserStatus: string
+}
+
 type UploadFileTypes = "APPLICATION_LOGO_IMAGE" | "PORTAL_SETTING_LOGO_IMAGE" | "WINDOWS_AGENT" | "LINUX_PAM" | "OMPASS_PROXY" | "FIDO_AGENT" | "APK" | "CSV" | "REDMINE_PLUGIN" | "KEYCLOAK_PLUGIN"
 
 type TableSearchOptionType = {
@@ -843,8 +881,7 @@ type TableFilterOptionType = {
     value: any | any[]
 }[]
 
-type PAMPassDataType = {
-    isEnabled: boolean
+type PAMBypassDataType = PolicyEnabledDataType & {
     ip: string
     username: string
 }

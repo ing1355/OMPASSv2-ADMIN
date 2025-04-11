@@ -105,6 +105,12 @@ export const FindPortalUsernameApi = '/v2/username'
 export const OMPASSAuthStartApi = '/v2/enhanced-authentication'
 export const GetOMPASSAuthResultApi = (type: string, pollingKey: string) => `/v2/enhanced-authentication/type/${type}/polling-key/${pollingKey}`
 
+// 외부 디렉토리 동기화
+export const GetExternalDirectoryListApi = '/v2/external-directories'
+export const AddExternalDirectoryApi = '/v2/external-directories'
+export const UpdateExternalDirectoryApi = (id: ExternalDirectoryDataType['id']) => `/v2/external-directories/id/${id}`
+export const DeleteExternalDirectoryApi = (id: ExternalDirectoryDataType['id']) => `/v2/external-directories/id/${id}`
+export const SyncExternalDirectoryApi = '/v2/external-directories/sync'
 // LDAP
 export const GetLdapConfigListApi = '/v2/ldap-configs'
 export const AddLdapConfigListApi = '/v2/ldap-configs'

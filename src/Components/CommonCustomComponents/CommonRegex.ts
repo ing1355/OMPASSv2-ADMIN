@@ -23,6 +23,6 @@ export const koreanRegex:RegExp = /[ㄱ-ㅎㅏ-ㅣ가-힣]/
 export const ipAddressRegex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
 export const cidrRegex = /^([0-9]{1,3}\.){3}[0-9]{1,3}\/([0-9]|[1-2][0-9]|3[0-2])$/
 
-export const domainRegex:RegExp = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(:\d+)?(\/.*)?$/
+export const domainRegex:RegExp = /^(https?:\/\/)?(([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}|(\d{1,3}\.){3}\d{1,3})(:\d+)?(\/.*)?$/
 
 export const redirectUriRegex:RegExp = /^(\/[a-zA-Z0-9\-_\/\.]*)?(\?[a-zA-Z0-9\-_\.=]*(?:&[a-zA-Z0-9\-_\.=]*)*)?(#[a-zA-Z0-9\-_\.]*)?$/

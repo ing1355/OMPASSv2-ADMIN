@@ -4,26 +4,29 @@ import Input from "Components/CommonCustomComponents/Input";
 import downloadIcon from '../../../assets/downloadIcon.png';
 import Contents from "Components/Layout/Contents";
 import ContentsHeader from "Components/Layout/ContentsHeader";
-import { AddLdapConfigListFunc, DeleteLdapConfigListFunc, GetLdapConfigListFunc, UpdateLdapConfigListFunc } from "Functions/ApiFunctions";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import './LdapSync.css'
 import { LDAPAuthenticationTypes, LDAPTransportTypes } from "Constants/ConstantValues";
 import { message } from "antd";
 import { useNavigate, useParams } from "react-router";
 import BottomLineText from "Components/CommonCustomComponents/BottomLineText";
 import deleteIcon from '../../../assets/deleteIcon.png'
 import deleteIconHover from '../../../assets/deleteIconHover.png'
-import LdapSyncButton from "./LdapSyncButton";
+import ExternalDirectorySyncButton from "./ExternalDirectorySyncButton";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { useSelector } from "react-redux";
 import { downloadFileByLink } from "Functions/GlobalFunctions";
+import './ExternalDirectory.css'
+import { GetExternalDirectoryListFunc, AddExternalDirectoryFunc, UpdateExternalDirectoryFunc, DeleteExternalDirectoryFunc } from "Functions/ApiFunctions";
 
-const LdapSyncDetail = () => {
+const ExternalDirectoryDetail = () => {
+    const type = useParams().type as ExternalDirectoryType
+    const detailId = useParams().id;
     const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const [dataLoading, setDataLoading] = useState(false)
-    const [data, setData] = useState<LdapConfigDataType>()
-    const [params, setParams] = useState<LdapConfigParamsType>({
+    const [data, setData] = useState<ExternalDirectoryDataType>()
+    const [params, setParams] = useState<ExternalDirectoryParamsType>({
+        type,
         name: '',
         description: '',
         proxyServer: {
@@ -38,15 +41,23 @@ const LdapSyncDetail = () => {
         },
         ldapTransportType: 'CLEAR'
     })
+
     const navigate = useNavigate()
-    const detailId = useParams().id;
     const { formatMessage } = useIntl()
+    const isMSEntraId = type === 'MICROSOFT_ENTRA_ID'
+
+    const filteredAuthenticationTypes = () => {
+        if(type === 'OPEN_LDAP') {
+            return LDAPAuthenticationTypes.filter(_ => _ == 'PLAIN')
+        } else return LDAPAuthenticationTypes
+    }
 
     const GetDatas = async () => {
         try {
             setDataLoading(true)
-            GetLdapConfigListFunc({
-                ldapConfigId: detailId
+            GetExternalDirectoryListFunc({
+                id: detailId,
+                type
             }, ({ results }) => {
                 setData(results[0])
             }).finally(() => {
@@ -66,6 +77,7 @@ const LdapSyncDetail = () => {
     useEffect(() => {
         if (data) {
             setParams({
+                type,
                 name: data.name,
                 description: data.description,
                 proxyServer: data.proxyServer,
@@ -76,16 +88,56 @@ const LdapSyncDetail = () => {
         }
     }, [data])
 
+    const getTitleByType = () => {
+        if(type === 'OPEN_LDAP') {
+            return detailId ? 'LDAP_MODIFY_TITLE' : 'LDAP_ADD_TITLE'
+        } else if(type === 'ACTIVE_DIRECTORY') {
+            return detailId ? 'ACTIVE_DIRECTORY_MODIFY_TITLE' : 'ACTIVE_DIRECTORY_ADD_TITLE'
+        } else if(type === 'MICROSOFT_ENTRA_ID') {
+            return detailId ? 'MICROSOFT_ENTRA_ID_MODIFY_TITLE' : 'MICROSOFT_ENTRA_ID_ADD_TITLE'
+        }
+    }
+
+    const addSuccessMessageByType = () => {
+        if(type === 'OPEN_LDAP') {
+            return 'LDAP_ADD_SUCCESS_MSG'
+        } else if(type === 'ACTIVE_DIRECTORY') {
+            return 'ACTIVE_DIRECTORY_ADD_SUCCESS_MSG'
+        } else if(type === 'MICROSOFT_ENTRA_ID') {
+            return 'MICROSOFT_ENTRA_ID_ADD_SUCCESS_MSG'
+        }
+    }
+
+    const modifySuccessMessageByType = () => {
+        if(type === 'OPEN_LDAP') {
+            return 'LDAP_MODIFY_SUCCESS_MSG'
+        } else if(type === 'ACTIVE_DIRECTORY') {
+            return 'ACTIVE_DIRECTORY_MODIFY_SUCCESS_MSG'
+        } else if(type === 'MICROSOFT_ENTRA_ID') {
+            return 'MICROSOFT_ENTRA_ID_MODIFY_SUCCESS_MSG'
+        }
+    }
+
+    const deleteSuccessMessageByType = () => {
+        if(type === 'OPEN_LDAP') {
+            return 'LDAP_DELETE_SUCCESS_MSG'
+        } else if(type === 'ACTIVE_DIRECTORY') {
+            return 'ACTIVE_DIRECTORY_DELETE_SUCCESS_MSG'
+        } else if(type === 'MICROSOFT_ENTRA_ID') {
+            return 'MICROSOFT_ENTRA_ID_DELETE_SUCCESS_MSG'
+        }
+    }
+    console.log(params.ldapAuthenticationType)
     return <Contents loading={dataLoading}>
-        <ContentsHeader title={detailId ? "LDAP_MODIFY_TITLE" : "LDAP_ADD_TITLE"} subTitle={<div style={{
+        <ContentsHeader subTitle={<div style={{
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             flexDirection: 'row',
             gap: '8px'
         }}>
-            <FormattedMessage id={detailId ? "LDAP_MODIFY_TITLE" : "LDAP_ADD_TITLE"} />
-            <div>
+            <FormattedMessage id={getTitleByType()} />
+            {type !== 'MICROSOFT_ENTRA_ID' && <div>
                 <Button className="st11" icon={downloadIcon} onClick={() => {
                     if (!subdomainInfo.ompassProxyDownloadUrl) {
                         message.error(formatMessage({ id: 'NO_DOWNLOAD_URL_MSG' }))
@@ -93,19 +145,19 @@ const LdapSyncDetail = () => {
                         downloadFileByLink(subdomainInfo.ompassProxyDownloadUrl)
                     }
                 }}>
-                    <FormattedMessage id={"RADIUS_AGENT_DOWNLOAD_LABEL"} />
+                    <FormattedMessage id={"OMPASS_PROXY_SERVER_DOWNLOAD_LABEL"} />
                 </Button>
-            </div>
+            </div>}
         </div>}>
             <Button className="st3" onClick={() => {
                 if (detailId) {
-                    UpdateLdapConfigListFunc(detailId, params, (newData) => {
-                        message.success(formatMessage({ id: 'LDAP_MODIFY_SUCCESS_MSG' }))
+                    UpdateExternalDirectoryFunc(detailId, params, (newData) => {
+                        message.success(formatMessage({ id: modifySuccessMessageByType() }))
                         setData(newData)
                     })
                 } else {
-                    AddLdapConfigListFunc(params, () => {
-                        message.success(formatMessage({ id: 'LDAP_ADD_SUCCESS_MSG' }))
+                    AddExternalDirectoryFunc(params, () => {
+                        message.success(formatMessage({ id: addSuccessMessageByType() }))
                         navigate(-1)
                     })
                 }
@@ -113,8 +165,8 @@ const LdapSyncDetail = () => {
                 <FormattedMessage id={"SAVE"} />
             </Button>
             {detailId && <Button icon={deleteIcon} hoverIcon={deleteIconHover} className="st2" onClick={() => {
-                DeleteLdapConfigListFunc(detailId, () => {
-                    message.success(formatMessage({ id: 'LDAP_DELETE_SUCCESS_MSG' }))
+                DeleteExternalDirectoryFunc(detailId, () => {
+                    message.success(formatMessage({ id: deleteSuccessMessageByType() }))
                     navigate(-1)
                 })
             }}>
@@ -136,7 +188,6 @@ const LdapSyncDetail = () => {
             </CustomInputRow>}
             {data?.secretKey && <CustomInputRow title={<FormattedMessage id="LDAP_SECRET_KEY_LABEL" />}>
                 <CopyToClipboard text={data.secretKey} onCopy={(value, result) => {
-                    console.log(value, result)
                     if (result) {
                         message.success(formatMessage({ id: 'APPLICATION_SECRET_KEY_COPY_SUCCESS_MSG' }))
                     } else {
@@ -165,7 +216,7 @@ const LdapSyncDetail = () => {
                     })
                 }} />
             </CustomInputRow>
-            <CustomInputRow title={<FormattedMessage id="LDAP_PROXY_ADDRESS_LABEL" />}>
+            { !isMSEntraId && <CustomInputRow title={<FormattedMessage id="LDAP_PROXY_ADDRESS_LABEL" />}>
                 <Input className="st1" value={params.proxyServer.address} valueChange={val => {
                     setParams({
                         ...params,
@@ -175,8 +226,8 @@ const LdapSyncDetail = () => {
                         }
                     })
                 }} />
-            </CustomInputRow>
-            <CustomInputRow title={<FormattedMessage id="LDAP_PROXY_PORT_LABEL" />}>
+            </CustomInputRow>}
+            { !isMSEntraId && <CustomInputRow title={<FormattedMessage id="LDAP_PROXY_PORT_LABEL" />}>
                 <Input className="st1" value={params.proxyServer.port || ''} valueChange={val => {
                     setParams({
                         ...params,
@@ -186,19 +237,19 @@ const LdapSyncDetail = () => {
                         }
                     })
                 }} onlyNumber />
-            </CustomInputRow>
-            <CustomInputRow title="Base DN">
+            </CustomInputRow>}
+            { !isMSEntraId && <CustomInputRow title="Base DN">
                 <Input className="st1" value={params.baseDn} valueChange={val => {
                     setParams({
                         ...params,
                         baseDn: val
                     })
                 }} />
-            </CustomInputRow>
-            <CustomInputRow title={<FormattedMessage id="LDAP_AUTH_TYPE_LABEL" />}>
+            </CustomInputRow>}
+            { !isMSEntraId && <CustomInputRow title={<FormattedMessage id="LDAP_AUTH_TYPE_LABEL" />}>
                 <div className="ldap-authentication-type-container">
                     {
-                        LDAPAuthenticationTypes.map((_, ind) => <Input key={ind} className="st1" type="radio" checked={params.ldapAuthenticationType.type === _} onChange={e => {
+                        filteredAuthenticationTypes().map((_, ind) => <Input key={ind} className="st1" type="radio" checked={params.ldapAuthenticationType.type === _} onChange={e => {
                             if (e.target.checked) {
                                 setParams({
                                     ...params,
@@ -212,8 +263,8 @@ const LdapSyncDetail = () => {
                         }} label={_} />)
                     }
                 </div>
-            </CustomInputRow>
-            <CustomInputRow title={<FormattedMessage id="LDAP_TRANSPORT_TYPE_LABEL" />}>
+            </CustomInputRow>}
+            { !isMSEntraId && <CustomInputRow title={<FormattedMessage id="LDAP_TRANSPORT_TYPE_LABEL" />}>
                 <div className="ldap-authentication-type-container">
                     {
                         LDAPTransportTypes.map((_, ind) => <Input key={ind} className="st1" type="radio" checked={params.ldapTransportType === _} onChange={e => {
@@ -226,10 +277,10 @@ const LdapSyncDetail = () => {
                         }} label={_} />)
                     }
                 </div>
-            </CustomInputRow>
-            {detailId && <LdapSyncButton id={detailId} />}
+            </CustomInputRow>}
+            {detailId && <ExternalDirectorySyncButton id={detailId} />}
         </div>
     </Contents>
 }
 
-export default LdapSyncDetail
+export default ExternalDirectoryDetail

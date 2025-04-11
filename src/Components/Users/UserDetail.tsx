@@ -22,7 +22,7 @@ import RoleSelect from "Components/CommonCustomComponents/RoleSelect"
 import CustomModal from "Components/Modal/CustomModal"
 import Button from 'Components/CommonCustomComponents/Button'
 import { userInfoClear } from 'Redux/actions/userChange'
-import { RadiusDetailItem, UserDetailInfoAuthenticatorContent, UserDetailInfoAuthenticatorDeleteButton, UserDetailInfoDeviceInfoContent, UserDetailInfoETCInfoContent, UserInfoInputrow, UserInfoRow, ViewPasscode, ViewRecoveryCode } from './UserDetailComponents'
+import { EmptyDetailItem, UserDetailInfoAuthenticatorContent, UserDetailInfoAuthenticatorDeleteButton, UserDetailInfoDeviceInfoContent, UserDetailInfoETCInfoContent, UserInfoInputrow, UserInfoRow, ViewPasscode, ViewRecoveryCode } from './UserDetailComponents'
 import { autoHypenPhoneFun, convertUTCStringToLocalDateString, logoImageWithDefaultImage } from 'Functions/GlobalFunctions'
 import Input from 'Components/CommonCustomComponents/Input'
 import BottomLineText from 'Components/CommonCustomComponents/BottomLineText'
@@ -126,14 +126,15 @@ const UserDetail = ({ }) => {
             username: _.username,
             application: _.application,
             authenticationInfo: __,
-            groupName: _.groupName
+            group: _.group
         }) as UserDetailAuthInfoRowType))
-        const radiusTarget = userDetailDatas.find(_ => _.application.type === 'RADIUS')
-        if (radiusTarget && radiusTarget.authenticationInfo.length === 0) {
+        const emptyTarget = userDetailDatas.filter(_ => _.application.type === 'RADIUS' || _.application.type === 'LDAP').filter(_ => _.authenticationInfo.length === 0)
+        emptyTarget.forEach(_ => {
             temp.push({
-                id: radiusTarget.id,
-                username: radiusTarget.username,
-                application: radiusTarget.application,
+                id: _.id,
+                username: _.username,
+                application: _.application,
+                createdAt: _.createdAt,
                 authenticationInfo: {
                     authenticators: [],
                     username: '',
@@ -155,12 +156,16 @@ const UserDetail = ({ }) => {
                     policy: undefined,
                     serverInfo: undefined
                 },
-                groupName: radiusTarget.groupName
+                group: _.group
             })
-        }
+        })
         temp = temp.sort((a, b) => new Date(a.authenticationInfo.createdAt).getTime() - new Date(b.authenticationInfo.createdAt).getTime())
         return temp;
     }, [userDetailDatas])
+
+    const canUsePasscode = (applicationType: ApplicationDataType['type']) => {
+        return applicationType !== 'LDAP' && applicationType !== 'RADIUS'
+    }
 
     const passcodeData = useCallback((authInfoId: UserDetailAuthInfoRowType['authenticationInfo']['id']) => {
         const temp1 = authInfoDatas.find(_ => _.authenticationInfo.id === authInfoId)?.authenticationInfo.authenticators.find(_ => _.type === 'PASSCODE') as PasscodeAuthenticatorDataType
@@ -180,7 +185,7 @@ const UserDetail = ({ }) => {
                 })
                 await GetUserDetailDataFunc(uuid, (data) => {
                     setUserDetailDatas(data)
-                    const hasPortal = data.find(_ => _.application.type === 'ADMIN')
+                    const hasPortal = data.find(_ => _.application.type === 'PORTAL')
                     if (hasPortal) {
                         setPortalSigned(true)
                         if (data.length === 1) {
@@ -230,7 +235,7 @@ const UserDetail = ({ }) => {
             setModifyValues(initModifyValues)
         }
     }, [isModify, userData])
-    
+
     const columnsByRole = (id: RPUserDetailAuthDataType['id']) => {
         let columns: CustomTableColumnType<PasscodeAuthenticatorDataType>[] = [
             {
@@ -547,7 +552,7 @@ const UserDetail = ({ }) => {
                     </>} />}
                     {authInfoDatas.length > 0 && isSelf && <UserInfoRow value={<NewDeviceBtn onComplete={() => {
                         GetDatas()
-                    }}/>} title='OMPASS_DEVICE_CHANGE_LABEL'/>}
+                    }} />} title='OMPASS_DEVICE_CHANGE_LABEL' />}
                 </div>
             </div>
             {authInfoDatas.map((_, index) => <Fragment key={index}>
@@ -555,12 +560,11 @@ const UserDetail = ({ }) => {
                     className={`user-detail-section mb20${portalSigned ? '' : ' no-portal-signed'}${!userDetailOpened.includes(_.authenticationInfo.id) ? ' closed' : ''}`}
                     ref={_ref => authInfoRef.current[_.authenticationInfo.id] = _ref as HTMLDivElement}
                 >
-                    {
-                        isSelf && _.application.type === 'RADIUS' && !_.authenticationInfo.createdAt && <RadiusDetailItem appId={_.application.id} onComplete={() => {
-                            GetDatas()
-                            message.success(formatMessage({ id: 'RADIUS_OMPASS_REGISTRATION_SUCCESS_MSG' }))
-                        }} />
-                    }
+                    {isSelf && (_.application.type === 'RADIUS' || _.application.type === 'LDAP') && !_.authenticationInfo.createdAt && <EmptyDetailItem
+                        appId={_.application.id}
+                        onComplete={GetDatas}
+                        type={_.application.type}
+                    />}
                     <div className="user-detail-header" onClick={() => {
                         if (_.application.type === 'RADIUS' && !_.authenticationInfo.createdAt) return;
                         if (portalSigned) setUserDetailOpened(userDetailOpened.includes(_.authenticationInfo.id) ? userDetailOpened.filter(uOpened => uOpened !== _.authenticationInfo.id) : userDetailOpened.concat(_.authenticationInfo.id))
@@ -609,7 +613,7 @@ const UserDetail = ({ }) => {
                         <UserDetailInfoAuthenticatorContent data={_.authenticationInfo.authenticators.find(auth => auth.type === 'OMPASS')} />
 
                         {
-                            (_.application.type === 'ADMIN' || _.application.type === 'DEFAULT' || _.application.type === 'REDMINE') && <>
+                            (_.application.type === 'PORTAL' || _.application.type === 'WEB' || _.application.type === 'REDMINE') && <>
                                 <div className="user-detail-info-device-info-title">
                                     <h4>
                                         WEBAUTHN
@@ -622,7 +626,7 @@ const UserDetail = ({ }) => {
                             </>
                         }
 
-                        <div>
+                        {canUsePasscode(_.application.type) && <div>
                             <div className="user-detail-content-passcode-container">
                                 <div>
                                     <h4>PASSCODE</h4>
@@ -644,14 +648,11 @@ const UserDetail = ({ }) => {
                                 datas={passcodeData(_.authenticationInfo.id)}
                                 theme="table-st1"
                             />
-                        </div>
+                        </div>}
                     </div>
                 </div>
             </Fragment>
             )}
-            {/* {userDetailDatas.find(detail => detail.application.type === 'RADIUS') && <div className={`user-detail-section${!userDetailOpened.includes(_.authenticationInfo.id) ? ' closed' : ''}`}>
-                test
-            </div>} */}
         </Contents >
         <PairOMPASSAuthModal opened={authView} onCancel={() => {
             setAuthView(false)

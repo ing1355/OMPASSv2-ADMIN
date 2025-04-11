@@ -128,7 +128,7 @@ type LdapAuthenticationType = {
   ntlmDomain?: string | null
   ntlmWorkstation?: string | null
 }
-type LdapProxyServerDataType = {
+type ProxyServerDataType = {
   address: string
   port: number
 }
@@ -145,21 +145,12 @@ type LdapConfigDataType = {
   secretKey: string
   apiServerHost: string
   directoryServers: LdapDirectoryServerDataType[]
-  proxyServer: LdapProxyServerDataType
+  proxyServer: ProxyServerDataType
   baseDn: string
   ldapAuthenticationType: LdapAuthenticationType
   ldapTransportType: LdapTransportType
   isConnected: boolean
   lastUserSyncedAt: string
-}
-
-type LdapUserDataType = {
-  username: UserDataType['username']
-  name: UserDataType['name']
-  email: UserDataType['email']
-  phone: UserDataType['phone']
-  org: string
-  syncedUserStatus: string
 }
 
 type RpUserListDataType = {

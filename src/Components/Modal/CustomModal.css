@@ -95,13 +95,22 @@
     margin-bottom: 36px;
 }
 
-.custom-modal-close-icon {
-    cursor: pointer;
+.custom-modal-header-icon {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     position: absolute;
-    right: 24px;
     top: 20px;
-    width: 32px;
     height: 32px;
-    box-sizing: border-box;
     padding: 2px;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.custom-modal-close-icon {
+    right: 24px;
+}
+
+.custom-modal-back-icon {
+    left: 24px;
 }

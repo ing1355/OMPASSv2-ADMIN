@@ -34,6 +34,7 @@ export const getOMPASSAuthIconByProgressStatus = (status: OMPASSAuthStatusType) 
     else return completeIcon
 }
 
+export const DEEP_LINK_DOMAIN = 'https://applink.ompasscloud.com'
 export const timeZoneNames = tz.names()
 export const ompassDefaultLogoImage = ompassLogoIcon
 export const isDev = process.env.NODE_ENV === 'development'
@@ -136,14 +137,21 @@ export const menuDatas = (role: userRoleType, isOnPremise: boolean): menuDataTyp
     return datas
 }
 
-// export const applicationTypes: ApplicationDataType['applicationType'][] = ["DEFAULT", "WINDOWS_LOGIN", "LINUX_LOGIN", "MAC_LOGIN", "ADMIN"]
-// const appTypes: ApplicationDataType['type'][] = ["ADMIN", "WINDOWS_LOGIN", "DEFAULT", "LINUX_LOGIN", "RADIUS", "REDMINE", "GOOROOM_LOGIN"]
-const appTypes: ApplicationDataType['type'][] = ["ADMIN", "WINDOWS_LOGIN", "DEFAULT", "LINUX_LOGIN", "RADIUS", "REDMINE", "MS_ENTRA_ID", "KEYCLOAK", "LDAP"]
-// export const applicationTypes = (hasWindowsLogin: boolean): ApplicationDataType['type'][] => !hasWindowsLogin ? appTypes : appTypes.filter(_ => _ !== 'WINDOWS_LOGIN')
-export const applicationTypes: ApplicationDataType['type'][] = appTypes
+// const appTypes: ApplicationDataType['type'][] = ["ADMIN", "WINDOWS_LOGIN", "DEFAULT", "LINUX_LOGIN", "RADIUS", "REDMINE", "MS_ENTRA_ID", "KEYCLOAK", "LDAP"]
+// export const applicationTypes: ApplicationDataType['type'][] = ["WEB", "WINDOWS_LOGIN", "LINUX_LOGIN", "MAC_LOGIN", "PORTAL", "RADIUS", "REDMINE", "MICROSOFT_ENTRA_ID", "KEYCLOAK", "LDAP"]
+export const applicationTypes: ApplicationDataType['type'][] = ["PORTAL", "WINDOWS_LOGIN", "WEB", "LINUX_LOGIN", "RADIUS", "REDMINE", "MICROSOFT_ENTRA_ID", "KEYCLOAK", "LDAP"]
+
 // 애플리케이션 타입 다국어 매칭해놨으나 타입 지정은 불가능하므로 값 바뀌면 다국어 키값도 바뀌어야함
 export const AuthenticationProcessTypes: ProcessTypeType[] = ["POLICY", "REGISTRATION", "AUTHENTICATION"]
 export const HttpMethodTypes: HttpMethodType[] = ["POST", "PUT", "DELETE"]
+
+export const ExternalDirectoryTypes: {
+    [key in ExternalDirectoryType]: ExternalDirectoryType
+} = {
+    OPEN_LDAP: 'OPEN_LDAP',
+    ACTIVE_DIRECTORY: 'ACTIVE_DIRECTORY',
+    MICROSOFT_ENTRA_ID: 'MICROSOFT_ENTRA_ID'
+}
 
 export const getApplicationTypeLabel = (type: LocalApplicationTypes) => type ? <FormattedMessage id={type + '_APPLICATION_TYPE'} /> : ""
 

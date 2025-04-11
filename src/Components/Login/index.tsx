@@ -62,7 +62,7 @@ const LoginPage = () => {
                         className='login-agent-download-button st10'
                         icon={downloadIconWhite}
                         onClick={() => {
-                            downloadFileByLink('/ompassApk', 'OMPASSv2(130).apk')
+                            downloadFileByLink('/ompassApk', 'OMPASSv2(133).apk')
                         }}
                     >
                         <FormattedMessage id='APK_DOWNLOAD_LABEL' />

@@ -4,7 +4,7 @@ import { QRCodeCanvas } from 'qrcode.react'
 import './QRCode.css'
 
 type QRCodeProps<T> = {
-    data: QRDataType<T>
+    data: string
     width?: CSSProperties['width']
     height?: CSSProperties['height']
     size?: number
@@ -18,7 +18,8 @@ const QRCode = ({ data, width, height, size, style }: QRCodeProps<QRDataDefaultB
         ...style
     }}>
         <QRCodeCanvas
-            value={JSON.stringify(data)}
+            value={data}
+            // value={JSON.stringify(data)}
             size={size ? size : (isMobile ? 249 : 249)}
             level={"L"}
         />

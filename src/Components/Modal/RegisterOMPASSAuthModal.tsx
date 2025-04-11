@@ -22,7 +22,7 @@ const RegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, radiusAppl
     const [remainTime, setRemainTime] = useState(-1)
     const [sessionData, setSessionData] = useState<QRDataDefaultBodyType>({
         url: '',
-        param: ''
+        nonce: ''
     })
     const [authStatus, setAuthStatus] = useState<OMPASSAuthStatusType>('ready')
     const OMPASSAuth = useOMPASS()
@@ -41,7 +41,7 @@ const RegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, radiusAppl
         setRemainTime(-1)
         setSessionData({
             url: '',
-            param: ''
+            nonce: ''
         })
         tokenRef.current = ''
         if (timeTimerRef.current) {
@@ -50,7 +50,7 @@ const RegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, radiusAppl
         OMPASSAuth.stopAuth()
     }
 
-    return <CustomModal title={<FormattedMessage id="OMPASS_REGISTER_MODAL_TITLE_LABEL"/>} open={opened} onCancel={() => {
+    return <CustomModal title={<FormattedMessage id="OMPASS_REGISTER_MODAL_TITLE_LABEL" />} open={opened} onCancel={() => {
         _onCancel()
     }} buttonsType="small" noBtns noClose onOpen={() => {
         OMPASSAuth.startAuth({ type: 'single', purpose: purpose, applicationId: radiusApplicationId }, ({ url, ntp, sessionExpiredAt, sourceNonce, sessionId }) => {
@@ -58,7 +58,7 @@ const RegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, radiusAppl
             const expireTime = dayjs.utc(sessionExpiredAt)
             setSessionData({
                 url,
-                param: sessionId ?? sourceNonce ?? ""
+                nonce: sessionId ?? sourceNonce ?? ""
             })
             setRemainTime(expireTime.diff(ntpTime, 'seconds'))
             if (timeTimerRef.current) {
@@ -67,7 +67,7 @@ const RegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, radiusAppl
             timeTimerRef.current = setInterval(() => {
                 if (remainTimeRef.current < 1) {
                     _onCancel()
-                    message.error(formatMessage({id:'OMPASS_MODULE_TIME_EXPIRED_MSG'}))
+                    message.error(formatMessage({ id: 'OMPASS_MODULE_TIME_EXPIRED_MSG' }))
                 } else {
                     setRemainTime(time => time - 1)
                 }
@@ -84,18 +84,22 @@ const RegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, radiusAppl
             _onCancel()
         })
     }}>
-        <OMPASSAuthContents isRegister role={userInfo.role} name={userInfo.name} username={userInfo.username} status={authStatus} sessionData={sessionData} customQrData={purpose === 'DEVICE_CHANGE' ? {
-            type: 'DEVICE_CHANGE',
-            body: sessionData
-        } : undefined}/>
+        <OMPASSAuthContents
+            isRegister
+            role={userInfo.role}
+            name={userInfo.name}
+            username={userInfo.username}
+            status={authStatus}
+            sessionData={sessionData}
+            purpose={purpose}/>
         {sessionData.url && <div className="ompass-auth-description-text">
-            <FormattedMessage id="OMPASS_REGISTER_MODAL_SUBSCRIPTION_1"/><br />
-            <FormattedMessage id="OMPASS_REGISTER_MODAL_SUBSCRIPTION_2"/>
+            <FormattedMessage id="OMPASS_REGISTER_MODAL_SUBSCRIPTION_1" /><br />
+            <FormattedMessage id="OMPASS_REGISTER_MODAL_SUBSCRIPTION_2" />
         </div>}
         <div className="ompass-auth-remain-time-container">
             {
                 remainTime > 0 ? <>
-                    <FormattedMessage id="OMPASS_MODULE_REMAIN_TIME_LABEL"/>
+                    <FormattedMessage id="OMPASS_MODULE_REMAIN_TIME_LABEL" />
                     <span>
                         <FormattedMessage id={remainTime > 60 ? "WITH_MINUTE_SECONDS_TIME" : "ONLY_SECONDS_TIME"} values={{
                             ...convertTimeFormat(remainTime)

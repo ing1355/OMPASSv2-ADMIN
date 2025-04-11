@@ -10,14 +10,14 @@ import useFullName from "hooks/useFullName"
 import { useMemo, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 
-type LdapSyncButtonProps = {
-    id: LdapConfigDataType['id']
+type ExternalDirectorySyncButtonProps = {
+    id: ExternalDirectoryDataType['id']
 }
 
-const LdapSyncButton = ({ id }: LdapSyncButtonProps) => {
+const ExternalDirectorySyncButton = ({ id }: ExternalDirectorySyncButtonProps) => {
     const [dataLoading, setDataLoading] = useState(false)
     const [sureSync, setSureSync] = useState(false)
-    const [syncDatas, setSyncDatas] = useState<LdapUserDataType[]>([])
+    const [syncDatas, setSyncDatas] = useState<ExternalDirectoryUserDataType[]>([])
     const [pageSetting, setPageSetting] = useState({
         page: 1,
         showPerPage: userSelectPageSize()
@@ -58,7 +58,7 @@ const LdapSyncButton = ({ id }: LdapSyncButtonProps) => {
             {dataLoading ? <div className="ldap-sync-user-list-loading-container">
                 <CustomLoading />
                 <FormattedMessage id="CONTENTS_DATA_LOADING_LABEL"/>
-            </div> : <CustomTable<LdapUserDataType>
+            </div> : <CustomTable<ExternalDirectoryUserDataType>
                 theme="table-st1"
                 datas={tableData}
                 pagination={tableData.length > 0}
@@ -115,4 +115,4 @@ const LdapSyncButton = ({ id }: LdapSyncButtonProps) => {
     </>
 }
 
-export default LdapSyncButton
+export default ExternalDirectorySyncButton

@@ -28,8 +28,6 @@ import ApplicationDetailSubInfoByType from "./ApplicationDetailSubInfoByType"
 import ApplicationDetailHeaderInfo from "./ApplicationDetailHeaderInfo"
 import BottomLineText from "Components/CommonCustomComponents/BottomLineText"
 
-
-
 const ApplicationDetail = () => {
     const [logoImage, setLogoImage] = useState<updateLogoImageType>({
         isDefaultImage: true,
@@ -51,11 +49,6 @@ const ApplicationDetail = () => {
     const [ldapProxyServer, setLdapProxyServer] = useState<ApplicationDataType['ldapProxyServer']>({
         host: ''
     })
-    const [pamPassData, setPamPassData] = useState<PAMPassDataType>({
-        isEnabled: false,
-        ip: '',
-        username: ''
-    })
     const [isAuthorized, setIsAuthorized] = useState(false)
     const [dataLoading, setDataLoading] = useState(false)
     const [sureDelete, setSureDelete] = useState(false)
@@ -68,15 +61,14 @@ const ApplicationDetail = () => {
     const { formatMessage } = useIntl()
     const { uuid } = useParams()
     const isAdd = !uuid
-    const needDomains: LocalApplicationTypes[] = ["DEFAULT", "ADMIN", "REDMINE", "KEYCLOAK"]
+    const needDomains: LocalApplicationTypes[] = ["WEB", "PORTAL", "REDMINE", "KEYCLOAK"]
     const noRedirectUri: LocalApplicationTypes[] = ["KEYCLOAK", "REDMINE"]
-    const passwordUsed: LocalApplicationTypes[] = ['WINDOWS_LOGIN', 'LINUX_LOGIN']
     const typeItems = applicationTypes.map(_ => ({
         key: _,
         label: getApplicationTypeLabel(_),
-        disabled: _ === 'ADMIN' || (hasWindowsLogin && _ === 'WINDOWS_LOGIN')
+        disabled: _ === 'PORTAL' || (hasWindowsLogin && _ === 'WINDOWS_LOGIN')
     }))
-
+    
     const handleFileSelect = (data: updateLogoImageType) => {
         setLogoImage({
             isDefaultImage: data.isDefaultImage,
@@ -93,9 +85,6 @@ const ApplicationDetail = () => {
                 if (data.domain) {
                     setInputDomain(data.domain ?? "")
                     setInputRedirectUrl(data.redirectUri ? data.redirectUri.replace(data.domain, "") : "")
-                }
-                if (data.linuxPamBypass) {
-                    setPamPassData(data.linuxPamBypass)
                 }
                 if (data.msTenantId) {
                     setMSEntraTenantId(data.msTenantId)
@@ -121,7 +110,6 @@ const ApplicationDetail = () => {
                 setApplicationType(data.type)
                 setHelpMsg(data.helpDeskMessage || "")
                 setInputApiServerHost(data.apiServerHost)
-                setIsPasswordlessEnabled(data.isPasswordlessEnabled ?? false)
                 setRadiusData(data.radiusProxyServer)
                 setLdapProxyServer(data.ldapProxyServer)
                 if (data.isAuthorized) {
@@ -158,19 +146,14 @@ const ApplicationDetail = () => {
                     if (needDomains.includes(applicationType) && !domainRegex.test(inputDomain)) {
                         return message.error(formatMessage({ id: 'INVALID_INPUT_DOMAIN_MSG' }))
                     }
-                    if (needDomains.includes(applicationType) && !noRedirectUri.includes(applicationType) && !inputRedirectUrl) {
-                        return message.error(formatMessage({ id: 'PLEASE_INPUT_APPLICATION_REDIRECT_URI' }))
-                    }
+                    // if (needDomains.includes(applicationType) && !noRedirectUri.includes(applicationType) && !inputRedirectUrl) {
+                    //     return message.error(formatMessage({ id: 'PLEASE_INPUT_APPLICATION_REDIRECT_URI' }))
+                    // }
                     if (needDomains.includes(applicationType) && !noRedirectUri.includes(applicationType) && !redirectUriRegex.test(inputRedirectUrl)) {
                         return message.error(formatMessage({ id: 'INVALID_INPUT_REDIRECT_URI_MSG' }))
                     }
                     if (!selectedPolicy) {
                         return message.error(formatMessage({ id: 'PLEASE_SELECT_APPLICATION_POLICY' }))
-                    }
-                    if (pamPassData.isEnabled) {
-                        if (!pamPassData.username) return message.error(formatMessage({ id: 'PAM_PASS_DATA_USERNAME_REQUIRED_MSG' }))
-                        if (!pamPassData.ip) return message.error(formatMessage({ id: 'PAM_PASS_DATA_IP_ADDRESS_REQUIRED_MSG' }))
-                        if (pamPassData.ip && !ipAddressRegex.test(pamPassData.ip)) return message.error(formatMessage({ id: 'PAM_PASS_DATA_IP_ADDRESS_INVALID_MSG' }))
                     }
                     if (uuid) {
                         UpdateApplicationDataFunc(uuid!, {
@@ -184,13 +167,7 @@ const ApplicationDetail = () => {
                                 isDefaultImage: logoImage.isDefaultImage
                             },
                             description: inputDescription,
-                            type: applicationType,
-                            isPasswordlessEnabled: isPasswordlessEnabled,
-                            linuxPamBypass: {
-                                isEnabled: pamPassData.isEnabled,
-                                ip: pamPassData.isEnabled ? pamPassData.ip : '',
-                                username: pamPassData.isEnabled ? pamPassData.username : ''
-                            }
+                            type: applicationType
                         }, () => {
                             message.success(formatMessage({ id: 'APPLICATION_MODIFY_SUCCESS_MSG' }))
                         })
@@ -206,8 +183,7 @@ const ApplicationDetail = () => {
                                 isDefaultImage: logoImage.isDefaultImage
                             },
                             description: inputDescription,
-                            type: applicationType,
-                            isPasswordlessEnabled: isPasswordlessEnabled
+                            type: applicationType
                         }, (res) => {
                             message.success(formatMessage({ id: 'APPLICATION_ADD_SUCCESS_MSG' }))
                             navigate(`/Applications/detail/${res.id}`)
@@ -217,7 +193,7 @@ const ApplicationDetail = () => {
                     <FormattedMessage id="SAVE" />
                 </Button>
                 {uuid && <>
-                    {applicationType !== 'ADMIN' && <Button icon={deleteIcon} hoverIcon={deleteIconHover} className="st2" onClick={() => {
+                    {applicationType !== 'PORTAL' && <Button icon={deleteIcon} hoverIcon={deleteIconHover} className="st2" onClick={() => {
                         setSureDelete(true)
                     }}>
                         <FormattedMessage id="APPLICATION_DELETE" />
@@ -228,10 +204,10 @@ const ApplicationDetail = () => {
         <div className="contents-header-container">
             {
                 !isAdd && <>
-                    {applicationType !== 'ADMIN' && <ApplicationDetailHeaderInfo applicationType={applicationType} inputApiServerHost={inputApiServerHost} inputClientId={inputClientId} MSEntraDiscoveryEndpoint={MSEntraDiscoveryEndpoint} MSEntraAppId={MSEntraAppId} inputSecretKey={inputSecretKey} setInputSecretKey={setInputSecretKey} setSureReset={setSureReset} />}
+                    {applicationType !== 'PORTAL' && <ApplicationDetailHeaderInfo applicationType={applicationType} inputApiServerHost={inputApiServerHost} inputClientId={inputClientId} MSEntraDiscoveryEndpoint={MSEntraDiscoveryEndpoint} MSEntraAppId={MSEntraAppId} inputSecretKey={inputSecretKey} setInputSecretKey={setInputSecretKey} setSureReset={setSureReset} />}
                     <ApplicationDetailSubInfoByType isAuthorized={isAuthorized} applicationType={applicationType} data={radiusData} MSEntraTenantId={MSEntraTenantId} ldapProxyServer={ldapProxyServer} />
                     <BottomLineText title={<FormattedMessage id="APPLICATION_INFO_SETTING_LABELS" />} style={{
-                        marginTop: applicationType === 'ADMIN' ? 0 : '36px',
+                        marginTop: applicationType === 'PORTAL' ? 0 : '36px',
                     }} />
                 </>
             }
@@ -240,7 +216,7 @@ const ApplicationDetail = () => {
                 {isAdd ? <CustomSelect value={applicationType} onChange={value => {
                     setApplicationType(value as ApplicationDataType['type'])
                 }} items={typeItems} needSelect /> : getApplicationTypeLabel(applicationType as ApplicationDataType['type'])}
-                {applicationType && applicationType !== 'ADMIN' && <Button className="st5" icon={documentIcon} hoverIcon={documentIconHover} onClick={() => {
+                {applicationType && applicationType !== 'PORTAL' && <Button className="st5" icon={documentIcon} hoverIcon={documentIconHover} onClick={() => {
                     if (isMobile) {
                         message.info(formatMessage({ id: 'PLEASE_USE_PC_ENVIRONMENT_MSG' }))
                     } else if (applicationType === 'LDAP') {
@@ -258,7 +234,7 @@ const ApplicationDetail = () => {
                     <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_NAME_LABEL" />} required>
                         <Input className="st1" value={inputName} valueChange={value => {
                             setInputName(value)
-                        }} placeholder={formatMessage({ id: 'APPLICATION_INFO_NAME_PLACEHOLDER' })} readOnly={applicationType === 'ADMIN'} maxLength={20} />
+                        }} placeholder={formatMessage({ id: 'APPLICATION_INFO_NAME_PLACEHOLDER' })} readOnly={applicationType === 'PORTAL'} maxLength={20} />
                     </CustomInputRow>
                     <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_DESCRIPTION_LABEL" />}>
                         <Input className="st1" value={inputDescription} valueChange={value => {
@@ -275,7 +251,7 @@ const ApplicationDetail = () => {
                             <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_DOMAIN_LABEL" />} required>
                                 <Input className="st1" value={inputDomain} valueChange={value => {
                                     setInputDomain(value)
-                                }} placeholder="ex) https://omsecurity.kr:1234" readOnly={applicationType === 'ADMIN'} noGap />
+                                }} placeholder="ex) https://omsecurity.kr:1234" readOnly={applicationType === 'PORTAL'} noGap />
                             </CustomInputRow>
                             {!noRedirectUri.includes(applicationType) && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_REDIRECT_URI_LABEL" />}>
                                 <Input className="st1" value={inputRedirectUrl} valueChange={value => {
@@ -284,51 +260,7 @@ const ApplicationDetail = () => {
                             </CustomInputRow>}
                         </>
                     }
-                    {passwordUsed.includes(applicationType) && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_WINDOWS_PASSWORD_NEED_CHECK_LABEL" />}>
-                        <Switch checked={isPasswordlessEnabled} onChange={check => {
-                            setIsPasswordlessEnabled(check)
-                        }} />
-                    </CustomInputRow>}
-                    {applicationType === 'LINUX_LOGIN' && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_PAM_PASS_LABEL" />} isVertical containerStyle={{
-                        alignItems: 'flex-start',
-                        marginTop: '12px'
-                    }}>
-                        <Switch checked={pamPassData.isEnabled} onChange={check => {
-                            setPamPassData({
-                                ...pamPassData,
-                                isEnabled: check
-                            })
-                        }} />
-                        <div className="application-contents-container" data-hidden={!pamPassData.isEnabled}>
-                            <div className="application-contents-inner-container">
-                                <Input containerClassName="pam-pass-input" className="st1" placeholder={formatMessage({ id: 'APPLICATION_INFO_PAM_PASS_INFO_USERNAME_PLACEHOLDER' })} value={pamPassData.username} valueChange={(val) => {
-                                    setPamPassData({
-                                        ...pamPassData,
-                                        username: val
-                                    })
-                                }} maxLength={24} />
-                                <Input containerClassName="pam-pass-input" className="st1" placeholder={formatMessage({ id: 'APPLICATION_INFO_PAM_PASS_INFO_IP_PLACEHOLDER' })} value={pamPassData.ip} onInput={e => {
-                                    e.currentTarget.value = e.currentTarget.value.replace(/[^0-9.\/]/g, '')
-                                }} maxLength={16} valueChange={(val) => {
-                                    setPamPassData({
-                                        ...pamPassData,
-                                        ip: val
-                                    })
-                                }} rules={[
-                                    {
-                                        regExp: (value) => !RegExp(ipAddressRegex).test(value),
-                                        msg: formatMessage({ id: 'PAM_DATA_IP_ADDRESS_INPUT' })
-                                    }
-                                ]} />
-                            </div>
-                            <div className="pam-data-description-text">
-                                <FormattedMessage id="PAM_PASS_DESCRIPTION_TEXT" />
-                            </div>
-                            <div className="pam-data-description-text">
-                                <FormattedMessage id="PAM_PASS_DESCRIPTION_TEXT2" />
-                            </div>
-                        </div>
-                    </CustomInputRow>}
+                    
                     <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_POLICY_LABEL" />} required>
                         <PolicySelect selectedPolicy={selectedPolicy} setSelectedPolicy={setSelectedPolicy} applicationType={applicationType} needSelect />
                     </CustomInputRow>

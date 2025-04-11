@@ -1,0 +1,13 @@
+.pam-data-description-text {
+    letter-spacing: -0.5px;
+    color: var(--main-purple-color);
+    font-weight: bold;
+    font-size: .75rem;
+    padding-left: 4px;
+}
+
+.pam-pass-input {
+    margin-top: 8px;
+    width: 160px !important;
+    height: 36px !important;
+}

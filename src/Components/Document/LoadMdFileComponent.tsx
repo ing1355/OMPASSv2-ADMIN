@@ -11,15 +11,15 @@ type DocumentSubType = ApplicationDataType['type'] | 'app' | 'ompass' | 'signup'
 const pathByApplicationType: {
     [key in string]: string
 } = {
-    'DEFAULT': 'web',
+    'WEB': 'web',
     'LINUX_LOGIN': 'linux_ssh',
     'RADIUS': 'radius',
     'REDMINE': 'redmine',
     'WINDOWS_LOGIN': 'windows_logon',
-    'MS_ENTRA_ID': 'ms_entra_id',
+    'MICROSOFT_ENTRA_ID': 'ms_entra_id',
     'KEYCLOAK': 'keycloak',
-    // 'LDAP': 'ldap',
-    'ADMIN': '',
+    'LDAP': 'ldap',
+    'PORTAL': '',
     'ALL': '',
     'MAC_LOGIN': '',
 }

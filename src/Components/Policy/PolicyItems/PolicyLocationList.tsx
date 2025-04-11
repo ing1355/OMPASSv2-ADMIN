@@ -118,6 +118,9 @@ const PolicyLocationList = ({ value={
                                     <MapControl position={ControlPosition.TOP_RIGHT}>
                                         <div className="custom-current-position-check" onClick={() => {
                                             navigator.geolocation.getCurrentPosition(function (position) {
+                                                console.log(
+                                                    '현재 위치 획득!', position
+                                                )
                                                 if (modifyLocationIndex !== -1) {
                                                     setModifyLocationTemp({
                                                         ...modifyLocationTemp,
@@ -142,9 +145,13 @@ const PolicyLocationList = ({ value={
                                                     case err.TIMEOUT:
                                                         message.error(formatMessage({id:'LOCATION_GET_TIMEOUT_MSG'}))
                                                         break;
+                                                    default:
+                                                        message.error(formatMessage({id:'LOCATION_GET_FAIL_MSG'}))
+                                                        break;
                                                 }
                                             }, {
-                                                timeout: 10_000
+                                                timeout: 5_000,
+                                                maximumAge: 0
                                             })
                                         }}>
                                             <img src={locationIcon} />

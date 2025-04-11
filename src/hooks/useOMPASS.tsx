@@ -45,14 +45,14 @@ const useOMPASS = () => {
                                 sourceRef.current = status.source
                                 targetRef.current = status.target
                             }
-                            
                         }
                     }).catch(err => {
                         clearTimer()
+                        console.log(err)
                     })
                 }, 1000);
             }
-            console.log(isDev)
+            
             OMPASSAuthStartFunc({
                 isTest: isDev,
                 purpose: purpose,

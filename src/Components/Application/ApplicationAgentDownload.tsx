@@ -17,7 +17,7 @@ const ApplicationAgentDownload = ({ type }: {
         } else if (type === 'LINUX_LOGIN') {
             return 'LINUX_LOGIN_AGENT_DOWNLOAD_LABEL'
         } else {
-            return 'RADIUS_AGENT_DOWNLOAD_LABEL'
+            return 'OMPASS_PROXY_SERVER_DOWNLOAD_LABEL'
         }
     }
     const getDownloadUrlByType = () => {

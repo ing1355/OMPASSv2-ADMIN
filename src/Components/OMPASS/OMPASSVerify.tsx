@@ -29,7 +29,7 @@ const OMPASSVerify = () => {
       {
         username: username,
         token,
-        applicationType: "ADMIN"
+        applicationType: "PORTAL"
       } as {
         username: string
         token: string

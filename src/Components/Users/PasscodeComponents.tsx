@@ -2,7 +2,7 @@ import { message } from "antd"
 import Input from "Components/CommonCustomComponents/Input"
 import CustomModal from "Components/Modal/CustomModal"
 import { AddPasscodeFunc } from "Functions/ApiFunctions"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 import { createRandom1Digit } from "Functions/GlobalFunctions"
 
@@ -27,21 +27,25 @@ const PasscodeRadioButton = ({ title, name, defaultChecked, children, value, che
     </div>
 }
 
+type PasscodeAddComponentDataType = {
+    method: 'target' | 'random'
+    time: 'infinity' | 'select'
+    count: 'infinity' | 'one' | 'select'
+}
+
+const passcodeInitData: PasscodeAddComponentDataType = {
+    method: 'random',
+    time: 'infinity',
+    count: 'one'
+}
+
 export const PasscodeAddComponent = ({ okCallback, cancelCallback, authId, modalOpen }: {
     cancelCallback: Function
     okCallback: (data: PasscodeAuthenticatorDataType) => void
     authId: string
     modalOpen: boolean
 }) => {
-    const [addPasscodeMethod, setAddPasscodeMethod] = useState<{
-        method: 'target' | 'random'
-        time: 'infinity' | 'select'
-        count: 'infinity' | 'one' | 'select'
-    }>({
-        method: 'random',
-        time: 'infinity',
-        count: 'one'
-    })
+    const [addPasscodeMethod, setAddPasscodeMethod] = useState<PasscodeAddComponentDataType>(passcodeInitData)
     const [inputCurrentPasscodeValue, setInputCurrentPasscodeValue] = useState('')
     const [inputCurrentPasscodeTime, setInputCurrentPasscodeTime] = useState<number | string>(1)
     const [inputCurrentPasscodeCount, setInputCurrentPasscodeCount] = useState<number | string>(1)
@@ -54,6 +58,15 @@ export const PasscodeAddComponent = ({ okCallback, cancelCallback, authId, modal
             [name]: value
         })
     }
+
+    useEffect(() => {
+        if (!modalOpen) {
+            setAddPasscodeMethod(passcodeInitData)
+            setInputCurrentPasscodeValue('')
+            setInputCurrentPasscodeTime(1)
+            setInputCurrentPasscodeCount(1)
+        }
+    }, [modalOpen])
 
     return <CustomModal
         open={modalOpen}

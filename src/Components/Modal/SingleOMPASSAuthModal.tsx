@@ -22,7 +22,7 @@ const SingleOMPASSAuthModal = ({ opened, onCancel, successCallback, purpose }: S
     const [remainTime, setRemainTime] = useState(-1)
     const [sessionData, setSessionData] = useState<QRDataDefaultBodyType>({
         url: '',
-        param: ''
+        nonce: ''
     })
     const [authStatus, setAuthStatus] = useState<OMPASSAuthStatusType>('ready')
     const OMPASSAuth = useOMPASS()
@@ -41,7 +41,7 @@ const SingleOMPASSAuthModal = ({ opened, onCancel, successCallback, purpose }: S
         setRemainTime(-1)
         setSessionData({
             url: '',
-            param: ''
+            nonce: ''
         })
         tokenRef.current = ''
         if (timeTimerRef.current) {
@@ -59,7 +59,7 @@ const SingleOMPASSAuthModal = ({ opened, onCancel, successCallback, purpose }: S
             
             setSessionData({
                 url,
-                param: sessionId ?? sourceNonce ?? ""
+                nonce: sessionId ?? sourceNonce ?? ""
             })
             setRemainTime(expireTime.diff(ntpTime, 'seconds'))
             if (timeTimerRef.current) {

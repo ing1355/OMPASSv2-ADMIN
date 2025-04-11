@@ -1,41 +1,53 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable";
 import Contents from "Components/Layout/Contents";
 import ContentsHeader from "Components/Layout/ContentsHeader";
-import { GetLdapConfigListFunc } from "Functions/ApiFunctions";
+import { GetExternalDirectoryListFunc } from "Functions/ApiFunctions";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import userAddIcon from './../../../assets/userAddIcon.png'
 import userAddIconHover from './../../../assets/userAddIconHover.png'
 
-const LdapManagement = () => {
-    const [tableData, setTableData] = useState<LdapConfigDataType[]>([])
+const ExternalDirectoryManagement = () => {
+    const [tableData, setTableData] = useState<ExternalDirectoryDataType[]>([])
     const [totalCount, setTotalCount] = useState<number>(0);
     const [dataLoading, setDataLoading] = useState(false)
     const navigate = useNavigate()
+    const type = useParams().type as ExternalDirectoryType
 
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
-        const _params: GeneralParamsType = {
+        const _params: ExternalDirectoryListParamsType = {
             page_size: params.size,
-            page: params.page
+            page: params.page,
+            type: 'OPEN_LDAP'
         }
         if (params.searchType) {
             _params[params.searchType] = params.searchValue
         }
-        GetLdapConfigListFunc(_params, ({ results, totalCount }) => {
+        GetExternalDirectoryListFunc(_params, ({ results, totalCount }) => {
             setTableData(results)
             setTotalCount(totalCount)
         }).finally(() => {
             setDataLoading(false)
         })
     }
+
+    const getTitleByType = (type: ExternalDirectoryType) => {
+        if(type === 'OPEN_LDAP') {
+            return 'LDAP_MANAGEMENT_TITLE'
+        } else if(type === 'ACTIVE_DIRECTORY') {
+            return 'ACTIVE_DIRECTORY_MANAGEMENT_TITLE'
+        } else if(type === 'MICROSOFT_ENTRA_ID') {
+            return 'MICROSOFT_ENTRA_ID_MANAGEMENT_TITLE'
+        }
+    }
     
     return <Contents loading={dataLoading}>
-        <ContentsHeader title="LDAP_MANAGEMENT_TITLE" subTitle="LDAP_MANAGEMENT_TITLE">
+        <ContentsHeader title={getTitleByType(type)} subTitle={getTitleByType(type)}>
         </ContentsHeader>
         <div className="contents-header-container">
-            <CustomTable<LdapConfigDataType>
+            <CustomTable<ExternalDirectoryDataType>
                 theme='table-st1'
                 datas={tableData}
                 hover
@@ -47,7 +59,7 @@ const LdapManagement = () => {
                     icon: userAddIcon,
                     hoverIcon: userAddIconHover,
                     callback: () => {
-                        navigate('/UserManagement/ldapSync/detail')
+                        navigate(`/UserManagement/externalDirectory/${type}/detail`)
                     }
                 }}
                 pagination
@@ -55,6 +67,10 @@ const LdapManagement = () => {
                     {
                         key: 'name',
                         title: <FormattedMessage id="LDAP_NAME_LABEL"/>
+                    },
+                    {
+                        key: 'description',
+                        title: <FormattedMessage id="DESCRIPTION_LABEL"/>
                     },
                     {
                         key: 'proxyIpAddress',
@@ -68,11 +84,7 @@ const LdapManagement = () => {
                     },
                     {
                         key: 'baseDn',
-                        title: "baseDn"
-                    },
-                    {
-                        key: 'description',
-                        title: <FormattedMessage id="DESCRIPTION_LABEL"/>
+                        title: "Base DN"
                     },
                     {
                         key: 'lastUserSyncedAt',
@@ -84,7 +96,7 @@ const LdapManagement = () => {
                     },
                 ]}
                 onBodyRowClick={(row, index, arr) => {
-                    navigate(`/UserManagement/ldapSync/detail/${row.id}`);
+                    navigate(`/UserManagement/externalDirectory/${type}/detail/${row.id}`);
                 }}
                 totalCount={totalCount}
             />
@@ -92,4 +104,4 @@ const LdapManagement = () => {
     </Contents>
 }
 
-export default LdapManagement
+export default ExternalDirectoryManagement

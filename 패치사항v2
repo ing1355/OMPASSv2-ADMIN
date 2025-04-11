@@ -1,3 +1,42 @@
+* v2.0.0(118)
+  - 대시보드 애플리케이션 선택 스크롤이 버튼 영역 침범하던 이슈 수정
+  - 전체 스크롤 통일
+  - 대시보드 비정상 인증 차트가 화면 확대, 축소 시 사이즈 조절이 안되던 이슈 수정
+
+* v2.0.0(117)
+  - (패스워드 없이 로그인, PAM 바이패스) 어플리케이션 -> 정책으로 이동
+  - 키값 변경 (isPasswordlessEnabled -> passwordless)
+  - Application Type명 변경 (ADMIN -> PORTAL, DEFAULT -> WEB, MS_ENTRA_ID -> MICROSOFT_ENTRA_ID)
+  - application detail 도메인 http 및 ip 주소도 허용
+  - 기기 변경 시 경고 문구 추가(Webauthn, Passcode 관련)
+
+* v2.0.0(116)
+  - OMPASS Interface Framework 문서 추가
+  - 사용자 상세 정보에서 LDAP 일 시 운영체제 안보이게 수정
+  - 사용자 상세 정보에서 LDAP, RADIUS 일 시 PASSCODE 안보이게 수정
+
+* v2.0.0(115)
+  - 모든 QR 앱링크 적용
+  - 앱링크 deeplink path 제거
+  - url 전부 인앱으로 변경
+
+* v2.0.0(114)
+  - 로그인 패스워드 초기화 시 구조 분해 할당 파싱 이슈 수정
+  - 권한 승계 시 source, target 같은 nonce 사용하던 이슈 수정
+
+* v2.0.0(113)
+  - 모바일 뷰 로그인 화면에서 img, text 비율 조정
+  - Ldap 과 Radius는 IP 정책 사용 못하게 수정
+
+* v2.0.0(112)
+  - 사용자 상세 정보 그룹, 정책 클릭 시 해당 페이지로 이동
+  - 외부 저장소 동기화 back 버튼 추가
+
+* v2.0.0(111)
+  - 패스코드 발급 시 초기화 로직 추가
+  - ldap 사용자 OMPASS 등록 로직 추가
+  - 외부 디렉토리 저장소 동기화 구현
+
 * v2.0.0(110)
   - 로그인 정렬 변경
   - 인증 로그 상세에 리다이렉트 URI 추가

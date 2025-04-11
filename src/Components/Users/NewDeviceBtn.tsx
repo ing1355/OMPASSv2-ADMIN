@@ -51,6 +51,13 @@ const NewDeviceBtn = ({ onComplete }: {
                         <FormattedMessage id="OMPASS_DEVICE_CHANGE_MODAL_SUBSCRIPTION" />
                     </div>
                     <div style={{
+                        color: 'var(--main-red-color)',
+                        fontSize: '12px',
+                        fontWeight: 'bold'
+                    }}>
+                        (<FormattedMessage id="OMPASS_DEVICE_CHANGE_MODAL_SUBSCRIPTION_2" />)
+                    </div>
+                    <div style={{
                         height: '40px',
                         paddingTop: '12px'
                     }}>

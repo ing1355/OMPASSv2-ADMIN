@@ -39,7 +39,8 @@ const ServerErrorCodes = {
         ERR_B041: "이미 존재하는 이메일 입니다.",
         ERR_B042: "이메일을 확인해주세요.",
         ERR_B043: "이미 존재하는 애플리케이션명 입니다.",
-        ERR_B045: '비밀번호가 일치하지 않습니다.'
+        ERR_B045: '비밀번호가 일치하지 않습니다.',
+        ERR_B046: '등록되지 않은 아이디 입니다.'
     },
     'EN': {
         ERR_B002: "Please check your ID and email",
@@ -81,7 +82,8 @@ const ServerErrorCodes = {
         ERR_B041: "Already exists email",
         ERR_B042: "Please check your email",
         ERR_B043: "Already exists application name",
-        ERR_B045: "The password does not match"
+        ERR_B045: "The password does not match",
+        ERR_B046: "The ID does not exist"
     }
 }
 

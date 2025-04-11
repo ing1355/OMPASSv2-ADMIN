@@ -1,5 +1,5 @@
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from "Components/CommonCustomComponents/CustomAxios";
-import { AddApplicationListApi, AddLdapConfigListApi, AddPasscodeApi, AddPoliciesListApi, AddRadiusUserListApi, AddUserDataApi, AddUserGroupApi, AddUserWithCsvDataApi, ApprovalUserApi, ConfirmPasswordApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeleteLdapConfigListApi, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DuplicateUserNameCheckApi, EmailChangeCodeVerificationApi, FindPortalUsernameApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetAuthorizeMSEntraUriApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetGlobalConfigApi, GetLdapConfigListApi, GetOMPASSAuthResultApi, GetPasscodeHistoriesApi, GetPasscodeListApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetRpUserListApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, LoginApi, OMPASSAuthStartApi, PasswordlessLoginApi, PatchSessionTokenApi, ResetPasswordApi, ResetPasswordEmailCodeVerifyApi, ResetPasswordEmailSendApi, RoleSwappingApi, RootSignUpRequestApi, SendEmailChangeEmailByAdminApi, SendPasscodeEmailApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, SyncLdapUserListApi, TestLdapConnectionApi, UnlockUserApi, UpdateAgentNoteApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdateLdapConfigListApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateSecurityQuestionsApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi, VerificationEmailChangeApi } from "Constants/ApiRoute";
+import { AddApplicationListApi, AddExternalDirectoryApi, AddLdapConfigListApi, AddPasscodeApi, AddPoliciesListApi, AddRadiusUserListApi, AddUserDataApi, AddUserGroupApi, AddUserWithCsvDataApi, ApprovalUserApi, ConfirmPasswordApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeleteExternalDirectoryApi, DeleteLdapConfigListApi, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DuplicateUserNameCheckApi, EmailChangeCodeVerificationApi, FindPortalUsernameApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetAuthorizeMSEntraUriApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetExternalDirectoryListApi, GetGlobalConfigApi, GetLdapConfigListApi, GetOMPASSAuthResultApi, GetPasscodeHistoriesApi, GetPasscodeListApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetRpUserListApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, LoginApi, OMPASSAuthStartApi, PasswordlessLoginApi, PatchSessionTokenApi, ResetPasswordApi, ResetPasswordEmailCodeVerifyApi, ResetPasswordEmailSendApi, RoleSwappingApi, RootSignUpRequestApi, SendEmailChangeEmailByAdminApi, SendPasscodeEmailApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, SyncExternalDirectoryApi, SyncLdapUserListApi, TestLdapConnectionApi, UnlockUserApi, UpdateAgentNoteApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdateExternalDirectoryApi, UpdateLdapConfigListApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateSecurityQuestionsApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi, VerificationEmailChangeApi } from "Constants/ApiRoute";
 import { DateTimeFormat, INT_MAX_VALUE } from "Constants/ConstantValues";
 import { convertLocalDateStringToUTCString, convertUTCStringToLocalDateString } from "./GlobalFunctions";
 import dayjs from "dayjs";
@@ -664,7 +664,7 @@ export const UpdateLdapConfigListFunc = (id: LdapConfigDataType['id'], params: L
 export const DeleteLdapConfigListFunc = (id: LdapConfigDataType['id'], callback: () => void) => {
     return CustomAxiosDelete(DeleteLdapConfigListApi(id), callback)
 }
-export const SyncLdapUserListFunc = (params: LdapConfigDataType['id'], callback: (res: LdapUserDataType[]) => void) => {
+export const SyncLdapUserListFunc = (params: LdapConfigDataType['id'], callback: (res: ExternalDirectoryUserDataType[]) => void) => {
     return CustomAxiosPost(SyncLdapUserListApi, callback, {
         id: params
     })
@@ -737,3 +737,46 @@ export const GetAuthorizeMSEntraUriFunc = (appId: ApplicationDataType['id'], cal
 export const ConfirmPasswordFunc = (params: PasswordVerificationRequestParamsType, callback: () => void) => {
     return CustomAxiosPost(ConfirmPasswordApi, callback, params)
 }
+
+export const GetExternalDirectoryListFunc = ({
+    page_size = 10,
+    page = 1,
+    sortDirection = "DESC",
+    id = undefined,
+    name = "",
+    proxyServerAddress = "",
+    baseDn = "",
+    type
+}: ExternalDirectoryListParamsType, callback: ((data: GetListDataGeneralType<ExternalDirectoryDataType>) => void)) => {
+    return CustomAxiosGet(GetExternalDirectoryListApi, (data: GetListDataGeneralType<ExternalDirectoryDataType>) => {
+        callback(data)
+    }, {
+        page_size,
+        page,
+        sortDirection,
+        id,
+        name,
+        proxyServerAddress,
+        baseDn,
+        type
+    } as ExternalDirectoryListParamsType)
+}
+
+export const AddExternalDirectoryFunc = (params: ExternalDirectoryParamsType, callback: (res: ExternalDirectoryDataType) => void) => {
+    return CustomAxiosPost(AddExternalDirectoryApi, callback, params)
+}
+
+export const UpdateExternalDirectoryFunc = (id: ExternalDirectoryDataType['id'], params: ExternalDirectoryParamsType, callback: (res: ExternalDirectoryDataType) => void) => {
+    return CustomAxiosPut(UpdateExternalDirectoryApi(id), callback, params)
+}
+
+export const DeleteExternalDirectoryFunc = (id: ExternalDirectoryDataType['id'], callback: () => void) => {
+    return CustomAxiosDelete(DeleteExternalDirectoryApi(id), callback)
+}
+
+export const SyncExternalDirectoryFunc = (id: ExternalDirectoryDataType['id'], callback: (res: ExternalDirectoryUserDataType) => void) => {
+    return CustomAxiosPost(SyncExternalDirectoryApi, callback, {
+        id
+    })
+}
+

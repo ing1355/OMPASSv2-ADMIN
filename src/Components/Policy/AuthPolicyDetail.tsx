@@ -13,7 +13,6 @@ import Input from "Components/CommonCustomComponents/Input";
 import { applicationTypes, getApplicationTypeLabel, PolicyBrowsersList } from "Constants/ConstantValues";
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect";
 import CustomModal from "Components/Modal/CustomModal";
-import './AuthPolicyDetail.css'
 import OMPASSAuth from "./PolicyItems/OMPASSAuth";
 import OMPASSAuthenticators from "./PolicyItems/OMPASSAuthenticators";
 import PolicyBrowserSelect from "./PolicyItems/PolicyBrowserSelect";
@@ -26,6 +25,15 @@ import useCustomRoute from "hooks/useCustomRoute";
 import { cidrRegex, ipAddressRegex } from "Components/CommonCustomComponents/CommonRegex";
 import { isValidIpRange } from "Functions/GlobalFunctions";
 import OMPASSAppAuthenticators from "./PolicyItems/OMPASSAppAuthenticator";
+import './AuthPolicyDetail.css'
+import PasswordlessCheck from "./PolicyItems/PasswordlessCheck";
+import LinuxPamBypass from "./PolicyItems/LinuxPamBypass";
+
+const pamInitData: PAMBypassDataType = {
+    isEnabled: false,
+    ip: '',
+    username: ''
+}
 
 const AuthPolicyDetail = () => {
     const { uuid } = useParams()
@@ -33,7 +41,7 @@ const AuthPolicyDetail = () => {
     const isAdd = !uuid
     const [authenticatorPolicies, setAuthenticatorPolicies] = useState<PolicyDataType['enableAuthenticators']>(['OMPASS', 'OTP', 'PASSCODE', 'WEBAUTHN'])
     const [appAuthenticatorPolicies, setAppAuthenticatorPolicies] = useState<PolicyDataType['enableAppAuthenticationMethods']>([])
-    const [selectedApplicationType, setSelectedApplicationType] = useState<LocalApplicationTypes>(isAdd ? '' : 'DEFAULT')
+    const [selectedApplicationType, setSelectedApplicationType] = useState<LocalApplicationTypes>(isAdd ? '' : 'WEB')
     const [policyName, setPolicyName] = useState('')
     const [dataLoading, setDataLoading] = useState(!(!uuid))
     const [initEvent, setInitEvent] = useState(false)
@@ -42,6 +50,10 @@ const AuthPolicyDetail = () => {
         isEnabled: false,
         locations: []
     })
+    const [passwordlessData, setPasswordlessData] = useState<PolicyEnabledDataType>({
+        isEnabled: false,
+    })
+    const [pamBypassData, setPamBypassData] = useState<PAMBypassDataType>(pamInitData)
     const [browserChecked, setBrowserChecked] = useState<BrowserPolicyType[] | undefined>(isAdd ? PolicyBrowsersList : [])
     const [ompassControl, setOmpassControl] = useState<PolicyDataType['accessControl']>('ACTIVE')
     const [noticeToThemselves, setNoticeToThemselves] = useState<PolicyDataType['noticeToThemselves']>(undefined)
@@ -55,10 +67,14 @@ const AuthPolicyDetail = () => {
     const navigate = useNavigate()
     const isDefaultPolicy = detailData?.policyType === 'DEFAULT'
     const passcodeUsed = !isDefaultPolicy && selectedApplicationType ? !(["ALL", "RADIUS"] as LocalApplicationTypes[]).includes(selectedApplicationType) : false
+    const passwordlessUsed = selectedApplicationType && (["WINDOWS_LOGIN", "LINUX_LOGIN"] as LocalApplicationTypes[]).includes(selectedApplicationType)
     const otpUsed = !isDefaultPolicy && selectedApplicationType ? !(["RADIUS"] as LocalApplicationTypes[]).includes(selectedApplicationType) : false
-    const browserUsed = !isDefaultPolicy && selectedApplicationType ? (["ADMIN", "DEFAULT", "REDMINE", "MS_ENTRA_ID"] as LocalApplicationTypes[]).includes(selectedApplicationType) : false
+    const browserUsed = !isDefaultPolicy && selectedApplicationType ? (["ADMIN", "DEFAULT", "REDMINE", "MS_ENTRA_ID", "KEYCLOAK"] as LocalApplicationTypes[]).includes(selectedApplicationType) : false
     const webauthnUsed = !isDefaultPolicy && browserUsed
-    const locationUsed = !isDefaultPolicy && (selectedApplicationType ? (["ADMIN", "DEFAULT", "WINDOWS_LOGIN", "REDMINE", 'LINUX_LOGIN', 'RADIUS', 'MAC_LOGIN', 'MS_ENTRA_ID'] as LocalApplicationTypes[]).includes(selectedApplicationType) : false)
+    const ipAddressUsed = !isDefaultPolicy && selectedApplicationType ? !(['LDAP', 'RADIUS'] as LocalApplicationTypes[]).includes(selectedApplicationType) : false
+    const isPAM = selectedApplicationType && (["LINUX_LOGIN"] as LocalApplicationTypes[]).includes(selectedApplicationType)
+    // const locationUsed = !isDefaultPolicy && (selectedApplicationType ? (["ADMIN", "DEFAULT", "WINDOWS_LOGIN", "REDMINE", 'LINUX_LOGIN', 'RADIUS', 'MAC_LOGIN', 'MS_ENTRA_ID', 'LDAP', 'KEYCLOAK'] as LocalApplicationTypes[]).includes(selectedApplicationType) : false)
+    const locationUsed = !isDefaultPolicy
     const authenticatorsUsed = !isDefaultPolicy && selectedApplicationType ? !(["ALL", "RADIUS"] as LocalApplicationTypes[]).includes(selectedApplicationType) : false
     const typeItems = applicationTypes.map(_ => ({
         key: _,
@@ -75,6 +91,12 @@ const AuthPolicyDetail = () => {
                 setDetailData(data)
                 setAuthenticatorPolicies(data.enableAuthenticators)
                 setSelectedApplicationType(data.applicationType)
+                if (data.linuxPamBypass) {
+                    setPamBypassData(data.linuxPamBypass)
+                }
+                if (data.passwordless) {
+                    setPasswordlessData(data.passwordless)
+                }
                 const isDefault = data.policyType === 'DEFAULT'
                 if (!isDefault) {
                     setIpAddressValues(data.networkConfig)
@@ -101,6 +123,11 @@ const AuthPolicyDetail = () => {
         if (webauthnUsed) tempAuthPolices.push('WEBAUTHN')
         setAuthenticatorPolicies(tempAuthPolices)
         if (!isDefaultPolicy) {
+            setAppAuthenticatorPolicies([])
+            setPasswordlessData({
+                isEnabled: false,
+            })
+            setPamBypassData(pamInitData)
             if (browserUsed) setBrowserChecked(PolicyBrowsersList)
             if (locationUsed) {
                 setLocationDatas({
@@ -128,13 +155,66 @@ const AuthPolicyDetail = () => {
                 accessTimes: []
             })
         }
-
     }
 
-    const addAuthPolicyFunc = () => {
-        AddPoliciesListFunc({
-            id: '',
-            policyType: "CUSTOM",
+    const submitCallback = () => {
+        if (!selectedApplicationType) return message.error(formatMessage({ id: 'PLEASE_SELECT_APPLICATION_TYPE_MSG' }))
+        if (!policyName) {
+            return message.error(formatMessage({ id: 'PLEASE_INPUT_POLICY_NAME_MSG' }))
+        }
+        if (pamBypassData.isEnabled) {
+            if (!pamBypassData.username) return message.error(formatMessage({ id: 'PAM_BYPASS_DATA_USERNAME_REQUIRED_MSG' }))
+            if (!pamBypassData.ip) return message.error(formatMessage({ id: 'PAM_BYPASS_DATA_IP_ADDRESS_REQUIRED_MSG' }))
+            if (pamBypassData.ip && !ipAddressRegex.test(pamBypassData.ip)) return message.error(formatMessage({ id: 'PAM_BYPASS_DATA_IP_ADDRESS_INVALID_MSG' }))
+        }
+        if (ompassControl === 'ACTIVE') {
+            if (browserUsed && browserChecked!.length === 0) return message.error(formatMessage({ id: 'PLEASE_SELECT_BROWSER_POLICY_MSG' }))
+            if (locationUsed && locationDatas?.isEnabled && locationDatas.locations.length === 0) {
+                return message.error(formatMessage({ id: 'PLEASE_SELECT_USER_LOCATION_POLICY_MSG' }))
+            }
+            if (locationUsed && locationDatas?.isEnabled && locationDatas?.locations.some(_ => !_.alias)) {
+                return message.error(formatMessage({ id: 'PLEASE_INPOUT_LOCATION_NAME_MSG' }))
+            }
+            if (ipAddressValues?.isEnabled && ipAddressValues.notRequire2faForIps.length === 0 && ipAddressValues.require2faForIps.length === 0 && ipAddressValues.deny2faForIps.length === 0) {
+                return message.error(formatMessage({ id: 'PLEASE_SETTING_IP_ADDRESS_POLICY_MSG' }))
+            }
+            if (accessTimeValues?.isEnabled && accessTimeValues.accessTimes.length === 0) {
+                return message.error(formatMessage({ id: 'PLEASE_SETTING_TIME_POLICY_MSG' }))
+            }
+            if (noticeToAdmin?.isEnabled && noticeToAdmin.methods.length === 0) {
+                return message.error(formatMessage({ id: 'PLEASE_SETTING_NOTI_TO_ADMIN_POLICY_MSG' }))
+            }
+            if (noticeToAdmin?.isEnabled && noticeToAdmin.admins.length === 0) {
+                return message.error(formatMessage({ id: 'PLEASE_SETTING_NOTI_TO_ADMIN_ONE_MORE_MSG' }))
+            }
+            if (hasIncludeWithdrawal) {
+                return message.error(formatMessage({ id: 'NOTI_TO_ADMIN_INCLUDE_WITHDRAWAL_ADMIN_MSG' }))
+            }
+            if (noticeToAdmin?.isEnabled && noticeToAdmin.targetPolicies.length === 0) {
+                return message.error(formatMessage({ id: 'PLEASE_SETTING_NOTI_TO_ADMIN_POLICY_ONE_MORE_MSG' }))
+            }
+        }
+        if (ipAddressValues?.isEnabled) {
+            const ips = ipAddressValues.require2faForIps.map(_ => _.ip).concat(ipAddressValues.notRequire2faForIps.map(_ => _.ip).concat(ipAddressValues.deny2faForIps.map(_ => _.ip)))
+            const ipTest = ips.some(ip => {
+                if (!ip) {
+                    return false
+                }
+                if ((ip.includes('-') && !isValidIpRange(ip)) || (ip.includes('/') && !RegExp(cidrRegex).test(ip))) {
+                    return false
+                }
+                if (!ip.includes('-') && !ip.includes('/') && !RegExp(ipAddressRegex).test(ip)) {
+                    return false
+                }
+                return true
+            })
+            if (!ipTest) {
+                return message.error(formatMessage({ id: 'PLEASE_INPUT_CORRECT_IP_ADDRESS' }))
+            }
+        }
+        const params: PolicyDataType = {
+            id: uuid || '',
+            policyType: detailData?.policyType || "CUSTOM",
             applicationType: selectedApplicationType || "ALL",
             description: inputDescription,
             name: policyName,
@@ -145,9 +225,39 @@ const AuthPolicyDetail = () => {
             enableAuthenticators: authenticatorPolicies,
             enableAppAuthenticationMethods: appAuthenticatorPolicies,
             accessTimeConfig: accessTimeValues,
-            noticeToAdmin: noticeToAdmin!,
-            noticeToThemselves
-        }, (res) => {
+            noticeToAdmin: noticeToAdmin,
+            noticeToThemselves,
+            passwordless: passwordlessData,
+            linuxPamBypass: {
+                isEnabled: pamBypassData.isEnabled,
+                ip: pamBypassData.isEnabled ? pamBypassData.ip : '',
+                username: pamBypassData.isEnabled ? pamBypassData.username : ''
+            }
+        }
+        if (uuid) {
+            updateAuthPolicyFunc(params)
+        } else {
+            addAuthPolicyFunc(params)
+        }
+    }
+
+    const updateAuthPolicyFunc = (params: PolicyDataType) => {
+        UpdatePoliciesListFunc(params, ({ enableAuthenticators, enableBrowsers, locationConfig, networkConfig, noticeToAdmin, noticeToThemselves, accessTimeConfig }) => {
+            if (!isDefaultPolicy) {
+                if (locationUsed) setLocationDatas(locationConfig)
+                if (authenticatorsUsed) setAuthenticatorPolicies(webauthnUsed ? enableAuthenticators : enableAuthenticators.filter(_ => _ !== 'WEBAUTHN'))
+                if (browserUsed) setBrowserChecked(browserUsed ? enableBrowsers : [])
+                setAccessTimeValues(accessTimeConfig)
+                setIpAddressValues(networkConfig)
+                setNoticeToAdmin(noticeToAdmin)
+                setNoticeToThemselves(noticeToThemselves)
+            }
+            message.success(formatMessage({ id: 'AUTH_POLICY_UPDATE_SUCCESS_MSG' }))
+        })
+    }
+
+    const addAuthPolicyFunc = (params: PolicyDataType) => {
+        AddPoliciesListFunc(params, (res) => {
             message.success(formatMessage({ id: 'AUTH_POLICY_ADD_SUCCESS_MSG' }))
             navigate(`/Policies/detail/${res.id}`)
         })
@@ -166,88 +276,7 @@ const AuthPolicyDetail = () => {
     return <Contents loading={dataLoading}>
         <ContentsHeader title="POLICY_MANAGEMENT" subTitle={isAdd ? "AUTH_POLICY_ADD" : "AUTH_POLICY_DETAIL"}>
             <div className="custom-detail-header-items-container">
-                {!isDefaultPolicy && <Button className="st3" onClick={() => {
-                    if (!selectedApplicationType) return message.error(formatMessage({ id: 'PLEASE_SELECT_APPLICATION_TYPE_MSG' }))
-                    if (!policyName) {
-                        return message.error(formatMessage({ id: 'PLEASE_INPUT_POLICY_NAME_MSG' }))
-                    }
-                    if (ompassControl === 'ACTIVE') {
-                        if (browserUsed && browserChecked!.length === 0) return message.error(formatMessage({ id: 'PLEASE_SELECT_BROWSER_POLICY_MSG' }))
-                        if (locationUsed && locationDatas?.isEnabled && locationDatas.locations.length === 0) {
-                            return message.error(formatMessage({ id: 'PLEASE_SELECT_USER_LOCATION_POLICY_MSG' }))
-                        }
-                        if (locationUsed && locationDatas?.isEnabled && locationDatas?.locations.some(_ => !_.alias)) {
-                            return message.error(formatMessage({ id: 'PLEASE_INPOUT_LOCATION_NAME_MSG' }))
-                        }
-                        if (ipAddressValues?.isEnabled && ipAddressValues.notRequire2faForIps.length === 0 && ipAddressValues.require2faForIps.length === 0 && ipAddressValues.deny2faForIps.length === 0) {
-                            return message.error(formatMessage({ id: 'PLEASE_SETTING_IP_ADDRESS_POLICY_MSG' }))
-                        }
-                        if (accessTimeValues?.isEnabled && accessTimeValues.accessTimes.length === 0) {
-                            return message.error(formatMessage({ id: 'PLEASE_SETTING_TIME_POLICY_MSG' }))
-                        }
-                        if (noticeToAdmin?.isEnabled && noticeToAdmin.methods.length === 0) {
-                            return message.error(formatMessage({ id: 'PLEASE_SETTING_NOTI_TO_ADMIN_POLICY_MSG' }))
-                        }
-                        if (noticeToAdmin?.isEnabled && noticeToAdmin.admins.length === 0) {
-                            return message.error(formatMessage({ id: 'PLEASE_SETTING_NOTI_TO_ADMIN_ONE_MORE_MSG' }))
-                        }
-                        if (hasIncludeWithdrawal) {
-                            return message.error(formatMessage({ id: 'NOTI_TO_ADMIN_INCLUDE_WITHDRAWAL_ADMIN_MSG' }))
-                        }
-                        if (noticeToAdmin?.isEnabled && noticeToAdmin.targetPolicies.length === 0) {
-                            return message.error(formatMessage({ id: 'PLEASE_SETTING_NOTI_TO_ADMIN_POLICY_ONE_MORE_MSG' }))
-                        }
-                    }
-                    if (ipAddressValues?.isEnabled) {
-                        const ips = ipAddressValues.require2faForIps.map(_ => _.ip).concat(ipAddressValues.notRequire2faForIps.map(_ => _.ip).concat(ipAddressValues.deny2faForIps.map(_ => _.ip)))
-                        const ipTest = ips.some(ip => {
-                            if (!ip) {
-                                return false
-                            }
-                            if ((ip.includes('-') && !isValidIpRange(ip)) || (ip.includes('/') && !RegExp(cidrRegex).test(ip))) {
-                                return false
-                            }
-                            if (!ip.includes('-') && !ip.includes('/') && !RegExp(ipAddressRegex).test(ip)) {
-                                return false
-                            }
-                            return true
-                        })
-                        if(!ipTest) {
-                            return message.error(formatMessage({ id: 'PLEASE_INPUT_CORRECT_IP_ADDRESS' }))
-                        }
-                    }
-                    if (uuid) {
-                        UpdatePoliciesListFunc({
-                            id: uuid,
-                            applicationType: selectedApplicationType,
-                            policyType: detailData?.policyType || "CUSTOM",
-                            description: inputDescription,
-                            name: policyName,
-                            accessControl: ompassControl,
-                            enableBrowsers: browserUsed ? browserChecked : undefined,
-                            networkConfig: ipAddressValues,
-                            locationConfig: locationDatas,
-                            enableAuthenticators: authenticatorPolicies,
-                            enableAppAuthenticationMethods: appAuthenticatorPolicies,
-                            accessTimeConfig: accessTimeValues,
-                            noticeToAdmin: isDefaultPolicy ? undefined : noticeToAdmin!,
-                            noticeToThemselves
-                        }, ({ enableAuthenticators, enableBrowsers, locationConfig, networkConfig, noticeToAdmin, noticeToThemselves, accessTimeConfig }) => {
-                            if (!isDefaultPolicy) {
-                                if (locationUsed) setLocationDatas(locationConfig)
-                                if (authenticatorsUsed) setAuthenticatorPolicies(webauthnUsed ? enableAuthenticators : enableAuthenticators.filter(_ => _ !== 'WEBAUTHN'))
-                                if (browserUsed) setBrowserChecked(browserUsed ? enableBrowsers : [])
-                                setAccessTimeValues(accessTimeConfig)
-                                setIpAddressValues(networkConfig)
-                                setNoticeToAdmin(noticeToAdmin)
-                                setNoticeToThemselves(noticeToThemselves)
-                            }
-                            message.success(formatMessage({ id: 'AUTH_POLICY_UPDATE_SUCCESS_MSG' }))
-                        })
-                    } else {
-                        addAuthPolicyFunc()
-                    }
-                }}>
+                {!isDefaultPolicy && <Button className="st3" onClick={submitCallback}>
                     <FormattedMessage id="SAVE" />
                 </Button>}
                 {!isDefaultPolicy && <Button className="st5" icon={resetIcon} hoverIcon={resetIconWhite} onClick={() => {
@@ -287,10 +316,12 @@ const AuthPolicyDetail = () => {
                 <OMPASSAuth value={ompassControl} onChange={setOmpassControl} isDefaultPolicy={isDefaultPolicy} />
                 <div className="auth-policy-validate-container" data-hidden={ompassControl !== 'ACTIVE'}>
                     {authenticatorsUsed && <OMPASSAuthenticators value={authenticatorPolicies} onChange={setAuthenticatorPolicies} locationChecked={locationDatas?.isEnabled || false} webauthnUsed={webauthnUsed} setSureChange={setSureChange} />}
-                    <OMPASSAppAuthenticators value={appAuthenticatorPolicies} onChange={setAppAuthenticatorPolicies} />
+                    {!isDefaultPolicy && <OMPASSAppAuthenticators value={appAuthenticatorPolicies} onChange={setAppAuthenticatorPolicies} />}
+                    {passwordlessUsed && <PasswordlessCheck value={passwordlessData} onChange={setPasswordlessData} />}
+                    {isPAM && <LinuxPamBypass value={pamBypassData} onChange={setPamBypassData} />}
                     {browserUsed && <PolicyBrowserSelect value={browserChecked} onChange={setBrowserChecked} />}
                     {locationUsed && locationDatas && <PolicyLocationList value={locationDatas} onChange={setLocationDatas} authenticators={authenticatorPolicies} setSureChange={setSureChange} />}
-                    {!isDefaultPolicy && ipAddressValues && <PolicyIpAddressList value={ipAddressValues} onChange={setIpAddressValues} dataInit={initEvent}/>}
+                    {!isDefaultPolicy && ipAddressValues && ipAddressUsed && <PolicyIpAddressList value={ipAddressValues} onChange={setIpAddressValues} dataInit={initEvent} />}
                     {!isDefaultPolicy && accessTimeValues && <PolicyAccessTimeList value={accessTimeValues} onChange={setAccessTimeValues} />}
                     {!isDefaultPolicy && noticeToAdmin && <NoticeToAdmin hasIncludeWithdrawal={setHasIncludeWithdrawal} value={noticeToAdmin} onChange={setNoticeToAdmin} />}
                     {!isDefaultPolicy && noticeToThemselves && <NoticeToThemselves value={noticeToThemselves} onChange={setNoticeToThemselves} />}
@@ -304,15 +335,15 @@ const AuthPolicyDetail = () => {
                 setSureChange(null)
             }}
             type="info"
-            typeTitle={<FormattedMessage id="POLICY_LOCATION_AUTHENTICATOR_MODAL_TITLE"/>}
+            typeTitle={<FormattedMessage id="POLICY_LOCATION_AUTHENTICATOR_MODAL_TITLE" />}
             typeContent={sureChange === 'LOCATION' ? <>
-                <FormattedMessage id="POLICY_LOCATION_AUTHENTICATOR_MODAL_SUBSCRIPTION_1"/><br />
-                <FormattedMessage id="POLICY_LOCATION_AUTHENTICATOR_MODAL_SUBSCRIPTION_2"/>
+                <FormattedMessage id="POLICY_LOCATION_AUTHENTICATOR_MODAL_SUBSCRIPTION_1" /><br />
+                <FormattedMessage id="POLICY_LOCATION_AUTHENTICATOR_MODAL_SUBSCRIPTION_2" />
             </> : <>
                 <FormattedMessage id={"POLICY_LOCATION_AUTHENTICATOR_MODAL_SUBSCRIPTION_3"} values={{
                     auth: sureChange
                 }} /><br />
-                <FormattedMessage id="POLICY_LOCATION_AUTHENTICATOR_MODAL_SUBSCRIPTION_2"/>
+                <FormattedMessage id="POLICY_LOCATION_AUTHENTICATOR_MODAL_SUBSCRIPTION_2" />
             </>}
             yesOrNo
             okCallback={async () => {
