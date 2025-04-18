@@ -60,9 +60,9 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: white;
   --header-height: 72px;
   --main-background-color: #ededf4;
-  background-color: var(--main-background-color);
  }
  
  html,

@@ -56,7 +56,7 @@ const ApplicationDetail = () => {
     const [sureReset, setSureReset] = useState(false)
     const [hasWindowsLogin, setHasWindowsLogin] = useState(false)
     const [radiusData, setRadiusData] = useState<RadiusDataType>()
-    const [applicationType, setApplicationType] = useState<LocalApplicationTypes>('')
+    const [applicationType, setApplicationType] = useState<LocalApplicationTypes>(undefined)
     const navigate = useNavigate()
     const { formatMessage } = useIntl()
     const { uuid } = useParams()

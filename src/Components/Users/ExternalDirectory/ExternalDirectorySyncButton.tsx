@@ -5,16 +5,18 @@ import CustomLoading from "Components/CommonCustomComponents/CustomLoading"
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import CustomModal from "Components/Modal/CustomModal"
 import { userSelectPageSize } from "Constants/ConstantValues"
-import { AddUserWithCsvDataFunc, SyncLdapUserListFunc } from "Functions/ApiFunctions"
+import { AddUserWithCsvDataFunc, GetMicrosoftEntraIdAuthFunc, SyncExternalDirectoryFunc } from "Functions/ApiFunctions"
 import useFullName from "hooks/useFullName"
 import { useMemo, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
+import { ExternalDirectoryTypeLabel } from "./ExternalDirectoryContstants"
 
 type ExternalDirectorySyncButtonProps = {
-    id: ExternalDirectoryDataType['id']
+    data?: ExternalDirectoryDataType
+    type: ExternalDirectoryType
 }
 
-const ExternalDirectorySyncButton = ({ id }: ExternalDirectorySyncButtonProps) => {
+const ExternalDirectorySyncButton = ({ data, type }: ExternalDirectorySyncButtonProps) => {
     const [dataLoading, setDataLoading] = useState(false)
     const [sureSync, setSureSync] = useState(false)
     const [syncDatas, setSyncDatas] = useState<ExternalDirectoryUserDataType[]>([])
@@ -28,36 +30,49 @@ const ExternalDirectorySyncButton = ({ id }: ExternalDirectorySyncButtonProps) =
         const { page, showPerPage } = pageSetting
         return syncDatas.slice((page - 1) * showPerPage, page * showPerPage)
     }, [syncDatas, pageSetting])
-    
+
     return <>
-        <BottomLineText title={<FormattedMessage id="LDAP_USER_TITLE_LABEL"/>} style={{
+        <BottomLineText title={<><FormattedMessage id={ExternalDirectoryTypeLabel[type]} /> <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_USER_TITLE_LABEL" /></>} style={{
             marginTop: '48px'
         }} buttons={<>
-            <Button className="st3" onClick={() => {
-                message.info(formatMessage({id:'LDAP_USER_LOAD_SUCCESS_MSG'}))
+            {
+                type === 'MICROSOFT_ENTRA_ID' && <Button className="st3" onClick={() => {
+                    if (data?.id) {
+                        GetMicrosoftEntraIdAuthFunc(data.id, res => {
+                            window.open(res.redirectUri, '_blank')
+                        })
+                    }
+                }}>
+                    <FormattedMessage id="MS_ENTRA_ID_AUTHORIZE_LABEL" />
+                </Button>
+            }
+            <Button className="st3" disabled={type === 'MICROSOFT_ENTRA_ID' && !data?.isAuthorized} onClick={() => {
+                message.info(formatMessage({ id: 'USER_ADD_EXTERNAL_DIRECTORY_USER_LOAD_SUCCESS_MSG' }, { type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }))
                 setDataLoading(true)
-                SyncLdapUserListFunc(id, res => {
-                    console.log(res)
-                    setSyncDatas(res)
-                }).finally(() => {
-                    setDataLoading(false)
-                })
+                if (data?.id) {
+                    SyncExternalDirectoryFunc(data.id, res => {
+                        console.log(res)
+                        setSyncDatas(res)
+                    }).finally(() => {
+                        setDataLoading(false)
+                    })
+                }
             }}>
-                <FormattedMessage id="LOAD_LABEL"/>
+                <FormattedMessage id="LOAD_LABEL" />
             </Button>
             <Button className="st3" onClick={() => {
-                if(syncDatas.length === 0) {
-                    return message.error(formatMessage({id:'LDAP_USER_SYNC_FAIL_NO_USERS_MSG'}))
+                if (syncDatas.length === 0) {
+                    return message.error(formatMessage({ id: 'USER_ADD_EXTERNAL_DIRECTORY_SYNC_FAIL_NO_USERS_MSG' }, { type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }))
                 }
                 setSureSync(true)
-            }}>
-                <FormattedMessage id="SYNC_LABEL"/>
+            }} disabled={type === 'MICROSOFT_ENTRA_ID' && !data?.isAuthorized}>
+                <FormattedMessage id="SYNC_LABEL" />
             </Button>
         </>} />
-        <div className="ldap-sync-user-list-container">
-            {dataLoading ? <div className="ldap-sync-user-list-loading-container">
+        <div className="external-directory-sync-user-list-container">
+            {dataLoading ? <div className="external-directory-sync-user-list-loading-container">
                 <CustomLoading />
-                <FormattedMessage id="CONTENTS_DATA_LOADING_LABEL"/>
+                <FormattedMessage id="CONTENTS_DATA_LOADING_LABEL" />
             </div> : <CustomTable<ExternalDirectoryUserDataType>
                 theme="table-st1"
                 datas={tableData}
@@ -72,17 +87,17 @@ const ExternalDirectorySyncButton = ({ id }: ExternalDirectorySyncButtonProps) =
                 columns={[
                     {
                         key: 'username',
-                        title: <FormattedMessage id="ID"/>
+                        title: <FormattedMessage id="ID" />
                     }, {
                         key: 'name',
-                        title: <FormattedMessage id="FIRST_NAME"/>,
+                        title: <FormattedMessage id="FIRST_NAME" />,
                         render: (data, ind, row) => getFullName(row.name)
                     }, {
                         key: 'org',
-                        title: <FormattedMessage id="RADIUS_ORG_LABEL"/>
+                        title: <FormattedMessage id="ORGANIZATION_NAME_LABEL" />
                     }, {
                         key: 'email',
-                        title: <FormattedMessage id="EMAIL"/>
+                        title: <FormattedMessage id="EMAIL" />
                     }
                 ]}
             />}
@@ -93,11 +108,11 @@ const ExternalDirectorySyncButton = ({ id }: ExternalDirectorySyncButtonProps) =
                 setSureSync(false)
             }}
             type="info"
-            typeTitle={<FormattedMessage id="LDAP_SYNC_MODAL_TITLE"/>}
+            typeTitle={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_SYNC_MODAL_TITLE" />}
             typeContent={<>
-                <FormattedMessage id="LDAP_SYNC_MODAL_SUBSCRIPTION_1"/><br />
-                <FormattedMessage id="LDAP_SYNC_MODAL_SUBSCRIPTION_2"/><br/>
-                <FormattedMessage id="LDAP_SYNC_MODAL_SUBSCRIPTION_3"/>
+                <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_SYNC_MODAL_SUBSCRIPTION_1" values={{ type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }} /><br />
+                <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_SYNC_MODAL_SUBSCRIPTION_2" /><br />
+                <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_SYNC_MODAL_SUBSCRIPTION_3" />
             </>}
             yesOrNo
             okCallback={async () => {
@@ -108,7 +123,7 @@ const ExternalDirectorySyncButton = ({ id }: ExternalDirectorySyncButtonProps) =
                     phone: _.phone,
                     role: 'USER'
                 })), () => {
-                    message.success(formatMessage({id:'LDAP_USER_SYNC_SUCCESS_MSG'}))
+                    message.success(formatMessage({ id: 'USER_ADD_EXTERNAL_DIRECTORY_SYNC_SUCCESS_MSG' }, { type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }))
                     setSureSync(false)
                 })
             }} buttonLoading />

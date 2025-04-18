@@ -7,10 +7,11 @@ import { message } from "antd";
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow";
 import Input from "Components/CommonCustomComponents/Input";
 import CopyToClipboard from "react-copy-to-clipboard";
+import { ExternalDirectoryTypeLabel } from "Components/Users/ExternalDirectory/ExternalDirectoryContstants";
 
 type ApplicationDetailSubInfoByTypeProps = {
     isAuthorized: boolean
-    applicationType: string
+    applicationType: LocalApplicationTypes
     MSEntraTenantId: string
     data?: RadiusDataType
     ldapProxyServer?: ApplicationDataType['ldapProxyServer']
@@ -18,7 +19,7 @@ type ApplicationDetailSubInfoByTypeProps = {
 
 const ApplicationDetailSubInfoByType = ({ isAuthorized, applicationType, data, MSEntraTenantId, ldapProxyServer }: ApplicationDetailSubInfoByTypeProps) => {
     if (applicationType === 'RADIUS') return <RadiusDetailInfo data={data} />
-    if (applicationType === 'MS_ENTRA_ID') return <MSEntraIDDetailInfo isAuthorized={isAuthorized} MSEntraTenantId={MSEntraTenantId} />
+    if (applicationType === 'MICROSOFT_ENTRA_ID') return <MSEntraIDDetailInfo isAuthorized={isAuthorized} MSEntraTenantId={MSEntraTenantId} />
     if (applicationType === 'LDAP') return <LDAPDetailInfo ldapProxyServer={ldapProxyServer} />
     return <></>
 }
@@ -29,7 +30,7 @@ const LDAPDetailInfo = ({ ldapProxyServer }: {
     const { formatMessage } = useIntl()
     const noConnectedMsg = formatMessage({ id: 'NO_CONNECTED_MSG' })
     return <>
-        <BottomLineText title={<FormattedMessage id="LDAP_DETAIL_INFO_LABEL" />} style={{
+        <BottomLineText title={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_DETAIL_INFO_LABEL" values={{type: formatMessage({id: ExternalDirectoryTypeLabel['OPEN_LDAP']})}} />} style={{
             marginTop: '36px',
         }} />
         <CustomInputRow title={<FormattedMessage id="OMPASS_PROXY_INSTALLED_IP_LABEL" />}>
@@ -50,17 +51,7 @@ const RadiusDetailInfo = ({ data }: {
     return <>
         <BottomLineText title={<FormattedMessage id="APPLICATION_RADIUS_INFO_LABELS" />} style={{
             marginTop: '24px',
-        }} buttons={<>
-            <Button className="st3" onClick={() => {
-                if (!data) {
-                    message.error(formatMessage({ id: 'NO_CONNECTED_RADIUS_APPLICATION_MSG' }))
-                } else {
-                    navigate(`/Applications/detail/${uuid}/radius`)
-                }
-            }}>
-                <FormattedMessage id="RADIUS_USER_ADD_LABEL" />
-            </Button>
-        </>} />
+        }} />
         <CustomInputRow title="Host">
             <Input className="st1" readOnly value={host || ''} placeholder={noConnectedMsg} />
         </CustomInputRow>

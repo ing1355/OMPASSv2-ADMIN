@@ -55,6 +55,8 @@ type SubDomainInfoDataType = {
   windowsAgentUrl?: string
   linuxPamDownloadUrl?: string
   ompassProxyDownloadUrl?: string
+  redminePluginDownloadUrl?: string
+  keycloakPluginDownloadUrl?: string
 }
 
 type PortalSettingsDataType = {

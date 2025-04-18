@@ -29,7 +29,7 @@ const VersionUpload = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch()
   const navigate = useNavigate();
-  const type = useParams().type as UploadFileTypes
+  const type: UploadFileTypes = useParams().type as UploadFileTypes
   
   const fileExtensionByType = () => {
     if (type === 'WINDOWS_AGENT') {
@@ -38,6 +38,10 @@ const VersionUpload = () => {
       return ".zip"
     } else if (type === 'LINUX_PAM') {
       return ".deb"
+    } else if (type === 'KEYCLOAK_PLUGIN') {
+      return ".jar"
+    } else if (type === 'REDMINE_PLUGIN') {
+      return ".zip"
     } else return ''
   }
 
@@ -90,12 +94,12 @@ const VersionUpload = () => {
           ...subdomainInfo,
           windowsAgentUrl: newData.downloadUrl
         }))
-      } else if(!subdomainInfo.windowsAgentUrl && type === 'LINUX_PAM') {
+      } else if(!subdomainInfo.linuxPamDownloadUrl && type === 'LINUX_PAM') {
         dispatch(subdomainInfoChange({
           ...subdomainInfo,
           linuxPamDownloadUrl: newData.downloadUrl
         }))
-      } else if(!subdomainInfo.windowsAgentUrl && type === 'OMPASS_PROXY') {
+      } else if(!subdomainInfo.ompassProxyDownloadUrl && type === 'OMPASS_PROXY') {
         dispatch(subdomainInfoChange({
           ...subdomainInfo,
           ompassProxyDownloadUrl: newData.downloadUrl

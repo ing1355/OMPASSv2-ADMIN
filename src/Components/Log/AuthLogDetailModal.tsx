@@ -1,17 +1,18 @@
 import CustomModal from "Components/Modal/CustomModal"
-import './AuthLogDetailModal.css'
 import { FormattedMessage, useIntl } from "react-intl"
 import { getApplicationTypeLabel } from "Constants/ConstantValues"
 import useFullName from "hooks/useFullName"
 import { createOSInfo } from "Functions/GlobalFunctions"
 import { useSelector } from "react-redux"
 import { APIProvider, Map, MapControl, ControlPosition, AdvancedMarker, useMap } from '@vis.gl/react-google-maps';
-import { useEffect, useState, Fragment, useRef } from "react"
+import { useEffect, Fragment, useRef } from "react"
 import { message } from "antd"
 import locationIcon from '../../assets/locationIcon.png'
 import locationValidIcon from '../../assets/locationValidIcon.png'
 import locationInvalidIcon from '../../assets/locationInvalidIcon.png'
 import { Circle } from "Components/Policy/PolicyItems/GoogleCircle"
+import './AuthLogDetailModal.css'
+import CustomMap from "Components/Layout/CustomMap"
 
 type AuthLogdetailModalProps = {
     data: AllAuthLogDataType | undefined
@@ -81,112 +82,57 @@ const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
                         <div className="auth-detail-modal-contents-map-container">
                             {
                                 locationData && locationData.currentUserLocation ? <>
-                                    {globalDatas?.googleApiKey ? <APIProvider apiKey={globalDatas.googleApiKey} onLoad={() => {
-
-                                    }}>
-                                        <Map
-                                            defaultZoom={10}
-                                            fullscreenControl={null}
-                                            mapId='24ce68fbca231158'
-                                            mapTypeControl={null}
-                                            reuseMaps={false}
-                                            maxZoom={17}
-                                            streetViewControl={false}
-                                            onIdle={({ map }) => {
-                                                if (!mapInitRef.current) {
-                                                    const bounds = new window.google.maps.LatLngBounds();
-                                                    if (locationData.currentUserLocation) {
-                                                        bounds.extend({
-                                                            lat: locationData.currentUserLocation.latitude,
-                                                            lng: locationData.currentUserLocation.longitude
-                                                        })
-                                                    }
-                                                    policyAtTimeOfEvent?.locationConfig?.locations.forEach(_ => {
-                                                        bounds.extend({
-                                                            lat: _.coordinate.latitude,
-                                                            lng: _.coordinate.longitude
-                                                        })
-                                                    })
-                                                    map.fitBounds(bounds)
-                                                    mapInitRef.current = true
-                                                    mapRef.current = map
-                                                }
-                                            }}
-                                            defaultCenter={{ lat: 36.713889964770544, lng: 127.88793971566751 }}
-                                        >
-                                            <MapControl position={ControlPosition.TOP_RIGHT}>
-                                                <div className="custom-current-position-check" onClick={() => {
-                                                    navigator.geolocation.getCurrentPosition(function (position) {
-                                                        mapRef.current?.setCenter({
-                                                            lat: position.coords.latitude,
-                                                            lng: position.coords.longitude
-                                                        })
-                                                    }, err => {
-                                                        console.log('현재 위치 획득 실패!', err)
-                                                        switch (err.code) {
-                                                            case err.PERMISSION_DENIED:
-                                                                message.error(formatMessage({ id: 'LOCATION_PERMISSION_DENY_MSG' }))
-                                                                break;
-                                                            case err.POSITION_UNAVAILABLE:
-                                                            case err.TIMEOUT:
-                                                                message.error(formatMessage({ id: 'LOCATION_GET_TIMEOUT_MSG' }))
-                                                                break;
-                                                        }
-                                                    }, {
-                                                        timeout: 10_000
-                                                    })
-                                                }}>
-                                                    <img src={locationIcon} />
-                                                </div>
-                                            </MapControl>
-                                            {locationData.currentUserLocation && <AdvancedMarker position={{
+                                    <CustomMap onInit={map => {
+                                        const bounds = new window.google.maps.LatLngBounds();
+                                        if (locationData.currentUserLocation) {
+                                            bounds.extend({
                                                 lat: locationData.currentUserLocation.latitude,
                                                 lng: locationData.currentUserLocation.longitude
+                                            })
+                                        }
+                                        policyAtTimeOfEvent?.locationConfig?.locations.forEach(_ => {
+                                            bounds.extend({
+                                                lat: _.coordinate.latitude,
+                                                lng: _.coordinate.longitude
+                                            })
+                                        })
+                                        map.fitBounds(bounds)
+                                    }}>
+                                        {locationData.currentUserLocation && <AdvancedMarker position={{
+                                            lat: locationData.currentUserLocation.latitude,
+                                            lng: locationData.currentUserLocation.longitude
+                                        }}>
+                                            <div style={{
+                                                width: 22,
+                                                height: 32,
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
+                                            }}>
+                                                <img src={locationInvalidIcon} />
+                                            </div>
+                                        </AdvancedMarker>}
+                                        {(locationConfig?.locations || []).length > 0 && (locationConfig?.locations || []).map((_, ind) => <Fragment key={ind}>
+                                            <AdvancedMarker position={{
+                                                lat: _.coordinate.latitude,
+                                                lng: _.coordinate.longitude
                                             }}>
                                                 <div style={{
-                                                    width: 22,
-                                                    height: 32,
+                                                    width: 16,
+                                                    height: 24,
                                                     display: 'flex',
                                                     justifyContent: 'center',
                                                     alignItems: 'center'
                                                 }}>
-                                                    <img src={locationInvalidIcon} />
+                                                    <img src={locationValidIcon} />
                                                 </div>
-                                            </AdvancedMarker>}
-                                            {(locationConfig?.locations || []).length > 0 && (locationConfig?.locations || []).map((_, ind) => <Fragment key={ind}>
-                                                <AdvancedMarker position={{
-                                                    lat: _.coordinate.latitude,
-                                                    lng: _.coordinate.longitude
-                                                }}>
-                                                    <div style={{
-                                                        width: 16,
-                                                        height: 24,
-                                                        display: 'flex',
-                                                        justifyContent: 'center',
-                                                        alignItems: 'center'
-                                                    }}>
-                                                        <img src={locationValidIcon} />
-                                                    </div>
-                                                </AdvancedMarker>
-                                                <Circle radius={_.radius} center={{
-                                                    lat: _.coordinate.latitude,
-                                                    lng: _.coordinate.longitude
-                                                }} strokeOpacity={0} fillColor={'rgba(0,0,0,.5)'} />
-                                            </Fragment>)}
-                                        </Map>
-                                    </APIProvider> : <div style={{
-                                        width: '100%',
-                                        height: '100%',
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        border: '1px solid black',
-                                        padding: '4px',
-                                        borderRadius: '12px',
-                                        boxSizing: 'border-box'
-                                    }}>
-                                        <FormattedMessage id="MAP_NOT_AVAILABLE_LABEL" />
-                                    </div>}
+                                            </AdvancedMarker>
+                                            <Circle radius={_.radius} center={{
+                                                lat: _.coordinate.latitude,
+                                                lng: _.coordinate.longitude
+                                            }} strokeOpacity={0} fillColor={'rgba(0,0,0,.5)'} />
+                                        </Fragment>)}
+                                    </CustomMap>
                                 </> : <div className="no-location-data-container">
                                     <FormattedMessage id="NO_LOCATION_DATA_LABEL" />
                                 </div>
@@ -218,7 +164,7 @@ const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
                 </div>
                 <div className="auth-detail-modal-contents-row">
                     <div className="auth-detail-modal-contents-container" data-title={formatMessage({ id: "APPLICATION_INFO_TITLE_LABEL" })}>
-                        <TextComponent title="APPLICATION_TYPE_LABEL" content={getApplicationTypeLabel(data?.ompassData.application.type ?? "")} />
+                        <TextComponent title="APPLICATION_TYPE_LABEL" content={getApplicationTypeLabel(data?.ompassData.application.type)} />
                         <TextComponent title="APPLICATION_NAME_COLUMN_LABEL" content={data?.ompassData.application.name} />
                         <TextComponent title="APPLICATION_INFO_DOMAIN_LABEL" content={data?.ompassData.application.domain} />
                         {data?.ompassData.application.redirectUri && <TextComponent title="APPLICATION_INFO_REDIRECT_URI_LABEL" content={data?.ompassData.application.redirectUri} />}
@@ -236,9 +182,6 @@ const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
                         <TextComponent title="USER_DETAIL_OS_LABEL" content={createOSInfo(loginDeviceInfo?.os)} />
                         <TextComponent title="PACKAGE_VERSION_INFO_LABEL" content={loginDeviceInfo?.packageVersion} />
                     </div>
-                </div>
-                <div className="auth-detail-modal-contents-row">
-
                 </div>
             </div>
         </CustomModal>

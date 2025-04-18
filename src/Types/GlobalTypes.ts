@@ -22,6 +22,15 @@ type PolicyValidationLocationValueType = {
     currentUserLocation: CoordinateType
     policyLocations: LocationPolicyRestrictionItemType[]
 }
+
+type InterfaceServerConnectionType = {
+    host: string
+    apiPort: number
+    socketPort: number
+    tcpSocketPort: number
+    webSocketPort: number
+}
+
 type OMPASSDataType = {
     authPurpose: AuthPurposeType
     method: AuthMethodType
@@ -31,11 +40,18 @@ type OMPASSDataType = {
         loginDeviceInfo: LoginDeviceInfoDataType
         serverInfo: ServerMetaDataType
     }
+    interfaceServerConnection: InterfaceServerConnectionType
     policyValidationResult: PolicyValidationType[]
+    allowedOmpassAppAuthMethods: string[]
     authenticators: AuthenticatorDataType[]
     sessionExpiredAt: string
     ntp: string
     createdAt: string
+    tenant: {
+        id: string
+        name: string
+        logoImage: logoImageType
+    }
 }
 
 type OSInfoType = {
@@ -222,7 +238,7 @@ type PasscodeListDataType = {
 // type ApplicationTypes = "DEFAULT" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "ADMIN" | "RADIUS" | "REDMINE" | 'MS_ENTRA_ID' | 'KEYCLOAK' | 'LDAP'
 // type ApplicationTypes = "WEB" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "PORTAL" | "RADIUS" | "REDMINE" | 'MICROSOFT_ENTRA_ID' | 'KEYCLOAK' | 'LDAP'
 type ApplicationTypes = "WEB" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "PORTAL" | "RADIUS" | "REDMINE" | 'MICROSOFT_ENTRA_ID' | 'KEYCLOAK' | 'LDAP'
-type LocalApplicationTypes = ApplicationTypes | 'ALL' | ''
+type LocalApplicationTypes = ApplicationTypes | 'ALL' | undefined
 
 type DefaultApplicationDataType = {
     id: string
@@ -836,12 +852,14 @@ type ExternalDirectoryDataType = {
     secretKey: string
     apiServerHost: string
     proxyServer: ProxyServerDataType
-    baseDn: string
-    ldapAuthenticationType: LdapAuthenticationType
-    ldapTransportType: LdapTransportType
+    baseDn?: string
+    ldapAuthenticationType?: LdapAuthenticationType
+    ldapTransportType?: LdapTransportType
     isConnected: boolean
-    lastUserSyncedAt: string
+    lastUserSyncedAt?: string
     createdAt: string
+    msTenantId?: string
+    isAuthorized?: boolean
 }
 
 type ExternalDirectoryParamsType = {

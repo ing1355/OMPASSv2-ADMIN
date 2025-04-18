@@ -15,9 +15,10 @@ type RadiusUserRegisterOMPASSAuthModalProps = {
     radiusApplicationId?: ApplicationDataType['id']
     successCallback: (token: string) => void
     purpose: AuthPurposeType
+    targetUserId: string
 }
 
-const RegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, radiusApplicationId, purpose }: RadiusUserRegisterOMPASSAuthModalProps) => {
+const RegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, radiusApplicationId, purpose, targetUserId }: RadiusUserRegisterOMPASSAuthModalProps) => {
     const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     const [remainTime, setRemainTime] = useState(-1)
     const [sessionData, setSessionData] = useState<QRDataDefaultBodyType>({
@@ -53,7 +54,7 @@ const RegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, radiusAppl
     return <CustomModal title={<FormattedMessage id="OMPASS_REGISTER_MODAL_TITLE_LABEL" />} open={opened} onCancel={() => {
         _onCancel()
     }} buttonsType="small" noBtns noClose onOpen={() => {
-        OMPASSAuth.startAuth({ type: 'single', purpose: purpose, applicationId: radiusApplicationId }, ({ url, ntp, sessionExpiredAt, sourceNonce, sessionId }) => {
+        OMPASSAuth.startAuth({ type: 'single', purpose: purpose, applicationId: radiusApplicationId, targetUserId: targetUserId }, ({ url, ntp, sessionExpiredAt, sourceNonce, sessionId }) => {
             const ntpTime = dayjs.utc(parseInt(ntp))
             const expireTime = dayjs.utc(sessionExpiredAt)
             setSessionData({

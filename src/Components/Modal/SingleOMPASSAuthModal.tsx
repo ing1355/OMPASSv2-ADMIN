@@ -15,9 +15,10 @@ type SingleOMPASSAuthModalProps = {
     onCancel: () => void
     successCallback: (token: string) => void
     purpose: AuthPurposeType
+    targetUserId?: string
 }
 
-const SingleOMPASSAuthModal = ({ opened, onCancel, successCallback, purpose }: SingleOMPASSAuthModalProps) => {
+const SingleOMPASSAuthModal = ({ opened, onCancel, successCallback, purpose, targetUserId }: SingleOMPASSAuthModalProps) => {
     const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     const [remainTime, setRemainTime] = useState(-1)
     const [sessionData, setSessionData] = useState<QRDataDefaultBodyType>({
@@ -53,7 +54,7 @@ const SingleOMPASSAuthModal = ({ opened, onCancel, successCallback, purpose }: S
     return <CustomModal title={<FormattedMessage id="OMPASS_MODULE_MODAL_TITLE_LABEL"/>} open={opened} onCancel={() => {
         _onCancel()
     }} buttonsType="small" noClose onOpen={() => {
-        OMPASSAuth.startAuth({ type: 'single', purpose }, ({ url, ntp, sessionExpiredAt, sourceNonce, sessionId }) => {
+        OMPASSAuth.startAuth({ type: 'single', purpose, targetUserId }, ({ url, ntp, sessionExpiredAt, sourceNonce, sessionId }) => {
             const ntpTime = dayjs.utc(parseInt(ntp))
             const expireTime = dayjs.utc(sessionExpiredAt)
             

@@ -101,7 +101,7 @@ const Login = () => {
       inputUesrnameRef.current?.focus()
       return message.error(formatMessage({ id: 'PLEASE_INPUT_ID_MSG' }))
     }
-    
+
     if (needPasswordChange) {
       if (inputChangePassword !== inputChangePasswordConfirm) return message.error(formatMessage({ id: 'PASSWORD_NOT_MATCH' }))
       UpdatePasswordFunc(inputChangePassword, tempToken, () => {
@@ -175,72 +175,84 @@ const Login = () => {
         <div
           className='login-input-container'
         >
-          {needPasswordChange ? <>
-            <label htmlFor='userId'><FormattedMessage id='PASSWORD' /></label>
-            <Input
-              className='st1 login-input'
-              value={inputChangePassword}
-              type="password"
-              name="password"
-              maxLength={16}
-              noGap
-              customType='password'
-              placeholder={formatMessage({ id: 'PASSWORD_CHANGE_PLACEHOLDER' })}
-              ref={inputChangePasswordRef}
-              valueChange={value => {
-                setInputChangePassword(value);
-              }}
-            /> </> : <>
-            <label htmlFor='userId'><FormattedMessage id='ID' /></label>
-            <Input
-              className='st1 login-input userId'
-              value={inputUsername}
-              maxLength={16}
-              noGap
-              autoFocus
-              ref={inputUesrnameRef}
-              name="userId"
-              valueChange={value => {
-                setInputUsername(value);
-              }}
-            /></>}
+          <label>
+            {needPasswordChange ? <>
+              <FormattedMessage id='PASSWORD' />
+              <Input
+                className='st1 login-input'
+                value={inputChangePassword}
+                type="password"
+                name="password"
+                maxLength={16}
+                noGap
+                customType='password'
+                placeholder={formatMessage({ id: 'PASSWORD_CHANGE_PLACEHOLDER' })}
+                ref={inputChangePasswordRef}
+                valueChange={value => {
+                  setInputChangePassword(value);
+                }}
+              />
+            </> : <>
+              <FormattedMessage id='ID' />
+              <Input
+                className='st1 login-input username'
+                value={inputUsername}
+                maxLength={16}
+                noGap
+                autoFocus
+                ref={inputUesrnameRef}
+                name="username"
+                customType="username"
+                valueChange={value => {
+                  setInputUsername(value);
+                }}
+              />
+            </>}
+          </label>
         </div>
         {needPasswordChange ?
           <div
             className='login-input-container'
           >
-            <label htmlFor='userId'><FormattedMessage id='PASSWORD_CONFIRM' /></label>
-            <Input
-              className='st1 login-input'
-              type='password'
-              noGap
-              rules={[
-                {
-                  regExp: (val) => val != inputChangePassword,
-                  msg: <FormattedMessage id="PASSWORD_CONFIRM_CHECK" />
-                }
-              ]}
-              value={inputChangePasswordConfirm}
-              name="passwordConfirm"
-              maxLength={16}
-              placeholder={formatMessage({ id: 'PASSWORD_CHANGE_CONFIRM_PLACEHOLDER' })}
-              valueChange={value => {
-                setInputChangePasswordConfirm(value);
-              }}
-            /> </div> : <div className={`login-input-container password${notRegistered ? ' not-registered' : ''}`}>
-            <label htmlFor='userPassword'><FormattedMessage id='PASSWORD' /></label>
-            <Input
-              className='st1 login-input password'
-              type='password'
-              noGap
-              ref={inputPasswordRef}
-              name="password"
-              maxLength={16}
-              value={inputPassword}
-              valueChange={value => {
-                setInputPassword(value);
-              }}
-            />
+            <label>
+              <FormattedMessage id='PASSWORD_CONFIRM' />
+              <Input
+                className='st1 login-input'
+                type='password'
+                noGap
+                rules={[
+                  {
+                    regExp: (val) => val != inputChangePassword,
+                    msg: <FormattedMessage id="PASSWORD_CONFIRM_CHECK" />
+                  }
+                ]}
+                value={inputChangePasswordConfirm}
+                name="passwordConfirm"
+                customType='password'
+                maxLength={16}
+                placeholder={formatMessage({ id: 'PASSWORD_CHANGE_CONFIRM_PLACEHOLDER' })}
+                valueChange={value => {
+                  setInputChangePasswordConfirm(value);
+                }}
+              />
+            </label>
+          </div> : <div className={`login-input-container password${notRegistered ? ' not-registered' : ''}`}>
+            <label>
+              <FormattedMessage id='PASSWORD' />
+              <Input
+                className='st1 login-input password'
+                type='password'
+                noGap
+                ref={inputPasswordRef}
+                name="password"
+                customType='password'
+                maxLength={16}
+                value={inputPassword}
+                valueChange={value => {
+                  setInputPassword(value);
+                }}
+              />
+            </label>
           </div>}
         {!needPasswordChange && <div className='login-action-row-container'>
           <div className='login-action-row'>

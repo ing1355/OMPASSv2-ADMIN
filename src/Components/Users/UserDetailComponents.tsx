@@ -406,10 +406,11 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
     </>
 }
 
-export const EmptyDetailItem = ({ onComplete, appId, type }: {
+export const EmptyDetailItem = ({ onComplete, appId, type, targetUserId }: {
     appId: ApplicationDataType['id']
     onComplete: () => void
     type: ApplicationDataType['type']
+    targetUserId: string
 }) => {
     const [authView, setAuthView] = useState(false)
     const { formatMessage } = useIntl()
@@ -448,6 +449,6 @@ export const EmptyDetailItem = ({ onComplete, appId, type }: {
         }} successCallback={token => {
             message.success(formatMessage({ id: getSuccessMessageByType() }))
             onComplete()
-        }} purpose={getPurposeByType() as AuthPurposeType} />
+        }} purpose={getPurposeByType() as AuthPurposeType} targetUserId={targetUserId} />
     </>
 }

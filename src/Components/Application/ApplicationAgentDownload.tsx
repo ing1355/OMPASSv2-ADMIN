@@ -10,12 +10,17 @@ const ApplicationAgentDownload = ({ type }: {
 }) => {
     const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const { formatMessage } = useIntl()
-    const needAgent = (['WINDOWS_LOGIN', 'LINUX_LOGIN', 'RADIUS'] as LocalApplicationTypes[]).includes(type)
+    const needAgentList: LocalApplicationTypes[] = ['WINDOWS_LOGIN', 'LINUX_LOGIN', 'RADIUS', 'KEYCLOAK', 'REDMINE']
+    const needAgent = needAgentList.includes(type)
     const getLabelKeyByType = () => {
         if (type === 'WINDOWS_LOGIN') {
             return 'WINDOWS_LOGIN_AGENT_DOWNLOAD_LABEL'
         } else if (type === 'LINUX_LOGIN') {
             return 'LINUX_LOGIN_AGENT_DOWNLOAD_LABEL'
+        } else if (type === 'REDMINE') {
+            return 'REDMINE_PLUGIN_DOWNLOAD_LABEL'
+        } else if (type === 'KEYCLOAK') {
+            return 'KEYCLOAK_PLUGIN_DOWNLOAD_LABEL'
         } else {
             return 'OMPASS_PROXY_SERVER_DOWNLOAD_LABEL'
         }
@@ -25,6 +30,10 @@ const ApplicationAgentDownload = ({ type }: {
             return subdomainInfo.windowsAgentUrl
         } else if (type === 'LINUX_LOGIN') {
             return subdomainInfo.linuxPamDownloadUrl
+        } else if (type === 'REDMINE') {
+            return subdomainInfo.redminePluginDownloadUrl
+        } else if (type === 'KEYCLOAK') {
+            return subdomainInfo.keycloakPluginDownloadUrl
         } else {
             return subdomainInfo.ompassProxyDownloadUrl
         }

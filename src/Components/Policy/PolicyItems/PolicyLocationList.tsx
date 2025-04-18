@@ -10,7 +10,7 @@ import locationEditIcon from '../../../assets/locationEditIcon.png';
 import locationEditIconHover from '../../../assets/locationEditIconHover.png';
 import locationIcon from '../../../assets/locationIcon.png'
 import locationIconHover from '../../../assets/locationIconHover.png'
-import { APIProvider, Map, MapControl, ControlPosition, AdvancedMarker } from '@vis.gl/react-google-maps';
+import { AdvancedMarker } from '@vis.gl/react-google-maps';
 import { Circle } from "./GoogleCircle"
 import { useEffect, useState } from "react"
 import Button from "Components/CommonCustomComponents/Button"
@@ -19,8 +19,9 @@ import Input from "Components/CommonCustomComponents/Input"
 import deleteIcon from '../../../assets/deleteIcon.png'
 import deleteIconHover from '../../../assets/deleteIconHover.png'
 import { SetStateType } from "Types/PropsTypes"
+import CustomMap from "Components/Layout/CustomMap"
 
-const PolicyLocationList = ({ value={
+const PolicyLocationList = ({ value = {
     isEnabled: false,
     locations: []
 }, onChange, dataInit, authenticators, setSureChange }: PolicyItemsPropsType<LocationPolicyType> & {
@@ -42,7 +43,7 @@ const PolicyLocationList = ({ value={
     })
     const { isEnabled, locations } = value
     const { formatMessage } = useIntl()
-    
+
     useEffect(() => {
         if (dataInit) {
             setCurrentLocationName('')
@@ -76,122 +77,77 @@ const PolicyLocationList = ({ value={
         }} checked={isEnabled} onChange={check => {
             if (check && authenticators!.some(auth => (['WEBAUTHN', 'OTP', 'PASSCODE'] as AuthenticatorPolicyType[]).includes(auth))) setSureChange('LOCATION')
             else setLocationChecked(check)
-        }}/>
+        }} />
         <div className="policy-contents-container" data-hidden={!isEnabled}>
             <div className="policy-input-container">
                 <div className="current-location-policy-input-container">
                     <div className="policy-input-map-container">
                         <div className="map-layout">
-                            {globalDatas?.googleApiKey ? <APIProvider apiKey={globalDatas.googleApiKey} onLoad={() => {
-                                navigator.geolocation.getCurrentPosition(function (position) {
-                                    setCurrentLocation({
-                                        lat: position.coords.latitude,
-                                        lng: position.coords.longitude
+                            <CustomMap
+                                onCurrentPositionCheck={position => {
+                                    if (modifyLocationIndex !== -1) {
+                                        setModifyLocationTemp({
+                                            ...modifyLocationTemp,
+                                            coordinate: {
+                                                latitude: position.coords.latitude,
+                                                longitude: position.coords.longitude
+                                            }
+                                        })
+                                    } else {
+                                        setCurrentLocation({
+                                            lat: position.coords.latitude,
+                                            lng: position.coords.longitude
+                                        })
+                                    }
+                                }}
+                                onLoad={() => {
+                                    navigator.geolocation.getCurrentPosition(function (position) {
+                                        setCurrentLocation({
+                                            lat: position.coords.latitude,
+                                            lng: position.coords.longitude
+                                        })
                                     })
-                                })
-                            }}>
-                                <Map
-                                    defaultZoom={10}
-                                    fullscreenControl={null}
-                                    mapId='24ce68fbca231158'
-                                    mapTypeControl={null}
-                                    streetViewControl={false}
-                                    center={modifyLocationIndex === -1 ? currentLocation : {
-                                        lat: modifyLocationTemp.coordinate.latitude,
-                                        lng: modifyLocationTemp.coordinate.longitude
-                                    }}
-                                    defaultCenter={{ lat: 36.713889964770544, lng: 127.88793971566751 }}
-                                    onCameraChanged={(ev) => {
-                                        if (modifyLocationIndex !== -1) {
-                                            setModifyLocationTemp({
-                                                ...modifyLocationTemp,
-                                                coordinate: {
-                                                    latitude: ev.detail.center.lat,
-                                                    longitude: ev.detail.center.lng
-                                                }
-                                            })
-                                        } else {
-                                            setCurrentLocation(ev.detail.center)
-                                        }
-                                    }}
-                                >
-                                    <MapControl position={ControlPosition.TOP_RIGHT}>
-                                        <div className="custom-current-position-check" onClick={() => {
-                                            navigator.geolocation.getCurrentPosition(function (position) {
-                                                console.log(
-                                                    '현재 위치 획득!', position
-                                                )
-                                                if (modifyLocationIndex !== -1) {
-                                                    setModifyLocationTemp({
-                                                        ...modifyLocationTemp,
-                                                        coordinate: {
-                                                            latitude: position.coords.latitude,
-                                                            longitude: position.coords.longitude
-                                                        }
-                                                    })
-                                                } else {
-                                                    setCurrentLocation({
-                                                        lat: position.coords.latitude,
-                                                        lng: position.coords.longitude
-                                                    })
-                                                }
-                                            }, err => {
-                                                console.log('현재 위치 획득 실패!', err)
-                                                switch (err.code) {
-                                                    case err.PERMISSION_DENIED:
-                                                        message.error(formatMessage({id:'LOCATION_PERMISSION_DENY_MSG'}))
-                                                        break;
-                                                    case err.POSITION_UNAVAILABLE:
-                                                    case err.TIMEOUT:
-                                                        message.error(formatMessage({id:'LOCATION_GET_TIMEOUT_MSG'}))
-                                                        break;
-                                                    default:
-                                                        message.error(formatMessage({id:'LOCATION_GET_FAIL_MSG'}))
-                                                        break;
-                                                }
-                                            }, {
-                                                timeout: 5_000,
-                                                maximumAge: 0
-                                            })
-                                        }}>
-                                            <img src={locationIcon} />
-                                        </div>
-                                    </MapControl>
-                                    <AdvancedMarker position={modifyLocationIndex === -1 ? currentLocation : {
-                                        lat: modifyLocationTemp.coordinate.latitude,
-                                        lng: modifyLocationTemp.coordinate.longitude
-                                    }} />
-                                    {currentRadius && <Circle radius={modifyLocationIndex === -1 ? parseInt(currentRadius) : modifyLocationTemp.radius} center={modifyLocationIndex === -1 ? currentLocation : {
-                                        lat: modifyLocationTemp.coordinate.latitude,
-                                        lng: modifyLocationTemp.coordinate.longitude
-                                    }} strokeOpacity={0} fillColor={'rgba(0,0,0,.5)'} />}
-                                </Map>
-                            </APIProvider> : <div style={{
-                                width: '100%',
-                                height: '100%',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                border: '1px solid black',
-                                padding: '4px',
-                                borderRadius: '12px',
-                                boxSizing: 'border-box'
-                            }}>
-                                <FormattedMessage id="MAP_NOT_AVAILABLE_LABEL"/>
-                            </div>}
+                                }}
+                                center={modifyLocationIndex === -1 ? currentLocation : {
+                                    lat: modifyLocationTemp.coordinate.latitude,
+                                    lng: modifyLocationTemp.coordinate.longitude
+                                }}
+                                onCameraChanged={ev => {
+                                    if (modifyLocationIndex !== -1) {
+                                        setModifyLocationTemp({
+                                            ...modifyLocationTemp,
+                                            coordinate: {
+                                                latitude: ev.detail.center.lat,
+                                                longitude: ev.detail.center.lng
+                                            }
+                                        })
+                                    } else {
+                                        setCurrentLocation(ev.detail.center)
+                                    }
+                                }}
+                            >
+                                <AdvancedMarker position={modifyLocationIndex === -1 ? currentLocation : {
+                                    lat: modifyLocationTemp.coordinate.latitude,
+                                    lng: modifyLocationTemp.coordinate.longitude
+                                }} />
+                                {currentRadius && <Circle radius={modifyLocationIndex === -1 ? parseInt(currentRadius) : modifyLocationTemp.radius} center={modifyLocationIndex === -1 ? currentLocation : {
+                                    lat: modifyLocationTemp.coordinate.latitude,
+                                    lng: modifyLocationTemp.coordinate.longitude
+                                }} strokeOpacity={0} fillColor={'rgba(0,0,0,.5)'} />}
+                            </CustomMap>
                         </div>
                     </div>
                     <div className="current-location-input-container">
                         <div className="current-location-input-row first">
                             <div className="current-location-input-row-item">
                                 <div>
-                                    <FormattedMessage id="LOCATION_LATITUDE"/>
+                                    <FormattedMessage id="LOCATION_LATITUDE" />
                                 </div>
                                 <Input className="st1" value={currentLocation.lat} readOnly />
                             </div>
                             <div className="current-location-input-row-item">
                                 <div>
-                                    <FormattedMessage id="LOCATION_LONGITUDE"/>
+                                    <FormattedMessage id="LOCATION_LONGITUDE" />
                                 </div>
                                 <Input className="st1" value={currentLocation.lng} readOnly />
                             </div>
@@ -199,7 +155,7 @@ const PolicyLocationList = ({ value={
                         <div className="current-location-input-row second">
                             <div className="current-location-input-row-item">
                                 <div>
-                                    <FormattedMessage id="LOCATION_RADIUS"/>
+                                    <FormattedMessage id="LOCATION_RADIUS" />
                                 </div>
                                 <Input className="st1 policy-location-radius-input" onlyNumber value={currentRadius} valueChange={value => {
                                     setCurrentRadius(value ? value : '')
@@ -209,7 +165,7 @@ const PolicyLocationList = ({ value={
                         <div className="current-location-input-row third">
                             <div className="current-location-input-row-item">
                                 <div>
-                                    <FormattedMessage id="LOCATION_NAME_LABEL"/>
+                                    <FormattedMessage id="LOCATION_NAME_LABEL" />
                                 </div>
                                 <Input className="st1" value={currentLocationName} valueChange={value => {
                                     setCurrentLocationName(value)
@@ -218,9 +174,9 @@ const PolicyLocationList = ({ value={
                         </div>
                         <div className="current-location-input-row fourth">
                             <Button className="st3" disabled={modifyLocationIndex !== -1} onClick={() => {
-                                if (!currentRadius) return message.error(formatMessage({id:'LOCATION_RADIUS_NEED_VALUE_MSG'}))
-                                if (!currentLocationName) return message.error(formatMessage({id:'LOCATION_NAME_REQUIRED_MSG'}))
-                                if (locations.find(_ => _.alias === currentLocationName)) return message.error(formatMessage({id:'LOCATION_NAME_ALREADY_EXIST_MSG'}))
+                                if (!currentRadius) return message.error(formatMessage({ id: 'LOCATION_RADIUS_NEED_VALUE_MSG' }))
+                                if (!currentLocationName) return message.error(formatMessage({ id: 'LOCATION_NAME_REQUIRED_MSG' }))
+                                if (locations.find(_ => _.alias === currentLocationName)) return message.error(formatMessage({ id: 'LOCATION_NAME_ALREADY_EXIST_MSG' }))
                                 setLocationDatas([{
                                     alias: currentLocationName,
                                     radius: parseInt(currentRadius),
@@ -232,7 +188,7 @@ const PolicyLocationList = ({ value={
                                 setCurrentRadius('1')
                                 setCurrentLocationName('')
                             }}>
-                                <FormattedMessage id="NORMAL_ADD_LABEL"/>
+                                <FormattedMessage id="NORMAL_ADD_LABEL" />
                             </Button>
                         </div>
                     </div>
@@ -240,9 +196,9 @@ const PolicyLocationList = ({ value={
                 {
                     locations.map((_, ind) => <div key={ind}>
                         <div className="policy-location-input-row">
-                            <span className="policy-location-label"><FormattedMessage id="LOCATION_LATITUDE"/></span> <Input className="st1" value={modifyLocationIndex === ind ? modifyLocationTemp.coordinate.latitude : _.coordinate.latitude} readOnly />
-                            <span className="policy-location-label"><FormattedMessage id="LOCATION_LONGITUDE"/></span> <Input className="st1" value={modifyLocationIndex === ind ? modifyLocationTemp.coordinate.longitude : _.coordinate.longitude} readOnly />
-                            <span className="policy-location-label"><FormattedMessage id="LOCATION_RADIUS"/></span> <Input className="st1 policy-location-radius-input" value={modifyLocationIndex === ind ? modifyLocationTemp.radius : _.radius} readOnly={modifyLocationIndex !== ind} style={{
+                            <span className="policy-location-label"><FormattedMessage id="LOCATION_LATITUDE" /></span> <Input className="st1" value={modifyLocationIndex === ind ? modifyLocationTemp.coordinate.latitude : _.coordinate.latitude} readOnly />
+                            <span className="policy-location-label"><FormattedMessage id="LOCATION_LONGITUDE" /></span> <Input className="st1" value={modifyLocationIndex === ind ? modifyLocationTemp.coordinate.longitude : _.coordinate.longitude} readOnly />
+                            <span className="policy-location-label"><FormattedMessage id="LOCATION_RADIUS" /></span> <Input className="st1 policy-location-radius-input" value={modifyLocationIndex === ind ? modifyLocationTemp.radius : _.radius} readOnly={modifyLocationIndex !== ind} style={{
                                 width: '160px'
                             }} suffix="m" sliceNum valueChange={(val) => {
                                 setModifyLocationTemp({
@@ -250,7 +206,7 @@ const PolicyLocationList = ({ value={
                                     radius: parseInt(val)
                                 })
                             }} maxLength={10} />
-                            <span className="policy-location-label"><FormattedMessage id="LOCATION_NAME_LABEL"/></span> <Input className="st1" value={modifyLocationIndex === ind ? modifyLocationTemp.alias : _.alias} readOnly={modifyLocationIndex !== ind} valueChange={(val) => {
+                            <span className="policy-location-label"><FormattedMessage id="LOCATION_NAME_LABEL" /></span> <Input className="st1" value={modifyLocationIndex === ind ? modifyLocationTemp.alias : _.alias} readOnly={modifyLocationIndex !== ind} valueChange={(val) => {
                                 setModifyLocationTemp({
                                     ...modifyLocationTemp,
                                     alias: val

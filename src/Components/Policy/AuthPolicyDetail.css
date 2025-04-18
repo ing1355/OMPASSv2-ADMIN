@@ -159,21 +159,6 @@
     flex-direction: column;
 }
 
-.custom-current-position-check {
-    background-color: var(--main-white-color);
-    top: 8px;
-    position: relative;
-    right: 8px;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    padding: 6px;
-    box-sizing: border-box;
-}
-
 .policy-location-input-row.current {
     padding: 12px 8px;
     border-radius: 10px;

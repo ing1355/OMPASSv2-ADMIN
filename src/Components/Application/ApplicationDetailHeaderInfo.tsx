@@ -7,7 +7,7 @@ import Input from "Components/CommonCustomComponents/Input"
 import Button from "Components/CommonCustomComponents/Button"
 
 type ApplicationDetailHeaderInfoProps = {
-    applicationType: string
+    applicationType: LocalApplicationTypes
     inputApiServerHost: string
     inputClientId: string
     MSEntraDiscoveryEndpoint: string
@@ -21,7 +21,7 @@ const ApplicationDetailHeaderInfo = ({ applicationType, inputApiServerHost, inpu
     const { formatMessage } = useIntl()
     return <>
         <BottomLineText title={<FormattedMessage id="APPLICATION_INFO_DETAIL_LABELS" />} />
-        {applicationType !== 'MS_ENTRA_ID' && <ApiServerAddressItem text={inputApiServerHost} />}
+        {applicationType !== 'MICROSOFT_ENTRA_ID' && <ApiServerAddressItem text={inputApiServerHost} />}
         {applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_CLIENT_ID_LABEL" />}>
             <CopyToClipboard text={inputClientId} onCopy={(value, result) => {
                 if (result) {
@@ -55,7 +55,7 @@ const ApplicationDetailHeaderInfo = ({ applicationType, inputApiServerHost, inpu
                 <Input className="st1 secret-key" value={MSEntraAppId} disabled={false} readOnly={true} />
             </CopyToClipboard>
         </CustomInputRow>}
-        {applicationType !== 'MS_ENTRA_ID' && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_SECRET_KEY_LABEL" />}>
+        {applicationType !== 'MICROSOFT_ENTRA_ID' && applicationType !== 'WINDOWS_LOGIN' && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_SECRET_KEY_LABEL" />}>
             <CopyToClipboard text={inputSecretKey} onCopy={(value, result) => {
                 if (result) {
                     message.success(formatMessage({ id: 'APPLICATION_SECRET_KEY_COPY_SUCCESS_MSG' }))

@@ -1,0 +1,15 @@
+.custom-current-position-check {
+    background-color: rgb(255, 255, 255);
+    position: relative;
+    top: 6px;
+    right: 6px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 6px;
+    box-sizing: border-box;
+    border-radius: 3px;
+}

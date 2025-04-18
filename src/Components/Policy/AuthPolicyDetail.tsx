@@ -40,8 +40,8 @@ const AuthPolicyDetail = () => {
     const { goBack } = useCustomRoute()
     const isAdd = !uuid
     const [authenticatorPolicies, setAuthenticatorPolicies] = useState<PolicyDataType['enableAuthenticators']>(['OMPASS', 'OTP', 'PASSCODE', 'WEBAUTHN'])
-    const [appAuthenticatorPolicies, setAppAuthenticatorPolicies] = useState<PolicyDataType['enableAppAuthenticationMethods']>([])
-    const [selectedApplicationType, setSelectedApplicationType] = useState<LocalApplicationTypes>(isAdd ? '' : 'WEB')
+    const [appAuthenticatorPolicies, setAppAuthenticatorPolicies] = useState<PolicyDataType['enableAppAuthenticationMethods']>(["PATTERN", "PIN"])
+    const [selectedApplicationType, setSelectedApplicationType] = useState<LocalApplicationTypes>(isAdd ? undefined : 'WEB')
     const [policyName, setPolicyName] = useState('')
     const [dataLoading, setDataLoading] = useState(!(!uuid))
     const [initEvent, setInitEvent] = useState(false)
@@ -66,16 +66,22 @@ const AuthPolicyDetail = () => {
     const { formatMessage } = useIntl()
     const navigate = useNavigate()
     const isDefaultPolicy = detailData?.policyType === 'DEFAULT'
-    const passcodeUsed = !isDefaultPolicy && selectedApplicationType ? !(["ALL", "RADIUS"] as LocalApplicationTypes[]).includes(selectedApplicationType) : false
-    const passwordlessUsed = selectedApplicationType && (["WINDOWS_LOGIN", "LINUX_LOGIN"] as LocalApplicationTypes[]).includes(selectedApplicationType)
-    const otpUsed = !isDefaultPolicy && selectedApplicationType ? !(["RADIUS"] as LocalApplicationTypes[]).includes(selectedApplicationType) : false
-    const browserUsed = !isDefaultPolicy && selectedApplicationType ? (["ADMIN", "DEFAULT", "REDMINE", "MS_ENTRA_ID", "KEYCLOAK"] as LocalApplicationTypes[]).includes(selectedApplicationType) : false
-    const webauthnUsed = !isDefaultPolicy && browserUsed
-    const ipAddressUsed = !isDefaultPolicy && selectedApplicationType ? !(['LDAP', 'RADIUS'] as LocalApplicationTypes[]).includes(selectedApplicationType) : false
-    const isPAM = selectedApplicationType && (["LINUX_LOGIN"] as LocalApplicationTypes[]).includes(selectedApplicationType)
+    const passcodeUsedList: LocalApplicationTypes[] = ["ALL", "RADIUS"]
+    const passcodeUsed = !isDefaultPolicy && selectedApplicationType ? !passcodeUsedList.includes(selectedApplicationType) : false
+    const passwordLessUsedList: LocalApplicationTypes[] = ["WINDOWS_LOGIN", "LINUX_LOGIN"]
+    const passwordlessUsed = selectedApplicationType && passwordLessUsedList.includes(selectedApplicationType)
+    const otpUsedList: LocalApplicationTypes[] = ["RADIUS"]
+    const otpUsed = !isDefaultPolicy && selectedApplicationType ? !otpUsedList.includes(selectedApplicationType) : false
+    const browserUsedList: LocalApplicationTypes[] = ["WEB", "PORTAL", "REDMINE", "MICROSOFT_ENTRA_ID", "KEYCLOAK"]
+    const browserUsed = !isDefaultPolicy && selectedApplicationType ? browserUsedList.includes(selectedApplicationType) : false
+    const ipAddressUsedList: LocalApplicationTypes[] = ["LDAP", "RADIUS"]
+    const ipAddressUsed = !isDefaultPolicy && selectedApplicationType ? !ipAddressUsedList.includes(selectedApplicationType) : false
+    const isPamList: LocalApplicationTypes[] = ["LINUX_LOGIN"]
+    const isPAM = selectedApplicationType && isPamList.includes(selectedApplicationType)
     // const locationUsed = !isDefaultPolicy && (selectedApplicationType ? (["ADMIN", "DEFAULT", "WINDOWS_LOGIN", "REDMINE", 'LINUX_LOGIN', 'RADIUS', 'MAC_LOGIN', 'MS_ENTRA_ID', 'LDAP', 'KEYCLOAK'] as LocalApplicationTypes[]).includes(selectedApplicationType) : false)
     const locationUsed = !isDefaultPolicy
-    const authenticatorsUsed = !isDefaultPolicy && selectedApplicationType ? !(["ALL", "RADIUS"] as LocalApplicationTypes[]).includes(selectedApplicationType) : false
+    const authenticatorUsedList: LocalApplicationTypes[] = ["ALL", "RADIUS"]
+    const authenticatorsUsed = !isDefaultPolicy && selectedApplicationType ? !authenticatorUsedList.includes(selectedApplicationType) : false
     const typeItems = applicationTypes.map(_ => ({
         key: _,
         label: getApplicationTypeLabel(_)
@@ -91,6 +97,9 @@ const AuthPolicyDetail = () => {
                 setDetailData(data)
                 setAuthenticatorPolicies(data.enableAuthenticators)
                 setSelectedApplicationType(data.applicationType)
+                if (data.enableAppAuthenticationMethods) {
+                    setAppAuthenticatorPolicies(data.enableAppAuthenticationMethods)
+                }
                 if (data.linuxPamBypass) {
                     setPamBypassData(data.linuxPamBypass)
                 }
@@ -120,8 +129,9 @@ const AuthPolicyDetail = () => {
         const tempAuthPolices: AuthenticatorPolicyType[] = ['OMPASS']
         if (otpUsed) tempAuthPolices.push('OTP')
         if (passcodeUsed) tempAuthPolices.push('PASSCODE')
-        if (webauthnUsed) tempAuthPolices.push('WEBAUTHN')
+        if (browserUsed) tempAuthPolices.push('WEBAUTHN')
         setAuthenticatorPolicies(tempAuthPolices)
+        setAppAuthenticatorPolicies(["PATTERN", "PIN"])
         if (!isDefaultPolicy) {
             setAppAuthenticatorPolicies([])
             setPasswordlessData({
@@ -245,7 +255,7 @@ const AuthPolicyDetail = () => {
         UpdatePoliciesListFunc(params, ({ enableAuthenticators, enableBrowsers, locationConfig, networkConfig, noticeToAdmin, noticeToThemselves, accessTimeConfig }) => {
             if (!isDefaultPolicy) {
                 if (locationUsed) setLocationDatas(locationConfig)
-                if (authenticatorsUsed) setAuthenticatorPolicies(webauthnUsed ? enableAuthenticators : enableAuthenticators.filter(_ => _ !== 'WEBAUTHN'))
+                if (authenticatorsUsed) setAuthenticatorPolicies(browserUsed ? enableAuthenticators : enableAuthenticators.filter(_ => _ !== 'WEBAUTHN'))
                 if (browserUsed) setBrowserChecked(browserUsed ? enableBrowsers : [])
                 setAccessTimeValues(accessTimeConfig)
                 setIpAddressValues(networkConfig)
@@ -315,7 +325,7 @@ const AuthPolicyDetail = () => {
                 </CustomInputRow>
                 <OMPASSAuth value={ompassControl} onChange={setOmpassControl} isDefaultPolicy={isDefaultPolicy} />
                 <div className="auth-policy-validate-container" data-hidden={ompassControl !== 'ACTIVE'}>
-                    {authenticatorsUsed && <OMPASSAuthenticators value={authenticatorPolicies} onChange={setAuthenticatorPolicies} locationChecked={locationDatas?.isEnabled || false} webauthnUsed={webauthnUsed} setSureChange={setSureChange} />}
+                    {authenticatorsUsed && <OMPASSAuthenticators value={authenticatorPolicies} onChange={setAuthenticatorPolicies} locationChecked={locationDatas?.isEnabled || false} webauthnUsed={browserUsed} setSureChange={setSureChange} />}
                     {!isDefaultPolicy && <OMPASSAppAuthenticators value={appAuthenticatorPolicies} onChange={setAppAuthenticatorPolicies} />}
                     {passwordlessUsed && <PasswordlessCheck value={passwordlessData} onChange={setPasswordlessData} />}
                     {isPAM && <LinuxPamBypass value={pamBypassData} onChange={setPamBypassData} />}

@@ -3,12 +3,14 @@ import Contents from "Components/Layout/Contents";
 import ContentsHeader from "Components/Layout/ContentsHeader";
 import { GetExternalDirectoryListFunc } from "Functions/ApiFunctions";
 import { useState } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { useNavigate, useParams } from "react-router";
 import userAddIcon from './../../../assets/userAddIcon.png'
 import userAddIconHover from './../../../assets/userAddIconHover.png'
+import { ExternalDirectoryTypeLabel } from "./ExternalDirectoryContstants";
 
 const ExternalDirectoryManagement = () => {
+    const { formatMessage } = useIntl()
     const [tableData, setTableData] = useState<ExternalDirectoryDataType[]>([])
     const [totalCount, setTotalCount] = useState<number>(0);
     const [dataLoading, setDataLoading] = useState(false)
@@ -20,7 +22,7 @@ const ExternalDirectoryManagement = () => {
         const _params: ExternalDirectoryListParamsType = {
             page_size: params.size,
             page: params.page,
-            type: 'OPEN_LDAP'
+            type
         }
         if (params.searchType) {
             _params[params.searchType] = params.searchValue
@@ -33,18 +35,49 @@ const ExternalDirectoryManagement = () => {
         })
     }
 
-    const getTitleByType = (type: ExternalDirectoryType) => {
-        if(type === 'OPEN_LDAP') {
-            return 'LDAP_MANAGEMENT_TITLE'
-        } else if(type === 'ACTIVE_DIRECTORY') {
-            return 'ACTIVE_DIRECTORY_MANAGEMENT_TITLE'
-        } else if(type === 'MICROSOFT_ENTRA_ID') {
-            return 'MICROSOFT_ENTRA_ID_MANAGEMENT_TITLE'
+    const columnsByType = () => {
+        let columns: CustomTableColumnType<ExternalDirectoryDataType>[] = [{
+            key: 'name',
+            title: <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_NAME_LABEL" />
+        },
+        {
+            key: 'description',
+            title: <FormattedMessage id="DESCRIPTION_LABEL" />
+        }]
+        if (type === 'OPEN_LDAP') {
+            columns = columns.concat([
+                {
+                    key: 'proxyIpAddress',
+                    title: <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_PROXY_ADDRESS_LABEL" />,
+                    render: (data, ind, row) => row.proxyServer.address || '-'
+                },
+                {
+                    key: 'proxyPort',
+                    title: <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_PROXY_PORT_LABEL" />,
+                    render: (data, ind, row) => row.proxyServer.port || '-'
+                },
+                {
+                    key: 'baseDn',
+                    title: "Base DN"
+                }
+            ])
+        } else if (type === 'ACTIVE_DIRECTORY') {
         }
+        columns = columns.concat([
+            {
+                key: 'lastUserSyncedAt',
+                title: <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_LAST_SYNC_TIME_LABEL" />
+            },
+            {
+                key: 'createdAt',
+                title: <FormattedMessage id="CREATE_AT_LABEL" />,
+            }
+        ])
+        return columns
     }
-    
+
     return <Contents loading={dataLoading}>
-        <ContentsHeader title={getTitleByType(type)} subTitle={getTitleByType(type)}>
+        <ContentsHeader title={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_MANAGEMENT_TITLE" values={{type: formatMessage({id: ExternalDirectoryTypeLabel[type]})}} />} subTitle={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_MANAGEMENT_TITLE" values={{type: formatMessage({id: ExternalDirectoryTypeLabel[type]})}} />}>
         </ContentsHeader>
         <div className="contents-header-container">
             <CustomTable<ExternalDirectoryDataType>
@@ -63,38 +96,7 @@ const ExternalDirectoryManagement = () => {
                     }
                 }}
                 pagination
-                columns={[
-                    {
-                        key: 'name',
-                        title: <FormattedMessage id="LDAP_NAME_LABEL"/>
-                    },
-                    {
-                        key: 'description',
-                        title: <FormattedMessage id="DESCRIPTION_LABEL"/>
-                    },
-                    {
-                        key: 'proxyIpAddress',
-                        title: <FormattedMessage id="LDAP_PROXY_ADDRESS_LABEL"/>,
-                        render: (data, ind, row) => row.proxyServer.address
-                    },
-                    {
-                        key: 'proxyPort',
-                        title: <FormattedMessage id="LDAP_PROXY_PORT_LABEL"/>,
-                        render: (data, ind, row) => row.proxyServer.port
-                    },
-                    {
-                        key: 'baseDn',
-                        title: "Base DN"
-                    },
-                    {
-                        key: 'lastUserSyncedAt',
-                        title: <FormattedMessage id="LDAP_LAST_SYNC_TIME_LABEL"/>
-                    },
-                    {
-                        key: 'createdAt',
-                        title: <FormattedMessage id="CREATE_AT_LABEL"/>,
-                    },
-                ]}
+                columns={columnsByType()}
                 onBodyRowClick={(row, index, arr) => {
                     navigate(`/UserManagement/externalDirectory/${type}/detail/${row.id}`);
                 }}

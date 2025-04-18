@@ -6,10 +6,12 @@ import RegisterOMPASSAuthModal from "Components/Modal/RegisterOMPASSAuthModal"
 import Input from "Components/CommonCustomComponents/Input"
 import { ConfirmPasswordFunc } from "Functions/ApiFunctions"
 import { message } from "antd"
+import { useSelector } from "react-redux"
 
 const NewDeviceBtn = ({ onComplete }: {
     onComplete: () => void
 }) => {
+    const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     const [showModal, setShowModal] = useState(false)
     const [showSingleOMPASSAuthModal, setShowSingleOMPASSAuthModal] = useState(false)
     const [password, setPassword] = useState('')
@@ -76,6 +78,7 @@ const NewDeviceBtn = ({ onComplete }: {
         />
         <RegisterOMPASSAuthModal
             opened={showSingleOMPASSAuthModal}
+            targetUserId={userInfo.userId}
             onCancel={() => {
                 setShowSingleOMPASSAuthModal(false)
             }}

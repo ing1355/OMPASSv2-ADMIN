@@ -131,7 +131,7 @@
 }
 
 .dashboard-application-select-inner-container {
-    background-color: var(--sub-grey-color9);
+    /* background-color: var(--sub-grey-color9); */
     border-radius: 6px;
     padding: 4px 8px;
     max-width: calc(100% - 128px);
@@ -142,8 +142,10 @@
 .dashboard-application-select-item {
     border-radius: 24px;
     padding: 4px 16px;
-    border: 1.6px solid var(--dashboard-purple-color2);
-    color: var(--dashboard-purple-color2);
+    /* border: 1.6px solid var(--dashboard-purple-color2); */
+    /* color: var(--dashboard-purple-color2); */
+    color: #aaa;
+    background-color: var(--sub-grey-color);
     font-size: .9rem;
     font-weight: 500;
     cursor: pointer;
@@ -158,17 +160,17 @@
     background-color: var(--dashboard-purple-color2);
     color: white;
     font-weight: bold;
-    padding-left: 30px;
+    /* padding-left: 30px;
     background-image: url('../../assets/dashboardCheckIcon.png');
     background-position: 10px 50%;
     background-size: 14px 14px;
-    background-repeat: no-repeat;
+    background-repeat: no-repeat; */
 }
 
 .dashboard-middle-container {
-    background-color: var(--sub-purple-color3);
+    /* background-color: var(--sub-purple-color3); */
+    padding: 8px 0;
     border-radius: 12px;
-    padding: 8px;
     display: flex;
     flex-direction: row;
     gap: 8px;

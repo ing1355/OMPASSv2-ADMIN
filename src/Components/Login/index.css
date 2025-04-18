@@ -26,6 +26,7 @@
   align-items: center;
   justify-content: center;
   gap: 24px;
+  background-color: var(--main-background-color);
 }
 
 .login-form-header>img {
@@ -131,15 +132,11 @@
 .login-input-container {
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
   height: 65px;
+  margin-bottom: 20px;
 }
 
-.login-input-container + .login-input-container.password:not(.not-registered) {
-  margin-bottom: 0;
-}
-
-.login-input-container>.custom-input-wrapper {
+.login-input-container > label >.custom-input-wrapper {
   height: 46px;
 }
 
@@ -182,7 +179,7 @@
   background-color: var(--sub-purple-color4);
 } */
 
-.login-input.userId {
+.login-input.username {
   background-image: url(../../assets/login_id.png) !important;
 }
 

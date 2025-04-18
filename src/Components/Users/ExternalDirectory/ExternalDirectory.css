@@ -1,15 +1,15 @@
-.ldap-authentication-type-container {
+.external-directory-authentication-type-container {
     display: flex;
     flex-direction: row;
     gap: 12px;
 }
 
-.ldap-sync-user-list-container {
+.external-directory-sync-user-list-container {
     width: 100%;
     min-height: 200px;
 }
 
-.ldap-sync-user-list-loading-container {
+.external-directory-sync-user-list-loading-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -18,5 +18,5 @@
     height: 200px;
     position: relative;
     flex-direction: column;
-    color: var(--main-purple-color);
+    color: var(--sub-grey-color3);
 }

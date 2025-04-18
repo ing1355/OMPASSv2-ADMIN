@@ -561,6 +561,7 @@ const UserDetail = ({ }) => {
                     ref={_ref => authInfoRef.current[_.authenticationInfo.id] = _ref as HTMLDivElement}
                 >
                     {isSelf && (_.application.type === 'RADIUS' || _.application.type === 'LDAP') && !_.authenticationInfo.createdAt && <EmptyDetailItem
+                        targetUserId={_.id}
                         appId={_.application.id}
                         onComplete={GetDatas}
                         type={_.application.type}

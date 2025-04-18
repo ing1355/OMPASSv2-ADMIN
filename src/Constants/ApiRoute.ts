@@ -111,13 +111,7 @@ export const AddExternalDirectoryApi = '/v2/external-directories'
 export const UpdateExternalDirectoryApi = (id: ExternalDirectoryDataType['id']) => `/v2/external-directories/id/${id}`
 export const DeleteExternalDirectoryApi = (id: ExternalDirectoryDataType['id']) => `/v2/external-directories/id/${id}`
 export const SyncExternalDirectoryApi = '/v2/external-directories/sync'
-// LDAP
-export const GetLdapConfigListApi = '/v2/ldap-configs'
-export const AddLdapConfigListApi = '/v2/ldap-configs'
-export const UpdateLdapConfigListApi = (id: LdapConfigDataType['id']) => `/v2/ldap-configs/id/${id}`
-export const DeleteLdapConfigListApi = (id: LdapConfigDataType['id']) => `/v2/ldap-configs/id/${id}`
-export const SyncLdapUserListApi = '/v2/ldap/sync'
-export const TestLdapConnectionApi = '/v2/ldap/test-connection'
+export const GetMicrosoftEntraIdAuthApi = (id: ExternalDirectoryDataType['id']) => `/v2/external-directories/${id}/ms/oauth2/url`
 
 // RADIUS
 export const AddRadiusUserListApi = '/v2/radius-rp-users'
