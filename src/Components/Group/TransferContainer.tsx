@@ -1,9 +1,8 @@
 import Button from "Components/CommonCustomComponents/Button"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { SetStateType } from "Types/PropsTypes"
-import searchIcon from '../../assets/searchIcon.png'
-import groupViewClearIcon from '../../assets/groupViewClearIcon.png'
-import groupViewClearIconColor from '../../assets/resetIcon.png'
+import groupViewClearIcon from '@assets/groupViewClearIcon.png'
+import groupViewClearIconColor from '@assets/resetIcon.png'
 import Input from 'Components/CommonCustomComponents/Input'
 import useDebounce from "hooks/useDebounce"
 import useFullName from "hooks/useFullName"

@@ -1,8 +1,8 @@
 import { Modal, ModalProps } from "antd";
-import deleteModalIcon from '../../assets/deleteModalIcon.png';
-import infoModalIcon from '../../assets/infoModalIcon.png';
-import closeIcon from '../../assets/closeIcon.png';
-import backIcon from '../../assets/backIconGrey.png';
+import deleteModalIcon from '@assets/deleteModalIcon.png';
+import infoModalIcon from '@assets/infoModalIcon.png';
+import closeIcon from '@assets/closeIcon.png';
+import backIcon from '@assets/backIconGrey.png';
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 import Button from "Components/CommonCustomComponents/Button";
@@ -81,6 +81,7 @@ const CustomModal = ({ titleLeft, noBtns, title, buttonLoading, typeTitle, typeC
             }
         }} {...props} onCancel={onCancel} className="custom-modal-container">
         <form onSubmit={async (e) => {
+            console.log("loading", buttonLoading)
             e.preventDefault()
             if (buttonLoading) setOkLoading(true)
             try {

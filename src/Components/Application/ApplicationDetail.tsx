@@ -2,7 +2,7 @@ import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
 import { useNavigate, useParams } from "react-router"
 import { useLayoutEffect, useState } from "react"
-import { Switch, message } from "antd"
+import { message } from "antd"
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import { AddApplicationDataFunc, DeleteApplicationListFunc, GetApplicationDetailFunc, GetApplicationListFunc, GetAuthorizeMSEntraUriFunc, UpdateApplicationDataFunc, UpdateApplicationSecretkeyFunc } from "Functions/ApiFunctions"
 import PolicySelect from "Components/CommonCustomComponents/PolicySelect"
@@ -11,15 +11,15 @@ import { convertBase64FromClientToServerFormat } from "Functions/GlobalFunctions
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect"
 import Button from "Components/CommonCustomComponents/Button"
 import Input from "Components/CommonCustomComponents/Input"
-import deleteIcon from '../../assets/deleteIcon.png'
-import deleteIconHover from '../../assets/deleteIconHover.png'
+import deleteIcon from '@assets/deleteIcon.png'
+import deleteIconHover from '@assets/deleteIconHover.png'
 import { FormattedMessage, useIntl } from "react-intl"
 import CustomImageUpload from "Components/CommonCustomComponents/CustomImageUpload"
-import { domainRegex, ipAddressRegex, redirectUriRegex } from "Components/CommonCustomComponents/CommonRegex"
+import { domainRegex, redirectUriRegex } from "Components/CommonCustomComponents/CommonRegex"
 import CustomModal from "Components/Modal/CustomModal"
 import SingleOMPASSAuthModal from "Components/Modal/SingleOMPASSAuthModal"
-import documentIcon from '../../assets/documentIcon.png'
-import documentIconHover from '../../assets/documentIconHover.png'
+import documentIcon from '@assets/documentIcon.png'
+import documentIconHover from '@assets/documentIconHover.png'
 import ApplicationAgentDownload from "./ApplicationAgentDownload"
 import '../Policy/AuthPolicyDetail.css'
 import './ApplicationDetail.css'
@@ -35,7 +35,6 @@ const ApplicationDetail = () => {
     })
     const [inputName, setInputName] = useState('')
     const [helpMsg, setHelpMsg] = useState('')
-    const [isPasswordlessEnabled, setIsPasswordlessEnabled] = useState(false)
     const [inputSecretKey, setInputSecretKey] = useState('')
     const [inputDomain, setInputDomain] = useState('')
     const [inputClientId, setInputClientId] = useState('')
@@ -61,7 +60,8 @@ const ApplicationDetail = () => {
     const { formatMessage } = useIntl()
     const { uuid } = useParams()
     const isAdd = !uuid
-    const needDomains: LocalApplicationTypes[] = ["WEB", "PORTAL", "REDMINE", "KEYCLOAK"]
+    const needDomains: LocalApplicationTypes[] = ["WEB", "REDMINE", "KEYCLOAK"]
+    const readOnlyRedirectUriList: LocalApplicationTypes[] = ["PORTAL", "REDMINE"]
     const noRedirectUri: LocalApplicationTypes[] = ["KEYCLOAK", "REDMINE"]
     const typeItems = applicationTypes.map(_ => ({
         key: _,
@@ -186,7 +186,9 @@ const ApplicationDetail = () => {
                             type: applicationType
                         }, (res) => {
                             message.success(formatMessage({ id: 'APPLICATION_ADD_SUCCESS_MSG' }))
-                            navigate(`/Applications/detail/${res.id}`)
+                            navigate(`/Applications/detail/${res.id}`, {
+                                replace: true
+                            })
                         })
                     }
                 }}>
@@ -256,7 +258,7 @@ const ApplicationDetail = () => {
                             {!noRedirectUri.includes(applicationType) && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_REDIRECT_URI_LABEL" />}>
                                 <Input className="st1" value={inputRedirectUrl} valueChange={value => {
                                     setInputRedirectUrl(value)
-                                }} placeholder="ex) /ompass" readOnly={['ADMIN', 'REDMINE'].includes(applicationType)} noGap />
+                                }} placeholder="ex) /ompass" readOnly={readOnlyRedirectUriList.includes(applicationType)} noGap />
                             </CustomInputRow>}
                         </>
                     }

@@ -20,7 +20,7 @@ type ApplicationDetailSubInfoByTypeProps = {
 const ApplicationDetailSubInfoByType = ({ isAuthorized, applicationType, data, MSEntraTenantId, ldapProxyServer }: ApplicationDetailSubInfoByTypeProps) => {
     if (applicationType === 'RADIUS') return <RadiusDetailInfo data={data} />
     if (applicationType === 'MICROSOFT_ENTRA_ID') return <MSEntraIDDetailInfo isAuthorized={isAuthorized} MSEntraTenantId={MSEntraTenantId} />
-    if (applicationType === 'LDAP') return <LDAPDetailInfo ldapProxyServer={ldapProxyServer} />
+    // if (applicationType === 'LDAP') return <LDAPDetailInfo ldapProxyServer={ldapProxyServer} />
     return <></>
 }
 

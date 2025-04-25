@@ -4,7 +4,7 @@ input.secret-key:hover {
 input.secret-key {
     cursor: pointer;
     padding-right: 28px;
-    background-image: url('../../assets/copyIcon.png');
+    background-image: url('@assets/copyIcon.png');
     background-repeat: no-repeat;
     background-position: right 10px center;
     background-size: 18px 18px;
@@ -19,10 +19,6 @@ input.secret-key {
     display: flex;
     flex-direction: row;
     gap: 12px;
-}
-
-.application-contents-container[data-hidden=true] {
-    display: none;
 }
 
 .application-contents-inner-container {

@@ -2,8 +2,8 @@ import { FormattedMessage } from "react-intl"
 import './ContentsHeader.css'
 import { CSSProperties, PropsWithChildren, useState } from "react"
 import { useSelector } from "react-redux"
-import backIcon from "../../assets/backIcon.png"
-import backIconHover from "../../assets/backIconHover.png"
+import backIcon from "@assets/backIcon.png"
+import backIconHover from "@assets/backIconHover.png"
 import useCustomRoute from "hooks/useCustomRoute"
 
 type ContentsHeaderProps = {

@@ -27,7 +27,7 @@ import { globalDatasChange } from 'Redux/actions/globalDatasChange';
 import Dashboard from 'Components/Dashboard/Dashboard';
 import LoginPage from 'Components/Login';
 import SecurityQuestionPage from 'Components/Login/SecurityQuestionPage';
-import EmailChangeVerification from 'Components/Users/EmailChangeVerification';
+import EmailChangeVerification from 'Components/Users/UserDetail/EmailChangeVerification';
 import Document from 'Components/Document';
 
 const App: React.FC = () => {

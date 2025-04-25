@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CustomDropdown from "./CustomDropdown"
 import { saveLocaleToLocalStorage } from "Functions/GlobalFunctions";
 import { langChange } from "Redux/actions/langChange";
-import locale_image from '../../assets/locale_image.png';
+import locale_image from '@assets/locale_image.png';
 import { message } from "antd";
 import './LocaleChange.css'
 

@@ -1,0 +1,13 @@
+.user-detail-self-rp-user-add-container {
+    border: 1px solid black;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.user-detail-self-rp-user-add-application-select-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}

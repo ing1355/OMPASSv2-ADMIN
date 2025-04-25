@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
-import userIconColor from '../../assets/userIconColor.png'
-import beforeUserIcon from '../../assets/beforeUserIcon.png'
-import rpUesrIcon from '../../assets/login_id.png'
+import userIconColor from '@assets/userIconColor.png'
+import beforeUserIcon from '@assets/beforeUserIcon.png'
+import rpUesrIcon from '@assets/login_id.png'
 import useFullName from "hooks/useFullName"
 import { logoImageWithDefaultImage } from "Functions/GlobalFunctions"
 import { SetStateType } from "Types/PropsTypes"

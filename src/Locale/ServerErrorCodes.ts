@@ -42,6 +42,8 @@ const ServerErrorCodes = {
         ERR_B045: '비밀번호가 일치하지 않습니다.',
         ERR_B046: '등록되지 않은 아이디 입니다.',
         ERR_B047: 'Microsoft Entra ID 접근 권한이 없습니다.',
+        ERR_B048: '이미 존재하는 이름입니다. 다른 이름을 입력해주세요.',
+        ERR_B049: '이미 등록이 완료된 계정입니다.',
     },
     'EN': {
         ERR_B002: "Please check your ID and email",
@@ -85,7 +87,9 @@ const ServerErrorCodes = {
         ERR_B043: "Already exists application name",
         ERR_B045: "The password does not match",
         ERR_B046: "The ID does not exist",
-        ERR_B047: "Microsoft Entra ID access permission is not available"
+        ERR_B047: "Microsoft Entra ID access permission is not available",
+        ERR_B048: "The name already exists. Please enter a different name",
+        ERR_B049: "The account has already been registered"
     }
 }
 

@@ -2,22 +2,22 @@ import { message, Switch } from "antd"
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import { policyNoticeRestrictionTypes } from "Constants/ConstantValues"
 import { FormattedMessage, useIntl } from "react-intl"
-import locationModifyConfirmIcon from '../../../assets/locationModifyConfirmIcon.png'
-import locationModifyConfirmIconHover from '../../../assets/locationModifyConfirmIconHover.png'
-import locationModifyCancelIcon from '../../../assets/locationModifyCancelIcon.png'
-import locationModifyCancelIconHover from '../../../assets/locationModifyCancelIconHover.png'
-import locationEditIcon from '../../../assets/locationEditIcon.png';
-import locationEditIconHover from '../../../assets/locationEditIconHover.png';
-import locationIcon from '../../../assets/locationIcon.png'
-import locationIconHover from '../../../assets/locationIconHover.png'
+import locationModifyConfirmIcon from '@assets/locationModifyConfirmIcon.png'
+import locationModifyConfirmIconHover from '@assets/locationModifyConfirmIconHover.png'
+import locationModifyCancelIcon from '@assets/locationModifyCancelIcon.png'
+import locationModifyCancelIconHover from '@assets/locationModifyCancelIconHover.png'
+import locationEditIcon from '@assets/locationEditIcon.png';
+import locationEditIconHover from '@assets/locationEditIconHover.png';
+import locationIcon from '@assets/locationIcon.png'
+import locationIconHover from '@assets/locationIconHover.png'
 import { AdvancedMarker } from '@vis.gl/react-google-maps';
 import { Circle } from "./GoogleCircle"
 import { useEffect, useState } from "react"
 import Button from "Components/CommonCustomComponents/Button"
 import { useSelector } from "react-redux"
 import Input from "Components/CommonCustomComponents/Input"
-import deleteIcon from '../../../assets/deleteIcon.png'
-import deleteIconHover from '../../../assets/deleteIconHover.png'
+import deleteIcon from '@assets/deleteIcon.png'
+import deleteIconHover from '@assets/deleteIconHover.png'
 import { SetStateType } from "Types/PropsTypes"
 import CustomMap from "Components/Layout/CustomMap"
 

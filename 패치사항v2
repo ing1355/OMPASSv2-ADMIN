@@ -1,3 +1,21 @@
+* v2.0.0(125)
+  - 외부 저장소 연결상태 표시 추가
+  - 모바일로 접근 시 OMPASS Apk 다운로드 버튼 -> OMPASS APP 다운로드 버튼으로 변경(Android, iOS 감지하여 각 스토어로 이동)
+  - LDAP, RADIUS 사용자 추가 기능 구현
+
+* v2.0.0(124)
+  - 외부 저장소 시나리오 재구성
+  - AD LTNM 관련 Input 추가
+
+* v2.0.0(123)
+  - 비밀번호 초기화 시나리오 시 autoComplete 제거
+  - 인증 로그 -> 지도에 현재 위치 Circle UI 추가
+  - Open LDAP 서버 목록 동기화 완료
+
+* v2.0.0(122)
+  - 외부 저장소 동기화(Portal User) 세부 사항 정리
+  - Open LDAP 디렉토리 서버 목록 구현
+
 * v2.0.0(121)
   - 외부 저장소 동기화 type param OPEN_LDAP 으로만 가던 이슈 수정
   - LDAP -> External Directory 변경

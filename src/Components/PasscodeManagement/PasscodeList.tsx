@@ -1,5 +1,5 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
-import { ViewPasscode } from "Components/Users/UserDetailComponents";
+import { ViewPasscode } from "Components/Users/UserDetail/UserDetailComponents";
 import { GetPasscodeListFunc } from "Functions/ApiFunctions";
 import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions";
 import { useState } from "react";
@@ -99,7 +99,8 @@ const PasscodeList = () => {
             {
                 key: 'createdAt',
                 title: <FormattedMessage id="PASSCODE_CREATED_AT_LABEL" />,
-                render: (data, ind, row) => convertUTCStringToLocalDateString(row.passcode.createdAt)
+                render: (data, ind, row) => convertUTCStringToLocalDateString(row.passcode.createdAt),
+                filterType: 'date'
             },
             {
                 key: 'expirationTime',

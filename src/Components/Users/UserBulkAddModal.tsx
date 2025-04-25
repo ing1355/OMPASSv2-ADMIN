@@ -1,12 +1,12 @@
 import CustomModal from "Components/Modal/CustomModal"
 import { FormattedMessage } from "react-intl"
 import { useNavigate } from "react-router"
-import singleUserAddIcon from './../../assets/singleUserAddIcon.png'
-import exceclUploadIcon from './../../assets/exceclUploadIcon.png'
-import activeDirectorySyncIcon from './../../assets/activeDirectorySyncIcon.png'
-import msEntraIdSyncIcon from './../../assets/msEntraIdSyncIcon.png'
-import externalStorageSyncIcon from './../../assets/externalStorageSyncIcon.png'
-import ldapSyncIcon from './../../assets/ldapSyncIcon.png'
+import singleUserAddIcon from '@assets/singleUserAddIcon.png'
+import exceclUploadIcon from '@assets/exceclUploadIcon.png'
+import activeDirectorySyncIcon from '@assets/activeDirectorySyncIcon.png'
+import msEntraIdSyncIcon from '@assets/msEntraIdSyncIcon.png'
+import externalStorageSyncIcon from '@assets/externalStorageSyncIcon.png'
+import ldapSyncIcon from '@assets/ldapSyncIcon.png'
 import { useEffect, useState } from "react"
 import { ExternalDirectoryTypes } from "Constants/ConstantValues"
 

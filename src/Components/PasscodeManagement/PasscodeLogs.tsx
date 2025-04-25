@@ -1,5 +1,5 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
-import { ViewPasscode } from "Components/Users/UserDetailComponents";
+import { ViewPasscode } from "Components/Users/UserDetail/UserDetailComponents";
 import { GetPasscodeHistoriesFunc } from "Functions/ApiFunctions";
 import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions";
 import { useState } from "react";
@@ -123,7 +123,8 @@ const PasscodeLogs = () => {
             {
                 key: 'createdAt',
                 title: <FormattedMessage id="ACTION_DATE" />,
-                render: (data) => convertUTCStringToLocalDateString(data)
+                render: (data) => convertUTCStringToLocalDateString(data),
+                filterType: 'date'
             },
             {
                 key: 'expirationTime',

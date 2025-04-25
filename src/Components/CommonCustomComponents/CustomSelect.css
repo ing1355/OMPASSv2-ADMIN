@@ -2,7 +2,7 @@
   display: none;
 }
 .custom-select-container.opened {
-  background-image: url(../../assets/arrowUpIcon.png);
+  background-image: url('@assets/arrowUpIcon.png');
   z-index: 98;
 }
 .custom-select-container.read-only {
@@ -12,7 +12,7 @@
 }
 .custom-select-container {
   display: inline-block;
-  background-image: url(../../assets/arrowDownIcon.png);
+  background-image: url('@assets/arrowDownIcon.png');
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 18px 18px;

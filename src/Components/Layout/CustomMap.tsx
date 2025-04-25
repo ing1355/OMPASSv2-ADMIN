@@ -1,8 +1,8 @@
-import { APIProvider, Map, MapControl, ControlPosition, MapCameraChangedEvent } from '@vis.gl/react-google-maps';
+import { APIProvider, Map, MapControl, ControlPosition, MapCameraChangedEvent, AdvancedMarker } from '@vis.gl/react-google-maps';
 import { PropsWithChildren, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import locationIcon from '../../assets/currentLocationIcon.png'
-import locationIconColor from '../../assets/currentLocationIconColor.png'
+import locationIcon from '@assets/currentLocationIcon.png'
+import locationIconColor from '@assets/currentLocationIconColor.png'
 import { message, Tooltip } from 'antd';
 import { FormattedMessage, useIntl } from 'react-intl';
 import './CustomMap.css'
@@ -18,6 +18,7 @@ type CustomMapProps = PropsWithChildren & {
 const CustomMap = ({ children, onInit, onLoad, onCurrentPositionCheck, center, onCameraChanged }: CustomMapProps) => {
     const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas);
     const [isHover, setIsHover] = useState(false)
+    const [currentLocation, setCurrentLocation] = useState<GeolocationPosition>()
     const mapInitRef = useRef(false)
     const mapRef = useRef<google.maps.Map>()
     const { formatMessage } = useIntl()
@@ -48,6 +49,18 @@ const CustomMap = ({ children, onInit, onLoad, onCurrentPositionCheck, center, o
             center={center}
             defaultCenter={{ lat: 36.713889964770544, lng: 127.88793971566751 }}
         >
+            {
+                currentLocation && <AdvancedMarker position={{
+                    lat: currentLocation.coords.latitude,
+                    lng: currentLocation.coords.longitude
+                }}>
+                    <div className='current-location-marker'>
+                        <div className='current-location-marker-inner'/>
+                        <div className='current-location-marker-background'/>
+                        <div className='current-location-marker-outer'/>
+                    </div>
+                </AdvancedMarker>
+            }
             <MapControl position={ControlPosition.TOP_RIGHT}>
                 <Tooltip title={formatMessage({ id: 'CURRENT_LOCATION_CHECK_TOOLTIP_LABEL' })}>
                     <div
@@ -63,6 +76,7 @@ const CustomMap = ({ children, onInit, onLoad, onCurrentPositionCheck, center, o
                                 console.log(
                                     '현재 위치 획득!', position
                                 )
+                                setCurrentLocation(position)
                                 mapRef.current?.panTo({
                                     lat: position.coords.latitude,
                                     lng: position.coords.longitude

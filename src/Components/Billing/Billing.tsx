@@ -2,9 +2,9 @@ import ContentsHeader from "Components/Layout/ContentsHeader"
 import Contents from 'Components/Layout/Contents';
 import { CSSProperties, PropsWithChildren, useMemo, useState } from "react";
 import './Billing.css'
-import planIcon from '../../assets/planIcon.png'
-import checkIcon from '../../assets/checkIcon.png'
-import userIconColor from '../../assets/userIconColor.png'
+import planIcon from '@assets/planIcon.png'
+import checkIcon from '@assets/checkIcon.png'
+import userIconColor from '@assets/userIconColor.png'
 import { slicePrice } from "Functions/GlobalFunctions";
 import CustomTable from "Components/CommonCustomComponents/CustomTable";
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect";

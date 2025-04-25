@@ -1,10 +1,11 @@
 import { Navigate, Route, Routes } from "react-router"
 import UserManagement from "./UserManagement"
-import UserDetail from "./UserDetail"
+import UserDetail from "./UserDetail/UserDetail"
 import { useSelector } from "react-redux"
 import UserExcelUpload from "./UserExcelUpload"
 import ExternalDirectoryDetail from "./ExternalDirectory/ExternalDirectoryDetail"
 import ExternalDirectoryManagement from "./ExternalDirectory/ExternalDirectoryManagement"
+import ExternalDirectoryOpenLdapSettingEdit from "./ExternalDirectory/ExternalDirectoryOpenLdapSettingEdit"
 
 const Users = () => {
     const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
@@ -17,6 +18,7 @@ const Users = () => {
             <Route path="/externalDirectory/:type" element={<ExternalDirectoryManagement />} />
             <Route path="/externalDirectory/:type/detail" element={<ExternalDirectoryDetail />} />
             <Route path="/externalDirectory/:type/detail/:id" element={<ExternalDirectoryDetail />} />
+            <Route path="/externalDirectory/:type/detail/:id/edit" element={<ExternalDirectoryOpenLdapSettingEdit />} />
             <Route path="/detail/*" element={<UserDetail />} />
             <Route path="/detail/:uuid" element={<UserDetail />} />
             <Route

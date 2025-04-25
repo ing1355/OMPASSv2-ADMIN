@@ -10,12 +10,12 @@ import { message, Radio, RadioChangeEvent, Space } from "antd"
 import { useEffect, useLayoutEffect, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 import { useNavigate, useParams } from "react-router"
-import groupViewAlignIcon from '../../assets/groupAlignIcon.png'
-import groupPortalViewIcon from '../../assets/groupPortalViewIcon.png'
-import groupPortalViewIconColor from '../../assets/groupPortalViewIconColor.png'
-import groupApplicationViewIcon from '../../assets/groupApplicationViewIcon.png'
-import groupApplicationViewIconColor from '../../assets/groupApplicationViewIconColor.png'
-import closeIcon from '../../assets/closeIcon.png'
+import groupViewAlignIcon from '@assets/groupAlignIcon.png'
+import groupPortalViewIcon from '@assets/groupPortalViewIcon.png'
+import groupPortalViewIconColor from '@assets/groupPortalViewIconColor.png'
+import groupApplicationViewIcon from '@assets/groupApplicationViewIcon.png'
+import groupApplicationViewIconColor from '@assets/groupApplicationViewIconColor.png'
+import closeIcon from '@assets/closeIcon.png'
 import { applicationTypes, getApplicationTypeLabel } from "Constants/ConstantValues"
 import './GroupDetail.css'
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect"

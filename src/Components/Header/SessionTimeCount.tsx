@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { sessionCheckChange, sessionTimeChange } from "Redux/actions/sessionInfoChange"
 import { userInfoChange, userInfoClear } from "Redux/actions/userChange"
 import './SessionTimeCount.css'
-import timeIcon from '../../assets/sessionTimeIcon.png'
+import timeIcon from '@assets/sessionTimeIcon.png'
 import CustomDropdown from "Components/CommonCustomComponents/CustomDropdown"
 import { FormattedMessage, useIntl } from "react-intl"
 

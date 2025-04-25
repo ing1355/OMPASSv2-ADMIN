@@ -1,6 +1,6 @@
 import { ApplicationUserNum } from "./DashboardItems"
-import dashboardRegisterUserIcon from '../../assets/dashboardRegisterUserIcon.png';
-import dashboardNotRegisterUserIcon from '../../assets/dashboardNotRegisterUserIcon.png';
+import dashboardRegisterUserIcon from '@assets/dashboardRegisterUserIcon.png';
+import dashboardNotRegisterUserIcon from '@assets/dashboardNotRegisterUserIcon.png';
 import { useEffect, useState } from "react";
 import { GetDashboardApplicationRPUserFunc } from "Functions/ApiFunctions";
 import { DashboardColors } from "./DashboardColors";

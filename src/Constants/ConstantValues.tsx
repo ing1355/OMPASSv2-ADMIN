@@ -1,31 +1,29 @@
 import { FormattedMessage } from "react-intl";
-import applicationMenuIconWhite from '../assets/applicationMenuIconWhite.png';
-import applicationMenuIconBlack from '../assets/applicationMenuIconBlack.png';
-import billingMenuIconWhite from '../assets/billingMenuIconWhite.png';
-import billingMenuIconBlack from '../assets/billingMenuIconBlack.png';
-import authLogMenuIconWhite from '../assets/authLogMenuIconWhite.png';
-import authLogMenuIconBlack from '../assets/authLogMenuIconBlack.png';
-import userLogMenuIconBlack from '../assets/userLogMenuIconBlack.png';
-import userLogMenuIconWhite from '../assets/userLogMenuIconWhite.png';
-import groupMenuIconBlack from '../assets/groupMenuIconBlack.png';
-import groupMenuIconWhite from '../assets/groupMenuIconWhite.png';
-import policyMenuIconBlack from '../assets/policyMenuIconBlack.png';
-import policyMenuIconWhite from '../assets/policyMenuIconWhite.png';
-import userManagementMenuIconBlack from '../assets/userManagementMenuIconBlack.png';
-import userManagementMenuIconWhite from '../assets/userManagementMenuIconWhite.png';
-import versionManagementMenuIconBlack from '../assets/versionManagementMenuIconBlack.png';
-import versionManagementMenuIconWhite from '../assets/versionManagementMenuIconWhite.png';
-// import licenseManagementMenuIconWhite from '../assets/licenseManagementMenuIconWhite.png';
-// import licenseManagementMenuIconBlack from '../assets/licenseManagementMenuIconBlack.png';
-import passcodeHistoryMenuIconBlack from '../assets/passcodeHistoryMenuIconBlack.png';
-import passcodeHistoryMenuIconWhite from '../assets/passcodeHistoryMenuIconWhite.png';
-import settingsMenuIconBlack from '../assets/settingsMenuIconBlack.png';
-import SettingsMenuIconWhite from '../assets/settingsMenuIconWhite.png';
+import applicationMenuIconWhite from '@assets/applicationMenuIconWhite.png';
+import applicationMenuIconBlack from '@assets/applicationMenuIconBlack.png';
+import billingMenuIconWhite from '@assets/billingMenuIconWhite.png';
+import billingMenuIconBlack from '@assets/billingMenuIconBlack.png';
+import authLogMenuIconWhite from '@assets/authLogMenuIconWhite.png';
+import authLogMenuIconBlack from '@assets/authLogMenuIconBlack.png';
+import userLogMenuIconBlack from '@assets/userLogMenuIconBlack.png';
+import userLogMenuIconWhite from '@assets/userLogMenuIconWhite.png';
+import groupMenuIconBlack from '@assets/groupMenuIconBlack.png';
+import groupMenuIconWhite from '@assets/groupMenuIconWhite.png';
+import policyMenuIconBlack from '@assets/policyMenuIconBlack.png';
+import policyMenuIconWhite from '@assets/policyMenuIconWhite.png';
+import userManagementMenuIconBlack from '@assets/userManagementMenuIconBlack.png';
+import userManagementMenuIconWhite from '@assets/userManagementMenuIconWhite.png';
+import versionManagementMenuIconBlack from '@assets/versionManagementMenuIconBlack.png';
+import versionManagementMenuIconWhite from '@assets/versionManagementMenuIconWhite.png';
+import passcodeHistoryMenuIconBlack from '@assets/passcodeHistoryMenuIconBlack.png';
+import passcodeHistoryMenuIconWhite from '@assets/passcodeHistoryMenuIconWhite.png';
+import settingsMenuIconBlack from '@assets/settingsMenuIconBlack.png';
+import SettingsMenuIconWhite from '@assets/settingsMenuIconWhite.png';
 import { tz } from 'moment-timezone'
-import ompassLogoIcon from '../assets/ompassLogoIcon.png'
-import readyIcon from '../assets/ompassLogoIcon.png'
-import progressIcon from '../assets/ompassAuthProgressIcon.png'
-import completeIcon from '../assets/ompassAuthCompleteIcon.png'
+import ompassLogoIcon from '@assets/ompassLogoIcon.png'
+import readyIcon from '@assets/ompassLogoIcon.png'
+import progressIcon from '@assets/ompassAuthProgressIcon.png'
+import completeIcon from '@assets/ompassAuthCompleteIcon.png'
 import { isMobile } from "react-device-detect";
 
 export const getOMPASSAuthIconByProgressStatus = (status: OMPASSAuthStatusType) => {

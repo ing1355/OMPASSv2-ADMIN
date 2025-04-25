@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import rpUesrIcon from '../../assets/groupUserIcon.png'
+import rpUesrIcon from '@assets/groupUserIcon.png'
 import useFullName from "hooks/useFullName"
 import { logoImageWithDefaultImage } from "Functions/GlobalFunctions"
 import { SetStateType } from "Types/PropsTypes"

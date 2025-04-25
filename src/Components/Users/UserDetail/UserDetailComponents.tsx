@@ -1,36 +1,36 @@
-import deviceModelIcon from '../../assets/deviceModelIcon.png';
-import lastLoginTimeIcon from '../../assets/lastLoginTimeIcon.png'
-import passcodeVisibleIcon from '../../assets/passwordVisibleIcon.png';
-import passcodeHiddenIcon from '../../assets/passwordHiddenIcon.png';
-import windowsOSIcon from '../../assets/windowsOSIcon.png';
-import macOSIcon from '../../assets/macOSIcon.png';
-import rockyOsIcon from '../../assets/rockyOsIcon.png';
-import androidOSIcon from '../../assets/androidOSIcon.png';
-import iOSIcon from '../../assets/iOSIcon.png';
-import ubuntuOSIcon from '../../assets/ubuntuOSIcon.png';
-import gooroomOSIcon from '../../assets/gooroomOSIcon.png';
-import centOSIcon from '../../assets/centOSIcon.png';
-import uuidIcon from '../../assets/uuidIcon.png';
-import locationIcon from '../../assets/locationIcon.png';
-import browserIcon from '../../assets/browserIcon.png';
-import ipAddressIcon from '../../assets/ipAddressIcon.png';
-import macAddressIcon from '../../assets/macAddressIcon.png';
-import pcNameIcon from '../../assets/pcNameIcon.png';
-import agentVersionIcon from '../../assets/agentVersionIcon.png';
-import registeredAtIcon from '../../assets/registeredAtIcon.png';
-import noDataIcon from '../../assets/noDataIcon.png';
-import copyIcon from '../../assets/copyIcon.png';
-import lastAuthIcon from '../../assets/lastAuthIcon.png';
-import sshIcon from '../../assets/sshIcon.png';
-import clientIcon from '../../assets/clientIcon.png';
+import deviceModelIcon from '@assets/deviceModelIcon.png';
+import lastLoginTimeIcon from '@assets/lastLoginTimeIcon.png'
+import passcodeVisibleIcon from '@assets/passwordVisibleIcon.png';
+import passcodeHiddenIcon from '@assets/passwordHiddenIcon.png';
+import windowsOSIcon from '@assets/windowsOSIcon.png';
+import macOSIcon from '@assets/macOSIcon.png';
+import rockyOsIcon from '@assets/rockyOsIcon.png';
+import androidOSIcon from '@assets/androidOSIcon.png';
+import iOSIcon from '@assets/iOSIcon.png';
+import ubuntuOSIcon from '@assets/ubuntuOSIcon.png';
+import gooroomOSIcon from '@assets/gooroomOSIcon.png';
+import centOSIcon from '@assets/centOSIcon.png';
+import uuidIcon from '@assets/uuidIcon.png';
+import locationIcon from '@assets/locationIcon.png';
+import browserIcon from '@assets/browserIcon.png';
+import ipAddressIcon from '@assets/ipAddressIcon.png';
+import macAddressIcon from '@assets/macAddressIcon.png';
+import pcNameIcon from '@assets/pcNameIcon.png';
+import agentVersionIcon from '@assets/agentVersionIcon.png';
+import registeredAtIcon from '@assets/registeredAtIcon.png';
+import noDataIcon from '@assets/noDataIcon.png';
+import copyIcon from '@assets/copyIcon.png';
+import lastAuthIcon from '@assets/lastAuthIcon.png';
+import sshIcon from '@assets/sshIcon.png';
+import clientIcon from '@assets/clientIcon.png';
 import { FormattedMessage, useIntl } from 'react-intl';
 import React, { PropsWithChildren, useState } from 'react';
 import './UserDetailComponents.css'
 import { convertBase64FromServerFormatToClient, createOSInfo } from 'Functions/GlobalFunctions';
 import Button from 'Components/CommonCustomComponents/Button';
 import RequiredLabel from 'Components/CommonCustomComponents/RequiredLabel';
-import groupMenuIcon from '../../assets/groupMenuIconBlack.png';
-import policyMenuIconBlack from '../../assets/policyMenuIconBlack.png';
+import groupMenuIcon from '@assets/groupMenuIconBlack.png';
+import policyMenuIconBlack from '@assets/policyMenuIconBlack.png';
 import { ompassDefaultLogoImage } from 'Constants/ConstantValues';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { message } from 'antd';
@@ -444,7 +444,7 @@ export const EmptyDetailItem = ({ onComplete, appId, type, targetUserId }: {
         }}>
             <FormattedMessage id={getTitleByType()}/>
         </div>
-        <RegisterOMPASSAuthModal radiusApplicationId={appId} opened={authView} onCancel={() => {
+        <RegisterOMPASSAuthModal applicationId={appId} opened={authView} onCancel={() => {
             setAuthView(false)
         }} successCallback={token => {
             message.success(formatMessage({ id: getSuccessMessageByType() }))

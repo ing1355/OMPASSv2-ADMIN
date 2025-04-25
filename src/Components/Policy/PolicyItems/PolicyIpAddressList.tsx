@@ -4,12 +4,11 @@ import { policyNoticeRestrictionTypes } from "Constants/ConstantValues"
 import { FormattedMessage, useIntl } from "react-intl"
 import { useEffect, useRef, useState } from "react"
 import { cidrRegex, ipAddressRegex } from "Components/CommonCustomComponents/CommonRegex";
-import ipInfoIcon from '../../../assets/ipInfoIcon.png'
 import Input from "Components/CommonCustomComponents/Input"
 import Button from "Components/CommonCustomComponents/Button"
-import deleteIcon from '../../../assets/deleteIcon.png'
-import deleteIconHover from '../../../assets/deleteIconHover.png'
-import addIconWhite from '../../../assets/addIconWhite.png'
+import deleteIcon from '@assets/deleteIcon.png'
+import deleteIconHover from '@assets/deleteIconHover.png'
+import addIconWhite from '@assets/addIconWhite.png'
 import './PolicyIpAddressList.css'
 import { isValidIpRange } from "Functions/GlobalFunctions"
 

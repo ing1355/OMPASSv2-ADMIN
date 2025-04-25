@@ -2,9 +2,9 @@ import Button from "Components/CommonCustomComponents/Button"
 import './AccountRecovery.css'
 import { useNavigate } from "react-router"
 import { FormattedMessage } from "react-intl"
-import userIcon from '../../assets/groupUserIcon.png'
-import accountRecoveryLockIcon from '../../assets/accountRecoveryLockIcon.png'
-import accountRecoveryPasswordIcon from '../../assets/accountRecoveryPasswordIcon.png'
+import userIcon from '@assets/groupUserIcon.png'
+import accountRecoveryLockIcon from '@assets/accountRecoveryLockIcon.png'
+import accountRecoveryPasswordIcon from '@assets/accountRecoveryPasswordIcon.png'
 
 const AccountRecoveryRowItem = ({ icon, title, path }: {
     icon: string

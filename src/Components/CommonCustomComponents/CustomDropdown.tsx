@@ -5,7 +5,7 @@ import { convertLangToIntlVer } from 'Constants/ConstantValues'
 import Locale from 'Locale'
 import { useSelector } from 'react-redux'
 import { createRoot } from 'react-dom/client'
-import checkIcon from '../../assets/checkIcon.png'
+import checkIcon from '@assets/checkIcon.png'
 
 type CustomDropdownProps = PropsWithChildren<{
     items?: {

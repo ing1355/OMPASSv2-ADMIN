@@ -1,10 +1,10 @@
 import './CustomImageUpload.css'
-import uploadIcon from '../../assets/uploadIcon.png'
-import uploadIconHover from '../../assets/uploadIconHover.png'
+import uploadIcon from '@assets/uploadIcon.png'
+import uploadIconHover from '@assets/uploadIconHover.png'
 import { message, Upload } from 'antd'
 import Button from 'Components/CommonCustomComponents/Button'
 import { useState } from 'react'
-import deleteIcon from '../../assets/deleteIconRed.png';
+import deleteIcon from '@assets/deleteIconRed.png';
 import { ompassDefaultLogoImage } from 'Constants/ConstantValues'
 import { FormattedMessage, useIntl } from 'react-intl'
 

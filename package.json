@@ -1,6 +1,6 @@
 {
   "name": "ompass_rp_admin",
-  "version": "2.0.0(120)",
+  "version": "2.0.0(125)",
   "proxy": "https://ompass.kr:54006",
   "private": true,
   "dependencies": {
@@ -84,6 +84,7 @@
     ]
   },
   "devDependencies": {
+    "@craco/craco": "^7.1.0",
     "@types/google.maps": "^3.55.12",
     "@types/react-copy-to-clipboard": "^5.0.7",
     "@types/react-router": "^5.1.20",

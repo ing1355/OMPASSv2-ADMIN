@@ -1,10 +1,9 @@
 import QRCode from "Components/CommonCustomComponents/QRCode"
 import { DEEP_LINK_DOMAIN, getOMPASSAuthIconByProgressStatus } from "Constants/ConstantValues"
-import { convertTimeFormat } from "Functions/GlobalFunctions"
 import useFullName from "hooks/useFullName"
 import { useState } from "react"
 import { FormattedMessage } from "react-intl"
-import QRIcon from '../../assets/qrIcon.png'
+import QRIcon from '@assets/qrIcon.png'
 import CustomLoading from "Components/CommonCustomComponents/CustomLoading"
 
 type OMPASSAuthContentsProps = {

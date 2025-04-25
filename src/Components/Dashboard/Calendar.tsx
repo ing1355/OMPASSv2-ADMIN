@@ -4,10 +4,10 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { useState } from 'react';
 import { addDays, addMonths, addYears, differenceInDays, endOfMonth, format, isBefore, isSameDay, isSameMonth, isSaturday, isSunday, isWithinInterval, setHours, setMinutes, setSeconds, startOfMonth, subDays, subMonths, subYears } from 'date-fns';
 import { message } from 'antd';
-import leftArrowIcon from '../../assets/leftArrowIcon2.png';
-import rightArrowIcon from '../../assets/rightArrowIcon2.png';
-import doubleLeftArrowIcon from '../../assets/doubleLeftArrowIcon2.png';
-import doubleRightArrowIcon from '../../assets/doubleRightArrowIcon2.png';
+import leftArrowIcon from '@assets/leftArrowIcon2.png';
+import rightArrowIcon from '@assets/rightArrowIcon2.png';
+import doubleLeftArrowIcon from '@assets/doubleLeftArrowIcon2.png';
+import doubleRightArrowIcon from '@assets/doubleRightArrowIcon2.png';
 
 const DAY_LIST = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
 const dateFormat = 'yyyy-MM-dd'

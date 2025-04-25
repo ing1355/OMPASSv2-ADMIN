@@ -61,20 +61,24 @@ type OSInfoType = {
 
 type ClientTypeType = "OMPASS_APP" | "OMPASS_APP_SESSION_INIT" | "OMPASS_APP_SESSION_REFRESH" | "OMPASS_APP_REG" | "OMPASS_APP_AUTH" | "BROWSER" | "DESKTOP_APP" | "WINDOWS_LOGIN" | "OMPASS_PROXY" | "LINUX_LOGIN" | "PORTAL_ENHANCED_AUTH"
 
-type LoginDeviceInfoDataType = {
+type LoginDeviceInfoDataParamsType = {
+    clientType?: ClientTypeType
     os?: OSInfoType
-    ip?: string
     id?: string
+    ip?: string
+    name?: string
+    macAddress?: string
     browser?: string
     location?: string
-    name?: string
-    craetedAt: string
-    macAddress?: string
     agentVersion?: string
     packageVersion?: string
-    updatedAt: string
-    lastLoginTime: string
 }
+
+type LoginDeviceInfoDataType = LoginDeviceInfoDataParamsType & {
+    craetedAt: string
+    updatedAt: string
+}
+
 type ServerMetaDataType = {
     os?: OSInfoType
     id?: string
@@ -742,19 +746,27 @@ type PolicyItemsPropsType<T> = {
     authenticators?: PolicyDataType['enableAuthenticators']
 }
 
-type OMPASSAuthStartParamsType = {
+type DefaultEtcAuthenticationParamsType = {
     isTest?: boolean
     purpose: AuthPurposeForApiType
-    targetUserId?: string
     applicationId?: ApplicationDataType['id']
-    loginDeviceInfo: {
-        os: {
-            name: string,
-            version: string
-        },
-        browser: string,
-        ip: string
-    }
+    targetUserId?: string
+    loginDeviceInfo: LoginDeviceInfoDataParamsType
+}
+
+type OMPASSAuthStartParamsType = DefaultEtcAuthenticationParamsType
+
+type OMPASSRoleSwappingParamsType = DefaultEtcAuthenticationParamsType
+
+type RPPrimaryAuthParamsType = {
+    applicationId: ApplicationDataType['id']
+    username: string
+    password: string
+}
+
+type DirectoryServerBasedOMPASSRegistrationParamsType = {
+    primaryAuthToken: string
+    loginDeviceInfo: LoginDeviceInfoDataParamsType
 }
 
 type ClientInfoType = {
@@ -777,15 +789,28 @@ type OMPASSAuthResultDataType = {
 
 type OMPASSAuthStatusType = 'ready' | 'progress' | 'complete'
 
-type OMPASSAuthStartResponseDataType = {
-    ntp: string
+type DefaultEtcAuthenticationResponseDataType = {
     url: string
+    sessionId?: string
     pollingKey: string
     sourceNonce?: string
     targetNonce?: string
-    sessionId?: string
     sessionExpiredAt: string
+    ntp: string
 }
+
+type OMPASSDeviceChangeResponseDataType = DefaultEtcAuthenticationResponseDataType
+
+type OMPASSAuthStartResponseDataType = DefaultEtcAuthenticationResponseDataType
+
+type OMPASSRoleSwappingResponseDataType = DefaultEtcAuthenticationResponseDataType
+
+type RPPrimaryAuthResponseDataType = {
+    isSuccess: boolean
+    primaryAuthToken: string
+}
+
+type DirectoryServerBasedOMPASSRegistrationResponseDataType = DefaultEtcAuthenticationResponseDataType
 
 type QRDataType<T> = {
     type: "DEFAULT" | 'DEVICE_CHANGE'
@@ -844,6 +869,13 @@ type ExternalDirectoryListParamsType = GeneralParamsType & {
 
 type ExternalDirectoryType = "MICROSOFT_ENTRA_ID" | "OPEN_LDAP" | "ACTIVE_DIRECTORY"
 
+type ExternalDirectoryIntegrationPurposeType = "PORTAL_USER" | "RP_USER"
+
+type ExternalDirectoryServerListType = {
+    address: string
+    port: number
+}
+
 type ExternalDirectoryDataType = {
     id: string
     type: ExternalDirectoryType
@@ -851,7 +883,8 @@ type ExternalDirectoryDataType = {
     description?: string
     secretKey: string
     apiServerHost: string
-    proxyServer: ProxyServerDataType
+    integrationPurpose: ExternalDirectoryIntegrationPurposeType
+    directoryServers: ExternalDirectoryServerListType[]
     baseDn?: string
     ldapAuthenticationType?: LdapAuthenticationType
     ldapTransportType?: LdapTransportType
@@ -862,11 +895,32 @@ type ExternalDirectoryDataType = {
     isAuthorized?: boolean
 }
 
-type ExternalDirectoryParamsType = {
+// type ExternalDirectoryParamsType = {
+//     type: ExternalDirectoryType
+//     name: string
+//     description?: string
+//     proxyServer: ProxyServerDataType
+//     baseDn: string
+//     ldapAuthenticationType: LdapAuthenticationType
+//     ldapTransportType: LdapTransportType
+// }
+type ExternalDirectoryLocalParamsType = {
     type: ExternalDirectoryType
+    integrationPurpose: ExternalDirectoryIntegrationPurposeType
     name: string
     description?: string
-    proxyServer: ProxyServerDataType
+    directoryServers: ExternalDirectoryServerDataType[]
+    baseDn: string
+    ldapAuthenticationType: LdapAuthenticationType
+    ldapTransportType: LdapTransportType
+}
+
+type ExternalDirectoryServerParamsType = {
+    type: ExternalDirectoryType
+    integrationPurpose: ExternalDirectoryIntegrationPurposeType
+    name: string
+    description?: string
+    directoryServers: ExternalDirectoryServerListType[]
     baseDn: string
     ldapAuthenticationType: LdapAuthenticationType
     ldapTransportType: LdapTransportType
@@ -879,6 +933,19 @@ type ExternalDirectoryUserDataType = {
     phone: string
     org: string
     syncedUserStatus: string
+}
+
+type ExternalDirectoryCheckConnectionParamsType = {
+    id: ExternalDirectoryDataType['id']
+    baseDn: ExternalDirectoryDataType['baseDn']
+    directoryServers: ExternalDirectoryServerDataType['directoryServer'][]
+    ldapAuthenticationType: LdapAuthenticationType
+    ldapTransportType: LdapTransportType
+}
+
+type ExternalDirectoryServerDataType = {
+    directoryServer: ExternalDirectoryServerListType
+    isConnected: boolean
 }
 
 type UploadFileTypes = "APPLICATION_LOGO_IMAGE" | "PORTAL_SETTING_LOGO_IMAGE" | "WINDOWS_AGENT" | "LINUX_PAM" | "OMPASS_PROXY" | "FIDO_AGENT" | "APK" | "CSV" | "REDMINE_PLUGIN" | "KEYCLOAK_PLUGIN"

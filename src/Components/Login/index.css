@@ -180,11 +180,11 @@
 } */
 
 .login-input.username {
-  background-image: url(../../assets/login_id.png) !important;
+  background-image: url('@assets/login_id.png') !important;
 }
 
 .login-input.password {
-  background-image: url(../../assets/login_password.png);
+  background-image: url('@assets/login_password.png');
 }
 
 .login-button {
@@ -381,6 +381,8 @@
   }
 }
 
-@media (max-width:479px) {
-  /* 모바일 세로 */
+@media (max-width:375px) {
+  .login-agent-download-button {
+    font-size: 8.5px;
+  }
 }

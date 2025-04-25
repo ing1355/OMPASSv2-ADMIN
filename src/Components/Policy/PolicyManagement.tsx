@@ -5,8 +5,8 @@ import { useState } from "react"
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import { useNavigate } from "react-router"
 import { GetPoliciesListFunc } from "Functions/ApiFunctions"
-import policyAddIcon from '../../assets/policyAddIcon.png'
-import policyAddIconHover from '../../assets/policyAddIconHover.png'
+import policyAddIcon from '@assets/policyAddIcon.png'
+import policyAddIconHover from '@assets/policyAddIconHover.png'
 import { FormattedMessage, useIntl } from "react-intl"
 import { applicationTypes } from "Constants/ConstantValues"
 

@@ -1,5 +1,5 @@
 import { useRef } from "react"
-import uploadIcon from '../../assets/uploadIcon.png'
+import uploadIcon from '@assets/uploadIcon.png'
 import './CustomUpload.css'
 import { FormattedMessage, useIntl } from "react-intl"
 import { message } from "antd"

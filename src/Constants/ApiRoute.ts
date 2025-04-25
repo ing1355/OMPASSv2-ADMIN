@@ -29,7 +29,7 @@ export const AddApplicationListApi = '/v2/applications'
 export const UpdateApplicationListApi = (applicationId: ApplicationDataType['id']) => `/v2/applications/${applicationId}`
 export const DeleteApplicationListApi = (applicationId: ApplicationDataType['id']) => `/v2/applications/${applicationId}`
 export const UpdateApplicationSecretkeyApi = (applicationId: ApplicationDataType['id']) => `/v2/applications/${applicationId}/reissuance`
-export const GetAuthorizeMSEntraUriApi = (applicationId: ApplicationDataType['id']) => `/v2/applications/ms-entra-id/${applicationId}/authorize`
+export const GetAuthorizeMSEntraUriApi = (applicationId: ApplicationDataType['id']) => `/v2/applications/${applicationId}/ms/oauth2/url`
 
 // 정책 관리
 export const GetPoliciesListApi = '/v2/policies'
@@ -102,16 +102,22 @@ export const ValidateRecoveryMailApi = '/v2/recovery-account/verification'
 export const FindPortalUsernameApi = '/v2/username'
 
 // 인증 모듈
-export const OMPASSAuthStartApi = '/v2/enhanced-authentication'
-export const GetOMPASSAuthResultApi = (type: string, pollingKey: string) => `/v2/enhanced-authentication/type/${type}/polling-key/${pollingKey}`
+export const OMPASSAuthApi = '/v2/etc/enhanced-authentication'
+export const GetOMPASSAuthResultApi = (type: string, pollingKey: string) => `/v2/etc/type/${type}/polling-key/${pollingKey}`
+export const OMPASSRoleSwappingApi = '/v2/etc/role-swapping'
+export const OMPASSDeviceChangeApi = '/v2/etc/device-change'
+export const RPPrimaryAuthApi = '/v2/etc/rp/directory-server-based/verify-primary'
+export const DirectoryServerBasedOMPASSRegistrationApi = '/v2/etc/rp/directory-server-based/registration'
 
 // 외부 디렉토리 동기화
 export const GetExternalDirectoryListApi = '/v2/external-directories'
 export const AddExternalDirectoryApi = '/v2/external-directories'
 export const UpdateExternalDirectoryApi = (id: ExternalDirectoryDataType['id']) => `/v2/external-directories/id/${id}`
 export const DeleteExternalDirectoryApi = (id: ExternalDirectoryDataType['id']) => `/v2/external-directories/id/${id}`
-export const SyncExternalDirectoryApi = '/v2/external-directories/sync'
+export const SyncExternalDirectoryPortalUsersApi = '/v2/external-directories/portal-users/sync'
+export const SyncExternalDirectoryRpUsersApi = '/v2/external-directories/rp-users/sync'
 export const GetMicrosoftEntraIdAuthApi = (id: ExternalDirectoryDataType['id']) => `/v2/external-directories/${id}/ms/oauth2/url`
+export const CheckExternalDirectoryConnectionApi = `/v2/external-directories/test-connection`
 
 // RADIUS
 export const AddRadiusUserListApi = '/v2/radius-rp-users'

@@ -8,7 +8,7 @@ import ContentsHeader from 'Components/Layout/ContentsHeader';
 import { PatchSessionTokenFunc, UploadAgentInstallerFunc } from 'Functions/ApiFunctions';
 import Button from 'Components/CommonCustomComponents/Button';
 import Input from 'Components/CommonCustomComponents/Input';
-import uploadIconHover from '../../assets/uploadIconHover.png'
+import uploadIconHover from '@assets/uploadIconHover.png'
 import { useDispatch, useSelector } from 'react-redux';
 import CustomModal from 'Components/Modal/CustomModal';
 import { userInfoChange } from 'Redux/actions/userChange';

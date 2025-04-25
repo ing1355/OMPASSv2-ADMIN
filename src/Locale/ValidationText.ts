@@ -42,7 +42,12 @@ const ValidationText = {
         UPLOAD_NEED_UNDER_10_MB_FILE: '10MB 미만의 파일만 업로드 가능합니다.',
         IP_ADDRESS_POLICY_INPUT: 'IP 주소 형식(AAA.BBB.CCC.DDD) 혹은 CIDR 형식(AAA.BBB.0.0/24)을 입력해야 합니다.',
         PLEASE_INPUT_CORRECT_IP_ADDRESS: '올바른 IP 주소 형식을 입력해야 합니다.',
-        PAM_DATA_IP_ADDRESS_INPUT: 'IP 주소 형식(AAA.BBB.CCC.DDD)을 입력해야 합니다.'
+        PAM_DATA_IP_ADDRESS_INPUT: 'IP 주소 형식(AAA.BBB.CCC.DDD)을 입력해야 합니다.',
+        PLEASE_INPUT_DOMAIN_OR_IP_ADDRESS: '도메인 혹은 IP 주소를 입력해야 합니다.',
+        PLEASE_INPUT_BASE_DN: 'Base DN을 입력해야 합니다.',
+        PLEASE_INPUT_EXTERNAL_DIRECTORY_NAME: '이름을 입력해야 합니다.',
+        PLEASE_INPUT_NTLM_DOMAIN: 'NTLM Domain을 입력해야 합니다.',
+        PLEASE_INPUT_NTLM_WORKSTATION: 'NTLM Workstation을 입력해야 합니다.'
     },
     'EN': {
         USERNAME_CHECK: 'Only lowercase letters and numbers are allowed, with a length of 4 to 16 characters',
@@ -87,7 +92,12 @@ const ValidationText = {
         UPLOAD_NEED_UNDER_10_MB_FILE: 'Only files smaller than 10MB can be uploaded',
         IP_ADDRESS_POLICY_INPUT: 'You must enter the IP address format (AAA.BBB.CCC.DDD) or CIDR format (AAA.BBB.0.0/24)',
         PLEASE_INPUT_CORRECT_IP_ADDRESS: 'You must enter the correct IP address format.',
-        PAM_DATA_IP_ADDRESS_INPUT: 'You must enter the IP address format (AAA.BBB.CCC.DDD)'
+        PAM_DATA_IP_ADDRESS_INPUT: 'You must enter the IP address format (AAA.BBB.CCC.DDD)',
+        PLEASE_INPUT_DOMAIN_OR_IP_ADDRESS: 'You must enter a domain or IP address',
+        PLEASE_INPUT_BASE_DN: 'You must enter a Base DN',
+        PLEASE_INPUT_EXTERNAL_DIRECTORY_NAME: 'You must enter a name',
+        PLEASE_INPUT_NTLM_DOMAIN: 'You must enter a NTLM Domain',
+        PLEASE_INPUT_NTLM_WORKSTATION: 'You must enter a NTLM Workstation'
     }
 }
 

@@ -5,7 +5,7 @@ import CustomLoading from "Components/CommonCustomComponents/CustomLoading"
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import CustomModal from "Components/Modal/CustomModal"
 import { userSelectPageSize } from "Constants/ConstantValues"
-import { AddUserWithCsvDataFunc, GetMicrosoftEntraIdAuthFunc, SyncExternalDirectoryFunc } from "Functions/ApiFunctions"
+import { AddUserWithCsvDataFunc, GetMicrosoftEntraIdAuthFunc, SyncExternalDirectoryPortalUsersFunc } from "Functions/ApiFunctions"
 import useFullName from "hooks/useFullName"
 import { useMemo, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
@@ -36,7 +36,7 @@ const ExternalDirectorySyncButton = ({ data, type }: ExternalDirectorySyncButton
             marginTop: '48px'
         }} buttons={<>
             {
-                type === 'MICROSOFT_ENTRA_ID' && <Button className="st3" onClick={() => {
+                type === 'MICROSOFT_ENTRA_ID' && !data?.isAuthorized && <Button className="st3" onClick={() => {
                     if (data?.id) {
                         GetMicrosoftEntraIdAuthFunc(data.id, res => {
                             window.open(res.redirectUri, '_blank')
@@ -47,10 +47,10 @@ const ExternalDirectorySyncButton = ({ data, type }: ExternalDirectorySyncButton
                 </Button>
             }
             <Button className="st3" disabled={type === 'MICROSOFT_ENTRA_ID' && !data?.isAuthorized} onClick={() => {
-                message.info(formatMessage({ id: 'USER_ADD_EXTERNAL_DIRECTORY_USER_LOAD_SUCCESS_MSG' }, { type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }))
                 setDataLoading(true)
                 if (data?.id) {
-                    SyncExternalDirectoryFunc(data.id, res => {
+                    SyncExternalDirectoryPortalUsersFunc(data.id, res => {
+                        message.info(formatMessage({ id: 'USER_ADD_EXTERNAL_DIRECTORY_USER_LOAD_SUCCESS_MSG' }, { type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }))
                         console.log(res)
                         setSyncDatas(res)
                     }).finally(() => {

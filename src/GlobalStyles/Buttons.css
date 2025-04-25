@@ -28,7 +28,7 @@
 
 .custom-button[data-loading=true]::after {
     content: "";
-    background-image: url("/src/assets/loading.png");
+    background-image: url("@assets/loading.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;

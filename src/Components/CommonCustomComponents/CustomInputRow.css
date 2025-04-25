@@ -69,3 +69,7 @@
     flex: 0 0 80%;
     display: inline-flex;
 }
+
+.custom-detail-contents *[data-hidden=true] {
+    display: none;
+}

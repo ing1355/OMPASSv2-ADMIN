@@ -4,12 +4,10 @@ import { getApplicationTypeLabel } from "Constants/ConstantValues"
 import useFullName from "hooks/useFullName"
 import { createOSInfo } from "Functions/GlobalFunctions"
 import { useSelector } from "react-redux"
-import { APIProvider, Map, MapControl, ControlPosition, AdvancedMarker, useMap } from '@vis.gl/react-google-maps';
+import { AdvancedMarker } from '@vis.gl/react-google-maps';
 import { useEffect, Fragment, useRef } from "react"
-import { message } from "antd"
-import locationIcon from '../../assets/locationIcon.png'
-import locationValidIcon from '../../assets/locationValidIcon.png'
-import locationInvalidIcon from '../../assets/locationInvalidIcon.png'
+import locationValidIcon from '@assets/locationValidIcon.png'
+import locationInvalidIcon from '@assets/locationInvalidIcon.png'
 import { Circle } from "Components/Policy/PolicyItems/GoogleCircle"
 import './AuthLogDetailModal.css'
 import CustomMap from "Components/Layout/CustomMap"

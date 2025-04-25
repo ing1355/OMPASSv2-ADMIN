@@ -87,7 +87,7 @@
 }
 
 .custom-transfer-user-search:focus {
-    background-image: url('../../assets/groupSeaerchIconColor.png');
+    background-image: url('@assets/groupSeaerchIconColor.png');
     border-color: var(--main-purple-color);
 }
 
@@ -95,7 +95,7 @@
     border-style: solid;
     border-width: 1px;
     border-radius: 6px;
-    background-image: url('../../assets/groupSeaerchIcon.png');
+    background-image: url('@assets/groupSeaerchIcon.png');
     background-repeat: no-repeat;
     background-size: 20px 20px;
     background-position: right 8px center;

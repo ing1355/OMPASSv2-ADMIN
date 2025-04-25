@@ -11,9 +11,10 @@ const useCustomRoute = () => {
     const hasParams = Object.keys(params).length > 1
     const isParamsEnd = Object.values(params).some(_ => splitPathname[splitPathname.length - 1] === _)
     const goBack = () => {
-        navigate(location.pathname.split('/').slice(0, (hasParams && isParamsEnd) ? -2 : -1).join('/') || '/Main', {
-            replace: true
-        })
+        navigate(-1)
+        // navigate(location.pathname.split('/').slice(0, (hasParams && isParamsEnd) ? -2 : -1).join('/') || '/Main', {
+        //     replace: true
+        // })
     }
     const customPushRoute = (queryParams: {
         [key: string]: any

@@ -1,5 +1,5 @@
 import Button from "Components/CommonCustomComponents/Button"
-import downloadIcon from '../../assets/downloadIcon.png';
+import downloadIcon from '@assets/downloadIcon.png';
 import { FormattedMessage, useIntl } from "react-intl";
 import { useSelector } from "react-redux";
 import { message } from "antd";

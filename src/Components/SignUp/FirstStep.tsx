@@ -2,7 +2,7 @@ import Button from "Components/CommonCustomComponents/Button";
 import Input from "Components/CommonCustomComponents/Input";
 import { PropsWithChildren, useState } from "react";
 import { FormattedMessage } from "react-intl";
-import RefundImg from '../../assets/refunded_img.png';
+import RefundImg from '@assets/refunded_img.png';
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 

@@ -160,11 +160,6 @@
     background-color: var(--dashboard-purple-color2);
     color: white;
     font-weight: bold;
-    /* padding-left: 30px;
-    background-image: url('../../assets/dashboardCheckIcon.png');
-    background-position: 10px 50%;
-    background-size: 14px 14px;
-    background-repeat: no-repeat; */
 }
 
 .dashboard-middle-container {

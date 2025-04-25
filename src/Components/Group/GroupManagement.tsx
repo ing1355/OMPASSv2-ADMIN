@@ -5,8 +5,8 @@ import { useState } from "react"
 import { useNavigate } from "react-router"
 import { GetUserGroupDataListFunc } from "Functions/ApiFunctions"
 import { FormattedMessage } from "react-intl"
-import groupAddIcon from './../../assets/groupAddIcon.png'
-import groupAddIconHover from './../../assets/groupAddIconHover.png'
+import groupAddIcon from '@assets/groupAddIcon.png'
+import groupAddIconHover from '@assets/groupAddIconHover.png'
 
 const GroupManagement = () => {
     const [totalCount, setTotalCount] = useState(10);

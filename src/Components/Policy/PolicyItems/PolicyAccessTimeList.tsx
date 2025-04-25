@@ -4,9 +4,9 @@ import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import Input from "Components/CommonCustomComponents/Input"
 import { policyNoticeRestrictionTypes, timeZoneNames } from "Constants/ConstantValues"
 import { FormattedMessage, useIntl } from "react-intl"
-import deleteIcon from '../../../assets/deleteIcon.png'
-import deleteIconHover from '../../../assets/deleteIconHover.png'
-import addIconWhite from '../../../assets/addIconWhite.png'
+import deleteIcon from '@assets/deleteIcon.png'
+import deleteIconHover from '@assets/deleteIconHover.png'
+import addIconWhite from '@assets/addIconWhite.png'
 import { useEffect, useState } from "react"
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect"
 import dayjs from "dayjs"

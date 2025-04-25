@@ -12,6 +12,7 @@ type CustomInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
     containerClassName?: string
     zeroOk?: boolean
     nonZero?: boolean
+    title?: string | React.ReactNode
     customType?: CustomType
     noGap?: boolean
     suffix?: string
@@ -34,7 +35,7 @@ const HasLabel = ({ children, label }: {
 </>}
     </div>
 
-const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyNumber, label, value, containerClassName, onInput, customType, rules, maxLength, required, className, noGap, type, suffix, style, sliceNum, ...props }: CustomInputProps, ref) => {
+const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyNumber, label, value, containerClassName, onInput, customType, rules, maxLength, required, className, noGap, type, suffix, style, sliceNum, title, ...props }: CustomInputProps, ref) => {
     const [isAlert, _setIsAlert] = useState(false)
     const [alertMsg, setAlertMsg] = useState<string | React.ReactNode>('')
     const isAlertRef = useRef(isAlert)
@@ -114,6 +115,7 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
 
     return <>
         <div className={`custom-input-wrapper${containerClassName ? (' ' + containerClassName) : ''}${(customType || rules) ? ' has-alert' : ''}`}>
+            {title && <div className="custom-input-title">{title}</div>}
             <HasLabel label={label}>
                 <div>
                     {

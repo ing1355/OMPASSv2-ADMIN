@@ -6,8 +6,8 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { useNavigate, useParams } from "react-router"
 import { message } from "antd";
 import { AddPoliciesListFunc, DeletePoliciesListFunc, GetPolicyDetailDataFunc, UpdatePoliciesListFunc } from "Functions/ApiFunctions";
-import resetIcon from '../../assets/resetIcon.png'
-import resetIconWhite from '../../assets/resetIconWhite.png'
+import resetIcon from '@assets/resetIcon.png'
+import resetIconWhite from '@assets/resetIconWhite.png'
 import Button from "Components/CommonCustomComponents/Button";
 import Input from "Components/CommonCustomComponents/Input";
 import { applicationTypes, getApplicationTypeLabel, PolicyBrowsersList } from "Constants/ConstantValues";

@@ -1,39 +1,43 @@
 import Button from "Components/CommonCustomComponents/Button";
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow";
 import Input from "Components/CommonCustomComponents/Input";
-import downloadIcon from '../../../assets/downloadIcon.png';
+import downloadIcon from '@assets/downloadIcon.png';
 import Contents from "Components/Layout/Contents";
 import ContentsHeader from "Components/Layout/ContentsHeader";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { LDAPAuthenticationTypes, LDAPTransportTypes } from "Constants/ConstantValues";
 import { message } from "antd";
 import { useNavigate, useParams } from "react-router";
 import BottomLineText from "Components/CommonCustomComponents/BottomLineText";
-import deleteIcon from '../../../assets/deleteIcon.png'
-import deleteIconHover from '../../../assets/deleteIconHover.png'
+import deleteIcon from '@assets/deleteIcon.png'
+import deleteIconHover from '@assets/deleteIconHover.png'
 import ExternalDirectorySyncButton from "./ExternalDirectorySyncButton";
-import CopyToClipboard from "react-copy-to-clipboard";
 import { useSelector } from "react-redux";
 import { downloadFileByLink } from "Functions/GlobalFunctions";
+import loadingIcon2 from '@assets/loading2.png'
 import './ExternalDirectory.css'
 import { GetExternalDirectoryListFunc, AddExternalDirectoryFunc, UpdateExternalDirectoryFunc, DeleteExternalDirectoryFunc } from "Functions/ApiFunctions";
-import { ExternalDirectoryTypeLabel } from "./ExternalDirectoryContstants";
+import { externalDirectoryImgByConnectionStatus, ExternalDirectoryTypeLabel } from "./ExternalDirectoryContstants";
 
 const ExternalDirectoryDetail = () => {
     const type = useParams().type as ExternalDirectoryType
     const detailId = useParams().id;
     const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
+    const [loading, setLoading] = useState(false)
     const [dataLoading, setDataLoading] = useState(false)
     const [data, setData] = useState<ExternalDirectoryDataType>()
-    const [params, setParams] = useState<ExternalDirectoryParamsType>({
+    const [params, setParams] = useState<ExternalDirectoryLocalParamsType>({
         type,
         name: '',
         description: '',
-        proxyServer: {
-            address: '',
-            port: 0
-        },
+        integrationPurpose: 'PORTAL_USER',
+        directoryServers: [{
+            directoryServer: {
+                address: '',
+                port: 0
+            },
+            isConnected: false
+        }],
         baseDn: '',
         ldapAuthenticationType: {
             type: 'PLAIN',
@@ -46,12 +50,6 @@ const ExternalDirectoryDetail = () => {
     const navigate = useNavigate()
     const { formatMessage } = useIntl()
     const isMSEntraId = type === 'MICROSOFT_ENTRA_ID'
-
-    const filteredAuthenticationTypes = () => {
-        if (type === 'OPEN_LDAP') {
-            return LDAPAuthenticationTypes.filter(_ => _ == 'PLAIN')
-        } else return LDAPAuthenticationTypes
-    }
 
     const GetDatas = async () => {
         try {
@@ -73,7 +71,7 @@ const ExternalDirectoryDetail = () => {
         if (detailId) {
             GetDatas()
         }
-    }, [])
+    }, [detailId])
 
     useEffect(() => {
         if (data) {
@@ -81,7 +79,20 @@ const ExternalDirectoryDetail = () => {
                 type,
                 name: data.name,
                 description: data.description,
-                proxyServer: data.proxyServer,
+                integrationPurpose: data.integrationPurpose,
+                directoryServers: data.directoryServers && data.directoryServers.length > 0 ? data.directoryServers.map(server => ({
+                    directoryServer: {
+                        address: server.address,
+                        port: server.port
+                    },
+                    isConnected: false
+                })) : [{
+                    directoryServer: {
+                        address: '',
+                        port: 0
+                    },
+                    isConnected: false
+                }],
                 baseDn: data.baseDn ?? '',
                 ldapAuthenticationType: data.ldapAuthenticationType ?? {
                     type: 'PLAIN',
@@ -92,6 +103,28 @@ const ExternalDirectoryDetail = () => {
             })
         }
     }, [data])
+
+    const submitExternalDirectoryInfo = () => {
+        if (!params.name) {
+            return message.error(formatMessage({ id: 'PLEASE_INPUT_EXTERNAL_DIRECTORY_NAME' }))
+        }
+        // if(type !== 'MICROSOFT_ENTRA_ID' && !params.baseDn && detailId) {
+        //     return message.error(formatMessage({ id: 'PLEASE_INPUT_BASE_DN' }))
+        // }
+        if (detailId) {
+            UpdateExternalDirectoryFunc(detailId, { ...params, directoryServers: params.directoryServers.map(_ => _.directoryServer) }, (newData) => {
+                message.success(formatMessage({ id: "USER_ADD_EXTERNAL_DIRECTORY_MODIFY_SUCCESS_MSG" }, { type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }))
+                setData(newData)
+            })
+        } else {
+            AddExternalDirectoryFunc({ ...params, directoryServers: params.directoryServers.map(_ => _.directoryServer) }, (newData) => {
+                message.success(formatMessage({ id: "USER_ADD_EXTERNAL_DIRECTORY_ADD_SUCCESS_MSG" }, { type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }))
+                navigate(`/UserManagement/externalDirectory/${type}/detail/${newData.id}${type === 'MICROSOFT_ENTRA_ID' ? '' : '/edit'}`, {
+                    replace: true
+                })
+            })
+        }
+    }
 
     return <Contents loading={dataLoading}>
         <ContentsHeader subTitle={<div style={{
@@ -115,17 +148,7 @@ const ExternalDirectoryDetail = () => {
             </div>}
         </div>}>
             <Button className="st3" onClick={() => {
-                if (detailId) {
-                    UpdateExternalDirectoryFunc(detailId, params, (newData) => {
-                        message.success(formatMessage({ id: "USER_ADD_EXTERNAL_DIRECTORY_MODIFY_SUCCESS_MSG" }, { type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }))
-                        setData(newData)
-                    })
-                } else {
-                    AddExternalDirectoryFunc(params, () => {
-                        message.success(formatMessage({ id: "USER_ADD_EXTERNAL_DIRECTORY_ADD_SUCCESS_MSG" }, { type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }))
-                        navigate(-1)
-                    })
-                }
+                submitExternalDirectoryInfo()
             }}>
                 <FormattedMessage id={"SAVE"} />
             </Button>
@@ -139,37 +162,26 @@ const ExternalDirectoryDetail = () => {
             </Button>}
         </ContentsHeader>
         <div className="contents-header-container">
-            {detailId && <BottomLineText title={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_DETAIL_INFO_LABEL" values={{ type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }} />} />}
-            {data?.apiServerHost && type !== 'MICROSOFT_ENTRA_ID' && <CustomInputRow title={<FormattedMessage id="API_SERVER_ADDRESS_LABEL" />}>
-                <CopyToClipboard text={data?.apiServerHost} onCopy={(value, result) => {
-                    if (result) {
-                        message.success(formatMessage({ id: 'API_SERVER_ADDRESS_COPY_SUCCESS' }))
-                    } else {
-                        message.success(formatMessage({ id: 'API_SERVER_ADDRESS_COPY_FAIL' }))
-                    }
-                }}>
-                    <Input className="st1 secret-key" value={data?.apiServerHost} readOnly />
-                </CopyToClipboard>
-            </CustomInputRow>}
-            {data?.secretKey && type !== 'MICROSOFT_ENTRA_ID' && <CustomInputRow title={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_SECRET_KEY_LABEL" />}>
-                <CopyToClipboard text={data.secretKey} onCopy={(value, result) => {
-                    if (result) {
-                        message.success(formatMessage({ id: 'APPLICATION_SECRET_KEY_COPY_SUCCESS_MSG' }))
-                    } else {
-                        message.success(formatMessage({ id: 'APPLICATION_SECRET_KEY_COPY_FAIL_MSG' }))
-                    }
-                }}>
-                    <Input className="st1 secret-key" value={data.secretKey} readOnly={true} />
-                </CopyToClipboard>
-            </CustomInputRow>}
-            {type === 'MICROSOFT_ENTRA_ID' && <CustomInputRow title={<FormattedMessage id="MS_ENTRA_TENANT_ID_LABEL" />}>
-                <Input className="st1" value={''} valueChange={val => {
+            {detailId && type === 'MICROSOFT_ENTRA_ID' && <>
+                <BottomLineText title={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_DETAIL_INFO_LABEL" values={{ type: formatMessage({ id: ExternalDirectoryTypeLabel['MICROSOFT_ENTRA_ID'] }) }} />} />
+                <CustomInputRow title={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_CONNECTED_LABEL" />}>
+                    <img src={loading ? loadingIcon2 : externalDirectoryImgByConnectionStatus(data?.isConnected ?? false)} className="external-directory-management-connected-icon"/>
+                </CustomInputRow>
+                <CustomInputRow title={<FormattedMessage id="MS_ENTRA_TENANT_ID_LABEL" />}>
+                    <Input className="st1" value={''} valueChange={val => {
 
-                }} placeholder={formatMessage({ id: 'NO_CONNECTED_MSG' })} disabled={true} />
-            </CustomInputRow>}
-            {detailId && <BottomLineText title={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_SETTING_INFO_LABEL" />} style={{
-                marginTop: detailId ? '32px' : 0
-            }} />}
+                    }} placeholder={formatMessage({ id: 'NO_CONNECTED_MSG' })} disabled={true} />
+                </CustomInputRow>
+            </>}
+            <BottomLineText title={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_SETTING_INFO_LABEL" />} style={{
+                marginTop: type === 'MICROSOFT_ENTRA_ID' ? '32px' : 0
+            }} buttons={
+                detailId && type !== 'MICROSOFT_ENTRA_ID' && <Button className="st3" onClick={() => {
+                    navigate(`/UserManagement/externalDirectory/${type}/detail/${detailId}/edit`)
+                }}>
+                    <FormattedMessage id={"USER_ADD_EXTERNAL_DIRECTORY_OPEN_LDAP_SERVER_SETTING_EDIT_LABEL"} />
+                </Button>
+            } />
             <CustomInputRow title={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_NAME_LABEL" />}>
                 <Input className="st1" value={params.name} valueChange={val => {
                     setParams({
@@ -186,68 +198,6 @@ const ExternalDirectoryDetail = () => {
                     })
                 }} />
             </CustomInputRow>
-            {!isMSEntraId && <CustomInputRow title={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_PROXY_ADDRESS_LABEL" />}>
-                <Input className="st1" value={params.proxyServer.address} valueChange={val => {
-                    setParams({
-                        ...params,
-                        proxyServer: {
-                            ...params.proxyServer,
-                            address: val
-                        }
-                    })
-                }} disabled={params.proxyServer.address.length === 0} placeholder={formatMessage({id: 'NO_CONNECTED_MSG'})} readOnly/>
-            </CustomInputRow>}
-            {!isMSEntraId && <CustomInputRow title={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_PROXY_PORT_LABEL" />}>
-                <Input className="st1" value={params.proxyServer.port} valueChange={val => {
-                    setParams({
-                        ...params,
-                        proxyServer: {
-                            ...params.proxyServer,
-                            port: val ? parseInt(val) : 0
-                        }
-                    })
-                }} onlyNumber disabled={params.proxyServer.port === 0} placeholder={formatMessage({id: 'NO_CONNECTED_MSG'})} readOnly/>
-            </CustomInputRow>}
-            {!isMSEntraId && <CustomInputRow title="Base DN">
-                <Input className="st1" value={params.baseDn} valueChange={val => {
-                    setParams({
-                        ...params,
-                        baseDn: val
-                    })
-                }} />
-            </CustomInputRow>}
-            {!isMSEntraId && <CustomInputRow title={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_AUTH_TYPE_LABEL" />}>
-                <div className="external-directory-authentication-type-container">
-                    {
-                        filteredAuthenticationTypes().map((_, ind) => <Input key={ind} className="st1" type="radio" checked={params.ldapAuthenticationType.type === _} onChange={e => {
-                            if (e.target.checked) {
-                                setParams({
-                                    ...params,
-                                    ldapAuthenticationType: {
-                                        type: _,
-                                        ntlmDomain: null,
-                                        ntlmWorkstation: null
-                                    }
-                                })
-                            }
-                        }} label={_} />)
-                    }
-                </div>
-            </CustomInputRow>}
-            {!isMSEntraId && <CustomInputRow title={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_TRANSPORT_TYPE_LABEL" />}>
-                <div className="external-directory-authentication-type-container">
-                    {
-                        LDAPTransportTypes.map((_, ind) => <Input key={ind} className="st1" type="radio" checked={params.ldapTransportType === _} onChange={e => {
-                            if (e.target.checked) {
-                                setParams({
-                                    ...params,
-                                    ldapTransportType: _
-                                })
-                            }
-                        }} label={_} />)
-                    }
-                </div>
-            </CustomInputRow>}
             {detailId && <ExternalDirectorySyncButton data={data} type={type} />}
         </div>
     </Contents>

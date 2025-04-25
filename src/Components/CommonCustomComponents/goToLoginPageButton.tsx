@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
 import { FormattedMessage } from 'react-intl';
-import userManagementMenuIconWhite from '../../assets/userManagementMenuIconWhite.png';
+import userManagementMenuIconWhite from '@assets/userManagementMenuIconWhite.png';
 import Button from './Button';
 
 interface GoToLoginPageButtonProps {

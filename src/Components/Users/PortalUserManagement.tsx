@@ -3,12 +3,12 @@ import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import { INT_MAX_VALUE, userStatusTypes } from "Constants/ConstantValues"
 import { GetUserDataListFunc } from "Functions/ApiFunctions"
 import { FormattedMessage, useIntl } from "react-intl"
-import userAddIcon from './../../assets/userAddIcon.png'
-import userAddIconHover from './../../assets/userAddIconHover.png'
-import rootRoleIcon from './../../assets/rootRoleIcon.png'
-import downloadIcon from './../../assets/downloadIcon.png'
-import downloadIconWhite from './../../assets/downloadIconWhite.png'
-import adminRoleIcon from './../../assets/adminRoleIcon.png'
+import userAddIcon from '@assets/userAddIcon.png'
+import userAddIconHover from '@assets/userAddIconHover.png'
+import rootRoleIcon from '@assets/rootRoleIcon.png'
+import downloadIcon from '@assets/downloadIcon.png'
+import downloadIconWhite from '@assets/downloadIconWhite.png'
+import adminRoleIcon from '@assets/adminRoleIcon.png'
 import { useState } from "react"
 import useFullName from "hooks/useFullName"
 import { useNavigate } from "react-router"

@@ -13,7 +13,7 @@ import Input from "Components/CommonCustomComponents/Input"
 import { useDispatch, useSelector } from "react-redux"
 import { subdomainInfoChange } from "Redux/actions/subdomainInfoChange"
 import { globalDatasChange } from "Redux/actions/globalDatasChange"
-import loginMainImage from '../../assets/loginMainImage.png'
+import loginMainImage from '@assets/loginMainImage.png'
 import CustomImageUpload from "Components/CommonCustomComponents/CustomImageUpload"
 import CustomAdminSelect from "Components/CommonCustomComponents/CustomAdminSelect"
 import { FormattedMessage, useIntl } from "react-intl"

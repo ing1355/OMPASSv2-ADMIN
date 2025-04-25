@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import groupOpenIcon from '../../assets/groupOpenIcon.png'
-import groupOpenedIcon from '../../assets/groupOpenedIcon.png'
-import groupOpenIconHover from '../../assets/groupOpenIconHover.png'
-import groupOpenedIconHover from '../../assets/groupOpenedIconHover.png'
-import groupOpenIconColor from '../../assets/groupOpenIconColor.png'
-import groupOpenedIconColor from '../../assets/groupOpenedIconColor.png'
+import groupOpenIcon from '@assets/groupOpenIcon.png'
+import groupOpenedIcon from '@assets/groupOpenedIcon.png'
+import groupOpenIconHover from '@assets/groupOpenIconHover.png'
+import groupOpenedIconHover from '@assets/groupOpenedIconHover.png'
+import groupOpenIconColor from '@assets/groupOpenIconColor.png'
+import groupOpenedIconColor from '@assets/groupOpenedIconColor.png'
 
 type GroupOpenProps = {
     opened: boolean

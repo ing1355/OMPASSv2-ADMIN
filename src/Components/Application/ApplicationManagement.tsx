@@ -6,21 +6,16 @@ import { GetApplicationListFunc, GetPoliciesListFunc } from "Functions/ApiFuncti
 import { useLayoutEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useNavigate } from "react-router";
-import applicationAddIcon from '../../assets/applicationAddIcon.png'
-import applicationAddIconHover from '../../assets/applicationAddIconHover.png'
+import applicationAddIcon from '@assets/applicationAddIcon.png'
+import applicationAddIconHover from '@assets/applicationAddIconHover.png'
 
 const ApplicationManagement = () => {
     const [tableData, setTableData] = useState<ApplicationListDataType[]>([])
     const [policiesData, setPoliciesData] = useState<PolicyListDataType[]>([])
     const [totalCount, setTotalCount] = useState<number>(0);
     const [dataLoading, setDataLoading] = useState(false)
-    const [hoveredRow, setHoveredRow] = useState<number>(-1)
     const navigate = useNavigate()
     const { formatMessage } = useIntl()
-
-    const handleRowHover = (index: number) => {
-        setHoveredRow(index);
-    };
 
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
@@ -92,12 +87,6 @@ const ApplicationManagement = () => {
                 }}
                 onBodyRowClick={(row, index, arr) => {
                     navigate('/Applications/detail/' + row.id)
-                }}
-                onBodyRowHover={(_, index) => {
-                    handleRowHover(index)
-                }}
-                onBodyRowMouseLeave={() => {
-                    handleRowHover(-1)
                 }}
                 columns={[
                     {

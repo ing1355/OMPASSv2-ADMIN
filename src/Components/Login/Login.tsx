@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { isMobile } from "react-device-detect";
 import { isDev, subDomain } from '../../Constants/ConstantValues';
-import loginMainImage from '../../assets/loginMainImage.png'
+import loginMainImage from '@assets/loginMainImage.png'
 import { useCookies } from 'react-cookie';
 import { LoginFunc, UpdatePasswordFunc, PasswordlessLoginFunc } from 'Functions/ApiFunctions';
 import Button from 'Components/CommonCustomComponents/Button';
@@ -31,7 +31,7 @@ const Login = () => {
   const navigate = useNavigate()
   const { formatMessage } = useIntl()
   const inputChangePasswordRef = useRef<HTMLInputElement>(null)
-  const { noticeMessage, logoImage, userSignupMethod } = subdomainInfo || {}
+  const { noticeMessage, logoImage } = subdomainInfo || {}
 
   useEffect(() => {
     setInputChangePassword('')
@@ -97,10 +97,6 @@ const Login = () => {
   const passwordlessLoginRequest = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { saveId } = e.currentTarget.elements as any
-    if (!inputUsername) {
-      inputUesrnameRef.current?.focus()
-      return message.error(formatMessage({ id: 'PLEASE_INPUT_ID_MSG' }))
-    }
 
     if (needPasswordChange) {
       if (inputChangePassword !== inputChangePasswordConfirm) return message.error(formatMessage({ id: 'PASSWORD_NOT_MATCH' }))
@@ -110,6 +106,10 @@ const Login = () => {
         setTempToken('')
       })
     } else {
+      if (!inputUsername) {
+        inputUesrnameRef.current?.focus()
+        return message.error(formatMessage({ id: 'PLEASE_INPUT_ID_MSG' }))
+      }
       if (notRegistered) {
         if (!inputUsername) {
           inputUesrnameRef.current?.focus()
@@ -145,12 +145,6 @@ const Login = () => {
     }
   }
 
-  const loginRequest = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const { saveId } = e.currentTarget.elements as any
-
-  }
-
   useEffect(() => {
     if (needPasswordChange) inputChangePasswordRef.current?.focus()
   }, [needPasswordChange])
@@ -182,10 +176,11 @@ const Login = () => {
                 className='st1 login-input'
                 value={inputChangePassword}
                 type="password"
-                name="password"
+                name="newPassword"
                 maxLength={16}
                 noGap
                 customType='password'
+                autoComplete='off'
                 placeholder={formatMessage({ id: 'PASSWORD_CHANGE_PLACEHOLDER' })}
                 ref={inputChangePasswordRef}
                 valueChange={value => {
@@ -227,8 +222,9 @@ const Login = () => {
                   }
                 ]}
                 value={inputChangePasswordConfirm}
-                name="passwordConfirm"
+                name="newPasswordConfirm"
                 customType='password'
+                autoComplete='off'
                 maxLength={16}
                 placeholder={formatMessage({ id: 'PASSWORD_CHANGE_CONFIRM_PLACEHOLDER' })}
                 valueChange={value => {

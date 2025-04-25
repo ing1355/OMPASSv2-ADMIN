@@ -8,11 +8,11 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { subdomainInfoChange } from "Redux/actions/subdomainInfoChange";
-import tableDeleteIcon from '../../assets/tableDeleteIcon.png';
-import tableDeleteIconHover from '../../assets/deleteIconRed.png';
-import downloadIcon from '../../assets/downloadIcon.png';
-import uploadIcon from '../../assets/uploadIcon.png';
-import uploadIconHover from '../../assets/uploadIconHover.png';
+import tableDeleteIcon from '@assets/tableDeleteIcon.png';
+import tableDeleteIconHover from '@assets/deleteIconRed.png';
+import downloadIcon from '@assets/downloadIcon.png';
+import uploadIcon from '@assets/uploadIcon.png';
+import uploadIconHover from '@assets/uploadIconHover.png';
 
 type ManagementByTypeProps = {
     type: UploadFileTypes

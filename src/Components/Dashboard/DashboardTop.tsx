@@ -1,7 +1,7 @@
 import { DashboardTopDisabledUserNumItem, DashboardTopUserNumItem } from "./DashboardItems"
-import dashboardAllUserIcon from '../../assets/dashboardAllUserIcon.png';
-import dashboardEnableUserIcon from '../../assets/dashboardEnableUserIcon.png';
-import dashboardDisableUserIcon from '../../assets/dashboardDisableUserIcon.png';
+import dashboardAllUserIcon from '@assets/dashboardAllUserIcon.png';
+import dashboardEnableUserIcon from '@assets/dashboardEnableUserIcon.png';
+import dashboardDisableUserIcon from '@assets/dashboardDisableUserIcon.png';
 import { useEffect, useState } from "react";
 import { GetDashboardTopFunc } from "Functions/ApiFunctions";
 import { FormattedMessage } from "react-intl";

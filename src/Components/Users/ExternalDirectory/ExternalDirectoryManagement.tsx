@@ -5,9 +5,11 @@ import { GetExternalDirectoryListFunc } from "Functions/ApiFunctions";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useNavigate, useParams } from "react-router";
-import userAddIcon from './../../../assets/userAddIcon.png'
-import userAddIconHover from './../../../assets/userAddIconHover.png'
+import userAddIcon from '@assets/userAddIcon.png'
+import userAddIconHover from '@assets/userAddIconHover.png'
 import { ExternalDirectoryTypeLabel } from "./ExternalDirectoryContstants";
+import circleCheckIcon from '@assets/circleCheckIcon.png'
+import circleXIcon from '@assets/circleXIcon.png'
 
 const ExternalDirectoryManagement = () => {
     const { formatMessage } = useIntl()
@@ -36,26 +38,24 @@ const ExternalDirectoryManagement = () => {
     }
 
     const columnsByType = () => {
-        let columns: CustomTableColumnType<ExternalDirectoryDataType>[] = [{
-            key: 'name',
-            title: <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_NAME_LABEL" />
-        },
+        let columns: CustomTableColumnType<ExternalDirectoryDataType>[] = [
+            {
+                key: 'connected',
+                title: <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_CONNECTED_LABEL" />,
+                render: (data, ind, row) => {
+                    return <img src={row.isAuthorized || row.isConnected ? circleCheckIcon : circleXIcon} className="external-directory-management-connected-icon"/>
+                }
+            },
+            {
+                key: 'name',
+                title: <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_NAME_LABEL" />
+            },
         {
             key: 'description',
             title: <FormattedMessage id="DESCRIPTION_LABEL" />
         }]
         if (type === 'OPEN_LDAP') {
             columns = columns.concat([
-                {
-                    key: 'proxyIpAddress',
-                    title: <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_PROXY_ADDRESS_LABEL" />,
-                    render: (data, ind, row) => row.proxyServer.address || '-'
-                },
-                {
-                    key: 'proxyPort',
-                    title: <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_PROXY_PORT_LABEL" />,
-                    render: (data, ind, row) => row.proxyServer.port || '-'
-                },
                 {
                     key: 'baseDn',
                     title: "Base DN"

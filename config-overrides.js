@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = function override(config, env) {
     // Webpack 설정에서 .md 파일을 처리하는 규칙 추가
     // config.module.rules.push({
@@ -17,6 +19,11 @@ module.exports = function override(config, env) {
     //       },
     //       publicPath: '/assets/docs/'
     //   }});
+
+    config.resolve.alias = {
+        ...config.resolve.alias,
+        '@assets': path.resolve(__dirname, 'src/assets'),
+    }
 
     return config;
 };

@@ -5,8 +5,8 @@ import Input from "Components/CommonCustomComponents/Input"
 import { UnlockUserFunc } from "Functions/ApiFunctions"
 import { useRef, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
-import lockIcon from "../../assets/lockIcon.png"
-import unlockIcon from "../../assets/unlockIcon.png"
+import lockIcon from "@assets/lockIcon.png"
+import unlockIcon from "@assets/unlockIcon.png"
 
 const UnLockBtn = ({ userData, onSuccess }: {
     userData: UserDataType

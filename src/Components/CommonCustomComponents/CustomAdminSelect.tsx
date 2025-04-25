@@ -1,8 +1,8 @@
 import { Select } from "antd"
 import { INT_MAX_VALUE } from "Constants/ConstantValues"
 import { GetUserDataListFunc } from "Functions/ApiFunctions"
-import { useEffect, useLayoutEffect, useMemo, useState } from "react"
-import closeIcon from '../../assets/closeIcon.png'
+import { useEffect, useMemo, useState } from "react"
+import closeIcon from '@assets/closeIcon.png'
 import { FormattedMessage } from "react-intl"
 import './CustomAdminSelect.css'
 
