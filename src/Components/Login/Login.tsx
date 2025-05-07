@@ -55,7 +55,6 @@ const Login = () => {
   }
 
   const ompassUrlCallback = (ompassUrl: string, token: string) => {
-    console.log(ompassUrl, token)
     let temp = ompassUrl + `&authorization=${token}`
     if (isDev) {
       const targetUrl = "192.168.182.120:9002"
@@ -64,7 +63,6 @@ const Login = () => {
     if (!ompassWindowRef.current?.closed) {
       ompassWindowRef.current?.close()
     }
-    console.log(temp)
     ompassWindowRef.current = OMPASS(temp);
   }
 
@@ -97,6 +95,7 @@ const Login = () => {
   const passwordlessLoginRequest = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { saveId } = e.currentTarget.elements as any
+    saveIdFunction(saveId.checked)
 
     if (needPasswordChange) {
       if (inputChangePassword !== inputChangePasswordConfirm) return message.error(formatMessage({ id: 'PASSWORD_NOT_MATCH' }))
@@ -122,7 +121,6 @@ const Login = () => {
           language: lang!,
           loginClientType: "PORTAL"
         }, (res, token) => {
-          saveIdFunction(saveId.checked)
           loginSuccessCallback(res, token)
         }).catch(err => {
           setInputPassword('')
@@ -133,7 +131,6 @@ const Login = () => {
           username: inputUsername,
           language: lang!
         }, (res, token) => {
-          saveIdFunction(saveId.checked)
           if (res.ompassAuthentication?.isRegisteredOmpass) {
             loginSuccessCallback(res, token)
           } else {

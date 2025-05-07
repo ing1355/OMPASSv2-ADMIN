@@ -27,6 +27,7 @@ const ExternalDirectoryOpenLdapSettingEdit = () => {
     const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const { formatMessage } = useIntl()
     const navigate = useNavigate()
+    const [connected, setConnected] = useState(false)
     const [saveLoading, setSaveLoading] = useState(false)
     const [loading, setLoading] = useState(false)
     const [dataLoading, setDataLoading] = useState(false)
@@ -76,6 +77,7 @@ const ExternalDirectoryOpenLdapSettingEdit = () => {
     
     useEffect(() => {
         if (data) {
+            console.log(data)
             setParams({
                 type,
                 name: data.name,
@@ -113,7 +115,7 @@ const ExternalDirectoryOpenLdapSettingEdit = () => {
             flexDirection: 'row',
             gap: '8px'
         }}>
-            <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_MANAGEMENT_TITLE" values={{ type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }} />
+            <FormattedMessage id={type === 'ACTIVE_DIRECTORY' ? "USER_ADD_EXTERNAL_DIRECTORY_AD_SERVER_SETTING_EDIT_LABEL" : "USER_ADD_EXTERNAL_DIRECTORY_OPEN_LDAP_SERVER_SETTING_EDIT_LABEL"} values={{ type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }} />
             {type !== 'MICROSOFT_ENTRA_ID' && <div>
                 <Button className="st11" icon={downloadIcon} onClick={() => {
                     if (!subdomainInfo.ompassProxyDownloadUrl) {
@@ -128,13 +130,14 @@ const ExternalDirectoryOpenLdapSettingEdit = () => {
         </div>}>
             <Button className="st3" onClick={() => {
                 setSaveLoading(true)
+                setConnected(false)
                 UpdateExternalDirectoryFunc(detailId, {...params,directoryServers: params.directoryServers.map(_ => _.directoryServer)}, (newData) => {
                     message.success(formatMessage({ id: "USER_ADD_EXTERNAL_DIRECTORY_MODIFY_SUCCESS_MSG" }, { type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }))
                     setData(newData)
                 }).finally(() => {
                     setSaveLoading(false)
                 })
-            }} loading={saveLoading}>
+            }} loading={saveLoading} disabled={loading || saveLoading}>
                 <FormattedMessage id={"SAVE"} />
             </Button>
             <Button className="st3" onClick={() => {
@@ -167,9 +170,9 @@ const ExternalDirectoryOpenLdapSettingEdit = () => {
                     <Input className="st1 secret-key" value={data.secretKey} readOnly={true} />
                 </CopyToClipboard>
             </CustomInputRow>}
-            <BottomLineText title={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_DETAIL_INFO_LABEL" values={{ type: formatMessage({ id: ExternalDirectoryTypeLabel['OPEN_LDAP'] }) }} />} style={{
+            <BottomLineText title={<FormattedMessage id={type === 'ACTIVE_DIRECTORY' ? "USER_ADD_EXTERNAL_DIRECTORY_AD_SERVER_INFO_LABEL" : "USER_ADD_EXTERNAL_DIRECTORY_OPEN_LDAP_SERVER_INFO_LABEL"} />} style={{
                 marginTop: detailId ? '32px' : 0
-            }} buttons={<Button loading={loading || saveLoading}
+            }} buttons={<Button loading={loading} disabled={loading || saveLoading}
                 className="st3"
                 onClick={() => {
                     if (!params.baseDn) {
@@ -187,6 +190,7 @@ const ExternalDirectoryOpenLdapSettingEdit = () => {
                         return message.error(formatMessage({ id: 'PLEASE_CHECK_OPEN_LDAP_DIRECTORY_SERVER_INFO' }))
                     }
                     setLoading(true)
+                    setConnected(true)
                     CheckExternalDirectoryConnectionFunc({
                         id: detailId,
                         baseDn: params.baseDn,
@@ -276,7 +280,7 @@ const ExternalDirectoryOpenLdapSettingEdit = () => {
                                         ntlmWorkstation: val
                                     }
                                 })
-                            }} disabled={loading || saveLoading}/>
+                            }} readOnly={loading || saveLoading}/>
                         </div>
                     </div>
                 </CustomInputRow>
@@ -297,7 +301,7 @@ const ExternalDirectoryOpenLdapSettingEdit = () => {
             </CustomInputRow>
             <CustomInputRow
                 noCenter
-                title={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_OPEN_LDAP_SERVER_LIST_LABEL" values={{ type: formatMessage({ id: ExternalDirectoryTypeLabel['OPEN_LDAP'] }) }} />}>
+                title={<FormattedMessage id={type === 'ACTIVE_DIRECTORY' ? "USER_ADD_EXTERNAL_DIRECTORY_AD_SERVER_LIST_LABEL" : "USER_ADD_EXTERNAL_DIRECTORY_OPEN_LDAP_SERVER_LIST_LABEL"} values={{ type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }} />}>
                 <div className="external-directory-open-ldap-server-list-container">
                     {params.directoryServers.map((_, ind) => <OpenLdapServerItem
                         canDelete={params.directoryServers.length > 1}
@@ -305,6 +309,7 @@ const ExternalDirectoryOpenLdapSettingEdit = () => {
                         saveLoading={saveLoading}
                         key={ind}
                         data={_}
+                        connected={connected}
                         onChange={val => {
                             setParams({
                                 ...params,
@@ -354,26 +359,16 @@ const checkValidationDirectoryServer = (data: ExternalDirectoryServerDataType) =
     return true
 }
 
-const OpenLdapServerItem = ({ data, onChange, onDelete, canDelete, isLoading, saveLoading }: {
+const OpenLdapServerItem = ({ data, onChange, onDelete, canDelete, isLoading, saveLoading, connected }: {
     data: ExternalDirectoryServerDataType
     onChange: (data: ExternalDirectoryServerDataType) => void
     onDelete: () => void
     canDelete: boolean
     isLoading: boolean
     saveLoading: boolean
+    connected: boolean
 }) => {
-    const [connected, setConnected] = useState(false)
     const { formatMessage } = useIntl()
-
-    useEffect(() => {
-        if (isLoading) {
-            setConnected(true)
-        }
-    }, [isLoading])
-
-    useEffect(() => {
-        setConnected(false)
-    },[data.directoryServer.address, data.directoryServer.port])
 
     return <div className="external-directory-open-ldap-server-item-container">
         <Input className="st1" value={data.directoryServer?.address || ''} title="서버 주소" onChange={e => {

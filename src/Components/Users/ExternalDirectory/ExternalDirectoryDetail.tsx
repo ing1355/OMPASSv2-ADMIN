@@ -179,7 +179,7 @@ const ExternalDirectoryDetail = () => {
                 detailId && type !== 'MICROSOFT_ENTRA_ID' && <Button className="st3" onClick={() => {
                     navigate(`/UserManagement/externalDirectory/${type}/detail/${detailId}/edit`)
                 }}>
-                    <FormattedMessage id={"USER_ADD_EXTERNAL_DIRECTORY_OPEN_LDAP_SERVER_SETTING_EDIT_LABEL"} />
+                    <FormattedMessage id={type === 'ACTIVE_DIRECTORY' ? "USER_ADD_EXTERNAL_DIRECTORY_AD_SERVER_SETTING_EDIT_LABEL" : "USER_ADD_EXTERNAL_DIRECTORY_OPEN_LDAP_SERVER_SETTING_EDIT_LABEL"} />
                 </Button>
             } />
             <CustomInputRow title={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_NAME_LABEL" />}>

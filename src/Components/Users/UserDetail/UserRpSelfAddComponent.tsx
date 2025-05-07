@@ -2,12 +2,13 @@ import CustomModal from 'Components/Modal/CustomModal';
 import './UserRpSelfAddComponent.css'
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { message } from 'antd';
-import { useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import CustomSelect from 'Components/CommonCustomComponents/CustomSelect';
 import { GetApplicationListFunc, RPPrimaryAuthFunc } from 'Functions/ApiFunctions';
 import RegisterOMPASSAuthModal from 'Components/Modal/RegisterOMPASSAuthModal';
 import Input from 'Components/CommonCustomComponents/Input';
 import Button from 'Components/CommonCustomComponents/Button';
+import { INT_MAX_VALUE } from 'Constants/ConstantValues';
 
 type UserRpSelfAddComponentProps = {
     refreshCallback: () => void
@@ -19,7 +20,6 @@ const UserRpSelfAddComponent = ({ refreshCallback }: UserRpSelfAddComponentProps
     const [rpUsername, setRpUsername] = useState('')
     const [rpPassword, setRpPassword] = useState('')
     const [applications, setApplications] = useState<ApplicationListDataType[]>([])
-    const [authLoading, setAuthLoading] = useState(false)
     const [selectedApplication, setSelectedApplication] = useState<ApplicationListDataType | undefined>()
     const [dataLoading, setDataLoading] = useState(false)
     const { formatMessage } = useIntl()
@@ -47,14 +47,15 @@ const UserRpSelfAddComponent = ({ refreshCallback }: UserRpSelfAddComponentProps
         if (modalOpen) {
             setRpUsername('')
             setRpPassword('')
+            setSelectedApplication(undefined)
         }
     }, [modalOpen])
 
     return <>
-        <Button loading={dataLoading} className='user-detail-self-rp-user-add-container' onClick={() => {
+        <Button loading={dataLoading} className='st5 user-detail-self-rp-user-add-container' onClick={() => {
             getApplications({
-                page: 1,
-                size: 99999,
+                page: 0,
+                size: INT_MAX_VALUE,
                 filterOptions: [{
                     key: 'types',
                     value: ['RADIUS', 'LDAP']
@@ -66,30 +67,34 @@ const UserRpSelfAddComponent = ({ refreshCallback }: UserRpSelfAddComponentProps
             })
             setModalOpen(true)
         }}>
-            + 사용자 추가
+            + <FormattedMessage id="USER_RP_SELF_ADD_MODAL_USER_ADD_BUTTON_LABEL" />
         </Button>
         <CustomModal
             open={modalOpen}
             onCancel={() => {
                 setModalOpen(false)
             }}
+            okText={formatMessage({ id: 'NORMAL_ADD_LABEL' })}
             type="info"
             typeTitle={formatMessage({ id: 'USER_RP_SELF_ADD_MODAL_TITLE' })}
             typeContent={<>
-                <div>
-                    OMPASS 포탈에서는 일부 애플리케이션(인증 기능만 제공하는 애플리케이션)에 대해 사용자가 직접 OMPASS 등록을 진행할 수 있는 기능을 제공합니다.
+                <div className='user-detail-self-rp-user-add-description'>
+                    <FormattedMessage id="USER_RP_SELF_ADD_MODAL_SUBSCRIPTION_1" />
                 </div>
-                <br />
+                <InputContainerHeader title={formatMessage({ id: 'USER_RP_SELF_ADD_MODAL_APPLICATION_INFO_TITLE' })} />
                 <div className='user-detail-self-rp-user-add-application-select-container'>
-                    <div>
-                        애플리케이션 선택
-                    </div>
                     <CustomSelect
+                        style={{
+                            width: '100%',
+                            height: '42px',
+                            lineHeight: '42px'
+                        }}
                         items={applications.map(_ => ({
                             key: _.id,
                             label: _.name,
                             value: _.id
                         }))}
+                        noLabel={formatMessage({ id: 'USER_RP_SELF_ADD_MODAL_APPLICATION_SELECT_PLACEHOLDER' })}
                         needSelect
                         value={selectedApplication?.id}
                         onChange={(value) => {
@@ -97,18 +102,18 @@ const UserRpSelfAddComponent = ({ refreshCallback }: UserRpSelfAddComponentProps
                         }}
                     />
                 </div>
-                <br />
                 {
                     selectedApplication && <>
-                        <div>
-                            애플리케이션에서 사용하는 계정 정보를 입력해주세요.
-                        </div>
-                        <Input placeholder={formatMessage({ id: 'USER_ID_PLACEHOLDER' })} value={rpUsername} onChange={(e) => {
+                        {/* <InputContainerHeader title={formatMessage({ id: 'USER_RP_SELF_ADD_MODAL_USER_INFO_TITLE' })} /> */}
+                        <Input containerClassName='user-detail-self-rp-user-add-input-container first' className='st1 login-input username' placeholder={formatMessage({ id: 'USER_ID_PLACEHOLDER' })} value={rpUsername} onChange={(e) => {
                             setRpUsername(e.target.value)
-                        }} autoComplete='off'/>
-                        <Input placeholder={formatMessage({ id: 'PASSWORD_PLACEHOLDER' })} value={rpPassword} onChange={(e) => {
+                        }} autoComplete='off' maxLength={20}/>
+                        <Input containerClassName='user-detail-self-rp-user-add-input-container' className='st1 login-input password' placeholder={formatMessage({ id: 'PASSWORD_PLACEHOLDER' })} value={rpPassword} onChange={(e) => {
                             setRpPassword(e.target.value)
-                        }} type='password' autoComplete='off' />
+                        }} type='password' autoComplete='off' maxLength={20}/>
+                        <div className='user-detail-self-rp-user-add-info-description'>
+                            * <FormattedMessage id="USER_RP_SELF_ADD_MODAL_SUBSCRIPTION_2" />
+                        </div>
                     </>
                 }
             </>}
@@ -125,10 +130,10 @@ const UserRpSelfAddComponent = ({ refreshCallback }: UserRpSelfAddComponentProps
                     }, (res) => {
                         if (res.isSuccess) {
                             setModalOpen(false)
-                            console.log('res: ',res, res.primaryAuthToken)
+                            console.log('res: ', res, res.primaryAuthToken)
                             setAuthModalOpen(res.primaryAuthToken)
                         } else {
-                            message.error("계정 정보가 올바르지 않습니다.")
+                            message.error(formatMessage({ id: 'APPLICATION_ACCOUNT_INFO_INVALID_MSG' }))
                         }
                     })
                 }
@@ -161,6 +166,15 @@ const getSuccessMessageByType = (type?: ApplicationDataType['type']) => {
     } else {
         return ""
     }
+}
+
+const InputContainerHeader = ({ title }: { title: React.ReactNode }) => {
+    return <div className='user-detail-self-rp-user-add-input-header'>
+        <div className='input-header-circle'>
+            <div className='input-header-circle-inner' />
+        </div>
+        {title}
+    </div>
 }
 
 export default UserRpSelfAddComponent;

@@ -23,7 +23,7 @@
   box-sizing: border-box;
   line-height: 36px;
   min-width: 200px;
-  color: var(--sub-grey-color4);
+  /* color: var(--sub-grey-color4); */
   border: 1px solid var(--sub-grey-color5);
   border-radius: 6px;
   user-select: none;
@@ -77,4 +77,8 @@
   background-color: var(--sub-grey-color6);
   color: var(--main-grey-color);
   cursor: not-allowed;
+}
+
+.custom-select-no-label {
+  color: var(--sub-grey-color5);
 }

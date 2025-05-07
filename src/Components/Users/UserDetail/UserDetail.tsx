@@ -162,7 +162,7 @@ const UserDetail = ({ }) => {
             </ContentsHeader>
             <UserDetailUserInfo targetData={userData} setTargetData={setUserData} refreshCallback={GetDatas} hasRpUser={authInfoDatas.length > 0}/>
             <UserDetailRpUsers authInfoDatas={authInfoDatas} refreshCallback={GetDatas} targetData={userData} portalSigned={portalSigned} userDetailOpened={userDetailOpened} setUserDetailOpened={setUserDetailOpened} authInfoRef={authInfoRef} />
-            <UserRpSelfAddComponent refreshCallback={GetDatas} />
+            {isSelf && <UserRpSelfAddComponent refreshCallback={GetDatas} />}
         </Contents >
         <PairOMPASSAuthModal opened={authView} onCancel={() => {
             setAuthView(false)

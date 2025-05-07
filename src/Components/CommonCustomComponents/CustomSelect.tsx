@@ -90,7 +90,9 @@ const CustomSelect = ({ items, value, onChange, needSelect, noLabel, style, read
             setShowSelect(!showSelect)
         }
     }} ref={selectRef} style={style}>
-        {value ? _items.find(_ => _.key === value)?.label : (noLabel || <FormattedMessage id="NO_SELECT_VALUE" />)}
+        {value ? _items.find(_ => _.key === value)?.label : <div className="custom-select-no-label">
+            {noLabel ||  <FormattedMessage id="NO_SELECT_VALUE" />}
+        </div>}
         {
             showSelect && <div className="custom-select-option-container" ref={scrollRef}>
                 {

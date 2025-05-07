@@ -138,8 +138,9 @@ const MessageText = {
         PREPARING_MSG: '준비중인 기능입니다.',
         OMPASS_DEVICE_CHANGE_SUCCESS_MSG: '등록 기기 변경에 성공하였습니다.',
         PLEASE_CHECK_OPEN_LDAP_DIRECTORY_SERVER_INFO: 'Open LDAP 서버 목록은 올바른 서버 주소와 포트로 구성해야 합니다.',
-        PLEASE_SELECT_APPLICATION_FOR_RP_USER_ADD_MSG: '직접 추가할 애플리케이션을 선택해주세요.',
-        PLEASE_INPUT_RP_USER_INFO_MSG: '애플리케이션에서 사용하는 계정 정보를 입력해주세요.'
+        PLEASE_SELECT_APPLICATION_FOR_RP_USER_ADD_MSG: '직접 OMPASS 등록을 진행할 애플리케이션을 선택해주세요.',
+        PLEASE_INPUT_RP_USER_INFO_MSG: '애플리케이션에서 사용하는 계정 정보를 입력해주세요.',
+        APPLICATION_ACCOUNT_INFO_INVALID_MSG: '애플리케이션 계정 정보가 올바르지 않습니다.'
     },
     'EN': {
         USERNAME_CHECK: 'Only lowercase letters and numbers are allowed, with a length of 4 to 16 characters',
@@ -280,8 +281,9 @@ const MessageText = {
         PREPARING_MSG: 'This feature is under preparation.',
         OMPASS_DEVICE_CHANGE_SUCCESS_MSG: 'The device registration has been changed successfully.',
         PLEASE_CHECK_OPEN_LDAP_DIRECTORY_SERVER_INFO: 'Open LDAP server list must be composed of correct server addresses and ports.',
-        PLEASE_SELECT_APPLICATION_FOR_RP_USER_ADD_MSG: 'Please select the application to add directly',
-        PLEASE_INPUT_RP_USER_INFO_MSG: 'Please enter the account information used in the application.'
+        PLEASE_SELECT_APPLICATION_FOR_RP_USER_ADD_MSG: 'Please select the application for which you wish to directly register for OMPASS.',
+        PLEASE_INPUT_RP_USER_INFO_MSG: 'Please enter the account information used in the application.',
+        APPLICATION_ACCOUNT_INFO_INVALID_MSG: 'The account information in the application is incorrect.'
     }
 }
 
