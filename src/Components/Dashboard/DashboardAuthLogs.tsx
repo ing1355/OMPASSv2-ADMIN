@@ -75,17 +75,17 @@ const DashboardAuthLogs = ({ applications }: {
                     {
                         key: 'rpUser',
                         title: 'RP ID',
-                        render: (_, _ind, row) => row.ompassData.rpUser.username
+                        render: (_, _ind, row) => row.ompassData?.rpUser?.username ?? "-"
                     },
                     {
                         key: 'policyAtTimeOfEvent',
                         title: <FormattedMessage id="POLICY_NAME_LABEL"/>,
-                        render: (d, ind, row) => row.policyAtTimeOfEvent.name
+                        render: (d, ind, row) => row.policyAtTimeOfEvent?.name ?? "-"
                     },
                     {
                         key: 'reason',
                         title: <FormattedMessage id="INVALID_REASON_LABEL"/>,
-                        render: (d) => <FormattedMessage id={"INVALID_" + d + '_LABEL'}/>
+                        render: (d) => d ? <FormattedMessage id={"INVALID_" + d + '_LABEL'}/> : "-"
                     },
                     {
                         key: 'authenticationTime',

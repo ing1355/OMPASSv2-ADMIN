@@ -14,9 +14,10 @@ import { ExternalDirectoryTypeLabel } from "./ExternalDirectoryContstants"
 type ExternalDirectorySyncButtonProps = {
     data?: ExternalDirectoryDataType
     type: ExternalDirectoryType
+    needSync?: () => void
 }
 
-const ExternalDirectorySyncButton = ({ data, type }: ExternalDirectorySyncButtonProps) => {
+const ExternalDirectorySyncButton = ({ data, type, needSync }: ExternalDirectorySyncButtonProps) => {
     const [dataLoading, setDataLoading] = useState(false)
     const [sureSync, setSureSync] = useState(false)
     const [syncDatas, setSyncDatas] = useState<ExternalDirectoryUserDataType[]>([])
@@ -53,6 +54,8 @@ const ExternalDirectorySyncButton = ({ data, type }: ExternalDirectorySyncButton
                         message.info(formatMessage({ id: 'USER_ADD_EXTERNAL_DIRECTORY_USER_LOAD_SUCCESS_MSG' }, { type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }))
                         console.log(res)
                         setSyncDatas(res)
+                    }).catch(e => {
+                        needSync?.()
                     }).finally(() => {
                         setDataLoading(false)
                     })
@@ -116,13 +119,16 @@ const ExternalDirectorySyncButton = ({ data, type }: ExternalDirectorySyncButton
             </>}
             yesOrNo
             okCallback={async () => {
-                return AddUserWithCsvDataFunc(syncDatas.map(_ => ({
-                    username: _.username,
-                    name: _.name,
-                    email: _.email,
-                    phone: _.phone,
-                    role: 'USER'
-                })), () => {
+                return AddUserWithCsvDataFunc({
+                    userSyncMethod: `EXTERNAL_DIRECTORY_${type}` as UserBulkAddMethodType,
+                    users: syncDatas.map(_ => ({
+                        username: _.username,
+                        name: _.name,
+                        email: _.email,
+                        phone: _.phone,
+                        role: 'USER'
+                    }))
+                }, () => {
                     message.success(formatMessage({ id: 'USER_ADD_EXTERNAL_DIRECTORY_SYNC_SUCCESS_MSG' }, { type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }))
                     setSureSync(false)
                 })

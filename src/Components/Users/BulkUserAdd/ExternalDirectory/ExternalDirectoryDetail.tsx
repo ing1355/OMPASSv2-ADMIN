@@ -14,10 +14,9 @@ import deleteIconHover from '@assets/deleteIconHover.png'
 import ExternalDirectorySyncButton from "./ExternalDirectorySyncButton";
 import { useSelector } from "react-redux";
 import { downloadFileByLink } from "Functions/GlobalFunctions";
-import loadingIcon2 from '@assets/loading2.png'
 import './ExternalDirectory.css'
 import { GetExternalDirectoryListFunc, AddExternalDirectoryFunc, UpdateExternalDirectoryFunc, DeleteExternalDirectoryFunc } from "Functions/ApiFunctions";
-import { externalDirectoryImgByConnectionStatus, ExternalDirectoryTypeLabel } from "./ExternalDirectoryContstants";
+import { ExternalDirectoryTypeLabel } from "./ExternalDirectoryContstants";
 
 const ExternalDirectoryDetail = () => {
     const type = useParams().type as ExternalDirectoryType
@@ -51,14 +50,22 @@ const ExternalDirectoryDetail = () => {
     const { formatMessage } = useIntl()
     const isMSEntraId = type === 'MICROSOFT_ENTRA_ID'
 
-    const GetDatas = async () => {
+    const GetDatas = async (forChange: boolean = false) => {
         try {
             setDataLoading(true)
             GetExternalDirectoryListFunc({
                 id: detailId,
                 type
             }, ({ results }) => {
-                setData(results[0])
+                if (forChange) {
+                    setData({
+                        ...results[0],
+                        name: params.name,
+                        description: params.description,
+                    })
+                } else {
+                    setData(results[0])
+                }
             }).finally(() => {
                 setDataLoading(false)
             })
@@ -112,12 +119,15 @@ const ExternalDirectoryDetail = () => {
         //     return message.error(formatMessage({ id: 'PLEASE_INPUT_BASE_DN' }))
         // }
         if (detailId) {
-            UpdateExternalDirectoryFunc(detailId, { ...params, directoryServers: params.directoryServers.map(_ => _.directoryServer) }, (newData) => {
+            setLoading(true)
+            UpdateExternalDirectoryFunc(detailId, { ...params, directoryServers: type === 'MICROSOFT_ENTRA_ID' ? [] : params.directoryServers.map(_ => _.directoryServer) }, (newData) => {
                 message.success(formatMessage({ id: "USER_ADD_EXTERNAL_DIRECTORY_MODIFY_SUCCESS_MSG" }, { type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }))
                 setData(newData)
+            }).finally(() => {
+                setLoading(false)
             })
         } else {
-            AddExternalDirectoryFunc({ ...params, directoryServers: params.directoryServers.map(_ => _.directoryServer) }, (newData) => {
+            AddExternalDirectoryFunc({ ...params, directoryServers: type === 'MICROSOFT_ENTRA_ID' ? [] : params.directoryServers.map(_ => _.directoryServer) }, (newData) => {
                 message.success(formatMessage({ id: "USER_ADD_EXTERNAL_DIRECTORY_ADD_SUCCESS_MSG" }, { type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }))
                 navigate(`/UserManagement/externalDirectory/${type}/detail/${newData.id}${type === 'MICROSOFT_ENTRA_ID' ? '' : '/edit'}`, {
                     replace: true
@@ -149,7 +159,7 @@ const ExternalDirectoryDetail = () => {
         </div>}>
             <Button className="st3" onClick={() => {
                 submitExternalDirectoryInfo()
-            }}>
+            }} loading={loading}>
                 <FormattedMessage id={"SAVE"} />
             </Button>
             {detailId && <Button icon={deleteIcon} hoverIcon={deleteIconHover} className="st2" onClick={() => {
@@ -164,9 +174,9 @@ const ExternalDirectoryDetail = () => {
         <div className="contents-header-container">
             {detailId && type === 'MICROSOFT_ENTRA_ID' && <>
                 <BottomLineText title={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_DETAIL_INFO_LABEL" values={{ type: formatMessage({ id: ExternalDirectoryTypeLabel['MICROSOFT_ENTRA_ID'] }) }} />} />
-                <CustomInputRow title={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_CONNECTED_LABEL" />}>
+                {/* <CustomInputRow title={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_CONNECTED_LABEL" />}>
                     <img src={loading ? loadingIcon2 : externalDirectoryImgByConnectionStatus(data?.isConnected ?? false)} className="external-directory-management-connected-icon"/>
-                </CustomInputRow>
+                </CustomInputRow> */}
                 <CustomInputRow title={<FormattedMessage id="MS_ENTRA_TENANT_ID_LABEL" />}>
                     <Input className="st1" value={''} valueChange={val => {
 
@@ -179,7 +189,7 @@ const ExternalDirectoryDetail = () => {
                 detailId && type !== 'MICROSOFT_ENTRA_ID' && <Button className="st3" onClick={() => {
                     navigate(`/UserManagement/externalDirectory/${type}/detail/${detailId}/edit`)
                 }}>
-                    <FormattedMessage id={type === 'ACTIVE_DIRECTORY' ? "USER_ADD_EXTERNAL_DIRECTORY_AD_SERVER_SETTING_EDIT_LABEL" : "USER_ADD_EXTERNAL_DIRECTORY_OPEN_LDAP_SERVER_SETTING_EDIT_LABEL"} />
+                    <FormattedMessage id={type === 'MICROSOFT_ACTIVE_DIRECTORY' ? "USER_ADD_EXTERNAL_DIRECTORY_AD_SERVER_SETTING_EDIT_LABEL" : "USER_ADD_EXTERNAL_DIRECTORY_OPEN_LDAP_SERVER_SETTING_EDIT_LABEL"} />
                 </Button>
             } />
             <CustomInputRow title={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_NAME_LABEL" />}>
@@ -198,7 +208,9 @@ const ExternalDirectoryDetail = () => {
                     })
                 }} />
             </CustomInputRow>
-            {detailId && <ExternalDirectorySyncButton data={data} type={type} />}
+            {detailId && <ExternalDirectorySyncButton data={data} type={type} needSync={() => {
+                GetDatas(true)
+            }} />}
         </div>
     </Contents>
 }

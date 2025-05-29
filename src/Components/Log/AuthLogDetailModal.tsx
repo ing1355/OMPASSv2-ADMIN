@@ -148,13 +148,13 @@ const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
                     <div className="auth-detail-modal-contents-container" data-title={formatMessage({ id: "USER_INFO_TITLE_LABEL" })}>
                         <TextComponent title="NAME" content={data?.portalUser.name && getFullName(data?.portalUser.name)} />
                         <TextComponent title="PORTAL_USERNAME_COLUMN_LABEL" content={data?.portalUser.username} />
-                        <TextComponent title="RP_USERNAME_COLUMN_LABEL" content={data?.ompassData.rpUser.username} />
+                        <TextComponent title="RP_USERNAME_COLUMN_LABEL" content={data?.ompassData?.rpUser?.username} />
                     </div>
                     <div className="auth-detail-modal-contents-container authentication-info" data-title={formatMessage({ id: "AUTH_LOG_DETAIL_AUTH_INFO_TITLE_LABEL" })}>
                         <TextComponent title="APPLIED_POLICY_NAME_COLUMN_LABEL" content={policyAtTimeOfEvent?.name} />
-                        <TextComponent title="AUTHENTICATION_PURPOSE_LABEL" content={<FormattedMessage id={data?.ompassData.authPurpose + '_LOG_VALUE'} />} />
+                        <TextComponent title="AUTHENTICATION_PURPOSE_LABEL" content={data?.ompassData?.authPurpose ? <FormattedMessage id={data?.ompassData.authPurpose + '_LOG_VALUE'} /> : "-"} />
                         <TextComponent title="AUTHENTICATOR_TYPE_LABEL" content={(data as ValidAuthLogDataType)?.authenticatorType} />
-                        {data && isInvalidLogType(data) && <TextComponent title="INVALID_REASON_LABEL" content={<FormattedMessage id={"INVALID_" + data.reason + '_LABEL'} />} />}
+                        {data && isInvalidLogType(data) && <TextComponent title="INVALID_REASON_LABEL" content={data.reason ? <FormattedMessage id={"INVALID_" + data.reason + '_LABEL'} /> : "-"} />}
                         <TextComponent title="AUTHENTICATION_START_TIME_LABEL" content={createdAt} />
                         <TextComponent title="AUTHENTICATION_TIME_LABEL" content={data?.authenticationTime} />
                         <TextComponent title="SESSION_EXPIRED_AT_LABEL" content={sessionExpiredAt} />
@@ -162,10 +162,10 @@ const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
                 </div>
                 <div className="auth-detail-modal-contents-row">
                     <div className="auth-detail-modal-contents-container" data-title={formatMessage({ id: "APPLICATION_INFO_TITLE_LABEL" })}>
-                        <TextComponent title="APPLICATION_TYPE_LABEL" content={getApplicationTypeLabel(data?.ompassData.application.type)} />
-                        <TextComponent title="APPLICATION_NAME_COLUMN_LABEL" content={data?.ompassData.application.name} />
-                        <TextComponent title="APPLICATION_INFO_DOMAIN_LABEL" content={data?.ompassData.application.domain} />
-                        {data?.ompassData.application.redirectUri && <TextComponent title="APPLICATION_INFO_REDIRECT_URI_LABEL" content={data?.ompassData.application.redirectUri} />}
+                        <TextComponent title="APPLICATION_TYPE_LABEL" content={data?.ompassData?.application?.type ? getApplicationTypeLabel(data?.ompassData.application.type) : "-"} />
+                        <TextComponent title="APPLICATION_NAME_COLUMN_LABEL" content={data?.ompassData?.application?.name} />
+                        <TextComponent title="APPLICATION_INFO_DOMAIN_LABEL" content={data?.ompassData?.application?.domain} />
+                        {data?.ompassData?.application?.redirectUri && <TextComponent title="APPLICATION_INFO_REDIRECT_URI_LABEL" content={data?.ompassData?.application?.redirectUri} />}
                     </div>
                     {isPam && <div className="auth-detail-modal-contents-container" data-title={`${formatMessage({ id: "SERVER_DEVICE_INFO_TITLE_LABEL" })}(Server)`}>
                         <TextComponent title="DEVICE_NAME_LABEL" content={serverInfo?.name} />

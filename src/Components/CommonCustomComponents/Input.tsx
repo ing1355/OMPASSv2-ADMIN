@@ -124,7 +124,7 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                             <span className="custom-radio-inner"></span>
                         </div>
                     }
-                    <span className="custom-input-inner-container">
+                    <div className="custom-input-inner-container">
                         <input
                             ref={ref as any}
                             className={"custom-input-inner" + (className ? ` ${className}` : '')}
@@ -191,7 +191,7 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                         {suffix && <div className="custom-suffix-text">
                             {suffix}
                         </div>}
-                    </span>
+                    </div>
                     {((customType || rules) && isAlert) && <div className={`custom-type-alert-text ${customType ?? ''}`}>
                         {isAlert ? alertMsg : ''}
                     </div>}

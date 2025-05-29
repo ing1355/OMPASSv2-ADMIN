@@ -33,10 +33,10 @@ const InvalidAuthLogs = () => {
                 ..._,
                 ompassData: {
                     ..._.ompassData,
-                    sessionExpiredAt: convertUTCStringToLocalDateString(_.ompassData.sessionExpiredAt),
-                    createdAt: convertUTCStringToLocalDateString(_.ompassData.createdAt)
+                    sessionExpiredAt: _.ompassData?.sessionExpiredAt ? convertUTCStringToLocalDateString(_.ompassData.sessionExpiredAt) : "",
+                    createdAt: _.ompassData?.createdAt ? convertUTCStringToLocalDateString(_.ompassData.createdAt) : ""
                 },
-                authenticationTime: convertUTCStringToLocalDateString(_.authenticationTime)
+                authenticationTime: _.authenticationTime ? convertUTCStringToLocalDateString(_.authenticationTime) : ""
             })))
             setTotalCount(totalCount)
         }).finally(() => {
@@ -78,7 +78,7 @@ const InvalidAuthLogs = () => {
                 {
                     key: 'applicationType',
                     title: <FormattedMessage id="APPLICATION_TYPE_LABEL" />,
-                    render: (_, _ind, row) => getApplicationTypeLabel(row.ompassData.application.type),
+                    render: (_, _ind, row) => getApplicationTypeLabel(row.ompassData?.application?.type ?? ""),
                     filterKey: 'applicationTypes',
                     filterOption: applicationTypes.map(_ => ({
                         label: formatMessage({ id: _ + "_APPLICATION_TYPE" }),
@@ -88,22 +88,22 @@ const InvalidAuthLogs = () => {
                 {
                     key: 'applicationName',
                     title: <FormattedMessage id="APPLICATION_NAME_COLUMN_LABEL" />,
-                    render: (_, _ind, row) => row.ompassData.application.name
+                    render: (_, _ind, row) => row.ompassData?.application?.name ?? "-"
                 },
                 {
                     key: 'portalUsername',
                     title: <FormattedMessage id="PORTAL_USERNAME_COLUMN_LABEL" />,
-                    render: (_, _ind, row) => row.portalUser.username
+                    render: (_, _ind, row) => row.portalUser?.username ?? "-"
                 },
                 {
                     key: 'rpUsername',
                     title: <FormattedMessage id="RP_USERNAME_COLUMN_LABEL" />,
-                    render: (_, _ind, row) => row.ompassData.rpUser.username
+                    render: (_, _ind, row) => row.ompassData?.rpUser?.username ?? "-"
                 },
                 {
                     key: 'authPurpose',
                     title: <FormattedMessage id="AUTHPURPOSE_COLUMN_LABEL" />,
-                    render: (data, ind, row) => <FormattedMessage id={row.ompassData.authPurpose + '_LOG_VALUE'} />,
+                    render: (data, ind, row) => row.ompassData?.authPurpose ? <FormattedMessage id={row.ompassData.authPurpose + '_LOG_VALUE'} /> : "-",
                     filterKey: 'authPurposes',
                     filterOption: logAuthPurposeList.map(_ => ({
                         label: formatMessage({ id: _ + '_LOG_VALUE' }),
@@ -113,12 +113,12 @@ const InvalidAuthLogs = () => {
                 {
                     key: 'policyAtTimeOfEvent',
                     title: <FormattedMessage id="POLICY_NAME_LABEL" />,
-                    render: (d, ind, row) => row.policyAtTimeOfEvent.name
+                    render: (d, ind, row) => row.policyAtTimeOfEvent?.name ?? "-"
                 },
                 {
                     key: 'reason',
                     title: <FormattedMessage id="INVALID_REASON_LABEL" />,
-                    render: (d) => <FormattedMessage id={"INVALID_" + d + '_LABEL'} />,
+                    render: (d) => d ? <FormattedMessage id={"INVALID_" + d + '_LABEL'} /> : "-",
                     filterKey: 'denyReasons',
                     filterOption: authFailReasonList.map(_ => ({
                         label: formatMessage({ id: "INVALID_" + _ + '_LABEL' }),

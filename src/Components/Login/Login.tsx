@@ -95,7 +95,6 @@ const Login = () => {
   const passwordlessLoginRequest = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { saveId } = e.currentTarget.elements as any
-    saveIdFunction(saveId.checked)
 
     if (needPasswordChange) {
       if (inputChangePassword !== inputChangePasswordConfirm) return message.error(formatMessage({ id: 'PASSWORD_NOT_MATCH' }))
@@ -105,6 +104,7 @@ const Login = () => {
         setTempToken('')
       })
     } else {
+      saveIdFunction(saveId.checked)
       if (!inputUsername) {
         inputUesrnameRef.current?.focus()
         return message.error(formatMessage({ id: 'PLEASE_INPUT_ID_MSG' }))
@@ -126,18 +126,19 @@ const Login = () => {
           setInputPassword('')
         })
       } else {
-        PasswordlessLoginFunc({
-          domain: subDomain,
-          username: inputUsername,
-          language: lang!
-        }, (res, token) => {
-          if (res.ompassAuthentication?.isRegisteredOmpass) {
-            loginSuccessCallback(res, token)
-          } else {
-            message.info(formatMessage({ id: 'NOT_REGISTERED_MSG' }))
-            setNotRegistered(true)
-          }
-        })
+        // PasswordlessLoginFunc({
+        //   domain: subDomain,
+        //   username: inputUsername,
+        //   language: lang!
+        // }, (res, token) => {
+        //   if (res.ompassAuthentication?.isRegisteredOmpass) {
+        //     loginSuccessCallback(res, token)
+        //   } else {
+        //     message.info(formatMessage({ id: 'NOT_REGISTERED_MSG' }))
+        //     setNotRegistered(true)
+        //   }
+        // })
+        setNotRegistered(true)
       }
     }
   }

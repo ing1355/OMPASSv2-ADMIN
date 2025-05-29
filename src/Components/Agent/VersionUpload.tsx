@@ -42,6 +42,8 @@ const VersionUpload = () => {
       return ".jar"
     } else if (type === 'REDMINE_PLUGIN') {
       return ".zip"
+    } else if (type === 'WINDOWS_FRAMEWORK') {
+      return ".nupkg"
     } else return ''
   }
 
@@ -52,6 +54,8 @@ const VersionUpload = () => {
       return "ONLY_ZIP_FILES_CAN_BE_UPLOADED"
     } else if (type === 'LINUX_PAM') {
       return "ONLY_DEB_FILES_CAN_BE_UPLOADED"
+    } else if (type === 'WINDOWS_FRAMEWORK') {
+      return "ONLY_NUPKG_FILES_CAN_BE_UPLOADED"
     } else return ''
   }
 

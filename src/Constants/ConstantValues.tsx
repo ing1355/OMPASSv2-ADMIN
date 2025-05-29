@@ -137,7 +137,7 @@ export const menuDatas = (role: userRoleType, isOnPremise: boolean): menuDataTyp
 
 // const appTypes: ApplicationDataType['type'][] = ["ADMIN", "WINDOWS_LOGIN", "DEFAULT", "LINUX_LOGIN", "RADIUS", "REDMINE", "MS_ENTRA_ID", "KEYCLOAK", "LDAP"]
 // export const applicationTypes: ApplicationDataType['type'][] = ["WEB", "WINDOWS_LOGIN", "LINUX_LOGIN", "MAC_LOGIN", "PORTAL", "RADIUS", "REDMINE", "MICROSOFT_ENTRA_ID", "KEYCLOAK", "LDAP"]
-export const applicationTypes: ApplicationDataType['type'][] = ["PORTAL", "WINDOWS_LOGIN", "WEB", "LINUX_LOGIN", "RADIUS", "REDMINE", "MICROSOFT_ENTRA_ID", "KEYCLOAK", "LDAP"]
+export const applicationTypes: ApplicationDataType['type'][] = ["PORTAL", "WINDOWS_LOGIN", "WEB", "LINUX_LOGIN", "RADIUS", "REDMINE", "MICROSOFT_ENTRA_ID", "KEYCLOAK", "LDAP", "MAC_LOGIN"]
 
 // 애플리케이션 타입 다국어 매칭해놨으나 타입 지정은 불가능하므로 값 바뀌면 다국어 키값도 바뀌어야함
 export const AuthenticationProcessTypes: ProcessTypeType[] = ["POLICY", "REGISTRATION", "AUTHENTICATION"]
@@ -147,8 +147,9 @@ export const ExternalDirectoryTypes: {
     [key in ExternalDirectoryType]: ExternalDirectoryType
 } = {
     OPEN_LDAP: 'OPEN_LDAP',
-    ACTIVE_DIRECTORY: 'ACTIVE_DIRECTORY',
-    MICROSOFT_ENTRA_ID: 'MICROSOFT_ENTRA_ID'
+    MICROSOFT_ACTIVE_DIRECTORY: 'MICROSOFT_ACTIVE_DIRECTORY',
+    MICROSOFT_ENTRA_ID: 'MICROSOFT_ENTRA_ID',
+    API: 'API'
 }
 
 export const getApplicationTypeLabel = (type: LocalApplicationTypes) => type ? <FormattedMessage id={type + '_APPLICATION_TYPE'} /> : ""
@@ -170,7 +171,7 @@ export const LDAPTransportTypes: LdapTransportType[] = ['CLEAR', 'LDAPS', 'START
 
 export const authProcessTypeList: AllAuthLogDataType['processType'][] = ['REGISTRATION', 'AUTHENTICATION', 'POLICY']
 export const logAuthPurposeList: LogAuthPurposeType[] = ['ADD_OTHER_AUTHENTICATOR', 'ADMIN_2FA_FOR_APPLICATION_DELETION', 'ADMIN_2FA_FOR_SECRET_KEY_UPDATE', 'AUTH_LOGIN', 'RADIUS_REGISTRATION', 'REG_LOGIN', 'ROLE_SWAPPING_SOURCE', 'ROLE_SWAPPING_TARGET']
-export const authenticatorList: AuthenticatorTypeType[] = ['OMPASS', 'PASSCODE', 'WEBAUTHN']
+export const authenticatorList: AuthenticatorTypeType[] = ['OMPASS', 'PASSCODE', 'WEBAUTHN', 'OTP']
 export const authFailReasonList: InvalidAuthLogDataType['reason'][] = ['ACCESS_TIME', 'BROWSER', 'COUNTRY', 'INVALID_OTP', 'INVALID_PASSCODE', 'INVALID_SIGNATURE', 'IP_WHITE_LIST', 'LOCATION', 'NONE']
 
 export const convertLangToIntlVer = (lang: ReduxStateType['lang']) => {

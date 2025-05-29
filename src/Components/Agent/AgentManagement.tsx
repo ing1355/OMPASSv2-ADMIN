@@ -40,6 +40,11 @@ const AgentManagement = () => {
       label: <FormattedMessage id="AGENT_KEYCLOAK_LABEL" />,
       key: "KEYCLOAK_PLUGIN",
       children: <ManagementByType type='KEYCLOAK_PLUGIN' />
+    },
+    {
+      label: <FormattedMessage id="AGENT_WINDOWS_FRAMEWORK_LABEL" />,
+      key: "WINDOWS_FRAMEWORK",
+      children: <ManagementByType type='WINDOWS_FRAMEWORK' />
     }
   ]
   // const items: {

@@ -65,7 +65,7 @@ const AuthenticatorInfoContentsOMPASSType = ({ data }: {
 }) => {
     const { mobile, id, lastAuthenticatedAt, createdAt } = data as OMPASSAuthenticatorDataType
     const { os, deviceId, deviceName, model, ompassAppVersion } = mobile
-    console.log(os)
+    
     return <>
         <div className="user-detail-info-device-info-content">
             <UserDetailInfoContentItem imgSrc={imgSrcByOS(os.name)} title={<FormattedMessage id="USER_DETAIL_OS_LABEL" />} content={`${os.name} ${os.version}`} />
@@ -216,6 +216,7 @@ export const UserInfoInputrow = ({ title, children, required }: PropsWithChildre
 }
 
 const imgSrcByOS = (os: OsNamesType) => {
+    console.log(os)
     switch (os) {
         case 'Mac':
             return macOSIcon
@@ -277,6 +278,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
     const isPAM = application.type === 'LINUX_LOGIN'
     const isRadius = application.type === 'RADIUS'
     const isLdap = application.type === 'LDAP'
+    
     return <>
         {!isPAM && !isRadius && !isLdap && <UserDetailInfoContentItem imgSrc={imgSrcByOS(os?.name!)} title={<FormattedMessage id="USER_DETAIL_OS_LABEL" />} content={`${os?.name} ${os?.version}`} />}
         {isPAM && <>

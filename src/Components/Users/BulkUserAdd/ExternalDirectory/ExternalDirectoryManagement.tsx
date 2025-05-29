@@ -40,20 +40,22 @@ const ExternalDirectoryManagement = () => {
     const columnsByType = () => {
         let columns: CustomTableColumnType<ExternalDirectoryDataType>[] = [
             {
-                key: 'connected',
-                title: <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_CONNECTED_LABEL" />,
-                render: (data, ind, row) => {
-                    return <img src={row.isAuthorized || row.isConnected ? circleCheckIcon : circleXIcon} className="external-directory-management-connected-icon"/>
-                }
-            },
-            {
                 key: 'name',
                 title: <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_NAME_LABEL" />
             },
-        {
-            key: 'description',
-            title: <FormattedMessage id="DESCRIPTION_LABEL" />
-        }]
+            {
+                key: 'description',
+                title: <FormattedMessage id="DESCRIPTION_LABEL" />
+            }]
+        if (type !== 'MICROSOFT_ENTRA_ID') {
+            columns = [{
+                key: 'connected',
+                title: <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_CONNECTED_LABEL" />,
+                render: (data, ind, row) => {
+                    return <img src={row.isAuthorized || row.isConnected ? circleCheckIcon : circleXIcon} className="external-directory-management-connected-icon" />
+                }
+            }, ...columns]
+        }
         if (type === 'OPEN_LDAP') {
             columns = columns.concat([
                 {
@@ -61,7 +63,7 @@ const ExternalDirectoryManagement = () => {
                     title: "Base DN"
                 }
             ])
-        } else if (type === 'ACTIVE_DIRECTORY') {
+        } else if (type === 'MICROSOFT_ACTIVE_DIRECTORY') {
         }
         columns = columns.concat([
             {
@@ -77,7 +79,7 @@ const ExternalDirectoryManagement = () => {
     }
 
     return <Contents loading={dataLoading}>
-        <ContentsHeader title={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_MANAGEMENT_TITLE" values={{type: formatMessage({id: ExternalDirectoryTypeLabel[type]})}} />} subTitle={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_MANAGEMENT_TITLE" values={{type: formatMessage({id: ExternalDirectoryTypeLabel[type]})}} />}>
+        <ContentsHeader title={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_MANAGEMENT_TITLE" values={{ type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }} />} subTitle={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_MANAGEMENT_TITLE" values={{ type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }} />}>
         </ContentsHeader>
         <div className="contents-header-container">
             <CustomTable<ExternalDirectoryDataType>

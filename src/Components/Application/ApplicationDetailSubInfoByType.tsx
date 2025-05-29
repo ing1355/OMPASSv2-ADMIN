@@ -7,7 +7,7 @@ import { message } from "antd";
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow";
 import Input from "Components/CommonCustomComponents/Input";
 import CopyToClipboard from "react-copy-to-clipboard";
-import { ExternalDirectoryTypeLabel } from "Components/Users/ExternalDirectory/ExternalDirectoryContstants";
+import { ExternalDirectoryTypeLabel } from "Components/Users/BulkUserAdd/ExternalDirectory/ExternalDirectoryContstants";
 
 type ApplicationDetailSubInfoByTypeProps = {
     isAuthorized: boolean

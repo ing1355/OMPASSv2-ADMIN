@@ -141,6 +141,7 @@ type LdapDirectoryServerDataType = {
 
 type LdapConfigDataType = {
   id: string
+  type: ExternalDirectoryType
   name: string
   description: string
   createdAt: string

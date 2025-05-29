@@ -97,7 +97,7 @@ type UserNameType = {
 type HttpMethodType = "GET" | "POST" | "PUT" | "DELETE"
 type ProcessTypeType = "REGISTRATION" | "AUTHENTICATION" | "POLICY"
 type AuthenticatorStatusType = "REGISTERED" | "ENABLED" | "DISABLED" | "MODIFIED"
-type AuthenticatorTypeType = "OMPASS" | "WEBAUTHN" | "PASSCODE"
+type AuthenticatorTypeType = "OMPASS" | "WEBAUTHN" | "PASSCODE" | "OTP"
 type DefaultAuthenticatorDataType = {
     createdAt: string
     lastAuthenticatedAt: string
@@ -240,8 +240,8 @@ type PasscodeListDataType = {
 }
 
 // type ApplicationTypes = "DEFAULT" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "ADMIN" | "RADIUS" | "REDMINE" | 'MS_ENTRA_ID' | 'KEYCLOAK' | 'LDAP'
-// type ApplicationTypes = "WEB" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "PORTAL" | "RADIUS" | "REDMINE" | 'MICROSOFT_ENTRA_ID' | 'KEYCLOAK' | 'LDAP'
-type ApplicationTypes = "WEB" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "PORTAL" | "RADIUS" | "REDMINE" | 'MICROSOFT_ENTRA_ID' | 'KEYCLOAK' | 'LDAP'
+type ApplicationTypes = "WEB" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "PORTAL" | "RADIUS" | "REDMINE" | 'MICROSOFT_ENTRA_ID' | 'KEYCLOAK' | 'LDAP'
+// type ApplicationTypes = "WEB" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "PORTAL" | "RADIUS" | "REDMINE" | 'MICROSOFT_ENTRA_ID' | 'KEYCLOAK' | 'LDAP'
 type LocalApplicationTypes = ApplicationTypes | 'ALL' | undefined
 
 type DefaultApplicationDataType = {
@@ -429,6 +429,11 @@ type DefaultUserDataParamsType = {
 
 type DefaultUserDataType = DefaultUserDataParamsType & {
     name: UserNameType
+}
+
+type UserBulkAddParameterType = {
+    userSyncMethod: UserBulkAddMethodType
+    users: DefaultUserDataType[]
 }
 
 type UserStatusType = "USER_PENDING_EMAIL_UPDATE_VERIFICATION" | "USER_PENDING_SIGNUP_VERIFICATION" | "WAIT_ADMIN_APPROVAL" | "RUN" | "WITHDRAWAL" | "LOCK" | "WAIT_INIT_PASSWORD" | "WAIT_SECURITY_QNA"
@@ -631,12 +636,15 @@ type ProtalLogListParamsType = GeneralParamsType & {
     sortBy?: 'CREATED_AT' | 'USERNAME' | 'API_URI' | 'HTTP_METHOD'
 }
 
+type AuthenticationNetWorkStatusType = "ONLINE" | "OFFLINE"
+
 type ValidAuthLogDataType = {
     id: number
     portalUser: PortalUserType
     processType: ProcessTypeType
     authenticatorType: AuthenticatorTypeType
     authenticationTime: string
+    networkStatus: AuthenticationNetWorkStatusType
     ompassData: OMPASSDataType
     policyAtTimeOfEvent: PolicyDataType
 }
@@ -647,6 +655,7 @@ type InvalidAuthLogDataType = {
     authenticationLogType: "ALLOW" | "DENY" | "ALLOW_OUT_OF_SCHEDULE"
     processType: ProcessTypeType
     authenticationTime: string
+    networkStatus: AuthenticationNetWorkStatusType
     ompassData: OMPASSDataType
     policyAtTimeOfEvent: PolicyDataType
     reason: 'INVALID_SIGNATURE' | 'INVALID_PASSCODE' | 'INVALID_OTP' | 'BROWSER' | 'ACCESS_TIME' | 'LOCATION' | 'IP_WHITE_LIST' | 'COUNTRY' | 'NONE'
@@ -867,7 +876,8 @@ type ExternalDirectoryListParamsType = GeneralParamsType & {
     baseDn?: string
 }
 
-type ExternalDirectoryType = "MICROSOFT_ENTRA_ID" | "OPEN_LDAP" | "ACTIVE_DIRECTORY"
+type ExternalDirectoryType = "MICROSOFT_ENTRA_ID" | "OPEN_LDAP" | "MICROSOFT_ACTIVE_DIRECTORY" | "API"
+type UserBulkAddMethodType = "BASIC" | "CSV" | "API" | "EXTERNAL_DIRECTORY_MICROSOFT_ENTRA_ID" | "EXTERNAL_DIRECTORY_MICROSOFT_ACTIVE_DIRECTORY" | "EXTERNAL_DIRECTORY_OPEN_LDAP"
 
 type ExternalDirectoryIntegrationPurposeType = "PORTAL_USER" | "RP_USER"
 
@@ -913,6 +923,7 @@ type ExternalDirectoryLocalParamsType = {
     baseDn: string
     ldapAuthenticationType: LdapAuthenticationType
     ldapTransportType: LdapTransportType
+    secretKey?: string
 }
 
 type ExternalDirectoryServerParamsType = {
@@ -948,7 +959,7 @@ type ExternalDirectoryServerDataType = {
     isConnected: boolean
 }
 
-type UploadFileTypes = "APPLICATION_LOGO_IMAGE" | "PORTAL_SETTING_LOGO_IMAGE" | "WINDOWS_AGENT" | "LINUX_PAM" | "OMPASS_PROXY" | "FIDO_AGENT" | "APK" | "CSV" | "REDMINE_PLUGIN" | "KEYCLOAK_PLUGIN"
+type UploadFileTypes = "APPLICATION_LOGO_IMAGE" | "PORTAL_SETTING_LOGO_IMAGE" | "WINDOWS_AGENT" | "LINUX_PAM" | "OMPASS_PROXY" | "APK" | "REDMINE_PLUGIN" | "KEYCLOAK_PLUGIN" | "WINDOWS_FRAMEWORK"
 
 type TableSearchOptionType = {
     key: string
@@ -981,4 +992,9 @@ type DocsMenuItemType = {
 type PasswordVerificationRequestParamsType = {
     password: string
     purpose: "PROFILE_UPDATE" | "DEVICE_CHANGE"
+}
+
+type UserApiSyncInfoDataType = {
+    url: string
+    secretKey: string
 }

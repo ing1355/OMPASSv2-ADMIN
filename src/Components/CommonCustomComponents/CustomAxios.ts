@@ -3,6 +3,8 @@ import { getStorageAuth } from 'Functions/GlobalFunctions';
 
 export const controller = new AbortController()
 
+const defaultDomain = ''
+
 const defaultHeaders = () => ({
     authorization: getStorageAuth(),
     'Content-Type': 'application/json'
@@ -26,7 +28,7 @@ export function CustomAxiosGet(url: string, callback?: Function, params?: any, c
         authorization: config.authorization ? config.authorization : getStorageAuth(),
         ...config.headers
     } : defaultHeaders()
-    return axios.get(url, {
+    return axios.get(defaultDomain + url, {
         paramsSerializer: {
             indexes: null
         }, params, headers
@@ -57,7 +59,7 @@ export function CustomAxiosPost(url: string, callback?: Function, params?: any, 
         authorization: config.authorization ? config.authorization : getStorageAuth(),
         ...config.headers
     } : defaultHeaders()
-    return axios.post(url, params, { headers }).then(res => {
+    return axios.post(defaultDomain + url, params, { headers }).then(res => {
         // if (callback) callback(res.data.data, res.headers.authorization);
         if (callback) callback(res.data, res.headers.authorization);
         return res.data
@@ -65,7 +67,7 @@ export function CustomAxiosPost(url: string, callback?: Function, params?: any, 
 }
 
 export function CustomAxiosDelete(url: string, callback?: Function, params?: any) {
-    return axios.delete(url, {
+    return axios.delete(defaultDomain + url, {
         params, headers: defaultHeaders()
     }).then(res => {
         if (callback) callback(res.data);
@@ -79,7 +81,7 @@ export function CustomAxiosPut(url: string, callback?: Function, params?: any, c
         authorization: config.authorization ? config.authorization : getStorageAuth(),
         ...config.headers
     } : defaultHeaders()
-    return axios.put(url, params, { headers }).then(res => {
+    return axios.put(defaultDomain + url, params, { headers }).then(res => {
         if (callback) callback(res.data);
         return res.data
     })
@@ -91,7 +93,7 @@ export function CustomAxiosPatch(url: string, callback?: Function, params?: any,
         authorization: config.authorization ? config.authorization : getStorageAuth(),
         ...config.headers
     } : defaultHeaders()
-    return axios.patch(url, params, { headers }).then(res => {
+    return axios.patch(defaultDomain + url, params, { headers }).then(res => {
         if (callback) callback(res.data, res.headers.authorization);
         return res.data
     })
@@ -103,7 +105,7 @@ export async function CustomAxiosGetAll(url: string[], callback?: Function[], pa
         authorization: config.authorization ? config.authorization : getStorageAuth(),
         ...config.headers
     } : defaultHeaders()
-    axios.all(url.map((_, ind) => axios.get(_, { headers, signal: controller.signal, params: params && params[ind] })))
+    axios.all(url.map((_, ind) => axios.get(defaultDomain + _, { headers, signal: controller.signal, params: params && params[ind] })))
         .then(axios.spread((...res) => {
             res.forEach((_, ind) => {
                 if (callback && callback[ind]) callback[ind](_.data)

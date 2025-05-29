@@ -38,7 +38,9 @@ const App: React.FC = () => {
   const lang = useSelector((state: ReduxStateType) => state.lang!);
 
   const getDomainInfo = () => {
+    console.log('get subdomain info : ', subDomain)
     GetSubDomainInfoFunc(subDomain, (data) => {
+      console.log('response subdomain info : ', data)
       dispatch(subdomainInfoChange(data))
     })
   }

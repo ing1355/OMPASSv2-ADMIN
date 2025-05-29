@@ -1,6 +1,6 @@
 {
   "name": "ompass_rp_admin",
-  "version": "2.0.0(127)",
+  "version": "2.0.0(133)",
   "proxy": "https://ompass.kr:54006",
   "private": true,
   "dependencies": {
@@ -35,6 +35,7 @@
     "react-device-detect": "^2.2.3",
     "react-dom": "^18.2.0",
     "react-intl": "^6.4.2",
+    "react-json-pretty": "^2.2.0",
     "react-markdown": "^10.0.0",
     "react-redux": "^8.0.5",
     "react-router": "^6.10.0",

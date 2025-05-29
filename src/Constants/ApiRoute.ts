@@ -56,13 +56,14 @@ export const DeleteUserDataApi = (userId: UserDataType['userId']) => `/v2/users/
 export const GetUserDetailDataApi = (userId: UserDataType['userId']) => `/v2/users/${userId}/rp/details`
 export const DeleteAuthenticatorData = (authenticatorId: AuthenticatorDataType['id']) => `/v2/authenticators/${authenticatorId}`
 export const UnlockUserApi = (userId: UserDataType['userId']) => `/v2/users/${userId}/unlock`
-export const AddUserWithCsvDataApi = '/v2/users/csv'
+export const AddUserWithCsvDataApi = '/v2/users/bulk-users'
 export const DuplicateUserNameCheckApi = (username: string) => `/v2/users/username/${username}/existence`;
 export const RoleSwappingApi = '/v2/users/role-swapping'
 export const GetRpUserListApi = 'v2/users/rp'
 export const EmailChangeCodeVerificationApi = '/v2/users/email/code-verification'
 export const SendEmailChangeEmailByAdminApi = '/v2/users/email/update-auth'
 export const VerificationEmailChangeApi = '/v2/users/email/token-verification'
+export const GetUserApiSyncInfoDataApi = '/v2/users/api-sync-info'
 
 // 인증장치 정책 업데이트
 export const UpdateUserAuthenticatorPolicyApi = (authId: string, policyId: string) => `/v2/rp/authentication-data/${authId}/policy/${policyId}`
@@ -110,14 +111,16 @@ export const RPPrimaryAuthApi = '/v2/etc/rp/directory-server-based/verify-primar
 export const DirectoryServerBasedOMPASSRegistrationApi = '/v2/etc/rp/directory-server-based/registration'
 
 // 외부 디렉토리 동기화
-export const GetExternalDirectoryListApi = '/v2/external-directories'
-export const AddExternalDirectoryApi = '/v2/external-directories'
-export const UpdateExternalDirectoryApi = (id: ExternalDirectoryDataType['id']) => `/v2/external-directories/id/${id}`
-export const DeleteExternalDirectoryApi = (id: ExternalDirectoryDataType['id']) => `/v2/external-directories/id/${id}`
-export const SyncExternalDirectoryPortalUsersApi = '/v2/external-directories/portal-users/sync'
-export const SyncExternalDirectoryRpUsersApi = '/v2/external-directories/rp-users/sync'
-export const GetMicrosoftEntraIdAuthApi = (id: ExternalDirectoryDataType['id']) => `/v2/external-directories/${id}/ms/oauth2/url`
-export const CheckExternalDirectoryConnectionApi = `/v2/external-directories/test-connection`
+export const GetExternalDirectoryListApi = '/v2/user/sync/config'
+export const AddExternalDirectoryApi = '/v2/user/sync/config'
+export const UpdateExternalDirectoryApi = (id: ExternalDirectoryDataType['id']) => `/v2/user/sync/config/${id}`
+export const DeleteExternalDirectoryApi = (id: ExternalDirectoryDataType['id']) => `/v2/user/sync/config/${id}`
+export const SyncExternalDirectoryPortalUsersApi = (id: ExternalDirectoryDataType['id']) => `/v2/user/sync/config/${id}/portal-users`
+export const GetMicrosoftEntraIdAuthApi = (id: ExternalDirectoryDataType['id']) => `/v2/user/sync/config/${id}/ms/oauth2/url`
+export const ReissuanceSecretKeyForUserSyncApi = (id: ExternalDirectoryDataType['id']) => `/v2/user/sync/config/${id}/reissuance`
+
+
+export const CheckExternalDirectoryConnectionApi = `/v2/user/sync/config/test-connection`
 
 // RADIUS
 export const AddRadiusUserListApi = '/v2/radius-rp-users'

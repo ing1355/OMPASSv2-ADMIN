@@ -4,8 +4,9 @@ import circleXIcon from '@assets/circleXIcon.png'
 
 export const ExternalDirectoryTypeLabel = {
     OPEN_LDAP: 'USER_ADD_EXTERNAL_DIRECTORY_LDAP_SYNC_LABEL',
-    ACTIVE_DIRECTORY: 'USER_ADD_EXTERNAL_DIRECTORY_AD_SYNC_LABEL',
-    MICROSOFT_ENTRA_ID: 'USER_ADD_EXTERNAL_DIRECTORY_MS_ENTRA_ID_SYNC_LABEL'
+    MICROSOFT_ACTIVE_DIRECTORY: 'USER_ADD_EXTERNAL_DIRECTORY_AD_SYNC_LABEL',
+    MICROSOFT_ENTRA_ID: 'USER_ADD_EXTERNAL_DIRECTORY_MS_ENTRA_ID_SYNC_LABEL',
+    API: ''
 }
 
 export const filteredExternalDirectoryAuthenticationTypes = (type: ExternalDirectoryType) => {

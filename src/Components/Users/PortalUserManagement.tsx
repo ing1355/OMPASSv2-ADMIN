@@ -14,7 +14,7 @@ import useFullName from "hooks/useFullName"
 import { useNavigate } from "react-router"
 import { useSelector } from "react-redux"
 import useExcelDownload from "hooks/useExcelDownload"
-import UserBulkAddModal from "./UserBulkAddModal"
+import UserBulkAddModal from "./BulkUserAdd/UserBulkAddModal"
 // const userStatusList: UserDataType['status'][] = ['LOCK', 'RUN', 'WAIT_ADMIN_APPROVAL', 'USER_PENDING_SIGNUP_VERIFICATION', 'USER_PENDING_EMAIL_UPDATE_VERIFICATION', 'WAIT_INIT_PASSWORD', 'WITHDRAWAL']
 const userRoleList = (role: UserDataType['role']): UserDataType['role'][] => role === 'ROOT' ? ['USER', 'ADMIN', 'ROOT'] : ['USER', 'ADMIN']
 

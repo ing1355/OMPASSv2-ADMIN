@@ -1,0 +1,19 @@
+.user-add-api-sync-json-modal-json-pretty {
+    width: 100%;
+}
+
+.user-add-api-sync-json-modal-json-pretty > .__json-pretty__ {
+    padding: 18px 24px;
+    border-radius: 4px;
+}
+
+.user-add-api-sync-json-modal-description {
+    text-align: left;
+    width: 100%;
+    margin-top: 16px;
+}
+
+.api-secret-key-reset-btn {
+    height: 40px;
+    flex: 1;
+}

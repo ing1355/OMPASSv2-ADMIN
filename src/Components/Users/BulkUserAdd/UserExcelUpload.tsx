@@ -15,7 +15,7 @@ import './UserExcelUpload.css'
 import { userSelectPageSize } from "Constants/ConstantValues";
 import { useSelector } from "react-redux";
 import useExcelDownload from "hooks/useExcelDownload";
-import Locale from '../../Locale';
+import Locale from '../../../Locale';
 
 type ExcelRegexErrorDataType = {
     row: number
@@ -68,10 +68,13 @@ const UserExcelUpload = () => {
             <ContentsHeader subTitle={'USER_ADD_EXCEL_UPLOAD_ITEM_LABEL'}>
                 <Button loading={loading} disabled={datas.length === 0} className="st3" onClick={() => {
                     setLoading(true)
-                    AddUserWithCsvDataFunc(datas.map(_ => ({
-                        ..._,
-                        role: 'USER'
-                    })), res => {
+                    AddUserWithCsvDataFunc({
+                        userSyncMethod: 'CSV',
+                        users: datas.map(_ => ({
+                            ..._,
+                            role: 'USER'
+                        }))
+                    }, res => {
                         message.success(formatMessage({ id: 'EXCEL_USER_ADD_SUCCESS_MSG' }))
                         setDatas([])
                     }).finally(() => {
