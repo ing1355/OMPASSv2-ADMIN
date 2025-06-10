@@ -277,6 +277,7 @@ type ApplicationDataType = DefaultApplicationDataType & {
     discoveryEndpoint?: string
     msAppId?: string
     isAuthorized?: boolean
+    passwordless?: PolicyDataType['passwordless']
     ldapProxyServer: {
         host?: string
     }
@@ -291,6 +292,7 @@ type ApplicationDataParamsType = {
     description: ApplicationDataType['description']
     domain?: ApplicationDataType['domain']
     type?: LocalApplicationTypes
+    passwordless?: PolicyDataType['passwordless']
 }
 
 type ApplicationListDataType = {
@@ -619,6 +621,7 @@ type AuthLogListParamsType = GeneralParamsType & {
     authPurposes?: AuthPurposeType[]
     authenticationLogTypes?: AuthenticationLogType[]
     denyReasons?: InvalidAuthLogDataType['reason'][]
+    applicationIds?: ApplicationDataType['id'][]
     policyName?: string
     startDate?: string
     endDate?: string

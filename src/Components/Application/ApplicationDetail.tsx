@@ -27,6 +27,7 @@ import { isMobile } from "react-device-detect"
 import ApplicationDetailSubInfoByType from "./ApplicationDetailSubInfoByType"
 import ApplicationDetailHeaderInfo from "./ApplicationDetailHeaderInfo"
 import BottomLineText from "Components/CommonCustomComponents/BottomLineText"
+import PasswordlessCheck from "Components/Policy/PolicyItems/PasswordlessCheck"
 
 const ApplicationDetail = () => {
     const [logoImage, setLogoImage] = useState<updateLogoImageType>({
@@ -42,6 +43,7 @@ const ApplicationDetail = () => {
     const [selectedPolicy, setSelectedPolicy] = useState('')
     const [inputDescription, setInputDescription] = useState('')
     const [inputApiServerHost, setInputApiServerHost] = useState('')
+    const [passwordless, setPasswordless] = useState(false)
     const [MSEntraTenantId, setMSEntraTenantId] = useState('')
     const [MSEntraDiscoveryEndpoint, setMSEntraDiscoveryEndpoint] = useState('')
     const [MSEntraAppId, setMSEntraAppId] = useState('')
@@ -68,7 +70,7 @@ const ApplicationDetail = () => {
         label: getApplicationTypeLabel(_),
         disabled: _ === 'PORTAL' || (hasWindowsLogin && _ === 'WINDOWS_LOGIN')
     }))
-    
+
     const handleFileSelect = (data: updateLogoImageType) => {
         setLogoImage({
             isDefaultImage: data.isDefaultImage,
@@ -81,7 +83,7 @@ const ApplicationDetail = () => {
             await GetApplicationDetailFunc(uuid, (data) => {
                 setInputName(data.name)
                 setInputSecretKey(data.secretKey)
-
+                setPasswordless(data.passwordless?.isEnabled ?? false)
                 if (data.domain) {
                     setInputDomain(data.domain ?? "")
                     setInputRedirectUrl(data.redirectUri ? data.redirectUri.replace(data.domain, "") : "")
@@ -167,7 +169,10 @@ const ApplicationDetail = () => {
                                 isDefaultImage: logoImage.isDefaultImage
                             },
                             description: inputDescription,
-                            type: applicationType
+                            type: applicationType,
+                            passwordless: {
+                                isEnabled: passwordless
+                            }
                         }, () => {
                             message.success(formatMessage({ id: 'APPLICATION_MODIFY_SUCCESS_MSG' }))
                         })
@@ -183,7 +188,10 @@ const ApplicationDetail = () => {
                                 isDefaultImage: logoImage.isDefaultImage
                             },
                             description: inputDescription,
-                            type: applicationType
+                            type: applicationType,
+                            passwordless: {
+                                isEnabled: passwordless
+                            }
                         }, (res) => {
                             message.success(formatMessage({ id: 'APPLICATION_ADD_SUCCESS_MSG' }))
                             navigate(`/Applications/detail/${res.id}`, {
@@ -248,6 +256,11 @@ const ApplicationDetail = () => {
                             setHelpMsg(value)
                         }} maxLength={50} />
                     </CustomInputRow>
+                    <PasswordlessCheck value={{
+                        isEnabled: passwordless
+                    }} onChange={value => {
+                        setPasswordless(value.isEnabled)
+                    }} />
                     {
                         needDomains.includes(applicationType) && <>
                             <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_DOMAIN_LABEL" />} required>
@@ -262,7 +275,7 @@ const ApplicationDetail = () => {
                             </CustomInputRow>}
                         </>
                     }
-                    
+
                     <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_POLICY_LABEL" />} required>
                         <PolicySelect selectedPolicy={selectedPolicy} setSelectedPolicy={setSelectedPolicy} applicationType={applicationType} needSelect />
                     </CustomInputRow>

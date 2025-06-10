@@ -45,7 +45,7 @@ const DashboardAllAuthSum = ({ applications }: {
   return <DashboardCardWithDateSelect title={<FormattedMessage id="DASHBOARD_ALL_AUTH_SUM"/>} onChange={(_) => {
     setParams(_)
   }}>
-    <DashBoardBarChart datas={datas} keys={["count"]} indexKey="name"/>
+    <DashBoardBarChart datas={datas} keys={["count"]} indexKey="name" params={params}/>
   </DashboardCardWithDateSelect>
 }
 

@@ -41,7 +41,15 @@ const Login = () => {
   }, [needPasswordChange])
 
   useEffect(() => {
-    if (notRegistered) {
+    if (!subdomainInfo.passwordless?.isEnabled) {
+      setNotRegistered(true)
+    } else {
+      setNotRegistered(false)
+    }
+  }, [subdomainInfo.passwordless?.isEnabled])
+
+  useEffect(() => {
+    if (notRegistered && subdomainInfo.passwordless?.isEnabled) {
       inputPasswordRef.current?.focus()
     }
   }, [notRegistered])
@@ -109,10 +117,10 @@ const Login = () => {
         inputUesrnameRef.current?.focus()
         return message.error(formatMessage({ id: 'PLEASE_INPUT_ID_MSG' }))
       }
-      if (notRegistered) {
-        if (!inputUsername) {
-          inputUesrnameRef.current?.focus()
-          return message.error(formatMessage({ id: 'PLEASE_INPUT_ID_MSG' }))
+      if (notRegistered && !subdomainInfo.passwordless?.isEnabled) {
+        if (!inputPassword) {
+          inputPasswordRef.current?.focus()
+          return message.error(formatMessage({ id: 'PLEASE_INPUT_PASSWORD_MSG' }))
         }
         LoginFunc({
           domain: subDomain,
@@ -126,19 +134,18 @@ const Login = () => {
           setInputPassword('')
         })
       } else {
-        // PasswordlessLoginFunc({
-        //   domain: subDomain,
-        //   username: inputUsername,
-        //   language: lang!
-        // }, (res, token) => {
-        //   if (res.ompassAuthentication?.isRegisteredOmpass) {
-        //     loginSuccessCallback(res, token)
-        //   } else {
-        //     message.info(formatMessage({ id: 'NOT_REGISTERED_MSG' }))
-        //     setNotRegistered(true)
-        //   }
-        // })
-        setNotRegistered(true)
+        PasswordlessLoginFunc({
+          domain: subDomain,
+          username: inputUsername,
+          language: lang!
+        }, (res, token) => {
+          if (res.ompassAuthentication?.isRegisteredOmpass) {
+            loginSuccessCallback(res, token)
+          } else {
+            message.info(formatMessage({ id: 'NOT_REGISTERED_MSG' }))
+            setNotRegistered(true)
+          }
+        })
       }
     }
   }
@@ -230,7 +237,7 @@ const Login = () => {
                 }}
               />
             </label>
-          </div> : <div className={`login-input-container password${notRegistered ? ' not-registered' : ''}`}>
+          </div> : <div className={`login-input-container password${notRegistered ? ' not-registered' : ''}${subdomainInfo.passwordless?.isEnabled ? ' passwordless' : ''}`}>
             <label>
               <FormattedMessage id='PASSWORD' />
               <Input

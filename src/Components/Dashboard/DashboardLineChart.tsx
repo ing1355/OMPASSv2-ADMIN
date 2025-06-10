@@ -17,7 +17,7 @@ const DashBoardLineChart = ({ datas, keys }: DashBoardLineChartProps) => {
                 tickSize: 0,
                 tickPadding: 10,
                 tickRotation: -45,
-                legend: 'date',
+                legend: formatMessage({id:'DASHBOARD_LEGEND_DATE_LABEL'}),
                 legendPosition: 'middle',
                 legendOffset: 23,
                 truncateTickAt: 0

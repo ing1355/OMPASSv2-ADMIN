@@ -140,7 +140,7 @@
   height: 46px;
 }
 
-.login-input-container.password {
+.login-input-container.password.passwordless {
   overflow: hidden;
   animation: login-input-container-collapse .3s ease-in-out;
 }

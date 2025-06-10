@@ -9,10 +9,12 @@ type DashBoardBarChartProps = {
     indexKey: string
     customColor?: boolean
     isSum?: boolean
+    params: DashboardDateSelectDataType
 }
 
-const DashBoardBarChart = ({ datas, keys, indexKey, customColor, isSum }: DashBoardBarChartProps) => {
+const DashBoardBarChart = ({ datas, keys, indexKey, customColor, isSum, params }: DashBoardBarChartProps) => {
     const { formatMessage } = useIntl()
+
     const colors = useMemo(() => {
         let temp: {
             [key: string]: string
@@ -67,7 +69,7 @@ const DashBoardBarChart = ({ datas, keys, indexKey, customColor, isSum }: DashBo
                 tickSize: 0,
                 tickPadding: 10,
                 tickRotation: -35,
-                legend: 'date',
+                legend: params.intervalValue === 24 ? formatMessage({id:'DASHBOARD_LEGEND_DATE_LABEL'}) : formatMessage({id:'DASHBOARD_LEGEND_TIME_LABEL'}),
                 legendPosition: 'middle',
                 legendOffset: 40,
                 truncateTickAt: 0

@@ -57,6 +57,7 @@ type SubDomainInfoDataType = {
   ompassProxyDownloadUrl?: string
   redminePluginDownloadUrl?: string
   keycloakPluginDownloadUrl?: string
+  passwordless?: PolicyDataType['passwordless']
 }
 
 type PortalSettingsDataType = {

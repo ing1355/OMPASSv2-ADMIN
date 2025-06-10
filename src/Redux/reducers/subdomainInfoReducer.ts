@@ -19,7 +19,10 @@ const subdomainInfo: ReduxStateType['subdomainInfo']|null = {
     url: ''
   },
   userSignupMethod: UserSignupMethod.USER_SELF_ADMIN_ACCEPT,
-  selfSignupEnabled: false
+  selfSignupEnabled: false,
+  passwordless: {
+    isEnabled: false
+  }
 }
 
 const subdomainInfoReducer = (state = subdomainInfo, action: DefaultReduxActionType<ReduxStateType['subdomainInfo']>) => {

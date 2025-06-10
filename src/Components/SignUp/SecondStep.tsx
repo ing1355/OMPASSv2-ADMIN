@@ -131,32 +131,54 @@ const SecondStep = ({ completeCallback }: {
             onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
                 e.preventDefault();
                 if (isIdAlert) {
+                    message.error(formatMessage({ id: 'PLEASE_INPUT_ID' }))
                     return usernameRef.current?.focus()
                 }
                 if (idExist) {
                     return message.error(formatMessage({ id: 'ID_CHECK' }))
                 }
-                if (isPasswordAlert) {
+                if (inputPassword.length === 0) {
+                    message.error(formatMessage({ id: 'PLEASE_INPUT_PASSWORD' }))
                     return passwordRef.current?.focus()
                 }
-                if (inputPassword !== inputPasswordConfirm) {
+                if (isPasswordAlert) {
+                    message.error(formatMessage({ id: 'PASSWORD_CHECK' }))
+                    return passwordRef.current?.focus()
+                }
+                if(inputPasswordConfirm.length === 0) {
+                    message.error(formatMessage({ id: 'PLEASE_INPUT_PASSWORD_CONFIRM' }))
                     return passwordConfirmRef.current?.focus()
                 }
+                if (inputPassword !== inputPasswordConfirm) {
+                    message.error(formatMessage({ id: 'PASSWORD_NOT_MATCH' }))
+                    return passwordConfirmRef.current?.focus()
+                }
+                if (inputName1.length === 0) {
+                    message.error(formatMessage({ id: 'PLEASE_INPUT_FIRST_NAME' }))
+                    return firstNameRef.current?.focus()
+                }
+                if (inputName2.length === 0) {
+                    message.error(formatMessage({ id: 'PLEASE_INPUT_LAST_NAME' }))
+                    return lastNameRef.current?.focus()
+                }
                 if (isNameAlert1) {
+                    message.error(formatMessage({ id: 'LAST_NAME_CHECK' }))
                     return firstNameRef.current?.focus()
                 }
                 if (isNameAlert2) {
+                    message.error(formatMessage({ id: 'FIRST_NAME_CHECK' }))
                     return lastNameRef.current?.focus()
                 }
                 if (isEmailAlert) {
+                    message.error(formatMessage({ id: 'PLEASE_INPUT_EMAIL' }))
                     return emailRef.current?.focus()
                 }
                 if (!emailCodeSend) {
                     return message.error(formatMessage({ id: 'SEND_CODE_NEED_EMAIL_SEND_FIRST' }))
                 }
                 if (!emailVerify) {
-                    codeRef.current?.focus()
-                    return message.error(formatMessage({ id: 'NEED_CODE_VERIFY_MSG' }))
+                    message.error(formatMessage({ id: 'NEED_CODE_VERIFY_MSG' }))
+                    return codeRef.current?.focus()
                 }
                 if (inputUsername && inputName1 && inputName2 && inputEmail && inputPassword) {
                     if (!subdomainInfo.securityQuestion.isRootAdminSignupComplete) return setRootConfirm(true)
@@ -258,18 +280,19 @@ const SecondStep = ({ completeCallback }: {
                     rules={[
                         {
                             regExp: nameRegex,
-                            msg: <FormattedMessage id={lang === 'EN' ? "FIRST_NAME_CHECK" : "LAST_NAME_CHECK"} />
+                            msg: <FormattedMessage id={"FIRST_NAME_CHECK"} />
                         }
                     ]}
-                    value={lang === 'EN' ? inputName1 : inputName2}
+                    value={inputName1}
                     valueChange={(value, isAlert) => {
-                        if (lang === 'EN') {
-                            setInputName1(value)
-                            setIsNameAlert1(isAlert || false)
-                        } else {
-                            setInputName2(value)
-                            setIsNameAlert2(isAlert || false)
-                        }
+                        console.log('value : ', value, isAlert)
+                        setInputName1(value)
+                        setIsNameAlert1(isAlert || false)
+                        // if (lang === 'EN') {
+                        // } else {
+                        //     setInputName2(value)
+                        //     setIsNameAlert2(isAlert || false)
+                        // }
                     }}
                 />
             </InputRow>
@@ -282,19 +305,19 @@ const SecondStep = ({ completeCallback }: {
                     rules={[
                         {
                             regExp: nameRegex,
-                            msg: <FormattedMessage id={lang === 'EN' ? "LAST_NAME_CHECK" : "FIRST_NAME_CHECK"} />
+                            msg: <FormattedMessage id={"LAST_NAME_CHECK"} />
                         }
                     ]}
-                    value={lang === 'EN' ? inputName2 : inputName1}
+                    value={inputName2}
                     customType="name"
                     valueChange={(value, isAlert) => {
-                        if (lang === 'EN') {
-                            setInputName2(value)
-                            setIsNameAlert2(isAlert || false)
-                        } else {
-                            setInputName1(value)
-                            setIsNameAlert1(isAlert || false)
-                        }
+                        setInputName2(value)
+                        setIsNameAlert2(isAlert || false)
+                        // if (lang === 'EN') {
+                        // } else {
+                        //     setInputName1(value)
+                        //     setIsNameAlert1(isAlert || false)
+                        // }
                     }}
                 />
             </InputRow>
