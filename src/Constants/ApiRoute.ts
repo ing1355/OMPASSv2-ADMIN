@@ -9,8 +9,8 @@ export const ResetPasswordEmailSendApi = `/v2/recovery-account/mail`
 export const ResetPasswordEmailCodeVerifyApi = `/v2/recovery-account/verification`
 
 // Windows agent 파일
-export const GetAgentInstallerListApi = (type: UploadFileTypes) => `/v2/agent-installer/type/${type}`;
-export const CurrentAgentInstallerVersionChangeApi = (type: UploadFileTypes, fileId: AgentInstallerDataType['fileId']) => `/v2/agent-installer/type/${type}/id/${fileId}/target`
+export const GetAgentInstallerListApi = (type: AgentType) => `/v2/agent-installer/type/${type}`;
+export const CurrentAgentInstallerVersionChangeApi = (type: AgentType, fileId: AgentInstallerDataType['fileId']) => `/v2/agent-installer/type/${type}/id/${fileId}/target`
 export const DeleteAgentInstallerApi = (fileIds: string) => `/v2/id/${fileIds}`;
 export const DownloadAgentInstallerApi = '/v2/agent-installer/download';
 export const UploadAgentInstallerApi = `/v2/upload`;

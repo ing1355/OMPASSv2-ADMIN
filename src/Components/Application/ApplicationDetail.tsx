@@ -65,6 +65,7 @@ const ApplicationDetail = () => {
     const needDomains: LocalApplicationTypes[] = ["WEB", "REDMINE", "KEYCLOAK"]
     const readOnlyRedirectUriList: LocalApplicationTypes[] = ["PORTAL", "REDMINE"]
     const noRedirectUri: LocalApplicationTypes[] = ["KEYCLOAK", "REDMINE"]
+    const passwordlessApplicationTypes: LocalApplicationTypes[] = ["WINDOWS_LOGIN", "LINUX_LOGIN", 'PORTAL']
     const typeItems = applicationTypes.map(_ => ({
         key: _,
         label: getApplicationTypeLabel(_),
@@ -111,7 +112,6 @@ const ApplicationDetail = () => {
                 setSelectedPolicy(data.policyId)
                 setApplicationType(data.type)
                 setHelpMsg(data.helpDeskMessage || "")
-                setInputApiServerHost(data.apiServerHost)
                 setRadiusData(data.radiusProxyServer)
                 setLdapProxyServer(data.ldapProxyServer)
                 if (data.isAuthorized) {
@@ -256,11 +256,11 @@ const ApplicationDetail = () => {
                             setHelpMsg(value)
                         }} maxLength={50} />
                     </CustomInputRow>
-                    <PasswordlessCheck value={{
+                    {passwordlessApplicationTypes.includes(applicationType) && <PasswordlessCheck value={{
                         isEnabled: passwordless
                     }} onChange={value => {
                         setPasswordless(value.isEnabled)
-                    }} />
+                    }} />}
                     {
                         needDomains.includes(applicationType) && <>
                             <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_DOMAIN_LABEL" />} required>
@@ -275,7 +275,6 @@ const ApplicationDetail = () => {
                             </CustomInputRow>}
                         </>
                     }
-
                     <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_POLICY_LABEL" />} required>
                         <PolicySelect selectedPolicy={selectedPolicy} setSelectedPolicy={setSelectedPolicy} applicationType={applicationType} needSelect />
                     </CustomInputRow>

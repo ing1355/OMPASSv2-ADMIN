@@ -26,7 +26,7 @@ import { cidrRegex, ipAddressRegex } from "Components/CommonCustomComponents/Com
 import { isValidIpRange } from "Functions/GlobalFunctions";
 import OMPASSAppAuthenticators from "./PolicyItems/OMPASSAppAuthenticator";
 import './AuthPolicyDetail.css'
-import PasswordlessCheck from "./PolicyItems/PasswordlessCheck";
+// import PasswordlessCheck from "./PolicyItems/PasswordlessCheck";
 import LinuxPamBypass from "./PolicyItems/LinuxPamBypass";
 
 const pamInitData: PAMBypassDataType = {
@@ -50,9 +50,9 @@ const AuthPolicyDetail = () => {
         isEnabled: false,
         locations: []
     })
-    const [passwordlessData, setPasswordlessData] = useState<PolicyEnabledDataType>({
-        isEnabled: false,
-    })
+    // const [passwordlessData, setPasswordlessData] = useState<PolicyEnabledDataType>({
+    //     isEnabled: false,
+    // })
     const [pamBypassData, setPamBypassData] = useState<PAMBypassDataType>(pamInitData)
     const [browserChecked, setBrowserChecked] = useState<BrowserPolicyType[] | undefined>(isAdd ? PolicyBrowsersList : [])
     const [ompassControl, setOmpassControl] = useState<PolicyDataType['accessControl']>('ACTIVE')
@@ -68,8 +68,8 @@ const AuthPolicyDetail = () => {
     const isDefaultPolicy = detailData?.policyType === 'DEFAULT'
     const passcodeUsedList: LocalApplicationTypes[] = ["ALL", "RADIUS"]
     const passcodeUsed = !isDefaultPolicy && selectedApplicationType ? !passcodeUsedList.includes(selectedApplicationType) : false
-    const passwordLessUsedList: LocalApplicationTypes[] = ["WINDOWS_LOGIN", "LINUX_LOGIN"]
-    const passwordlessUsed = selectedApplicationType && passwordLessUsedList.includes(selectedApplicationType)
+    // const passwordLessUsedList: LocalApplicationTypes[] = ["WINDOWS_LOGIN", "LINUX_LOGIN"]
+    // const passwordlessUsed = selectedApplicationType && passwordLessUsedList.includes(selectedApplicationType)
     const otpUsedList: LocalApplicationTypes[] = ["RADIUS"]
     const otpUsed = !isDefaultPolicy && selectedApplicationType ? !otpUsedList.includes(selectedApplicationType) : false
     const browserUsedList: LocalApplicationTypes[] = ["WEB", "PORTAL", "REDMINE", "MICROSOFT_ENTRA_ID", "KEYCLOAK"]
@@ -103,9 +103,9 @@ const AuthPolicyDetail = () => {
                 if (data.linuxPamBypass) {
                     setPamBypassData(data.linuxPamBypass)
                 }
-                if (data.passwordless) {
-                    setPasswordlessData(data.passwordless)
-                }
+                // if (data.passwordless) {
+                //     setPasswordlessData(data.passwordless)
+                // }
                 const isDefault = data.policyType === 'DEFAULT'
                 if (!isDefault) {
                     setIpAddressValues(data.networkConfig)
@@ -134,9 +134,9 @@ const AuthPolicyDetail = () => {
         setAppAuthenticatorPolicies(["PATTERN", "PIN"])
         if (!isDefaultPolicy) {
             setAppAuthenticatorPolicies([])
-            setPasswordlessData({
-                isEnabled: false,
-            })
+            // setPasswordlessData({
+            //     isEnabled: false,
+            // })
             setPamBypassData(pamInitData)
             if (browserUsed) setBrowserChecked(PolicyBrowsersList)
             if (locationUsed) {
@@ -237,7 +237,7 @@ const AuthPolicyDetail = () => {
             accessTimeConfig: accessTimeValues,
             noticeToAdmin: noticeToAdmin,
             noticeToThemselves,
-            passwordless: passwordlessData,
+            // passwordless: passwordlessData,
             linuxPamBypass: {
                 isEnabled: pamBypassData.isEnabled,
                 ip: pamBypassData.isEnabled ? pamBypassData.ip : '',
@@ -327,7 +327,7 @@ const AuthPolicyDetail = () => {
                 <div className="auth-policy-validate-container" data-hidden={ompassControl !== 'ACTIVE'}>
                     {authenticatorsUsed && <OMPASSAuthenticators value={authenticatorPolicies} onChange={setAuthenticatorPolicies} locationChecked={locationDatas?.isEnabled || false} webauthnUsed={browserUsed} setSureChange={setSureChange} />}
                     {!isDefaultPolicy && <OMPASSAppAuthenticators value={appAuthenticatorPolicies} onChange={setAppAuthenticatorPolicies} />}
-                    {passwordlessUsed && <PasswordlessCheck value={passwordlessData} onChange={setPasswordlessData} />}
+                    {/* {passwordlessUsed && <PasswordlessCheck value={passwordlessData} onChange={setPasswordlessData} />} */}
                     {isPAM && <LinuxPamBypass value={pamBypassData} onChange={setPamBypassData} />}
                     {browserUsed && <PolicyBrowserSelect value={browserChecked} onChange={setBrowserChecked} />}
                     {locationUsed && locationDatas && <PolicyLocationList value={locationDatas} onChange={setLocationDatas} authenticators={authenticatorPolicies} setSureChange={setSureChange} />}

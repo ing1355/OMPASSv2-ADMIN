@@ -2,18 +2,18 @@ import { Tabs, TabsProps } from "antd"
 import useCustomRoute from "hooks/useCustomRoute"
 import { useEffect, useState } from "react"
 import { useSearchParams } from "react-router-dom"
-import './CustomTabs.css'
+import './AgentLeftTabs.css'
 
-type CustomTabsProps<T> = TabsProps & {
+type AgentLeftTabsProps<T> = TabsProps & {
     defaultKey: T
     onChange?: (key: T) => void
 }
 
-const CustomTabs = <T extends string>({
+const AgentLeftTabs = <T extends string>({
     defaultKey,
     items,
     onChange
-}: CustomTabsProps<T>) => {
+}: AgentLeftTabsProps<T>) => {
     const { customPushRoute } = useCustomRoute()
     const [searchParams] = useSearchParams()
     const [active, setActive] = useState(searchParams.get('tabType') ?? defaultKey as string)
@@ -24,18 +24,16 @@ const CustomTabs = <T extends string>({
 
     return <Tabs
         activeKey={active}
-        className={"auth-log-tab"}
-        // animated
-
+        className={"agent-left-tabs"}
+        animated
+        tabPosition="left"
         onChange={act => {
             setActive(act)
             customPushRoute({
                 tabType: act
             }, true, true)
         }}
-        centered
-        type="card"
         items={items} />
 }
 
-export default CustomTabs
+export default AgentLeftTabs

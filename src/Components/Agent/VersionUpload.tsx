@@ -29,7 +29,7 @@ const VersionUpload = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch()
   const navigate = useNavigate();
-  const type: UploadFileTypes = useParams().type as UploadFileTypes
+  const type: AgentType = useParams().type as AgentType
   
   const fileExtensionByType = () => {
     if (type === 'WINDOWS_AGENT') {
@@ -44,6 +44,8 @@ const VersionUpload = () => {
       return ".zip"
     } else if (type === 'WINDOWS_FRAMEWORK') {
       return ".nupkg"
+    } else if (type === 'MAC_AGENT') {
+      return ".pkg"
     } else return ''
   }
 
@@ -56,6 +58,8 @@ const VersionUpload = () => {
       return "ONLY_DEB_FILES_CAN_BE_UPLOADED"
     } else if (type === 'WINDOWS_FRAMEWORK') {
       return "ONLY_NUPKG_FILES_CAN_BE_UPLOADED"
+    } else if (type === 'MAC_AGENT') {
+      return "ONLY_PKG_FILES_CAN_BE_UPLOADED"
     } else return ''
   }
 
@@ -107,6 +111,11 @@ const VersionUpload = () => {
         dispatch(subdomainInfoChange({
           ...subdomainInfo,
           ompassProxyDownloadUrl: newData.downloadUrl
+        }))
+      } else if(!subdomainInfo.macOsAgentUrl && type === 'MAC_AGENT') {
+        dispatch(subdomainInfoChange({
+          ...subdomainInfo,
+          macOsAgentUrl: newData.downloadUrl
         }))
       }
       navigate(-1);

@@ -184,8 +184,8 @@ const SecondStep = ({ completeCallback }: {
                     if (!subdomainInfo.securityQuestion.isRootAdminSignupComplete) return setRootConfirm(true)
                     SignUpRequestFunc({
                         name: {
-                            firstName: inputName1,
-                            lastName: inputName2
+                            firstName: lang === 'EN' ? inputName2 : inputName1,
+                            lastName: lang === 'EN' ? inputName1 : inputName2
                         },
                         password: inputPassword,
                         username: inputUsername,

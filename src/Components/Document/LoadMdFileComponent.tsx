@@ -21,7 +21,7 @@ const pathByApplicationType: {
     'LDAP': 'ldap',
     'PORTAL': '',
     'ALL': '',
-    'MAC_LOGIN': '',
+    'MAC_LOGIN': 'mac_logon',
 }
 
 const LoadMdFileComponent = () => {

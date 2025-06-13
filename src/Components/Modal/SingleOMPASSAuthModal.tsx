@@ -1,7 +1,6 @@
 import useOMPASS from "hooks/useOMPASS"
 import CustomModal from "./CustomModal"
 import './OMPASSAuthModal.css'
-import { useSelector } from "react-redux"
 import { useEffect, useRef, useState } from "react"
 import { message } from "antd"
 import dayjs from "dayjs"
@@ -19,7 +18,6 @@ type SingleOMPASSAuthModalProps = {
 }
 
 const SingleOMPASSAuthModal = ({ opened, onCancel, successCallback, purpose, targetUserId }: SingleOMPASSAuthModalProps) => {
-    const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     const [remainTime, setRemainTime] = useState(-1)
     const [sessionData, setSessionData] = useState<QRDataDefaultBodyType>({
         url: '',
@@ -90,7 +88,7 @@ const SingleOMPASSAuthModal = ({ opened, onCancel, successCallback, purpose, tar
             _onCancel()
         }
     }}>
-        <OMPASSAuthContents role={userInfo.role} name={userInfo.name} username={userInfo.username} status={authStatus} sessionData={sessionData} />
+        <OMPASSAuthContents status={authStatus} sessionData={sessionData} />
         <div className="ompass-auth-remain-time-container">
             {
                 remainTime > 0 ? <>

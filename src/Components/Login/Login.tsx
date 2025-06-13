@@ -117,7 +117,7 @@ const Login = () => {
         inputUesrnameRef.current?.focus()
         return message.error(formatMessage({ id: 'PLEASE_INPUT_ID_MSG' }))
       }
-      if (notRegistered && !subdomainInfo.passwordless?.isEnabled) {
+      if(notRegistered) {
         if (!inputPassword) {
           inputPasswordRef.current?.focus()
           return message.error(formatMessage({ id: 'PLEASE_INPUT_PASSWORD_MSG' }))
@@ -145,7 +145,7 @@ const Login = () => {
             message.info(formatMessage({ id: 'NOT_REGISTERED_MSG' }))
             setNotRegistered(true)
           }
-        })
+        }) 
       }
     }
   }

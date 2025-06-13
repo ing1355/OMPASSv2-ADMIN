@@ -1,5 +1,6 @@
 import { message } from "antd"
 import Button from "Components/CommonCustomComponents/Button"
+import { emailRegex } from "Components/CommonCustomComponents/CommonRegex"
 import Input from "Components/CommonCustomComponents/Input"
 import CustomModal from "Components/Modal/CustomModal"
 import { EmailChangeCodeVerificationFunc, SendEmailChangeEmailByAdminFunc } from "Functions/ApiFunctions"
@@ -56,6 +57,14 @@ const EmailChangeBtn = ({ isSelf, username, successCallback }: {
             buttonLoading
             okText={<FormattedMessage id="LETS_CHANGE" />}
             onSubmit={async () => {
+                if (!emailInput) {
+                    message.error(formatMessage({ id: 'PLEASE_INPUT_EMAIL' }))
+                    return null
+                }
+                if (!emailRegex.test(emailInput)) {
+                    message.error(formatMessage({ id: 'EMAIL_CHECK' }))
+                    return null
+                } 
                 if (isSelf) {
                     if (!emailCodeSend) {
                         message.error(formatMessage({ id: 'EMAIL_CODE_SEND_FIRST_MSG' }))
@@ -94,9 +103,10 @@ const EmailChangeBtn = ({ isSelf, username, successCallback }: {
                 <Input noGap customType='email' className='st1' value={emailInput} valueChange={val => {
                     setEmailInput(val)
                     setEmailCodeSend(false)
-                }}>
+                }} readOnly={emailCodeSend}>
                     {isSelf && <Button type="button" disabled={mailSendLoading} className="st11 user-email-change-modal-btn" onClick={() => {
                         if (!emailInput) return message.error(formatMessage({ id: 'PLEASE_INPUT_EMAIL' }))
+                        if (!emailRegex.test(emailInput)) return message.error(formatMessage({ id: 'EMAIL_CHECK' }))
                         return SendEmailChangeEmailByAdminFunc({
                             username,
                             email: emailInput,

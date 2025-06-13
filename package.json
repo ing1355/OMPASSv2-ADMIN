@@ -1,6 +1,6 @@
 {
   "name": "ompass_rp_admin",
-  "version": "2.0.0(136)",
+  "version": "2.0.0(140)",
   "proxy": "https://ompass.kr:54006",
   "private": true,
   "dependencies": {

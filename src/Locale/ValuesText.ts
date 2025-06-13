@@ -25,7 +25,7 @@ const ValuesText = {
         LINUX_LOGIN_APPLICATION_TYPE: "Linux SSH",
         RADIUS_APPLICATION_TYPE: "RADIUS",
         GOOROOM_LOGIN_APPLICATION_TYPE: "Gooroom Logno",
-        MAC_LOGIN_APPLICATION_TYPE: "Mac Logon",
+        MAC_LOGIN_APPLICATION_TYPE: "Mac 로그인",
         ALL_APPLICATION_TYPE: '공용',
         REDMINE_APPLICATION_TYPE: 'Redmine',
         MS_ENTRA_ID_APPLICATION_TYPE: 'Microsoft Entra ID',

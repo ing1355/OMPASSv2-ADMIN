@@ -142,7 +142,7 @@ type GeneralParamsType = {
     sortDirection?: DirectionType
 }
 type AgentInstallerListParamsType = GeneralParamsType & {
-    fileType?: UploadFileTypes
+    fileType?: AgentType
 }
 type DirectionType = "DESC" | "ASC"
 type RPUserType = {
@@ -277,7 +277,7 @@ type ApplicationDataType = DefaultApplicationDataType & {
     discoveryEndpoint?: string
     msAppId?: string
     isAuthorized?: boolean
-    passwordless?: PolicyDataType['passwordless']
+    passwordless?: PolicyEnabledDataType
     ldapProxyServer: {
         host?: string
     }
@@ -292,7 +292,7 @@ type ApplicationDataParamsType = {
     description: ApplicationDataType['description']
     domain?: ApplicationDataType['domain']
     type?: LocalApplicationTypes
-    passwordless?: PolicyDataType['passwordless']
+    passwordless?: PolicyEnabledDataType
 }
 
 type ApplicationListDataType = {
@@ -403,7 +403,7 @@ type PolicyDataType = DefaultPolicyDataType & {
     noticeToAdmin?: RestrictionNoticeDataType
     noticeToThemselves?: RestrictionNoticeThemselvesDataType
     linuxPamBypass?: PAMBypassDataType
-    passwordless?: PolicyEnabledDataType
+    // passwordless?: PolicyEnabledDataType
 }
 
 type PolicyListDataType = {
@@ -962,7 +962,8 @@ type ExternalDirectoryServerDataType = {
     isConnected: boolean
 }
 
-type UploadFileTypes = "APPLICATION_LOGO_IMAGE" | "PORTAL_SETTING_LOGO_IMAGE" | "WINDOWS_AGENT" | "LINUX_PAM" | "OMPASS_PROXY" | "APK" | "REDMINE_PLUGIN" | "KEYCLOAK_PLUGIN" | "WINDOWS_FRAMEWORK"
+type AgentType = "WINDOWS_AGENT" | "LINUX_PAM" | "OMPASS_PROXY" | "REDMINE_PLUGIN" | "KEYCLOAK_PLUGIN" | "WINDOWS_FRAMEWORK" | "MAC_AGENT"
+type UploadFileTypes = AgentType | "APPLICATION_LOGO_IMAGE" | "PORTAL_SETTING_LOGO_IMAGE" | "APK"
 
 type TableSearchOptionType = {
     key: string
@@ -1001,3 +1002,6 @@ type UserApiSyncInfoDataType = {
     url: string
     secretKey: string
 }
+
+// type PlanTypes = "TRIAL_PLAN" | "LICENSE_PLAN_L1" | "LICENSE_PLAN_L2" | "SUBSCRIPTION_PLAN_L1" | "SUBSCRIPTION_PLAN_L2"
+type PlanTypes = "TRIAL_PLAN" | "LICENSE_PLAN_L1" | "LICENSE_PLAN_L2"

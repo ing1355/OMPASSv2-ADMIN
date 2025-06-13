@@ -52,12 +52,13 @@ type SubDomainInfoDataType = {
     interfaceApp: string
     portalApp: string
   }
+  macOsAgentUrl?: string
   windowsAgentUrl?: string
   linuxPamDownloadUrl?: string
   ompassProxyDownloadUrl?: string
   redminePluginDownloadUrl?: string
   keycloakPluginDownloadUrl?: string
-  passwordless?: PolicyDataType['passwordless']
+  passwordless?: ApplicationDataType['passwordless']
 }
 
 type PortalSettingsDataType = {

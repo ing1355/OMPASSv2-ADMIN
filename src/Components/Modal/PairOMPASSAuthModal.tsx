@@ -1,6 +1,5 @@
 import useOMPASS from "hooks/useOMPASS"
 import CustomModal from "./CustomModal"
-import { useSelector } from "react-redux"
 import { useEffect, useRef, useState } from "react"
 import { message } from "antd"
 import dayjs from "dayjs"
@@ -17,7 +16,6 @@ type PairOMPASSAuthModalProps = {
 }
 
 const PairOMPASSAuthModal = ({ opened, onCancel, successCallback, userData }: PairOMPASSAuthModalProps) => {
-    const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     const [remainTime, setRemainTime] = useState(-1)
     const [sourceSessionData, setSourceSessionData] = useState<QRDataDefaultBodyType>({
         url: '',
@@ -108,13 +106,13 @@ const PairOMPASSAuthModal = ({ opened, onCancel, successCallback, userData }: Pa
         }
     }} width={800}>
         <div className="pair-ompass-auth-contents-container">
-            <OMPASSAuthContents role={userInfo.role} name={userInfo.name} username={userInfo.username} status={sourceStatus} sessionData={sourceSessionData} />
+            <OMPASSAuthContents status={sourceStatus} sessionData={sourceSessionData} />
             <div className="pair-ompass-auth-animation-container">
                 {
                     Array.from({length: 20}).map((_,ind) => <div key={ind}/>)
                 }
             </div>
-            {userData && <OMPASSAuthContents role={userData.role} name={userData.name} username={userData.username} status={targetStatus} sessionData={targetSessionData} />}
+            {userData && <OMPASSAuthContents status={targetStatus} sessionData={targetSessionData} />}
         </div>
         <div className="ompass-auth-remain-time-container">
             {

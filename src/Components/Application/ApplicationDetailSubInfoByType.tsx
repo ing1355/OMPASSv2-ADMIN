@@ -18,7 +18,7 @@ type ApplicationDetailSubInfoByTypeProps = {
 }
 
 const ApplicationDetailSubInfoByType = ({ isAuthorized, applicationType, data, MSEntraTenantId, ldapProxyServer }: ApplicationDetailSubInfoByTypeProps) => {
-    if (applicationType === 'RADIUS') return <RadiusDetailInfo data={data} />
+    // if (applicationType === 'RADIUS') return <RadiusDetailInfo data={data} />
     if (applicationType === 'MICROSOFT_ENTRA_ID') return <MSEntraIDDetailInfo isAuthorized={isAuthorized} MSEntraTenantId={MSEntraTenantId} />
     // if (applicationType === 'LDAP') return <LDAPDetailInfo ldapProxyServer={ldapProxyServer} />
     return <></>
@@ -93,6 +93,7 @@ const MSEntraIDDetailInfo = ({ isAuthorized, MSEntraTenantId }: { isAuthorized: 
                 }
             }}>
                 <Input className="st1 secret-key" value={MSEntraTenantId || formatMessage({ id: 'MS_ENTRA_ID_TENANT_EMPTY_VALUE' })} disabled={false} readOnly={true} />
+                {/* <Input className="st1 secret-key" value={'test-tenant-id'} disabled={false} readOnly={true} /> */}
             </CopyToClipboard>
         </CustomInputRow>
     </>

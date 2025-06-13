@@ -5,22 +5,24 @@ import { useState } from "react"
 import { FormattedMessage } from "react-intl"
 import QRIcon from '@assets/qrIcon.png'
 import CustomLoading from "Components/CommonCustomComponents/CustomLoading"
+import { useSelector } from "react-redux"
 
 type OMPASSAuthContentsProps = {
-    role: userRoleType
-    name: UserNameType
-    username: string
     status: OMPASSAuthStatusType
     sessionData: QRDataDefaultBodyType
     isRegister?: boolean
     purpose?: AuthPurposeType
+    applicationName?: string
+    username?: string
 }
 
-const OMPASSAuthContents = ({ isRegister, role, name, username, status, sessionData, purpose }: OMPASSAuthContentsProps) => {
+const OMPASSAuthContents = ({ isRegister, status, sessionData, purpose, applicationName, username }: OMPASSAuthContentsProps) => {
+    const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     const isComplete = status === 'complete'
     const getFullName = useFullName()
     const [qrView, setQrView] = useState(false)
     const qrData: string = `${DEEP_LINK_DOMAIN}/${purpose === 'DEVICE_CHANGE' ? 'device_change' : 'auth'}?${new URLSearchParams(sessionData).toString()}`
+    const { role, name } = userInfo;
     // const qrData: QRDataType<QRDataDefaultBodyType> = {
     //     type: 'DEFAULT',
     //     body: {...sessionData}
@@ -29,10 +31,15 @@ const OMPASSAuthContents = ({ isRegister, role, name, username, status, sessionD
     return <div className="ompass-auth-content-container">
         <div className="ompass-auth-content-title">
             <div className="ompass-auth-content-title-text">
-                <FormattedMessage id={`${role}_ROLE_VALUE`} />
+                {
+                    applicationName ? applicationName : <FormattedMessage id={`${role}_ROLE_VALUE`} />
+                }                
             </div>
             <div className="ompass-auth-content-sub-title">
-                {getFullName(name)}({username})
+                {
+                    username ? username : `${getFullName(name)}(${userInfo.username})`
+                }
+                
             </div>
         </div>
         <div className="ompass-auth-content-progress-container">

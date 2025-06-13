@@ -139,7 +139,7 @@ const UserRpSelfAddComponent = ({ refreshCallback }: UserRpSelfAddComponentProps
                 }
             }}
             buttonLoading />
-        <RegisterOMPASSAuthModal primaryAuthToken={authModalOpen} applicationId={selectedApplication?.id} opened={authModalOpen !== ""} onCancel={() => {
+        <RegisterOMPASSAuthModal username={rpUsername} applicationName={selectedApplication?.name} primaryAuthToken={authModalOpen} applicationId={selectedApplication?.id} opened={authModalOpen !== ""} onCancel={() => {
             setAuthModalOpen("")
         }} successCallback={token => {
             message.success(formatMessage({ id: getSuccessMessageByType(selectedApplication?.type) }))

@@ -49,24 +49,24 @@ const BillingInputRow = ({ label, children, labelStyle, contentStyle }: PropsWit
 }
 
 const Billing = () => {
-    const userNumList = useMemo(() => new Array(991).fill(1), []);
-    const [inputUserNum, setInputUserNum] = useState(10);
+    // const userNumList = useMemo(() => new Array(991).fill(1), []);
+    // const [inputUserNum, setInputUserNum] = useState(10);
 
     const planDatas = [
         {
-            title: "무료 플랜",
+            title: <FormattedMessage id="PLAN_TYPE_TRIAL_PLAN" />,
             status: "USED",
             price: 0,
             descriptions: Array.from({length: 3}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
         },
         {
-            title: "베이직 플랜",
+            title: <FormattedMessage id="PLAN_TYPE_LICENSE_PLAN_L1" />,
             status: "",
             price: "1,100",
             descriptions: Array.from({length: 5}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
         },
         {
-            title: "프리미엄 플랜",
+            title: <FormattedMessage id="PLAN_TYPE_LICENSE_PLAN_L2" />,
             status: "",
             price: "2,200",
             descriptions: Array.from({length: 9}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
@@ -82,7 +82,7 @@ const Billing = () => {
                         {planDatas.map((_, ind) => <div className={"plan-box" + (ind === 0 ? ' selected' : '')} key={ind}>
                             {_.status === 'USED' && <div className="plan-selected">
                                 <img src={planIcon} height='100%' />
-                                현재 플랜 사용중
+                                <FormattedMessage id="BILLING_CURRENT_PLAN_USED" />
                             </div>}
                             <div className="plan-title">
                                 {_.title}
@@ -90,10 +90,10 @@ const Billing = () => {
                             <div className="plan-price-container">
                                 <div className="plan-price-row">
                                     <div className="plan-price-number">{_.price}</div>
-                                    <div className="plan-price-text">원 / 월</div>
+                                    <div className="plan-price-text"><FormattedMessage id="BILLING_PRICE_TEXT" /></div>
                                 </div>
                                 <div className="plan_sub_price_text">
-                                    {ind === 0 ? "*최대 10명 가능" : "*최소 10명 기준"}
+                                    {ind === 0 ? <FormattedMessage id="BILLING_MAX_USER_COUNT_TEXT" /> : <FormattedMessage id="BILLING_MIN_USER_COUNT_TEXT" />}
                                 </div>
                             </div>
                             <div className="plan-description-container">
@@ -104,13 +104,13 @@ const Billing = () => {
                                     </div>)
                                 }
                             </div>
-                            {ind !== 0 && _.status === 'USED' && <Button className="st3">
+                            {/* {ind !== 0 && _.status === 'USED' && <Button className="st3">
                                 구독 취소
-                            </Button>}
+                            </Button>} */}
                         </div>)}
                     </div>
                 </ItemContainer>
-                <ItemContainer title="현재 사용자 수" border>
+                {/* <ItemContainer title="현재 사용자 수" border>
                     <div className="billing-user-nums-container">
                         <div className="billing-current-user-nums">5</div>
                         /
@@ -124,8 +124,8 @@ const Billing = () => {
                             }} />
                         </div>
                     </div>
-                </ItemContainer>
-                <ItemContainer title="OMPASS 결제" border bodyStyle={{
+                </ItemContainer> */}
+                {/* <ItemContainer title="OMPASS 결제" border bodyStyle={{
                     width: '90%'
                 }}>
                     <BillingInputRow label="최대 사용자 수" labelStyle={{
@@ -140,8 +140,8 @@ const Billing = () => {
                             setInputUserNum(parseInt(value))
                         }} needSelect />
                     </BillingInputRow>
-                </ItemContainer>
-                <ItemContainer title="" border bodyStyle={{
+                </ItemContainer> */}
+                {/* <ItemContainer title="" border bodyStyle={{
                     width: '90%'
                 }}>
                     <BillingInputRow label="금액">
@@ -161,42 +161,36 @@ const Billing = () => {
                         <br />
                         <Button className="st3">결제하기</Button>
                     </BillingInputRow>
-                </ItemContainer>
-                <ItemContainer title="결제 내역" border bodyStyle={{
+                </ItemContainer> */}
+                <ItemContainer title={<FormattedMessage id="BILLING_HISTORY" />} border bodyStyle={{
                     width: '100%'
                 }}>
                     <CustomTable
                         theme='table-st1'
-
                         columns={[
                             {
-                                key: 'plan',
-                                title: '플랜'
+                                key: 'type',
+                                title: <FormattedMessage id="PLAN_TYPE_COLUMN_LABEL" />
                             },
                             {
-                                key: 'rotate',
-                                title: '주기'
+                                key: 'createdAt',
+                                title: <FormattedMessage id="PLAN_CREATED_AT_COLUMN_LABEL" />
                             },
                             {
-                                key: 'price',
-                                title: '금액'
+                                key: 'maxApplicationCount',
+                                title: <FormattedMessage id="PLAN_TOTAL_PRICE_AMOUNT_COLUMN_LABEL" />
                             },
                             {
-                                key: 'userNums',
-                                title: '최대 사용자 수'
+                                key: 'maxUserCount',
+                                title: <FormattedMessage id="PLAN_MAX_USER_COUNT_COLUMN_LABEL" />
                             },
                             {
-                                key: 'date',
-                                title: '날짜',
-
+                                key: 'maxSessionCount',
+                                title: <FormattedMessage id="PLAN_MAX_SESSION_COUNT_COLUMN_LABEL" />
                             },
                             {
-                                key: 'status',
-                                title: '상태'
-                            },
-                            {
-                                key: 'etc',
-                                title: '비고'
+                                key: 'totalPriceAmount',
+                                title: <FormattedMessage id="PLAN_TOTAL_PRICE_AMOUNT_COLUMN_LABEL" />
                             }
                         ]}
                     />

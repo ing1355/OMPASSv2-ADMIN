@@ -1,0 +1,8 @@
+.agent-left-tabs .ant-tabs-tab.ant-tabs-tab-active > .ant-tabs-tab-btn{
+    color: var(--main-purple-color);
+    font-weight: bold;
+}
+
+.agent-left-tabs .ant-tabs-ink-bar {
+    background: var(--main-purple-color);
+}

@@ -144,7 +144,8 @@ const ExternalDirectoryDetail = () => {
             flexDirection: 'row',
             gap: '8px'
         }}>
-            <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_MANAGEMENT_TITLE" values={{ type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }} />
+            {/* <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_MANAGEMENT_TITLE" values={{ type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }} /> */}
+            <FormattedMessage id={detailId ? "USER_ADD_EXTERNAL_DIRECTORY_MODIFY_TITLE" : "USER_ADD_EXTERNAL_DIRECTORY_ADD_TITLE"} values={{ type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }} />
             {type !== 'MICROSOFT_ENTRA_ID' && <div>
                 <Button className="st11" icon={downloadIcon} onClick={() => {
                     if (!subdomainInfo.ompassProxyDownloadUrl) {

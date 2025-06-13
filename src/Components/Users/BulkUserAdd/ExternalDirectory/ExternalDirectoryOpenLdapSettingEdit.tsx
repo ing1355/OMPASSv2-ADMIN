@@ -343,7 +343,7 @@ const ExternalDirectoryOpenLdapSettingEdit = () => {
                         }}>
                         </Button>}
                         <div className="external-directory-open-ldap-server-list-container-description">
-                            * 포트는 일반적으로 LDAP 또는 STARTTLS의 경우 389이고 LDAPS의 경우 636입니다.
+                            * <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_OPEN_LDAP_SERVER_LIST_CONTAINER_DESCRIPTION" />
                         </div>
                     </div>
                 </CustomInputRow>

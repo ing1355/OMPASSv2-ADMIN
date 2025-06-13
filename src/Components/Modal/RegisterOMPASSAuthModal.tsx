@@ -1,7 +1,6 @@
 import useOMPASS from "hooks/useOMPASS"
 import CustomModal from "./CustomModal"
 import './OMPASSAuthModal.css'
-import { useSelector } from "react-redux"
 import { useEffect, useRef, useState } from "react"
 import { message } from "antd"
 import dayjs from "dayjs"
@@ -17,10 +16,11 @@ type RadiusUserRegisterOMPASSAuthModalProps = {
     purpose: AuthPurposeType
     targetUserId: string
     primaryAuthToken?: string
+    username?: string
+    applicationName?: string
 }
 
-const RegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, applicationId, purpose, targetUserId, primaryAuthToken }: RadiusUserRegisterOMPASSAuthModalProps) => {
-    const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
+const RegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, applicationId, purpose, targetUserId, primaryAuthToken, username, applicationName }: RadiusUserRegisterOMPASSAuthModalProps) => {
     const [remainTime, setRemainTime] = useState(-1)
     const [sessionData, setSessionData] = useState<QRDataDefaultBodyType>({
         url: '',
@@ -32,7 +32,7 @@ const RegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, applicatio
     const remainTimeRef = useRef(remainTime)
     const tokenRef = useRef<string>('')
     const { formatMessage } = useIntl()
-
+    
     useEffect(() => {
         remainTimeRef.current = remainTime
     }, [remainTime])
@@ -89,11 +89,10 @@ const RegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, applicatio
     }}>
         <OMPASSAuthContents
             isRegister
-            role={userInfo.role}
-            name={userInfo.name}
-            username={userInfo.username}
             status={authStatus}
             sessionData={sessionData}
+            applicationName={applicationName}
+            username={username}
             purpose={purpose}/>
         {sessionData.url && <div className="ompass-auth-description-text">
             <FormattedMessage id="OMPASS_REGISTER_MODAL_SUBSCRIPTION_1" /><br />

@@ -2,6 +2,10 @@
     min-width: var(--main-width);
 }
 
+.contents-header-container.cloud-table {
+    margin-bottom: 32px;
+}
+
 .contents-header-content {
     display: flex;
     flex-direction: row;

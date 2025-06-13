@@ -16,7 +16,7 @@ import groupPortalViewIconColor from '@assets/groupPortalViewIconColor.png'
 import groupApplicationViewIcon from '@assets/groupApplicationViewIcon.png'
 import groupApplicationViewIconColor from '@assets/groupApplicationViewIconColor.png'
 import closeIcon from '@assets/closeIcon.png'
-import { applicationTypes, getApplicationTypeLabel } from "Constants/ConstantValues"
+import { applicationTypes, getApplicationTypeLabel, INT_MAX_VALUE } from "Constants/ConstantValues"
 import './GroupDetail.css'
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect"
 
@@ -62,7 +62,10 @@ const GroupDetail = () => {
     }
 
     useLayoutEffect(() => {
-        GetPoliciesListFunc({}, ({ results, totalCount }) => {
+        GetPoliciesListFunc({
+            page: 0,
+            page_size: INT_MAX_VALUE
+        }, ({ results, totalCount }) => {
             setPoliciesData(results)
         })
         GetDatas()

@@ -17,6 +17,10 @@ export const ApplicationUserMenuItems: DocsMenuItemType[] = [
         route: '/user/application/windows_logon_user'
     },
     {
+        title: 'Mac 로그인',
+        route: '/user/application/mac_logon_user'
+    },
+    {
         title: 'Linux SSH',
         route: '/user/application/linux_ssh_user'
     },
@@ -60,6 +64,10 @@ export const EtcMenuItems: DocsMenuItemType[] = [
 ]
 
 export const PortalMenuItems: DocsMenuItemType[] = [
+    {
+        title: '대시보드',
+        route: '/portal/dashboard'
+    },
     {
         title: '사용자',
         route: '/portal/user'

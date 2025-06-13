@@ -466,7 +466,7 @@ export const AddUserWithCsvDataFunc = (datas: UserBulkAddParameterType, callback
     return CustomAxiosPost(AddUserWithCsvDataApi, callback, datas)
 }
 
-export const GetAgentInstallerListFunc = (fileType: UploadFileTypes, {
+export const GetAgentInstallerListFunc = (fileType: AgentType, {
     page_size = 10,
     page = 1,
     sortDirection = "DESC"
@@ -488,7 +488,7 @@ export const UploadAgentInstallerFunc = (params: AgentInstallerUploadParamsType,
     })
 }
 
-export const CurrentAgentVersionChangeFunc = (fileType: UploadFileTypes, fileId: AgentInstallerDataType['fileId'], callback: (newData: AgentInstallerDataType) => void) => {
+export const CurrentAgentVersionChangeFunc = (fileType: AgentType, fileId: AgentInstallerDataType['fileId'], callback: (newData: AgentInstallerDataType) => void) => {
     return CustomAxiosPatch(CurrentAgentInstallerVersionChangeApi(fileType, fileId), callback)
 }
 

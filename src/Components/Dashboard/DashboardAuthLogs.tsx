@@ -18,7 +18,7 @@ const DashboardAuthLogs = ({ applications }: {
             page_size: 12,
             page: 1,
             authenticationLogType: 'DENY',
-            // applicationTypes: applications.map(_ => _.type)
+            applicationIds: applications.map(_ => _.id)
         }
         GetInvalidAuthLogDataListFunc(_params, ({ results, totalCount }) => {
             setDatas(results.map(_ => ({

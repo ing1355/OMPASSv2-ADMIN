@@ -274,7 +274,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
     const { serverInfo } = data.authenticationInfo
     const { os } = clientData
     const isBrowser = (['WEB', 'ADMIN', 'MICROSOFT_ENTRA_ID', ''] as ApplicationDataType['type'][]).includes(application.type)
-    const isWindow = application.type === 'WINDOWS_LOGIN'
+    const isOSLogin = application.type === 'WINDOWS_LOGIN' || application.type === 'MAC_LOGIN'
     const isPAM = application.type === 'LINUX_LOGIN'
     const isRadius = application.type === 'RADIUS'
     const isLdap = application.type === 'LDAP'
@@ -364,7 +364,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
             </div>
         }
         {
-            isWindow && <div className="user-detail-info-device-info-content-item">
+            isOSLogin && <div className="user-detail-info-device-info-content-item">
                 <img src={pcNameIcon} />
                 <div className="user-detail-info-device-info-content-title">
                     PC Name
@@ -375,7 +375,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
             </div>
         }
         {
-            isWindow && <div className="user-detail-info-device-info-content-item">
+            isOSLogin && <div className="user-detail-info-device-info-content-item">
                 <img src={macAddressIcon} />
                 <div className="user-detail-info-device-info-content-title">
                     Mac Address
@@ -386,7 +386,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
             </div>
         }
         {
-            isWindow && <div className="user-detail-info-device-info-content-item">
+            isOSLogin && <div className="user-detail-info-device-info-content-item">
                 <img src={agentVersionIcon} />
                 <div className="user-detail-info-device-info-content-title">
                     <FormattedMessage id="PACKAGE_VERSION_INFO_LABEL"/>
