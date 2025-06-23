@@ -237,7 +237,11 @@
 }
 
 .notice-row-container.themselves>div:first-child {
-    width: 120px;
+    /* width: 120px; */
+}
+
+.policy-input-container.notice-to-themselves:lang(EN) {
+    /* flex: 0 0 400px; */
 }
 
 .current-location-input-container {

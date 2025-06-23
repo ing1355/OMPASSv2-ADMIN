@@ -19,7 +19,6 @@ const CustomUpload = ({ className, onChange, accept }: CustomUploadProps) => {
         if(accept) {
             const acceptList = accept.split(',')
             if(!acceptList.some(_ => file.name.endsWith(_))) {
-                console.log(`ishere?? ${accept} ${file.name} ${acceptList}`)
                 return message.error(formatMessage({id:'UPLOAD_NEED_ACCEPT_TYPE'}, {
                     param: accept
                 }))

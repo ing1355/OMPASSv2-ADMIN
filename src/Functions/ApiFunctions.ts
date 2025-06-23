@@ -1,8 +1,6 @@
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from "Components/CommonCustomComponents/CustomAxios";
-import { AddApplicationListApi, AddExternalDirectoryApi, AddPasscodeApi, AddPoliciesListApi, AddRadiusUserListApi, AddUserDataApi, AddUserGroupApi, AddUserWithCsvDataApi, ApprovalUserApi, CheckExternalDirectoryConnectionApi, ConfirmPasswordApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeleteExternalDirectoryApi, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DirectoryServerBasedOMPASSRegistrationApi, DuplicateUserNameCheckApi, EmailChangeCodeVerificationApi, FindPortalUsernameApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetAuthorizeMSEntraUriApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetExternalDirectoryListApi, GetGlobalConfigApi, GetMicrosoftEntraIdAuthApi, GetOMPASSAuthResultApi, GetPasscodeHistoriesApi, GetPasscodeListApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetRpUserListApi, GetSubDomainInfoApi, GetUserApiSyncInfoDataApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, LoginApi, OMPASSAuthApi, OMPASSDeviceChangeApi, OMPASSRoleSwappingApi, PasswordlessLoginApi, PatchSessionTokenApi, ReissuanceSecretKeyForUserSyncApi, ResetPasswordApi, ResetPasswordEmailCodeVerifyApi, ResetPasswordEmailSendApi, RoleSwappingApi, RootSignUpRequestApi, RPPrimaryAuthApi, SendEmailChangeEmailByAdminApi, SendPasscodeEmailApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, SyncExternalDirectoryPortalUsersApi, UnlockUserApi, UpdateAgentNoteApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdateExternalDirectoryApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateSecurityQuestionsApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi, VerificationEmailChangeApi } from "Constants/ApiRoute";
-import { DateTimeFormat, INT_MAX_VALUE } from "Constants/ConstantValues";
-import { convertLocalDateStringToUTCString, convertUTCStringToLocalDateString } from "./GlobalFunctions";
-import dayjs from "dayjs";
+import { AddApplicationListApi, AddExternalDirectoryApi, AddPasscodeApi, AddPoliciesListApi, AddRadiusUserListApi, AddUserDataApi, AddUserGroupApi, AddUserWithCsvDataApi, ApprovalUserApi, CheckExternalDirectoryConnectionApi, ConfirmPasswordApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeleteExternalDirectoryApi, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DirectoryServerBasedOMPASSRegistrationApi, DuplicateUserNameCheckApi, EmailChangeCodeVerificationApi, FindPortalUsernameApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetAuthorizeMSEntraUriApi, GetBillingHistoriesApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetExternalDirectoryListApi, GetGlobalConfigApi, GetMicrosoftEntraIdAuthApi, GetOMPASSAuthResultApi, GetPasscodeHistoriesApi, GetPasscodeListApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetRpUserListApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, LoginApi, OMPASSAuthApi, OMPASSDeviceChangeApi, OMPASSRoleSwappingApi, PasswordlessLoginApi, PatchSessionTokenApi, ReissuanceSecretKeyForUserSyncApi, ResetPasswordApi, ResetPasswordEmailCodeVerifyApi, ResetPasswordEmailSendApi, RoleSwappingApi, RootSignUpRequestApi, RPPrimaryAuthApi, SendChangeEmailCodeApi, SendEmailVerificationApi, SendPasscodeEmailApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, SyncExternalDirectoryPortalUsersApi, UnlockUserApi, UpdateAgentDescriptionApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdateExternalDirectoryApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateSecurityQuestionsApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi, VerificationEmailChangeApi } from "Constants/ApiRoute";
+import { INT_MAX_VALUE } from "Constants/ConstantValues";
 
 export const LoginFunc = (params: LoginApiParamsType, callback: (res: LoginApiResponseType, token: string) => void) => {
     return CustomAxiosPost(
@@ -34,7 +32,7 @@ export const UpdatePasswordFunc = (password: string, authorization: string, call
 }
 
 export const GetPasscodeHistoriesFunc = ({
-    page_size = 10,
+    pageSize = 10,
     page = 1,
     sortBy = "CREATED_AT",
     sortDirection = "DESC",
@@ -42,12 +40,14 @@ export const GetPasscodeHistoriesFunc = ({
     issuerUsername = "",
     portalUsername = "",
     rpUsername = "",
+    startDate = undefined,
+    endDate = undefined,
     actions = []
 }: PasscodeHistoriesParamsType, callback: (data: GetListDataGeneralType<PasscodeHistoryDataType>) => void) => {
     return CustomAxiosGet(GetPasscodeHistoriesApi, (data: GetListDataGeneralType<PasscodeHistoryDataType>) => {
         callback(data)
     }, {
-        page_size,
+        pageSize,
         page,
         sortBy,
         sortDirection,
@@ -55,12 +55,14 @@ export const GetPasscodeHistoriesFunc = ({
         issuerUsername,
         portalUsername,
         rpUsername,
+        startDate,
+        endDate,
         actions
     } as PasscodeHistoriesParamsType)
 }
 
 export const GetPasscodeListFunc = ({
-    page_size = 10,
+    pageSize = 10,
     page = 1,
     sortBy = "CREATED_AT",
     sortDirection = "DESC",
@@ -68,12 +70,14 @@ export const GetPasscodeListFunc = ({
     issuerUsername = "",
     portalUsername = "",
     rpUsername = "",
+    startDate = undefined,
+    endDate = undefined,
     action = undefined
 }: PasscodeHistoriesParamsType, callback: (data: GetListDataGeneralType<PasscodeListDataType>) => void) => {
     return CustomAxiosGet(GetPasscodeListApi, (data: GetListDataGeneralType<PasscodeListDataType>) => {
         callback(data)
     }, {
-        page_size,
+        pageSize,
         page,
         sortBy,
         sortDirection,
@@ -81,6 +85,8 @@ export const GetPasscodeListFunc = ({
         issuerUsername,
         portalUsername,
         rpUsername,
+        startDate,
+        endDate,
         action
     } as PasscodeHistoriesParamsType)
 }
@@ -90,7 +96,7 @@ export const AddPasscodeFunc = (params: PasscodeParamsType, callback: (data: Pas
 }
 
 export const GetApplicationListFunc = ({
-    page_size = 10,
+    pageSize = 10,
     page = 1,
     id = "",
     policyName = "",
@@ -101,7 +107,7 @@ export const GetApplicationListFunc = ({
     sortDirection = "DESC"
 }: ApplicationListParamsType, callback: (data: GetListDataGeneralType<ApplicationListDataType>) => void) => {
     return CustomAxiosGet(GetApplicationListApi, callback, {
-        page_size,
+        pageSize,
         page,
         id,
         policyName,
@@ -138,27 +144,26 @@ export const UpdateApplicationSecretkeyFunc = (applicationId: ApplicationDataTyp
 }
 
 export const GetPoliciesListFunc = ({
-    page_size = 10,
+    pageSize = 10,
     page = 1,
     policyId = "",
     name = "",
     applicationTypes = [],
+    startDate = undefined,
+    endDate = undefined,
     sortBy = "CREATED_AT",
     sortDirection = "DESC"
 }: PoliciesListParamsType, callback: (data: GetListDataGeneralType<PolicyListDataType>) => void) => {
     return CustomAxiosGet(GetPoliciesListApi, (data: GetListDataGeneralType<PolicyListDataType>) => {
-        callback({
-            ...data, results: data.results.map(_ => ({
-                ..._,
-                createdAt: convertUTCStringToLocalDateString(_.createdAt)
-            }))
-        })
+        callback(data)
     }, {
-        page_size,
+        pageSize,
         page,
         policyId,
         name,
         applicationTypes,
+        startDate,
+        endDate,
         sortBy,
         sortDirection
     } as PoliciesListParamsType)
@@ -183,7 +188,7 @@ export const DeletePoliciesListFunc = (policyId: PolicyDataType['id'], callback:
 }
 
 export const GetUserDataListFunc = ({
-    page_size = 10,
+    pageSize = 10,
     page = 1,
     userId = "",
     username = "",
@@ -199,7 +204,7 @@ export const GetUserDataListFunc = ({
     return CustomAxiosGet(GetUserDataListApi, (data: GetListDataGeneralType<UserDataType>) => {
         callback(data)
     }, {
-        page_size,
+        pageSize,
         page,
         userId,
         roles,
@@ -241,31 +246,16 @@ export const UnlockUserFunc = (userId: UserDataType['userId'], shouldGenerateRan
 
 export const GetUserDetailDataFunc = (userId: UserDataType['userId'], callback: (data: UserDetailDataType[]) => void) => {
     return CustomAxiosGet(GetUserDetailDataApi(userId), (data: UserDetailDataType[]) => {
-        callback(data.map(_ => ({
-            ..._,
-            authenticationInfo: _.authenticationInfo.map(__ => ({
-                ...__,
-                loginDeviceInfo: {
-                    ...__.loginDeviceInfo,
-                    updatedAt: convertUTCStringToLocalDateString(__.loginDeviceInfo.updatedAt)
-                },
-                createdAt: convertUTCStringToLocalDateString(__.createdAt),
-                authenticators: __.authenticators.map(___ => ({
-                    ...___,
-                    createdAt: convertUTCStringToLocalDateString(___.createdAt),
-                    lastAuthenticatedAt: convertUTCStringToLocalDateString(___.lastAuthenticatedAt)
-                }))
-            }))
-        })))
+        callback(data)
     }, {
-        page: 0,
-        page_size: INT_MAX_VALUE,
+        page: 1,
+        pageSize: INT_MAX_VALUE,
         rpUserId: userId
     } as UserDetailDataParamsType)
 }
 
 export const GetUserGroupDataListFunc = ({
-    page_size = 10,
+    pageSize = 10,
     page = 1,
     policyName = "",
     name = "",
@@ -275,7 +265,7 @@ export const GetUserGroupDataListFunc = ({
     return CustomAxiosGet(GetUserGroupsApi, (data: GetListDataGeneralType<UserGroupListDataType>) => {
         callback(data)
     }, {
-        page_size,
+        pageSize,
         page,
         policyName,
         name,
@@ -309,7 +299,7 @@ export const DeleteUserGroupDataFunc = (groupId: UserGroupDataType['id'], callba
 }
 
 export const GetAllAuthLogDataListFunc = ({
-    page_size = 10,
+    pageSize = 10,
     page = 1,
     portalUsername = "",
     rpUsername = "",
@@ -328,7 +318,7 @@ export const GetAllAuthLogDataListFunc = ({
     return CustomAxiosGet(GetAuthLogDataListApi, (data: GetListDataGeneralType<AllAuthLogDataType>) => {
         callback(data)
     }, {
-        page_size,
+        pageSize,
         page,
         rpUsername,
         portalUsername,
@@ -347,7 +337,7 @@ export const GetAllAuthLogDataListFunc = ({
 }
 
 export const GetInvalidAuthLogDataListFunc = ({
-    page_size = 10,
+    pageSize = 10,
     page = 1,
     rpUsername = "",
     portalUsername = "",
@@ -366,7 +356,7 @@ export const GetInvalidAuthLogDataListFunc = ({
     return CustomAxiosGet(GetAuthLogDataListApi, (data: GetListDataGeneralType<InvalidAuthLogDataType>) => {
         callback(data)
     }, {
-        page_size,
+        pageSize,
         page,
         rpUsername,
         portalUsername,
@@ -386,7 +376,7 @@ export const GetInvalidAuthLogDataListFunc = ({
 }
 
 export const GetValidAuthLogDataListFunc = ({
-    page_size = 10,
+    pageSize = 10,
     page = 1,
     rpUsername = "",
     portalUsername = "",
@@ -403,7 +393,7 @@ export const GetValidAuthLogDataListFunc = ({
     return CustomAxiosGet(GetAuthLogDataListApi, (data: GetListDataGeneralType<ValidAuthLogDataType>) => {
         callback(data)
     }, {
-        page_size,
+        pageSize,
         page,
         rpUsername,
         portalUsername,
@@ -421,7 +411,7 @@ export const GetValidAuthLogDataListFunc = ({
 }
 
 export const GetPortalLogDataListFunc = ({
-    page_size = 10,
+    pageSize = 10,
     page = 1,
     username = "",
     httpMethods = [],
@@ -434,7 +424,7 @@ export const GetPortalLogDataListFunc = ({
     return CustomAxiosGet(GetPortalLogDataListApi, (data: GetListDataGeneralType<PortalLogDataType>) => {
         callback(data)
     }, {
-        page_size,
+        pageSize,
         page,
         username,
         httpMethods,
@@ -467,16 +457,20 @@ export const AddUserWithCsvDataFunc = (datas: UserBulkAddParameterType, callback
 }
 
 export const GetAgentInstallerListFunc = (fileType: AgentType, {
-    page_size = 10,
+    pageSize = 10,
     page = 1,
-    sortDirection = "DESC"
+    sortDirection = "DESC",
+    startDate = undefined,
+    endDate = undefined
 }: AgentInstallerListParamsType, callback: ((data: GetListDataGeneralType<AgentInstallerDataType>) => void)) => {
     return CustomAxiosGet(GetAgentInstallerListApi(fileType), (data: GetListDataGeneralType<AgentInstallerDataType>) => {
         callback(data)
     }, {
-        page_size,
+        pageSize,
         page,
-        sortDirection
+        sortDirection,
+        startDate,
+        endDate
     } as AgentInstallerListParamsType)
 }
 
@@ -496,9 +490,9 @@ export const DeleteAgentInstallerFunc = (fileIds: string, callback: () => void) 
     return CustomAxiosDelete(DeleteAgentInstallerApi(fileIds), callback)
 }
 
-export const UpdateAgentInstallerNoteFunc = (fileId: AgentInstallerDataType['fileId'], params: AgentInstallerDataType['note'], callback: () => void) => {
-    return CustomAxiosPatch(UpdateAgentNoteApi(fileId), callback, {
-        note: params
+export const UpdateAgentInstallerDescriptionFunc = (fileId: AgentInstallerDataType['fileId'], params: AgentInstallerDataType['description'], callback: () => void) => {
+    return CustomAxiosPatch(UpdateAgentDescriptionApi(fileId), callback, {
+        description: params
     })
 }
 
@@ -510,7 +504,7 @@ export const GetPortalSettingsDataFunc = (callback: (data: PortalSettingsDataTyp
     return CustomAxiosGet(GetPortalSettingsDataApi, callback)
 }
 
-export const UpdatePortalSettingsDataFunc = (params: UpdatePortalSettingsDataType, callback: () => void) => {
+export const UpdatePortalSettingsDataFunc = (params: UpdatePortalSettingsDataType, callback: (newData: UpdatePortalSettingsDataType) => void) => {
     return CustomAxiosPut(UpdatePortalSettingsDataApi, callback, params)
 }
 
@@ -548,14 +542,6 @@ export const EmailChangeCodeVerificationFunc = (data: {
     return CustomAxiosPost(EmailChangeCodeVerificationApi, callback, data)
 }
 
-export const SendEmailChangeEmailByAdminFunc = (data: {
-    username: string
-    email: string
-    language: LanguageType
-}, callback: () => void) => {
-    return CustomAxiosPost(SendEmailChangeEmailByAdminApi, callback, data)
-}
-
 export const VerificationEmailChangeFunc = (data: {
     token: string
 }, callback: () => void) => {
@@ -582,28 +568,20 @@ export const GetDashboardApplicationRPUserFunc = (params: ApplicationListDataTyp
     return CustomAxiosGet(GetDashboardApplicationRPUserApi, callback, { applicationIds: params })
 }
 
-const convertDashboardDateParamsKSTtoUTC = (params: DashboardDateSelectDataType): DashboardDateSelectDataType => {
-    return {
-        ...params,
-        startDate: convertLocalDateStringToUTCString(params.startDate),
-        endDate: convertLocalDateStringToUTCString(params.intervalValue === 24 ? dayjs(params.endDate).format(DateTimeFormat) : params.endDate)
-    }
-}
-
 export const GetDashboardApplicationAuthFunc = (params: ApplicationListDataType['id'][], params2: DashboardDateSelectDataType, callback: (data: DashboardChartDataEachApplicationType[]) => void) => {
-    return CustomAxiosGet(GetDashboardApplicationAuthApi, callback, { applicationIds: params, ...convertDashboardDateParamsKSTtoUTC(params2) })
+    return CustomAxiosGet(GetDashboardApplicationAuthApi, callback, { applicationIds: params, ...params2 })
 }
 
 export const GetDashboardApplicationAuthSumFunc = (params: ApplicationListDataType['id'][], params2: DashboardDateSelectDataType, callback: (data: DashboardChartDataType[]) => void) => {
-    return CustomAxiosGet(GetDashboardApplicationAuthSumApi, callback, { applicationIds: params, ...convertDashboardDateParamsKSTtoUTC(params2) })
+    return CustomAxiosGet(GetDashboardApplicationAuthSumApi, callback, { applicationIds: params, ...params2 })
 }
 
 export const GetDashboardApplicationInvalidAuthFunc = (params: ApplicationListDataType['id'][], params2: DashboardDateSelectDataType, callback: (data: DashboardChartDataEachApplicationType[]) => void) => {
-    return CustomAxiosGet(GetDashboardApplicationAuthApi, callback, { applicationIds: params, ...convertDashboardDateParamsKSTtoUTC(params2), logType: 'DENY' })
+    return CustomAxiosGet(GetDashboardApplicationAuthApi, callback, { applicationIds: params, ...params2, logType: 'DENY' })
 }
 
 export const GetDashboardApplicationInvalidAuthSumFunc = (params: ApplicationListDataType['id'][], params2: DashboardDateSelectDataType, callback: (data: DashboardChartDataType[]) => void) => {
-    return CustomAxiosGet(GetDashboardApplicationAuthSumApi, callback, { applicationIds: params, ...convertDashboardDateParamsKSTtoUTC(params2), logType: 'DENY' })
+    return CustomAxiosGet(GetDashboardApplicationAuthSumApi, callback, { applicationIds: params, ...params2, logType: 'DENY' })
 }
 
 export const PatchSessionTokenFunc = (callback: (data: any, token: string) => void) => {
@@ -665,7 +643,7 @@ export const AddRadiusUserListFunc = (params: {
 }
 
 export const GetRpUsersListFunc = ({
-    page_size = 10,
+    pageSize = 10,
     page = 1,
     sortDirection = "DESC",
     applicationId = "",
@@ -676,12 +654,14 @@ export const GetRpUsersListFunc = ({
     lastLoggedInAuthenticator = [],
     windowsAgentVersion = "",
     rpUsername = "",
-    groupName = ""
+    groupName = "",
+    startDate = undefined,
+    endDate = undefined
 }: RpUsersListParamsType, callback: ((data: GetListDataGeneralType<RpUserListDataType>) => void)) => {
     return CustomAxiosGet(GetRpUserListApi, (data: GetListDataGeneralType<RpUserListDataType>) => {
         callback(data)
     }, {
-        page_size,
+        pageSize,
         page,
         sortDirection,
         applicationId,
@@ -692,12 +672,14 @@ export const GetRpUsersListFunc = ({
         isPasscodeCheckEnabled,
         windowsAgentVersion,
         rpUsername,
-        groupName
+        groupName,
+        startDate,
+        endDate
     } as RpUsersListParamsType)
 }
 
 export const FindPortalUsernameFunc = (token: string, callback: (data: {
-    username: string
+    usernames: string[]
 }) => void) => {
     return CustomAxiosGet(FindPortalUsernameApi, callback, null, {
         authorization: token
@@ -705,7 +687,6 @@ export const FindPortalUsernameFunc = (token: string, callback: (data: {
 }
 
 export const UpdateSecurityQuestionsFunc = (questions: SecurityQuestionDataType[], token: string, callback: () => void) => {
-    console.log(token)
     return CustomAxiosPut(UpdateSecurityQuestionsApi, callback, {
         securityQnas: questions
     }, {
@@ -724,7 +705,7 @@ export const ConfirmPasswordFunc = (params: PasswordVerificationRequestParamsTyp
 }
 
 export const GetExternalDirectoryListFunc = ({
-    page_size = 10,
+    pageSize = 10,
     page = 1,
     sortDirection = "DESC",
     id = undefined,
@@ -736,7 +717,7 @@ export const GetExternalDirectoryListFunc = ({
     return CustomAxiosGet(GetExternalDirectoryListApi, (data: GetListDataGeneralType<ExternalDirectoryDataType>) => {
         callback(data)
     }, {
-        page_size,
+        pageSize,
         page,
         sortDirection,
         id,
@@ -781,4 +762,31 @@ export const GetUserApiSyncInfoDataFunc = (callback: (res: GetListDataGeneralTyp
 
 export const ReissuanceSecretKeyForUserSyncFunc = (id: ExternalDirectoryDataType['id'], callback: (res: ExternalDirectoryDataType) => void) => {
     return CustomAxiosPatch(ReissuanceSecretKeyForUserSyncApi(id), callback)
+}
+
+export const SendChangeEmailCodeFunc = (params: {
+    username: string
+    email: string
+}, callback: () => void) => {
+    return CustomAxiosPost(SendChangeEmailCodeApi, callback, params)
+}
+
+export const SendEmailVerificationFunc = (token: string, callback: () => void) => {
+    return CustomAxiosPost(SendEmailVerificationApi, callback, null, {
+        authorization: token
+    })
+}
+
+export const GetBillingHistoriesFunc = ({
+    pageSize = 10,
+    page = 1,
+    sortDirection = "DESC",
+}: GeneralParamsType, callback: ((data: GetListDataGeneralType<BillingHistoryDataType>) => void)) => {
+    return CustomAxiosGet(GetBillingHistoriesApi, (data: GetListDataGeneralType<BillingHistoryDataType>) => {
+        callback(data)
+    }, {
+        pageSize,
+        page,
+        sortDirection
+    } as GeneralParamsType)
 }

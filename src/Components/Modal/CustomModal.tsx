@@ -81,7 +81,6 @@ const CustomModal = ({ titleLeft, noBtns, title, buttonLoading, typeTitle, typeC
             }
         }} {...props} onCancel={onCancel} className="custom-modal-container">
         <form onSubmit={async (e) => {
-            console.log("loading", buttonLoading)
             e.preventDefault()
             if (buttonLoading) setOkLoading(true)
             try {

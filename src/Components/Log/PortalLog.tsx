@@ -2,13 +2,14 @@ import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
 import { GetPortalLogDataListFunc } from "Functions/ApiFunctions"
-import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions"
 import { useState } from "react"
 import { FormattedMessage } from "react-intl"
+import useDateTime from "hooks/useDateTime"
 
 const httpMethodList: HttpMethodType[] = ['POST', 'PUT', 'DELETE']
 
 const PortalLog = () => {
+    const { convertUTCStringToTimezoneDateString } = useDateTime();
     const [tableData, setTableData] = useState<PortalLogDataType[]>([])
     const [totalCount, setTotalCount] = useState<number>(0);
     const [dataLoading, setDataLoading] = useState(false)
@@ -16,7 +17,7 @@ const PortalLog = () => {
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
         const _params: GeneralParamsType = {
-            page_size: params.size,
+            pageSize: params.size,
             page: params.page
         }
         if(params.searchType) {
@@ -30,7 +31,7 @@ const PortalLog = () => {
         GetPortalLogDataListFunc(_params, ({ results, totalCount }) => {
             setTableData(results.map(_ => ({
                 ..._,
-                createdAt: convertUTCStringToLocalDateString(_.createdAt)
+                createdAt: convertUTCStringToTimezoneDateString(_.createdAt)
             })))
             setTotalCount(totalCount)
         }).finally(() => {

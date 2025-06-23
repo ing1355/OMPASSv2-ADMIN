@@ -1,25 +1,25 @@
 import { GetDashboardApplicationInvalidAuthFunc } from "Functions/ApiFunctions"
 import DashboardCardWithDateSelect from "./DashboardCardWithDateSelect"
 import { useEffect, useState } from "react"
-import { dashboardDateInitialValue } from "./Dashboard"
-import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions"
 import { FormattedMessage } from "react-intl"
 import DashBoardBarChart from "./DashboardBarChart"
 import { useSelector } from "react-redux"
 import useDsashboardFunctions from "hooks/useDashboardFunctions"
+import useDateTime from "hooks/useDateTime"
 
 const DashboardInvalidAuth = ({ applications }: {
     applications: ApplicationListDataType[]
 }) => {
     const lang = useSelector((state: ReduxStateType) => state.lang!);
+    const { convertUTCStringToTimezoneDateString } = useDateTime();
+    const {convertDaysByDate, convertHourRangeByDate, convertDashboardDateParamsLocalTimezoneToUTC, dashboardDateInitialValue} = useDsashboardFunctions()
     const [params, setParams] = useState(dashboardDateInitialValue())
-    const {convertDaysByDate, convertHourRangeByDate} = useDsashboardFunctions()
     const [datas, setDatas] = useState<{
         date: string
     }[]>([])
-    console.log(applications)
+    
     const getDatas = () => {
-        GetDashboardApplicationInvalidAuthFunc(applications.map(_ => _.id), params, (data) => {
+        GetDashboardApplicationInvalidAuthFunc(applications.map(_ => _.id), convertDashboardDateParamsLocalTimezoneToUTC(params), (data) => {
             if (params.intervalValue === 24) {
                 setDatas(data.map((_, ind, arr) => {
                     const values = _.applicationCounts.reduce((pre, cur) => {
@@ -29,7 +29,7 @@ const DashboardInvalidAuth = ({ applications }: {
                         }
                     }, {})
                     return {
-                        date: convertDaysByDate(convertUTCStringToLocalDateString(_.startDate)),
+                        date: convertDaysByDate(convertUTCStringToTimezoneDateString(_.startDate)),
                         ...values
                     }
                 }))
@@ -45,7 +45,7 @@ const DashboardInvalidAuth = ({ applications }: {
                         }
                     }, {})
                     return {
-                        date: convertHourRangeByDate(convertUTCStringToLocalDateString(_.startDate), convertUTCStringToLocalDateString(_.endDate), ind === arr.length - 1, lang),
+                        date: convertHourRangeByDate(convertUTCStringToTimezoneDateString(_.startDate), convertUTCStringToTimezoneDateString(_.endDate), ind === arr.length - 1, lang),
                         ...values
                     }
                 }))

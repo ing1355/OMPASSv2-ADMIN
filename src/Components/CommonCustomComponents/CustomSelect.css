@@ -45,14 +45,31 @@
   box-shadow: 0 0 10px 3px rgba(0, 0, 0, .2);
   max-height: 200px;
   overflow-y: auto;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
   z-index: 99;
+}
+
+.custom-select-option-container:not(.opened) {
+  visibility: hidden;
+}
+
+.custom-select-option-item.group-title {
+  color: var(--main-grey-color);
+  font-weight: bold;
+  text-align: left;
+  padding-left: 8px;
 }
 
 .custom-select-option-item {
   color: var(--main-grey-color2);
   border-radius: 6px;
   margin: 2px 0;
+  letter-spacing: -0.25px;
+}
+
+.custom-select-option-item.group-item {
+  text-align: left;
+  padding: 0 16px;
 }
 
 .custom-select-option-item.activate {

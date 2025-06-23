@@ -1,29 +1,24 @@
 import Button from "Components/CommonCustomComponents/Button";
 import Input from "Components/CommonCustomComponents/Input";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { ResetPasswordEmailCodeVerifyFunc, ResetPasswordEmailSendFunc, ResetPasswordFunc } from "Functions/ApiFunctions";
 import { FormattedMessage, useIntl } from "react-intl";
 import { message } from "antd";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
+import EmailSendButton from "Components/CommonCustomComponents/EmailSendButton";
 
-type ResetPasswordProps = {
-    
-}
-
-const ResetPassword = ({ }: ResetPasswordProps) => {
+const ResetPassword = () => {
     const [inputPassword, setInputPassword] = useState('')
     const [inputPasswordConfirm, setInputPasswordConfirm] = useState('')
     const [passwordAlert, setPasswordAlert] = useState(false)
-    const [mailSendLoading, setMailSendLoading] = useState(false)
     const [emailCodeSend, setEmailCodeSend] = useState(false)
     const [inputUsername, setInputUsername] = useState('')
     const [inputEmail, setInputEmail] = useState('')
     const [inputCode, setInputCode] = useState('')
     const [usernameAlert, setUsernameAlert] = useState(false)
     const [emailAlert, setEmailAlert] = useState(false)
-    const [mailCount, setMailCount] = useState(0)
     const [codeConfirm, setCodeConfirm] = useState(false)
     const [token, setToken] = useState('')
     const [searchParams] = useSearchParams()
@@ -34,15 +29,9 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
     const inputPasswordConfirmRef = useRef<HTMLInputElement>()
     const inputEmailRef = useRef<HTMLInputElement>()
     const inputCodeRef = useRef<HTMLInputElement>()
-    const mailTimer = useRef<NodeJS.Timer>()
-    const mailCountRef = useRef(0)
     
     const navigate = useNavigate()
     const { formatMessage } = useIntl()
-
-    useEffect(() => {
-        mailCountRef.current = mailCount
-    }, [mailCount])
 
     const resetRequest = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -58,6 +47,10 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
             if (!inputPasswordConfirm) {
                 inputPasswordConfirmRef.current?.focus()
                 return message.error(formatMessage({id:'PLEASE_INPUT_PASSWORD_CONFIRM_MSG'}))
+            }
+            if (inputPassword !== inputPasswordConfirm) {
+                inputPasswordConfirmRef.current?.focus()
+                return message.error(formatMessage({id:'PASSWORD_NOT_MATCH'}))
             }
             ResetPasswordFunc(inputPassword, token, () => {
                 message.success(formatMessage({id:'PASSWORD_INIT_SUCCESS_MSG'}))
@@ -189,44 +182,22 @@ const ResetPassword = ({ }: ResetPasswordProps) => {
                         ref={inputEmailRef}
                         name="email"
                         maxLength={48}
-
+                        readOnly={emailCodeSend}
                         placeholder={formatMessage({id:'INPUT_EMAIL_WHEN_SIGN_UP_PLACEHOLDER'})}
                         valueChange={(value, alert) => {
                             setInputEmail(value);
                             setEmailAlert(alert || false)
                         }}
                     >
-                        <Button
-                            type='button'
-                            className={'st11'}
-                            style={{
-                                height: '100%',
-                                marginLeft: '8px'
-                            }}
-                            disabled={inputEmail.length === 0 || emailAlert || mailSendLoading}
-                            onClick={() => {
-                                setMailSendLoading(true)
-                                ResetPasswordEmailSendFunc({
-                                    username: inputUsername,
-                                    email: inputEmail,
-                                    type
-                                }, () => {
-                                    setEmailCodeSend(true)
-                                    message.success(formatMessage({id:'EMAIL_SEND_FOR_CODE_VERIFY_SUCCESS_MSG'}))
-                                    mailTimer.current = setInterval(() => {
-                                        setMailCount(count => count + 1)
-                                        if (mailCountRef.current >= 10) {
-                                            clearInterval(mailTimer.current)
-                                            setMailCount(0)
-                                            setMailSendLoading(false)
-                                        }
-                                    }, 1000);
-                                }).catch(e => {
-                                    setMailSendLoading(false)
-                                })
-                            }}
-                        ><FormattedMessage id={emailCodeSend ? 'EMAIL_VERIFY_RE' : 'EMAIL_VERIFY'} />{mailSendLoading ? `(${10 - mailCount}s..)` : ''}
-                        </Button>
+                        <EmailSendButton disabled={inputEmail.length === 0 || emailAlert} onClick={() => {
+                            return ResetPasswordEmailSendFunc({
+                                username: inputUsername,
+                                email: inputEmail,
+                                type
+                            }, () => {
+                                message.success(formatMessage({id:'EMAIL_SEND_FOR_CODE_VERIFY_SUCCESS_MSG'}))
+                            })
+                        }} onChangeCodeSend={setEmailCodeSend} />
                     </Input>
                 </div>}
                 {!codeConfirm && <div

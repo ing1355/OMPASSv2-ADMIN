@@ -40,23 +40,23 @@ const InputRow = ({ title, policyKey, value, setValue, onComplete }: {
                         msg: formatMessage({ id: 'IP_ADDRESS_POLICY_INPUT' })
                     }
                 ]} onInput={ipAddressRestriction} />
-                <Input className="st1 policy-ip-address-input" name="note" placeholder={formatMessage({ id: 'MEMO' })} maxLength={30} />
+                <Input className="st1 policy-ip-address-input" name="description" placeholder={formatMessage({ id: 'MEMO' })} maxLength={30} />
                 <Button icon={addIconWhite} type="submit" className="st3" style={{
                     width: '16px'
                 }} />
             </form>
             {
-                (value[policyKey] as networkPolicyType[]).map(({ ip, note }, ipInd) => <div key={ipInd} className="ip-address-form-container">
+                (value[policyKey] as networkPolicyType[]).map(({ ip, description }, ipInd) => <div key={ipInd} className="ip-address-form-container">
                     <Input className="st1 policy-ip-address-input" placeholder={formatMessage({ id: 'IP_ADDRESS_POLICY_INPUT_PLACEHOLDER_LABEL' })} value={ip} maxLength={31} valueChange={(val) => {
                         setValue(policyKey, (value[policyKey] as networkPolicyType[]).map((_, _ind) => _ind === ipInd ? ({
                             ip: val,
-                            note
+                            description
                         }) : _))
                     }} onInput={ipAddressRestriction} />
-                    <Input className="st1 policy-ip-address-input" placeholder={formatMessage({ id: 'MEMO' })} value={note} valueChange={(val) => {
+                    <Input className="st1 policy-ip-address-input" placeholder={formatMessage({ id: 'MEMO' })} value={description} valueChange={(val) => {
                         setValue(policyKey, (value[policyKey] as networkPolicyType[]).map((_, _ind) => _ind === ipInd ? ({
                             ip,
-                            note: val
+                            description: val
                         }) : _))
                     }} />
                     <Button className="st2" onClick={() => {
@@ -80,9 +80,9 @@ const PolicyIpAddressList = ({ value, onChange, dataInit }: PolicyItemsPropsType
         if (dataInit) {
             const forms = containerRef.current?.querySelectorAll("form");
             forms?.forEach(form => {
-                const { ip, note } = form.elements as any
+                const { ip, description } = form.elements as any
                 ip.value = ''
-                note.value = ''
+                description.value = ''
             })
         }
     }, [dataInit])
@@ -97,7 +97,7 @@ const PolicyIpAddressList = ({ value, onChange, dataInit }: PolicyItemsPropsType
 
     const addFormCallback = (e: React.FormEvent<HTMLFormElement>, key: keyof IpAddressPolicyType) => {
         e.preventDefault()
-        const { ip, note } = e.currentTarget.elements as any
+        const { ip, description } = e.currentTarget.elements as any
         if (!ip.value) {
             return message.error(formatMessage({ id: 'PLEASE_INPUT_CORRECT_IP_ADDRESS' }))
         }
@@ -109,11 +109,11 @@ const PolicyIpAddressList = ({ value, onChange, dataInit }: PolicyItemsPropsType
         }
         const data = {
             ip: ip.value,
-            note: note.value
+            description: description.value
         }
         onChange({ ...value, [key]: [data, ...(value[key] as networkPolicyType[])] })
         ip.value = ''
-        note.value = ''
+        description.value = ''
     }
 
     return <CustomInputRow title={<FormattedMessage id={`${policyNoticeRestrictionTypes[3]}_LABEL`} />} noCenter isVertical>
@@ -149,6 +149,11 @@ const PolicyIpAddressList = ({ value, onChange, dataInit }: PolicyItemsPropsType
                             10.0.0.0/8
                             </div>
                         </div>
+                    </div>
+                    <div className="ip-address-policy-input-header-description last">
+                        <FormattedMessage id="IP_ADDRESS_CIDR_INFO_3" values={{
+                            b: (chunks) => <b>{chunks}</b>
+                        }}/>
                     </div>
                     {/* <div data-valuetext={formatMessage({ id: 'IP_ADDRESS_CIDR_INFO' })}>
                         <img src={ipInfoIcon} />

@@ -11,23 +11,8 @@ import DashboardAllAuthSum from "./DashboardAllAuthSum";
 import DashboardAllAuth from "./DashboardAllAuth";
 import DashboardInvalidAuthSum from "./DashboardInvalidAuthSum";
 import DashboardInvalidAuth from "./DashboardInvalidAuth";
-import { getDateTimeString } from "Functions/GlobalFunctions";
 import DashboardAuthLogs from "./DashboardAuthLogs";
-import { subHours } from "date-fns";
 import { INT_MAX_VALUE } from "Constants/ConstantValues";
-
-export const dashboardDateInitialValue = () => {
-    let startDate = new Date()
-    let endDate = new Date()
-    startDate = subHours(startDate, 5)
-    startDate.setMinutes(0)
-    startDate.setSeconds(0)
-    return {
-        startDate: getDateTimeString(startDate),
-        endDate: getDateTimeString(endDate),
-        intervalValue: 1
-    } as DashboardDateSelectDataType
-}
 
 const Dashboard = () => {
     const [dataLoading, setDataLoading] = useState(false)
@@ -41,7 +26,7 @@ const Dashboard = () => {
     const getApplicationDatas = async () => {
         setDataLoading(true)
         const _params: GeneralParamsType = {
-            page_size: INT_MAX_VALUE,
+            pageSize: INT_MAX_VALUE,
             page: 0
         }
         await GetApplicationListFunc(_params, ({ results, totalCount }) => {

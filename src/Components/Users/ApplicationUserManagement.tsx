@@ -1,9 +1,8 @@
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow";
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect";
 import CustomTable from "Components/CommonCustomComponents/CustomTable";
-import { applicationTypes, authenticatorList, getApplicationTypeLabel, INT_MAX_VALUE } from "Constants/ConstantValues";
+import { applicationTypes, authenticatorList, authenticatorLabelList, getApplicationTypeLabel, INT_MAX_VALUE } from "Constants/ConstantValues";
 import { GetApplicationListFunc, GetRpUsersListFunc } from "Functions/ApiFunctions";
-import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions";
 import useCustomRoute from "hooks/useCustomRoute";
 import useFullName from "hooks/useFullName";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -11,6 +10,7 @@ import { FormattedMessage } from "react-intl";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
+import useDateTime from "hooks/useDateTime";
 
 const ApplicationUserManagement = () => {
     const [searchParams] = useSearchParams()
@@ -30,7 +30,7 @@ const ApplicationUserManagement = () => {
         label: _.name
     }))
     const targetApplicationRef = useRef(targetApplication)
-
+    const { convertUTCStringToTimezoneDateString } = useDateTime();
     const tableSearchOptions = useMemo(() => {
         let temp: TableSearchOptionType[] = [
             {
@@ -53,7 +53,6 @@ const ApplicationUserManagement = () => {
                 type: 'string'
             },
         ]
-        console.log(targetApplication?.type)
         if (targetApplication?.type === 'WINDOWS_LOGIN') {
             temp.push({ key: 'pcName', type: 'string' }, { key: 'windowsPackageVersion', type: 'string' })
         }
@@ -93,8 +92,8 @@ const ApplicationUserManagement = () => {
             key: 'lastLoggedInAuthenticator',
             title: <FormattedMessage id="LAST_LOGGED_IN_AUTHENTICATOR_LABEL" />,
             filterKey: 'lastLoggedInAuthenticator',
-            filterOption: authenticatorList.map(_ => ({
-                label: _,
+            filterOption: authenticatorList.filter(_ => (_ === 'MASTER_USB' && targetApplication?.type === 'WINDOWS_LOGIN') || _ !== 'MASTER_USB').map(_ => ({
+                label: authenticatorLabelList[_],
                 value: _
             }))
         },
@@ -104,7 +103,8 @@ const ApplicationUserManagement = () => {
             },
             {
                 key: 'ompassRegisteredAt',
-                title: <FormattedMessage id="RP_OMPASS_REGISTED_AT_LABEL" />
+                title: <FormattedMessage id="RP_OMPASS_REGISTED_AT_LABEL" />,
+                filterType: 'date'
             }, {
             key: 'hasPasscode',
             title: <FormattedMessage id="RP_HAS_PASSCODE_LABEL" />,
@@ -120,7 +120,7 @@ const ApplicationUserManagement = () => {
 
     const GetAppTypes = async (params: CustomTableSearchParams) => {
         const _params: GeneralParamsType = {
-            page_size: params.size,
+            pageSize: params.size,
             page: params.page
         }
         if (params.searchType) {
@@ -140,7 +140,7 @@ const ApplicationUserManagement = () => {
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
         const _params: GeneralParamsType = {
-            page_size: params.size,
+            pageSize: params.size,
             page: params.page
         }
         if (params.searchType) {
@@ -155,8 +155,8 @@ const ApplicationUserManagement = () => {
         GetRpUsersListFunc(_params, ({ results, totalCount }) => {
             setTableData(results.map(_ => ({
                 ..._,
-                lastLoggedInAt: convertUTCStringToLocalDateString(_.lastLoggedInAt),
-                ompassRegisteredAt: convertUTCStringToLocalDateString(_.ompassRegisteredAt)
+                lastLoggedInAt: convertUTCStringToTimezoneDateString(_.lastLoggedInAt),
+                ompassRegisteredAt: convertUTCStringToTimezoneDateString(_.ompassRegisteredAt)
             })))
             setTotalCount(totalCount)
         }).finally(() => {

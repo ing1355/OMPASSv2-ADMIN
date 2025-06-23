@@ -1,11 +1,5 @@
 import { useState } from "react"
 
-type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-    loading?: boolean
-    icon?: string
-    hoverIcon?: string
-}
-
 const Button = ({ className, loading, onClick, icon, hoverIcon, children, type, disabled, ...props }: ButtonProps) => {
     const [hover, setHover] = useState(false)
     return <button disabled={disabled} data-loading={loading} onClick={(e) => {

@@ -1,10 +1,10 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
-import { applicationTypes, AuthenticationProcessTypes, authenticatorList, getApplicationTypeLabel, logAuthPurposeList } from "Constants/ConstantValues"
-import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions"
+import { applicationTypes, AuthenticationProcessTypes, authenticatorList, authenticatorLabelList, getApplicationTypeLabel, logAuthPurposeList } from "Constants/ConstantValues"
 import { useEffect, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 import { GetValidAuthLogDataListFunc } from "Functions/ApiFunctions"
 import AuthLogDetailModal from "./AuthLogDetailModal"
+import useDateTime from "hooks/useDateTime"
 
 const ValidAuthLogs = () => {
     const [detailData, setDetailData] = useState<ValidAuthLogDataType>()
@@ -12,11 +12,11 @@ const ValidAuthLogs = () => {
     const [totalCount, setTotalCount] = useState(1)
     const [dataLoading, setDataLoading] = useState(false)
     const { formatMessage } = useIntl()
-
+    const { convertUTCStringToTimezoneDateString } = useDateTime();
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
         const _params: GeneralParamsType = {
-            page_size: params.size,
+            pageSize: params.size,
             page: params.page
         }
         if (params.searchType) {
@@ -32,10 +32,10 @@ const ValidAuthLogs = () => {
                 ..._,
                 ompassData: {
                     ..._.ompassData,
-                    sessionExpiredAt: convertUTCStringToLocalDateString(_.ompassData.sessionExpiredAt),
-                    createdAt: convertUTCStringToLocalDateString(_.ompassData.createdAt)
+                    sessionExpiredAt: convertUTCStringToTimezoneDateString(_.ompassData.sessionExpiredAt),
+                    createdAt: convertUTCStringToTimezoneDateString(_.ompassData.createdAt)
                 },
-                authenticationTime: convertUTCStringToLocalDateString(_.authenticationTime)
+                authenticationTime: convertUTCStringToTimezoneDateString(_.authenticationTime)
             })))
             setTotalCount(totalCount)
         }).finally(() => {
@@ -111,9 +111,12 @@ const ValidAuthLogs = () => {
                 {
                     key: 'authenticatorType',
                     title: <FormattedMessage id="AUTHENTICATOR_TYPE_COLUMN_LABEL" />,
+                    render: (data, ind, row) => {
+                        return authenticatorLabelList[data as AuthenticatorTypeType]
+                    },
                     filterKey: 'authenticatorTypes',
                     filterOption: authenticatorList.map(_ => ({
-                        label: _,
+                        label: authenticatorLabelList[_],
                         value: _
                     }))
                 },

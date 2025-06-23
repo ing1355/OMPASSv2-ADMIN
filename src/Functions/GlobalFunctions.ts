@@ -1,10 +1,17 @@
-import { DateTimeFormat, ompassDefaultLogoImage } from "Constants/ConstantValues";
-import dayjs from "dayjs";
+import { ompassDefaultLogoImage } from "Constants/ConstantValues";
 import jwtDecode from "jwt-decode";
 
 export const getStorageAuth = () => localStorage.getItem('Authorization')
 export const setStorageAuth = (token: string) => localStorage.setItem('Authorization', token)
 export const removeStorageAuth = () => localStorage.removeItem('Authorization')
+
+export const getCircledNumber = (index: number) => {
+    // ①(U+2460) ~ ⑳(U+2473)까지 1~20
+    if (index >= 0 && index < 20) {
+        return String.fromCharCode(0x2460 + index);
+    }
+    return index + 1; // 범위 밖이면 일반 숫자
+}
 
 export const saveLocaleToLocalStorage = (locale: ReduxStateType['lang'] = "KR") => {
     localStorage.setItem('locale', locale);
@@ -18,27 +25,6 @@ export const createRandom1Digit = () => {
     return Math.floor(Math.random() * 10).toString()
 }
 
-export const getDateTimeString = (date: Date) => {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-
-    const hour = date.getHours().toString().padStart(2, '0');
-    const minute = date.getMinutes().toString().padStart(2, '0');
-    const second = date.getSeconds().toString().padStart(2, '0');
-
-    const datetimeString = `${year}-${month}-${day} ${hour}:${minute}:${second}`
-
-    return datetimeString;
-}
-
-export const convertUTCStringToLocalDateString = (date: string) => {
-    return dayjs.utc(date).local().format(DateTimeFormat)
-}
-
-export const convertLocalDateStringToUTCString = (date: string) => {
-    return dayjs(date).utc().format(DateTimeFormat)
-}
 
 export const slicePrice = (price: string | number) => {
     const _price = price + "";
@@ -189,10 +175,10 @@ export const convertTimeFormat = (time: number) => {
 };
 
 export const downloadFileByLink = (link?: string, fileName?: string) => {
-    if(link) {
+    if (link) {
         const downloadLink = document.createElement('a');
         downloadLink.href = link
-        if(fileName) downloadLink.download = fileName;
+        if (fileName) downloadLink.download = fileName;
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);
@@ -211,12 +197,12 @@ export function isValidIpRange(range: string) {
         if (start.length !== 4 || start.length !== end.length) {
             return false;
         }
-        
+
         for (let i = 0; i < 4; i++) {
             if (start[i] < end[i]) return true;
             if (start[i] > end[i]) return false;
         }
-        
+
         return true;
     }
     return false;

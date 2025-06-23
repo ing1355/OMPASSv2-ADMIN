@@ -45,6 +45,8 @@ const ServerErrorCodes = {
         ERR_B048: '이미 존재하는 이름입니다. 다른 이름을 입력해주세요.',
         ERR_B049: '이미 등록이 완료된 계정입니다.',
         ERR_B050: "현재 플랜의 한도를 초과하였습니다.",
+        ERR_B051: "존재하지 않는 테넌트입니다. 관리자에게 문의해주세요.",
+        ERR_B052: "만료된 이메일 인증입니다.",
     },
     'EN': {
         ERR_B002: "Please check your ID and email",
@@ -91,7 +93,9 @@ const ServerErrorCodes = {
         ERR_B047: "Microsoft Entra ID access permission is not available",
         ERR_B048: "The name already exists. Please enter a different name",
         ERR_B049: "The account has already been registered",
-        ERR_B050: "The current plan limit has been exceeded"
+        ERR_B050: "The current plan limit has been exceeded",
+        ERR_B051: "This tenant does not exist. Please contact the administrator.",
+        ERR_B052: "Expired email verification."
     }
 }
 

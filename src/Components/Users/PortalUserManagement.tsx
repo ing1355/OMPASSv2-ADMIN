@@ -15,6 +15,8 @@ import { useNavigate } from "react-router"
 import { useSelector } from "react-redux"
 import useExcelDownload from "hooks/useExcelDownload"
 import UserBulkAddModal from "./BulkUserAdd/UserBulkAddModal"
+import emailVerifiedIcon from "@assets/emailVerifiedIcon.png"
+import emailUnverifiedIcon from "@assets/emailUnverifiedIcon.png"
 // const userStatusList: UserDataType['status'][] = ['LOCK', 'RUN', 'WAIT_ADMIN_APPROVAL', 'USER_PENDING_SIGNUP_VERIFICATION', 'USER_PENDING_EMAIL_UPDATE_VERIFICATION', 'WAIT_INIT_PASSWORD', 'WITHDRAWAL']
 const userRoleList = (role: UserDataType['role']): UserDataType['role'][] => role === 'ROOT' ? ['USER', 'ADMIN', 'ROOT'] : ['USER', 'ADMIN']
 
@@ -33,7 +35,7 @@ const PortalUserManagement = () => {
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
         const _params: GeneralParamsType = {
-            page_size: params.size,
+            pageSize: params.size,
             page: params.page
         }
         if (params.searchType) {
@@ -91,7 +93,7 @@ const PortalUserManagement = () => {
             customBtns={<>
                 <Button className="st5" onClick={() => {
                     GetUserDataListFunc({
-                        page_size: INT_MAX_VALUE,
+                        pageSize: INT_MAX_VALUE,
                         page: 0
                     }, (res) => {
                         excelDownload(res.results.filter(_ => _.status !== 'WITHDRAWAL'))
@@ -125,8 +127,15 @@ const PortalUserManagement = () => {
                     render: (data) => getFullName(data)
                 },
                 {
-                    key: 'email',
+                    key: 'emailVerified',
                     title: createHeaderColumn('EMAIL'),
+                    render: (data, ind, row) => <div className="user-email-column">
+                        {row.email}
+                        <img src={data ? emailVerifiedIcon : emailUnverifiedIcon} style={{
+                            width: '20px',
+                            height: '20px',
+                        }} />
+                    </div>
                 },
                 {
                     key: 'phone',

@@ -216,7 +216,6 @@ export const UserInfoInputrow = ({ title, children, required }: PropsWithChildre
 }
 
 const imgSrcByOS = (os: OsNamesType) => {
-    console.log(os)
     switch (os) {
         case 'Mac':
             return macOSIcon

@@ -35,12 +35,13 @@ const App: React.FC = () => {
   const location = useLocation()
   const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
   const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas)!;
+  const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo)!;
   const lang = useSelector((state: ReduxStateType) => state.lang!);
 
   const getDomainInfo = () => {
     console.log('get subdomain info : ', subDomain)
     GetSubDomainInfoFunc(subDomain, (data) => {
-      console.log('response subdomain info : ', data)
+      console.log('timeZone : ', data.timeZone)
       dispatch(subdomainInfoChange(data))
     })
   }
@@ -67,17 +68,16 @@ const App: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    if (userInfo) {
+    if (userInfo && subdomainInfo.backendVersion.fidoApp !== 'unknown') {
       window.addEventListener('storage', () => {
         window.location.reload()
       })
-      console.log('userInfo Change : ', userInfo)
       dispatch(globalDatasChange({ ...globalDatas, loading: true }))
       GetGlobalConfigFunc((data) => {
         dispatch(globalDatasChange({ ...globalDatas, ...data, loading: false }))
       })
     }
-  }, [userInfo])
+  }, [userInfo, subdomainInfo])
 
   return <IntlProvider locale={convertLangToIntlVer(lang)} messages={Locale[lang]}>
     <AxiosController />

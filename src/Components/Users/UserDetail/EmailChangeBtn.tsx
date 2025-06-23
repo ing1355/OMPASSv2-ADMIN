@@ -1,37 +1,27 @@
 import { message } from "antd"
 import Button from "Components/CommonCustomComponents/Button"
 import { emailRegex } from "Components/CommonCustomComponents/CommonRegex"
+import EmailSendButton from "Components/CommonCustomComponents/EmailSendButton"
 import Input from "Components/CommonCustomComponents/Input"
 import CustomModal from "Components/Modal/CustomModal"
-import { EmailChangeCodeVerificationFunc, SendEmailChangeEmailByAdminFunc } from "Functions/ApiFunctions"
-import { useEffect, useRef, useState } from "react"
+import { EmailChangeCodeVerificationFunc, SendChangeEmailCodeFunc } from "Functions/ApiFunctions"
+import { useEffect, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
-import { useSelector } from "react-redux"
 
 const EmailChangeBtn = ({ isSelf, username, successCallback }: {
     isSelf: boolean
     username: UserDataType['username']
     successCallback: () => void
 }) => {
-    const lang = useSelector((state: ReduxStateType) => state.lang!);
     const [modalOpen, setModalOpen] = useState(false)
     const [emailInput, setEmailInput] = useState('')
     const [verifyCode, setVerifyCode] = useState('')
     const [emailCodeSend, setEmailCodeSend] = useState(false)
-    const [mailCount, setMailCount] = useState(0)
     const { formatMessage } = useIntl()
-
-    const mailTimer = useRef<NodeJS.Timer>()
-    const mailCountRef = useRef(0)
-    const [mailSendLoading, setMailSendLoading] = useState(false)
 
     useEffect(() => {
         setVerifyCode('')
     }, [emailCodeSend])
-
-    useEffect(() => {
-        mailCountRef.current = mailCount
-    }, [mailCount])
 
     useEffect(() => {
         if (!modalOpen) {
@@ -64,7 +54,7 @@ const EmailChangeBtn = ({ isSelf, username, successCallback }: {
                 if (!emailRegex.test(emailInput)) {
                     message.error(formatMessage({ id: 'EMAIL_CHECK' }))
                     return null
-                } 
+                }
                 if (isSelf) {
                     if (!emailCodeSend) {
                         message.error(formatMessage({ id: 'EMAIL_CODE_SEND_FIRST_MSG' }))
@@ -82,10 +72,9 @@ const EmailChangeBtn = ({ isSelf, username, successCallback }: {
                         })
                     }
                 } else {
-                    return SendEmailChangeEmailByAdminFunc({
+                    return SendChangeEmailCodeFunc({
                         username,
-                        email: emailInput,
-                        language: lang
+                        email: emailInput
                     }, () => {
                         message.success(formatMessage({ id: 'EMAIL_CODE_SEND_SUCCESS_MSG' }))
                         setModalOpen(false)
@@ -98,35 +87,28 @@ const EmailChangeBtn = ({ isSelf, username, successCallback }: {
             </div>
             <div className='user-unlock-password-row'>
                 <div>
-                    <FormattedMessage id="EMAIL_CHANGE_PLACEHOLDER" />
+                    <FormattedMessage id="EMAIL_CHANGE_INPUT_LABEL" />
                 </div>
-                <Input noGap customType='email' className='st1' value={emailInput} valueChange={val => {
+                <Input noGap customType='email' name='email' className='st1' value={emailInput} valueChange={val => {
                     setEmailInput(val)
                     setEmailCodeSend(false)
                 }} readOnly={emailCodeSend}>
-                    {isSelf && <Button type="button" disabled={mailSendLoading} className="st11 user-email-change-modal-btn" onClick={() => {
-                        if (!emailInput) return message.error(formatMessage({ id: 'PLEASE_INPUT_EMAIL' }))
-                        if (!emailRegex.test(emailInput)) return message.error(formatMessage({ id: 'EMAIL_CHECK' }))
-                        return SendEmailChangeEmailByAdminFunc({
+                    {isSelf && <EmailSendButton noStyle className="user-email-change-modal-btn" onClick={async () => {
+                        if (!emailInput) {
+                            message.error(formatMessage({ id: 'PLEASE_INPUT_EMAIL' }))
+                            return
+                        }
+                        if (!emailRegex.test(emailInput)) {
+                            message.error(formatMessage({ id: 'EMAIL_CHECK' }))
+                            return
+                        }
+                        return SendChangeEmailCodeFunc({
                             username,
-                            email: emailInput,
-                            language: lang
+                            email: emailInput
                         }, () => {
                             message.success(formatMessage({ id: 'EMAIL_CODE_SEND_SUCCESS_MSG' }))
-                            setMailSendLoading(true)
-                            setEmailCodeSend(true)
-                            mailTimer.current = setInterval(() => {
-                                setMailCount(count => count + 1)
-                                if (mailCountRef.current >= 10) {
-                                    clearInterval(mailTimer.current)
-                                    setMailCount(0)
-                                    setMailSendLoading(false)
-                                }
-                            }, 1000);
                         })
-                    }}>
-                        <FormattedMessage id={emailCodeSend ? 'EMAIL_VERIFY_RE' : 'EMAIL_VERIFY'} />{mailSendLoading ? `(${10 - mailCount}s..)` : ''}
-                    </Button>}
+                    }} onChangeCodeSend={setEmailCodeSend} />}
                 </Input>
             </div>
             {isSelf && <div className="user-unlock-password-row">

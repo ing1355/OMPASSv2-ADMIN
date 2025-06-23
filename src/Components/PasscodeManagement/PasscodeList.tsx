@@ -1,11 +1,11 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import { ViewPasscode } from "Components/Users/UserDetail/UserDetailComponents";
 import { GetPasscodeListFunc } from "Functions/ApiFunctions";
-import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import useDateTime from "hooks/useDateTime";
 
 const PasscodeList = () => {
     const [dataLoading, setDataLoading] = useState(false)
@@ -13,17 +13,25 @@ const PasscodeList = () => {
     const navigate = useNavigate();
     const [totalCount, setTotalCount] = useState<number>(0);
     const [tableData, setTableData] = useState<PasscodeListDataType[]>([]);
+    const { convertUTCStringToTimezoneDateString } = useDateTime();
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
         const _params: GeneralParamsType = {
-            page_size: params.size,
+            pageSize: params.size,
             page: params.page
         }
         if (params.searchType) {
             _params[params.searchType] = params.searchValue
         }
         GetPasscodeListFunc(_params, ({ results, totalCount }) => {
-            setTableData(results)
+            setTableData(results.map(_ => ({
+                ..._,
+                passcode: {
+                    ..._.passcode,
+                    createdAt: convertUTCStringToTimezoneDateString(_.passcode.createdAt),
+                    expiredAt: _.passcode.expiredAt === "-1" ? "∞" : convertUTCStringToTimezoneDateString(_.passcode.expiredAt)
+                }
+            })))
             setTotalCount(totalCount)
         }).finally(() => {
             setDataLoading(false)
@@ -99,17 +107,11 @@ const PasscodeList = () => {
             {
                 key: 'createdAt',
                 title: <FormattedMessage id="PASSCODE_CREATED_AT_LABEL" />,
-                render: (data, ind, row) => convertUTCStringToLocalDateString(row.passcode.createdAt),
                 filterType: 'date'
             },
             {
                 key: 'expirationTime',
                 title: <FormattedMessage id="PASSCODE_COLUMN_VALID_TIME_LABEL" />,
-                render: (_, ind, row) => {
-                    const data = row.passcode.expiredAt
-                    if (!data || data === "-1") return "∞"
-                    return convertUTCStringToLocalDateString(data)
-                }
             },
         ]}
     />

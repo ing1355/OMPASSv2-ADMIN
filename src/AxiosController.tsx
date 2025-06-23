@@ -6,12 +6,14 @@ import { message as _message } from 'antd';
 import { userInfoClear } from "Redux/actions/userChange";
 import { controller } from "Components/CommonCustomComponents/CustomAxios";
 import { getStorageAuth } from "Functions/GlobalFunctions";
+import { useNavigate } from "react-router";
 
 let oldInterceptorId = 0;
 
 const AxiosController = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const lang = useSelector((state: ReduxStateType) => state.lang!);
 
   useLayoutEffect(() => {
@@ -22,26 +24,29 @@ const AxiosController = () => {
       console.log(err)
       if (err && err.response && err.response) {
         const { data } = err.response
-        if(data && data.code === 'ERR_B009') {
+        if (data && data.code === 'ERR_B009') {
           console.log('why session expired ?', getStorageAuth(), err.config.headers)
           dispatch(userInfoClear());
-          // navigate('/', {
-          //   replace: true
-          // });
-          if(data) {
-            const { code } = err.response.data;
-            // _message.error(formatMessage({id: code}))
-          }
-        } else {
-          if(data) {
-            const { code, message } = err.response.data;
-            if(code.startsWith("ERR_C")) {
-              _message.error(formatMessage({id: `${code} - ${message}`}))
+        } else if (data) {
+          const { code, message } = err.response.data;
+          console.log(code, message)
+          if (code) {
+            if (code.startsWith("ERR_C")) {
+              _message.error(formatMessage({ id: `${code} - ${message}` }))
+            } else if (code === 'ERR_B051') {
+              window.alert(formatMessage({ id: code }))
+              // window.location.href = `https://test.ompasscloud.com/${lang === 'KR' ? 'ko' : 'en'}/adminLogin/`;
+            } else if (code === 'ERR_B052') {
+              window.alert(formatMessage({ id: code }))
+              navigate('/', {
+                replace: true
+              })
+              // window.location.href = `https://test.ompasscloud.com/${lang === 'KR' ? 'ko' : 'en'}/adminLogin/`;
             } else {
-              _message.error(formatMessage({id: code}))
+              _message.error(formatMessage({ id: code }))
             }
-            controller.abort()
           }
+          controller.abort()
         }
       } else {
 

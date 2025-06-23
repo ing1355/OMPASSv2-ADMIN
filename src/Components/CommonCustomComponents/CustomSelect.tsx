@@ -1,12 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
 import './CustomSelect.css'
 import { FormattedMessage } from "react-intl"
-
-type CustomSelectItemType = {
-    key: any
-    label: React.ReactNode
-    disabled?: boolean
-}
 
 type CustomSelectProps = {
     items: CustomSelectItemType[]
@@ -16,15 +10,18 @@ type CustomSelectProps = {
     noLabel?: React.ReactNode
     style?: React.HTMLAttributes<HTMLDivElement>['style']
     readOnly?: boolean
+    hasGroup?: boolean
 }
 
-const CustomSelect = ({ items, value, onChange, needSelect, noLabel, style, readOnly }: CustomSelectProps) => {
+const CustomSelect = ({ items, value, onChange, needSelect, noLabel, style, readOnly, hasGroup }: CustomSelectProps) => {
     const [showSelect, setShowSelect] = useState(false)
     const [active, setActive] = useState<any>(items && items.length > 0 ? items.find(_ => _.key === value)?.key || items[0].key : '')
     const selectRef = useRef<HTMLDivElement>(null)
     const scrollRef = useRef<HTMLDivElement>(null)
     const activeRef = useRef(active)
     const valueRef = useRef(value)
+    const [maxWidth, setMaxWidth] = useState<number | undefined>(undefined)
+    const measureRef = useRef<HTMLDivElement>(null)
 
     const _items: CustomSelectProps['items'] = needSelect ? items : [{
         key: '',
@@ -85,24 +82,55 @@ const CustomSelect = ({ items, value, onChange, needSelect, noLabel, style, read
         };
     }, [showSelect]);
 
-    return <div className={`custom-select-container${readOnly ? ' read-only' : ''}${showSelect ? ' opened' : ''}${_items.length > 5 ? ' scroll' : ''}`} onClick={() => {
-        if(!readOnly) {
-            setShowSelect(!showSelect)
+    useLayoutEffect(() => {
+        let retry = 0;
+        function measure() {
+          if (measureRef.current && _items.length > 0) {
+            const children = Array.from(measureRef.current.children) as HTMLDivElement[];
+            const widths = children.map(child => child.offsetWidth);
+            const max = Math.max(...widths, 0);
+            if (max === 0 && retry < 3) {
+              retry++;
+              setTimeout(measure, 30); // 30ms 후 재측정
+            } else {
+              setMaxWidth(max > 0 ? max + 14 : undefined);
+            }
+          }
         }
-    }} ref={selectRef} style={style}>
-        {value ? _items.find(_ => _.key === value)?.label : <div className="custom-select-no-label">
-            {noLabel ||  <FormattedMessage id="NO_SELECT_VALUE" />}
-        </div>}
-        {
-            showSelect && <div className="custom-select-option-container" ref={scrollRef}>
+        measure();
+      }, [_items]);
+      
+
+    return <>
+        <div className={`custom-select-container${readOnly ? ' read-only' : ''}${showSelect ? ' opened' : ''}${_items.length > 5 ? ' scroll' : ''}`} onClick={() => {
+            if (!readOnly) {
+                setShowSelect(!showSelect)
+            }
+        }} ref={selectRef} style={{
+            ...style,
+            width: maxWidth
+        }}>
+            {value ? _items.find(_ => _.key === value)?.label : <div className="custom-select-no-label" style={{
+                textAlign: 'center'
+            }}>
+                {noLabel || <FormattedMessage id="NO_SELECT_VALUE" />}
+            </div>}
+            <div className={`custom-select-option-container ${showSelect ? 'opened' : ''}`} ref={scrollRef}>
                 {
-                    _items.length === 0 && <div className="custom-select-option-item no-item">
+                    _items.length === 0 && <div className="custom-select-option-item no-item" style={{
+                        textAlign: 'center'
+                    }}>
                         <FormattedMessage id="CUSTOM_SELECT_NO_ITEM_LABEL" />
                     </div>
                 }
                 {
                     _items.map((_, ind) => {
-                        return <div key={ind} className={`custom-select-option-item${_.key === active ? ' activate' : ''}${_.key === value ? ' selected' : ''}${_.disabled ? ' disabled' : ''}`} onClick={() => {
+                        if (_.isGroup) {
+                            return <div key={ind} className="custom-select-option-item group-title">
+                                {_.label}
+                            </div>
+                        }
+                        return <div key={ind} className={`custom-select-option-item${_.key === active ? ' activate' : ''}${_.key === value ? ' selected' : ''}${_.disabled ? ' disabled' : ''}${hasGroup ? ' group-item' : ''}`} onClick={() => {
                             if (!_.disabled && _.key !== value) onChange(_.key)
                         }} onMouseMove={() => {
                             setActive(_.key)
@@ -112,8 +140,31 @@ const CustomSelect = ({ items, value, onChange, needSelect, noLabel, style, read
                     })
                 }
             </div>
-        }
-    </div>
+        </div>
+        <div
+            ref={measureRef}
+            style={{
+                position: "absolute",
+                visibility: "hidden",
+                height: 0,
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                pointerEvents: "none",
+                display: 'flex',
+                flexDirection: 'column',
+            }}
+        >
+            {_items.map((item, idx) => (
+                <div
+                    key={idx}
+                    className={`custom-select-option-item${item.isGroup ? ' group-title' : ''}${hasGroup ? ' group-item' : ''}`}
+                    style={{ display: "inline-block", fontWeight: item.isGroup ? "bold" : undefined }}
+                >
+                    {item.label}
+                </div>
+            ))}
+        </div>
+    </>
 }
 
 export default CustomSelect

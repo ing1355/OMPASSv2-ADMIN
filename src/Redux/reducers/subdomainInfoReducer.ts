@@ -13,6 +13,7 @@ const subdomainInfo: ReduxStateType['subdomainInfo']|null = {
     questions: []
   },
   serverType: 'ON_PREMISE',
+  timeZone: 'Asia/Seoul',
   noticeMessage: '',
   logoImage: {
     isDefaultImage: true,

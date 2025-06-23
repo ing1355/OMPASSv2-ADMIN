@@ -14,7 +14,7 @@ export const CurrentAgentInstallerVersionChangeApi = (type: AgentType, fileId: A
 export const DeleteAgentInstallerApi = (fileIds: string) => `/v2/id/${fileIds}`;
 export const DownloadAgentInstallerApi = '/v2/agent-installer/download';
 export const UploadAgentInstallerApi = `/v2/upload`;
-export const UpdateAgentNoteApi = (fileId: AgentInstallerDataType['fileId']) => `/v2/id/${fileId}/note`
+export const UpdateAgentDescriptionApi = (fileId: AgentInstallerDataType['fileId']) => `/v2/id/${fileId}/description`
 
 // PASSCODE 관리
 export const GetPasscodeHistoriesApi = '/v2/passcode-histories';
@@ -59,9 +59,8 @@ export const UnlockUserApi = (userId: UserDataType['userId']) => `/v2/users/${us
 export const AddUserWithCsvDataApi = '/v2/users/bulk-users'
 export const DuplicateUserNameCheckApi = (username: string) => `/v2/users/username/${username}/existence`;
 export const RoleSwappingApi = '/v2/users/role-swapping'
-export const GetRpUserListApi = 'v2/users/rp'
+export const GetRpUserListApi = '/v2/users/rp'
 export const EmailChangeCodeVerificationApi = '/v2/users/email/code-verification'
-export const SendEmailChangeEmailByAdminApi = '/v2/users/email/update-auth'
 export const VerificationEmailChangeApi = '/v2/users/email/token-verification'
 export const GetUserApiSyncInfoDataApi = '/v2/users/api-sync-info'
 
@@ -130,3 +129,10 @@ export const UpdateSecurityQuestionsApi = '/v2/users/security-qna'
 
 // 비밀번호 확인
 export const ConfirmPasswordApi = '/v2/users/password-verification'
+
+// 인증 코드 발송
+export const SendChangeEmailCodeApi = '/v2/users/email/verification/update'
+export const SendEmailVerificationApi = '/v2/users/email/verification/authorize'
+
+// 요금
+export const GetBillingHistoriesApi = '/v2/plans'

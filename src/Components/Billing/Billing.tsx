@@ -1,6 +1,6 @@
 import ContentsHeader from "Components/Layout/ContentsHeader"
 import Contents from 'Components/Layout/Contents';
-import { CSSProperties, PropsWithChildren, useMemo, useState } from "react";
+import { CSSProperties, PropsWithChildren, useEffect, useMemo, useState } from "react";
 import './Billing.css'
 import planIcon from '@assets/planIcon.png'
 import checkIcon from '@assets/checkIcon.png'
@@ -11,6 +11,8 @@ import CustomSelect from "Components/CommonCustomComponents/CustomSelect";
 import Button from "Components/CommonCustomComponents/Button";
 import Input from "Components/CommonCustomComponents/Input";
 import { FormattedMessage } from "react-intl";
+import { GetBillingHistoriesFunc } from "Functions/ApiFunctions";
+import useDateTime from "hooks/useDateTime";
 
 type ItemContainerProps = PropsWithChildren<{
     border?: boolean
@@ -48,39 +50,80 @@ const BillingInputRow = ({ label, children, labelStyle, contentStyle }: PropsWit
     </div>
 }
 
+const planDatas: {
+    type: PlanTypes
+    title: React.ReactNode
+    price: string
+    descriptions: React.ReactNode[]
+}[] = [
+    {
+        type: "TRIAL_PLAN",
+        title: <FormattedMessage id="PLAN_TYPE_TRIAL_PLAN" />,
+        price: "0",
+        descriptions: Array.from({length: 3}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
+    },
+    {
+        type: "LICENSE_PLAN_L1",
+        title: <FormattedMessage id="PLAN_TYPE_LICENSE_PLAN_L1" />,
+        price: "1,000",
+        descriptions: Array.from({length: 5}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
+    },
+    {
+        type: "LICENSE_PLAN_L2",
+        title: <FormattedMessage id="PLAN_TYPE_LICENSE_PLAN_L2" />,
+        price: "2,000",
+        descriptions: Array.from({length: 9}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
+    }
+]
+
 const Billing = () => {
+    const { convertUTCStringToTimezoneDateString } = useDateTime();
+    const [tableData, setTableData] = useState<BillingHistoryDataType[]>([])
+    const [totalCount, setTotalCount] = useState<number>(0);
+    const [dataLoading, setDataLoading] = useState(false)
+
     // const userNumList = useMemo(() => new Array(991).fill(1), []);
     // const [inputUserNum, setInputUserNum] = useState(10);
 
-    const planDatas = [
-        {
-            title: <FormattedMessage id="PLAN_TYPE_TRIAL_PLAN" />,
-            status: "USED",
-            price: 0,
-            descriptions: Array.from({length: 3}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
-        },
-        {
-            title: <FormattedMessage id="PLAN_TYPE_LICENSE_PLAN_L1" />,
-            status: "",
-            price: "1,100",
-            descriptions: Array.from({length: 5}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
-        },
-        {
-            title: <FormattedMessage id="PLAN_TYPE_LICENSE_PLAN_L2" />,
-            status: "",
-            price: "2,200",
-            descriptions: Array.from({length: 9}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
+
+    const GetDatas = async (params: CustomTableSearchParams) => {
+        setDataLoading(true)
+        const _params: GeneralParamsType = {
+            pageSize: params.size,
+            page: params.page
         }
-    ]
+        if (params.searchType) {
+            _params[params.searchType] = params.searchValue
+        }
+        if (params.filterOptions) {
+            params.filterOptions.forEach(_ => {
+                _params[_.key] = _.value
+            })
+        }
+        GetBillingHistoriesFunc(_params, ({ results, totalCount }) => {
+            setTableData(results.map(_ => ({
+                ..._,
+                createdAt: convertUTCStringToTimezoneDateString(_.createdAt),
+                expiredDate: _.expiredDate ? convertUTCStringToTimezoneDateString(_.expiredDate) : "-"
+            })))
+            setTotalCount(totalCount)
+        }).finally(() => {
+            setDataLoading(false)
+        })
+    }
+
+    const isSelectedPlan = (type: PlanTypes) => {
+        return tableData[0] && tableData[0].status === 'RUN' && tableData[0].type === type
+    }
 
     return <>
-        <Contents>
+        <Contents loading={dataLoading}>
             <ContentsHeader title="BILLING_MANAGEMENT" subTitle="BILLING_DETAIL" />
             <div className="billing-contents-container">
                 <ItemContainer title={<FormattedMessage id="BILLING_PLAN" />} border>
                     <div className="plans-description-container">
-                        {planDatas.map((_, ind) => <div className={"plan-box" + (ind === 0 ? ' selected' : '')} key={ind}>
-                            {_.status === 'USED' && <div className="plan-selected">
+                        {planDatas.map((_, ind) => <div className={"plan-box" + (isSelectedPlan(_.type) ? ' selected' : '')} key={ind}>
+                            {isSelectedPlan(_.type) && <div className="plan-selected">
                                 <img src={planIcon} height='100%' />
                                 <FormattedMessage id="BILLING_CURRENT_PLAN_USED" />
                             </div>}
@@ -167,10 +210,20 @@ const Billing = () => {
                 }}>
                     <CustomTable
                         theme='table-st1'
+                        datas={tableData}
+                        onSearchChange={(data) => {
+                            GetDatas(data)
+                        }}
                         columns={[
                             {
                                 key: 'type',
-                                title: <FormattedMessage id="PLAN_TYPE_COLUMN_LABEL" />
+                                title: <FormattedMessage id="PLAN_TYPE_COLUMN_LABEL" />,
+                                render: (data, ind, row) => <FormattedMessage id={`PLAN_TYPE_${data}`} />
+                            },
+                            {
+                                key: 'status',
+                                title: <FormattedMessage id="PLAN_STATUS_COLUMN_LABEL" />,
+                                render: (data, ind, row) => <FormattedMessage id={`PLAN_STATUS_${data}`} />
                             },
                             {
                                 key: 'createdAt',
@@ -178,7 +231,7 @@ const Billing = () => {
                             },
                             {
                                 key: 'maxApplicationCount',
-                                title: <FormattedMessage id="PLAN_TOTAL_PRICE_AMOUNT_COLUMN_LABEL" />
+                                title: <FormattedMessage id="PLAN_MAX_APPLICATION_COUNT_COLUMN_LABEL" />
                             },
                             {
                                 key: 'maxUserCount',
@@ -189,9 +242,13 @@ const Billing = () => {
                                 title: <FormattedMessage id="PLAN_MAX_SESSION_COUNT_COLUMN_LABEL" />
                             },
                             {
-                                key: 'totalPriceAmount',
+                                key: 'paymentAmount',
                                 title: <FormattedMessage id="PLAN_TOTAL_PRICE_AMOUNT_COLUMN_LABEL" />
-                            }
+                            },
+                            {
+                                key: 'description',
+                                title: <FormattedMessage id="PLAN_DESCRIPTION_COLUMN_LABEL" />
+                            },
                         ]}
                     />
                 </ItemContainer>

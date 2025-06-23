@@ -1,0 +1,36 @@
+.login-agent-download-button-container {
+    position: relative;
+    height: 34px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    z-index: 999;
+    width: 260px;
+}
+
+.login-agent-download-button-container.hover {
+    overflow: visible;
+}
+
+.login-agent-download-button-container:not(.hover) > .login-agent-download-button:last-child {
+    display: none;
+}
+
+.login-agent-download-button-container > .login-agent-download-button:last-child {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 260px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    height: 34px;
+}
+
+.login-agent-download-button-container.hover > .login-agent-download-button:first-child {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.login-agent-download-button-container > .login-agent-download-button:hover {
+    color: var(--sub-purple-color3);
+}

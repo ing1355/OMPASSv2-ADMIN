@@ -94,7 +94,6 @@ const useOMPASS = () => {
                 loginDeviceInfo: await createDeviceInfoParams()
             }
             authFuncByPurpose({purpose, authFuncParams, primaryAuthToken}, (res) => {
-                console.log(res)
                 startCallback(type, purpose, res, readyCallback, successCallback)
             }).catch(err => {
                 console.log('start api Error catch !!', err)

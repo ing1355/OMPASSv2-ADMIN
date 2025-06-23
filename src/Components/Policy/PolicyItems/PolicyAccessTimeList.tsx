@@ -2,7 +2,7 @@ import { message, Switch, TimePicker } from "antd"
 import Button from "Components/CommonCustomComponents/Button"
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import Input from "Components/CommonCustomComponents/Input"
-import { policyNoticeRestrictionTypes, timeZoneNames } from "Constants/ConstantValues"
+import { policyNoticeRestrictionTypes, timeZoneNamesWithCustomSelect } from "Constants/ConstantValues"
 import { FormattedMessage, useIntl } from "react-intl"
 import deleteIcon from '@assets/deleteIcon.png'
 import deleteIconHover from '@assets/deleteIconHover.png'
@@ -126,21 +126,18 @@ const PolicyAccessTimeList = ({ value, onChange, dataInit }: PolicyItemsPropsTyp
                                 })
                             }} label={<FormattedMessage id="NO_SELECT_VALUE" />} />
                         </div>
-                        <div>
+                        {isEnabled && <div>
                             <label>
-                                <FormattedMessage id="TIME_ZONE_LABEL" /> : <CustomSelect value={currentAccessTimeValue.timeZone} onChange={e => {
+                                <FormattedMessage id="TIME_ZONE_LABEL" /> : <CustomSelect needSelect value={currentAccessTimeValue.timeZone} onChange={e => {
                                     setCurrentAccessTimeValue({
                                         ...currentAccessTimeValue,
                                         timeZone: e
                                     })
-                                }} items={timeZoneNames.map(_ => ({
-                                    key: _,
-                                    label: _
-                                }))} style={{
+                                }} items={timeZoneNamesWithCustomSelect} style={{
                                     width: '300px'
-                                }} />
+                                }} hasGroup />
                             </label>
-                        </div>
+                        </div>}
                     </div>
                     <div className="time-policy-buttons-container">
                         <Button icon={addIconWhite} className="st3" onClick={() => {
@@ -208,19 +205,16 @@ const PolicyAccessTimeList = ({ value, onChange, dataInit }: PolicyItemsPropsTyp
                                 }) : timeValue))
                             }} label={<FormattedMessage id="NO_SELECT_VALUE" />} />
                         </div>
-                        <div>
+                        {isEnabled && <div>
                             <label>
-                                <FormattedMessage id="TIME_ZONE_LABEL" /> : <CustomSelect value={_.timeZone} onChange={e => {
+                                <FormattedMessage id="TIME_ZONE_LABEL" /> : <CustomSelect needSelect value={_.timeZone} onChange={e => {
                                     setAccessTimeValues(accessTimes.map((timeValue, tInd) => tInd === ind ? ({
                                         ...timeValue,
                                         timeZone: e
                                     }) : timeValue))
-                                }} items={timeZoneNames.map(_ => ({
-                                    key: _,
-                                    label: _
-                                }))} />
+                                }} items={timeZoneNamesWithCustomSelect} hasGroup />
                             </label>
-                        </div>
+                        </div>}
                     </div>
                     <div className="time-policy-buttons-container">
                         <Button icon={deleteIcon} hoverIcon={deleteIconHover} className="st2" onClick={() => {

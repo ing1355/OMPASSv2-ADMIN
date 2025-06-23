@@ -10,7 +10,7 @@ import resetIcon from '@assets/resetIcon.png'
 import resetIconWhite from '@assets/resetIconWhite.png'
 import Button from "Components/CommonCustomComponents/Button";
 import Input from "Components/CommonCustomComponents/Input";
-import { applicationTypes, getApplicationTypeLabel, PolicyBrowsersList } from "Constants/ConstantValues";
+import { applicationTypes, getApplicationTypeLabel, maxLengthByType, PolicyBrowsersList } from "Constants/ConstantValues";
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect";
 import CustomModal from "Components/Modal/CustomModal";
 import OMPASSAuth from "./PolicyItems/OMPASSAuth";
@@ -269,7 +269,9 @@ const AuthPolicyDetail = () => {
     const addAuthPolicyFunc = (params: PolicyDataType) => {
         AddPoliciesListFunc(params, (res) => {
             message.success(formatMessage({ id: 'AUTH_POLICY_ADD_SUCCESS_MSG' }))
-            navigate(`/Policies/detail/${res.id}`)
+            navigate(`/Policies/detail/${res.id}`, {
+                replace: true
+            })
         })
     }
 
@@ -315,13 +317,13 @@ const AuthPolicyDetail = () => {
                     {
                         detailData?.policyType === 'DEFAULT' ? <Input className="st1" value={formatMessage({ id: 'default policy' })} readOnly /> : <Input className="st1" value={policyName} valueChange={value => {
                             setPolicyName(value)
-                        }} placeholder={formatMessage({ id: 'POLICY_NAME_PLACEHOLDER' })} />
+                        }} placeholder={formatMessage({ id: 'POLICY_NAME_PLACEHOLDER' })} maxLength={maxLengthByType('title')}/>
                     }
                 </CustomInputRow>
                 <CustomInputRow title={<FormattedMessage id="DESCRIPTION_LABEL" />}>
                     <Input className="st1" value={inputDescription} placeholder={formatMessage({ id: 'DESCRIPTION_PLACEHOLDER' })} valueChange={value => {
                         setInputDescription(value)
-                    }} />
+                    }} maxLength={maxLengthByType('description')}/>
                 </CustomInputRow>
                 <OMPASSAuth value={ompassControl} onChange={setOmpassControl} isDefaultPolicy={isDefaultPolicy} />
                 <div className="auth-policy-validate-container" data-hidden={ompassControl !== 'ACTIVE'}>

@@ -18,26 +18,31 @@
     border-bottom: none;
 }
 
-.excel-errors-row > div:first-child {
-}
-
-.excel-errors-row > div:last-child {
-    
-}
-
-.excel-errors-row > div:first-child {
-    flex: 0 0 200px;
+.excel-errors-row > div {
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
+}
+
+:lang(KR).excel-errors-row > div:first-child {
+    flex: 0 0 120px;
+}
+
+:lang(EN).excel-errors-row > div:first-child {
+    flex: 0 0 150px;
+}
+
+.excel-errors-row > div:nth-child(2) {
+    flex: 0 0 140px;
+}
+
+.excel-errors-row > div:nth-child(3) {
+    flex: .7;
 }
 
 .excel-errors-row > div:last-child {
     flex: 1;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 .excel-errors-modal-button {

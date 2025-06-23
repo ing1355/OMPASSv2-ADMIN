@@ -9,6 +9,7 @@ import policyAddIcon from '@assets/policyAddIcon.png'
 import policyAddIconHover from '@assets/policyAddIconHover.png'
 import { FormattedMessage, useIntl } from "react-intl"
 import { applicationTypes } from "Constants/ConstantValues"
+import useDateTime from "hooks/useDateTime"
 
 const PolicyManagement = () => {
     const [tableData, setTableData] = useState<PolicyListDataType[]>([])
@@ -17,11 +18,11 @@ const PolicyManagement = () => {
 
     const navigate = useNavigate()
     const { formatMessage } = useIntl()
-
+    const { convertUTCStringToTimezoneDateString } = useDateTime();
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
         const _params: GeneralParamsType = {
-            page_size: params.size,
+            pageSize: params.size,
             page: params.page
         }
         if (params.searchType) {
@@ -33,7 +34,10 @@ const PolicyManagement = () => {
             })
         }
         GetPoliciesListFunc(_params, ({ results, totalCount }) => {
-            setTableData(results)
+            setTableData(results.map(_ => ({
+                ..._,
+                createdAt: convertUTCStringToTimezoneDateString(_.createdAt)
+            })))
             setTotalCount(totalCount)
         }).finally(() => {
             setDataLoading(false)
@@ -88,6 +92,7 @@ const PolicyManagement = () => {
                     {
                         key: 'createdAt',
                         title: <FormattedMessage id="POLICY_COLUMN_CREATED_AT_LABEL" />,
+                        filterType: 'date'
                     }
                 ]}
                 onBodyRowClick={(row, index, arr) => {

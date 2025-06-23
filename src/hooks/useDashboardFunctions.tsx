@@ -1,8 +1,34 @@
 import { pad2Digit } from "Functions/GlobalFunctions"
 import { useIntl } from "react-intl"
+import useDateTime from "./useDateTime"
+import dayjs from "dayjs"
+import { DateTimeFormat } from "Constants/ConstantValues"
+import { subHours } from "date-fns"
 
 const useDsashboardFunctions = () => {    
     const {formatMessage} = useIntl()
+    const { convertTimezoneDateStringToUTCString, getDateTimeString } = useDateTime()
+
+    const dashboardDateInitialValue = () => {
+        let startDate = new Date()
+        let endDate = new Date()
+        startDate = subHours(startDate, 5)
+        startDate.setMinutes(0)
+        startDate.setSeconds(0)
+        return {
+            startDate: getDateTimeString(startDate),
+            endDate: getDateTimeString(endDate),
+            intervalValue: 1
+        } as DashboardDateSelectDataType
+    }
+
+    const convertDashboardDateParamsLocalTimezoneToUTC = (params: DashboardDateSelectDataType): DashboardDateSelectDataType => {
+        return {
+            ...params,
+            startDate: convertTimezoneDateStringToUTCString(params.startDate),
+            endDate: convertTimezoneDateStringToUTCString(params.intervalValue === 24 ? dayjs(params.endDate).format(DateTimeFormat) : params.endDate)
+        }
+    }
     
     const convertHourRangeByDate = (startDate: string, endDate: string, isLast: boolean, locale?: LanguageType) => {
         return `${pad2Digit(new Date(startDate).getHours())} ~ ${isLast ? formatMessage({id: 'NOW_LABEL'}) : pad2Digit(new Date(endDate).getHours())}`
@@ -41,7 +67,9 @@ const useDsashboardFunctions = () => {
     return {
         convertDaysByDate,
         convertHourRangeByDate,
-        BarWithLabel
+        BarWithLabel,
+        convertDashboardDateParamsLocalTimezoneToUTC,
+        dashboardDateInitialValue
     }
 }
 

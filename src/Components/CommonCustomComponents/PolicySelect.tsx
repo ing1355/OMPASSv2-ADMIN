@@ -29,7 +29,7 @@ const PolicySelect = ({ selectedPolicy, setSelectedPolicy, needSelect, applicati
     useLayoutEffect(() => {
         if (!datas) GetPoliciesListFunc({
             page: 0,
-            page_size: INT_MAX_VALUE
+            pageSize: INT_MAX_VALUE
         }, ({ results, totalCount }) => {
             setPoliciesData(results)
         })

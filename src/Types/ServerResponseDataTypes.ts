@@ -8,7 +8,7 @@ type AgentInstallerDataType = {
   downloadTarget: boolean
   downloadUrl: string
   fileName: string
-  note: string
+  description?: string
 }
 
 // export type userRoleType = "USER" | "ADMIN" | "SUPER_ADMIN" | null;
@@ -52,6 +52,7 @@ type SubDomainInfoDataType = {
     interfaceApp: string
     portalApp: string
   }
+  timeZone: string
   macOsAgentUrl?: string
   windowsAgentUrl?: string
   linuxPamDownloadUrl?: string
@@ -69,6 +70,7 @@ type PortalSettingsDataType = {
   selfSignupEnabled: boolean
   timeZone: string
   isUserAllowedToRemoveAuthenticator: boolean
+  hidePortal: boolean
   noticeToAdmin: {
     isEnabled: RestrictionNoticeDataType['isEnabled'],
     admins: RestrictionNoticeDataType['admins'],
@@ -84,6 +86,7 @@ type UpdatePortalSettingsDataType = {
   timeZone: string
   isUserAllowedToRemoveAuthenticator: boolean
   selfSignupEnabled: boolean
+  hidePortal: boolean
   noticeToAdmin: {
     isEnabled: RestrictionNoticeDataType['isEnabled'],
     admins: RestrictionNoticeDataType['admins'],

@@ -22,7 +22,7 @@ const ExternalDirectoryManagement = () => {
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
         const _params: ExternalDirectoryListParamsType = {
-            page_size: params.size,
+            pageSize: params.size,
             page: params.page,
             type
         }

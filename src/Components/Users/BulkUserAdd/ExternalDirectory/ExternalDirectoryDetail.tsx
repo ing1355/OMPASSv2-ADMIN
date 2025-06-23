@@ -17,6 +17,7 @@ import { downloadFileByLink } from "Functions/GlobalFunctions";
 import './ExternalDirectory.css'
 import { GetExternalDirectoryListFunc, AddExternalDirectoryFunc, UpdateExternalDirectoryFunc, DeleteExternalDirectoryFunc } from "Functions/ApiFunctions";
 import { ExternalDirectoryTypeLabel } from "./ExternalDirectoryContstants";
+import { maxLengthByType } from "Constants/ConstantValues";
 
 const ExternalDirectoryDetail = () => {
     const type = useParams().type as ExternalDirectoryType
@@ -179,9 +180,7 @@ const ExternalDirectoryDetail = () => {
                     <img src={loading ? loadingIcon2 : externalDirectoryImgByConnectionStatus(data?.isConnected ?? false)} className="external-directory-management-connected-icon"/>
                 </CustomInputRow> */}
                 <CustomInputRow title={<FormattedMessage id="MS_ENTRA_TENANT_ID_LABEL" />}>
-                    <Input className="st1" value={''} valueChange={val => {
-
-                    }} placeholder={formatMessage({ id: 'NO_CONNECTED_MSG' })} disabled={true} />
+                    <Input className="st1" value={data?.msTenantId ?? ''} placeholder={formatMessage({ id: 'NO_CONNECTED_MSG' })} disabled={true} />
                 </CustomInputRow>
             </>}
             <BottomLineText title={<FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_SETTING_INFO_LABEL" />} style={{
@@ -199,7 +198,7 @@ const ExternalDirectoryDetail = () => {
                         ...params,
                         name: val
                     })
-                }} />
+                }} maxLength={maxLengthByType('title')}/>
             </CustomInputRow>
             <CustomInputRow title={<FormattedMessage id="DESCRIPTION_LABEL" />}>
                 <Input className="st1" value={params.description} valueChange={val => {
@@ -207,7 +206,7 @@ const ExternalDirectoryDetail = () => {
                         ...params,
                         description: val
                     })
-                }} />
+                }} maxLength={maxLengthByType('description')}/>
             </CustomInputRow>
             {detailId && <ExternalDirectorySyncButton data={data} type={type} needSync={() => {
                 GetDatas(true)

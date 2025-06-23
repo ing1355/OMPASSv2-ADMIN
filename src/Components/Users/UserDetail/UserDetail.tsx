@@ -15,30 +15,31 @@ import PairOMPASSAuthModal from 'Components/Modal/PairOMPASSAuthModal'
 import UserDetailUserInfo from './UserDetailUserInfo'
 import UserDetailRpUsers from './UserDetailRpUsers'
 import UserRpSelfAddComponent from './UserRpSelfAddComponent'
+import useDateTime from "hooks/useDateTime"
 
 
 
 const UserDetail = ({ }) => {
-    const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);    
+    const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     const [userDetailDatas, setUserDetailDatas] = useState<UserDetailDataType[]>([])
     const [userDetailOpened, setUserDetailOpened] = useState<RPUserDetailAuthDataType['id'][]>([])
     const [userData, setUserData] = useState<UserDataType | undefined>()
     const [dataLoading, setDataLoading] = useState(false)
-    const [authView, setAuthView] = useState(false)    
+    const [authView, setAuthView] = useState(false)
     const [sureSwap, setSureSwap] = useState(false);
-    const [sureDelete, setSureDelete] = useState(false);    
+    const [sureDelete, setSureDelete] = useState(false);
     const [portalSigned, setPortalSigned] = useState(false)
     const navigate = useNavigate()
     const location = useLocation()
-    const dispatch = useDispatch()    
+    const dispatch = useDispatch()
     const _uuid = useParams().uuid;
     const isDeleted = userData?.status === 'WITHDRAWAL'
     const uuid = userInfo.role === 'USER' ? userInfo.userId : _uuid
     const isSelf = (isDev2 && userInfo.role === 'ROOT') || (userInfo.userId === uuid)
     const isAdd = !uuid
-    
+
     const canDelete = (isDev2 && userInfo.role === 'ROOT') || (isSelf && userInfo.role !== 'ROOT') || (userInfo.role === 'ADMIN' && userData?.role === 'USER') || (userInfo.role === 'ROOT' && userData?.role !== 'ROOT')
-    
+
     const authInfoRef = useRef<{
         [key: string]: HTMLDivElement
     }>({})
@@ -86,9 +87,9 @@ const UserDetail = ({ }) => {
         return temp;
     }, [userDetailDatas])
 
-    
-    const { formatMessage } = useIntl()
 
+    const { formatMessage } = useIntl()
+    const { convertUTCStringToTimezoneDateString } = useDateTime();
     const GetDatas = async () => {
         if (uuid) {
             setDataLoading(true)
@@ -99,7 +100,23 @@ const UserDetail = ({ }) => {
                     setUserData(results[0])
                 })
                 await GetUserDetailDataFunc(uuid, (data) => {
-                    setUserDetailDatas(data)
+                    setUserDetailDatas(data.map(_ => ({
+                        ..._,
+                        createdAt: convertUTCStringToTimezoneDateString(_.createdAt),
+                        authenticationInfo: _.authenticationInfo.map(__ => ({
+                            ...__,
+                            loginDeviceInfo: {
+                                ...__.loginDeviceInfo,
+                                updatedAt: convertUTCStringToTimezoneDateString(__.loginDeviceInfo.updatedAt)
+                            },
+                            createdAt: convertUTCStringToTimezoneDateString(__.createdAt),
+                            authenticators: __.authenticators.map(___ => ({
+                                ...___,
+                                createdAt: convertUTCStringToTimezoneDateString(___.createdAt),
+                                lastAuthenticatedAt: convertUTCStringToTimezoneDateString(___.lastAuthenticatedAt)
+                            }))
+                        }))
+                    })))
                     const hasPortal = data.find(_ => _.application.type === 'PORTAL')
                     if (hasPortal) {
                         setPortalSigned(true)
@@ -129,7 +146,7 @@ const UserDetail = ({ }) => {
             }, 250);
             setUserDetailOpened(userDetailOpened.concat(targetId))
         }
-    }, [targetId, authInfoDatas, portalSigned])    
+    }, [targetId, authInfoDatas, portalSigned])
 
     return <>
         <Contents loading={dataLoading}>
@@ -160,7 +177,7 @@ const UserDetail = ({ }) => {
                     <FormattedMessage id="USER_WITHDRAWAL_LABEL" />
                 </Button>}
             </ContentsHeader>
-            <UserDetailUserInfo targetData={userData} setTargetData={setUserData} refreshCallback={GetDatas} hasRpUser={authInfoDatas.length > 0}/>
+            <UserDetailUserInfo targetData={userData} setTargetData={setUserData} refreshCallback={GetDatas} hasRpUser={authInfoDatas.length > 0} />
             <UserDetailRpUsers authInfoDatas={authInfoDatas} refreshCallback={GetDatas} targetData={userData} portalSigned={portalSigned} userDetailOpened={userDetailOpened} setUserDetailOpened={setUserDetailOpened} authInfoRef={authInfoRef} />
             {isSelf && <UserRpSelfAddComponent refreshCallback={GetDatas} />}
         </Contents >
@@ -206,7 +223,7 @@ const UserDetail = ({ }) => {
                     }
                 })
             }} buttonLoading />
-        
+
     </>
 }
 

@@ -120,7 +120,7 @@
   height: 460px;
 }
 .login-body.password-reset.find-id {
-  height: 360px;
+  height: auto;
 }
 
 .login-form-title {
@@ -134,6 +134,10 @@
   flex-direction: column;
   height: 65px;
   margin-bottom: 20px;
+}
+
+.login-input-container.email-verify-modal-container {
+  width: 100%;
 }
 
 .login-input-container > label >.custom-input-wrapper {

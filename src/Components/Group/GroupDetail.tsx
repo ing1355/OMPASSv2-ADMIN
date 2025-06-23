@@ -19,6 +19,7 @@ import closeIcon from '@assets/closeIcon.png'
 import { applicationTypes, getApplicationTypeLabel, INT_MAX_VALUE } from "Constants/ConstantValues"
 import './GroupDetail.css'
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect"
+import useCustomRoute from "hooks/useCustomRoute"
 
 const GroupDetail = () => {
     const [inputName, setInputName] = useState('')
@@ -34,7 +35,7 @@ const GroupDetail = () => {
     const navigate = useNavigate()
     const { uuid } = useParams()
     const { formatMessage } = useIntl()
-
+    const { goBack } = useCustomRoute()
     const applicationTypeItems = applicationTypes.map(_ => ({
         key: _,
         label: getApplicationTypeLabel(_),
@@ -64,7 +65,7 @@ const GroupDetail = () => {
     useLayoutEffect(() => {
         GetPoliciesListFunc({
             page: 0,
-            page_size: INT_MAX_VALUE
+            pageSize: INT_MAX_VALUE
         }, ({ results, totalCount }) => {
             setPoliciesData(results)
         })
@@ -102,7 +103,9 @@ const GroupDetail = () => {
                 if (isAdd) {
                     AddUserGroupDataFunc(params, (res) => {
                         message.success(formatMessage({ id: 'GROUP_ADD_SUCCESS_MSG' }))
-                        navigate(`/Groups/detail/${res.id}`)
+                        navigate(`/Groups/detail/${res.id}`, {
+                            replace: true
+                        })
                     })
                 } else {
                     UpdateUserGroupDataFunc(uuid, params, () => {
@@ -116,9 +119,7 @@ const GroupDetail = () => {
             {!isAdd && <Button className="st2" onClick={() => {
                 DeleteUserGroupDataFunc(uuid, () => {
                     message.success(formatMessage({ id: 'GROUP_MODIFY_DELETE_MSG' }))
-                    navigate('/Groups', {
-                        replace: true
-                    })
+                    goBack()
                 })
             }}>
                 <FormattedMessage id="DELETE" />

@@ -1,23 +1,23 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
-import { applicationTypes, authenticatorList, authFailReasonList, getApplicationTypeLabel, logAuthPurposeList } from "Constants/ConstantValues"
-import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions"
+import { applicationTypes, authenticatorList, authenticatorLabelList, authFailReasonList, getApplicationTypeLabel, logAuthPurposeList } from "Constants/ConstantValues"
 import { useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 import { GetAllAuthLogDataListFunc } from "Functions/ApiFunctions"
 import AuthLogDetailModal from "./AuthLogDetailModal"
+import useDateTime from "hooks/useDateTime"
 
 const AllAuthLogs = () => {
     const [detailData, setDetailData] = useState<AllAuthLogDataType>()
     const [tableData, setTableData] = useState<AllAuthLogDataType[]>([])
     const [totalCount, setTotalCount] = useState(1)
     const [dataLoading, setDataLoading] = useState(false)
-
+    const { convertUTCStringToTimezoneDateString } = useDateTime();
     const { formatMessage } = useIntl()
 
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
         const _params: GeneralParamsType = {
-            page_size: params.size,
+            pageSize: params.size,
             page: params.page
         }
         if (params.searchType) {
@@ -33,10 +33,10 @@ const AllAuthLogs = () => {
                 ..._,
                 ompassData: {
                     ..._.ompassData,
-                    sessionExpiredAt: _.ompassData?.sessionExpiredAt ? convertUTCStringToLocalDateString(_.ompassData.sessionExpiredAt) : "",
-                    createdAt: _.ompassData?.createdAt ? convertUTCStringToLocalDateString(_.ompassData.createdAt) : "" 
+                    sessionExpiredAt: _.ompassData?.sessionExpiredAt ? convertUTCStringToTimezoneDateString(_.ompassData.sessionExpiredAt) : "",
+                    createdAt: _.ompassData?.createdAt ? convertUTCStringToTimezoneDateString(_.ompassData.createdAt) : "" 
                 },
-                authenticationTime: _.authenticationTime ? convertUTCStringToLocalDateString(_.authenticationTime) : ""
+                authenticationTime: _.authenticationTime ? convertUTCStringToTimezoneDateString(_.authenticationTime) : ""
             })))
             setTotalCount(totalCount)
         }).finally(() => {
@@ -112,9 +112,12 @@ const AllAuthLogs = () => {
                 {
                     key: 'authenticatorType',
                     title: <FormattedMessage id="AUTHENTICATOR_TYPE_COLUMN_LABEL" />,
+                    render: (data, ind, row) => {
+                        return authenticatorLabelList[data as AuthenticatorTypeType]
+                    },
                     filterKey: 'authenticatorTypes',
                     filterOption: authenticatorList.map(_ => ({
-                        label: _,
+                        label: authenticatorLabelList[_],
                         value: _
                     }))
                 },

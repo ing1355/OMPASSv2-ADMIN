@@ -128,9 +128,9 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
 
     const GetDatas = async () => {
         setDataLoading(true)
-        GetUserGroupDataListFunc({ page: 0, page_size: INT_MAX_VALUE }, (groups) => {
+        GetUserGroupDataListFunc({ page: 0, pageSize: INT_MAX_VALUE }, (groups) => {
             const groupDatas = groups.results
-            GetApplicationListFunc({ page: 0, page_size: INT_MAX_VALUE }, ({ results }) => {
+            GetApplicationListFunc({ page: 0, pageSize: INT_MAX_VALUE }, ({ results }) => {
                 setApplicationDatas(results)
                 GetUserHierarchyFunc(data => {
                     setUserDatas(data.filter(_ => _.rpUsers.length > 0).map(_ => {

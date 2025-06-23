@@ -1,14 +1,13 @@
 const ValidationText = {
     'KR': {
         USERNAME_CHECK: '아이디는 4~16자의 영소문자 및 숫자만 사용 가능합니다.',
-        EMAIL_CHECK: '올바른 이메일 형식이 아닙니다. (영문, 숫자, 일부 특수문자 사용 가능).',
-        NAME_CHECK: '이름은 한글, 영문 및 숫자만 사용 가능합니다.',
-        FIRST_NAME_CHECK: '이름은 한글, 영문, 숫자로 입력해주세요.',
-        LAST_NAME_CHECK: '성은 한글, 영문, 숫자로 입력해주세요.',
+        EMAIL_CHECK: '올바른 이메일 형식이 아닙니다. (영문, 숫자, 일부 특수문자 포함 48자 이내 사용 가능).',
+        FIRST_NAME_CHECK: '이름은 한글, 영문, 숫자만 사용 가능합니다.',
+        LAST_NAME_CHECK: '성은 한글, 영문, 숫자만 사용 가능합니다.',
         PASSWORD_CHECK: '비밀번호는 8자 이상 3가지 조합 혹은 10자 이상 2가지 조합만 가능합니다.',
         PASSWORD_CONFIRM_CHECK: '비밀번호가 일치하지 않습니다.',
         PASSWORD_NOT_MATCH: '비밀번호가 일치하지 않습니다.',
-        PHONE_NUMBER_CHECK: '10~11자리 숫자만 입력해주세요.',
+        PHONE_NUMBER_CHECK: '10~11자리 숫자와 "-" 문자만 입력해주세요.',
         PLEASE_INPUT_HASH: '해시값을 입력해주세요.',
         THE_FILE_SIZE_EXCEEDS_200MB: '파일 용량(200MB)을 초과하였습니다.',
         ONLY_ZIP_FILES_CAN_BE_UPLOADED: 'zip 파일만 업로드 가능합니다.',
@@ -49,18 +48,18 @@ const ValidationText = {
         PLEASE_INPUT_BASE_DN: 'Base DN을 입력해야 합니다.',
         PLEASE_INPUT_EXTERNAL_DIRECTORY_NAME: '이름을 입력해야 합니다.',
         PLEASE_INPUT_NTLM_DOMAIN: 'NTLM Domain을 입력해야 합니다.',
-        PLEASE_INPUT_NTLM_WORKSTATION: 'NTLM Workstation을 입력해야 합니다.'
+        PLEASE_INPUT_NTLM_WORKSTATION: 'NTLM Workstation을 입력해야 합니다.',
+        DUPLICATED_DATA_EXISTS: '중복된 데이터가 존재합니다.'
     },
     'EN': {
         USERNAME_CHECK: 'Only lowercase letters and numbers are allowed, with a length of 4 to 16 characters',
         EMAIL_CHECK: 'Please enter valid email address',
-        NAME_CHECK: 'Please enter in Korean or English or numbers',
         FIRST_NAME_CHECK: 'Please enter in Korean or English or numbers',
         LAST_NAME_CHECK: 'Please enter in Korean or English or numbers',
         PASSWORD_CHECK: 'Password must be 8 characters or more in 3 combinations or 10 characters or more in 2 combinations',
         PASSWORD_CONFIRM_CHECK: 'The passwords do not match',
         PASSWORD_NOT_MATCH: 'The passwords do not match',
-        PHONE_NUMBER_CHECK: 'Please enter a 10-11 digit number only',
+        PHONE_NUMBER_CHECK: 'Please enter a 10-11 digit number and "-" character only',
         PLEASE_INPUT_HASH: 'Please input hash for agent file',
         THE_FILE_SIZE_EXCEEDS_200MB: 'The file size exceeds 200 MB',
         ONLY_ZIP_FILES_CAN_BE_UPLOADED: 'Only zip files can be uploaded',
@@ -101,7 +100,8 @@ const ValidationText = {
         PLEASE_INPUT_BASE_DN: 'You must enter a Base DN',
         PLEASE_INPUT_EXTERNAL_DIRECTORY_NAME: 'You must enter a name',
         PLEASE_INPUT_NTLM_DOMAIN: 'You must enter a NTLM Domain',
-        PLEASE_INPUT_NTLM_WORKSTATION: 'You must enter a NTLM Workstation'
+        PLEASE_INPUT_NTLM_WORKSTATION: 'You must enter a NTLM Workstation',
+        DUPLICATED_DATA_EXISTS: 'Duplicated data exists'
     }
 }
 

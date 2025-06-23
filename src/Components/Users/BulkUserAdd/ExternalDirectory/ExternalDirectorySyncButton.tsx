@@ -52,7 +52,6 @@ const ExternalDirectorySyncButton = ({ data, type, needSync }: ExternalDirectory
                 if (data?.id) {
                     SyncExternalDirectoryPortalUsersFunc(data.id, res => {
                         message.info(formatMessage({ id: 'USER_ADD_EXTERNAL_DIRECTORY_USER_LOAD_SUCCESS_MSG' }, { type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }))
-                        console.log(res)
                         setSyncDatas(res)
                     }).catch(e => {
                         needSync?.()

@@ -11,6 +11,7 @@ import RequiredLabel from "Components/CommonCustomComponents/RequiredLabel";
 import { isDev } from "Constants/ConstantValues";
 import { useSelector } from "react-redux";
 import SecurityQuestionLayout from "./SecurityQuestionLayout";
+import EmailSendButton from "Components/CommonCustomComponents/EmailSendButton";
 
 const InputRow = ({ label, children, required }: PropsWithChildren<{
     label: string
@@ -34,8 +35,8 @@ const SecondStep = ({ completeCallback }: {
     const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const [isIdAlert, setIsIdAlert] = useState(true)
     const [isPasswordAlert, setIsPasswordAlert] = useState(true)
-    const [isNameAlert1, setIsNameAlert1] = useState(true)
-    const [isNameAlert2, setIsNameAlert2] = useState(true)
+    const [isFirstNameAlert, setIsFirstNameAlert] = useState(true)
+    const [isLastNameAlert, setIsLastNameAlert] = useState(true)
     const [isEmailAlert, setIsEmailAlert] = useState(true)
     const [idExist, setIdExist] = useState<boolean>(true)
     const [emailVerify, setEmailVerify] = useState(false)
@@ -44,14 +45,11 @@ const SecondStep = ({ completeCallback }: {
     const [inputPassword, setInputPassword] = useState('')
     const [inputPasswordConfirm, setInputPasswordConfirm] = useState('')
     const [inputUsername, setInputUsername] = useState('')
-    const [inputName1, setInputName1] = useState('')
-    const [inputName2, setInputName2] = useState('')
+    const [inputFirstName, setInputFirstName] = useState('')
+    const [inputLastName, setInputLastName] = useState('')
     const [inputPhone, setInputPhone] = useState('')
     const [inputEmail, setInputEmail] = useState('')
-    const [mailCount, setMailCount] = useState(0)
     const [rootConfirm, setRootConfirm] = useState(false)
-
-    const [mailSendLoading, setMailSendLoading] = useState(false)
 
 
     const usernameRef = useRef<HTMLInputElement>(null)
@@ -62,8 +60,6 @@ const SecondStep = ({ completeCallback }: {
     const emailRef = useRef<HTMLInputElement>(null)
     const codeRef = useRef<HTMLInputElement>(null)
 
-    const mailTimer = useRef<NodeJS.Timer>()
-    const mailCountRef = useRef(0)
 
     const navigate = useNavigate();
     const { formatMessage } = useIntl();
@@ -74,22 +70,13 @@ const SecondStep = ({ completeCallback }: {
     }, [emailCodeSend])
 
     useEffect(() => {
-        mailCountRef.current = mailCount
-    }, [mailCount])
-
-    useEffect(() => {
         if (isDev) {
             setInputPassword('alskdjfh!2')
             setInputPasswordConfirm('alskdjfh!2')
-            setInputName1('kim')
-            setInputName2('jiho')
+            setInputFirstName('kim')
+            setInputLastName('jiho')
             setInputEmail('hozzi@omsecurity.kr')
             setInputUsername('ingtest2')
-        }
-        return () => {
-            if (mailTimer.current) {
-                clearInterval(mailTimer.current)
-            }
         }
     }, [])
 
@@ -101,8 +88,8 @@ const SecondStep = ({ completeCallback }: {
     return rootConfirm ? <SecurityQuestionLayout onComplete={(ques1, ques2, ques3) => {
         RootSignUpRequestFunc({
             name: {
-                firstName: inputName1,
-                lastName: inputName2
+                firstName: inputFirstName,
+                lastName: inputLastName
             },
             password: inputPassword,
             username: inputUsername,
@@ -145,7 +132,7 @@ const SecondStep = ({ completeCallback }: {
                     message.error(formatMessage({ id: 'PASSWORD_CHECK' }))
                     return passwordRef.current?.focus()
                 }
-                if(inputPasswordConfirm.length === 0) {
+                if (inputPasswordConfirm.length === 0) {
                     message.error(formatMessage({ id: 'PLEASE_INPUT_PASSWORD_CONFIRM' }))
                     return passwordConfirmRef.current?.focus()
                 }
@@ -153,20 +140,21 @@ const SecondStep = ({ completeCallback }: {
                     message.error(formatMessage({ id: 'PASSWORD_NOT_MATCH' }))
                     return passwordConfirmRef.current?.focus()
                 }
-                if (inputName1.length === 0) {
+                if (inputFirstName.length === 0) {
                     message.error(formatMessage({ id: 'PLEASE_INPUT_FIRST_NAME' }))
                     return firstNameRef.current?.focus()
                 }
-                if (inputName2.length === 0) {
+                if (inputLastName.length === 0) {
                     message.error(formatMessage({ id: 'PLEASE_INPUT_LAST_NAME' }))
                     return lastNameRef.current?.focus()
                 }
-                if (isNameAlert1) {
-                    message.error(formatMessage({ id: 'LAST_NAME_CHECK' }))
-                    return firstNameRef.current?.focus()
-                }
-                if (isNameAlert2) {
+                if (isFirstNameAlert) {
                     message.error(formatMessage({ id: 'FIRST_NAME_CHECK' }))
+                    firstNameRef.current?.focus()
+                    return
+                }
+                if (isLastNameAlert) {
+                    message.error(formatMessage({ id: 'LAST_NAME_CHECK' }))
                     return lastNameRef.current?.focus()
                 }
                 if (isEmailAlert) {
@@ -180,12 +168,12 @@ const SecondStep = ({ completeCallback }: {
                     message.error(formatMessage({ id: 'NEED_CODE_VERIFY_MSG' }))
                     return codeRef.current?.focus()
                 }
-                if (inputUsername && inputName1 && inputName2 && inputEmail && inputPassword) {
+                if (inputUsername && inputFirstName && inputLastName && inputEmail && inputPassword) {
                     if (!subdomainInfo.securityQuestion.isRootAdminSignupComplete) return setRootConfirm(true)
                     SignUpRequestFunc({
                         name: {
-                            firstName: lang === 'EN' ? inputName2 : inputName1,
-                            lastName: lang === 'EN' ? inputName1 : inputName2
+                            firstName: inputFirstName,
+                            lastName: inputLastName
                         },
                         password: inputPassword,
                         username: inputUsername,
@@ -239,7 +227,6 @@ const SecondStep = ({ completeCallback }: {
             <InputRow label="PASSWORD" required>
                 <Input
                     className='st1'
-                    type="password"
                     ref={passwordRef}
                     required
                     noGap
@@ -254,7 +241,7 @@ const SecondStep = ({ completeCallback }: {
             <InputRow label="PASSWORD_CONFIRM" required>
                 <Input
                     className='st1'
-                    type="password"
+                    customType="password"
                     ref={passwordConfirmRef}
                     required
                     noGap
@@ -274,25 +261,24 @@ const SecondStep = ({ completeCallback }: {
                 <Input
                     className='st1'
                     required
-                    ref={firstNameRef}
+                    ref={lang === 'EN' ? firstNameRef : lastNameRef}
                     noGap
-                    customType="name"
+                    customType={lang === 'EN' ? 'firstName' : 'lastName'}
                     rules={[
                         {
                             regExp: nameRegex,
-                            msg: <FormattedMessage id={"FIRST_NAME_CHECK"} />
+                            msg: <FormattedMessage id={lang === 'EN' ? "FIRST_NAME_CHECK" : "LAST_NAME_CHECK"} />
                         }
                     ]}
-                    value={inputName1}
+                    value={lang === 'EN' ? inputFirstName : inputLastName}
                     valueChange={(value, isAlert) => {
-                        console.log('value : ', value, isAlert)
-                        setInputName1(value)
-                        setIsNameAlert1(isAlert || false)
-                        // if (lang === 'EN') {
-                        // } else {
-                        //     setInputName2(value)
-                        //     setIsNameAlert2(isAlert || false)
-                        // }
+                        if (lang === 'EN') {
+                            setIsFirstNameAlert(isAlert || false)
+                            setInputFirstName(value)
+                        } else {
+                            setIsLastNameAlert(isAlert || false)
+                            setInputLastName(value)
+                        }
                     }}
                 />
             </InputRow>
@@ -300,24 +286,24 @@ const SecondStep = ({ completeCallback }: {
                 <Input
                     className='st1'
                     required
-                    ref={lastNameRef}
+                    ref={lang === 'EN' ? lastNameRef : firstNameRef}
                     noGap
                     rules={[
                         {
                             regExp: nameRegex,
-                            msg: <FormattedMessage id={"LAST_NAME_CHECK"} />
+                            msg: <FormattedMessage id={lang === 'EN' ? "LAST_NAME_CHECK" : "FIRST_NAME_CHECK"} />
                         }
                     ]}
-                    value={inputName2}
-                    customType="name"
+                    value={lang === 'EN' ? inputLastName : inputFirstName}
+                    customType={lang === 'EN' ? 'lastName' : 'firstName'}
                     valueChange={(value, isAlert) => {
-                        setInputName2(value)
-                        setIsNameAlert2(isAlert || false)
-                        // if (lang === 'EN') {
-                        // } else {
-                        //     setInputName1(value)
-                        //     setIsNameAlert1(isAlert || false)
-                        // }
+                        if (lang === 'EN') {
+                            setIsLastNameAlert(isAlert || false)
+                            setInputLastName(value)
+                        } else {
+                            setIsFirstNameAlert(isAlert || false)
+                            setInputFirstName(value)
+                        }
                     }}
                 />
             </InputRow>
@@ -337,32 +323,13 @@ const SecondStep = ({ completeCallback }: {
                     }}
                     readOnly={emailVerify}
                 >
-                    <Button
-                        type='button'
-                        className={'st11 signup-duplicate-check'}
-                        disabled={inputEmail.length === 0 || emailVerify || isEmailAlert || mailSendLoading}
-                        loading={mailSendLoading}
-                        onClick={() => {
-                            setMailSendLoading(true)
-                            setEmailCodeSend(true)
-                            SignUpVerificationCodeSendFunc({
-                                email: inputEmail
-                            }, () => {
-                                message.success(formatMessage({ id: 'EMAIL_SEND_FOR_CODE_VERIFY_SUCCESS_MSG' }))
-                                mailTimer.current = setInterval(() => {
-                                    setMailCount(count => count + 1)
-                                    if (mailCountRef.current >= 10) {
-                                        clearInterval(mailTimer.current)
-                                        setMailCount(0)
-                                        setMailSendLoading(false)
-                                    }
-                                }, 1000);
-                            }).catch(e => {
-                                setMailSendLoading(false)
-                            })
-                        }}
-                    ><FormattedMessage id={emailCodeSend ? 'EMAIL_VERIFY_RE' : 'EMAIL_VERIFY'} />{mailSendLoading ? `(${10 - mailCount}s..)` : ''}
-                    </Button>
+                    <EmailSendButton noStyle className="signup-duplicate-check" disabled={inputEmail.length === 0 || emailVerify || isEmailAlert} onClick={() => {
+                        return SignUpVerificationCodeSendFunc({
+                            email: inputEmail
+                        }, () => {
+                            message.success(formatMessage({ id: 'EMAIL_SEND_FOR_CODE_VERIFY_SUCCESS_MSG' }))
+                        })
+                    }} onChangeCodeSend={setEmailCodeSend} />
                 </Input>
             </InputRow>
             <InputRow label="EMAIL_CODE_LABEL" required>

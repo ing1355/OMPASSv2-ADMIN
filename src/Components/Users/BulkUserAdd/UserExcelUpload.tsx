@@ -19,7 +19,9 @@ import Locale from '../../../Locale';
 
 type ExcelRegexErrorDataType = {
     row: number
-    key: (keyof UserExcelDataType | keyof UserNameType)[]
+    key: (keyof UserExcelDataType | keyof UserNameType)
+    msg: string
+    value: string
 }
 
 const decodeCSV = async (arrayBuffer: ArrayBuffer): Promise<string> => {
@@ -34,6 +36,15 @@ const decodeCSV = async (arrayBuffer: ArrayBuffer): Promise<string> => {
 
     return text;
 };
+
+const makeErrorData = (row: number, key: string, msg: string, value: string) => {
+    return {
+        row,
+        key,
+        msg,
+        value
+    } as ExcelRegexErrorDataType
+}
 
 
 const UserExcelUpload = () => {
@@ -162,7 +173,7 @@ const UserExcelUpload = () => {
                             if(jsonData.length === 0) {
                                 return message.error(formatMessage({ id: 'EXCEL_EMPTY_MSG' }));
                             }
-                            let temp: ExcelRegexErrorDataType[] = []
+                            let errorTemp: ExcelRegexErrorDataType[] = []
 
                             const columns = Object.keys(jsonData[0] as object)
 
@@ -176,53 +187,70 @@ const UserExcelUpload = () => {
                                 return message.error(formatMessage({id: 'EXCEL_UPLOAD_FAIL_MSG'}))
                             }
 
+                            const usernameSet = new Map<string, number>()
+                            const duplicatedUsernames: string[] = []
+
                             const resultData = jsonData.map((_, ind) => {
-                                let errorTemp: ExcelRegexErrorDataType = {
-                                    row: ind + 1,
-                                    key: []
-                                }
-                                let result = Object.values(_ as Object).reduce((pre, cur, ind) => {
-                                    cur = (cur as string).trim()
-                                    if (ind === usernameInd) {
+                                let result = Object.values(_ as Object).reduce((pre, cur, _ind) => {
+                                    if(typeof cur === 'number') cur = cur.toString()
+                                    cur = cur.trim()
+                                    if (_ind === usernameInd) {
                                         if (!idRegex.test(cur)) {
-                                            errorTemp.key.push('username')
+                                            errorTemp.push(makeErrorData(ind + 1, 'username', formatMessage({ id: 'USERNAME_CHECK' }), cur))
+                                        }
+                                        if (usernameSet.get(cur)) {
+                                            if(duplicatedUsernames.includes(cur)) {
+                                                errorTemp.push(makeErrorData(ind+1, 'username', formatMessage({ id: 'DUPLICATED_DATA_EXISTS' }), cur))
+                                            } else {
+                                                errorTemp.push(makeErrorData(usernameSet.get(cur)!, 'username', formatMessage({ id: 'DUPLICATED_DATA_EXISTS' }), cur))
+                                                errorTemp.push(makeErrorData(ind+1, 'username', formatMessage({ id: 'DUPLICATED_DATA_EXISTS' }), cur))
+                                                duplicatedUsernames.push(cur)
+                                            }
+                                        } else {
+                                            usernameSet.set(cur, ind + 1)
                                         }
                                         pre["username"] = cur;
-                                    } else if (ind === firstNameInd) {
+                                    }
+                                    if (_ind === firstNameInd) {
                                         if (cur.length > 0 && !nameRegex.test(cur)) {
-                                            errorTemp.key.push('firstName')
+                                            errorTemp.push(makeErrorData(ind + 1, 'firstName', formatMessage({ id: 'FIRST_NAME_CHECK' }), cur))
                                         }
                                         pre["name"] = {
                                             ...pre["name"],
                                             "firstName": cur
                                         }
-                                    } else if (ind === lastNameInd) {
+                                    }
+                                    if (_ind === lastNameInd) {
                                         if (!nameRegex.test(cur)) {
-                                            errorTemp.key.push('lastName')
+                                            errorTemp.push(makeErrorData(ind + 1, 'lastName', formatMessage({ id: 'LAST_NAME_CHECK' }), cur))
                                         }
                                         pre["name"] = {
                                             ...pre["name"],
                                             "lastName": cur
                                         }
-                                    } else if (ind === emailInd) {
-                                        if (!emailRegex.test(cur)) {
-                                            errorTemp.key.push('email')
+                                    }
+                                    if (_ind === emailInd) {
+                                        if (!cur) {
+                                            errorTemp.push(makeErrorData(ind + 1, 'email', formatMessage({ id: 'PLEASE_INPUT_EMAIL' }), cur))
+                                        } else if (!emailRegex.test(cur)) {
+                                            errorTemp.push(makeErrorData(ind + 1, 'email', formatMessage({ id: 'EMAIL_CHECK' }), cur))
                                         }
                                         pre["email"] = cur;
-                                    } else if (ind === phoneInd) {
+                                    }
+                                    if (_ind === phoneInd) {
                                         if (cur.length > 0 && !phoneRegex.test(cur)) {
-                                            errorTemp.key.push('phone')
+                                            errorTemp.push(makeErrorData(ind + 1, 'phone', formatMessage({ id: 'PHONE_NUMBER_CHECK' }), cur))
                                         }
                                         pre["phone"] = cur;
                                     }
+                                    
                                     return pre;
                                 }, {})
-                                if (errorTemp.key.length > 0) temp.push(errorTemp);
                                 return result;
                             }); // 데이터 저장
                             
-                            if (temp.length > 0) {
-                                setShowError(temp)
+                            if (errorTemp.length > 0) {
+                                setShowError(errorTemp)
                             } else {
                                 if(resultData.length === 0) {
                                     message.error(formatMessage({ id: 'EXCEL_EMPTY_MSG' }));
@@ -249,7 +277,7 @@ const UserExcelUpload = () => {
             onCancel={() => {
                 setShowError([])
             }}
-            width={800}
+            width={1000}
             justConfirm
             okText={formatMessage({ id: 'CONFIRM' })}
             okClassName="excel-errors-modal-button"
@@ -267,6 +295,12 @@ const UserExcelUpload = () => {
                         <div>
                             <FormattedMessage id="EXCEL_UPLOAD_ERROR_MODAL_SUBSCRIPTION_2_LABEL" />
                         </div>
+                        <div>
+                            <FormattedMessage id="EXCEL_UPLOAD_ERROR_MODAL_SUBSCRIPTION_4_LABEL" />
+                        </div>
+                        <div>
+                            <FormattedMessage id="EXCEL_UPLOAD_ERROR_MODAL_SUBSCRIPTION_3_LABEL" />
+                        </div>
                     </div>
                     {
                         showError.map((_, ind) => <div key={ind} className="excel-errors-row">
@@ -274,12 +308,19 @@ const UserExcelUpload = () => {
                                 {_.row}
                             </div>
                             <div>
-                                {_.key.map((__, _ind, arr) => <span key={_ind} style={{
+                                <FormattedMessage id={`USER_${_.key.toUpperCase()}_LABEL`} />
+                                {/* {_.key.map((__, _ind, arr) => <span key={_ind} style={{
                                     marginRight: '4px'
                                 }}>
                                     <FormattedMessage id={`USER_${__.toUpperCase()}_LABEL`} />
                                     {_ind !== arr.length - 1 && ','}
-                                </span>)}
+                                </span>)} */}
+                            </div>
+                            <div>
+                                {_.value}
+                            </div>
+                            <div>
+                                {_.msg}
                             </div>
                         </div>)
                     }

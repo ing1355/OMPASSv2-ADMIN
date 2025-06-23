@@ -80,7 +80,6 @@ const ExternalDirectoryOpenLdapSettingEdit = () => {
 
     useEffect(() => {
         if (data) {
-            console.log(data)
             setParams({
                 type,
                 name: data.name,
@@ -209,7 +208,6 @@ const ExternalDirectoryOpenLdapSettingEdit = () => {
                             ldapAuthenticationType: params.ldapAuthenticationType,
                             ldapTransportType: params.ldapTransportType
                         }, res => {
-                            console.log(res)
                             setParams({
                                 ...params,
                                 directoryServers: res.map(server => ({

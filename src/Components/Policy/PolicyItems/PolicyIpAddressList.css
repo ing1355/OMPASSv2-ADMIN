@@ -97,3 +97,9 @@
 .ip-address-policy-input-header-sub-row-2 > div {
     color: var(--main-grey-color);
 }
+
+.ip-address-policy-input-header-description.last {
+    font-size: 14px;
+    letter-spacing: -0.5px;
+    color: var(--sub-grey-color4);
+}

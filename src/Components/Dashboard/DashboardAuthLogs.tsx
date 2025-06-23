@@ -1,10 +1,10 @@
 import { Tooltip } from "antd"
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import { GetInvalidAuthLogDataListFunc } from "Functions/ApiFunctions"
-import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions"
 import { useEffect, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 import { useNavigate } from "react-router"
+import useDateTime from "hooks/useDateTime"
 
 const DashboardAuthLogs = ({ applications }: {
     applications: ApplicationListDataType[]
@@ -12,10 +12,10 @@ const DashboardAuthLogs = ({ applications }: {
     const [datas, setDatas] = useState<InvalidAuthLogDataType[]>([])
     const navigate = useNavigate()
     const { formatMessage } = useIntl()
-
+    const { convertUTCStringToTimezoneDateString } = useDateTime();
     const getDatas = () => {
         const _params: AuthLogListParamsType = {
-            page_size: 12,
+            pageSize: 12,
             page: 1,
             authenticationLogType: 'DENY',
             applicationIds: applications.map(_ => _.id)
@@ -23,7 +23,7 @@ const DashboardAuthLogs = ({ applications }: {
         GetInvalidAuthLogDataListFunc(_params, ({ results, totalCount }) => {
             setDatas(results.map(_ => ({
                 ..._,
-                authenticationTime: convertUTCStringToLocalDateString(_.authenticationTime)
+                authenticationTime: convertUTCStringToTimezoneDateString(_.authenticationTime)
             })))
         }).finally(() => {
 

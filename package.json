@@ -1,6 +1,6 @@
 {
   "name": "ompass_rp_admin",
-  "version": "2.0.0(140)",
+  "version": "2.0.0(150)",
   "proxy": "https://ompass.kr:54006",
   "private": true,
   "dependencies": {
@@ -24,7 +24,6 @@
     "axios": "^1.4.0",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
-    "dayjs-plugin-utc": "^0.1.2",
     "jwt-decode": "^3.1.2",
     "moment-timezone": "^0.5.45",
     "ompass": "^0.5.2",
@@ -64,7 +63,8 @@
     "awsDeploy": "aws s3 sync ./build s3://ompass-admin&&npm run awsInvalidation",
     "awsTestDeploy": "aws s3 sync ./build s3://ompass-admin-test&&npm run awsTestInvalidation",
     "deploy:dev": "rsync -av --delete ./build/* hozzi@192.168.182.141:~/admin",
-    "deploy:dev2": "rsync -av --delete ./build/* oms@192.168.182.75:/opt/oms/ompass2/server/fe/ompass_portal"
+    "deploy:dev2": "rsync -av --delete ./build/* oms@192.168.182.75:/opt/oms/ompass2/server/fe/ompass_portal",
+    "sync:prod": "ssh oms@192.168.182.76 'bash /opt/oms/ompass2/server/fe/get.sh'"
   },
   "eslintConfig": {
     "extends": [

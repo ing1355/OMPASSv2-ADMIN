@@ -1,11 +1,10 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import { applicationTypes, authFailReasonList, getApplicationTypeLabel, logAuthPurposeList } from "Constants/ConstantValues"
-import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions"
 import { useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 import { GetInvalidAuthLogDataListFunc } from "Functions/ApiFunctions"
-import { message } from "antd"
 import AuthLogDetailModal from "./AuthLogDetailModal"
+import useDateTime from "hooks/useDateTime"
 
 const InvalidAuthLogs = () => {
     const [detailData, setDetailData] = useState<InvalidAuthLogDataType>()
@@ -13,11 +12,11 @@ const InvalidAuthLogs = () => {
     const [totalCount, setTotalCount] = useState(1)
     const [dataLoading, setDataLoading] = useState(false)
     const { formatMessage } = useIntl()
-
+    const { convertUTCStringToTimezoneDateString } = useDateTime();
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
         const _params: GeneralParamsType = {
-            page_size: params.size,
+            pageSize: params.size,
             page: params.page
         }
         if (params.searchType) {
@@ -33,10 +32,10 @@ const InvalidAuthLogs = () => {
                 ..._,
                 ompassData: {
                     ..._.ompassData,
-                    sessionExpiredAt: _.ompassData?.sessionExpiredAt ? convertUTCStringToLocalDateString(_.ompassData.sessionExpiredAt) : "",
-                    createdAt: _.ompassData?.createdAt ? convertUTCStringToLocalDateString(_.ompassData.createdAt) : ""
+                    sessionExpiredAt: _.ompassData?.sessionExpiredAt ? convertUTCStringToTimezoneDateString(_.ompassData.sessionExpiredAt) : "",
+                    createdAt: _.ompassData?.createdAt ? convertUTCStringToTimezoneDateString(_.ompassData.createdAt) : ""
                 },
-                authenticationTime: _.authenticationTime ? convertUTCStringToLocalDateString(_.authenticationTime) : ""
+                authenticationTime: _.authenticationTime ? convertUTCStringToTimezoneDateString(_.authenticationTime) : ""
             })))
             setTotalCount(totalCount)
         }).finally(() => {

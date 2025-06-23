@@ -1,26 +1,26 @@
 import { useEffect, useState } from "react"
 import DashboardCardWithDateSelect from "./DashboardCardWithDateSelect"
-import { dashboardDateInitialValue } from "./Dashboard"
 import { GetDashboardApplicationAuthFunc } from "Functions/ApiFunctions"
-import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions"
 import { FormattedMessage } from "react-intl"
 import DashBoardBarChart from "./DashboardBarChart"
 import { useSelector } from "react-redux"
 import useDsashboardFunctions from "hooks/useDashboardFunctions"
+import useDateTime from "hooks/useDateTime"
 
 const DashboardAllAuth = ({ applications }: {
     applications: ApplicationListDataType[]
 }) => {
+    const { convertUTCStringToTimezoneDateString } = useDateTime();
     const lang = useSelector((state: ReduxStateType) => state.lang!);
+    const {convertDaysByDate, convertHourRangeByDate, convertDashboardDateParamsLocalTimezoneToUTC, dashboardDateInitialValue} = useDsashboardFunctions()
     const [params, setParams] = useState(dashboardDateInitialValue())
-    const {convertDaysByDate, convertHourRangeByDate} = useDsashboardFunctions()
     const [datas, setDatas] = useState<{
         date: string
         [key: string]: any
     }[]>([])
 
     const getDatas = () => {
-        GetDashboardApplicationAuthFunc(applications.map(_ => _.id), params, (data) => {
+        GetDashboardApplicationAuthFunc(applications.map(_ => _.id), convertDashboardDateParamsLocalTimezoneToUTC(params), (data) => {
             if (params.intervalValue === 24) {
                 setDatas(data.map((_, ind, arr) => {
                     const values = _.applicationCounts.reduce((pre, cur) => {
@@ -30,7 +30,7 @@ const DashboardAllAuth = ({ applications }: {
                         }
                     }, {})
                     return {
-                        date: convertDaysByDate(convertUTCStringToLocalDateString(_.startDate)),
+                        date: convertDaysByDate(convertUTCStringToTimezoneDateString(_.startDate)),
                         ...values
                     }
                 }))
@@ -46,7 +46,7 @@ const DashboardAllAuth = ({ applications }: {
                         }
                     }, {})
                     return {
-                        date: convertHourRangeByDate(convertUTCStringToLocalDateString(_.startDate), convertUTCStringToLocalDateString(_.endDate), ind === arr.length - 1, lang),
+                        date: convertHourRangeByDate(convertUTCStringToTimezoneDateString(_.startDate), convertUTCStringToTimezoneDateString(_.endDate), ind === arr.length - 1, lang),
                         ...values
                     }
                 }))

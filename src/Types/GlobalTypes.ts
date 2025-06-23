@@ -1,3 +1,5 @@
+type UnionKeys<T> = T extends any ? keyof T : never;
+
 type LanguageType = 'KR' | 'EN' | 'JP'
 type AuthPurposeType = "ROLE_SWAPPING_SOURCE" | "ROLE_SWAPPING_TARGET" | "ADMIN_2FA_FOR_APPLICATION_DELETION" | "ADMIN_2FA_FOR_SECRET_KEY_UPDATE" | "RADIUS_REGISTRATION" | "DEVICE_CHANGE" | "LDAP_REGISTRATION"
 type LogAuthPurposeType = AuthPurposeType | "ADD_OTHER_AUTHENTICATOR" | "AUTH_LOGIN" | "REG_LOGIN"
@@ -97,7 +99,7 @@ type UserNameType = {
 type HttpMethodType = "GET" | "POST" | "PUT" | "DELETE"
 type ProcessTypeType = "REGISTRATION" | "AUTHENTICATION" | "POLICY"
 type AuthenticatorStatusType = "REGISTERED" | "ENABLED" | "DISABLED" | "MODIFIED"
-type AuthenticatorTypeType = "OMPASS" | "WEBAUTHN" | "PASSCODE" | "OTP"
+type AuthenticatorTypeType = "OMPASS" | "WEBAUTHN" | "PASSCODE" | "OTP" | "MASTER_USB"
 type DefaultAuthenticatorDataType = {
     createdAt: string
     lastAuthenticatedAt: string
@@ -137,9 +139,11 @@ type GetListDataGeneralType<T> = {
 }
 type GeneralParamsType = {
     [key: string]: any
-    page_size?: number
+    pageSize?: number
     page?: number,
     sortDirection?: DirectionType
+    startDate?: string
+    endDate?: string
 }
 type AgentInstallerListParamsType = GeneralParamsType & {
     fileType?: AgentType
@@ -185,11 +189,12 @@ type LoginApiResponseType = {
     status: UserStatusType
     securityQuestions?: SecurityQuestionType[]
     ompassAuthentication?: OmpassAuthenticationDataType
+    email?: string
+    isEmailVerified?: boolean
 }
 
 type PasscodeHistoriesParamsType = GeneralParamsType & {
     sortBy?: "CREATED_AT" | "USERNAME" | "PASSCODE_ACTION"
-    sortDirection?: DirectionType
     applicationName?: string
     issuerUsername?: string
     portalUsername?: string
@@ -312,7 +317,6 @@ type ApplicationListParamsType = GeneralParamsType & {
     types?: ApplicationDataType['type'][]
     domain?: string
     sortBy?: "CREATED_AT" | "NAME"
-    sortDirection?: DirectionType
     policyName?: string
 }
 
@@ -325,7 +329,7 @@ type CoordinateType = {
 type LocationPolicyRestrictionItemType = {
     countryCode?: string
     coordinate: CoordinateType
-    radius: number
+    radius?: number
     alias: string
 }
 type LocationPolicyType = PolicyEnabledDataType & {
@@ -340,7 +344,7 @@ type IpAddressPolicyType = PolicyEnabledDataType & {
 }
 type networkPolicyType = {
     ip: string
-    note: string
+    description: string
 }
 // type BrowserPolicyType = "FireFox" | "Safari" | "Chrome Mobile" | "Chrome" | "Microsoft Edge" | "Mobile Safari" | "Samsung Browser" | "Whale Browser" | "Whale Browser Mobile" | "All other browsers"
 type BrowserPolicyType = "FIREFOX" | "SAFARI" | "CHROME_MOBILE" | "CHROME" | "MICROSOFT_EDGE" | "MOBILE_SAFARI" | "SAMSUNG_BROWSER" | "WHALE_BROWSER" | "WHALE_BROWSER_MOBILE" | "INTERNET_EXPLORER" | "ALL_OTHER_BROWSERS"
@@ -419,7 +423,6 @@ type PoliciesListParamsType = GeneralParamsType & {
     name?: string
     applicationTypes?: ApplicationDataType['type'][]
     sortBy?: "CREATED_AT" | "NAME"
-    sortDirection?: DirectionType
 }
 
 type DefaultUserDataParamsType = {
@@ -444,6 +447,7 @@ type UserDataType = DefaultUserDataType & {
     userId: string
     group: UserGroupListDataType
     status: UserStatusType
+    isEmailVerified: boolean
     recoveryCode: string
 }
 
@@ -457,7 +461,6 @@ type UserDataParamsType = {
 }
 
 type UserListParamsType = GeneralParamsType & {
-    [key: string]: any
     hasGroup?: boolean
     userId?: UserDataType['userId']
     email?: UserDataType['email']
@@ -623,8 +626,6 @@ type AuthLogListParamsType = GeneralParamsType & {
     denyReasons?: InvalidAuthLogDataType['reason'][]
     applicationIds?: ApplicationDataType['id'][]
     policyName?: string
-    startDate?: string
-    endDate?: string
     sortBy?: "CREATED_AT" | "AUTHENTICATION_TIME" | "USERNAME" | "APPLICATION_NAME" | "IS_PROCESS_SUCCESS"
 }
 
@@ -678,7 +679,7 @@ type AgentInstallerUploadParamsType = {
     type: UploadFileTypes
     multipartFile: File
     "metaData.hash": string
-    "metaData.note": string
+    "metaData.description": string
 }
 
 type UserDetailAuthInfoRowType = {
@@ -871,7 +872,6 @@ type RpUsersListParamsType = GeneralParamsType & {
 
 type ExternalDirectoryListParamsType = GeneralParamsType & {
     sortBy?: "CREATED_AT" | "NAME" | "USERNAME"
-    sortDirection?: DirectionType
     type: ExternalDirectoryType
     id?: string
     name?: string
@@ -1005,3 +1005,32 @@ type UserApiSyncInfoDataType = {
 
 // type PlanTypes = "TRIAL_PLAN" | "LICENSE_PLAN_L1" | "LICENSE_PLAN_L2" | "SUBSCRIPTION_PLAN_L1" | "SUBSCRIPTION_PLAN_L2"
 type PlanTypes = "TRIAL_PLAN" | "LICENSE_PLAN_L1" | "LICENSE_PLAN_L2"
+
+type CustomSelectItemType = {
+    key: any
+    label: React.ReactNode
+    disabled?: boolean
+    isGroup?: boolean
+}
+
+type CustomInputType = "username" | "password" | "email" | "firstName" | "lastName" | "phone"
+type InputValueType = CustomInputType | "domain" | "description" | "title"
+
+type BillingHistoryDataType = {
+    type: PlanTypes;
+    status: 'RUN' | 'EXPIRED';
+    paymentAmount: number;
+    maxUserCount: number;
+    maxApplicationCount: number;
+    maxSessionCount: number;
+    isNearExpiration: boolean;
+    description?: string;
+    expiredDate: string;
+    createdAt: string;
+}
+
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+    loading?: boolean
+    icon?: string
+    hoverIcon?: string
+}

@@ -27,7 +27,7 @@ const getItemClassname = (showDate: Date, target: Date, data: SelectedDateType) 
     if (isSunday(target)) result += ' sunday'
     if (isSaturday(target)) result += ' saturday'
     if (data.startDate && isSameDay(target, data.startDate)) result += ' is-start'
-    else if (data.endDate && isSameDay(target, data.endDate)) result += ' is-end'
+    if (data.endDate && isSameDay(target, data.endDate)) result += ' is-end'
     if (data.startDate && data.endDate && isWithinInterval(target, {
         start: data.startDate,
         end: data.endDate
@@ -69,15 +69,15 @@ const Calendar = ({ defaultValue, closeCallback, onChange, monthRestriction }: {
 }) => {
     const { formatMessage } = useIntl()
     const [data, setData] = useState<SelectedDateType>(defaultValue ? {
-        startDate: setHours(setMinutes(setSeconds(new Date(defaultValue.startDate), 0), 0), 0),
-        endDate: setHours(setMinutes(setSeconds(new Date(defaultValue.endDate), 0), 0), 0)
+        startDate: new Date(defaultValue.startDate),
+        endDate: new Date(defaultValue.endDate)
     } : {
         startDate: new Date(),
         endDate: new Date()
     })
     const [showDate, setShowDate] = useState(new Date())
     const daysOfMonth = getDatesOfMonth(showDate)
-
+    
     return <div className='custom-calendar-container'>
         <div className='custom-calendar-header'>
             <div className={`custom-calendar-header-item${data.startDate ? ' has-data' : ''}`}>
@@ -171,6 +171,7 @@ const Calendar = ({ defaultValue, closeCallback, onChange, monthRestriction }: {
                         return message.error(formatMessage({id:'CALENDAR_MAXIMUM_RANGE_DATE_INVALID_MSG'}))
                     }
                     closeCallback()
+                    
                     onChange({
                         startDate: format(data.startDate, dateFormat),
                         endDate: format(data.endDate, dateFormat)

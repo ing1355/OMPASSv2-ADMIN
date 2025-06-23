@@ -20,11 +20,6 @@ const EmailChangeVerification = () => {
                     replace: true
                 })
             })
-        } else {
-            message.error("잘못된 접근입니다.")
-            navigate('/', {
-                replace: true
-            })
         }
     }, [token])
     return <>

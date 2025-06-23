@@ -1,33 +1,33 @@
 import DashboardCardWithDateSelect from "./DashboardCardWithDateSelect"
 import { useEffect, useState } from "react";
 import { GetDashboardApplicationAuthSumFunc } from "Functions/ApiFunctions";
-import { dashboardDateInitialValue } from "./Dashboard";
-import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions";
 import { FormattedMessage } from "react-intl";
 import DashBoardBarChart from "./DashboardBarChart";
 import { useSelector } from "react-redux";
 import useDsashboardFunctions from "hooks/useDashboardFunctions";
+import useDateTime from "hooks/useDateTime";
 
 const DashboardAllAuthSum = ({ applications }: {
   applications: ApplicationListDataType[]
 }) => {
+  const { convertUTCStringToTimezoneDateString } = useDateTime();
   const lang = useSelector((state: ReduxStateType) => state.lang!);
+  const {convertDaysByDate, convertHourRangeByDate, convertDashboardDateParamsLocalTimezoneToUTC, dashboardDateInitialValue} = useDsashboardFunctions()
   const [params, setParams] = useState(dashboardDateInitialValue())
   const [datas, setDatas] = useState<{ name: string, count: number }[]>([])
-  const {convertDaysByDate, convertHourRangeByDate} = useDsashboardFunctions()
   
   const getDatas = () => {
-    GetDashboardApplicationAuthSumFunc(applications.map(_ => _.id), params, (data) => {
+    GetDashboardApplicationAuthSumFunc(applications.map(_ => _.id), convertDashboardDateParamsLocalTimezoneToUTC(params), (data) => {
       if (params.intervalValue === 24) {
         setDatas(data.map((_, ind, arr) => {
           return {
-            name: convertDaysByDate(convertUTCStringToLocalDateString(_.startDate)),
+            name: convertDaysByDate(convertUTCStringToTimezoneDateString(_.startDate)),
             count: _.count
           }
         }))
       } else {
         setDatas(data.map((_, ind, arr) => ({
-          name: convertHourRangeByDate(convertUTCStringToLocalDateString(_.startDate), convertUTCStringToLocalDateString(_.endDate), ind === arr.length - 1, lang),
+          name: convertHourRangeByDate(convertUTCStringToTimezoneDateString(_.startDate), convertUTCStringToTimezoneDateString(_.endDate), ind === arr.length - 1, lang),
           count: _.count
         })))
       }

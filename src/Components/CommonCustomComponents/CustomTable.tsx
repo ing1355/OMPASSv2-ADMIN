@@ -14,10 +14,10 @@ import { DateTimeFormat, userSelectPageSize } from "Constants/ConstantValues"
 import { FormattedMessage, useIntl } from "react-intl"
 import CustomDropdown from "./CustomDropdown"
 import Calendar from "Components/Dashboard/Calendar"
-import { convertLocalDateStringToUTCString } from "Functions/GlobalFunctions"
 import dayjs from "dayjs"
 import { useSearchParams } from "react-router-dom"
 import useCustomRoute from "hooks/useCustomRoute"
+import useDateTime from "hooks/useDateTime"
 
 type CustomTableButtonType = {
     icon?: string
@@ -100,7 +100,8 @@ const CustomTable = <T extends {
     const resultRef = useRef<CustomTableSearchParams>()
     const { formatMessage } = useIntl()
     const { customPushRoute } = useCustomRoute()
-
+    const { convertTimezoneDateStringToUTCString } = useDateTime()
+    
     const createParams = ({ page, size }: {
         page: number
         size: number
@@ -292,8 +293,8 @@ const CustomTable = <T extends {
                                     onChange={d => {
                                         setTemp(d)
                                         const convertedDate: DateSelectDataType = {
-                                            startDate: convertLocalDateStringToUTCString(d.startDate),
-                                            endDate: convertLocalDateStringToUTCString(dayjs(d.endDate).add(1, 'day').format(DateTimeFormat))
+                                            startDate: convertTimezoneDateStringToUTCString(d.startDate),
+                                            endDate: convertTimezoneDateStringToUTCString(dayjs(d.endDate).add(1, 'day').subtract(1, 'second').format(DateTimeFormat))
                                         }
                                         const result = [...filterValues.filter(_ => _.key !== 'startDate' && _.key !== 'endDate'),
                                         {

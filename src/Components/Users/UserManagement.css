@@ -46,6 +46,14 @@
     border-color: var(--main-purple-color);
 }
 
+.user-email-column {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;

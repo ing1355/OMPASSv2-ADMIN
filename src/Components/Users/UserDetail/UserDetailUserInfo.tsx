@@ -2,7 +2,7 @@ import { message } from "antd";
 import Button from "Components/CommonCustomComponents/Button";
 import { AddUserDataFunc, DuplicateUserNameCheckFunc, UpdateUserDataFunc } from "Functions/ApiFunctions";
 import useFullName from "hooks/useFullName";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useSelector } from "react-redux";
 import { UserInfoInputrow, UserInfoRow, ViewRecoveryCode } from "./UserDetailComponents";
@@ -12,9 +12,13 @@ import RoleSelect from "Components/CommonCustomComponents/RoleSelect";
 import { isDev2 } from "Constants/ConstantValues";
 import { useNavigate, useParams } from "react-router";
 import editIcon from "@assets/editIcon.png"
+import emailVerifiedIcon from "@assets/emailVerifiedIcon.png"
+import emailUnverifiedIcon from "@assets/emailUnverifiedIcon.png"
 import NewDeviceBtn from "./NewDeviceBtn";
 import UnLockBtn from "./UnLockBtn";
 import EmailChangeBtn from "./EmailChangeBtn";
+import { emailRegex, nameRegex, passwordRegex } from "Components/CommonCustomComponents/CommonRegex";
+import EmailVerifyBtn from "./EmailVerifyBtn";
 
 type UserDetailUserInfoProps = {
     targetData?: UserDataType
@@ -31,6 +35,12 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
     const [isModify, setIsModify] = useState(false)
     const [modifyValues, setModifyValues] = useState<UserDataModifyLocalValuesType>(initModifyValues)
     const [addValues, setAddValues] = useState<UserDataAddLocalValuesType>(initAddValues)
+    const usernameRef = useRef<HTMLInputElement>(null)
+    const passwordRef = useRef<HTMLInputElement>(null)
+    const passwordConfirmRef = useRef<HTMLInputElement>(null)
+    const firstNameRef = useRef<HTMLInputElement>(null)
+    const lastNameRef = useRef<HTMLInputElement>(null)
+    const emailRef = useRef<HTMLInputElement>(null)
     const _uuid = useParams().uuid;
     const uuid = selfInfo.role === 'USER' ? selfInfo.userId : _uuid
     const isSelf = (isDev2 && selfInfo.role === 'ROOT') || (selfInfo.userId === uuid)
@@ -39,6 +49,7 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
     const targetValue = isAdd ? addValues : modifyValues
     const isDeleted = targetData?.status === 'WITHDRAWAL'
     const isAdmin = selfInfo.role !== 'USER'
+    const isEN = lang === 'EN'
     const getFullName = useFullName()
     const navigate = useNavigate()
     const { formatMessage } = useIntl()
@@ -72,21 +83,77 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
                 {
                     ((!isAdd && isModify) || isAdd) && <Button className="st3" onClick={() => {
                         if (isAdd && !addValues.username) {
+                            usernameRef.current?.focus()
                             return message.error(formatMessage({ id: 'PLEASE_INPUT_ID' }));
                         }
-                        if (!targetValue.name.firstName) {
-                            return message.error(formatMessage({ id: 'PLEASE_INPUT_FIRST_NAME' }));
+                        if (isAdd && !duplicateIdCheck) {
+                            return message.error(formatMessage({ id: 'ID_CHECK' }))
                         }
-                        if (!targetValue.name.lastName) {
-                            return message.error(formatMessage({ id: 'PLEASE_INPUT_LAST_NAME' }));
+                        if (targetValue.hasPassword && isAdd && !addValues.password) {
+                            passwordRef.current?.focus()
+                            return message.error(formatMessage({ id: 'PLEASE_INPUT_PASSWORD' }));
+                        }
+                        if (targetValue.hasPassword && targetValue.password && !passwordRegex.test(targetValue.password)) {
+                            passwordRef.current?.focus()
+                            return message.error(formatMessage({ id: 'PASSWORD_CHECK' }))
+                        }
+                        if (targetValue.hasPassword && isAdd && !addValues.passwordConfirm) {
+                            passwordConfirmRef.current?.focus()
+                            return message.error(formatMessage({ id: 'PLEASE_INPUT_PASSWORD_CONFIRM' }));
+                        }
+                        if (targetValue.hasPassword && targetValue.passwordConfirm && targetValue.password !== targetValue.passwordConfirm) {
+                            passwordConfirmRef.current?.focus()
+                            return message.error(formatMessage({ id: 'PASSWORD_NOT_MATCH' }))
+                        }
+                        if(isEN) {
+                            if (!targetValue.name.firstName) {
+                                firstNameRef.current?.focus()
+                                return message.error(formatMessage({ id: 'PLEASE_INPUT_FIRST_NAME' }));
+                            }
+                            if (!nameRegex.test(targetValue.name.firstName)) {
+                                firstNameRef.current?.focus()
+                                return message.error(formatMessage({ id: 'FIRST_NAME_CHECK' }))
+                            }
+                            if (!targetValue.name.lastName) {
+                                lastNameRef.current?.focus()
+                                return message.error(formatMessage({ id: 'PLEASE_INPUT_LAST_NAME' }));
+                            }
+                            if (!nameRegex.test(targetValue.name.lastName)) {
+                                lastNameRef.current?.focus()
+                                return message.error(formatMessage({ id: 'LAST_NAME_CHECK' }))
+                            }
+                        } else {
+                            if (!targetValue.name.lastName) {
+                                lastNameRef.current?.focus()
+                                return message.error(formatMessage({ id: 'PLEASE_INPUT_LAST_NAME' }));
+                            }
+                            if (!nameRegex.test(targetValue.name.lastName)) {
+                                lastNameRef.current?.focus()
+                                return message.error(formatMessage({ id: 'LAST_NAME_CHECK' }))
+                            }
+                            if (!targetValue.name.firstName) {
+                                firstNameRef.current?.focus()
+                                return message.error(formatMessage({ id: 'PLEASE_INPUT_FIRST_NAME' }));
+                            }
+                            if (!nameRegex.test(targetValue.name.firstName)) {
+                                firstNameRef.current?.focus()
+                                return message.error(formatMessage({ id: 'FIRST_NAME_CHECK' }))
+                            }
                         }
                         if (!targetValue.email) {
+                            emailRef.current?.focus()
                             return message.error(formatMessage({ id: 'PLEASE_INPUT_EMAIL' }));
+                        }
+                        if (!emailRegex.test(targetValue.email)) {
+                            emailRef.current?.focus()
+                            return message.error(formatMessage({ id: 'EMAIL_CHECK' }))
                         }
                         if (isAdd) {
                             AddUserDataFunc(addValues, (res) => {
                                 message.success(formatMessage({ id: 'USER_ADD_SUCCESS_MSG' }))
-                                navigate(`/UserManagement/detail/${res.userId}`)
+                                navigate(`/UserManagement/detail/${res.userId}`, {
+                                    replace: true
+                                })
                             })
                         } else {
                             if (modifyValues.hasPassword && (modifyValues.password !== modifyValues.passwordConfirm)) return message.error(formatMessage({ id: 'PASSWORD_CONFIRM_CHECK' }))
@@ -111,19 +178,19 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
 
         <div className="user-detail-info-container">
             {isAdd ? <UserInfoInputrow title="ID" required>
-                <Input className='st1' value={addValues.username} valueChange={(value, alert) => {
+                <Input className='st1' ref={usernameRef} value={addValues.username} valueChange={(value, alert) => {
                     setDuplicateIdCheck(false)
                     setUsernameAlert(alert!)
                     setAddValues({
                         ...addValues,
                         username: value
                     })
-                }} customType='username' placeholder={formatMessage({ id: 'USER_ID_PLACEHOLDER' })} noGap />
+                }} customType='username' placeholder={formatMessage({ id: 'USER_ID_PLACEHOLDER' })} noGap name="username"/>
                 <Button className='st6' disabled={duplicateIdCheck || addValues.username.length === 0 || usernameAlert} onClick={() => {
                     DuplicateUserNameCheckFunc(addValues.username, ({ isExist }) => {
                         setDuplicateIdCheck(!isExist)
                         if (isExist) {
-                            message.success(formatMessage({ id: 'USER_ID_EXIST_CHECK_FAIL_MSG' }))
+                            message.warning(formatMessage({ id: 'USER_ID_EXIST_CHECK_FAIL_MSG' }))
                         } else {
                             message.success(formatMessage({ id: 'USER_ID_EXIST_CHECK_SUCCESS_MSG' }))
                         }
@@ -136,7 +203,7 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
             </UserInfoInputrow> : <UserInfoRow title="ID" value={targetData?.username} />}
             {(isAdd || (isSelf && isModify)) && <>
                 <UserInfoInputrow title='PASSWORD' required>
-                    <Input className='st1' value={targetValue.password} placeholder={formatMessage({ id: 'PASSWORD_PLACEHOLDER' })} disabled={!targetValue.hasPassword} valueChange={value => {
+                    <Input className='st1' ref={passwordRef} value={targetValue.password} placeholder={formatMessage({ id: 'PASSWORD_PLACEHOLDER' })} disabled={!targetValue.hasPassword} valueChange={value => {
                         if (isAdd) {
                             setAddValues({
                                 ...addValues,
@@ -164,7 +231,7 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
                     }} label={<FormattedMessage id="PASSWORD_RANDOM_GENERATE_LABEL" />} noGap />}
                 </UserInfoInputrow>
                 <UserInfoInputrow title='PASSWORD_CONFIRM' required>
-                    <Input className='st1' value={targetValue.passwordConfirm} disabled={!targetValue.hasPassword} placeholder={formatMessage({ id: 'PASSWORD_CONFIRM' })} valueChange={value => {
+                    <Input className='st1' ref={passwordConfirmRef} value={targetValue.passwordConfirm} disabled={!targetValue.hasPassword} placeholder={formatMessage({ id: 'PASSWORD_CONFIRM' })} valueChange={value => {
                         if (isAdd) {
                             setAddValues({
                                 ...addValues,
@@ -184,13 +251,13 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
                     ]} maxLength={16} noGap />
                 </UserInfoInputrow></>}
             {(isModify || isAdd) ? <UserInfoInputrow title="NAME" required>
-                <Input className='st1' value={lang === 'EN' ? targetValue.name.firstName : targetValue.name.lastName} placeholder={formatMessage({ id: lang === 'EN' ? 'FIRST_NAME_PLACEHOLDER' : 'LAST_NAME_PLACEHOLDER' })} onChange={e => {
+                <Input className='st1' ref={isEN ? firstNameRef : lastNameRef} value={isEN ? targetValue.name.firstName : targetValue.name.lastName} placeholder={formatMessage({ id: isEN ? 'FIRST_NAME_PLACEHOLDER' : 'LAST_NAME_PLACEHOLDER' })} onChange={e => {
                     if (isAdd) {
                         setAddValues({
                             ...addValues,
                             name: {
                                 ...addValues.name,
-                                [lang === 'EN' ? "firstName" : "lastName"]: e.target.value
+                                [isEN ? "firstName" : "lastName"]: e.target.value
                             }
                         })
                     } else {
@@ -198,18 +265,18 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
                             ...modifyValues,
                             name: {
                                 ...modifyValues.name,
-                                [lang === 'EN' ? "firstName" : "lastName"]: e.target.value
+                                [isEN ? "firstName" : "lastName"]: e.target.value
                             }
                         })
                     }
-                }} customType='name' noGap />
-                <Input className='st1' value={lang === 'EN' ? targetValue.name.lastName : targetValue.name.firstName} placeholder={formatMessage({ id: lang === 'EN' ? 'LAST_NAME_PLACEHOLDER' : 'FIRST_NAME_PLACEHOLDER' })} onChange={e => {
+                }} customType={isEN ? 'firstName' : 'lastName'} noGap />
+                <Input className='st1' ref={isEN ? lastNameRef : firstNameRef} value={isEN ? targetValue.name.lastName : targetValue.name.firstName} placeholder={formatMessage({ id: isEN ? 'LAST_NAME_PLACEHOLDER' : 'FIRST_NAME_PLACEHOLDER' })} onChange={e => {
                     if (isAdd) {
                         setAddValues({
                             ...addValues,
                             name: {
                                 ...addValues.name,
-                                [lang === 'EN' ? "lastName" : "firstName"]: e.target.value
+                                [isEN ? "lastName" : "firstName"]: e.target.value
                             }
                         })
                     } else {
@@ -217,16 +284,16 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
                             ...modifyValues,
                             name: {
                                 ...modifyValues.name,
-                                [lang === 'EN' ? "lastName" : "firstName"]: e.target.value
+                                [isEN ? "lastName" : "firstName"]: e.target.value
                             }
                         })
                     }
-                }} customType='name' noGap />
+                }} customType={isEN ? 'lastName' : 'firstName'} noGap />
             </UserInfoInputrow> :
                 <UserInfoRow title="NAME" value={targetData ? getFullName(targetData.name) : "-"} />}
             {
                 isAdd ? <UserInfoInputrow title="EMAIL" required>
-                    <Input style={{
+                    <Input ref={emailRef} style={{
                         width: '406px'
                     }} className='st1' value={isAdd ? addValues.email : modifyValues.email} onChange={e => {
                         if (isAdd) {
@@ -240,10 +307,18 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
                                 email: e.target.value
                             })
                         }
-                    }} maxLength={48} placeholder={formatMessage({ id: 'EMAIL_PLACEHOLDER' })} noGap />
+                    }} maxLength={48} placeholder={formatMessage({ id: 'EMAIL_PLACEHOLDER' })} noGap customType="email" name="email"/>
                 </UserInfoInputrow> : <UserInfoRow title="EMAIL" value={
                     <>
-                        {targetData?.email} {targetData && canModify && <EmailChangeBtn isSelf={isSelf} username={targetData!.username} successCallback={() => {
+                    {targetData?.email}&nbsp;
+                            <img src={targetData?.isEmailVerified ? emailVerifiedIcon : emailUnverifiedIcon} style={{
+                                width: '24px',
+                                height: '24px',
+                            }}/>
+                        {targetData && canModify && targetData.status !== 'WITHDRAWAL' && <EmailChangeBtn isSelf={isSelf} username={targetData!.username} successCallback={() => {
+                            refreshCallback()
+                        }} />}
+                        {targetData && !targetData.isEmailVerified && isSelf && targetData.status !== 'WITHDRAWAL' && <EmailVerifyBtn targetData={targetData} successCallback={() => {
                             refreshCallback()
                         }} />}
                     </>} />
@@ -263,7 +338,7 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
                             phone: value
                         })
                     }
-                }} maxLength={13} noGap />
+                }} maxLength={13} noGap name="phone"/>
             </UserInfoInputrow> : <UserInfoRow title="PHONE_NUMBER" value={targetData?.phone} />}
 
             {((isModify && selfInfo.role === 'ROOT') || (isAdd && isAdmin)) ? <UserInfoInputrow title="USER_ROLE">

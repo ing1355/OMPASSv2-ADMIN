@@ -6,7 +6,7 @@ import { message } from "antd"
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import { AddApplicationDataFunc, DeleteApplicationListFunc, GetApplicationDetailFunc, GetApplicationListFunc, GetAuthorizeMSEntraUriFunc, UpdateApplicationDataFunc, UpdateApplicationSecretkeyFunc } from "Functions/ApiFunctions"
 import PolicySelect from "Components/CommonCustomComponents/PolicySelect"
-import { applicationTypes, getApplicationTypeLabel, ompassDefaultLogoImage } from "Constants/ConstantValues"
+import { applicationTypes, getApplicationTypeLabel, maxLengthByType, ompassDefaultLogoImage } from "Constants/ConstantValues"
 import { convertBase64FromClientToServerFormat } from "Functions/GlobalFunctions"
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect"
 import Button from "Components/CommonCustomComponents/Button"
@@ -244,17 +244,17 @@ const ApplicationDetail = () => {
                     <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_NAME_LABEL" />} required>
                         <Input className="st1" value={inputName} valueChange={value => {
                             setInputName(value)
-                        }} placeholder={formatMessage({ id: 'APPLICATION_INFO_NAME_PLACEHOLDER' })} readOnly={applicationType === 'PORTAL'} maxLength={20} />
+                        }} placeholder={formatMessage({ id: 'APPLICATION_INFO_NAME_PLACEHOLDER' })} readOnly={applicationType === 'PORTAL'} maxLength={maxLengthByType('title')} />
                     </CustomInputRow>
                     <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_DESCRIPTION_LABEL" />}>
                         <Input className="st1" value={inputDescription} valueChange={value => {
                             setInputDescription(value)
-                        }} />
+                        }} maxLength={maxLengthByType('description')}/>
                     </CustomInputRow>
                     <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_NOTICE_LABEL" />}>
                         <Input className="st1" value={helpMsg} valueChange={value => {
                             setHelpMsg(value)
-                        }} maxLength={50} />
+                        }} maxLength={maxLengthByType('description')} />
                     </CustomInputRow>
                     {passwordlessApplicationTypes.includes(applicationType) && <PasswordlessCheck value={{
                         isEnabled: passwordless
@@ -266,12 +266,12 @@ const ApplicationDetail = () => {
                             <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_DOMAIN_LABEL" />} required>
                                 <Input className="st1" value={inputDomain} valueChange={value => {
                                     setInputDomain(value)
-                                }} placeholder="ex) https://omsecurity.kr:1234" readOnly={applicationType === 'PORTAL'} noGap />
+                                }} placeholder="ex) https://omsecurity.kr:1234" readOnly={applicationType === 'PORTAL'} noGap maxLength={maxLengthByType('domain')} />
                             </CustomInputRow>
                             {!noRedirectUri.includes(applicationType) && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_REDIRECT_URI_LABEL" />}>
                                 <Input className="st1" value={inputRedirectUrl} valueChange={value => {
                                     setInputRedirectUrl(value)
-                                }} placeholder="ex) /ompass" readOnly={readOnlyRedirectUriList.includes(applicationType)} noGap />
+                                }} placeholder="ex) /ompass" readOnly={readOnlyRedirectUriList.includes(applicationType)} noGap maxLength={maxLengthByType('domain')} />
                             </CustomInputRow>}
                         </>
                     }

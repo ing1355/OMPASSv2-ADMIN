@@ -1,6 +1,6 @@
 import CustomModal from "Components/Modal/CustomModal"
 import { FormattedMessage, useIntl } from "react-intl"
-import { getApplicationTypeLabel } from "Constants/ConstantValues"
+import { authenticatorLabelList, getApplicationTypeLabel } from "Constants/ConstantValues"
 import useFullName from "hooks/useFullName"
 import { createOSInfo } from "Functions/GlobalFunctions"
 import { useSelector } from "react-redux"
@@ -39,7 +39,6 @@ const TextComponent = ({ title, content }: {
 }
 
 const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
-    const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas);
     const { ompassData, policyAtTimeOfEvent } = data || {}
     const { rpUser, application, sessionExpiredAt, createdAt, policyValidationResult } = ompassData || {}
     const { loginDeviceInfo, serverInfo } = rpUser || {}
@@ -55,7 +54,7 @@ const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
         if (!data) {
             mapInitRef.current = false
         } else {
-            console.log(data)
+            
         }
     }, [data])
 
@@ -153,7 +152,7 @@ const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
                     <div className="auth-detail-modal-contents-container authentication-info" data-title={formatMessage({ id: "AUTH_LOG_DETAIL_AUTH_INFO_TITLE_LABEL" })}>
                         <TextComponent title="APPLIED_POLICY_NAME_COLUMN_LABEL" content={policyAtTimeOfEvent?.name} />
                         <TextComponent title="AUTHENTICATION_PURPOSE_LABEL" content={data?.ompassData?.authPurpose ? <FormattedMessage id={data?.ompassData.authPurpose + '_LOG_VALUE'} /> : "-"} />
-                        <TextComponent title="AUTHENTICATOR_TYPE_LABEL" content={(data as ValidAuthLogDataType)?.authenticatorType} />
+                        <TextComponent title="AUTHENTICATOR_TYPE_LABEL" content={authenticatorLabelList[(data as ValidAuthLogDataType)?.authenticatorType]} />
                         {data && isInvalidLogType(data) && <TextComponent title="INVALID_REASON_LABEL" content={data.reason ? <FormattedMessage id={"INVALID_" + data.reason + '_LABEL'} /> : "-"} />}
                         <TextComponent title="AUTHENTICATION_START_TIME_LABEL" content={createdAt} />
                         <TextComponent title="AUTHENTICATION_TIME_LABEL" content={data?.authenticationTime} />

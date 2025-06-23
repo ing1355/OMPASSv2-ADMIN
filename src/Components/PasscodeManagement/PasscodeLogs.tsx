@@ -1,11 +1,11 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import { ViewPasscode } from "Components/Users/UserDetail/UserDetailComponents";
 import { GetPasscodeHistoriesFunc } from "Functions/ApiFunctions";
-import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import useDateTime from "hooks/useDateTime";
 
 const actionList: PasscodeHistoryDataType['action'][] = ['CREATE', 'DELETE']
 
@@ -16,11 +16,11 @@ const PasscodeLogs = () => {
     const { formatMessage } = useIntl()
     const [totalCount, setTotalCount] = useState<number>(0);
     const [tableData, setTableData] = useState<PasscodeHistoryDataType[]>([]);
-
+    const { convertUTCStringToTimezoneDateString } = useDateTime();
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
         const _params: GeneralParamsType = {
-            page_size: params.size,
+            pageSize: params.size,
             page: params.page
         }
         if (params.searchType) {
@@ -32,7 +32,11 @@ const PasscodeLogs = () => {
             })
         }
         GetPasscodeHistoriesFunc(_params, ({ results, totalCount }) => {
-            setTableData(results)
+            setTableData(results.map(_ => ({
+                ..._,
+                createdAt: convertUTCStringToTimezoneDateString(_.createdAt),
+                expirationTime: _.passcode.expiredAt === "-1" ? "∞" : convertUTCStringToTimezoneDateString(_.passcode.expiredAt)
+            })))
             setTotalCount(totalCount)
         }).finally(() => {
             setDataLoading(false)
@@ -123,17 +127,11 @@ const PasscodeLogs = () => {
             {
                 key: 'createdAt',
                 title: <FormattedMessage id="ACTION_DATE" />,
-                render: (data) => convertUTCStringToLocalDateString(data),
                 filterType: 'date'
             },
             {
                 key: 'expirationTime',
                 title: <FormattedMessage id="VALID_TIME" />,
-                render: (_, ind, row) => {
-                    const data = row.passcode.expiredAt
-                    if (!data) return "∞"
-                    return convertUTCStringToLocalDateString(data)
-                }
             },
         ]}
     />

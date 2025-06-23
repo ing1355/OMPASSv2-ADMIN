@@ -2,11 +2,9 @@ const MessageText = {
     'KR': {
         USERNAME_CHECK: '아이디는 4~16자의 영소문자 및 숫자만 사용 가능합니다.',
         EMAIL_CHECK: '올바른 이메일 형식이 아닙니다. (영문, 숫자, 일부 특수문자 사용 가능)',
-        NAME_CHECK: '한글, 영문 및 숫자만 사용 가능합니다.',
         PASSWORD_CHECK: '비밀번호는 8자 이상 3가지 조합 혹은 10자 이상 2가지 조합만 가능합니다.',
         PASSWORD_CONFIRM_CHECK: '비밀번호가 일치하지 않습니다.',
         PASSWORD_NOT_MATCH: '비밀번호가 일치하지 않습니다.',
-        PHONE_NUMBER_CHECK: '10~11자리 숫자만 입력해주세요.',
         PLEASE_INPUT_HASH: '해시값을 입력해주세요.',
         THE_FILE_SIZE_EXCEEDS_200MB: '파일 용량(200MB)을 초과하였습니다.',
         ONLY_ZIP_FILES_CAN_BE_UPLOADED: '.zip 파일만 업로드 가능합니다.',
@@ -55,7 +53,7 @@ const MessageText = {
         PASSCODE_DELETE_SUCCESS_MSG: 'PASSCODE 삭제에 성공하였습니다.',
         SIGNUP_APPROVE_SUCCESS_MSG: '회원가입 승인에 성공하였습니다.',
         USER_ADD_SUCCESS_MSG: '사용자 추가에 성공하였습니다.',
-        USER_MODIFY_SUCCESS_MSG: '사용자 수정에 성공하였습니다.',
+        USER_MODIFY_SUCCESS_MSG: '사용자 정보 수정에 성공하였습니다.',
         USER_ID_EXIST_CHECK_SUCCESS_MSG: '사용 가능한 아이디 입니다.',
         USER_ID_EXIST_CHECK_FAIL_MSG: '이미 사용중인 아이디 입니다.',
         PASSCODE_ADD_SUCCESS_MSG: 'PASSCODE 추가에 성공하였습니다.',
@@ -143,6 +141,7 @@ const MessageText = {
         EMAIL_CODE_SEND_FIRST_MSG: '이메일 인증 코드 발송을 진행해주세요.',
         NEED_EMAIL_CODE_VERIFY_MSG: '이메일 인증 코드를 입력해주세요.',
         EMAIL_CHANGE_SUCCESS_MSG: '이메일 변경에 성공하였습니다.',
+        EMAIL_VERIFY_SUCCESS_MSG: '이메일 인증에 성공하였습니다.',
         EMAIL_CODE_SEND_SUCCESS_MSG: '코드 발송에 성공하였습니다. 이메일을 확인해주세요.',
         NOT_REGISTERED_MSG: 'OMPASS 등록이 되지 않은 사용자입니다.',
         PREPARING_MSG: '준비중인 기능입니다.',
@@ -150,16 +149,15 @@ const MessageText = {
         PLEASE_CHECK_OPEN_LDAP_DIRECTORY_SERVER_INFO: 'Open LDAP 서버 목록은 올바른 서버 주소와 포트로 구성해야 합니다.',
         PLEASE_SELECT_APPLICATION_FOR_RP_USER_ADD_MSG: '직접 OMPASS 등록을 진행할 애플리케이션을 선택해주세요.',
         PLEASE_INPUT_RP_USER_INFO_MSG: '애플리케이션에서 사용하는 계정 정보를 입력해주세요.',
-        APPLICATION_ACCOUNT_INFO_INVALID_MSG: '애플리케이션 계정 정보가 올바르지 않습니다.'
+        APPLICATION_ACCOUNT_INFO_INVALID_MSG: '애플리케이션 계정 정보가 올바르지 않습니다.',
+        EMAIL_VERIFY_NEED_MSG: '이메일 인증이 필요합니다.'
     },
     'EN': {
         USERNAME_CHECK: 'Only lowercase letters and numbers are allowed, with a length of 4 to 16 characters',
         EMAIL_CHECK: 'Please enter valid email address',
-        NAME_CHECK: 'Please enter in Korean or English or numbers',
         PASSWORD_CHECK: 'Password must be 8 characters or more in 3 combinations or 10 characters or more in 2 combinations',
         PASSWORD_CONFIRM_CHECK: 'The passwords do not match',
         PASSWORD_NOT_MATCH: 'The passwords do not match',
-        PHONE_NUMBER_CHECK: 'Please enter a 10-11 digit number only',
         PLEASE_INPUT_HASH: 'Please input hash for agent file',
         THE_FILE_SIZE_EXCEEDS_200MB: 'The file size exceeds 200 MB',
         ONLY_ZIP_FILES_CAN_BE_UPLOADED: 'Only .zip files can be uploaded',
@@ -208,7 +206,7 @@ const MessageText = {
         PASSCODE_DELETE_SUCCESS_MSG: 'Passcode deletion was successful',
         SIGNUP_APPROVE_SUCCESS_MSG: 'Your membership registration has been successfully approved',
         USER_ADD_SUCCESS_MSG: 'User addition was successful',
-        USER_MODIFY_SUCCESS_MSG: 'User modification was successful',
+        USER_MODIFY_SUCCESS_MSG: 'User information modification was successful',
         USER_ID_EXIST_CHECK_SUCCESS_MSG: 'This ID is available',
         USER_ID_EXIST_CHECK_FAIL_MSG: 'This ID is already in use',
         PASSCODE_ADD_SUCCESS_MSG: 'Passcode addition was successful',
@@ -297,13 +295,15 @@ const MessageText = {
         NEED_EMAIL_CODE_VERIFY_MSG: 'Please enter the email verification code',
         EMAIL_CODE_SEND_SUCCESS_MSG: 'The verification code has been successfully sent. Please check your email.',
         EMAIL_CHANGE_SUCCESS_MSG: 'Email change was successful.',
+        EMAIL_VERIFY_SUCCESS_MSG: 'Email verification was successful.',
         NOT_REGISTERED_MSG: 'This user is not registered with OMPASS.',
         PREPARING_MSG: 'This feature is under preparation.',
         OMPASS_DEVICE_CHANGE_SUCCESS_MSG: 'The device registration has been changed successfully.',
         PLEASE_CHECK_OPEN_LDAP_DIRECTORY_SERVER_INFO: 'Open LDAP server list must be composed of correct server addresses and ports.',
         PLEASE_SELECT_APPLICATION_FOR_RP_USER_ADD_MSG: 'Please select the application for which you wish to directly register for OMPASS.',
         PLEASE_INPUT_RP_USER_INFO_MSG: 'Please enter the account information used in the application.',
-        APPLICATION_ACCOUNT_INFO_INVALID_MSG: 'The account information in the application is incorrect.'
+        APPLICATION_ACCOUNT_INFO_INVALID_MSG: 'The account information in the application is incorrect.',
+        EMAIL_VERIFY_NEED_MSG: 'Please verify your email address.'
     }
 }
 

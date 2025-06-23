@@ -2,7 +2,6 @@ import { message, Popconfirm } from "antd";
 import Button from "Components/CommonCustomComponents/Button";
 import CustomTable from "Components/CommonCustomComponents/CustomTable";
 import { CurrentAgentVersionChangeFunc, DeleteAgentInstallerFunc, GetAgentInstallerListFunc } from "Functions/ApiFunctions";
-import { convertUTCStringToLocalDateString } from "Functions/GlobalFunctions";
 import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,6 +12,7 @@ import tableDeleteIconHover from '@assets/deleteIconRed.png';
 import downloadIcon from '@assets/downloadIcon.png';
 import uploadIcon from '@assets/uploadIcon.png';
 import uploadIconHover from '@assets/uploadIconHover.png';
+import useDateTime from "hooks/useDateTime";
 
 type ManagementByTypeProps = {
     type: AgentType
@@ -20,6 +20,7 @@ type ManagementByTypeProps = {
 }
 
 const ManagementByType = ({ type, isCloud }: ManagementByTypeProps) => {
+    const { convertUTCStringToTimezoneDateString } = useDateTime();
     const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const [openFileDelete, setOpenFileDelete] = useState(-1);
     const [deleteHover, setDeleteHover] = useState(-1)
@@ -35,16 +36,21 @@ const ManagementByType = ({ type, isCloud }: ManagementByTypeProps) => {
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
         const _params: GeneralParamsType = {
-            page_size: isCloud ? 1 : params.size,
+            pageSize: isCloud ? 1 : params.size,
             page: params.page
         }
         if (params.searchType) {
             _params[params.searchType] = params.searchValue
         }
+        if (params.filterOptions) {
+            params.filterOptions.forEach(_ => {
+                _params[_.key] = _.value
+            })
+        }
         await GetAgentInstallerListFunc(type, _params, ({ results, totalCount }) => {
             setTableData(results.map(_ => ({
                 ..._,
-                uploadDate: convertUTCStringToLocalDateString(_.uploadDate)
+                uploadDate: convertUTCStringToTimezoneDateString(_.uploadDate)
             })))
             setTotalCount(totalCount)
         }).finally(() => {
@@ -69,18 +75,23 @@ const ManagementByType = ({ type, isCloud }: ManagementByTypeProps) => {
                 title: <FormattedMessage id='FILE_NAME' />
             },
             {
-                key: 'note',
+                key: 'description',
                 title: <FormattedMessage id='MEMO' />,
                 maxWidth: '300px'
             },
             {
                 key: 'uploadDate',
-                title: <FormattedMessage id='UPLOAD_DATE' />
+                title: <FormattedMessage id='UPLOAD_DATE' />,
+                filterType: 'date'
             },
-            {
+        ]
+        if (!isCloud) {
+            temp.push({
                 key: 'uploader',
                 title: <FormattedMessage id='UPLOADER' />
-            },
+            })
+        }
+        temp.push(
             {
                 key: 'download',
                 width: '100px',
@@ -93,8 +104,7 @@ const ManagementByType = ({ type, isCloud }: ManagementByTypeProps) => {
                         className='agent-table-icon'
                     />
                 </a>
-            }
-        ]
+            })
         if (!isCloud) {
             temp.unshift(
                 {
@@ -119,7 +129,7 @@ const ManagementByType = ({ type, isCloud }: ManagementByTypeProps) => {
                             CurrentAgentVersionChangeFunc(type, data.fileId, (newData) => {
                                 setTableData(tableData.map(t => t.fileId === newData.fileId ? ({
                                     ...newData,
-                                    uploadDate: convertUTCStringToLocalDateString(newData.uploadDate)
+                                    uploadDate: convertUTCStringToTimezoneDateString(newData.uploadDate)
                                 }) : ({ ...t, downloadTarget: false })))
                                 message.success(formatMessage({ id: 'CURRENT_VERSION_CHANGE_COMPLETE' }));
                                 if (type === 'WINDOWS_AGENT') {
@@ -199,7 +209,7 @@ const ManagementByType = ({ type, isCloud }: ManagementByTypeProps) => {
             navigate('/AgentManagement/note', {
                 state: {
                     fileId: data.fileId,
-                    note: data.note
+                    description: data.description
                 }
             });
         } : undefined}

@@ -21,7 +21,7 @@ const CustomAdminSelect = ({ data, onChange, hasIncludeWithdrawal }: CustomAdmin
         
         GetUserDataListFunc({
             page: 0,
-            page_size: INT_MAX_VALUE,
+            pageSize: INT_MAX_VALUE,
             roles: ['ADMIN', 'ROOT']
         }, ({ results, totalCount }) => {
             setAdminDatas(results)

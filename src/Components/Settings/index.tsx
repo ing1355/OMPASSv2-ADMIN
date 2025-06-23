@@ -4,7 +4,7 @@ import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import { GetPortalSettingsDataFunc, UpdatePortalSettingsDataFunc } from "Functions/ApiFunctions"
 import { useLayoutEffect, useState } from "react"
 import './Settings.css'
-import { timeZoneNames, UserSignupMethod } from "Constants/ConstantValues"
+import { timeZoneNamesWithCustomSelect, UserSignupMethod } from "Constants/ConstantValues"
 import { message, Switch } from "antd"
 import { convertBase64FromClientToServerFormat } from "Functions/GlobalFunctions"
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect"
@@ -20,7 +20,7 @@ import { FormattedMessage, useIntl } from "react-intl"
 
 const Settings = () => {
     const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas!);
-      const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
+    const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const [dataLoading, setDataLoading] = useState(false)
     const [timeZoneValue, setTimeZoneValue] = useState('Asia/Seoul')
     const [welcomeText, setWelcomeText] = useState('')
@@ -38,13 +38,14 @@ const Settings = () => {
         isDefaultImage: true
     })
     const [hasIncludeWithdrawal, setHasIncludeWithdrawal] = useState(false)
+    const [hidePortal, setHidePortal] = useState(false)
 
     const dispatch = useDispatch()
     const { formatMessage } = useIntl()
 
     const getDatas = () => {
         setDataLoading(true)
-        GetPortalSettingsDataFunc(({ noticeToAdmin, userSignupMethod, logoImage, noticeMessage, timeZone, name, isUserAllowedToRemoveAuthenticator, selfSignupEnabled }) => {
+        GetPortalSettingsDataFunc(({ noticeToAdmin, userSignupMethod, logoImage, noticeMessage, timeZone, name, isUserAllowedToRemoveAuthenticator, selfSignupEnabled, hidePortal }) => {
             setSignupMethod(userSignupMethod)
             setLogoImg({
                 image: logoImage.url,
@@ -56,6 +57,7 @@ const Settings = () => {
             setInputAlias(name)
             setCanDelete(isUserAllowedToRemoveAuthenticator)
             setCanSignUp(selfSignupEnabled)
+            setHidePortal(hidePortal ?? false)
         }).finally(() => {
             setDataLoading(false)
         })
@@ -92,8 +94,9 @@ const Settings = () => {
                         name: inputAlias,
                         isUserAllowedToRemoveAuthenticator: canDelete,
                         noticeToAdmin: noticeToAdmin,
-                        selfSignupEnabled: canSignUp
-                    }, () => {
+                        selfSignupEnabled: canSignUp,
+                        hidePortal
+                    }, (newData) => {
                         message.success(formatMessage({ id: 'SETTING_SAVE_SUCCESS_MSG' }))
                         dispatch(globalDatasChange({
                             ...globalDatas,
@@ -105,9 +108,11 @@ const Settings = () => {
                                 url: data.image,
                                 isDefaultImage: data.isDefaultImage
                             },
-                            selfSignupEnabled: canSignUp,
-                            noticeMessage: welcomeText,
-                            userSignupMethod: signupMethod
+                            name: newData.name,
+                            timeZone: newData.timeZone,
+                            selfSignupEnabled: newData.selfSignupEnabled,
+                            noticeMessage: newData.noticeMessage,
+                            userSignupMethod: newData.userSignupMethod,
                         }))
                     })
                 }
@@ -140,17 +145,14 @@ const Settings = () => {
                 }} maxLength={20} />
             </CustomInputRow>
             <CustomInputRow title={<FormattedMessage id="TIME_ZONE_LABEL" />}>
-                <CustomSelect readOnly value={timeZoneValue} onChange={e => {
+                <CustomSelect hasGroup value={timeZoneValue} onChange={e => {
                     setTimeZoneValue(e)
-                }} items={timeZoneNames.map(_ => ({
-                    key: _,
-                    label: _
-                }))} needSelect />
+                }} items={timeZoneNamesWithCustomSelect} needSelect />
             </CustomInputRow>
             <CustomInputRow title={<FormattedMessage id="USER_SELF_SIGN_UP_LABEL" />}>
                 <Switch checked={canSignUp} onChange={check => {
                     setCanSignUp(check)
-                }}/>
+                }} />
             </CustomInputRow>
             <div className={`admin-need${canSignUp ? ' visible' : ''}`}>
                 <CustomInputRow title="">
@@ -177,7 +179,7 @@ const Settings = () => {
                                 ...noticeToAdmin,
                                 isEnabled: check
                             })
-                        }}/>
+                        }} />
                     </div>
                     <div className="policy-contents-container" data-hidden={!noticeToAdmin.isEnabled}>
                         <div className="policy-input-container">
@@ -225,6 +227,11 @@ const Settings = () => {
             <CustomInputRow title={<FormattedMessage id="SETTING_USER_SELF_DEVICE_DELETE_LABEL" />}>
                 <Switch checked={canDelete} onChange={check => {
                     setCanDelete(check)
+                }} />
+            </CustomInputRow>
+            <CustomInputRow title={<FormattedMessage id="SETTING_USER_APP_PORTAL_HIDE_LABEL" />}>
+                <Switch checked={hidePortal} onChange={check => {
+                    setHidePortal(check)
                 }} />
             </CustomInputRow>
             <CustomInputRow title={<FormattedMessage id="SETTING_NOTICE_TEXT_LABEL" />}>

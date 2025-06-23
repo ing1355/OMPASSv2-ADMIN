@@ -27,7 +27,7 @@ const UserRpSelfAddComponent = ({ refreshCallback }: UserRpSelfAddComponentProps
     const getApplications = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
         const _params: GeneralParamsType = {
-            page_size: params.size,
+            pageSize: params.size,
             page: params.page
         }
         if (params.searchType) {
@@ -130,7 +130,6 @@ const UserRpSelfAddComponent = ({ refreshCallback }: UserRpSelfAddComponentProps
                     }, (res) => {
                         if (res.isSuccess) {
                             setModalOpen(false)
-                            console.log('res: ', res, res.primaryAuthToken)
                             setAuthModalOpen(res.primaryAuthToken)
                         } else {
                             message.error(formatMessage({ id: 'APPLICATION_ACCOUNT_INFO_INVALID_MSG' }))

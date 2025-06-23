@@ -7,6 +7,7 @@ import { useRef, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 import lockIcon from "@assets/lockIcon.png"
 import unlockIcon from "@assets/unlockIcon.png"
+import { passwordRegex } from "Components/CommonCustomComponents/CommonRegex"
 
 const UnLockBtn = ({ userData, onSuccess }: {
     userData: UserDataType
@@ -18,6 +19,7 @@ const UnLockBtn = ({ userData, onSuccess }: {
     const [sureUnlock, setSureUnlock] = useState(false)
     const [showRandomPassword, setShowRandomPassword] = useState('')
     const inputUnlockPasswordRef = useRef<HTMLInputElement>()
+    const inputUnlockPasswordConfirmRef = useRef<HTMLInputElement>()
 
     const { formatMessage } = useIntl()
 
@@ -45,17 +47,28 @@ const UnLockBtn = ({ userData, onSuccess }: {
             }}
             onSubmit={async () => {
                 const randomChecked = unlockPasswordRandomChecked;
+                if (!randomChecked && !inputUnlockPassword) {
+                    message.error(formatMessage({id: 'PLEASE_INPUT_PASSWORD'}))
+                    inputUnlockPasswordRef.current?.focus()
+                    return
+                }
+                if(!randomChecked && !passwordRegex.test(inputUnlockPassword)) {
+                    message.error(formatMessage({id: 'PASSWORD_CHECK'}))
+                    inputUnlockPasswordRef.current?.focus()
+                    return
+                }
                 if(!randomChecked && (inputUnlockPassword !== inputUnlockPasswordConfirm)) {
                     message.error(formatMessage({id: 'PASSWORD_NOT_MATCH'}))
-                } else {
-                    return UnlockUserFunc(userData.userId, unlockPasswordRandomChecked, inputUnlockPassword, ({ password }) => {
+                    inputUnlockPasswordConfirmRef.current?.focus()
+                    return
+                }
+                return UnlockUserFunc(userData.userId, unlockPasswordRandomChecked, inputUnlockPassword, ({ password }) => {
                     setSureUnlock(false)
                         message.success(formatMessage({ id: 'USER_UNLOCK_SUCCESS_MSG' }))
                         if (randomChecked) setShowRandomPassword(password)
                         else onSuccess()
     
                     })
-                }
             }} buttonLoading>
             <>
                 <div style={{
@@ -80,7 +93,7 @@ const UnLockBtn = ({ userData, onSuccess }: {
                     </div>
                     <Input type="password" disabled={unlockPasswordRandomChecked} customType='password' className='st1' value={inputUnlockPasswordConfirm} valueChange={val => {
                         setInputUnlockPasswordConfirm(val)
-                    }} />
+                    }} ref={inputUnlockPasswordConfirmRef} />
                 </div>
             </>
         </CustomModal>

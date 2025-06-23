@@ -16,6 +16,8 @@ import { setStorageAuth } from 'Functions/GlobalFunctions';
 import { sessionCheckChange } from 'Redux/actions/sessionInfoChange';
 import { subdomainInfoChange } from 'Redux/actions/subdomainInfoChange';
 import AgentTitleByType from './AgentTitleByType';
+import { maxLengthByType } from 'Constants/ConstantValues';
+import useCustomRoute from 'hooks/useCustomRoute';
 
 const VersionUpload = () => {
   const sessionInfo = useSelector((state: ReduxStateType) => state.sessionInfo!);
@@ -28,8 +30,8 @@ const VersionUpload = () => {
   const [inputFile, setInputFile] = useState<File>()
   const { formatMessage } = useIntl();
   const dispatch = useDispatch()
-  const navigate = useNavigate();
   const type: AgentType = useParams().type as AgentType
+  const { goBack } = useCustomRoute()
   
   const fileExtensionByType = () => {
     if (type === 'WINDOWS_AGENT') {
@@ -94,7 +96,7 @@ const VersionUpload = () => {
       type,
       "metaData.hash": inputHash,
       // "metaData.version": inputVersion,
-      "metaData.note": inputMemo,
+      "metaData.description": inputMemo,
       multipartFile: inputFile,
     }, (newData) => {
       if(!subdomainInfo.windowsAgentUrl && type === 'WINDOWS_AGENT') {
@@ -118,7 +120,7 @@ const VersionUpload = () => {
           macOsAgentUrl: newData.downloadUrl
         }))
       }
-      navigate(-1);
+      goBack()
     }).finally(() => {
       setIsUploadingFile(false)
       setShowSession(false)
@@ -179,7 +181,7 @@ const VersionUpload = () => {
               <label><FormattedMessage id='MEMO' /></label>
               <Input
                 className={'st1'}
-                maxLength={192}
+                maxLength={maxLengthByType('description')}
                 value={inputMemo}
                 valueChange={value => {
                   setInputMemo(value)
@@ -193,6 +195,7 @@ const VersionUpload = () => {
                 className="st1"
                 autoComplete='off'
                 value={inputHash}
+                maxLength={64}
                 valueChange={value => {
                   setInputHash(value)
                 }}

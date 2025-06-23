@@ -65,7 +65,6 @@ const SessionTimeCount = () => {
 
     const visibilityChangeCallback = useCallback((e: Event) => {
         if (document.visibilityState === "visible") {
-            console.log("view focus on")
             settingTimer()
         }
     }, [])

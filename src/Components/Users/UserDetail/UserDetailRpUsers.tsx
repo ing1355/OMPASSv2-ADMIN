@@ -10,7 +10,7 @@ import passcodeDeleteIconHover from '@assets/deleteIconRed.png';
 import arrowDownIcon from '@assets/arrowDownIcon.png';
 import userIcon from '@assets/userIcon.png';
 import { EmptyDetailItem, UserDetailInfoAuthenticatorContent, UserDetailInfoAuthenticatorDeleteButton, UserDetailInfoDeviceInfoContent, UserDetailInfoETCInfoContent, ViewPasscode } from './UserDetailComponents';
-import { convertUTCStringToLocalDateString, logoImageWithDefaultImage } from 'Functions/GlobalFunctions';
+import { logoImageWithDefaultImage } from 'Functions/GlobalFunctions';
 import BottomLineText from 'Components/CommonCustomComponents/BottomLineText';
 import { DeleteAuthenticatorDataFunc, SendPasscodeEmailFunc } from "Functions/ApiFunctions";
 import CustomTable from "Components/CommonCustomComponents/CustomTable";
@@ -19,6 +19,7 @@ import { isDev2 } from "Constants/ConstantValues";
 import { useParams } from "react-router";
 import { PasscodeAddComponent } from "./PasscodeComponents";
 import CustomModal from "Components/Modal/CustomModal";
+import useDateTime from "hooks/useDateTime";
 
 
 type UserDetailRpUsersProps = {
@@ -44,6 +45,7 @@ const UserDetailRpUsers = ({ targetData, authInfoDatas, refreshCallback, portalS
     const [authenticatorDelete, setAuthenticatorDelete] = useState('')
     const [addPasscode, setAddPasscode] = useState<RPUserDetailAuthDataType['id']>("")
     const { formatMessage } = useIntl()
+    const { convertUTCStringToTimezoneDateString } = useDateTime();
 
     const canUsePasscode = (applicationType: ApplicationDataType['type']) => {
         return applicationType !== 'LDAP' && applicationType !== 'RADIUS'
@@ -76,7 +78,7 @@ const UserDetailRpUsers = ({ targetData, authInfoDatas, refreshCallback, portalS
                 title: <FormattedMessage id="VALID_TIME" />,
                 render: (data) => {
                     if (data === "-1") return "∞"
-                    return convertUTCStringToLocalDateString(data)
+                    return convertUTCStringToTimezoneDateString(data)
                 }
             },
             {
@@ -219,16 +221,6 @@ const UserDetailRpUsers = ({ targetData, authInfoDatas, refreshCallback, portalS
         }} okCallback={(newData) => {
             message.success(formatMessage({ id: 'PASSCODE_ADD_SUCCESS_MSG' }))
             refreshCallback()
-            // setUserDetailDatas(userDetailDatas.map((ud, ud_ind) => ({
-            //     ...ud,
-            //     authenticationInfo: ud.authenticationInfo.map((aInfo, aInd) => aInfo.id === addPasscode ? ({
-            //         ...aInfo,
-            //         authenticators: aInfo.authenticators.concat({
-            //             ...newData,
-            //             createdAt: convertUTCStringToLocalDateString(newData.createdAt)
-            //         })
-            //     }) : aInfo)
-            // })))
             setAddPasscode("")
         }} />
 

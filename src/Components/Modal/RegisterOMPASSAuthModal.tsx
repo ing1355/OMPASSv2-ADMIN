@@ -55,7 +55,6 @@ const RegisterOMPASSAuthModal = ({ opened, onCancel, successCallback, applicatio
     return <CustomModal title={<FormattedMessage id="OMPASS_REGISTER_MODAL_TITLE_LABEL" />} open={opened} onCancel={() => {
         _onCancel()
     }} buttonsType="small" noBtns noClose onOpen={() => {
-        console.log('token: ',primaryAuthToken)
         OMPASSAuth.startAuth({ type: 'single', purpose: purpose, applicationId, targetUserId: targetUserId, primaryAuthToken }, ({ url, ntp, sessionExpiredAt, sourceNonce, sessionId }) => {
             const ntpTime = dayjs.utc(parseInt(ntp))
             const expireTime = dayjs.utc(sessionExpiredAt)

@@ -92,13 +92,14 @@
     padding: 2px 0;
 }
 
-.user-detail-info-col:not(:has(.required-label)) {
+.user-detail-info-col:not(:has(.required-label)):not(:last-child) {
     padding-left: 17px;
 }
 
 .user-detail-info-col:first-child {
     width: 120px;
     position: relative;
+    box-sizing: border-box;
 }
 
 .user-detail-info-col:last-child {

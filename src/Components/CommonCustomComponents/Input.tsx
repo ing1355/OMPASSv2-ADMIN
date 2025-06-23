@@ -2,8 +2,7 @@ import React, { forwardRef, useEffect, useRef, useState } from "react"
 import { emailRegex, idRegex, nameRegex, passwordRegex } from "./CommonRegex"
 import { FormattedMessage } from "react-intl"
 import { slicePrice } from "Functions/GlobalFunctions"
-
-type CustomType = "username" | "password" | "email" | "name" | "phone"
+import { maxLengthByType } from "Constants/ConstantValues"
 
 type CustomInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
     valueChange?: (value: string, isAlert: boolean) => void
@@ -13,7 +12,7 @@ type CustomInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
     zeroOk?: boolean
     nonZero?: boolean
     title?: string | React.ReactNode
-    customType?: CustomType
+    customType?: InputValueType
     noGap?: boolean
     suffix?: string
     sliceNum?: boolean
@@ -45,15 +44,7 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
         isAlertRef.current = alert
     }
 
-    const maxLengthByCustomType = () => {
-        switch (customType) {
-            case 'email': return 48;
-            case 'name': return 12;
-            case 'password': return 16;
-            case 'phone': return 16;
-            case 'username': return 16;
-        }
-    }
+
 
     useEffect(() => {
         if (!isAlert) setAlertMsg('')
@@ -65,7 +56,8 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                 return idRegex
             case 'email':
                 return emailRegex
-            case 'name':
+            case 'firstName':
+            case 'lastName':
                 return nameRegex
             case 'password':
                 return passwordRegex
@@ -83,8 +75,11 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                 case 'email':
                     setAlertMsg(<FormattedMessage id="EMAIL_CHECK" />)
                     break;
-                case 'name':
-                    setAlertMsg(<FormattedMessage id="NAME_CHECK" />)
+                case 'firstName':
+                    setAlertMsg(<FormattedMessage id="FIRST_NAME_CHECK" />)
+                    break;
+                case 'lastName':
+                    setAlertMsg(<FormattedMessage id="LAST_NAME_CHECK" />)
                     break;
                 case 'password':
                     setAlertMsg(<FormattedMessage id="PASSWORD_CHECK" />)
@@ -169,9 +164,9 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                                 // } else if (customType === 'username') {
                                 //     e.currentTarget.value = e.currentTarget.value.replace(/[^0-9a-z]/g, '')
                                 // }
-                                if(maxLength || maxLengthByCustomType()) {
-                                    if (e.currentTarget.value.length > (maxLength || maxLengthByCustomType())!) {
-                                        e.currentTarget.value = e.currentTarget.value.slice(0, (maxLength || maxLengthByCustomType())!)
+                                if (maxLength || maxLengthByType(customType)) {
+                                    if (e.currentTarget.value.length > (maxLength || maxLengthByType(customType))!) {
+                                        e.currentTarget.value = e.currentTarget.value.slice(0, (maxLength || maxLengthByType(customType))!)
                                     }
                                 }
 
@@ -183,7 +178,7 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                                     setIsAlert(false)
                                 }
                                 if (onInput) onInput(e)
-                            }} {...props} type={type} value={props.disabled ? "" : ((value && sliceNum) ? slicePrice(value as string | number) : value)} maxLength={maxLength || maxLengthByCustomType()}
+                            }} {...props} type={type || customType} value={props.disabled ? "" : ((value && sliceNum) ? slicePrice(value as string | number) : value)} maxLength={maxLength || maxLengthByType(customType)}
                             style={{
                                 paddingRight: `${suffix ? (11 + suffix.length * 15 + 'px') : ''}`,
                                 ...style

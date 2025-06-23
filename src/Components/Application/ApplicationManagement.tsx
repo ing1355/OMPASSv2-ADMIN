@@ -20,7 +20,7 @@ const ApplicationManagement = () => {
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
         const _params: GeneralParamsType = {
-            page_size: params.size,
+            pageSize: params.size,
             page: params.page
         }
         if (params.searchType) {
@@ -38,12 +38,12 @@ const ApplicationManagement = () => {
             setDataLoading(false)
         })
     }
-
+    
     const getPolicyDatas = async () => {
         setDataLoading(true)
         GetPoliciesListFunc({
             page: 0,
-            page_size: INT_MAX_VALUE
+            pageSize: INT_MAX_VALUE
         }, ({ results, totalCount }) => {
             setPoliciesData(results)
         }).finally(() => {

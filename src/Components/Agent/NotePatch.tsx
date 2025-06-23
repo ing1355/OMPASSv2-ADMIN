@@ -4,7 +4,7 @@ import Button from "Components/CommonCustomComponents/Button";
 import Input from "Components/CommonCustomComponents/Input";
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader";
-import { UpdateAgentInstallerNoteFunc } from 'Functions/ApiFunctions';
+import { UpdateAgentInstallerDescriptionFunc } from 'Functions/ApiFunctions';
 import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useLocation, useNavigate } from "react-router";
@@ -14,14 +14,14 @@ const NotePatch = () => {
     const { formatMessage } = useIntl()
     const navigate = useNavigate();
     const location = useLocation()
-    const { fileId, note }: {
+    const { fileId, description }: {
         fileId: AgentInstallerDataType['fileId']
-        note: AgentInstallerDataType['note']
+        description: AgentInstallerDataType['description']
     } = location.state || {}
 
     useEffect(() => {
-        if (note) {
-            setInputMemo(note)
+        if (description) {
+            setInputMemo(description)
         }
     }, [])
 
@@ -29,7 +29,7 @@ const NotePatch = () => {
         <Contents>
             <ContentsHeader title="VERSION_MANAGEMENT" subTitle={'NOTE_PATCH'}>
                 <Button className='st3' onClick={() => {
-                    UpdateAgentInstallerNoteFunc(fileId, inputMemo, () => {
+                    UpdateAgentInstallerDescriptionFunc(fileId, inputMemo, () => {
                         message.success(formatMessage({id:'NOTE_PATCH_SUCCESS_MSG'}))
                         navigate(-1);
                     })

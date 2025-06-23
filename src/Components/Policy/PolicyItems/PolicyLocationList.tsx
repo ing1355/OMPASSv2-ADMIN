@@ -27,7 +27,6 @@ const PolicyLocationList = ({ value = {
 }, onChange, dataInit, authenticators, setSureChange }: PolicyItemsPropsType<LocationPolicyType> & {
     setSureChange: SetStateType<'LOCATION' | AuthenticatorPolicyType | null>
 }) => {
-    const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas);
     const [currentLocation, setCurrentLocation] = useState<google.maps.LatLngLiteral>({ lat: 36.713889964770544, lng: 127.88793971566751 })
     const [currentRadius, setCurrentRadius] = useState('1')
     const [currentLocationName, setCurrentLocationName] = useState('')
@@ -198,12 +197,12 @@ const PolicyLocationList = ({ value = {
                         <div className="policy-location-input-row">
                             <span className="policy-location-label"><FormattedMessage id="LOCATION_LATITUDE" /></span> <Input className="st1" value={modifyLocationIndex === ind ? modifyLocationTemp.coordinate.latitude : _.coordinate.latitude} readOnly />
                             <span className="policy-location-label"><FormattedMessage id="LOCATION_LONGITUDE" /></span> <Input className="st1" value={modifyLocationIndex === ind ? modifyLocationTemp.coordinate.longitude : _.coordinate.longitude} readOnly />
-                            <span className="policy-location-label"><FormattedMessage id="LOCATION_RADIUS" /></span> <Input className="st1 policy-location-radius-input" value={modifyLocationIndex === ind ? modifyLocationTemp.radius : _.radius} readOnly={modifyLocationIndex !== ind} style={{
+                            <span className="policy-location-label"><FormattedMessage id="LOCATION_RADIUS" /></span> <Input className="st1 policy-location-radius-input" value={(modifyLocationIndex === ind ? modifyLocationTemp.radius : _.radius) ?? ''} readOnly={modifyLocationIndex !== ind} style={{
                                 width: '160px'
                             }} suffix="m" sliceNum valueChange={(val) => {
                                 setModifyLocationTemp({
                                     ...modifyLocationTemp,
-                                    radius: parseInt(val)
+                                    radius: val ? parseInt(val) : undefined
                                 })
                             }} maxLength={10} />
                             <span className="policy-location-label"><FormattedMessage id="LOCATION_NAME_LABEL" /></span> <Input className="st1" value={modifyLocationIndex === ind ? modifyLocationTemp.alias : _.alias} readOnly={modifyLocationIndex !== ind} valueChange={(val) => {
@@ -248,6 +247,7 @@ const PolicyLocationList = ({ value = {
                                 width: '16px'
                             }} disabled={modifyLocationIndex !== -1 && modifyLocationIndex !== ind} />}
                             {modifyLocationIndex === ind && <Button className="st1" onClick={() => {
+                                if (!modifyLocationTemp.radius) return message.error(formatMessage({ id: 'LOCATION_RADIUS_NEED_VALUE_MSG' }))
                                 setLocationDatas(locations.map((d, lInd) => lInd === modifyLocationIndex ? modifyLocationTemp : d))
                                 setModifyLocationIndex(-1)
                             }} icon={locationModifyConfirmIcon} hoverIcon={locationModifyConfirmIconHover} />}
