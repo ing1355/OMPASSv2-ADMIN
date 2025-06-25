@@ -384,8 +384,13 @@ const CustomTable = <T extends {
                 }
             </tbody>
         </table>
+        {
+            totalCount && <div className="mt10 custom-table-total-count-container">
+                <FormattedMessage id="TOTAL_COUNT_LABEL" values={{ totalCount }} />
+            </div>
+        }
         {pagination && <div
-            className="mt30 mb40"
+            className="mb40"
             style={{ textAlign: 'center' }}
         >
             <Pagination showQuickJumper showSizeChanger current={pageNum} pageSize={tableSize} total={totalCount || 1} onChange={onChangePage} className="custom-pagination" />

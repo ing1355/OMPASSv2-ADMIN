@@ -45,8 +45,10 @@ const EmailSendButton = ({
         disabled={mailSendLoading || disabled}
         onClick={() => {
             setMailSendLoading(true)
-            onClick().finally(() => {
-                setEmailCodeSend(true)
+            setEmailCodeSend(true)
+            onClick().catch(err => {
+                setEmailCodeSend(false)
+            }).finally(() => {
                 onChangeCodeSend?.(true)
                 callback?.()
                 mailTimer.current = setInterval(() => {

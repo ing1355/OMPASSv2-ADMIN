@@ -211,6 +211,8 @@ const Billing = () => {
                     <CustomTable
                         theme='table-st1'
                         datas={tableData}
+                        totalCount={totalCount}
+                        pagination
                         onSearchChange={(data) => {
                             GetDatas(data)
                         }}

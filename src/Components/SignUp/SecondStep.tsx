@@ -51,7 +51,6 @@ const SecondStep = ({ completeCallback }: {
     const [inputEmail, setInputEmail] = useState('')
     const [rootConfirm, setRootConfirm] = useState(false)
 
-
     const usernameRef = useRef<HTMLInputElement>(null)
     const passwordRef = useRef<HTMLInputElement>(null)
     const passwordConfirmRef = useRef<HTMLInputElement>(null)
@@ -312,7 +311,6 @@ const SecondStep = ({ completeCallback }: {
                     className='st1 sign-up-readonly'
                     required
                     ref={emailRef}
-                    // readonly={idExist}
                     value={inputEmail}
                     customType="email"
                     noGap
@@ -321,7 +319,7 @@ const SecondStep = ({ completeCallback }: {
                         setIsEmailAlert(isAlert || false)
                         setEmailCodeSend(false)
                     }}
-                    readOnly={emailVerify}
+                    readOnly={emailCodeSend}
                 >
                     <EmailSendButton noStyle className="signup-duplicate-check" disabled={inputEmail.length === 0 || emailVerify || isEmailAlert} onClick={() => {
                         return SignUpVerificationCodeSendFunc({

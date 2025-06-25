@@ -28,6 +28,7 @@ import OMPASSAppAuthenticators from "./PolicyItems/OMPASSAppAuthenticator";
 import './AuthPolicyDetail.css'
 // import PasswordlessCheck from "./PolicyItems/PasswordlessCheck";
 import LinuxPamBypass from "./PolicyItems/LinuxPamBypass";
+import CanEmailRegister from "./CanEmailRegister";
 
 const pamInitData: PAMBypassDataType = {
     isEnabled: false,
@@ -63,6 +64,9 @@ const AuthPolicyDetail = () => {
     const [detailData, setDetailData] = useState<PolicyDataType>()
     const [sureChange, setSureChange] = useState<'LOCATION' | AuthenticatorPolicyType | null>(null)
     const [hasIncludeWithdrawal, setHasIncludeWithdrawal] = useState(false)
+    const [canEmailRegisterData, setCanEmailRegisterData] = useState<PolicyEnabledDataType>({
+        isEnabled: false
+    })
     const { formatMessage } = useIntl()
     const navigate = useNavigate()
     const isDefaultPolicy = detailData?.policyType === 'DEFAULT'
@@ -94,6 +98,9 @@ const AuthPolicyDetail = () => {
                 setPolicyName(data.name)
                 setInputDescription(data.description ?? "")
                 setOmpassControl(data.accessControl)
+                setCanEmailRegisterData(data.canEmailRegister || {
+                    isEnabled: false
+                })
                 setDetailData(data)
                 setAuthenticatorPolicies(data.enableAuthenticators)
                 setSelectedApplicationType(data.applicationType)
@@ -163,6 +170,9 @@ const AuthPolicyDetail = () => {
             setAccessTimeValues({
                 isEnabled: false,
                 accessTimes: []
+            })
+            setCanEmailRegisterData({
+                isEnabled: false
             })
         }
     }
@@ -242,7 +252,8 @@ const AuthPolicyDetail = () => {
                 isEnabled: pamBypassData.isEnabled,
                 ip: pamBypassData.isEnabled ? pamBypassData.ip : '',
                 username: pamBypassData.isEnabled ? pamBypassData.username : ''
-            }
+            },
+            canEmailRegister: canEmailRegisterData
         }
         if (uuid) {
             updateAuthPolicyFunc(params)
@@ -294,6 +305,7 @@ const AuthPolicyDetail = () => {
                 {!isDefaultPolicy && <Button className="st5" icon={resetIcon} hoverIcon={resetIconWhite} onClick={() => {
                     dataInit()
                     setInitEvent(true)
+                    message.info(formatMessage({ id: 'POLICY_INFO_RESET_SUCCESS_MSG' }))
                 }}>
                     <FormattedMessage id="NORMAL_RESET_LABEL" />
                 </Button>}
@@ -335,6 +347,7 @@ const AuthPolicyDetail = () => {
                     {locationUsed && locationDatas && <PolicyLocationList value={locationDatas} onChange={setLocationDatas} authenticators={authenticatorPolicies} setSureChange={setSureChange} />}
                     {!isDefaultPolicy && ipAddressValues && ipAddressUsed && <PolicyIpAddressList value={ipAddressValues} onChange={setIpAddressValues} dataInit={initEvent} />}
                     {!isDefaultPolicy && accessTimeValues && <PolicyAccessTimeList value={accessTimeValues} onChange={setAccessTimeValues} />}
+                    <CanEmailRegister value={canEmailRegisterData} onChange={setCanEmailRegisterData} />
                     {!isDefaultPolicy && noticeToAdmin && <NoticeToAdmin hasIncludeWithdrawal={setHasIncludeWithdrawal} value={noticeToAdmin} onChange={setNoticeToAdmin} />}
                     {!isDefaultPolicy && noticeToThemselves && <NoticeToThemselves value={noticeToThemselves} onChange={setNoticeToThemselves} />}
                 </div>

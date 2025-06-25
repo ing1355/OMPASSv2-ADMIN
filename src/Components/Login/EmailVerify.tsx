@@ -42,6 +42,13 @@ const EmailVerify = ({ token, username, isOpen, setIsOpen, onSuccess, onCancel }
         })
     }
 
+    useEffect(() => {
+        if (isOpen) {
+            setInputCode('')
+            setEmailCodeSend(false)
+        }
+    }, [isOpen])
+
     return <CustomModal open={!!isOpen} width={500} onCancel={() => {
         setIsOpen('')
         onCancel()

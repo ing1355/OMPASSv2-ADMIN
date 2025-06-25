@@ -81,7 +81,7 @@ export const UpdatePortalSettingsDataApi = '/v2/setting'
 // 회원가입
 export const SignUpRequestApi = '/v2/users/signup'
 export const RootSignUpRequestApi = '/v2/users/root/signup'
-export const SignUpVerificationCodeSendApi = '/v2/users/verification-code'
+export const SignUpVerificationCodeSendApi = '/v2/users/email/signup/verification-code'
 export const SignUpVerificationCodeVerifyApi = '/v2/users/verification-code/verify'
 
 // config

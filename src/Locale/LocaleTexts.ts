@@ -545,6 +545,8 @@ const LocaleTexts = {
     BILLING_MIN_USER_COUNT_TEXT: '*Min 10 users, VAT extra',
     BILLING_HISTORY: 'Payment History',
     EMAIL_VERIFY_TITLE_LABEL: 'Email Verify',
+    TOTAL_COUNT_LABEL: 'Total {totalCount} results found',
+    CAN_EMAIL_REGISTER_TITLE_LABEL: 'Allow Email Registration',   
   },
   KR: {
     LOGIN: '로그인',
@@ -1093,6 +1095,8 @@ const LocaleTexts = {
     BILLING_MIN_USER_COUNT_TEXT: '*최소 10명 기준, VAT 별도',
     BILLING_HISTORY: '결제 내역',
     EMAIL_VERIFY_TITLE_LABEL: '이메일 인증하기',
+    TOTAL_COUNT_LABEL: '총 {totalCount}건 검색됨',
+    CAN_EMAIL_REGISTER_TITLE_LABEL: '이메일로 OMPASS 등록 허용',
   }
 }
 

@@ -395,6 +395,7 @@ type DefaultPolicyDataType = {
     enableAppAuthenticationMethods: OMPASSAppAuthenticatorType[]
     description?: string
     applicationType: LocalApplicationTypes
+    canEmailRegister: PolicyEnabledDataType
 }
 
 type RestrictionNoticeMethodType = 'EMAIL' | 'PUSH'

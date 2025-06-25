@@ -30,6 +30,7 @@ const Dashboard = () => {
             page: 0
         }
         await GetApplicationListFunc(_params, ({ results, totalCount }) => {
+            results.sort((a, b) => a.type === 'PORTAL' ? -1 : 1)
             setApplicationDatas(results)
             setSelectedApplication(results)
         }).finally(() => {

@@ -127,7 +127,7 @@ const PortalUserManagement = () => {
                     render: (data) => getFullName(data)
                 },
                 {
-                    key: 'emailVerified',
+                    key: 'isEmailVerified',
                     title: createHeaderColumn('EMAIL'),
                     render: (data, ind, row) => <div className="user-email-column">
                         {row.email}

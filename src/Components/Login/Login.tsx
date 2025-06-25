@@ -96,24 +96,21 @@ const Login = () => {
         }
       })
     } else {
-      console.log(1, ompassAuthentication)
       if (ompassAuthentication && ompassAuthentication.isRegisteredOmpass) {
-        console.log(2)
         if(isEmailVerified) {
-          console.log(3)
           ompassUrlCallback(ompassAuthentication.ompassUrl, token)
         } else {
-          console.log(4)
           EmailVerifyCheck(isEmailVerified, token, email)
         }
       } else {
-        console.log(5)
         if(isEmailVerified) {
-          console.log(6)
-          message.info(formatMessage({ id: 'NOT_REGISTERED_MSG' }))
-          setNotRegistered(true)
+          if(notRegistered) {
+            ompassUrlCallback(ompassAuthentication.ompassUrl, token)
+          } else {
+            message.info(formatMessage({ id: 'NOT_REGISTERED_MSG' }))
+            setNotRegistered(true)
+          }
         } else {
-          console.log(7)
           EmailVerifyCheck(isEmailVerified, token, email)
         }
       }
