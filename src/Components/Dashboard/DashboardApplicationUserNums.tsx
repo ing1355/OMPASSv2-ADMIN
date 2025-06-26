@@ -22,11 +22,26 @@ const DashboardApplicationUserNums = ({ applications }: {
         })
     }
 
+    const getTotalCount = (applicationId: ApplicationDataType['id']) => {
+        const target = datas.find(__ => __.applicationId === applicationId)
+        if (!target) return 0
+        return target.registeredRpUserCount + target.unRegisteredRpUserCount
+    }
+
+    const getRegisteredRpUserCount = (applicationId: ApplicationDataType['id']) => {
+        const target = datas.find(__ => __.applicationId === applicationId)
+        if (!target) return 0
+        return target.registeredRpUserCount
+    }
+
     return <div className="dashboard-middle-application-user-container">
         <div className="dashboard-middle-application-user-num-container dashboard-card">
             <div className="dashboard-middle-application-user-num-title-container">
                 <div className="dashboard-middle-application-user-num-title-text dashboard-card-title">
                     <FormattedMessage id="DASHBOARD_REGISTER_USER_NUMS"/>
+                    <div className="dashboard-middle-application-user-num-title-text-sub">
+                        (<FormattedMessage id="DASHBOARD_REGISTER_USER_NUMS_SUB"/>)
+                    </div>
                 </div>
                 <div className="dashboard-middle-application-user-num-title-icon">
                     <img src={dashboardRegisterUserIcon} />
@@ -34,11 +49,11 @@ const DashboardApplicationUserNums = ({ applications }: {
             </div>
             <div className="dashboard-middle-application-user-num-tag-container">
                 {
-                    applications.map((_, ind) => <ApplicationUserNum key={_.id} title={_.name} num={datas.find(__ => __.applicationId === _.id)?.registeredRpUserCount || 0} color={DashboardColors[ind]} />)
+                    applications.map((_, ind) => <ApplicationUserNum key={_.id} title={_.name} totalCount={getTotalCount(_.id)} num={getRegisteredRpUserCount(_.id)} color={DashboardColors[ind]} />)
                 }
             </div>
         </div>
-        <div className="dashboard-middle-application-user-num-container dashboard-card">
+        {/* <div className="dashboard-middle-application-user-num-container dashboard-card">
             <div className="dashboard-middle-application-user-num-title-container">
                 <div className="dashboard-middle-application-user-num-title-text dashboard-card-title">
                     <FormattedMessage id="DASHBOARD_NOT_REGISTER_USER_NUMS"/>
@@ -49,10 +64,10 @@ const DashboardApplicationUserNums = ({ applications }: {
             </div>
             <div className="dashboard-middle-application-user-num-tag-container">
                 {
-                    applications.map((_, ind) => <ApplicationUserNum key={_.id} title={_.name} num={datas.find(__ => __.applicationId === _.id)?.unRegisteredRpUserCount || 0} color={DashboardColors[ind]} />)
+                    applications.map((_, ind) => <ApplicationUserNum key={_.id} title={_.name} totalCount={getTotalCount(_.id)} num={getUnRegisteredRpUserCount(_.id)} color={DashboardColors[ind]} />)
                 }
             </div>
-        </div>
+        </div> */}
     </div>
 }
 

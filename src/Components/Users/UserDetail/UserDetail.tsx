@@ -28,7 +28,6 @@ const UserDetail = ({ }) => {
     const [authView, setAuthView] = useState(false)
     const [sureSwap, setSureSwap] = useState(false);
     const [sureDelete, setSureDelete] = useState(false);
-    const [portalSigned, setPortalSigned] = useState(false)
     const navigate = useNavigate()
     const location = useLocation()
     const dispatch = useDispatch()
@@ -117,12 +116,8 @@ const UserDetail = ({ }) => {
                             }))
                         }))
                     })))
-                    const hasPortal = data.find(_ => _.application.type === 'PORTAL')
-                    if (hasPortal) {
-                        setPortalSigned(true)
-                        if (data.length === 1) {
-                            setUserDetailOpened(data.map((_, ind) => _.authenticationInfo[0].id))
-                        }
+                    if (data.length === 1) {
+                        setUserDetailOpened(data.map((_, ind) => _.authenticationInfo[0].id))
                     }
                     // setUserDetailDatas(testDetailDatas)
                 })
@@ -140,13 +135,13 @@ const UserDetail = ({ }) => {
     }, [uuid])
 
     useEffect(() => {
-        if (authInfoDatas.length > 0 && targetId && authInfoRef.current[targetId] && portalSigned) {
+        if (authInfoDatas.length > 0 && targetId && authInfoRef.current[targetId]) {
             setTimeout(() => {
                 authInfoRef.current[targetId].scrollIntoView({ block: 'start', behavior: 'smooth' })
             }, 250);
             setUserDetailOpened(userDetailOpened.concat(targetId))
         }
-    }, [targetId, authInfoDatas, portalSigned])
+    }, [targetId, authInfoDatas])
 
     return <>
         <Contents loading={dataLoading}>
@@ -178,7 +173,7 @@ const UserDetail = ({ }) => {
                 </Button>}
             </ContentsHeader>
             <UserDetailUserInfo targetData={userData} setTargetData={setUserData} refreshCallback={GetDatas} hasRpUser={authInfoDatas.length > 0} />
-            <UserDetailRpUsers authInfoDatas={authInfoDatas} refreshCallback={GetDatas} targetData={userData} portalSigned={portalSigned} userDetailOpened={userDetailOpened} setUserDetailOpened={setUserDetailOpened} authInfoRef={authInfoRef} />
+            <UserDetailRpUsers authInfoDatas={authInfoDatas} refreshCallback={GetDatas} targetData={userData} userDetailOpened={userDetailOpened} setUserDetailOpened={setUserDetailOpened} authInfoRef={authInfoRef} />
             {isSelf && <UserRpSelfAddComponent refreshCallback={GetDatas} />}
         </Contents >
         <PairOMPASSAuthModal opened={authView} onCancel={() => {

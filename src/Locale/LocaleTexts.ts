@@ -132,7 +132,7 @@ const LocaleTexts = {
     DASHBOARD_INVALID_ALL_AUTH_SUM: 'Sum of count of all abnormal auth for the selected application',
     DASHBOARD_INVALID_ALL_AUTH: 'Count of abnormal auth for each selected application',
     DASHBOARD_RECENT_INVALID_LOGS: 'Recent abnormal auth request log',
-    DASHBOARD_REGISTER_USER_NUMS: 'Number of registered users by application',
+    DASHBOARD_REGISTER_USER_NUMS: 'Number of users by application',
     DASHBOARD_NOT_REGISTER_USER_NUMS: 'Number of unregistered users by application',
     CALENDAR_START_DATE: 'Start Date',
     CALENDAR_END_DATE: 'End Date',
@@ -547,6 +547,7 @@ const LocaleTexts = {
     EMAIL_VERIFY_TITLE_LABEL: 'Email Verify',
     TOTAL_COUNT_LABEL: 'Total {totalCount} results found',
     CAN_EMAIL_REGISTER_TITLE_LABEL: 'Allow Email Registration',   
+    DASHBOARD_REGISTER_USER_NUMS_SUB: 'Registered User Count / Total User Count',
   },
   KR: {
     LOGIN: '로그인',
@@ -681,7 +682,7 @@ const LocaleTexts = {
     DASHBOARD_INVALID_ALL_AUTH_SUM: '전체 비정상 인증 요청 수',
     DASHBOARD_INVALID_ALL_AUTH: '개별 비정상 인증 요청 수',
     DASHBOARD_RECENT_INVALID_LOGS: '최근 비정상 인증 요청 로그',
-    DASHBOARD_REGISTER_USER_NUMS: '등록 사용자 수',
+    DASHBOARD_REGISTER_USER_NUMS: '애플리케이션 별 사용자 수',
     DASHBOARD_NOT_REGISTER_USER_NUMS: '미등록 사용자 수',
     CALENDAR_START_DATE: '시작일',
     CALENDAR_END_DATE: '종료일',
@@ -1097,6 +1098,7 @@ const LocaleTexts = {
     EMAIL_VERIFY_TITLE_LABEL: '이메일 인증하기',
     TOTAL_COUNT_LABEL: '총 {totalCount}건 검색됨',
     CAN_EMAIL_REGISTER_TITLE_LABEL: '이메일로 OMPASS 등록 허용',
+    DASHBOARD_REGISTER_USER_NUMS_SUB: '등록 사용자 수 / 총 사용자 수',
   }
 }
 

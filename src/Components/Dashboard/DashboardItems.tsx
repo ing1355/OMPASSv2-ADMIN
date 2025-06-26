@@ -2,8 +2,29 @@ import { slicePrice } from "Functions/GlobalFunctions"
 import { CSSProperties } from "react"
 import { useNavigate } from "react-router"
 
-const ApplicationUserNum = ({ title, num, color }: {
+// const ApplicationUserNum = ({ title, num, color }: {
+//     title: string
+//     num: number
+//     color: CSSProperties['color']
+// }) => {
+//     return <div className="dashboard-middle-application-user-num-tag-item">
+//         <div className="dashboard-middle-application-user-num-tag-item-title">
+//             <div className="dashboard-middle-application-user-num-tag-item-circle" style={{
+//                 backgroundColor: color
+//             }}/>
+//             <div className="dashboard-middle-application-user-num-tag-item-title-text">
+//                 {title}
+//             </div>
+//         </div>
+//         <div className="dashboard-middle-application-user-num-tag-item-num">
+//             {slicePrice(num)}
+//         </div>
+//     </div>
+// }
+
+const ApplicationUserNum = ({ title, totalCount, num, color }: {
     title: string
+    totalCount: number
     num: number
     color: CSSProperties['color']
 }) => {
@@ -17,7 +38,7 @@ const ApplicationUserNum = ({ title, num, color }: {
             </div>
         </div>
         <div className="dashboard-middle-application-user-num-tag-item-num">
-            {slicePrice(num)}
+            {slicePrice(num)} / {slicePrice(totalCount)} <div className="dashboard-middle-application-user-num-tag-item-num-sub">({Math.round(num / totalCount * 100)}%)</div>
         </div>
     </div>
 }

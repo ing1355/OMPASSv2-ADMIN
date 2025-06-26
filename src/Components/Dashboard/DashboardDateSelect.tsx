@@ -3,7 +3,7 @@ import './DashboardDateSelect.css'
 import { FormattedMessage } from "react-intl"
 import { SetStateType } from "Types/PropsTypes"
 import Calendar from "./Calendar"
-import { setHours, setMinutes, setSeconds, subHours } from "date-fns"
+import { setHours, setMinutes, setSeconds, subHours, subMonths } from "date-fns"
 import useDsashboardFunctions from "hooks/useDashboardFunctions"
 import useDateTime from "hooks/useDateTime"
 
@@ -101,20 +101,21 @@ const FixedItem = ({ type, selected, setSelected, onChange }: {
                     intervalValue: 24
                 })
                 break;
-            // case 'month':
-            //     startDate = new Date(startDate.setDate(endDate.getDate() - 30))
-            //     startDate.setHours(0)
-            //     startDate.setMinutes(0)
-            //     startDate.setSeconds(0)
-            //     endDate.setHours(0)
-            //     endDate.setMinutes(0)
-            //     endDate.setSeconds(0)
-            //     _onChange({
-            //         startDate: getDateTimeString(startDate),
-            //         endDate: getDateTimeString(endDate),
-            //         intervalValue: 24
-            //     })
-            //     break;
+            case 'month':
+                startDate = subMonths(new Date(), 1)
+                // startDate = new Date(startDate.setDate(endDate.getDate() - 30))
+                startDate.setHours(0)
+                startDate.setMinutes(0)
+                startDate.setSeconds(0)
+                endDate.setHours(0)
+                endDate.setMinutes(0)
+                endDate.setSeconds(0)
+                _onChange({
+                    startDate: getDateTimeString(startDate),
+                    endDate: getDateTimeString(endDate),
+                    intervalValue: 24
+                })
+                break;
         }
         if (type !== 'user') setSelected(type)
         else if (!showSelect) setShowSelect(true)
@@ -153,7 +154,7 @@ const DashboardDateSelect = ({ onChange }: {
         <FixedItem type='day' selected={selected} setSelected={setSelected} onChange={onChange} />
         <FixedItem type='week' selected={selected} setSelected={setSelected} onChange={onChange} />
         {/* <FixedItem type='month' selected={selected} setSelected={setSelected} onChange={onChange} /> */}
-        <FixedItem type='user' selected={selected} setSelected={setSelected} onChange={onChange} />
+        {/* <FixedItem type='user' selected={selected} setSelected={setSelected} onChange={onChange} /> */}
     </div>
 }
 

@@ -384,11 +384,9 @@ const CustomTable = <T extends {
                 }
             </tbody>
         </table>
-        {
-            totalCount && <div className="mt10 custom-table-total-count-container">
-                <FormattedMessage id="TOTAL_COUNT_LABEL" values={{ totalCount }} />
+        <div className="mt10 custom-table-total-count-container">
+                {totalCount ? <FormattedMessage id="TOTAL_COUNT_LABEL" values={{ totalCount }} /> : <></>}
             </div>
-        }
         {pagination && <div
             className="mb40"
             style={{ textAlign: 'center' }}

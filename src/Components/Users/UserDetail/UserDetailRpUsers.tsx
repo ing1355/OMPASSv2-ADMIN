@@ -26,7 +26,6 @@ type UserDetailRpUsersProps = {
     targetData?: UserDataType
     authInfoDatas: UserDetailAuthInfoRowType[]
     refreshCallback: () => void
-    portalSigned: boolean
     userDetailOpened: RPUserDetailAuthDataType['id'][]
     setUserDetailOpened: (userDetailOpened: RPUserDetailAuthDataType['id'][]) => void
     authInfoRef: React.MutableRefObject<{
@@ -34,7 +33,7 @@ type UserDetailRpUsersProps = {
     }>
 }
 
-const UserDetailRpUsers = ({ targetData, authInfoDatas, refreshCallback, portalSigned, userDetailOpened, setUserDetailOpened, authInfoRef }: UserDetailRpUsersProps) => {
+const UserDetailRpUsers = ({ targetData, authInfoDatas, refreshCallback, userDetailOpened, setUserDetailOpened, authInfoRef }: UserDetailRpUsersProps) => {
     const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas);
     const selfInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     const _uuid = useParams().uuid;
@@ -119,7 +118,7 @@ const UserDetailRpUsers = ({ targetData, authInfoDatas, refreshCallback, portalS
     return <>
         {authInfoDatas.map((_, index) => <Fragment key={index}>
             <div
-                className={`user-detail-section mb20${portalSigned ? '' : ' no-portal-signed'}${!userDetailOpened.includes(_.authenticationInfo.id) ? ' closed' : ''}`}
+                className={`user-detail-section mb20${!userDetailOpened.includes(_.authenticationInfo.id) ? ' closed' : ''}`}
                 ref={_ref => authInfoRef.current[_.authenticationInfo.id] = _ref as HTMLDivElement}
             >
                 {isSelf && (_.application.type === 'RADIUS' || _.application.type === 'LDAP') && !_.authenticationInfo.createdAt && <EmptyDetailItem
@@ -130,7 +129,7 @@ const UserDetailRpUsers = ({ targetData, authInfoDatas, refreshCallback, portalS
                 />}
                 <div className="user-detail-header" onClick={() => {
                     if (_.application.type === 'RADIUS' && !_.authenticationInfo.createdAt) return;
-                    if (portalSigned) setUserDetailOpened(userDetailOpened.includes(_.authenticationInfo.id) ? userDetailOpened.filter(uOpened => uOpened !== _.authenticationInfo.id) : userDetailOpened.concat(_.authenticationInfo.id))
+                    setUserDetailOpened(userDetailOpened.includes(_.authenticationInfo.id) ? userDetailOpened.filter(uOpened => uOpened !== _.authenticationInfo.id) : userDetailOpened.concat(_.authenticationInfo.id))
                 }}>
                     <div className="user-detail-header-application-info">
                         <div className="user-detail-alias-container">

@@ -237,8 +237,8 @@
 }
 
 .dashboard-middle-application-user-num-tag-item-title {
-    flex: 1 80%;
-    max-width: 80%;
+    flex: 1 70%;
+    max-width: 70%;
     font-size: .85rem;
     display: flex;
     flex-direction: row;
@@ -263,6 +263,10 @@
 .dashboard-middle-application-user-num-tag-item-num {
     font-size: .9rem;
     font-weight: bold;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2px;
 }
 
 .dashboard-middle-application-auth-num-container {
@@ -387,7 +391,12 @@
     position: relative;
 }
 
-.dashboard-middle-invalid-auth-log-table {}
+.dashboard-middle-application-user-num-title-text-sub {
+    font-size: .7rem;
+    color: var(--main-grey-color);
+    text-align: start;
+    margin-top: 2px;
+}
 
 .dashboard-chart-container {
     display: flex;
@@ -406,6 +415,13 @@
     transition: dash 2s linear;
     stroke-dasharray: 1100;
     stroke-dashoffset: 0;
+}
+
+.dashboard-middle-application-user-num-tag-item-num-sub {
+    font-size: .7rem;
+    color: var(--main-grey-color);
+    min-width: 34px;
+    text-align: end;
 }
 
 @keyframes dash {

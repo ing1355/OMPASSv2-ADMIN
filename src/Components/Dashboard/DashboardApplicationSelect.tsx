@@ -25,7 +25,11 @@ const DashboardApplicationSelect = ({ selectedApplication, setSelectedApplicatio
                     if (selectedApplication.includes(_)) {
                         setSelectedApplication(selectedApplication.filter(__ => __.id !== _.id))
                     } else {
-                        setSelectedApplication(selectedApplication.concat(_))
+                        if(_.type === 'PORTAL') {
+                            setSelectedApplication([_, ...selectedApplication])
+                        } else {
+                            setSelectedApplication(selectedApplication.concat(_))
+                        }
                     }
                 }}>
                     {
