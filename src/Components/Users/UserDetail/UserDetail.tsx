@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux"
 import CustomModal from "Components/Modal/CustomModal"
 import Button from 'Components/CommonCustomComponents/Button'
 import { userInfoClear } from 'Redux/actions/userChange'
-import { isDev2 } from 'Constants/ConstantValues'
+import { isDev2, isTta } from 'Constants/ConstantValues'
 import PairOMPASSAuthModal from 'Components/Modal/PairOMPASSAuthModal'
 import UserDetailUserInfo from './UserDetailUserInfo'
 import UserDetailRpUsers from './UserDetailRpUsers'
@@ -83,6 +83,7 @@ const UserDetail = ({ }) => {
             })
         })
         temp = temp.sort((a, b) => new Date(a.authenticationInfo.createdAt).getTime() - new Date(b.authenticationInfo.createdAt).getTime())
+        temp = temp.sort((a, b) => a.application.type === 'PORTAL' ? -1 : 1)
         return temp;
     }, [userDetailDatas])
 
@@ -174,7 +175,7 @@ const UserDetail = ({ }) => {
             </ContentsHeader>
             <UserDetailUserInfo targetData={userData} setTargetData={setUserData} refreshCallback={GetDatas} hasRpUser={authInfoDatas.length > 0} />
             <UserDetailRpUsers authInfoDatas={authInfoDatas} refreshCallback={GetDatas} targetData={userData} userDetailOpened={userDetailOpened} setUserDetailOpened={setUserDetailOpened} authInfoRef={authInfoRef} />
-            {isSelf && <UserRpSelfAddComponent refreshCallback={GetDatas} />}
+            {isSelf && !isTta && <UserRpSelfAddComponent refreshCallback={GetDatas} />}
         </Contents >
         <PairOMPASSAuthModal opened={authView} onCancel={() => {
             setAuthView(false)

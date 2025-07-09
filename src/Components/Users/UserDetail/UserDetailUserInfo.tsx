@@ -17,7 +17,7 @@ import emailUnverifiedIcon from "@assets/emailUnverifiedIcon.png"
 import NewDeviceBtn from "./NewDeviceBtn";
 import UnLockBtn from "./UnLockBtn";
 import EmailChangeBtn from "./EmailChangeBtn";
-import { emailRegex, nameRegex, passwordRegex } from "Components/CommonCustomComponents/CommonRegex";
+import { emailRegex, nameRegex, passwordRegex, phoneRegex } from "Components/CommonCustomComponents/CommonRegex";
 import EmailVerifyBtn from "./EmailVerifyBtn";
 
 type UserDetailUserInfoProps = {
@@ -41,6 +41,7 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
     const firstNameRef = useRef<HTMLInputElement>(null)
     const lastNameRef = useRef<HTMLInputElement>(null)
     const emailRef = useRef<HTMLInputElement>(null)
+    const phoneRef = useRef<HTMLInputElement>(null) 
     const _uuid = useParams().uuid;
     const uuid = selfInfo.role === 'USER' ? selfInfo.userId : _uuid
     const isSelf = (isDev2 && selfInfo.role === 'ROOT') || (selfInfo.userId === uuid)
@@ -147,6 +148,10 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
                         if (!emailRegex.test(targetValue.email)) {
                             emailRef.current?.focus()
                             return message.error(formatMessage({ id: 'EMAIL_CHECK' }))
+                        }
+                        if (targetValue.phone.length > 0 && !phoneRegex.test(targetValue.phone)) {
+                            phoneRef.current?.focus()
+                            return message.error(formatMessage({ id: 'PHONE_NUMBER_CHECK' }))
                         }
                         if (isAdd) {
                             AddUserDataFunc(addValues, (res) => {
@@ -310,12 +315,12 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
                     }} maxLength={48} placeholder={formatMessage({ id: 'EMAIL_PLACEHOLDER' })} noGap customType="email" name="email"/>
                 </UserInfoInputrow> : <UserInfoRow title="EMAIL" value={
                     <>
-                    {targetData?.email}&nbsp;
+                    {targetData?.email || '-'}&nbsp;
                             <img src={targetData?.isEmailVerified ? emailVerifiedIcon : emailUnverifiedIcon} style={{
                                 width: '24px',
                                 height: '24px',
                             }}/>
-                        {targetData && canModify && targetData.status !== 'WITHDRAWAL' && <EmailChangeBtn isSelf={isSelf} username={targetData!.username} successCallback={() => {
+                        {targetData && canModify && targetData.status !== 'WITHDRAWAL' && <EmailChangeBtn isSelf={isSelf} userId={targetData!.userId} username={targetData!.username} successCallback={() => {
                             refreshCallback()
                         }} />}
                         {targetData && !targetData.isEmailVerified && isSelf && targetData.status !== 'WITHDRAWAL' && <EmailVerifyBtn targetData={targetData} successCallback={() => {
@@ -338,7 +343,7 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
                             phone: value
                         })
                     }
-                }} maxLength={13} noGap name="phone"/>
+                }} maxLength={13} noGap name="phone" ref={phoneRef}/>
             </UserInfoInputrow> : <UserInfoRow title="PHONE_NUMBER" value={targetData?.phone} />}
 
             {((isModify && selfInfo.role === 'ROOT') || (isAdd && isAdmin)) ? <UserInfoInputrow title="USER_ROLE">

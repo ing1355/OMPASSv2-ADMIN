@@ -9,50 +9,62 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import ManagementByType from './ManagementByType';
 import AgentLeftTabs from './AgentLeftTabs';
+import { isTta } from 'Constants/ConstantValues';
 
 const AgentManagement = () => {
   const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
-  const [active, setActive] = useState<AgentType>('WINDOWS_AGENT')
+  const [active, setActive] = useState<AgentType>('WINDOWS_LOGIN')
   const isCloud = subdomainInfo.serverType === 'CLOUD'
   const items: {
     label: React.ReactNode
     key: AgentType
     children: React.ReactNode
-  }[] = [
+  }[] = isTta ? [
+    {
+      label: <FormattedMessage id="AGENT_WINDOWS_LABEL" />,
+      key: 'WINDOWS_LOGIN',
+      children: <ManagementByType type='WINDOWS_LOGIN' isCloud={isCloud} />
+    },
+    {
+      label: <FormattedMessage id="AGENT_PAM_LABEL" />,
+      key: "LINUX_PAM",
+      children: <ManagementByType type='LINUX_PAM' isCloud={isCloud} />
+    }
+  ] : [
       {
         label: <FormattedMessage id="AGENT_WINDOWS_LABEL" />,
-        key: 'WINDOWS_AGENT',
-        children: <ManagementByType type='WINDOWS_AGENT' isCloud={isCloud}/>
+        key: 'WINDOWS_LOGIN',
+        children: <ManagementByType type='WINDOWS_LOGIN' isCloud={isCloud} />
       },
       {
         label: <FormattedMessage id="AGENT_MAC_LABEL" />,
-        key: 'MAC_AGENT',
-        children: <ManagementByType type='MAC_AGENT' isCloud={isCloud}/>
+        key: 'MAC_LOGIN',
+        children: <ManagementByType type='MAC_LOGIN' isCloud={isCloud} />
       },
       {
         label: <FormattedMessage id="AGENT_PAM_LABEL" />,
         key: "LINUX_PAM",
-        children: <ManagementByType type='LINUX_PAM' isCloud={isCloud}/>
+        children: <ManagementByType type='LINUX_PAM' isCloud={isCloud} />
       },
       {
         label: <FormattedMessage id="AGENT_PROXY_LABEL" />,
         key: "OMPASS_PROXY",
-        children: <ManagementByType type='OMPASS_PROXY' isCloud={isCloud}/>
+        children: <ManagementByType type='OMPASS_PROXY' isCloud={isCloud} />
       },
       {
         label: <FormattedMessage id="AGENT_REDMINE_LABEL" />,
         key: "REDMINE_PLUGIN",
-        children: <ManagementByType type='REDMINE_PLUGIN' isCloud={isCloud}/>
+        children: <ManagementByType type='REDMINE_PLUGIN' isCloud={isCloud} />
       },
       {
         label: <FormattedMessage id="AGENT_KEYCLOAK_LABEL" />,
         key: "KEYCLOAK_PLUGIN",
-        children: <ManagementByType type='KEYCLOAK_PLUGIN' isCloud={isCloud}/>
+        children: <ManagementByType type='KEYCLOAK_PLUGIN' isCloud={isCloud} />
       },
       {
         label: <FormattedMessage id="AGENT_WINDOWS_FRAMEWORK_LABEL" />,
         key: "WINDOWS_FRAMEWORK",
-        children: <ManagementByType type='WINDOWS_FRAMEWORK' isCloud={isCloud}/>
+        children: <ManagementByType type='WINDOWS_FRAMEWORK' isCloud={isCloud} />
       }
     ]
   // const items: {
@@ -94,13 +106,13 @@ const AgentManagement = () => {
         <div className="contents-header-container">
           {
             isCloud ? <AgentLeftTabs<AgentType>
-              defaultKey='WINDOWS_AGENT'
+              defaultKey='WINDOWS_LOGIN'
               items={items}
               onChange={active => {
                 setActive(active as AgentType)
               }}
             /> : <CustomTabs<AgentType>
-              defaultKey='WINDOWS_AGENT'
+              defaultKey='WINDOWS_LOGIN'
               onChange={active => {
                 setActive(active as AgentType)
                 // if (active === 'REDMINE_PLUGIN' || active === 'KEYCLOAK_PLUGIN') {

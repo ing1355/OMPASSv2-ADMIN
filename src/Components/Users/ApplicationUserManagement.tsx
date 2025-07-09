@@ -64,7 +64,7 @@ const ApplicationUserManagement = () => {
             {
                 key: 'name',
                 title: <FormattedMessage id="NAME" />,
-                render: (data, ind, row) => row.portalUser.name ? getFullName(row.portalUser.name) : '-'
+                render: (data, ind, row) => row.portalUser.name ? getFullName(row.portalUser.name) || "-" : '-'
             },
             {
                 key: 'portalUser',
@@ -128,10 +128,14 @@ const ApplicationUserManagement = () => {
         }
         GetApplicationListFunc(_params, ({ results, totalCount }) => {
             setAppTypes(results)
-            if (searchParams.get('applicationType') && searchParams.get('applicationId')) {
-                const target = results.find(_ => _.id === searchParams.get('applicationId'))
-                setTargetApplication(target)
+            let target: ApplicationListDataType | undefined
+            const targetType = searchParams.get('applicationType') as ApplicationDataType['type']
+            if (targetType && searchParams.get('applicationId')) {
+                target = results.find(_ => _.id === searchParams.get('applicationId'))
+            } else if (targetType) {
+                target = results.find(_ => _.type === targetType)
             }
+            setTargetApplication(target)
         }).finally(() => {
             // setDataLoading(false)
         })
@@ -196,6 +200,7 @@ const ApplicationUserManagement = () => {
                         target = appTypes.find(__ => __.type === value)
                     }
                 })
+                
                 if (target) {
                     setRefresh(true)
                 }
@@ -205,7 +210,9 @@ const ApplicationUserManagement = () => {
                         applicationId: target.id
                     }, true)
                 } else {
-                    customPushRoute({}, true, true)
+                    customPushRoute({
+                        applicationType: value
+                    }, true, true)
                 }
                 setTargetApplication(target)
             }} items={applicationTypes.map(_ => ({

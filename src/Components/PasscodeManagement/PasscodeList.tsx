@@ -37,7 +37,7 @@ const PasscodeList = () => {
             setDataLoading(false)
         })
     }
-
+    
     return <CustomTable<PasscodeListDataType>
         theme='table-st1'
         datas={tableData}
@@ -107,11 +107,13 @@ const PasscodeList = () => {
             {
                 key: 'createdAt',
                 title: <FormattedMessage id="PASSCODE_CREATED_AT_LABEL" />,
+                render: (data, ind, row) => row.passcode.createdAt,
                 filterType: 'date'
             },
             {
                 key: 'expirationTime',
                 title: <FormattedMessage id="PASSCODE_COLUMN_VALID_TIME_LABEL" />,
+                render: (data, ind, row) => row.passcode.expiredAt,
             },
         ]}
     />

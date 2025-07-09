@@ -1,11 +1,11 @@
 .custom-calendar-container {
-    position: absolute;
+    /* position: absolute;
     right: 0;
-    top: calc(100% + 8px);
+    top: calc(100% + 8px); */
     width: 240px;
     height: 350px;
     background-color: var(--main-white-color);
-    box-shadow: 0 0 5px rgba(0, 0, 0, .2);
+    /* box-shadow: 0 0 5px rgba(0, 0, 0, .2); */
     z-index: 9999;
     border-radius: 8px;
     padding: 8px;
@@ -129,12 +129,12 @@
     height: 100%;
 }
 
-.custom-calendar-day-item.is-completed.is-start .custom-calendar-day-item-inner {
+.custom-calendar-day-item.is-completed.is-start:not(.is-end) .custom-calendar-day-item-inner {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
 
-.custom-calendar-day-item.is-completed.is-end .custom-calendar-day-item-inner {
+.custom-calendar-day-item.is-completed.is-end:not(.is-start) .custom-calendar-day-item-inner {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }

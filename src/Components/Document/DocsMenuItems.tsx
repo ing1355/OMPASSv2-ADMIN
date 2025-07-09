@@ -1,4 +1,4 @@
-import { applicationTypes, getApplicationTypeLabel } from "Constants/ConstantValues"
+import { applicationTypes, getApplicationTypeLabel, isTta } from "Constants/ConstantValues"
 
 export const StartAdminMenuItems: DocsMenuItemType[] = [
     {
@@ -11,7 +11,23 @@ export const StartAdminMenuItems: DocsMenuItemType[] = [
     }
 ]
 
-export const ApplicationUserMenuItems: DocsMenuItemType[] = [
+export const UserUserMenuItems: DocsMenuItemType[] = [
+    {
+        title: '사용자 정보',
+        route: '/user/user/detail'
+    }
+]
+
+export const ApplicationUserMenuItems: DocsMenuItemType[] = isTta ? [
+    {
+        title: 'Windows 로그인',
+        route: '/user/application/windows_logon_user'
+    },
+    {
+        title: 'Linux SSH',
+        route: '/user/application/linux_ssh_user'
+    }
+] : [
     {
         title: 'Windows 로그인',
         route: '/user/application/windows_logon_user'
@@ -48,7 +64,12 @@ export const EtcUserMenuItems: DocsMenuItemType[] = [
     }
 ]
 
-export const EtcMenuItems: DocsMenuItemType[] = [
+export const EtcMenuItems: DocsMenuItemType[] = isTta ? [
+    {
+        title: 'Web API',
+        route: '/etc/web_api'
+    }
+] : [
     {
         title: 'OMPASS 프록시',
         route: '/etc/ompass_proxy'

@@ -297,7 +297,7 @@ type ApplicationDataParamsType = {
     description: ApplicationDataType['description']
     domain?: ApplicationDataType['domain']
     type?: LocalApplicationTypes
-    passwordless?: PolicyEnabledDataType
+    passwordless?: PolicyEnabledDataType | null
 }
 
 type ApplicationListDataType = {
@@ -442,7 +442,7 @@ type UserBulkAddParameterType = {
     users: DefaultUserDataType[]
 }
 
-type UserStatusType = "USER_PENDING_EMAIL_UPDATE_VERIFICATION" | "USER_PENDING_SIGNUP_VERIFICATION" | "WAIT_ADMIN_APPROVAL" | "RUN" | "WITHDRAWAL" | "LOCK" | "WAIT_INIT_PASSWORD" | "WAIT_SECURITY_QNA"
+type UserStatusType = "WAIT_ADMIN_APPROVAL" | "RUN" | "WITHDRAWAL" | "LOCK" | "WAIT_INIT_PASSWORD" | "WAIT_SECURITY_QNA"
 
 type UserDataType = DefaultUserDataType & {
     userId: string
@@ -739,10 +739,7 @@ type CustomTableColumnType<T> = {
     maxWidth?: string | number
     filterKey?: string
     filterType?: 'string' | 'date'
-    filterOption?: {
-        label: string,
-        value: any
-    }[]
+    filterOption?: DropdownItemType[]
 }
 
 type UserTransferDataType = UserHierarchyDataType | UserHierarchyDataApplicationViewDataType | UserHierarchyDataGroupViewDataType
@@ -963,7 +960,7 @@ type ExternalDirectoryServerDataType = {
     isConnected: boolean
 }
 
-type AgentType = "WINDOWS_AGENT" | "LINUX_PAM" | "OMPASS_PROXY" | "REDMINE_PLUGIN" | "KEYCLOAK_PLUGIN" | "WINDOWS_FRAMEWORK" | "MAC_AGENT"
+type AgentType = "WINDOWS_LOGIN" | "LINUX_PAM" | "OMPASS_PROXY" | "REDMINE_PLUGIN" | "KEYCLOAK_PLUGIN" | "WINDOWS_FRAMEWORK" | "MAC_LOGIN"
 type UploadFileTypes = AgentType | "APPLICATION_LOGO_IMAGE" | "PORTAL_SETTING_LOGO_IMAGE" | "APK"
 
 type TableSearchOptionType = {
@@ -977,10 +974,12 @@ type TableSearchOptionType = {
     }[]
 }
 
-type TableFilterOptionType = {
+type TableFilterOptionItemType = {
     key: string
     value: any | any[]
-}[]
+}
+
+type TableFilterOptionType = TableFilterOptionItemType[]
 
 type PAMBypassDataType = PolicyEnabledDataType & {
     ip: string
@@ -1034,4 +1033,11 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
     loading?: boolean
     icon?: string
     hoverIcon?: string
+}
+
+type DropdownItemType = {
+    label: string
+    value: any,
+    style?: React.CSSProperties
+    isSide?: boolean
 }

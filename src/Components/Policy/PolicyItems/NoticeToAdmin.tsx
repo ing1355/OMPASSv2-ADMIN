@@ -14,7 +14,7 @@ const NoticeToAdmin = ({hasIncludeWithdrawal, value={
     hasIncludeWithdrawal: (has: boolean) => void
 }) => {
     const { isEnabled, admins, methods, targetPolicies } = value
-
+    
     return <CustomInputRow title={<FormattedMessage id="NOTICE_TO_ADMIN_TITLE_LABEL"/>} noCenter isVertical>
     <Switch style={{
         // marginBottom: !noticeAdminChecked ? 0 : '8px',

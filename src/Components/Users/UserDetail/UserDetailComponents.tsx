@@ -37,20 +37,21 @@ import { message } from 'antd';
 import RegisterOMPASSAuthModal from 'Components/Modal/RegisterOMPASSAuthModal';
 import { useNavigate } from 'react-router';
 
-const UserDetailInfoContentItem = ({ imgSrc, title, content, subContent, onClick }: {
+const UserDetailInfoContentItem = ({ imgSrc, title, content, subContent, onClick, noClick }: {
     imgSrc: string
     title: React.ReactNode
     content: React.ReactNode
     subContent?: string
     onClick?: () => void
+    noClick?: boolean
 }) => {
-    return <div className={`user-detail-info-device-info-content-item${onClick ? ' pointer' : ''}`} onClick={onClick}>
+    return <div className={`user-detail-info-device-info-content-item${onClick && !noClick ? ' pointer' : ''}`} onClick={onClick}>
         <img src={imgSrc} />
         <div className="user-detail-info-device-info-content-title">
             {title}
         </div>
         <div>
-            {content}
+            {content ?? '-'}
             {
                 subContent ? <>
                     <br />({subContent})
@@ -64,15 +65,15 @@ const AuthenticatorInfoContentsOMPASSType = ({ data }: {
     data: OMPASSAuthenticatorDataType
 }) => {
     const { mobile, id, lastAuthenticatedAt, createdAt } = data as OMPASSAuthenticatorDataType
-    const { os, deviceId, deviceName, model, ompassAppVersion } = mobile
+    const { os, deviceId, deviceName, model, ompassAppVersion } = mobile || {}
     
     return <>
         <div className="user-detail-info-device-info-content">
-            <UserDetailInfoContentItem imgSrc={imgSrcByOS(os.name)} title={<FormattedMessage id="USER_DETAIL_OS_LABEL" />} content={`${os.name} ${os.version}`} />
-            <UserDetailInfoContentItem imgSrc={ompassDefaultLogoImage} title={<FormattedMessage id="USER_DETAIL_VERSION_LABEL" />} content={`OMPASS v${ompassAppVersion}`} />
-            <UserDetailInfoContentItem imgSrc={uuidIcon} title={<FormattedMessage id="USER_DETAIL_UUID_LABEL" />} content={deviceId} />
-            <UserDetailInfoContentItem imgSrc={deviceModelIcon} title={<FormattedMessage id="USER_DETAIL_DEVICE_INFO_LABEL" />} content={model} subContent={deviceName} />
-            <UserDetailInfoContentItem imgSrc={registeredAtIcon} title={<FormattedMessage id="USER_DETAIL_REGISTERED_AT_LABEL" />} content={createdAt} />
+            <UserDetailInfoContentItem imgSrc={imgSrcByOS(os?.name) ?? ompassDefaultLogoImage} title={<FormattedMessage id="USER_DETAIL_OS_LABEL" />} content={`${os?.name ?? '-'} ${os?.version ?? '-'}`} />
+            <UserDetailInfoContentItem imgSrc={ompassDefaultLogoImage} title={<FormattedMessage id="USER_DETAIL_VERSION_LABEL" />} content={`OMPASS v${ompassAppVersion ?? '-'}`} />
+            <UserDetailInfoContentItem imgSrc={uuidIcon} title={<FormattedMessage id="USER_DETAIL_UUID_LABEL" />} content={deviceId ?? '-'} />
+            <UserDetailInfoContentItem imgSrc={deviceModelIcon} title={<FormattedMessage id="USER_DETAIL_DEVICE_INFO_LABEL" />} content={model ?? '-'} subContent={deviceName} />
+            <UserDetailInfoContentItem imgSrc={registeredAtIcon} title={<FormattedMessage id="USER_DETAIL_REGISTERED_AT_LABEL" />} content={createdAt ?? '-'} />
             <UserDetailInfoContentItem imgSrc={lastAuthIcon} title={<FormattedMessage id="USER_DETAIL_LAST_AUTH_LABEL" />} content={lastAuthenticatedAt} />
         </div>
     </>
@@ -249,19 +250,25 @@ export const UserDetailInfoAuthenticatorDeleteButton = ({ authenticatorId, callb
     </Button> : <></>
 }
 
-export const UserDetailInfoETCInfoContent = ({ data }: {
+export const UserDetailInfoETCInfoContent = ({ data, role }: {
     data: UserDetailAuthInfoRowType
+    role: UserDataType['role']
 }) => {
     const { group, authenticationInfo } = data
     const { policy } = authenticationInfo
     const navigate = useNavigate()
+    const isUser = role === 'USER'
     return <>
         <UserDetailInfoContentItem imgSrc={groupMenuIcon} title={<FormattedMessage id="GROUP"/>} content={group?.name || <FormattedMessage id="NO_GROUP_SELECTED_LABEL" />} onClick={group && (() => {
-            navigate(`/Groups/detail/${group?.id}`)
-        })} />
+            if(!isUser) {
+                navigate(`/Groups/detail/${group?.id}`)
+            }
+        })} noClick={isUser} />
         <UserDetailInfoContentItem imgSrc={policyMenuIconBlack} title={<FormattedMessage id="USER_DETAIL_ETC_INFO_POLICY_LABEL"/>} content={policy?.name || <FormattedMessage id="NO_POLICY_SELECTED_LABEL" />} onClick={() => {
-            navigate(`/Policies/detail/${policy?.id}`)
-        }} />
+            if(!isUser) {
+                navigate(`/Policies/detail/${policy?.id}`)
+            }
+        }} noClick={isUser} />
     </>
 }
 
@@ -272,7 +279,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
     const clientData = data.authenticationInfo.loginDeviceInfo
     const { serverInfo } = data.authenticationInfo
     const { os } = clientData
-    const isBrowser = (['WEB', 'ADMIN', 'MICROSOFT_ENTRA_ID', ''] as ApplicationDataType['type'][]).includes(application.type)
+    const isBrowser = (['WEB', 'ADMIN', 'PORTAL', 'REDMINE', 'MICROSOFT_ENTRA_ID', ''] as ApplicationDataType['type'][]).includes(application.type)
     const isOSLogin = application.type === 'WINDOWS_LOGIN' || application.type === 'MAC_LOGIN'
     const isPAM = application.type === 'LINUX_LOGIN'
     const isRadius = application.type === 'RADIUS'
@@ -352,7 +359,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
             </div>
         }
         {
-            isBrowser && <div className="user-detail-info-device-info-content-item">
+            clientData.ip && !isPAM && <div className="user-detail-info-device-info-content-item">
                 <img src={ipAddressIcon} />
                 <div className="user-detail-info-device-info-content-title">
                     <FormattedMessage id="USER_DETAIL_IP_ADDRESS_LABEL" />

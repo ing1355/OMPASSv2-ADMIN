@@ -151,7 +151,8 @@ const MessageText = {
         PLEASE_INPUT_RP_USER_INFO_MSG: '애플리케이션에서 사용하는 계정 정보를 입력해주세요.',
         APPLICATION_ACCOUNT_INFO_INVALID_MSG: '애플리케이션 계정 정보가 올바르지 않습니다.',
         EMAIL_VERIFY_NEED_MSG: '이메일 인증이 필요합니다.',
-        POLICY_INFO_RESET_SUCCESS_MSG: '정책 정보가 초기화 되었습니다.'
+        POLICY_INFO_RESET_SUCCESS_MSG: '정책 정보가 초기화 되었습니다.',
+        PLEASE_SELECT_FILTER_DATA: '최소 1개의 필터 값을 설정해야 합니다.'
     },
     'EN': {
         USERNAME_CHECK: 'Only lowercase letters and numbers are allowed, with a length of 4 to 16 characters',
@@ -305,7 +306,8 @@ const MessageText = {
         PLEASE_INPUT_RP_USER_INFO_MSG: 'Please enter the account information used in the application.',
         APPLICATION_ACCOUNT_INFO_INVALID_MSG: 'The account information in the application is incorrect.',
         EMAIL_VERIFY_NEED_MSG: 'Please verify your email address.',
-        POLICY_INFO_RESET_SUCCESS_MSG: 'Policy information has been reset.'
+        POLICY_INFO_RESET_SUCCESS_MSG: 'Policy information has been reset.',
+        PLEASE_SELECT_FILTER_DATA: 'Please set at least one filter value.'
     }
 }
 

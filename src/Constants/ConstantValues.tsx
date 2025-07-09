@@ -957,8 +957,10 @@ export const timeZoneNamesWithCustomSelect = ([{
 }).flat())
 export const ompassDefaultLogoImage = ompassLogoIcon
 export const isDev = process.env.NODE_ENV === 'development'
+export const isTta = process.env.REACT_APP_ENV === 'tta'
 export const isDev2 = process.env.REACT_APP_DEV === 'dev'
-export const CopyRightText = (info: SubDomainInfoDataType) => `OMPASS Portal v${process.env.REACT_APP_VERSION} © 2024. OneMoreSecurity Inc. All Rights Reserved. (backend versions : portal - ${info.backendVersion.portalApp}, interface - ${info.backendVersion.interfaceApp}, fido - ${info.backendVersion.fidoApp})`
+// export const CopyRightText = (info: SubDomainInfoDataType) => `OMPASS Portal v${process.env.REACT_APP_VERSION} © 2024. OneMoreSecurity Inc. All Rights Reserved. (backend versions : portal - ${info.backendVersion.portalApp}, interface - ${info.backendVersion.interfaceApp}, fido - ${info.backendVersion.fidoApp})`
+export const CopyRightText = (info: SubDomainInfoDataType) => `Copyright 2024 OneMoreSecurity Inc. All Rights Reserved.`
 console.log('version:', process.env.REACT_APP_VERSION)
 export const INT_MAX_VALUE = Math.pow(2, 31) - 1
 export const DateTimeFormat = "YYYY-MM-DD HH:mm:ss"
@@ -967,7 +969,8 @@ export const userSelectPageSize = () => parseInt(localStorage.getItem('user_sele
 
 // export const policyNoticeRestrictionTypes: NoticeRestrictionTypes[] = ["ACCESS_CONTROL", "BROWSER", "LOCATION", "IP_WHITE_LIST", "ACCESS_TIME", "COUNTRY"]
 export const policyNoticeRestrictionTypes: NoticeRestrictionTypes[] = ["ACCESS_CONTROL", "BROWSER", "LOCATION", "IP_WHITE_LIST", "ACCESS_TIME"]
-export const userStatusTypes: UserStatusType[] = ["RUN", "WAIT_ADMIN_APPROVAL", "USER_PENDING_SIGNUP_VERIFICATION", "USER_PENDING_EMAIL_UPDATE_VERIFICATION", "WITHDRAWAL", "LOCK", "WAIT_INIT_PASSWORD"]
+
+export const userStatusTypes: UserStatusType[] = ["RUN", "WAIT_ADMIN_APPROVAL", "LOCK", "WAIT_INIT_PASSWORD"]
 
 export const PolicyBrowsersList: BrowserPolicyType[] = [
     "CHROME",
@@ -1040,19 +1043,21 @@ export const menuDatas = (role: userRoleType, isOnPremise: boolean): menuDataTyp
             whiteImg: versionManagementMenuIconWhite,
             blackImg: versionManagementMenuIconBlack
         },
-        {
+    ]
+    if(!isTta) {
+        datas.push({
             label: 'BILLING_MANAGEMENT',
             route: '/Billing',
             whiteImg: billingMenuIconWhite,
             blackImg: billingMenuIconBlack
-        },
-        {
-            label: 'SETTINGS_MANAGEMENT',
-            route: '/Settings',
-            whiteImg: SettingsMenuIconWhite,
-            blackImg: settingsMenuIconBlack
-        },
-    ]
+        })
+    }
+    datas.push({
+        label: 'SETTINGS_MANAGEMENT',
+        route: '/Settings',
+        whiteImg: SettingsMenuIconWhite,
+        blackImg: settingsMenuIconBlack
+    })
     if (role === 'ROOT') {
     }
     return datas
@@ -1060,7 +1065,7 @@ export const menuDatas = (role: userRoleType, isOnPremise: boolean): menuDataTyp
 
 // const appTypes: ApplicationDataType['type'][] = ["ADMIN", "WINDOWS_LOGIN", "DEFAULT", "LINUX_LOGIN", "RADIUS", "REDMINE", "MS_ENTRA_ID", "KEYCLOAK", "LDAP"]
 // export const applicationTypes: ApplicationDataType['type'][] = ["WEB", "WINDOWS_LOGIN", "LINUX_LOGIN", "MAC_LOGIN", "PORTAL", "RADIUS", "REDMINE", "MICROSOFT_ENTRA_ID", "KEYCLOAK", "LDAP"]
-export const applicationTypes: ApplicationDataType['type'][] = ["PORTAL", "WINDOWS_LOGIN", "MAC_LOGIN", "WEB", "LINUX_LOGIN", "RADIUS", "REDMINE", "MICROSOFT_ENTRA_ID", "KEYCLOAK", "LDAP"]
+export const applicationTypes: ApplicationDataType['type'][] = isTta ? ["PORTAL", "WINDOWS_LOGIN", "WEB", "LINUX_LOGIN"] : ["PORTAL", "WINDOWS_LOGIN", "MAC_LOGIN", "WEB", "LINUX_LOGIN", "RADIUS", "REDMINE", "MICROSOFT_ENTRA_ID", "KEYCLOAK", "LDAP"]
 
 // 애플리케이션 타입 다국어 매칭해놨으나 타입 지정은 불가능하므로 값 바뀌면 다국어 키값도 바뀌어야함
 export const AuthenticationProcessTypes: ProcessTypeType[] = ["POLICY", "REGISTRATION", "AUTHENTICATION"]
@@ -1085,7 +1090,7 @@ export const UserSignupMethod: {
 }
 
 export const devUrl = process.env['REACT_APP_DEV_URL'] as string
-export const subDomain = isDev ? devUrl.replace('https://', '') : window.location.host.replace('www.', '');
+export const subDomain = isDev ? (isTta ? '192.168.182.143:9000' : devUrl.replace('https://', '')) : window.location.host.replace('www.', '');
 
 export const MainRouteByDeviceType = isMobile ? '/Main' : '/Dashboard'
 
@@ -1116,7 +1121,7 @@ export const convertLangToIntlVer = (lang: ReduxStateType['lang']) => {
   }
 }
 
-export const AgentTypes: AgentType[] = ['WINDOWS_AGENT', 'LINUX_PAM', 'OMPASS_PROXY', 'REDMINE_PLUGIN', 'KEYCLOAK_PLUGIN', 'WINDOWS_FRAMEWORK']
+export const AgentTypes: AgentType[] = ['WINDOWS_LOGIN', 'LINUX_PAM', 'OMPASS_PROXY', 'REDMINE_PLUGIN', 'KEYCLOAK_PLUGIN', 'WINDOWS_FRAMEWORK']
 
 export const maxLengthByType = (type: InputValueType | undefined) => {
   if(!type) return 50

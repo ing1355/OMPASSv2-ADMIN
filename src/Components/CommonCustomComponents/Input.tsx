@@ -164,9 +164,11 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                                 // } else if (customType === 'username') {
                                 //     e.currentTarget.value = e.currentTarget.value.replace(/[^0-9a-z]/g, '')
                                 // }
-                                if (maxLength || maxLengthByType(customType)) {
-                                    if (e.currentTarget.value.length > (maxLength || maxLengthByType(customType))!) {
-                                        e.currentTarget.value = e.currentTarget.value.slice(0, (maxLength || maxLengthByType(customType))!)
+                                if (type !== "file") {
+                                    if (maxLength || maxLengthByType(customType)) {
+                                        if (e.currentTarget.value.length > (maxLength || maxLengthByType(customType))!) {
+                                            e.currentTarget.value = e.currentTarget.value.slice(0, (maxLength || maxLengthByType(customType))!)
+                                        }
                                     }
                                 }
 
@@ -178,7 +180,11 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                                     setIsAlert(false)
                                 }
                                 if (onInput) onInput(e)
-                            }} {...props} type={type || customType} value={props.disabled ? "" : ((value && sliceNum) ? slicePrice(value as string | number) : value)} maxLength={maxLength || maxLengthByType(customType)}
+                            }} {...props} type={type || customType}
+                            {...((type === "file") ? {} : {
+                                value: props.disabled ? "" : ((value && sliceNum) ? slicePrice(value as string | number) : value)
+                            })}
+                            maxLength={maxLength || maxLengthByType(customType)}
                             style={{
                                 paddingRight: `${suffix ? (11 + suffix.length * 15 + 'px') : ''}`,
                                 ...style

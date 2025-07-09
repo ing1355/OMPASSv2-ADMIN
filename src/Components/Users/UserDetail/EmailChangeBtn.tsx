@@ -8,8 +8,9 @@ import { EmailChangeCodeVerificationFunc, SendChangeEmailCodeFunc } from "Functi
 import { useEffect, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 
-const EmailChangeBtn = ({ isSelf, username, successCallback }: {
+const EmailChangeBtn = ({ isSelf, userId, username, successCallback }: {
     isSelf: boolean
+    userId: UserDataType['userId']
     username: UserDataType['username']
     successCallback: () => void
 }) => {
@@ -73,7 +74,7 @@ const EmailChangeBtn = ({ isSelf, username, successCallback }: {
                     }
                 } else {
                     return SendChangeEmailCodeFunc({
-                        username,
+                        userId,
                         email: emailInput
                     }, () => {
                         message.success(formatMessage({ id: 'EMAIL_CODE_SEND_SUCCESS_MSG' }))
@@ -103,7 +104,7 @@ const EmailChangeBtn = ({ isSelf, username, successCallback }: {
                             return
                         }
                         return SendChangeEmailCodeFunc({
-                            username,
+                            userId,
                             email: emailInput
                         }, () => {
                             message.success(formatMessage({ id: 'EMAIL_CODE_SEND_SUCCESS_MSG' }))

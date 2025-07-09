@@ -38,7 +38,6 @@ const Settings = () => {
         isDefaultImage: true
     })
     const [hasIncludeWithdrawal, setHasIncludeWithdrawal] = useState(false)
-    const [hidePortal, setHidePortal] = useState(false)
 
     const dispatch = useDispatch()
     const { formatMessage } = useIntl()
@@ -57,7 +56,6 @@ const Settings = () => {
             setInputAlias(name)
             setCanDelete(isUserAllowedToRemoveAuthenticator)
             setCanSignUp(selfSignupEnabled)
-            setHidePortal(hidePortal ?? false)
         }).finally(() => {
             setDataLoading(false)
         })
@@ -95,7 +93,6 @@ const Settings = () => {
                         isUserAllowedToRemoveAuthenticator: canDelete,
                         noticeToAdmin: noticeToAdmin,
                         selfSignupEnabled: canSignUp,
-                        hidePortal
                     }, (newData) => {
                         message.success(formatMessage({ id: 'SETTING_SAVE_SUCCESS_MSG' }))
                         dispatch(globalDatasChange({
@@ -227,11 +224,6 @@ const Settings = () => {
             <CustomInputRow title={<FormattedMessage id="SETTING_USER_SELF_DEVICE_DELETE_LABEL" />}>
                 <Switch checked={canDelete} onChange={check => {
                     setCanDelete(check)
-                }} />
-            </CustomInputRow>
-            <CustomInputRow title={<FormattedMessage id="SETTING_USER_APP_PORTAL_HIDE_LABEL" />}>
-                <Switch checked={hidePortal} onChange={check => {
-                    setHidePortal(check)
                 }} />
             </CustomInputRow>
             <CustomInputRow title={<FormattedMessage id="SETTING_NOTICE_TEXT_LABEL" />}>

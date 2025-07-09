@@ -47,6 +47,7 @@ const ServerErrorCodes = {
         ERR_B050: "현재 플랜의 한도를 초과하였습니다.",
         ERR_B051: "존재하지 않는 테넌트입니다. 관리자에게 문의해주세요.",
         ERR_B052: "만료된 이메일 인증입니다.",
+        ERR_B053: "메일 서버에서 오류가 발생하였습니다. 관리자에게 문의해주세요.",
     },
     'EN': {
         ERR_B002: "Please check your ID and email",
@@ -95,7 +96,8 @@ const ServerErrorCodes = {
         ERR_B049: "The account has already been registered",
         ERR_B050: "The current plan limit has been exceeded",
         ERR_B051: "This tenant does not exist. Please contact the administrator.",
-        ERR_B052: "Expired email verification."
+        ERR_B052: "Expired email verification.",
+        ERR_B053: "An error occurred in the mail server. Please contact the administrator."
     }
 }
 

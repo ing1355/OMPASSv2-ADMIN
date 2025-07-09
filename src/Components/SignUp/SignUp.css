@@ -116,6 +116,16 @@
   margin-bottom: 20px;
 }
 
+.signup-input-row-name {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+}
+
+.signup-input-row-name > div {
+  flex: 1;
+}
+
 .signup-input-row-inner {
   display: flex;
   flex-direction: column;

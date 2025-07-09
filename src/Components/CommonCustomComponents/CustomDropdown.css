@@ -79,19 +79,28 @@
 }
 
 .custom-dropdown-multiple-save-container {
-    height: 24px;
+    cursor: pointer;
+    font-size: .8rem;
+    font-weight: bold;
+    border-top: 1.5px solid var(--sub-grey-color5);
+    padding-top: 2px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.custom-dropdown-multiple-save-inner {
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
-    width: 100%;
-    font-size: .8rem;
-    font-weight: bold;
-    color: var(--sub-purple-color2);
     background-color: var(--main-purple-color2);
+    height: 24px;
+    width: 100%;
+    color: var(--sub-purple-color2);
     border-radius: 6px;
 }
 
-.custom-dropdown-multiple-save-container:hover {
+.custom-dropdown-multiple-save-inner:hover {
     background-color: var(--main-purple-color);
 }

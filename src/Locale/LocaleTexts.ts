@@ -547,7 +547,7 @@ const LocaleTexts = {
     EMAIL_VERIFY_TITLE_LABEL: 'Email Verify',
     TOTAL_COUNT_LABEL: 'Total {totalCount} results found',
     CAN_EMAIL_REGISTER_TITLE_LABEL: 'Allow Email Registration',   
-    DASHBOARD_REGISTER_USER_NUMS_SUB: 'Registered User Count / Total User Count',
+    DASHBOARD_REGISTER_USER_NUMS_SUB: 'OMPASS Registered User Count / Portal User Count',
   },
   KR: {
     LOGIN: '로그인',
@@ -1098,7 +1098,7 @@ const LocaleTexts = {
     EMAIL_VERIFY_TITLE_LABEL: '이메일 인증하기',
     TOTAL_COUNT_LABEL: '총 {totalCount}건 검색됨',
     CAN_EMAIL_REGISTER_TITLE_LABEL: '이메일로 OMPASS 등록 허용',
-    DASHBOARD_REGISTER_USER_NUMS_SUB: '등록 사용자 수 / 총 사용자 수',
+    DASHBOARD_REGISTER_USER_NUMS_SUB: 'OMPASS 등록 사용자 수 / 포탈 사용자 수',
   }
 }
 

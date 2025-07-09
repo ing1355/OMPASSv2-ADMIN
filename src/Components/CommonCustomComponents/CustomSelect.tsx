@@ -22,7 +22,7 @@ const CustomSelect = ({ items, value, onChange, needSelect, noLabel, style, read
     const valueRef = useRef(value)
     const [maxWidth, setMaxWidth] = useState<number | undefined>(undefined)
     const measureRef = useRef<HTMLDivElement>(null)
-
+    
     const _items: CustomSelectProps['items'] = needSelect ? items : [{
         key: '',
         label: noLabel || <FormattedMessage id="NO_SELECT_VALUE" />
@@ -107,8 +107,8 @@ const CustomSelect = ({ items, value, onChange, needSelect, noLabel, style, read
                 setShowSelect(!showSelect)
             }
         }} ref={selectRef} style={{
+            width: maxWidth,
             ...style,
-            width: maxWidth
         }}>
             {value ? _items.find(_ => _.key === value)?.label : <div className="custom-select-no-label" style={{
                 textAlign: 'center'

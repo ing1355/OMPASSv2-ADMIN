@@ -47,7 +47,7 @@ async function downloadWithRetry(localPath, remotePath, count) {
 }
 
 async function fetchRemoteFile(pathName) {
-    const remoteFilePath = `/opt/oms/ompass2/server/doc/${pathName}`; // 원격 파일 경로
+    const remoteFilePath = `/opt/oms/ompass2/server/doc_tta/${pathName}`; // 원격 파일 경로
     const localFilePath = `./public/docs/${pathName}`;    // 로컬 저장 파일 경로
     let isUpdated = false
     ensureDirectoryExists(localFilePath)

@@ -26,7 +26,7 @@ const CustomTabs = <T extends string>({
         activeKey={active}
         className={"auth-log-tab"}
         // animated
-
+        destroyInactiveTabPane
         onChange={act => {
             setActive(act)
             customPushRoute({

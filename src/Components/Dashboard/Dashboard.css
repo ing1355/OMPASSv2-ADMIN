@@ -205,7 +205,9 @@
     justify-content: space-between;
 }
 
-.dashboard-middle-application-user-num-title-text {}
+.dashboard-middle-application-user-num-title-text {
+    text-align: start;
+}
 
 .dashboard-middle-application-user-num-title-icon {
     width: 52px;
@@ -261,12 +263,13 @@
 }
 
 .dashboard-middle-application-user-num-tag-item-num {
-    font-size: .9rem;
+    font-size: .85rem;
     font-weight: bold;
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 2px;
+    white-space: nowrap;
 }
 
 .dashboard-middle-application-auth-num-container {
@@ -420,7 +423,7 @@
 .dashboard-middle-application-user-num-tag-item-num-sub {
     font-size: .7rem;
     color: var(--main-grey-color);
-    min-width: 34px;
+    min-width: 42px;
     text-align: end;
 }
 

@@ -20,10 +20,10 @@ const DashboardTop = () => {
                 count: 0,
                 status: 'WAIT_ADMIN_APPROVAL'
             },
-            {
-                count: 0,
-                status: 'USER_PENDING_SIGNUP_VERIFICATION'
-            },
+            // {
+            //     count: 0,
+            //     status: 'USER_PENDING_SIGNUP_VERIFICATION'
+            // },
             {
                 count: 0,
                 status: 'WAIT_INIT_PASSWORD'
@@ -54,7 +54,7 @@ const DashboardTop = () => {
         <DashboardTopUserNumItem title={<FormattedMessage id="DASHBOARD_ACTIVE_USER"/>} num={activeUserCount} icon={dashboardEnableUserIcon} type='enable' />
         <DashboardTopUserNumItem title={<FormattedMessage id="DASHBOARD_INACTIVE_USER"/>} num={deActiveUserCount} icon={dashboardDisableUserIcon} type='disable' />
         <div className="dashboard-top-disabled-container">
-            <DashboardTopDisabledUserNumItem title={<FormattedMessage id="DASHBOARD_WAIT_FOR_EMAIL_AUTH"/>} num={findCountByStatus('USER_PENDING_SIGNUP_VERIFICATION')} type="USER_PENDING_SIGNUP_VERIFICATION"/>
+            {/* <DashboardTopDisabledUserNumItem title={<FormattedMessage id="DASHBOARD_WAIT_FOR_EMAIL_AUTH"/>} num={findCountByStatus('USER_PENDING_SIGNUP_VERIFICATION')} type="USER_PENDING_SIGNUP_VERIFICATION"/> */}
             <DashboardTopDisabledUserNumItem title={<FormattedMessage id="DASHBOARD_WAIT_ADMIN_ACCEPT"/>} num={findCountByStatus('WAIT_ADMIN_APPROVAL')} type="WAIT_ADMIN_APPROVAL"/>
             <DashboardTopDisabledUserNumItem title={<FormattedMessage id="DASHBOARD_PASSWORD_INIT_WAIT"/>} num={findCountByStatus('WAIT_INIT_PASSWORD')} type="WAIT_INIT_PASSWORD"/>
             {/* <DashboardTopDisabledUserNumItem title={<FormattedMessage id="DASHBOARD_WITHDRAWAL"/>} num={findCountByStatus('WITHDRAWAL')} type="WITHDRAWAL"/> */}

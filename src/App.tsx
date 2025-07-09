@@ -20,7 +20,7 @@ import AuthLog from 'Components/Log/AuthLog';
 import PortalLog from 'Components/Log/PortalLog';
 import Settings from 'Components/Settings';
 import { GetGlobalConfigFunc, GetSubDomainInfoFunc } from 'Functions/ApiFunctions';
-import { convertLangToIntlVer, MainRouteByDeviceType, subDomain } from 'Constants/ConstantValues';
+import { convertLangToIntlVer, isDev, isTta, MainRouteByDeviceType, subDomain } from 'Constants/ConstantValues';
 import { subdomainInfoChange } from 'Redux/actions/subdomainInfoChange';
 import SignUp from 'Components/SignUp/SignUp';
 import { globalDatasChange } from 'Redux/actions/globalDatasChange';
@@ -42,16 +42,15 @@ const App: React.FC = () => {
     console.log('get subdomain info : ', subDomain)
     GetSubDomainInfoFunc(subDomain, (data) => {
       console.log('timeZone : ', data.timeZone)
+      console.log('backendVersion : ', data.backendVersion)
+      console.log('fidoApp : ', data.backendVersion.fidoApp)
+      console.log('interfaceApp : ', data.backendVersion.interfaceApp)
+      console.log('portalApp : ', data.backendVersion.portalApp)
       dispatch(subdomainInfoChange(data))
     })
   }
 
   useEffect(() => {
-    // console.log('route change : ', location.pathname + location.search)
-  }, [location])
-
-  useEffect(() => {
-    getDomainInfo()
     const documentHeight = () => {
       const doc = document.documentElement
       doc.style.setProperty('--doc-height', `${window.innerHeight}px`)
@@ -59,13 +58,14 @@ const App: React.FC = () => {
     window.addEventListener('resize', documentHeight)
     documentHeight()
 
-    // setInterval(() => {
-    //   console.log('getStorageAuth : ', getStorageAuth())
-    // }, 1000);
     return () => {
       window.removeEventListener('resize', documentHeight)
     }
   }, [])
+
+  useEffect(() => {
+    getDomainInfo()
+  }, [userInfo])
 
   useEffect(() => {
     if (userInfo && subdomainInfo.backendVersion.fidoApp !== 'unknown') {
@@ -94,11 +94,13 @@ const App: React.FC = () => {
             userInfo ? (
               userInfo.role! !== 'USER' ? <>
                 <Route path='/Main' element={<Main />} />
+                {isTta ? <></> : <>
+                  <Route path='/Billing' element={<Billing />} />
+                </>}
                 <Route path='/Dashboard' element={<Dashboard />} />
                 <Route path='/AgentManagement/*' element={<Agent />} />
                 <Route path='/UserManagement/*' element={<Users />} />
                 <Route path='/PasscodeManagement' element={<PasscodeManagement />} />
-                <Route path='/Billing' element={<Billing />} />
                 <Route path='/Applications/*' element={<Application />} />
                 <Route path='/Policies/*' element={<Policies />} />
                 <Route path='/Groups/*' element={<Groups />} />

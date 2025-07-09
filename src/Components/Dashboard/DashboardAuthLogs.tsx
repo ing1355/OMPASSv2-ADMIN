@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 import { useNavigate } from "react-router"
 import useDateTime from "hooks/useDateTime"
+import { applicationTypes, getApplicationTypeLabel } from "Constants/ConstantValues"
 
 const DashboardAuthLogs = ({ applications }: {
     applications: ApplicationListDataType[]
@@ -69,13 +70,23 @@ const DashboardAuthLogs = ({ applications }: {
                         render: (d, ind) => ind + 1
                     },
                     {
+                        key: 'applicationType',
+                        title: <FormattedMessage id="APPLICATION_TYPE_LABEL" />,
+                        render: (_, _ind, row) => getApplicationTypeLabel(row.ompassData?.application?.type ?? ""),
+                    },
+                    {
+                        key: 'applicationName',
+                        title: <FormattedMessage id="APPLICATION_NAME_COLUMN_LABEL" />,
+                        render: (_, _ind, row) => row.ompassData?.application?.name ?? "-"
+                    },
+                    {
                         key: 'portalUser',
-                        title: 'Portal ID',
+                        title: <FormattedMessage id="PORTAL_USERNAME_COLUMN_LABEL" />,
                         render: (d) => d.username
                     },
                     {
                         key: 'rpUser',
-                        title: 'RP ID',
+                        title: <FormattedMessage id="RP_USERNAME_COLUMN_LABEL" />,
                         render: (_, _ind, row) => row.ompassData?.rpUser?.username ?? "-"
                     },
                     {

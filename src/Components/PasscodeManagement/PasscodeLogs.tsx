@@ -127,11 +127,13 @@ const PasscodeLogs = () => {
             {
                 key: 'createdAt',
                 title: <FormattedMessage id="ACTION_DATE" />,
+                render: (data, ind, row) => row.createdAt,
                 filterType: 'date'
             },
             {
                 key: 'expirationTime',
                 title: <FormattedMessage id="VALID_TIME" />,
+                render: (data, ind, row) => row.passcode.expiredAt,
             },
         ]}
     />

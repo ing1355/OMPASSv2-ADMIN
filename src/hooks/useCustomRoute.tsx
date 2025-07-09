@@ -21,13 +21,6 @@ const useCustomRoute = () => {
     }, replace?: boolean, reset?: boolean) => {
         let resultString = ""
         const result = new URLSearchParams()
-        // if(!reset) {
-        //     oldSearchParams.forEach((val, key) => {
-        //         if(!['tabType', 'applicationType', 'applicationId'].includes(key)) {
-        //             result.append(key, val)
-        //         }
-        //     })
-        // }
         if (queryParams) {
             Object.keys(queryParams).forEach(_ => {
                 if (_ === 'filterOptions') {
@@ -53,8 +46,8 @@ const useCustomRoute = () => {
         else if (oldSearchParams.get('tabType')) result.set('tabType', oldSearchParams.get('tabType')!)
         if (queryParams.applicationType) result.set('applicationType', queryParams.applicationType)
         else if (oldSearchParams.get('applicationType')) result.set('applicationType', oldSearchParams.get('applicationType')!)
-        if (queryParams.applicationId) result.set('applicationId', queryParams.applicationId)
-        else if (oldSearchParams.get('applicationId')) result.set('applicationId', oldSearchParams.get('applicationId')!)
+        // if (queryParams.applicationId) result.set('applicationId', queryParams.applicationId)
+        // else if (oldSearchParams.get('applicationId')) result.set('applicationId', oldSearchParams.get('applicationId')!)
         resultString += result.toString()
         if (!reset || resultString) {
             // window.history.pushState("", "", `${window.location.pathname}?${resultString}`)

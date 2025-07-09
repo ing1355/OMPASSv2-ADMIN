@@ -17,7 +17,7 @@ import useExcelDownload from "hooks/useExcelDownload"
 import UserBulkAddModal from "./BulkUserAdd/UserBulkAddModal"
 import emailVerifiedIcon from "@assets/emailVerifiedIcon.png"
 import emailUnverifiedIcon from "@assets/emailUnverifiedIcon.png"
-// const userStatusList: UserDataType['status'][] = ['LOCK', 'RUN', 'WAIT_ADMIN_APPROVAL', 'USER_PENDING_SIGNUP_VERIFICATION', 'USER_PENDING_EMAIL_UPDATE_VERIFICATION', 'WAIT_INIT_PASSWORD', 'WITHDRAWAL']
+
 const userRoleList = (role: UserDataType['role']): UserDataType['role'][] => role === 'ROOT' ? ['USER', 'ADMIN', 'ROOT'] : ['USER', 'ADMIN']
 
 const PortalUserManagement = () => {
@@ -46,7 +46,6 @@ const PortalUserManagement = () => {
                 _params[_.key] = _.value
             })
         }
-
         GetUserDataListFunc(_params, ({ results, totalCount }) => {
             setTableData(results)
             setTotalCount(totalCount)
@@ -124,17 +123,17 @@ const PortalUserManagement = () => {
                 {
                     key: 'name',
                     title: createHeaderColumn('NAME'),
-                    render: (data) => getFullName(data)
+                    render: (data) => getFullName(data) || "-"
                 },
                 {
                     key: 'isEmailVerified',
                     title: createHeaderColumn('EMAIL'),
                     render: (data, ind, row) => <div className="user-email-column">
-                        {row.email}
-                        <img src={data ? emailVerifiedIcon : emailUnverifiedIcon} style={{
+                        {row.email || "-"}
+                        {row.email && <img src={data ? emailVerifiedIcon : emailUnverifiedIcon} style={{
                             width: '20px',
                             height: '20px',
-                        }} />
+                        }} />}
                     </div>
                 },
                 {
@@ -148,10 +147,15 @@ const PortalUserManagement = () => {
                     render: data => <FormattedMessage id={`USER_STATUS_${data}`} />,
                     noWrap: true,
                     filterKey: 'statuses',
-                    filterOption: userStatusTypes.map(_ => ({
+                    filterOption: [...userStatusTypes.map(_ => ({
                         label: formatMessage({ id: `USER_STATUS_${_}` }),
                         value: _
-                    }))
+                    })), {
+                        label: formatMessage({ id: `USER_STATUS_WITHDRAWAL_FILTER_LABEL` }),
+                        value: 'WITHDRAWAL',
+                        isSide: true
+                    }]
+
                 }
             ]}
             onBodyRowClick={(row, index, arr) => {

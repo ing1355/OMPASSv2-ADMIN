@@ -170,9 +170,9 @@ const ApplicationDetail = () => {
                             },
                             description: inputDescription,
                             type: applicationType,
-                            passwordless: {
+                            passwordless: passwordlessApplicationTypes.includes(applicationType) ? {
                                 isEnabled: passwordless
-                            }
+                            } : null
                         }, () => {
                             message.success(formatMessage({ id: 'APPLICATION_MODIFY_SUCCESS_MSG' }))
                         })
@@ -189,9 +189,9 @@ const ApplicationDetail = () => {
                             },
                             description: inputDescription,
                             type: applicationType,
-                            passwordless: {
+                            passwordless: passwordlessApplicationTypes.includes(applicationType) ? {
                                 isEnabled: passwordless
-                            }
+                            } : null
                         }, (res) => {
                             message.success(formatMessage({ id: 'APPLICATION_ADD_SUCCESS_MSG' }))
                             navigate(`/Applications/detail/${res.id}`, {

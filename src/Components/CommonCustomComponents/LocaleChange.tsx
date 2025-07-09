@@ -33,13 +33,13 @@ const LocaleChange = () => {
                 label: localeLabel('EN'),
                 value: 'EN'
             },
-            {
-                label: localeLabel('JP'),
-                value: 'JP',
-                style: {
-                    fontFamily: 'Noto Sans JP'
-                }
-            }
+            // {
+            //     label: localeLabel('JP'),
+            //     value: 'JP',
+            //     style: {
+            //         fontFamily: 'Noto Sans JP'
+            //     }
+            // }
         ]}>
             <div className='header-locale-inner-container'>
                 <img src={locale_image} />

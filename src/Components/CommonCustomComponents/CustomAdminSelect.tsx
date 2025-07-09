@@ -34,7 +34,7 @@ const CustomAdminSelect = ({ data, onChange, hasIncludeWithdrawal }: CustomAdmin
 
     const selectData = useMemo(() => {
         if (adminDatas.length > 0) {
-            const result = data.map(_ => adminDatas.find(__ => __.userId === _)!.username)
+            const result = data.map(_ => adminDatas.find(__ => __.userId === _)?.username)
             return result
         } else return []
     }, [data, adminDatas])

@@ -132,7 +132,7 @@ const ManagementByType = ({ type, isCloud }: ManagementByTypeProps) => {
                                     uploadDate: convertUTCStringToTimezoneDateString(newData.uploadDate)
                                 }) : ({ ...t, downloadTarget: false })))
                                 message.success(formatMessage({ id: 'CURRENT_VERSION_CHANGE_COMPLETE' }));
-                                if (type === 'WINDOWS_AGENT') {
+                                if (type === 'WINDOWS_LOGIN') {
                                     dispatch(subdomainInfoChange({
                                         ...subdomainInfo,
                                         windowsAgentUrl: newData.downloadUrl

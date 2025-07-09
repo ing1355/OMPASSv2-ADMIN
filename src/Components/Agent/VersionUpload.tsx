@@ -34,7 +34,7 @@ const VersionUpload = () => {
   const { goBack } = useCustomRoute()
   
   const fileExtensionByType = () => {
-    if (type === 'WINDOWS_AGENT') {
+    if (type === 'WINDOWS_LOGIN') {
       return ".zip"
     } else if (type === 'OMPASS_PROXY') {
       return ".zip"
@@ -46,13 +46,13 @@ const VersionUpload = () => {
       return ".zip"
     } else if (type === 'WINDOWS_FRAMEWORK') {
       return ".nupkg"
-    } else if (type === 'MAC_AGENT') {
+    } else if (type === 'MAC_LOGIN') {
       return ".pkg"
     } else return ''
   }
 
   const fileExtensionErrorMsgByType = () => {
-    if (type === 'WINDOWS_AGENT') {
+    if (type === 'WINDOWS_LOGIN') {
       return "ONLY_ZIP_FILES_CAN_BE_UPLOADED"
     } else if (type === 'OMPASS_PROXY') {
       return "ONLY_ZIP_FILES_CAN_BE_UPLOADED"
@@ -60,7 +60,7 @@ const VersionUpload = () => {
       return "ONLY_DEB_FILES_CAN_BE_UPLOADED"
     } else if (type === 'WINDOWS_FRAMEWORK') {
       return "ONLY_NUPKG_FILES_CAN_BE_UPLOADED"
-    } else if (type === 'MAC_AGENT') {
+    } else if (type === 'MAC_LOGIN') {
       return "ONLY_PKG_FILES_CAN_BE_UPLOADED"
     } else return ''
   }
@@ -99,7 +99,7 @@ const VersionUpload = () => {
       "metaData.description": inputMemo,
       multipartFile: inputFile,
     }, (newData) => {
-      if(!subdomainInfo.windowsAgentUrl && type === 'WINDOWS_AGENT') {
+      if(!subdomainInfo.windowsAgentUrl && type === 'WINDOWS_LOGIN') {
         dispatch(subdomainInfoChange({
           ...subdomainInfo,
           windowsAgentUrl: newData.downloadUrl
@@ -114,7 +114,7 @@ const VersionUpload = () => {
           ...subdomainInfo,
           ompassProxyDownloadUrl: newData.downloadUrl
         }))
-      } else if(!subdomainInfo.macOsAgentUrl && type === 'MAC_AGENT') {
+      } else if(!subdomainInfo.macOsAgentUrl && type === 'MAC_LOGIN') {
         dispatch(subdomainInfoChange({
           ...subdomainInfo,
           macOsAgentUrl: newData.downloadUrl

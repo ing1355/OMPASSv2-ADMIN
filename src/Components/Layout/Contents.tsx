@@ -28,9 +28,8 @@ const Contents = ({ children, containerStyle, copyRightStyle, loading }: Content
         <div
             className='copyRight-style content'
             style={copyRightStyle}
-        >
-            {CopyRightText(subdomainInfo)}
-        </div>
+            dangerouslySetInnerHTML={{ __html: CopyRightText(subdomainInfo) }}
+        />
     </>
 }
 

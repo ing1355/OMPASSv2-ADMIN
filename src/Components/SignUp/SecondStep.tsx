@@ -1,5 +1,5 @@
 import { DuplicateUserNameCheckFunc, RootSignUpRequestFunc, SignUpRequestFunc, SignUpVerificationCodeSendFunc, SignUpVerificationCodeVerifyFunc } from "Functions/ApiFunctions";
-import { nameRegex } from "Components/CommonCustomComponents/CommonRegex";
+import { nameRegex, phoneRegex } from "Components/CommonCustomComponents/CommonRegex";
 import { autoHypenPhoneFun } from "Functions/GlobalFunctions";
 import Button from "Components/CommonCustomComponents/Button";
 import { PropsWithChildren, useEffect, useRef, useState } from "react";
@@ -167,6 +167,10 @@ const SecondStep = ({ completeCallback }: {
                     message.error(formatMessage({ id: 'NEED_CODE_VERIFY_MSG' }))
                     return codeRef.current?.focus()
                 }
+                if (inputPhone.length > 0 && !phoneRegex.test(inputPhone)) {
+                    message.error(formatMessage({ id: 'PHONE_NUMBER_CHECK' }))
+                    return
+                }
                 if (inputUsername && inputFirstName && inputLastName && inputEmail && inputPassword) {
                     if (!subdomainInfo.securityQuestion.isRootAdminSignupComplete) return setRootConfirm(true)
                     SignUpRequestFunc({
@@ -256,56 +260,58 @@ const SecondStep = ({ completeCallback }: {
                     }}
                 />
             </InputRow>
-            <InputRow label={lang === 'EN' ? "FIRST_NAME" : "LAST_NAME"} required>
-                <Input
-                    className='st1'
-                    required
-                    ref={lang === 'EN' ? firstNameRef : lastNameRef}
-                    noGap
-                    customType={lang === 'EN' ? 'firstName' : 'lastName'}
-                    rules={[
-                        {
-                            regExp: nameRegex,
-                            msg: <FormattedMessage id={lang === 'EN' ? "FIRST_NAME_CHECK" : "LAST_NAME_CHECK"} />
-                        }
-                    ]}
-                    value={lang === 'EN' ? inputFirstName : inputLastName}
-                    valueChange={(value, isAlert) => {
-                        if (lang === 'EN') {
-                            setIsFirstNameAlert(isAlert || false)
-                            setInputFirstName(value)
-                        } else {
-                            setIsLastNameAlert(isAlert || false)
-                            setInputLastName(value)
-                        }
-                    }}
-                />
-            </InputRow>
-            <InputRow label={lang === 'EN' ? "LAST_NAME" : "FIRST_NAME"} required>
-                <Input
-                    className='st1'
-                    required
-                    ref={lang === 'EN' ? lastNameRef : firstNameRef}
-                    noGap
-                    rules={[
-                        {
-                            regExp: nameRegex,
-                            msg: <FormattedMessage id={lang === 'EN' ? "LAST_NAME_CHECK" : "FIRST_NAME_CHECK"} />
-                        }
-                    ]}
-                    value={lang === 'EN' ? inputLastName : inputFirstName}
-                    customType={lang === 'EN' ? 'lastName' : 'firstName'}
-                    valueChange={(value, isAlert) => {
-                        if (lang === 'EN') {
-                            setIsLastNameAlert(isAlert || false)
-                            setInputLastName(value)
-                        } else {
-                            setIsFirstNameAlert(isAlert || false)
-                            setInputFirstName(value)
-                        }
-                    }}
-                />
-            </InputRow>
+            <div className="signup-input-row-name">
+                <InputRow label={lang === 'EN' ? "FIRST_NAME" : "LAST_NAME"} required>
+                    <Input
+                        className='st1'
+                        required
+                        ref={lang === 'EN' ? firstNameRef : lastNameRef}
+                        noGap
+                        customType={lang === 'EN' ? 'firstName' : 'lastName'}
+                        rules={[
+                            {
+                                regExp: nameRegex,
+                                msg: <FormattedMessage id={lang === 'EN' ? "FIRST_NAME_CHECK" : "LAST_NAME_CHECK"} />
+                            }
+                        ]}
+                        value={lang === 'EN' ? inputFirstName : inputLastName}
+                        valueChange={(value, isAlert) => {
+                            if (lang === 'EN') {
+                                setIsFirstNameAlert(isAlert || false)
+                                setInputFirstName(value)
+                            } else {
+                                setIsLastNameAlert(isAlert || false)
+                                setInputLastName(value)
+                            }
+                        }}
+                    />
+                </InputRow>
+                <InputRow label={lang === 'EN' ? "LAST_NAME" : "FIRST_NAME"} required>
+                    <Input
+                        className='st1'
+                        required
+                        ref={lang === 'EN' ? lastNameRef : firstNameRef}
+                        noGap
+                        rules={[
+                            {
+                                regExp: nameRegex,
+                                msg: <FormattedMessage id={lang === 'EN' ? "LAST_NAME_CHECK" : "FIRST_NAME_CHECK"} />
+                            }
+                        ]}
+                        value={lang === 'EN' ? inputLastName : inputFirstName}
+                        customType={lang === 'EN' ? 'lastName' : 'firstName'}
+                        valueChange={(value, isAlert) => {
+                            if (lang === 'EN') {
+                                setIsLastNameAlert(isAlert || false)
+                                setInputLastName(value)
+                            } else {
+                                setIsFirstNameAlert(isAlert || false)
+                                setInputFirstName(value)
+                            }
+                        }}
+                    />
+                </InputRow>
+            </div>
             <InputRow label="EMAIL" required>
                 <Input
                     className='st1 sign-up-readonly'

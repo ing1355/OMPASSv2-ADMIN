@@ -45,7 +45,7 @@ const UserDetailRpUsers = ({ targetData, authInfoDatas, refreshCallback, userDet
     const [addPasscode, setAddPasscode] = useState<RPUserDetailAuthDataType['id']>("")
     const { formatMessage } = useIntl()
     const { convertUTCStringToTimezoneDateString } = useDateTime();
-
+    
     const canUsePasscode = (applicationType: ApplicationDataType['type']) => {
         return applicationType !== 'LDAP' && applicationType !== 'RADIUS'
     }
@@ -157,7 +157,7 @@ const UserDetailRpUsers = ({ targetData, authInfoDatas, refreshCallback, userDet
                         margin: '24px 0 0 0'
                     }} />
                     <div className="user-detail-info-device-info-content">
-                        <UserDetailInfoETCInfoContent data={_} />
+                        <UserDetailInfoETCInfoContent data={_} role={selfInfo.role} />
                     </div>
                     <BottomLineText title={formatMessage({ id: 'USER_INFO_ACCESS_LABEL' })} />
                     <div className="user-detail-info-device-info-content">

@@ -1,7 +1,7 @@
 import Button from 'Components/CommonCustomComponents/Button'
 import './Calendar.css'
 import { FormattedMessage, useIntl } from 'react-intl';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { addDays, addMonths, addYears, differenceInDays, endOfMonth, format, isBefore, isSameDay, isSameMonth, isSaturday, isSunday, isWithinInterval, setHours, setMinutes, setSeconds, startOfMonth, subDays, subMonths, subYears } from 'date-fns';
 import { message } from 'antd';
 import leftArrowIcon from '@assets/leftArrowIcon2.png';
@@ -61,12 +61,14 @@ const getDatesOfMonth = (date: Date) => {
     return results as Date[][]
 }
 
-const Calendar = ({ defaultValue, closeCallback, onChange, monthRestriction }: {
-    defaultValue: DateSelectDataType | undefined
+const Calendar = ({ defaultValue, closeCallback, onChange, monthRestriction, value }: {
+    defaultValue?: DateSelectDataType
     closeCallback: () => void
     onChange: (data: DateSelectDataType) => void
     monthRestriction?: boolean
+    value?: DateSelectDataType
 }) => {
+    console.log(value)
     const { formatMessage } = useIntl()
     const [data, setData] = useState<SelectedDateType>(defaultValue ? {
         startDate: new Date(defaultValue.startDate),
@@ -77,7 +79,16 @@ const Calendar = ({ defaultValue, closeCallback, onChange, monthRestriction }: {
     })
     const [showDate, setShowDate] = useState(new Date())
     const daysOfMonth = getDatesOfMonth(showDate)
-    
+
+    useEffect(() => {
+        if(value) {
+            setData({
+                startDate: new Date(value.startDate),
+                endDate: new Date(value.endDate)
+            })
+        }
+    },[value])
+    console.log(data)
     return <div className='custom-calendar-container'>
         <div className='custom-calendar-header'>
             <div className={`custom-calendar-header-item${data.startDate ? ' has-data' : ''}`}>

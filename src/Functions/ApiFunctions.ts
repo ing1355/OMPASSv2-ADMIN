@@ -765,7 +765,7 @@ export const ReissuanceSecretKeyForUserSyncFunc = (id: ExternalDirectoryDataType
 }
 
 export const SendChangeEmailCodeFunc = (params: {
-    username: string
+    userId: string
     email: string
 }, callback: () => void) => {
     return CustomAxiosPost(SendChangeEmailCodeApi, callback, params)

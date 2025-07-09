@@ -64,7 +64,7 @@ const Login = () => {
     let temp = ompassUrl + `&authorization=${token}`
     if (isDev) {
       const targetUrl = "192.168.182.120:9002"
-      temp = temp.replace("ompass.kr:54007", targetUrl).replace("ompass.kr:54012", targetUrl).replace("192.168.182.75:9001", targetUrl).replace("ompass.kr:59001", targetUrl)
+      temp = temp.replace('192.168.182.143:9001',targetUrl).replace("ompass.kr:54007", targetUrl).replace("ompass.kr:54012", targetUrl).replace("192.168.182.75:9001", targetUrl).replace("ompass.kr:59001", targetUrl)
     }
     if (!ompassWindowRef.current?.closed) {
       ompassWindowRef.current?.close()

@@ -86,7 +86,6 @@ type UpdatePortalSettingsDataType = {
   timeZone: string
   isUserAllowedToRemoveAuthenticator: boolean
   selfSignupEnabled: boolean
-  hidePortal: boolean
   noticeToAdmin: {
     isEnabled: RestrictionNoticeDataType['isEnabled'],
     admins: RestrictionNoticeDataType['admins'],

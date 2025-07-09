@@ -1,4 +1,3 @@
-import { message } from "antd";
 import { VerificationEmailChangeFunc } from "Functions/ApiFunctions";
 import queryString from "query-string";
 import { useEffect } from "react";

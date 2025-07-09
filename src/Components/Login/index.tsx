@@ -102,11 +102,12 @@ const LoginPage = () => {
         <div
             className='login-footer'
         >
-            <div
+            <p
                 className='copyRight-style login-copyright'
+                
             >
                 {CopyRightText(subdomainInfo)}
-            </div>
+            </p>
         </div>
     </div>
 }
