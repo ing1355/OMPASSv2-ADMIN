@@ -141,15 +141,7 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
                                 return message.error(formatMessage({ id: 'FIRST_NAME_CHECK' }))
                             }
                         }
-                        if (!targetValue.email) {
-                            emailRef.current?.focus()
-                            return message.error(formatMessage({ id: 'PLEASE_INPUT_EMAIL' }));
-                        }
-                        if (!emailRegex.test(targetValue.email)) {
-                            emailRef.current?.focus()
-                            return message.error(formatMessage({ id: 'EMAIL_CHECK' }))
-                        }
-                        if (targetValue.phone.length > 0 && !phoneRegex.test(targetValue.phone)) {
+                        if (targetValue.phone && targetValue.phone.length > 0 && !phoneRegex.test(targetValue.phone)) {
                             phoneRef.current?.focus()
                             return message.error(formatMessage({ id: 'PHONE_NUMBER_CHECK' }))
                         }

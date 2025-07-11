@@ -6,8 +6,12 @@ export const StartAdminMenuItems: DocsMenuItemType[] = [
         route: '/start/signup'
     },
     {
+        title: 'OMPASS 등록',
+        route: '/start/ompass_register'
+    },
+    {
         title: 'OMPASS 인증',
-        route: '/start/ompass'
+        route: '/start/ompass_auth'
     }
 ]
 
@@ -52,8 +56,12 @@ export const StartUserMenuItems: DocsMenuItemType[] = [
         route: '/user/start/signup'
     },
     {
+        title: 'OMPASS 등록',
+        route: '/user/start/ompass_register'
+    },
+    {
         title: 'OMPASS 인증',
-        route: '/user/start/ompass'
+        route: '/user/start/ompass_auth'
     }
 ]
 

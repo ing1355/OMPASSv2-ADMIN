@@ -20,6 +20,7 @@ import { useParams } from "react-router";
 import { PasscodeAddComponent } from "./PasscodeComponents";
 import CustomModal from "Components/Modal/CustomModal";
 import useDateTime from "hooks/useDateTime";
+import useCustomRoute from "hooks/useCustomRoute";
 
 
 type UserDetailRpUsersProps = {
@@ -37,6 +38,7 @@ const UserDetailRpUsers = ({ targetData, authInfoDatas, refreshCallback, userDet
     const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas);
     const selfInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     const _uuid = useParams().uuid;
+    const { goBack } = useCustomRoute()
     const uuid = selfInfo.role === 'USER' ? selfInfo.userId : _uuid
     const isSelf = (isDev2 && selfInfo.role === 'ROOT') || (selfInfo.userId === uuid)
     const canModify = (isDev2 && selfInfo.role === 'ROOT') || (isSelf || (selfInfo.role === 'ADMIN' && targetData?.role === 'USER') || (selfInfo.role === 'ROOT' && targetData?.role !== 'ROOT'))
@@ -194,6 +196,10 @@ const UserDetailRpUsers = ({ targetData, authInfoDatas, refreshCallback, userDet
                                 <h4>PASSCODE</h4>
                                 {selfInfo.role !== "USER" && canModify && <PasscodeAddBtn added={_.authenticationInfo.authenticators.some(__ => __.type === 'PASSCODE')} onClick={() => {
                                     if (_.authenticationInfo.authenticators.some(__ => __.type === 'PASSCODE')) {
+                                        if (!targetData?.email) {
+                                            message.error(formatMessage({ id: 'PASSCODE_SEND_FAIL_MSG' }))
+                                            return;
+                                        }
                                         SendPasscodeEmailFunc(passcodeData(_.authenticationInfo.id)[0].id, () => {
                                             message.success(formatMessage({ id: 'PASSCODE_RE_SEND_SUCCESS_MSG' }))
                                         })
@@ -233,10 +239,14 @@ const UserDetailRpUsers = ({ targetData, authInfoDatas, refreshCallback, userDet
             typeContent={formatMessage({ id: 'USER_AUTH_DEVICE_UNREGISTER_MODAL_SUBSCRIPTION' })}
             yesOrNo
             okCallback={async () => {
-                return DeleteAuthenticatorDataFunc(authenticatorDelete, () => {
+                return DeleteAuthenticatorDataFunc(authenticatorDelete, (newData) => {
                     message.success(formatMessage({ id: 'USER_AUTH_DEVICE_UNREGISTER_SUCCESS_MSG' }))
                     setAuthenticatorDelete("")
-                    refreshCallback()
+                    if(newData && newData.length === 0) {
+                        goBack()
+                    } else {
+                        refreshCallback()
+                    }
                 })
             }} buttonLoading />
     </>

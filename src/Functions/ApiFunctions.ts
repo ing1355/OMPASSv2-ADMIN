@@ -436,7 +436,7 @@ export const GetPortalLogDataListFunc = ({
     })
 }
 
-export const DeleteAuthenticatorDataFunc = (authenticatorId: AuthenticatorDataType['id'], callback: () => void) => {
+export const DeleteAuthenticatorDataFunc = (authenticatorId: AuthenticatorDataType['id'], callback: (newData: AuthenticatorDataType[]) => void) => {
     return CustomAxiosDelete(DeleteAuthenticatorData(authenticatorId), callback)
 }
 

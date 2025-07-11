@@ -152,7 +152,8 @@ const MessageText = {
         APPLICATION_ACCOUNT_INFO_INVALID_MSG: '애플리케이션 계정 정보가 올바르지 않습니다.',
         EMAIL_VERIFY_NEED_MSG: '이메일 인증이 필요합니다.',
         POLICY_INFO_RESET_SUCCESS_MSG: '정책 정보가 초기화 되었습니다.',
-        PLEASE_SELECT_FILTER_DATA: '최소 1개의 필터 값을 설정해야 합니다.'
+        PLEASE_SELECT_FILTER_DATA: '최소 1개의 필터 값을 설정해야 합니다.',
+        PASSCODE_SEND_FAIL_MSG: 'PASSCODE를 메일로 발송하려면 해당 사용자의 이메일이 등록되어 있어야 합니다.'
     },
     'EN': {
         USERNAME_CHECK: 'Only lowercase letters and numbers are allowed, with a length of 4 to 16 characters',
@@ -307,7 +308,8 @@ const MessageText = {
         APPLICATION_ACCOUNT_INFO_INVALID_MSG: 'The account information in the application is incorrect.',
         EMAIL_VERIFY_NEED_MSG: 'Please verify your email address.',
         POLICY_INFO_RESET_SUCCESS_MSG: 'Policy information has been reset.',
-        PLEASE_SELECT_FILTER_DATA: 'Please set at least one filter value.'
+        PLEASE_SELECT_FILTER_DATA: 'Please set at least one filter value.',
+        PASSCODE_SEND_FAIL_MSG: 'To send a passcode by email, the user\'s email must be registered.'
     }
 }
 

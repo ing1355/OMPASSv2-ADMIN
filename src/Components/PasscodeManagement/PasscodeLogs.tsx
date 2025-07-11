@@ -32,10 +32,14 @@ const PasscodeLogs = () => {
             })
         }
         GetPasscodeHistoriesFunc(_params, ({ results, totalCount }) => {
+            console.log(results)
             setTableData(results.map(_ => ({
                 ..._,
                 createdAt: convertUTCStringToTimezoneDateString(_.createdAt),
-                expirationTime: _.passcode.expiredAt === "-1" ? "∞" : convertUTCStringToTimezoneDateString(_.passcode.expiredAt)
+                passcode: {
+                    ..._.passcode,
+                    expiredAt: _.passcode.expiredAt === "-1" ? "∞" : convertUTCStringToTimezoneDateString(_.passcode.expiredAt)
+                }
             })))
             setTotalCount(totalCount)
         }).finally(() => {
