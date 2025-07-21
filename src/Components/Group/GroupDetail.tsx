@@ -20,6 +20,7 @@ import { applicationTypes, getApplicationTypeLabel, INT_MAX_VALUE } from "Consta
 import './GroupDetail.css'
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect"
 import useCustomRoute from "hooks/useCustomRoute"
+import SureDeleteButton from "Components/CommonCustomComponents/SureDeleteButton"
 
 const GroupDetail = () => {
     const [inputName, setInputName] = useState('')
@@ -116,14 +117,18 @@ const GroupDetail = () => {
             }}>
                 <FormattedMessage id="SAVE" />
             </Button>
-            {!isAdd && <Button className="st2" onClick={() => {
-                DeleteUserGroupDataFunc(uuid, () => {
-                    message.success(formatMessage({ id: 'GROUP_MODIFY_DELETE_MSG' }))
-                    goBack()
-                })
-            }}>
-                <FormattedMessage id="DELETE" />
-            </Button>}
+            {!isAdd &&
+                <SureDeleteButton callback={() => {
+                    DeleteUserGroupDataFunc(uuid, () => {
+                        message.success(formatMessage({ id: 'GROUP_MODIFY_DELETE_MSG' }))
+                        goBack()
+                    })
+                }} modalTitle={<FormattedMessage id="GROUP_SURE_DELETE_TEXT" />} modalContent={<FormattedMessage id="GROUP_DELETE_CONFIRM_MSG" />}>
+                    <Button className="st2">
+                        <FormattedMessage id="DELETE" />
+                    </Button>
+                </SureDeleteButton>
+            }
         </ContentsHeader>
         <div className="contents-header-container">
             <CustomInputRow title={<FormattedMessage id="GROUP_NAME_LABEL" />} required>
@@ -144,12 +149,12 @@ const GroupDetail = () => {
                     setInputDescription(value)
                 }} placeholder={formatMessage({ id: 'GROUP_DESCRIPTION_PLACEHOLDER' })} className="st1" maxLength={192} />
             </CustomInputRow>
-            <CustomInputRow title={<FormattedMessage id="GROUP_POLICY_SELECT_LABEL"/>} isVertical>
+            <CustomInputRow title={<FormattedMessage id="GROUP_POLICY_SELECT_LABEL" />} isVertical>
                 <div className="group-policy-select-container">
-                <div className="custom-select-box-container">
-                    <CustomSelect items={applicationTypeItems} value={selectedApplicationType || ''} onChange={val => {
-                        setSelectedApplicationType(val as ApplicationDataType['type'])
-                    }} needSelect/>
+                    <div className="custom-select-box-container">
+                        <CustomSelect items={applicationTypeItems} value={selectedApplicationType || ''} onChange={val => {
+                            setSelectedApplicationType(val as ApplicationDataType['type'])
+                        }} needSelect />
                     </div>
                     {selectedApplicationType && <PolicySelect datas={policiesData} selectedPolicy={selectedPolicy} setSelectedPolicy={setSelectedPolicy} applicationType={selectedApplicationType} needSelect />}
                 </div>
@@ -160,7 +165,7 @@ const GroupDetail = () => {
                             {getApplicationTypeLabel(_.applicationType)}({target?.name})
                             <img src={closeIcon} onClick={() => {
                                 setSelectedPolicies(selectedPolicies.filter(sp => !(sp.applicationType === _.applicationType && sp.policyId === _.policyId)))
-                            }}/>
+                            }} />
                         </div>
                     })}
                 </div>

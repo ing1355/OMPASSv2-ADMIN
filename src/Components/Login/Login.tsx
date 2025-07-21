@@ -76,7 +76,6 @@ const Login = () => {
     {
       ompassAuthentication = { ompassUrl: '', isRegisteredOmpass: false },
       status = 'RUN',
-      securityQuestions = [],
       email = '',
       isEmailVerified = false
     }: LoginApiResponseType,
@@ -84,15 +83,20 @@ const Login = () => {
   ) => {
     if (status === 'WAIT_INIT_PASSWORD') {
       // if (false) {
-      setTempToken(token)
-      setInputPassword('')
-      message.info(formatMessage({ id: 'PASSWORD_CHANGE_NEED_MSG' }))
-      setNeedPasswordChange(true)
+      if(!notRegistered) {
+        setNotRegistered(true)
+        message.info(formatMessage({ id: 'LOGIN_FAILED_NEED_PASSWORD_INIT_MSG' }))
+      } else {
+        setTempToken(token)
+        setInputPassword('')
+        message.info(formatMessage({ id: 'PASSWORD_CHANGE_NEED_MSG' }))
+        setNeedPasswordChange(true)
+      }
     } else if (status === 'WAIT_SECURITY_QNA') {
       return navigate('/SecurityQuestion', {
         state: {
           token,
-          questions: securityQuestions
+          isLogin: true
         }
       })
     } else {

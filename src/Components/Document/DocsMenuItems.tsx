@@ -72,7 +72,10 @@ export const EtcUserMenuItems: DocsMenuItemType[] = [
     }
 ]
 
-export const EtcMenuItems: DocsMenuItemType[] = isTta ? [
+export const EtcMenuItems: DocsMenuItemType[] = [{
+    title: 'OMPASS 앱',
+    route: '/etc/app'
+}].concat(isTta ? [
     {
         title: 'Web API',
         route: '/etc/web_api'
@@ -90,7 +93,7 @@ export const EtcMenuItems: DocsMenuItemType[] = isTta ? [
         title: 'OMPASS Interface Framework',
         route: '/etc/ompass_interface_framework'
     }
-]
+])
 
 export const PortalMenuItems: DocsMenuItemType[] = [
     {

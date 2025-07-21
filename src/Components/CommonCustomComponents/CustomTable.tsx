@@ -19,6 +19,7 @@ import { useSearchParams } from "react-router-dom"
 import useCustomRoute from "hooks/useCustomRoute"
 import useDateTime from "hooks/useDateTime"
 import { arraysHaveSameElements } from "Functions/GlobalFunctions"
+import CustomTablePagination from "./CustomTablePagination"
 
 type CustomTableButtonType = {
     icon?: string
@@ -83,29 +84,24 @@ const CustomTable = <T extends {
     customBtns,
     refresh,
     hover }: CustomTableProps<T>) => {
-
     const [searchParams] = useSearchParams()
-    const [closeEvent, setCloseEvent] = useState(false)
-    const [pageNum, setPageNum] = useState(1)
-    const [tableSize, setTableSize] = useState<number>(userSelectPageSize());
-    const [searchType, setSearchType] = useState(searchParams.get('searchType') ?? ((searchOptions && searchOptions[0].key) || ""))
-    const [filterValues, setFilterValues] = useState<TableFilterOptionType>(columns.filter(_ => _.filterOption).map(_ => {
+    const initFilterValues = columns.filter(_ => _.filterOption).map(_ => {
         let result: TableFilterOptionItemType = {
             key: _.filterKey || _.key,
             value: []
         }
 
-        if(_.filterType === 'date') {
+        if (_.filterType === 'date') {
             result.value = searchParams.get(_.filterKey || _.key)
         } else {
             const initValues = [searchParams.get(_.filterKey || _.key)].filter(__ => __)
-            if(initValues.length > 0) {
+            if (initValues.length > 0) {
                 result.value = initValues
             } else {
                 result.value = _.filterOption?.filter(__ => !__.isSide).map(__ => __.value)
             }
         }
-        
+
         return result
     }).concat(columns.find(_ => _.filterType === 'date') ? [{
         key: 'startDate',
@@ -113,8 +109,13 @@ const CustomTable = <T extends {
     }, {
         key: 'endDate',
         value: searchParams.get('endDate') ?? ''
-    }] : []))
-    
+    }] : [])
+    const [closeEvent, setCloseEvent] = useState(false)
+    const [pageNum, setPageNum] = useState(1)
+    const [tableSize, setTableSize] = useState<number>(userSelectPageSize());
+    const [searchType, setSearchType] = useState(searchParams.get('searchType') ?? ((searchOptions && searchOptions[0].key) || ""))
+    const [filterValues, setFilterValues] = useState<TableFilterOptionType>(initFilterValues)
+
     const [searchValue, setSearchValue] = useState(searchParams.get('searchValue') ?? '')
     const [hoverId, setHoverId] = useState(-1)
     const resultRef = useRef<CustomTableSearchParams>()
@@ -164,7 +165,7 @@ const CustomTable = <T extends {
         }
         if (result.filterOptions?.find(_ => _.key === 'startDate')) {
             result.filterOptions = result.filterOptions.map(_ => {
-                if(_.key === 'startDate' || _.key === 'endDate') {
+                if (_.key === 'startDate' || _.key === 'endDate') {
                     return {
                         ..._,
                         value: convertTimezoneDateStringToUTCString(_.value)
@@ -174,9 +175,12 @@ const CustomTable = <T extends {
                 }
             })
         }
-        
+
+        console.log(result, result.filterOptions)
         if (result.filterOptions) {
             setFilterValues(values)
+        } else {
+            setFilterValues(initFilterValues)
         }
         return result
     }
@@ -225,12 +229,13 @@ const CustomTable = <T extends {
             filterOptions: filter || [...filterValues]
         }
         const filterOptions = columns.filter(_ => _.filterOption)
-        if(result.filterOptions) {
+
+        if (result.filterOptions) {
             result.filterOptions = result.filterOptions?.map(_ => {
-                if(_.key === 'startDate' || _.key === 'endDate') return _
+                if (_.key === 'startDate' || _.key === 'endDate') return _
                 else {
-                    const target = filterOptions.find(opt => opt.filterKey === _.key)?.filterOption?.map(_ => _.value)
-                    if(arraysHaveSameElements(target || [], _.value || [])) {
+                    const target = filterOptions.find(opt => opt.filterKey === _.key)?.filterOption?.filter(_ => !_.isSide).map(_ => _.value)
+                    if (arraysHaveSameElements(target || [], _.value || [])) {
                         return {
                             ..._,
                             value: []
@@ -241,11 +246,12 @@ const CustomTable = <T extends {
                 }
             })
         }
-        
+
         if (searchValue) {
             result.searchType = searchType
             result.searchValue = searchValue
         }
+
         if (isReset) {
             customPushRoute({}, true, true)
         } else {
@@ -340,7 +346,7 @@ const CustomTable = <T extends {
                             const targetFilterValues = filterValues?.find(f => f.key === _.filterKey)?.value
                             const hasSideFilterValues = targetFilterValues?.some((target: any) => sideFilterValues?.includes(target))
                             const hasAllMainFilterValues = mainFilterValues?.every((main: any) => targetFilterValues?.includes(main))
-                            
+
                             return <th key={_.key as string} onClick={e => {
                                 e.preventDefault()
                                 if (onHeaderColClick) onHeaderColClick(_, e.currentTarget)
@@ -460,7 +466,7 @@ const CustomTable = <T extends {
             className="mb40"
             style={{ textAlign: 'center' }}
         >
-            <Pagination showQuickJumper showSizeChanger current={pageNum} pageSize={tableSize} total={totalCount || 1} onChange={onChangePage} className="custom-pagination" />
+            <CustomTablePagination pageNum={pageNum} tableSize={tableSize} totalCount={totalCount || 1} onChangePage={onChangePage} />
         </div>}
     </div>
 }

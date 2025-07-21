@@ -14,6 +14,7 @@ const PasscodeList = () => {
     const [totalCount, setTotalCount] = useState<number>(0);
     const [tableData, setTableData] = useState<PasscodeListDataType[]>([]);
     const { convertUTCStringToTimezoneDateString } = useDateTime();
+
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
         const _params: GeneralParamsType = {
@@ -22,6 +23,11 @@ const PasscodeList = () => {
         }
         if (params.searchType) {
             _params[params.searchType] = params.searchValue
+        }
+        if (params.filterOptions) {
+            params.filterOptions.forEach(_ => {
+                _params[_.key] = _.value
+            })
         }
         GetPasscodeListFunc(_params, ({ results, totalCount }) => {
             setTableData(results.map(_ => ({

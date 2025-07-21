@@ -16,6 +16,7 @@ import UserDetailUserInfo from './UserDetailUserInfo'
 import UserDetailRpUsers from './UserDetailRpUsers'
 import UserRpSelfAddComponent from './UserRpSelfAddComponent'
 import useDateTime from "hooks/useDateTime"
+import SureDeleteButton from 'Components/CommonCustomComponents/SureDeleteButton'
 
 
 
@@ -167,11 +168,20 @@ const UserDetail = ({ }) => {
                         <FormattedMessage id="USER_AUTHORITY_SUCCESSION_LABEL" />
                     </Button>
                 }
-                {(canDelete && !isAdd) && !isDeleted && <Button className='st8' onClick={() => {
-                    setSureDelete(true)
-                }}>
-                    <FormattedMessage id="USER_WITHDRAWAL_LABEL" />
-                </Button>}
+                {(canDelete && !isAdd) && !isDeleted && <SureDeleteButton callback={() => {
+                    DeleteUserDataFunc(userData?.userId!, () => {
+                        message.success(formatMessage({ id: 'USER_WITHDRAWAL_SUCCESS_MSG' }))
+                        if (isSelf) {
+                            dispatch(userInfoClear());
+                        } else {
+                            navigate(-1)
+                        }
+                    })
+                }} modalTitle={<FormattedMessage id="USER_WITHDRAWAL_MODAL_TITLE" />} modalContent={<FormattedMessage id="USER_WITHDRAWAL_MODAL_SUBSCRIPTION" />}>
+                    <Button className='st8'>
+                        <FormattedMessage id="USER_WITHDRAWAL_LABEL" />
+                    </Button>
+                </SureDeleteButton>}
             </ContentsHeader>
             <UserDetailUserInfo targetData={userData} setTargetData={setUserData} refreshCallback={GetDatas} hasRpUser={authInfoDatas.length > 0} />
             <UserDetailRpUsers authInfoDatas={authInfoDatas} refreshCallback={GetDatas} targetData={userData} userDetailOpened={userDetailOpened} setUserDetailOpened={setUserDetailOpened} authInfoRef={authInfoRef} />
@@ -199,27 +209,6 @@ const UserDetail = ({ }) => {
                 setAuthView(true)
                 setSureSwap(false)
             }} buttonLoading />
-        <CustomModal
-            open={sureDelete}
-            onCancel={() => {
-                setSureDelete(false);
-            }}
-            type="warning"
-            typeTitle={formatMessage({ id: 'USER_WITHDRAWAL_MODAL_TITLE' })}
-            typeContent={formatMessage({ id: 'USER_WITHDRAWAL_MODAL_SUBSCRIPTION' })}
-            yesOrNo
-            okCallback={() => {
-                return DeleteUserDataFunc(userData?.userId!, () => {
-                    setSureDelete(false)
-                    message.success(formatMessage({ id: 'USER_WITHDRAWAL_SUCCESS_MSG' }))
-                    if (isSelf) {
-                        dispatch(userInfoClear());
-                    } else {
-                        navigate(-1)
-                    }
-                })
-            }} buttonLoading />
-
     </>
 }
 

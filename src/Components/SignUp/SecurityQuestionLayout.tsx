@@ -23,14 +23,14 @@ const InputRow = ({ label, children, required }: PropsWithChildren<{
     </div>
 }
 
-const SecurityQuestionLayout = ({ onComplete, questions }: {
+const SecurityQuestionLayout = ({ onComplete, isLogin }: {
     onComplete: (a: string, b: string, c: string) => void
-    questions?: SecurityQuestionsKeyType[]
+    isLogin?: boolean
 }) => {
     const navigate = useNavigate()
     const { formatMessage } = useIntl()
     const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
-
+    
     const [rootQuestion1, setRootQuestion1] = useState('')
     const [rootQuestion2, setRootQuestion2] = useState('')
     const [rootQuestion3, setRootQuestion3] = useState('')
@@ -42,6 +42,7 @@ const SecurityQuestionLayout = ({ onComplete, questions }: {
     return <div className="signup-content second">
         <form onSubmit={(e) => {
             e.preventDefault()
+            console.log(rootQuestion1, rootQuestion2, rootQuestion3)
             if (!rootQuestion1) {
                 rootQuestionRef1.current?.focus()
                 return message.error(formatMessage({ id: 'PLEASE_INPUT_SECURITY_QUESTION_MSG' }))
@@ -57,7 +58,7 @@ const SecurityQuestionLayout = ({ onComplete, questions }: {
             onComplete(rootQuestion1, rootQuestion2, rootQuestion3)
         }}>
             {
-                (questions || subdomainInfo.securityQuestion.questions).map((_, ind) => <InputRow key={ind} label={_} required>
+                (subdomainInfo.securityQuestion.questions).map((_, ind) => <InputRow key={ind} label={_} required>
                     <Input
                         className='st1'
                         required
@@ -79,7 +80,7 @@ const SecurityQuestionLayout = ({ onComplete, questions }: {
                 type={'submit'}
                 className={'st3 agree-button signup-complete'}
             >
-                <FormattedMessage id={questions ? 'LETS_CHANGE' : 'SIGN_UP'} />
+                <FormattedMessage id={isLogin ? 'LETS_CHANGE' : 'SIGN_UP'} />
             </Button>
             <Button
                 className={'st6 agree-button signup-complete'}

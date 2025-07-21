@@ -22,13 +22,14 @@ import NoticeToAdmin from "./PolicyItems/NoticeToAdmin";
 import PolicyAccessTimeList from "./PolicyItems/PolicyAccessTimeList";
 import NoticeToThemselves from "./PolicyItems/NoticeToThemselves";
 import useCustomRoute from "hooks/useCustomRoute";
-import { cidrRegex, ipAddressRegex } from "Components/CommonCustomComponents/CommonRegex";
+import { cidrRegex, ipAddressRegex } from "Constants/CommonRegex";
 import { isValidIpRange } from "Functions/GlobalFunctions";
 import OMPASSAppAuthenticators from "./PolicyItems/OMPASSAppAuthenticator";
 import './AuthPolicyDetail.css'
 // import PasswordlessCheck from "./PolicyItems/PasswordlessCheck";
 import LinuxPamBypass from "./PolicyItems/LinuxPamBypass";
 import CanEmailRegister from "./CanEmailRegister";
+import SureDeleteButton from "Components/CommonCustomComponents/SureDeleteButton";
 
 const pamInitData: PAMBypassDataType = {
     isEnabled: false,
@@ -213,23 +214,23 @@ const AuthPolicyDetail = () => {
             if (noticeToAdmin?.isEnabled && noticeToAdmin.targetPolicies.length === 0) {
                 return message.error(formatMessage({ id: 'PLEASE_SETTING_NOTI_TO_ADMIN_POLICY_ONE_MORE_MSG' }))
             }
-        }
-        if (ipAddressValues?.isEnabled) {
-            const ips = ipAddressValues.require2faForIps.map(_ => _.ip).concat(ipAddressValues.notRequire2faForIps.map(_ => _.ip).concat(ipAddressValues.deny2faForIps.map(_ => _.ip)))
-            const ipTest = ips.some(ip => {
-                if (!ip) {
-                    return false
+            if (ipAddressValues?.isEnabled) {
+                const ips = ipAddressValues.require2faForIps.map(_ => _.ip).concat(ipAddressValues.notRequire2faForIps.map(_ => _.ip).concat(ipAddressValues.deny2faForIps.map(_ => _.ip)))
+                const ipTest = ips.some(ip => {
+                    if (!ip) {
+                        return false
+                    }
+                    if ((ip.includes('-') && !isValidIpRange(ip)) || (ip.includes('/') && !RegExp(cidrRegex).test(ip))) {
+                        return false
+                    }
+                    if (!ip.includes('-') && !ip.includes('/') && !RegExp(ipAddressRegex).test(ip)) {
+                        return false
+                    }
+                    return true
+                })
+                if (!ipTest) {
+                    return message.error(formatMessage({ id: 'PLEASE_INPUT_CORRECT_IP_ADDRESS' }))
                 }
-                if ((ip.includes('-') && !isValidIpRange(ip)) || (ip.includes('/') && !RegExp(cidrRegex).test(ip))) {
-                    return false
-                }
-                if (!ip.includes('-') && !ip.includes('/') && !RegExp(ipAddressRegex).test(ip)) {
-                    return false
-                }
-                return true
-            })
-            if (!ipTest) {
-                return message.error(formatMessage({ id: 'PLEASE_INPUT_CORRECT_IP_ADDRESS' }))
             }
         }
         const params: PolicyDataType = {
@@ -309,13 +310,15 @@ const AuthPolicyDetail = () => {
                 }}>
                     <FormattedMessage id="NORMAL_RESET_LABEL" />
                 </Button>}
-                {!isAdd && !isDefaultPolicy && <Button className="st8" onClick={() =>
+                {!isAdd && !isDefaultPolicy && <SureDeleteButton callback={() => {
                     DeletePoliciesListFunc(uuid, () => {
                         message.success(formatMessage({ id: 'AUTH_POLICY_DELETE_SUCCESS_MSG' }))
-                        goBack()
-                    })}>
-                    <FormattedMessage id="DELETE" />
-                </Button>}
+                    })
+                }} modalTitle={<FormattedMessage id="POLICY_SURE_DELETE_TEXT" />} modalContent={<FormattedMessage id="POLICY_DELETE_CONFIRM_MSG" />}>
+                    <Button className="st8">
+                        <FormattedMessage id="DELETE" />
+                    </Button>
+                </SureDeleteButton>}
             </div>
         </ContentsHeader>
         <div className="contents-header-container">

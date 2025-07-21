@@ -68,7 +68,6 @@ const Calendar = ({ defaultValue, closeCallback, onChange, monthRestriction, val
     monthRestriction?: boolean
     value?: DateSelectDataType
 }) => {
-    console.log(value)
     const { formatMessage } = useIntl()
     const [data, setData] = useState<SelectedDateType>(defaultValue ? {
         startDate: new Date(defaultValue.startDate),
@@ -88,7 +87,7 @@ const Calendar = ({ defaultValue, closeCallback, onChange, monthRestriction, val
             })
         }
     },[value])
-    console.log(data)
+    
     return <div className='custom-calendar-container'>
         <div className='custom-calendar-header'>
             <div className={`custom-calendar-header-item${data.startDate ? ' has-data' : ''}`}>

@@ -32,7 +32,6 @@ import Document from 'Components/Document';
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
-  const location = useLocation()
   const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
   const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas)!;
   const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo)!;

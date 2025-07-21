@@ -1,6 +1,6 @@
 import { message } from "antd"
 import Button from "Components/CommonCustomComponents/Button"
-import { emailRegex } from "Components/CommonCustomComponents/CommonRegex"
+import { emailRegex } from "Constants/CommonRegex"
 import EmailSendButton from "Components/CommonCustomComponents/EmailSendButton"
 import Input from "Components/CommonCustomComponents/Input"
 import CustomModal from "Components/Modal/CustomModal"

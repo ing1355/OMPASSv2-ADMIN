@@ -42,6 +42,7 @@ const ApplicationAgentDownload = ({ type }: {
             return subdomainInfo.ompassProxyDownloadUrl
         }
     }
+
     return <>
         {needAgent && <Button className="st11" icon={downloadIcon} onClick={() => {
             if (!getDownloadUrlByType()) {

@@ -252,7 +252,6 @@ type LocalApplicationTypes = ApplicationTypes | 'ALL' | undefined
 type DefaultApplicationDataType = {
     id: string
     clientId: string
-    // type: "DEFAULT" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "ADMIN" | "RADIUS" | "GOOROOM_LOGIN" | "REDMINE" | "ALL"
     type: ApplicationTypes
     name: string
     domain?: string
@@ -993,9 +992,11 @@ type DocsMenuItemType = {
     route: string
 }
 
+type PasswordVerificationPurposeType = "PROFILE_UPDATE" | "DEVICE_CHANGE"
+
 type PasswordVerificationRequestParamsType = {
     password: string
-    purpose: "PROFILE_UPDATE" | "DEVICE_CHANGE"
+    purpose: PasswordVerificationPurposeType
 }
 
 type UserApiSyncInfoDataType = {

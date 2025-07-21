@@ -28,6 +28,8 @@ const MessageText = {
         APPLICATION_MS_ENTRA_APP_ID_COPY_FAIL_MSG: '앱 아이디 복사에 실패하였습니다.',
         APPLICATION_MS_ENTRA_DISCOVERY_ENDPOINT_COPY_SUCCESS_MSG: '검색 엔드포인트가 복사되었습니다.',
         APPLICATION_MS_ENTRA_DISCOVERY_ENDPOINT_COPY_FAIL_MSG: '검색 엔드포인트 복사에 실패하였습니다.',
+        JSON_COPY_SUCCESS_MSG: 'JSON 데이터가 클립보드에 복사되었습니다.',
+        JSON_COPY_FAIL_MSG: 'JSON 데이터 복사에 실패하였습니다.',
 
         APPLICATION_CLIENT_ID_COPY_SUCCESS_MSG: '클라이언트 아이디가 복사되었습니다.',
         APPLICATION_CLIENT_ID_COPY_FAIL_MSG: '클라이언트 아이디 복사에 실패하였습니다.',
@@ -78,6 +80,7 @@ const MessageText = {
         PASSWORD_INIT_SUCCESS_MSG: '비밀번호 초기화에 성공하였습니다.',
         PASSWORD_CHANGE_SUCCESS_MSG: '비밀번호 변경에 성공하였습니다. 다시 로그인해주세요.',
         PASSWORD_CHANGE_NEED_MSG: '비밀번호 초기화 대상입니다. 비밀번호 초기화를 진행해주세요.',
+        LOGIN_FAILED_NEED_PASSWORD_INIT_MSG: '사용자의 정보가 변경되었습니다. 비밀번호를 입력해주세요.',
         AUTH_POLICY_ADD_SUCCESS_MSG: '정책 추가에 성공하였습니다.',
         AUTH_POLICY_UPDATE_SUCCESS_MSG: '정책 수정에 성공하였습니다.',
         AUTH_POLICY_DELETE_SUCCESS_MSG: '정책 삭제에 성공하였습니다.',
@@ -184,6 +187,8 @@ const MessageText = {
         APPLICATION_MS_ENTRA_APP_ID_COPY_FAIL_MSG: 'Failed to copy App ID',
         APPLICATION_MS_ENTRA_DISCOVERY_ENDPOINT_COPY_SUCCESS_MSG: 'Discovery Endpoint has been copied.',
         APPLICATION_MS_ENTRA_DISCOVERY_ENDPOINT_COPY_FAIL_MSG: 'Discovery Endpoint copy failed',
+        JSON_COPY_SUCCESS_MSG: 'JSON data has been copied to clipboard',
+        JSON_COPY_FAIL_MSG: 'Failed to copy JSON data to clipboard',
         
         APPLICATION_CLIENT_ID_COPY_SUCCESS_MSG: 'The client ID has been copied',
         APPLICATION_CLIENT_ID_COPY_FAIL_MSG: 'Copying client ID failed',
@@ -234,6 +239,7 @@ const MessageText = {
         PASSWORD_INIT_SUCCESS_MSG: 'Password reset was successful',
         PASSWORD_CHANGE_SUCCESS_MSG: 'You have successfully changed your password. Please log in again',
         PASSWORD_CHANGE_NEED_MSG: 'It is subject to password reset. Please proceed with password reset',
+        LOGIN_FAILED_NEED_PASSWORD_INIT_MSG: 'The user\'s information has been changed. Please enter your password',
         AUTH_POLICY_ADD_SUCCESS_MSG: 'Policy addition was successful',
         AUTH_POLICY_UPDATE_SUCCESS_MSG: 'Policy modification was successful',
         AUTH_POLICY_DELETE_SUCCESS_MSG: 'Policy deletion was successful',

@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useRef, useState } from "react"
-import { emailRegex, idRegex, nameRegex, passwordRegex } from "./CommonRegex"
+import { emailRegex, idRegex, nameRegex, passwordRegex } from "../../Constants/CommonRegex"
 import { FormattedMessage } from "react-intl"
 import { slicePrice } from "Functions/GlobalFunctions"
 import { maxLengthByType } from "Constants/ConstantValues"

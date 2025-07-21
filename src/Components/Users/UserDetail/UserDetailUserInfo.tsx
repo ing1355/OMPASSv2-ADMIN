@@ -17,8 +17,9 @@ import emailUnverifiedIcon from "@assets/emailUnverifiedIcon.png"
 import NewDeviceBtn from "./NewDeviceBtn";
 import UnLockBtn from "./UnLockBtn";
 import EmailChangeBtn from "./EmailChangeBtn";
-import { emailRegex, nameRegex, passwordRegex, phoneRegex } from "Components/CommonCustomComponents/CommonRegex";
+import { emailRegex, nameRegex, passwordRegex, phoneRegex } from "Constants/CommonRegex";
 import EmailVerifyBtn from "./EmailVerifyBtn";
+import PasswordConfirmModal from "Components/CommonCustomComponents/PasswordConfirmModal";
 
 type UserDetailUserInfoProps = {
     targetData?: UserDataType
@@ -41,7 +42,7 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
     const firstNameRef = useRef<HTMLInputElement>(null)
     const lastNameRef = useRef<HTMLInputElement>(null)
     const emailRef = useRef<HTMLInputElement>(null)
-    const phoneRef = useRef<HTMLInputElement>(null) 
+    const phoneRef = useRef<HTMLInputElement>(null)
     const _uuid = useParams().uuid;
     const uuid = selfInfo.role === 'USER' ? selfInfo.userId : _uuid
     const isSelf = (isDev2 && selfInfo.role === 'ROOT') || (selfInfo.userId === uuid)
@@ -106,7 +107,7 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
                             passwordConfirmRef.current?.focus()
                             return message.error(formatMessage({ id: 'PASSWORD_NOT_MATCH' }))
                         }
-                        if(isEN) {
+                        if (isEN) {
                             if (!targetValue.name.firstName) {
                                 firstNameRef.current?.focus()
                                 return message.error(formatMessage({ id: 'PLEASE_INPUT_FIRST_NAME' }));
@@ -157,6 +158,7 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
                             UpdateUserDataFunc(uuid!, modifyValues, (data) => {
                                 setTargetData(data)
                                 message.success(formatMessage({ id: 'USER_MODIFY_SUCCESS_MSG' }))
+                            }).finally(() => {
                                 setIsModify(false)
                             })
                         }
@@ -164,11 +166,21 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
                         <FormattedMessage id={isAdd ? "NORMAL_REGISTER_LABEL" : "SAVE"} />
                     </Button>
                 }
-                {(targetData?.status === 'RUN' || targetData?.status === 'LOCK') && canModify && !isAdd && !isDeleted && <Button icon={!isModify && editIcon} className={isModify ? "st7" : "st3"} onClick={() => {
-                    setIsModify(!isModify)
-                }}>
-                    <FormattedMessage id={isModify ? "CANCEL" : "EDIT"} />
-                </Button>}
+                {(targetData?.status === 'RUN' || targetData?.status === 'LOCK') && canModify && !isAdd && !isDeleted && <>
+                    {
+                        isModify ? <Button className="st7" onClick={() => {
+                            setIsModify(!isModify)
+                        }}>
+                            <FormattedMessage id="CANCEL" />
+                        </Button> : <PasswordConfirmModal callback={() => {
+                            setIsModify(!isModify)
+                        }} type="PROFILE_UPDATE">
+                            <Button className="st3" icon={editIcon}>
+                                <FormattedMessage id="EDIT" />
+                            </Button>
+                        </PasswordConfirmModal>
+                    }
+                </>}
             </div>
             {/* user, admin 계정의 경우 본인만 수정, 탈퇴할 수 있음 */}
         </div>
@@ -182,7 +194,7 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
                         ...addValues,
                         username: value
                     })
-                }} customType='username' placeholder={formatMessage({ id: 'USER_ID_PLACEHOLDER' })} noGap name="username"/>
+                }} customType='username' placeholder={formatMessage({ id: 'USER_ID_PLACEHOLDER' })} noGap name="username" />
                 <Button className='st6' disabled={duplicateIdCheck || addValues.username.length === 0 || usernameAlert} onClick={() => {
                     DuplicateUserNameCheckFunc(addValues.username, ({ isExist }) => {
                         setDuplicateIdCheck(!isExist)
@@ -304,14 +316,14 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
                                 email: e.target.value
                             })
                         }
-                    }} maxLength={48} placeholder={formatMessage({ id: 'EMAIL_PLACEHOLDER' })} noGap customType="email" name="email"/>
+                    }} maxLength={48} placeholder={formatMessage({ id: 'EMAIL_PLACEHOLDER' })} noGap customType="email" name="email" />
                 </UserInfoInputrow> : <UserInfoRow title="EMAIL" value={
                     <>
-                    {targetData?.email || '-'}&nbsp;
-                            <img src={targetData?.isEmailVerified ? emailVerifiedIcon : emailUnverifiedIcon} style={{
-                                width: '24px',
-                                height: '24px',
-                            }}/>
+                        {targetData?.email || '-'}&nbsp;
+                        <img src={targetData?.isEmailVerified ? emailVerifiedIcon : emailUnverifiedIcon} style={{
+                            width: '24px',
+                            height: '24px',
+                        }} />
                         {targetData && canModify && targetData.status !== 'WITHDRAWAL' && <EmailChangeBtn isSelf={isSelf} userId={targetData!.userId} username={targetData!.username} successCallback={() => {
                             refreshCallback()
                         }} />}
@@ -335,7 +347,7 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
                             phone: value
                         })
                     }
-                }} maxLength={13} noGap name="phone" ref={phoneRef}/>
+                }} maxLength={13} noGap name="phone" ref={phoneRef} />
             </UserInfoInputrow> : <UserInfoRow title="PHONE_NUMBER" value={targetData?.phone} />}
 
             {((isModify && selfInfo.role === 'ROOT') || (isAdd && isAdmin)) ? <UserInfoInputrow title="USER_ROLE">

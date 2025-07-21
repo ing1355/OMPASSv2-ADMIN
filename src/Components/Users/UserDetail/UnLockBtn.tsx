@@ -7,7 +7,7 @@ import { useRef, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 import lockIcon from "@assets/lockIcon.png"
 import unlockIcon from "@assets/unlockIcon.png"
-import { passwordRegex } from "Components/CommonCustomComponents/CommonRegex"
+import { passwordRegex } from "Constants/CommonRegex"
 
 const UnLockBtn = ({ userData, onSuccess }: {
     userData: UserDataType

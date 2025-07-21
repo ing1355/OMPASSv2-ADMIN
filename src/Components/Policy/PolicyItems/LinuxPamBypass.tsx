@@ -1,5 +1,5 @@
 import { Switch } from "antd"
-import { ipAddressRegex } from "Components/CommonCustomComponents/CommonRegex"
+import { ipAddressRegex } from "Constants/CommonRegex"
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import Input from "Components/CommonCustomComponents/Input"
 import { FormattedMessage, useIntl } from "react-intl"

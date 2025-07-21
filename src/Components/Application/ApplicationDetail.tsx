@@ -15,7 +15,7 @@ import deleteIcon from '@assets/deleteIcon.png'
 import deleteIconHover from '@assets/deleteIconHover.png'
 import { FormattedMessage, useIntl } from "react-intl"
 import CustomImageUpload from "Components/CommonCustomComponents/CustomImageUpload"
-import { domainRegex, redirectUriRegex } from "Components/CommonCustomComponents/CommonRegex"
+import { domainRegex, redirectUriRegex } from "Constants/CommonRegex"
 import CustomModal from "Components/Modal/CustomModal"
 import SingleOMPASSAuthModal from "Components/Modal/SingleOMPASSAuthModal"
 import documentIcon from '@assets/documentIcon.png'
@@ -28,6 +28,7 @@ import ApplicationDetailSubInfoByType from "./ApplicationDetailSubInfoByType"
 import ApplicationDetailHeaderInfo from "./ApplicationDetailHeaderInfo"
 import BottomLineText from "Components/CommonCustomComponents/BottomLineText"
 import PasswordlessCheck from "Components/Policy/PolicyItems/PasswordlessCheck"
+import SureDeleteButton from "Components/CommonCustomComponents/SureDeleteButton"
 
 const ApplicationDetail = () => {
     const [logoImage, setLogoImage] = useState<updateLogoImageType>({
@@ -52,7 +53,6 @@ const ApplicationDetail = () => {
     })
     const [isAuthorized, setIsAuthorized] = useState(false)
     const [dataLoading, setDataLoading] = useState(false)
-    const [sureDelete, setSureDelete] = useState(false)
     const [authPurpose, setAuthPurpose] = useState<'delete' | 'reset' | ''>('')
     const [sureReset, setSureReset] = useState(false)
     const [hasWindowsLogin, setHasWindowsLogin] = useState(false)
@@ -172,6 +172,8 @@ const ApplicationDetail = () => {
                             type: applicationType,
                             passwordless: passwordlessApplicationTypes.includes(applicationType) ? {
                                 isEnabled: passwordless
+                            } : applicationType === 'MAC_LOGIN' ? {
+                                isEnabled: false
                             } : null
                         }, () => {
                             message.success(formatMessage({ id: 'APPLICATION_MODIFY_SUCCESS_MSG' }))
@@ -191,6 +193,8 @@ const ApplicationDetail = () => {
                             type: applicationType,
                             passwordless: passwordlessApplicationTypes.includes(applicationType) ? {
                                 isEnabled: passwordless
+                            } : applicationType === 'MAC_LOGIN' ? {
+                                isEnabled: false
                             } : null
                         }, (res) => {
                             message.success(formatMessage({ id: 'APPLICATION_ADD_SUCCESS_MSG' }))
@@ -203,11 +207,13 @@ const ApplicationDetail = () => {
                     <FormattedMessage id="SAVE" />
                 </Button>
                 {uuid && <>
-                    {applicationType !== 'PORTAL' && <Button icon={deleteIcon} hoverIcon={deleteIconHover} className="st2" onClick={() => {
-                        setSureDelete(true)
-                    }}>
-                        <FormattedMessage id="APPLICATION_DELETE" />
-                    </Button>}
+                    {applicationType !== 'PORTAL' && <SureDeleteButton callback={() => {
+                        setAuthPurpose('delete')
+                    }} modalTitle={<FormattedMessage id="APPLICATION_SURE_DELETE_TEXT" />} modalContent={<FormattedMessage id="APPLICATION_DELETE_CONFIRM_MSG" />}>
+                        <Button icon={deleteIcon} hoverIcon={deleteIconHover} className="st2">
+                            <FormattedMessage id="APPLICATION_DELETE" />
+                        </Button>
+                    </SureDeleteButton>}
                 </>}
             </div>
         </ContentsHeader>
@@ -249,7 +255,7 @@ const ApplicationDetail = () => {
                     <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_DESCRIPTION_LABEL" />}>
                         <Input className="st1" value={inputDescription} valueChange={value => {
                             setInputDescription(value)
-                        }} maxLength={maxLengthByType('description')}/>
+                        }} maxLength={maxLengthByType('description')} />
                     </CustomInputRow>
                     <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_NOTICE_LABEL" />}>
                         <Input className="st1" value={helpMsg} valueChange={value => {
@@ -288,19 +294,6 @@ const ApplicationDetail = () => {
             }
         </div>
         <CustomModal
-            open={sureDelete}
-            onCancel={() => {
-                setSureDelete(false);
-            }}
-            type="warning"
-            typeTitle={formatMessage({ id: 'APPLICATION_SURE_DELETE_TEXT' })}
-            typeContent={<FormattedMessage id="APPLICATION_DELETE_CONFIRM_MSG" />}
-            yesOrNo
-            okCallback={async () => {
-                setAuthPurpose('delete')
-                setSureDelete(false)
-            }} buttonLoading />
-        <CustomModal
             open={sureReset}
             onCancel={() => {
                 setSureReset(false);
@@ -323,7 +316,6 @@ const ApplicationDetail = () => {
                 })
             } else {
                 return DeleteApplicationListFunc(uuid!, token, () => {
-                    setSureDelete(false)
                     message.success(formatMessage({ id: 'APPLICATION_DELETE_SUCCESS_MSG' }))
                     navigate('/Applications', {
                         replace: true

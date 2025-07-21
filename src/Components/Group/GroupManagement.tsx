@@ -23,6 +23,11 @@ const GroupManagement = () => {
         if(params.searchType) {
             _params[params.searchType] = params.searchValue
         }
+        if (params.filterOptions) {
+            params.filterOptions.forEach(_ => {
+                _params[_.key] = _.value
+            })
+        }
         await GetUserGroupDataListFunc(_params, ({ results, totalCount }) => {
             setTableData(results)
             setTotalCount(totalCount)

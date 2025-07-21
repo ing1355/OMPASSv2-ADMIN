@@ -21,6 +21,7 @@ import { PasscodeAddComponent } from "./PasscodeComponents";
 import CustomModal from "Components/Modal/CustomModal";
 import useDateTime from "hooks/useDateTime";
 import useCustomRoute from "hooks/useCustomRoute";
+import SureDeleteButton from "Components/CommonCustomComponents/SureDeleteButton";
 
 
 type UserDetailRpUsersProps = {
@@ -96,12 +97,15 @@ const UserDetailRpUsers = ({ targetData, authInfoDatas, refreshCallback, userDet
             return columns.concat({
                 key: "etc",
                 title: "",
-                render: (data, index, row) => row.createdAt && <div className='user-passcode-delete-btn'
+                render: (data, index, row) => row.createdAt && <SureDeleteButton callback={() => {
+                    DeleteAuthenticatorDataFunc(row.id, () => {
+                        message.success(formatMessage({ id: 'PASSCODE_DELETE_SUCCESS_MSG' }))
+                        refreshCallback()
+                    })
+                }} modalTitle={<FormattedMessage id="PASSCODE_DELETE_MODAL_TITLE" />} modalContent={<FormattedMessage id="PASSCODE_DELETE_MODAL_SUBSCRIPTION" />}>
+                    <div className='user-passcode-delete-btn'
                     onClick={() => {
-                        DeleteAuthenticatorDataFunc(row.id, () => {
-                            message.success(formatMessage({ id: 'PASSCODE_DELETE_SUCCESS_MSG' }))
-                            refreshCallback()
-                        })
+                        
                     }} onMouseEnter={() => {
                         setPasscodeHover(id)
                     }} onMouseLeave={() => {
@@ -113,6 +117,7 @@ const UserDetailRpUsers = ({ targetData, authInfoDatas, refreshCallback, userDet
                         height: '18px'
                     }} src={id === passcodeHover ? passcodeDeleteIconHover : passcodeDeleteIcon} />
                 </div>
+                </SureDeleteButton>
             })
         } else return columns
     }

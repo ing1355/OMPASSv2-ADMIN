@@ -3,7 +3,7 @@ import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import { policyNoticeRestrictionTypes } from "Constants/ConstantValues"
 import { FormattedMessage, useIntl } from "react-intl"
 import { useEffect, useRef, useState } from "react"
-import { cidrRegex, ipAddressRegex } from "Components/CommonCustomComponents/CommonRegex";
+import { cidrRegex, ipAddressRegex } from "Constants/CommonRegex";
 import Input from "Components/CommonCustomComponents/Input"
 import Button from "Components/CommonCustomComponents/Button"
 import deleteIcon from '@assets/deleteIcon.png'

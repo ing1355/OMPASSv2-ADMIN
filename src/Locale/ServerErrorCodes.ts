@@ -48,6 +48,8 @@ const ServerErrorCodes = {
         ERR_B051: "존재하지 않는 테넌트입니다. 관리자에게 문의해주세요.",
         ERR_B052: "만료된 이메일 인증입니다.",
         ERR_B053: "메일 서버에서 오류가 발생하였습니다. 관리자에게 문의해주세요.",
+        ERR_B054: "현재 서버에 요청이 너무 많습니다. 잠시 후 다시 시도해주세요.",
+        ERR_B055: "비밀번호 인증 시간이 만료되었습니다. 다시 시도해주세요."
     },
     'EN': {
         ERR_B002: "Please check your ID and email",
@@ -97,7 +99,9 @@ const ServerErrorCodes = {
         ERR_B050: "The current plan limit has been exceeded",
         ERR_B051: "This tenant does not exist. Please contact the administrator.",
         ERR_B052: "Expired email verification.",
-        ERR_B053: "An error occurred in the mail server. Please contact the administrator."
+        ERR_B053: "An error occurred in the mail server. Please contact the administrator.",
+        ERR_B054: "Too many requests. Please try again in a moment",
+        ERR_B055: "The password verification time has expired. Please try again."
     }
 }
 

@@ -16,6 +16,8 @@ import BottomLineText from "Components/CommonCustomComponents/BottomLineText";
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow";
 import Input from "Components/CommonCustomComponents/Input";
 import CopyToClipboard from "react-copy-to-clipboard";
+import copyIcon from '@assets/jsonCopyIcon2.png';
+import copyIconHover from '@assets/jsonCopyIcon.png';
 
 const UserApiSync = () => {
     const [apiInfo, setApiInfo] = useState<ExternalDirectoryDataType | null>(null)
@@ -37,7 +39,7 @@ const UserApiSync = () => {
     }, [datas, pageSetting])
 
     const GetDatas = () => {
-        GetUserApiSyncInfoDataFunc(({results}) => {
+        GetUserApiSyncInfoDataFunc(({ results }) => {
             setApiInfo(results[0])
         })
         // setInputUrl('https://api.example.com/v2/users/api-sync')
@@ -163,7 +165,10 @@ const UserApiSync = () => {
             <div className="user-add-api-sync-json-modal-description">
                 <FormattedMessage id="USER_ADD_API_SYNC_JSON_MODAL_DESCRIPTION" />
             </div>
-            <JSONPretty id="json-pretty" data={jsonData} className="user-add-api-sync-json-modal-json-pretty" />
+            <div className="json-pretty-container">
+                <CopyBtn />
+                <JSONPretty id="json-pretty" data={jsonData} className="user-add-api-sync-json-modal-json-pretty" />
+            </div>
         </CustomModal>
         <CustomModal
             open={sureReset}
@@ -189,68 +194,88 @@ const UserApiSync = () => {
     </>
 }
 
+const CopyBtn = () => {
+    const [isHover, setIsHover] = useState(false)
+    const { formatMessage } = useIntl()
+    return <CopyToClipboard text={JSON.stringify(jsonData)} onCopy={(value, result) => {
+        if (result) {
+            message.success(formatMessage({ id: 'JSON_COPY_SUCCESS_MSG' }))
+        } else {
+            message.success(formatMessage({ id: 'JSON_COPY_FAIL_MSG' }))
+        }
+    }}>
+        <div className="json-copy-btn" onMouseEnter={() => {
+            setIsHover(true)
+        }} onMouseLeave={() => {
+            setIsHover(false)
+        }}>
+            <img src={isHover ? copyIconHover : copyIcon} alt="copy" />
+        </div>
+    </CopyToClipboard>
+}
+
 const jsonData = {
     "organizations": [
-      {
-        "id": "T000001",
-        "parentId": null,
-        "name": "원모어시큐리티"
-      },
-      {
-        "id": "T000002",
-        "parentId": "T000001",
-        "name": "개발1팀"
-      },
-      {
-        "id": "T000003",
-        "parentId": "T000001",
-        "name": "개발2팀"
-      }
+        {
+            "id": "T000001",
+            "parentId": null,
+            "name": "원모어시큐리티"
+        },
+        {
+            "id": "T000002",
+            "parentId": "T000001",
+            "name": "개발1팀"
+        },
+        {
+            "id": "T000003",
+            "parentId": "T000001",
+            "name": "개발2팀"
+        }
     ],
     "users": [
-      {
-        "organizationId": "T000001",
-        "username": "test01",
-        "employeeId": "E000001",
-        "name": {
-          "lastName": "홍",
-          "firstName": "길동"
+        {
+            "organizationId": "T000001",
+            "username": "test01",
+            "employeeId": "E000001",
+            "name": {
+                "lastName": "홍",
+                "firstName": "길동"
+            },
+            "email": "test01@example.com",
+            "phone": "010-0000-0001",
+            "jobLevel": "Grade 7",                // 직급
+            "jobPosition": "Deputy Officer",      // 직위
+            "jobTitle": "Civil Affairs Officer"   // 직책
         },
-        "email": "test01@example.com",
-        "phone": "010-0000-0001",
-        "jobLevel": "Grade 7",                // 직급
-        "jobPosition": "Deputy Officer",      // 직위
-        "jobTitle": "Civil Affairs Officer"   // 직책
-      },
-      {
-        "organizationId": "T000002",
-        "username": "test02",
-        "employeeId": "E000002",
-        "name": {
-          "lastName": "이",
-          "firstName": "순신"
+        {
+            "organizationId": "T000002",
+            "username": "test02",
+            "employeeId": "E000002",
+            "name": {
+                "lastName": "이",
+                "firstName": "순신"
+            },
+            "email": "test02@example.com",
+            "phone": "010-0000-0002",
+            "jobLevel": null,
+            "jobPosition": null,
+            "jobTitle": null
         },
-        "email": "test02@example.com",
-        "phone": "010-0000-0002",
-        "jobLevel": null,
-        "jobPosition": null,
-        "jobTitle": null
-      },
-      {
-        "organizationId": "T000003",
-        "username": "test03",
-        "employeeId": "E000003",
-        "name": {
-          "lastName": "김",
-          "firstName": "아무개"
-        },
-        "email": "test03@example.com",
-        "phone": "010-0000-0003",
-        "jobLevel": null,
-        "jobPosition": null,
-        "jobTitle": null
-      }
+        {
+            "organizationId": "T000003",
+            "username": "test03",
+            "employeeId": "E000003",
+            "name": {
+                "lastName": "김",
+                "firstName": "아무개"
+            },
+            "email": "test03@example.com",
+            "phone": "010-0000-0003",
+            "jobLevel": null,
+            "jobPosition": null,
+            "jobTitle": null
+        }
     ]
-  }
+}
 
 export default UserApiSync;

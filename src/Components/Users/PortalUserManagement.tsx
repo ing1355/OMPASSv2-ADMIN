@@ -46,6 +46,11 @@ const PortalUserManagement = () => {
                 _params[_.key] = _.value
             })
         }
+        
+        if(!params.filterOptions) {
+            _params.statuses = userStatusTypes.filter(_ => _ !== 'WITHDRAWAL')
+        }
+
         GetUserDataListFunc(_params, ({ results, totalCount }) => {
             setTableData(results)
             setTotalCount(totalCount)

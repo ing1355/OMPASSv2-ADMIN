@@ -4,7 +4,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { UpdatePasswordFunc } from "Functions/ApiFunctions";
 import Input from "Components/CommonCustomComponents/Input";
 import Button from "Components/CommonCustomComponents/Button";
-import { passwordRegex } from "Components/CommonCustomComponents/CommonRegex";
+import { passwordRegex } from "Constants/CommonRegex";
 import { isMobile } from "react-device-detect";
 
 type PasswordInitProps = {

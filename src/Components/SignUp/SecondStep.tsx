@@ -1,5 +1,5 @@
 import { DuplicateUserNameCheckFunc, RootSignUpRequestFunc, SignUpRequestFunc, SignUpVerificationCodeSendFunc, SignUpVerificationCodeVerifyFunc } from "Functions/ApiFunctions";
-import { nameRegex, phoneRegex } from "Components/CommonCustomComponents/CommonRegex";
+import { nameRegex, phoneRegex } from "Constants/CommonRegex";
 import { autoHypenPhoneFun } from "Functions/GlobalFunctions";
 import Button from "Components/CommonCustomComponents/Button";
 import { PropsWithChildren, useEffect, useRef, useState } from "react";

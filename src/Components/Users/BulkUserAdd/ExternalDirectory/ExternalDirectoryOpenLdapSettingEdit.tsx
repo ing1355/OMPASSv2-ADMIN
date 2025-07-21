@@ -15,7 +15,7 @@ import BottomLineText from "Components/CommonCustomComponents/BottomLineText";
 import { CheckExternalDirectoryConnectionFunc, GetExternalDirectoryListFunc, ReissuanceSecretKeyForUserSyncFunc, UpdateExternalDirectoryFunc } from "Functions/ApiFunctions";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { LDAPTransportTypes } from "Constants/ConstantValues";
-import { domainRegex } from "Components/CommonCustomComponents/CommonRegex";
+import { domainRegex } from "Constants/CommonRegex";
 import addIcon from '@assets/addIconWhite.png'
 import deleteIcon from '@assets/deleteIcon.png'
 import deleteIconHover from '@assets/deleteIconHover.png'

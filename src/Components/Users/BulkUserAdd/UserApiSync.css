@@ -1,10 +1,48 @@
 .user-add-api-sync-json-modal-json-pretty {
     width: 100%;
+    max-height: 60vh;
+    overflow-y: auto;
+    /* 스크롤바 숨기기 */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+/* Webkit 브라우저(Chrome, Safari, Edge)에서 스크롤바 숨기기 */
+.user-add-api-sync-json-modal-json-pretty::-webkit-scrollbar {
+    display: none;
 }
 
 .user-add-api-sync-json-modal-json-pretty > .__json-pretty__ {
     padding: 18px 24px;
+    margin-top: 0;
+}
+
+.json-pretty-container {
+    overflow: hidden;
     border-radius: 4px;
+    width: 100%;
+    position: relative;
+}
+
+.json-copy-btn {
+    position: absolute;
+    border-radius: 4px;
+    /* border: 1px solid var(--main-grey-color2); */
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    box-sizing: border-box;
+}
+
+.json-copy-btn:hover {
+    /* border-color: #fff; */
 }
 
 .user-add-api-sync-json-modal-description {

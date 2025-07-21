@@ -1,6 +1,6 @@
 import { message } from "antd";
 import Button from "Components/CommonCustomComponents/Button";
-import { emailRegex, idRegex, nameRegex, phoneRegex } from "Components/CommonCustomComponents/CommonRegex";
+import { emailRegex, idRegex, nameRegex, phoneRegex } from "Constants/CommonRegex";
 import CustomModal from "Components/Modal/CustomModal";
 import CustomTable from "Components/CommonCustomComponents/CustomTable";
 import CustomUpload from "Components/CommonCustomComponents/CustomUpload";

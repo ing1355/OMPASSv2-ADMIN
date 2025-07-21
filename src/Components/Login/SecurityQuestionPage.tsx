@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from "react-router";
 
 const SecurityQuestionPage = () => {
     const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
-    const { token, questions } = useLocation().state
+    const { token, isLogin } = useLocation().state
     const { formatMessage } = useIntl()
     const navigate = useNavigate()
 
@@ -20,18 +20,18 @@ const SecurityQuestionPage = () => {
                 />
                 <span>OMPASS</span>
             </div>
-            <SecurityQuestionLayout questions={questions} onComplete={(a, b, c) => {
+            <SecurityQuestionLayout isLogin={isLogin} onComplete={(a, b, c) => {
                 UpdateSecurityQuestionsFunc([
                     {
-                        question: questions[0],
+                        question: subdomainInfo.securityQuestion.questions[0],
                         answer: a
                     },
                     {
-                        question: questions[1],
+                        question: subdomainInfo.securityQuestion.questions[1],
                         answer: b
                     },
                     {
-                        question: questions[2],
+                        question: subdomainInfo.securityQuestion.questions[2],
                         answer: c
                     }
                 ], token, () => {
