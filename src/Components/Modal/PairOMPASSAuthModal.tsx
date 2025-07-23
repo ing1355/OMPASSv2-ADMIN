@@ -32,7 +32,7 @@ const PairOMPASSAuthModal = ({ opened, onCancel, successCallback, userData }: Pa
     const remainTimeRef = useRef(remainTime)
     const tokenRef = useRef<string>('')
     const { formatMessage } = useIntl()
-
+    
     useEffect(() => {
         remainTimeRef.current = remainTime
     }, [remainTime])
@@ -112,7 +112,7 @@ const PairOMPASSAuthModal = ({ opened, onCancel, successCallback, userData }: Pa
                     Array.from({length: 20}).map((_,ind) => <div key={ind}/>)
                 }
             </div>
-            {userData && <OMPASSAuthContents status={targetStatus} sessionData={targetSessionData} />}
+            {userData && <OMPASSAuthContents status={targetStatus} sessionData={targetSessionData} userData={userData}/>}
         </div>
         <div className="ompass-auth-remain-time-container">
             {

@@ -46,8 +46,9 @@ const PortalUserManagement = () => {
                 _params[_.key] = _.value
             })
         }
-        
-        if(!params.filterOptions) {
+
+        const filterValues = params.filterOptions as CustomTableFilterOptionType[] | undefined
+        if (!filterValues || (filterValues && !filterValues.find(_ => _.key === 'statuses'))) {
             _params.statuses = userStatusTypes.filter(_ => _ !== 'WITHDRAWAL')
         }
 

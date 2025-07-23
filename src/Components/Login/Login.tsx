@@ -64,7 +64,7 @@ const Login = () => {
     let temp = ompassUrl + `&authorization=${token}`
     if (isDev) {
       const targetUrl = "192.168.182.120:9002"
-      temp = temp.replace('192.168.182.143:9001',targetUrl).replace("ompass.kr:54007", targetUrl).replace("ompass.kr:54012", targetUrl).replace("192.168.182.75:9001", targetUrl).replace("ompass.kr:59001", targetUrl)
+      temp = temp.replace('192.168.182.143:9001', targetUrl).replace("ompass.kr:54007", targetUrl).replace("ompass.kr:54012", targetUrl).replace("192.168.182.75:9001", targetUrl).replace("ompass.kr:59001", targetUrl)
     }
     if (!ompassWindowRef.current?.closed) {
       ompassWindowRef.current?.close()
@@ -83,9 +83,9 @@ const Login = () => {
   ) => {
     if (status === 'WAIT_INIT_PASSWORD') {
       // if (false) {
-      if(!notRegistered) {
+      if (!notRegistered) {
         setNotRegistered(true)
-        message.info(formatMessage({ id: 'LOGIN_FAILED_NEED_PASSWORD_INIT_MSG' }))
+        message.info(formatMessage({ id: 'LOGIN_FAILED_NEED_PASSWORD_INPUT_MSG' }))
       } else {
         setTempToken(token)
         setInputPassword('')
@@ -93,29 +93,39 @@ const Login = () => {
         setNeedPasswordChange(true)
       }
     } else if (status === 'WAIT_SECURITY_QNA') {
-      return navigate('/SecurityQuestion', {
-        state: {
-          token,
-          isLogin: true
-        }
-      })
+      if (notRegistered) {
+        return navigate('/SecurityQuestion', {
+          state: {
+            token,
+            isLogin: true
+          }
+        })
+      } else {
+        message.info(formatMessage({ id: 'LOGIN_FAILED_NEED_PASSWORD_INPUT_MSG' }))
+        setNotRegistered(true)
+      }
     } else {
-      if (ompassAuthentication && ompassAuthentication.isRegisteredOmpass) {
-        if(isEmailVerified) {
+      if (ompassAuthentication && ompassAuthentication.isRegisteredOmpass) { // 등록이 되어있음
+        if (isEmailVerified) { // 등록 되어있고 이메일 인증 되어있음
           ompassUrlCallback(ompassAuthentication.ompassUrl, token)
-        } else {
+        } else { // 등록 되어있고 이메일 인증 안되어있음
           EmailVerifyCheck(isEmailVerified, token, email)
         }
-      } else {
-        if(isEmailVerified) {
-          if(notRegistered) {
+      } else { // 등록이 안되어있음
+        if (isEmailVerified) { // 등록 안되어있고 이메일 인증 되어있음
+          if (notRegistered) { // 등록 안되어있고 이메일 인증 되어있고 로그인 요청 했었음
             ompassUrlCallback(ompassAuthentication.ompassUrl, token)
-          } else {
+          } else { // 등록 안되어있고 이메일 인증 되어있고 로그인 요청 안했었음
             message.info(formatMessage({ id: 'NOT_REGISTERED_MSG' }))
             setNotRegistered(true)
           }
-        } else {
-          EmailVerifyCheck(isEmailVerified, token, email)
+        } else { // 등록 안되어있고 이메일 인증 안되어있음
+          if (notRegistered) { // 등록 안되어있고 이메일 인증 안되어있고 로그인 요청 했었음
+            EmailVerifyCheck(isEmailVerified, token, email)
+          } else { // 등록 안되어있고 이메일 인증 안되어있고 로그인 요청 안했었음
+            message.info(formatMessage({ id: 'NOT_REGISTERED_MSG' }))
+            setNotRegistered(true)
+          }
         }
       }
     }

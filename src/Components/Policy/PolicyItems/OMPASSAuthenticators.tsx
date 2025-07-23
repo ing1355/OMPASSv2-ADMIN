@@ -2,6 +2,7 @@ import { Switch } from "antd"
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import { FormattedMessage } from "react-intl"
 import { SetStateType } from "Types/PropsTypes"
+import { authenticatorLabelList } from "Constants/ConstantValues"
 
 const OMPASSAuthenticators = ({ value, onChange, locationChecked, webauthnUsed, setSureChange }: PolicyItemsPropsType<PolicyDataType['enableAuthenticators']> & {
     locationChecked: boolean
@@ -13,7 +14,7 @@ const OMPASSAuthenticators = ({ value, onChange, locationChecked, webauthnUsed, 
         type: AuthenticatorPolicyType
     }) => {
         return <label className="authenticator-controller">
-            {type}
+            {authenticatorLabelList[type]}
             <Switch checked={value.includes(type)} onChange={check => {
                 if (locationChecked && check) {
                     return setSureChange(type)

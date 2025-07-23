@@ -691,15 +691,17 @@ type UserDetailAuthInfoRowType = {
     createdAt: UserDetailDataType['createdAt']
 }
 
+type CustomTableFilterOptionType = {
+    key: string
+    value: any | any[]
+}
+
 type CustomTableSearchParams = {
     page: number
     size: number
     searchType?: string
     searchValue?: string
-    filterOptions?: {
-        key: string
-        value: any | any[]
-    }[]
+    filterOptions?: CustomTableFilterOptionType[]
 }
 
 type DateSelectDataType = {

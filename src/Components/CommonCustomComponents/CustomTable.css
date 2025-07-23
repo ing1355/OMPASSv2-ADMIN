@@ -135,6 +135,10 @@
   background-color: var(--main-purple-color);
 }
 
+.custom-pagination .ant-select-selector {
+  cursor: pointer !important;
+}
+
 .custom-table-filter-icon {
   cursor: pointer;
   width: 22px;

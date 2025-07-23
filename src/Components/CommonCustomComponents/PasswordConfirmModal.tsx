@@ -59,7 +59,7 @@ const PasswordConfirmModal = ({ callback, children, type }: PasswordConfirmModal
                                 fontSize: '12px',
                                 fontWeight: 'bold'
                             }}>
-                                (<FormattedMessage id="OMPASS_DEVICE_CHANGE_MODAL_SUBSCRIPTION_2" />)
+                                (<FormattedMessage id="PASSWORD_VERIFICATION_DEVICE_CHANGE_MODAL_SUBSCRIPTION_2" />)
                             </div>
                         )
                     }

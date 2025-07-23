@@ -182,7 +182,6 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
                     }
                 </>}
             </div>
-            {/* user, admin 계정의 경우 본인만 수정, 탈퇴할 수 있음 */}
         </div>
 
         <div className="user-detail-info-container">

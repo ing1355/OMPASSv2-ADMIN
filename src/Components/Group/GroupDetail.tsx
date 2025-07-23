@@ -121,7 +121,9 @@ const GroupDetail = () => {
                 <SureDeleteButton callback={() => {
                     DeleteUserGroupDataFunc(uuid, () => {
                         message.success(formatMessage({ id: 'GROUP_MODIFY_DELETE_MSG' }))
-                        goBack()
+                        navigate(`/Groups`, {
+                            replace: true
+                        })
                     })
                 }} modalTitle={<FormattedMessage id="GROUP_SURE_DELETE_TEXT" />} modalContent={<FormattedMessage id="GROUP_DELETE_CONFIRM_MSG" />}>
                     <Button className="st2">

@@ -201,7 +201,6 @@ export const GetUserDataListFunc = ({
     sortBy = "CREATED_AT",
     sortDirection = "DESC"
 }: UserListParamsType, callback: ((data: GetListDataGeneralType<UserDataType>) => void)) => {
-    console.log(statuses)
     return CustomAxiosGet(GetUserDataListApi, (data: GetListDataGeneralType<UserDataType>) => {
         callback(data)
     }, {

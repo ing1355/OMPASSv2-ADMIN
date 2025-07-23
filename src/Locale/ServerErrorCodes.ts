@@ -7,7 +7,7 @@ const ServerErrorCodes = {
         ERR_B006: "잘못된 API 요청입니다.",
         ERR_B007: "계정이 잠겼습니다.",
         ERR_B008: "잘못된 값을 전달하고 있습니다.",
-        ERR_B009: "유효하지 않은 인증 정보입니다. 다시 로그인해주세요.",
+        ERR_B009: "유효하지 않은 인증 정보입니다. 다시 로그인해 주세요.",
         ERR_B010: "사용 중인 정책은 삭제할 수 없습니다.",
         ERR_B011: "유효하지 않은 코드입니다.",
         ERR_B012: "OMPASS Portal 계정에 OMPASS를 먼저 등록해야 합니다.",
@@ -22,7 +22,7 @@ const ServerErrorCodes = {
         ERR_B023: "Windows 애플리케이션에 OMPASS가 등록되어 있지 않습니다.",
         ERR_B024: "OMPASS 포탈에서 삭제된 사용자입니다. 복구 코드를 확인하세요.",
         ERR_B026: "패스워드 5회 오류로 잠긴 계정입니다.",
-        ERR_B027: "요청이 너무 많습니다. 잠시 후 다시 시도해주세요.",
+        ERR_B027: "요청이 너무 많습니다. 잠시 후 다시 시도해 주세요.",
         ERR_B029: "관리자 승인이 필요한 계정입니다.",
 
         ERR_B030: "이미 존재하는 버전입니다.",
@@ -36,20 +36,22 @@ const ServerErrorCodes = {
         ERR_B037: "사용자(대상)의 계정이 잠겨있습니다.",
         ERR_B038: "사용자(대상)의 계정이 탈퇴되었습니다.",
 
-        ERR_B041: "이미 존재하는 이메일 입니다.",
-        ERR_B042: "이메일을 확인해주세요.",
-        ERR_B043: "이미 존재하는 애플리케이션명 입니다.",
+        ERR_B041: "이미 존재하는 이메일입니다.",
+        ERR_B042: "이메일을 확인해 주세요.",
+        ERR_B043: "이미 존재하는 애플리케이션명입니다.",
         ERR_B045: '비밀번호가 일치하지 않습니다.',
-        ERR_B046: '등록되지 않은 아이디 입니다.',
+        ERR_B046: '등록되지 않은 아이디입니다.',
         ERR_B047: 'Microsoft Entra ID 접근 권한이 없습니다.',
-        ERR_B048: '이미 존재하는 이름입니다. 다른 이름을 입력해주세요.',
+        ERR_B048: '이미 존재하는 이름입니다. 다른 이름을 입력해 주세요.',
         ERR_B049: '이미 등록이 완료된 계정입니다.',
         ERR_B050: "현재 플랜의 한도를 초과하였습니다.",
-        ERR_B051: "존재하지 않는 테넌트입니다. 관리자에게 문의해주세요.",
+        ERR_B051: "존재하지 않는 테넌트입니다. 관리자에게 문의해 주세요.",
         ERR_B052: "만료된 이메일 인증입니다.",
-        ERR_B053: "메일 서버에서 오류가 발생하였습니다. 관리자에게 문의해주세요.",
-        ERR_B054: "현재 서버에 요청이 너무 많습니다. 잠시 후 다시 시도해주세요.",
-        ERR_B055: "비밀번호 인증 시간이 만료되었습니다. 다시 시도해주세요."
+        ERR_B053: "메일 서버에서 오류가 발생하였습니다. 관리자에게 문의해 주세요.",
+        ERR_B054: "현재 서버에 요청이 너무 많습니다. 잠시 후 다시 시도해 주세요.",
+        ERR_B055: "비밀번호 인증 시간이 만료되었습니다. 다시 시도해 주세요.",
+        ERR_B056: "올바르지 않은 UUID 형식입니다.",
+        ERR_B057: "존재하지 않는 데이터입니다."
     },
     'EN': {
         ERR_B002: "Please check your ID and email",
@@ -101,7 +103,9 @@ const ServerErrorCodes = {
         ERR_B052: "Expired email verification.",
         ERR_B053: "An error occurred in the mail server. Please contact the administrator.",
         ERR_B054: "Too many requests. Please try again in a moment",
-        ERR_B055: "The password verification time has expired. Please try again."
+        ERR_B055: "The password verification time has expired. Please try again.",
+        ERR_B056: "Invalid UUID format",
+        ERR_B057: "The data does not exist"
     }
 }
 

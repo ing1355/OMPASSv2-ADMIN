@@ -64,7 +64,7 @@ export const EmailChangeCodeVerificationApi = '/v2/users/email/code-verification
 export const VerificationEmailChangeApi = '/v2/users/email/token-verification'
 export const GetUserApiSyncInfoDataApi = '/v2/users/api-sync-info'
 
-// 인증장치 정책 업데이트
+// 인증 장치 정책 업데이트
 export const UpdateUserAuthenticatorPolicyApi = (authId: string, policyId: string) => `/v2/rp/authentication-data/${authId}/policy/${policyId}`
 
 // 로그 관리

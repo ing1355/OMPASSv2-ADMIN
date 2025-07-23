@@ -127,7 +127,10 @@ const AuthPolicyDetail = () => {
                         methods: ['PUSH']
                     })
                 }
-            }).finally(() => {
+            }).catch(() => {
+                goBack()
+            })
+            .finally(() => {
                 setDataLoading(false)
             })
         }
@@ -313,6 +316,9 @@ const AuthPolicyDetail = () => {
                 {!isAdd && !isDefaultPolicy && <SureDeleteButton callback={() => {
                     DeletePoliciesListFunc(uuid, () => {
                         message.success(formatMessage({ id: 'AUTH_POLICY_DELETE_SUCCESS_MSG' }))
+                        navigate(`/Policies`, {
+                            replace: true
+                        })
                     })
                 }} modalTitle={<FormattedMessage id="POLICY_SURE_DELETE_TEXT" />} modalContent={<FormattedMessage id="POLICY_DELETE_CONFIRM_MSG" />}>
                     <Button className="st8">

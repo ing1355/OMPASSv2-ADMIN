@@ -13,33 +13,29 @@ type OMPASSAuthContentsProps = {
     isRegister?: boolean
     purpose?: AuthPurposeType
     applicationName?: string
+    userData?: UserDataType
     username?: string
 }
 
-const OMPASSAuthContents = ({ isRegister, status, sessionData, purpose, applicationName, username }: OMPASSAuthContentsProps) => {
+const OMPASSAuthContents = ({ isRegister, status, sessionData, purpose, applicationName, userData, username }: OMPASSAuthContentsProps) => {
     const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     const isComplete = status === 'complete'
     const getFullName = useFullName()
     const [qrView, setQrView] = useState(false)
     const qrData: string = `${DEEP_LINK_DOMAIN}/${purpose === 'DEVICE_CHANGE' ? 'device_change' : 'auth'}?${new URLSearchParams(sessionData).toString()}`
-    const { role, name } = userInfo;
-    // const qrData: QRDataType<QRDataDefaultBodyType> = {
-    //     type: 'DEFAULT',
-    //     body: {...sessionData}
-    // }
+    const targetInfo = userData || userInfo
     
     return <div className="ompass-auth-content-container">
         <div className="ompass-auth-content-title">
             <div className="ompass-auth-content-title-text">
                 {
-                    applicationName ? applicationName : <FormattedMessage id={`${role}_ROLE_VALUE`} />
+                    applicationName ? applicationName : <FormattedMessage id={`${targetInfo.role}_ROLE_VALUE`} />
                 }                
             </div>
             <div className="ompass-auth-content-sub-title">
                 {
-                    username ? username : `${getFullName(name)}(${userInfo.username})`
-                }
-                
+                    username ? username : `${getFullName(targetInfo?.name)}(${targetInfo?.username})`
+                }                
             </div>
         </div>
         <div className="ompass-auth-content-progress-container">

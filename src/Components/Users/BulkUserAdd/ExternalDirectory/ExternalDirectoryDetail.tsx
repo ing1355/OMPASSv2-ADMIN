@@ -167,7 +167,9 @@ const ExternalDirectoryDetail = () => {
             {detailId && <Button icon={deleteIcon} hoverIcon={deleteIconHover} className="st2" onClick={() => {
                 DeleteExternalDirectoryFunc(detailId, () => {
                     message.success(formatMessage({ id: "USER_ADD_EXTERNAL_DIRECTORY_DELETE_SUCCESS_MSG" }, { type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }))
-                    navigate(-1)
+                    navigate(`/UserManagement/externalDirectory/${type}`, {
+                        replace: true
+                    })
                 })
             }}>
                 <FormattedMessage id="DELETE" />

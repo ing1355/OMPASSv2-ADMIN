@@ -1090,7 +1090,7 @@ export const UserSignupMethod: {
 }
 
 export const devUrl = process.env['REACT_APP_DEV_URL'] as string
-export const subDomain = isDev ? (isTta ? '192.168.182.143:9000' : devUrl.replace('https://', '')) : window.location.host.replace('www.', '');
+export const subDomain = isDev ? (isTta ? 'ompass.kr:54006' : devUrl.replace('https://', '')) : window.location.host.replace('www.', '');
 
 export const MainRouteByDeviceType = isMobile ? '/Main' : '/Dashboard'
 
@@ -1105,9 +1105,9 @@ export const authenticatorLabelList: {
 } = {
     OMPASS: 'OMPASS',
     PASSCODE: 'PASSCODE',
-    WEBAUTHN: 'WEBAUTHN',
+    WEBAUTHN: 'WebAuthn',
     OTP: 'OTP',
-    MASTER_USB: 'MASTER USB'
+    MASTER_USB: 'Master USB'
 }
 export const authFailReasonList: InvalidAuthLogDataType['reason'][] = ['ACCESS_TIME', 'BROWSER', 'COUNTRY', 'INVALID_OTP', 'INVALID_PASSCODE', 'INVALID_SIGNATURE', 'IP_WHITE_LIST', 'LOCATION', 'NONE']
 
