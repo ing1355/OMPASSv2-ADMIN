@@ -73,8 +73,8 @@ const Calendar = ({ defaultValue, closeCallback, onChange, monthRestriction, val
         startDate: new Date(defaultValue.startDate),
         endDate: new Date(defaultValue.endDate)
     } : {
-        startDate: new Date(),
-        endDate: new Date()
+        startDate: null,
+        endDate: null
     })
     const [showDate, setShowDate] = useState(new Date())
     const daysOfMonth = getDatesOfMonth(showDate)
@@ -95,7 +95,7 @@ const Calendar = ({ defaultValue, closeCallback, onChange, monthRestriction, val
                     <FormattedMessage id="CALENDAR_START_DATE"/>
                 </div>
                 <div className='custom-calendar-header-contents'>
-                    {data.startDate ? format(data.startDate, dateFormat) : dateFormat}
+                    {data.startDate ? format(data.startDate, dateFormat) : dateFormat.toUpperCase()}
                 </div>
             </div>
             <div className='custom-calendar-header-center'>
@@ -106,7 +106,7 @@ const Calendar = ({ defaultValue, closeCallback, onChange, monthRestriction, val
                 <FormattedMessage id="CALENDAR_END_DATE"/>
                 </div>
                 <div className='custom-calendar-header-contents'>
-                    {data.endDate ? format(data.endDate, dateFormat) : dateFormat}
+                    {data.endDate ? format(data.endDate, dateFormat) : dateFormat.toUpperCase()}
                 </div>
             </div>
         </div>

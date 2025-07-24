@@ -35,7 +35,7 @@ const Header = () => {
     };
   }, [isMenuOpen]);
 
-  
+
 
   return (
     <div
@@ -75,8 +75,8 @@ const Header = () => {
         <div className='header-contents-second-items'>
           <SessionTimeCount />
 
-          {userInfo.role !== 'USER' && <Tooltip
-            title={formatMessage({ id: 'SEE_ADMIN_MANUAL' })}
+          <Tooltip
+            title={formatMessage({ id: role === 'USER' ? 'SEE_USER_MANUAL' : 'SEE_ADMIN_MANUAL' })}
             destroyTooltipOnHide
           >
             <div
@@ -85,17 +85,17 @@ const Header = () => {
                 cursor: 'pointer'
               }}
               onClick={() => {
-                if(isMobile) {
+                if (isMobile) {
                   message.info(formatMessage({ id: 'PLEASE_USE_PC_ENVIRONMENT_MSG' }))
                 } else {
-                  window.open(`/docs/start/signup`, '_blank');
+                  window.open(`/docs${role === 'USER' ? '/user' : ''}/start/signup`, '_blank');
                 }
               }}
             >
               <img src={adminManualIcon} />
             </div>
-          </Tooltip>}
-          <Tooltip
+          </Tooltip>
+          {role !== 'USER' ? <Tooltip
             title={formatMessage({ id: 'SELF_INFO_TOOLTIP_LABEL' })}
             destroyTooltipOnHide
           >
@@ -107,8 +107,10 @@ const Header = () => {
             >
               {username}
             </div>
-          </Tooltip>
-          <LocaleChange/>
+          </Tooltip> : <div>
+            {username}
+          </div>}
+          <LocaleChange />
           <Tooltip
             title={formatMessage({ id: 'LOGOUT' })}
             destroyTooltipOnHide

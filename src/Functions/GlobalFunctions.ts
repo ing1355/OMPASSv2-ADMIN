@@ -3,7 +3,10 @@ import jwtDecode from "jwt-decode";
 
 export const getStorageAuth = () => localStorage.getItem('Authorization')
 export const setStorageAuth = (token: string) => localStorage.setItem('Authorization', token)
-export const removeStorageAuth = () => localStorage.removeItem('Authorization')
+export const removeStorageUserSettings = () => {
+    localStorage.removeItem('Authorization')
+    localStorage.removeItem('user_select_size')
+}
 
 export const getCircledNumber = (index: number) => {
     // ①(U+2460) ~ ⑳(U+2473)까지 1~20

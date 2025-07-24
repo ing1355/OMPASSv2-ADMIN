@@ -147,14 +147,26 @@ const SecondStep = ({ completeCallback }: {
                     message.error(formatMessage({ id: 'PLEASE_INPUT_LAST_NAME' }))
                     return lastNameRef.current?.focus()
                 }
-                if (isFirstNameAlert) {
-                    message.error(formatMessage({ id: 'FIRST_NAME_CHECK' }))
-                    firstNameRef.current?.focus()
-                    return
-                }
-                if (isLastNameAlert) {
-                    message.error(formatMessage({ id: 'LAST_NAME_CHECK' }))
-                    return lastNameRef.current?.focus()
+                if(lang === 'KR') {
+                    if (isLastNameAlert) {
+                        message.error(formatMessage({ id: 'LAST_NAME_CHECK' }))
+                        return lastNameRef.current?.focus()
+                    }
+                    if (isFirstNameAlert) {
+                        message.error(formatMessage({ id: 'FIRST_NAME_CHECK' }))
+                        firstNameRef.current?.focus()
+                        return
+                    }
+                } else {
+                    if (isFirstNameAlert) {
+                        message.error(formatMessage({ id: 'FIRST_NAME_CHECK' }))
+                        firstNameRef.current?.focus()
+                        return
+                    }
+                    if (isLastNameAlert) {
+                        message.error(formatMessage({ id: 'LAST_NAME_CHECK' }))
+                        return lastNameRef.current?.focus()
+                    }
                 }
                 if (isEmailAlert) {
                     message.error(formatMessage({ id: 'PLEASE_INPUT_EMAIL' }))

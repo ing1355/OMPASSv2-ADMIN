@@ -28,22 +28,22 @@ const AxiosController = () => {
           console.log('why session expired ?', getStorageAuth(), err.config.headers)
           dispatch(userInfoClear());
         } else if (data) {
-          const { code, message } = err.response.data;
+          const { code, message, value } = err.response.data;
           console.log(code, message)
           if (code) {
             if (code.startsWith("ERR_C")) {
-              _message.error(formatMessage({ id: `${code} - ${message}` }))
+              _message.error(formatMessage({ id: `${code} - ${message}` }, { value }))
             } else if (code === 'ERR_B051') {
-              window.alert(formatMessage({ id: code }))
+              window.alert(formatMessage({ id: code }, { value }))
               // window.location.href = `https://test.ompasscloud.com/${lang === 'KR' ? 'ko' : 'en'}/adminLogin/`;
             } else if (code === 'ERR_B052') {
-              window.alert(formatMessage({ id: code }))
+              window.alert(formatMessage({ id: code }, { value }))
               navigate('/', {
                 replace: true
               })
               // window.location.href = `https://test.ompasscloud.com/${lang === 'KR' ? 'ko' : 'en'}/adminLogin/`;
             } else {
-              _message.error(formatMessage({ id: code }))
+              _message.error(formatMessage({ id: code }, { value }))
             }
           }
           controller.abort()

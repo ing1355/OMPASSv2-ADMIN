@@ -109,7 +109,7 @@ const EmailChangeBtn = ({ isSelf, userId, username, successCallback }: {
                         }, () => {
                             message.success(formatMessage({ id: 'EMAIL_CODE_SEND_SUCCESS_MSG' }))
                         })
-                    }} onChangeCodeSend={setEmailCodeSend} />}
+                    }} onChangeCodeSend={setEmailCodeSend} disabled={!emailRegex.test(emailInput)}/>}
                 </Input>
             </div>
             {isSelf && <div className="user-unlock-password-row">

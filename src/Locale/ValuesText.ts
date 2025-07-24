@@ -55,7 +55,7 @@ const ValuesText = {
         USER_STATUS_WAIT_SECURITY_QNA: "보안 질문 설정 대기 중",
         USER_STATUS_RUN: "활성화",
         USER_STATUS_LOCK: "잠김",
-        USER_STATUS_WITHDRAWAL_FILTER_LABEL: "탈퇴된 사용자도 보기",
+        USER_STATUS_WITHDRAWAL_FILTER_LABEL: "탈퇴 사용자 보기",
 
         DASHBOARD_DATE_SELECT_6HOUR: '최근 6시간',
         DASHBOARD_DATE_SELECT_12HOUR: '최근 12시간',

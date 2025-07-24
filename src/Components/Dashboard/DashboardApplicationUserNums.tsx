@@ -43,9 +43,9 @@ const DashboardApplicationUserNums = ({ applications }: {
                         (<FormattedMessage id="DASHBOARD_REGISTER_USER_NUMS_SUB"/>)
                     </div>
                 </div>
-                <div className="dashboard-middle-application-user-num-title-icon">
+                {/* <div className="dashboard-middle-application-user-num-title-icon">
                     <img src={dashboardRegisterUserIcon} />
-                </div>
+                </div> */}
             </div>
             <div className="dashboard-middle-application-user-num-tag-container">
                 {

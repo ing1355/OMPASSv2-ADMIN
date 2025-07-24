@@ -7,6 +7,7 @@ import Input from "Components/CommonCustomComponents/Input"
 import { EmailChangeCodeVerificationFunc, SendEmailVerificationFunc } from "Functions/ApiFunctions"
 import { getStorageAuth } from "Functions/GlobalFunctions"
 import EmailSendButton from "Components/CommonCustomComponents/EmailSendButton"
+import { emailRegex } from "Constants/CommonRegex"
 
 type EmailVerifyBtnProps = {
     targetData: UserDataType
@@ -70,7 +71,7 @@ const EmailVerifyBtn = ({ targetData, successCallback }: EmailVerifyBtnProps) =>
                             message.success(formatMessage({ id: 'EMAIL_CODE_SEND_SUCCESS_MSG' }))
                             verifyCodeRef.current?.focus()
                         })
-                    }} onChangeCodeSend={setEmailCodeSend} />
+                    }} onChangeCodeSend={setEmailCodeSend} disabled={!emailRegex.test(targetData.email)}/>
                 </Input>
             </div>
             <div className="user-unlock-password-row">

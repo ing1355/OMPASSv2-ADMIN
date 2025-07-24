@@ -40,7 +40,7 @@ async function downloadWithRetry(localPath, remotePath, count) {
         await sftp.get(remotePath, localPath)
         const stats = fs.statSync(localPath);
         if (stats.size === 0) {
-            console.log('다운로드 실패! 재시도!!')
+            console.log('다운로드 실패! 재시도!!', localPath, remotePath)
             downloadWithRetry(localPath, remotePath, count + 1)
         }
     }

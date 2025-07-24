@@ -15,10 +15,14 @@ export const StartAdminMenuItems: DocsMenuItemType[] = [
     }
 ]
 
-export const UserUserMenuItems: DocsMenuItemType[] = [
+export const PortalUserMenuItems: DocsMenuItemType[] = [
     {
         title: '사용자 정보',
-        route: '/user/user/detail'
+        route: '/user/portal/user'
+    },
+    {
+        title: '기타',
+        route: '/user/portal/etc'
     }
 ]
 
@@ -136,6 +140,10 @@ export const PortalMenuItems: DocsMenuItemType[] = [
         title: '설정',
         route: '/portal/setting'
     },
+    {
+        title: '기타',
+        route: '/portal/etc'
+    }
 ]
 
 export const ApplicationMenuItems: DocsMenuItemType[] = [...applicationTypes.filter(_ => _ !== 'PORTAL').map(_ => ({

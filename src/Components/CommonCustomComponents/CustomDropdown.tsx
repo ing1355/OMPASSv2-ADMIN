@@ -89,7 +89,7 @@ const DropdownContainer = forwardRef(({ lang, effectCallback, items, sideItems, 
                                     </div>
                                 </div>)
                             }
-                            {multiple && <div className='custom-dropdown-multiple-save-container'>
+                            {multiple && <div className={`custom-dropdown-multiple-save-container${sideItems && sideItems.length > 0 ? ' has-side' : ''}`}>
                                 {
                                     sideItems && sideItems.map((_, ind) => <div key={ind} className={`custom-dropdown-select-item-row${((Array.isArray(sideValues) && multiple) ? sideValues.includes(_.value) : sideValues === _.value) ? ' activate' : ''}`} onClick={() => {
                                         if (sideValues.includes(_.value)) {
@@ -107,18 +107,19 @@ const DropdownContainer = forwardRef(({ lang, effectCallback, items, sideItems, 
                                     </div>)
                                 }
                                 <div className='custom-dropdown-multiple-save-inner' onClick={() => {
-                                    if(isFilter) {
-                                        if(tempValues.length === 0) {
-                                            message.error(formatMessage({ id: 'PLEASE_SELECT_FILTER_DATA' }))
-                                            return
-                                        }
-                                    }
-                                    if(onChange) {
-                                        if(tempValues.length > 0) {
-                                            onChange(tempValues.concat(sideValues))
-                                        } else {
-                                            onChange(items.map(_ => _.value).concat(sideValues))
-                                        }
+                                    // if(isFilter) {
+                                    //     if(tempValues.length === 0) {
+                                    //         message.error(formatMessage({ id: 'PLEASE_SELECT_FILTER_DATA' }))
+                                    //         return
+                                    //     }
+                                    // }
+                                    if (onChange) {
+                                        // if(tempValues.length > 0) {
+                                        //     onChange(tempValues.concat(sideValues))
+                                        // } else {
+                                        //     onChange(items.map(_ => _.value).concat(sideValues))
+                                        // }
+                                        onChange(tempValues.concat(sideValues))
                                     }
                                     closeCallback()
                                 }}>

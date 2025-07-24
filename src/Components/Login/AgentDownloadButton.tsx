@@ -6,6 +6,17 @@ import downloadIconWhite from '@assets/downloadIconWhite.png';
 import { useSelector } from "react-redux"
 import './AgentDownloadButton.css'
 import { useState } from "react";
+import { isTta } from "Constants/ConstantValues";
+
+const DownloadButton = ({ label, onClick, icon }: { label: React.ReactNode, onClick: () => void, icon: string }) => {
+    return <Button
+        className='login-agent-download-button st3'
+        icon={icon}
+        onClick={onClick}
+    >
+        {label}
+    </Button>
+}
 
 const AgentDownloadButton = () => {
     const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
@@ -15,35 +26,41 @@ const AgentDownloadButton = () => {
     const windowsDownloadLink = subdomainInfo.windowsAgentUrl
     const macDownloadLink = subdomainInfo.macOsAgentUrl
 
+    const downloadCallback = (type: 'mac' | 'windows') => {
+        if (type === 'mac') {
+            downloadFileByLink(macDownloadLink)
+        } else {
+            downloadFileByLink(windowsDownloadLink)
+        }
+    }
+
     return !isMobile ? <div className={`login-agent-download-button-container ${isHover ? 'hover' : ''}`}
         onMouseEnter={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}>
-        <Button
-            className='login-agent-download-button st3'
-            icon={downloadIconWhite}
-            onClick={() => {
-                if (isMacOs) {
-                    downloadFileByLink(macDownloadLink)
-                } else {
-                    downloadFileByLink(windowsDownloadLink)
-                }
-            }}
-        >
-            {isMacOs ? macLabel : windowsLabel}
-        </Button>
-        <Button
-            className='login-agent-download-button st3'
-            icon={downloadIconWhite}
-            onClick={() => {
-                if (isMacOs) {
-                    downloadFileByLink(windowsDownloadLink)
-                } else {
-                    downloadFileByLink(macDownloadLink)
-                }
-            }}
-        >
-            {isMacOs ? windowsLabel : macLabel}
-        </Button>
+        {
+            isTta ? <DownloadButton
+                icon={downloadIconWhite}
+                onClick={() => {
+                    downloadCallback('windows')
+                }}
+                label={windowsLabel}
+            /> : <>
+                <DownloadButton
+                    icon={downloadIconWhite}
+                    onClick={() => {
+                        downloadCallback(isMacOs ? 'mac' : 'windows')
+                    }}
+                    label={isMacOs ? macLabel : windowsLabel}
+                />
+                <DownloadButton
+                    icon={downloadIconWhite}
+                    label={isMacOs ? windowsLabel : macLabel}
+                    onClick={() => {
+                        downloadCallback(isMacOs ? 'windows' : 'mac')
+                    }}
+                />
+            </>
+        }
     </div> : <></>
 }
 

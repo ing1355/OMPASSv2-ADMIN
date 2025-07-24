@@ -22,12 +22,13 @@ const CustomTablePagination = ({ pageNum, tableSize, totalCount, onChangePage }:
                 if (sizeChangerInputs[0]) {
                     sizeChangerInputs[0].setAttribute('readonly', 'true');
                 }
-
+                
                 // Quick Jumper input에 숫자만 입력 가능하도록 설정
                 const quickJumperInputs = paginationContainer.querySelectorAll('.ant-pagination-options-quick-jumper input');
-
+                
                 if (quickJumperInputs[0]) {
                     const input = quickJumperInputs[0] as HTMLInputElement;
+                    input.setAttribute('maxlength', '10');
                     
                     // 숫자만 입력 가능하도록 onKeyDown 이벤트 추가
                     input.addEventListener('keydown', (e) => {
@@ -40,12 +41,6 @@ const CustomTablePagination = ({ pageNum, tableSize, totalCount, onChangePage }:
                         if (!allowedKeys.includes(e.key)) {
                             e.preventDefault();
                         }
-                    });
-
-                    // 입력값이 숫자가 아닌 경우 제거
-                    input.addEventListener('input', (e) => {
-                        const target = e.target as HTMLInputElement;
-                        target.value = target.value.replace(/[^0-9]/g, '');
                     });
 
                     // 붙여넣기 시에도 숫자만 허용

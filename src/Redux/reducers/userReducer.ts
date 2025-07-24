@@ -1,5 +1,5 @@
 import types from '../types';
-import { getStorageAuth, parseJwtToken, removeStorageAuth } from 'Functions/GlobalFunctions';
+import { getStorageAuth, parseJwtToken, removeStorageUserSettings } from 'Functions/GlobalFunctions';
 
 const defaultUser = getStorageAuth()
 
@@ -9,14 +9,14 @@ try {
   if(defaultUser) user = parseJwtToken(defaultUser)
 } catch(e) {
   console.log("default jwt parse error : ", e)
-  removeStorageAuth()
+  removeStorageUserSettings()
 }
 
 const userReducer = (state = user, action: DefaultReduxActionType<ReduxStateType['userInfo']>) => {
   const { payload } = action;
   switch (action.type) {
     case types.userInfoClear:
-      removeStorageAuth()
+      removeStorageUserSettings()
       return null;
     case types.userInfoChange:
       return { ...state, ...payload };

@@ -6,7 +6,7 @@ import { convertLangToIntlVer, ompassDefaultLogoImage } from "Constants/Constant
 import { IntlProvider } from "react-intl";
 import Locale from "Locale";
 import { useSelector } from "react-redux";
-import { ApplicationMenuItems, ApplicationUserMenuItems, EtcMenuItems, EtcUserMenuItems, PortalMenuItems, StartAdminMenuItems, StartUserMenuItems, UserUserMenuItems } from "./DocsMenuItems";
+import { ApplicationMenuItems, ApplicationUserMenuItems, EtcMenuItems, EtcUserMenuItems, PortalMenuItems, PortalUserMenuItems, StartAdminMenuItems, StartUserMenuItems } from "./DocsMenuItems";
 import { isMobile } from "react-device-detect";
 import { lazy, Suspense } from "react";
 
@@ -62,12 +62,12 @@ const Document = () => {
                         {
                             isUserDocs ? <>
                                 <MenuItem title="시작하기" items={StartUserMenuItems} />
-                                <MenuItem title="사용자" items={UserUserMenuItems} />
+                                <MenuItem title="포탈" items={PortalUserMenuItems} />
                                 <MenuItem title="애플리케이션" items={ApplicationUserMenuItems} />
                                 <MenuItem title="기타" items={EtcUserMenuItems} />
                             </> : <>
                                 <MenuItem title="시작하기" items={StartAdminMenuItems} />
-                                <MenuItem title="포탈 메뉴" items={PortalMenuItems} />
+                                <MenuItem title="포탈" items={PortalMenuItems} />
                                 <MenuItem title="애플리케이션" items={ApplicationMenuItems} />
                                 <MenuItem title="기타" items={EtcMenuItems} />
                             </>

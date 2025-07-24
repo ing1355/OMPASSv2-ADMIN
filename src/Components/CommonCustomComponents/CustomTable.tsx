@@ -98,7 +98,8 @@ const CustomTable = <T extends {
             if (initValues.length > 0) {
                 result.value = initValues
             } else {
-                result.value = _.filterOption?.filter(__ => !__.isSide).map(__ => __.value)
+                // result.value = _.filterOption?.map(__ => __.value)
+                result.value = []
             }
         }
 
@@ -110,6 +111,7 @@ const CustomTable = <T extends {
         key: 'endDate',
         value: searchParams.get('endDate') ?? ''
     }] : [])
+    
     const [closeEvent, setCloseEvent] = useState(false)
     const [pageNum, setPageNum] = useState(1)
     const [tableSize, setTableSize] = useState<number>(userSelectPageSize());
@@ -121,7 +123,7 @@ const CustomTable = <T extends {
     const resultRef = useRef<CustomTableSearchParams>()
     const { formatMessage } = useIntl()
     const { customPushRoute } = useCustomRoute()
-    const { convertTimezoneDateStringToUTCString, convertUTCStringToTimezoneDateString } = useDateTime()
+    const { convertTimezoneDateStringToUTCString } = useDateTime()
 
     const dateValues = useMemo(() => {
         const startDate = filterValues.find(_ => _.key === 'startDate' && _.value)
@@ -176,12 +178,12 @@ const CustomTable = <T extends {
             })
         }
 
-        console.log(result, result.filterOptions)
-        if (result.filterOptions) {
-            setFilterValues(values)
-        } else {
-            setFilterValues(initFilterValues)
-        }
+        // if (result.filterOptions) {
+        //     setFilterValues(values)
+        // } else {
+        //     setFilterValues(initFilterValues)
+        // }
+        setFilterValues(values)
         return result
     }
 
@@ -198,6 +200,7 @@ const CustomTable = <T extends {
         setPageNum(page)
         setTableSize(size)
         const result = createParams({ page, size })
+        
         if (searchParams.get('searchType')) {
             result.searchType = searchParams.get('searchType')!
             result.searchValue = searchParams.get('searchValue')!
@@ -230,23 +233,25 @@ const CustomTable = <T extends {
         }
         const filterOptions = columns.filter(_ => _.filterOption)
 
+        
         if (result.filterOptions) {
             result.filterOptions = result.filterOptions?.map(_ => {
                 if (_.key === 'startDate' || _.key === 'endDate') return _
                 else {
                     const target = filterOptions.find(opt => opt.filterKey === _.key)?.filterOption?.filter(_ => !_.isSide).map(_ => _.value)
-                    if (arraysHaveSameElements(target || [], _.value || [])) {
-                        return {
-                            ..._,
-                            value: []
-                        }
-                    } else {
-                        return _
-                    }
+                    // if (arraysHaveSameElements(target || [], _.value || [])) {
+                    //     return {
+                    //         ..._,
+                    //         value: []
+                    //     }
+                    // } else {
+                    //     return _
+                    // }
+                    return _
                 }
             })
         }
-
+        
         if (searchValue) {
             result.searchType = searchType
             result.searchValue = searchValue
@@ -345,7 +350,8 @@ const CustomTable = <T extends {
                             const sideFilterValues = _.filterOption?.filter(_ => _.isSide).map(_ => _.value)
                             const targetFilterValues = filterValues?.find(f => f.key === _.filterKey)?.value
                             const hasSideFilterValues = targetFilterValues?.some((target: any) => sideFilterValues?.includes(target))
-                            const hasAllMainFilterValues = mainFilterValues?.every((main: any) => targetFilterValues?.includes(main))
+                            // const hasAllMainFilterValues = mainFilterValues?.every((main: any) => targetFilterValues?.includes(main))
+                            const hasMainFilterValues = targetFilterValues?.some((target: any) => mainFilterValues?.includes(target))
 
                             return <th key={_.key as string} onClick={e => {
                                 e.preventDefault()
@@ -402,7 +408,7 @@ const CustomTable = <T extends {
                                         value: opt.value
                                     }))}>
                                     <div className="custom-table-filter-icon">
-                                        <img src={(!hasAllMainFilterValues || hasSideFilterValues) ? filterIcon : filterDefaultIcon} />
+                                        <img src={(hasMainFilterValues || hasSideFilterValues) ? filterIcon : filterDefaultIcon} />
                                     </div>
                                 </CustomDropdown>}
                             </th>

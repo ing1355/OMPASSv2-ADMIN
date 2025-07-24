@@ -40,7 +40,7 @@ const ServerErrorCodes = {
         ERR_B042: "이메일을 확인해 주세요.",
         ERR_B043: "이미 존재하는 애플리케이션명입니다.",
         ERR_B045: '비밀번호가 일치하지 않습니다.',
-        ERR_B046: '등록되지 않은 아이디입니다.',
+        ERR_B046: '존재하지 않는 아이디입니다.',
         ERR_B047: 'Microsoft Entra ID 접근 권한이 없습니다.',
         ERR_B048: '이미 존재하는 이름입니다. 다른 이름을 입력해 주세요.',
         ERR_B049: '이미 등록이 완료된 계정입니다.',
@@ -51,7 +51,8 @@ const ServerErrorCodes = {
         ERR_B054: "현재 서버에 요청이 너무 많습니다. 잠시 후 다시 시도해 주세요.",
         ERR_B055: "비밀번호 인증 시간이 만료되었습니다. 다시 시도해 주세요.",
         ERR_B056: "올바르지 않은 UUID 형식입니다.",
-        ERR_B057: "존재하지 않는 데이터입니다."
+        ERR_B057: "존재하지 않는 데이터입니다.",
+        ERR_B058: "탈퇴한 사용자의 아이디가 포함되어 사용자 추가에 실패하였습니다. 대상: {value}"
     },
     'EN': {
         ERR_B002: "Please check your ID and email",
@@ -105,7 +106,8 @@ const ServerErrorCodes = {
         ERR_B054: "Too many requests. Please try again in a moment",
         ERR_B055: "The password verification time has expired. Please try again.",
         ERR_B056: "Invalid UUID format",
-        ERR_B057: "The data does not exist"
+        ERR_B057: "The data does not exist",
+        ERR_B058: "The user ID of the withdrawn user is included in the user addition. Target: {value}"
     }
 }
 
