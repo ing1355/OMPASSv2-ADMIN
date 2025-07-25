@@ -163,6 +163,10 @@ const UserDetail = ({ }) => {
                 {
                     // userInfo.role === 'ROOT' && <Button className='st5' onClick={() => {
                     !isAdd && userInfo.role === 'ROOT' && !isSelf && <Button className='st5' onClick={() => {
+                        if(userData?.status !== 'RUN') {
+                            message.error(formatMessage({ id: 'USER_AUTHORITY_SUCCESSION_FAIL_MSG' }))
+                            return
+                        }
                         setSureSwap(true)
                     }}>
                         <FormattedMessage id="USER_AUTHORITY_SUCCESSION_LABEL" />

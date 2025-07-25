@@ -7,6 +7,7 @@ import { userInfoClear } from "Redux/actions/userChange";
 import { controller } from "Components/CommonCustomComponents/CustomAxios";
 import { getStorageAuth } from "Functions/GlobalFunctions";
 import { useNavigate } from "react-router";
+import { PasswordlessLoginApi } from "Constants/ApiRoute";
 
 let oldInterceptorId = 0;
 
@@ -30,6 +31,9 @@ const AxiosController = () => {
         } else if (data) {
           const { code, message, value } = err.response.data;
           console.log(code, message)
+          if(err.response.config.url === PasswordlessLoginApi) {
+            return Promise.reject(err)
+          }
           if (code) {
             if (code.startsWith("ERR_C")) {
               _message.error(formatMessage({ id: `${code} - ${message}` }, { value }))

@@ -738,7 +738,7 @@ const LocaleTexts = {
     POLICY_SURE_DELETE_TEXT: '정책을 삭제하시겠습니까?',
     POLICY_DELETE_CONFIRM_MSG: '삭제 후, 정책 정보가 삭제되며\n모든 데이터는 복구되지 않습니다.',
     PASSCODE_DELETE_MODAL_TITLE: 'PASSCODE 삭제',
-    PASSCODE_DELETE_MODAL_SUBSCRIPTION: '삭제 시, 해당 PASSCODE로 더이상 로그인 할 수 없습니다.',
+    PASSCODE_DELETE_MODAL_SUBSCRIPTION: '삭제 시, 해당 PASSCODE로 더 이상 로그인 할 수 없습니다.',
     APPLICATION_INFO_SECRET_KEY_LABEL: '시크릿 키',
     APPLICATION_INFO_SECRET_KEY_SURE_RESET_TEXT: '시크릿 키를 재발급하시겠습니까?',
     APPLICATION_INFO_SECRET_KEY_SURE_RESET_SUBSCRIPTION: '재발급 후, 애플리케이션 정보가 변경되어\n사용 중인 애플리케이션에 이 정보를 반영해야 사용 가능합니다.',

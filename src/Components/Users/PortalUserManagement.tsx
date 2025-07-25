@@ -47,10 +47,10 @@ const PortalUserManagement = () => {
             })
         }
 
-        // const filterValues = params.filterOptions as CustomTableFilterOptionType[] | undefined
-        // if (!filterValues || (filterValues && !filterValues.find(_ => _.key === 'statuses'))) {
-        //     _params.statuses = userStatusTypes.filter(_ => _ !== 'WITHDRAWAL')
-        // }
+        const filterValues = params.filterOptions as CustomTableFilterOptionType[] | undefined
+        if (!filterValues || (filterValues && !filterValues.find(_ => _.key === 'statuses'))) {
+            _params.statuses = userStatusTypes.filter(_ => _ !== 'WITHDRAWAL')
+        }
 
         GetUserDataListFunc(_params, ({ results, totalCount }) => {
             setTableData(results)

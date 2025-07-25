@@ -24,7 +24,7 @@ const Login = () => {
   const [inputUsername, setInputUsername] = useState(cookies.rememberUserId || '')
   const [needPasswordChange, setNeedPasswordChange] = useState(false)
   const [needEmailVerify, setNeedEmailVerify] = useState('')
-  const [notRegistered, setNotRegistered] = useState(false)
+  const [needInputPassword, setNeedInputPassword] = useState(false)
   const ompassWindowRef = useRef<Window | null | undefined>()
 
   const inputUesrnameRef = useRef<HTMLInputElement>()
@@ -35,22 +35,22 @@ const Login = () => {
 
   useEffect(() => {
     setInputPassword('')
-    setNotRegistered(false)
+    setNeedInputPassword(false)
   }, [needPasswordChange])
 
   useEffect(() => {
     if (!subdomainInfo.passwordless?.isEnabled) {
-      setNotRegistered(true)
+      setNeedInputPassword(true)
     } else {
-      setNotRegistered(false)
+      setNeedInputPassword(false)
     }
   }, [subdomainInfo.passwordless?.isEnabled])
 
   useEffect(() => {
-    if (notRegistered && subdomainInfo.passwordless?.isEnabled) {
+    if (needInputPassword && subdomainInfo.passwordless?.isEnabled) {
       inputPasswordRef.current?.focus()
     }
-  }, [notRegistered])
+  }, [needInputPassword])
 
   const saveIdFunction = (checked: boolean) => {
     if (checked) {
@@ -81,52 +81,33 @@ const Login = () => {
     }: LoginApiResponseType,
     token: string
   ) => {
-    if (status === 'WAIT_INIT_PASSWORD') {
-      // if (false) {
-      if (!notRegistered) {
-        setNotRegistered(true)
-        message.info(formatMessage({ id: 'LOGIN_FAILED_NEED_PASSWORD_INPUT_MSG' }))
-      } else {
+    if (needInputPassword) { // U2F
+      if (status === 'WAIT_INIT_PASSWORD') { // 비밀번호 초기화 대기중
         setTempToken(token)
         setInputPassword('')
         message.info(formatMessage({ id: 'PASSWORD_CHANGE_NEED_MSG' }))
         setNeedPasswordChange(true)
-      }
-    } else if (status === 'WAIT_SECURITY_QNA') {
-      if (notRegistered) {
-        return navigate('/SecurityQuestion', {
+      } else if (status === 'WAIT_SECURITY_QNA') { // 보안질문 설정 필요 상태
+        navigate('/SecurityQuestion', {
           state: {
             token,
             isLogin: true
           }
         })
       } else {
-        message.info(formatMessage({ id: 'LOGIN_FAILED_NEED_PASSWORD_INPUT_MSG' }))
-        setNotRegistered(true)
-      }
-    } else {
-      if (ompassAuthentication && ompassAuthentication.isRegisteredOmpass) { // 등록이 되어있음
-        if (isEmailVerified) { // 등록 되어있고 이메일 인증 되어있음
+        if (isEmailVerified) { // 이메일 인증 되어있음
           ompassUrlCallback(ompassAuthentication.ompassUrl, token)
         } else { // 등록 되어있고 이메일 인증 안되어있음
           EmailVerifyCheck(isEmailVerified, token, email)
         }
-      } else { // 등록이 안되어있음
-        if (isEmailVerified) { // 등록 안되어있고 이메일 인증 되어있음
-          if (notRegistered) { // 등록 안되어있고 이메일 인증 되어있고 로그인 요청 했었음
-            ompassUrlCallback(ompassAuthentication.ompassUrl, token)
-          } else { // 등록 안되어있고 이메일 인증 되어있고 로그인 요청 안했었음
-            message.info(formatMessage({ id: 'NOT_REGISTERED_MSG' }))
-            setNotRegistered(true)
-          }
-        } else { // 등록 안되어있고 이메일 인증 안되어있음
-          if (notRegistered) { // 등록 안되어있고 이메일 인증 안되어있고 로그인 요청 했었음
-            EmailVerifyCheck(isEmailVerified, token, email)
-          } else { // 등록 안되어있고 이메일 인증 안되어있고 로그인 요청 안했었음
-            message.info(formatMessage({ id: 'NOT_REGISTERED_MSG' }))
-            setNotRegistered(true)
-          }
-        }
+      }
+    } else { // UAF
+      if (ompassAuthentication && ompassAuthentication.isRegisteredOmpass && isEmailVerified && status === 'RUN') {
+        ompassUrlCallback(ompassAuthentication.ompassUrl, token)
+      } else {
+        message.error(formatMessage({ id: 'LOGIN_FAILED_NEED_PASSWORD_INPUT_MSG' }))
+        setNeedInputPassword(true)
+        return
       }
     }
   }
@@ -145,7 +126,7 @@ const Login = () => {
       inputUesrnameRef.current?.focus()
       return message.error(formatMessage({ id: 'PLEASE_INPUT_ID_MSG' }))
     }
-    if (notRegistered) {
+    if (needInputPassword) {
       if (!inputPassword) {
         inputPasswordRef.current?.focus()
         return message.error(formatMessage({ id: 'PLEASE_INPUT_PASSWORD_MSG' }))
@@ -168,6 +149,9 @@ const Login = () => {
         language: lang!
       }, (res, token) => {
         loginSuccessCallback(res, token)
+      }).catch(err => {
+        message.error(formatMessage({ id: 'LOGIN_FAILED_NEED_PASSWORD_INPUT_MSG' }))
+        setNeedInputPassword(true)
       })
     }
   }
@@ -221,7 +205,7 @@ const Login = () => {
               </>
             </label>
           </div>
-          <div className={`login-input-container password${notRegistered ? ' not-registered' : ''}${subdomainInfo.passwordless?.isEnabled ? ' passwordless' : ''}`}>
+          <div className={`login-input-container password${needInputPassword ? ' not-registered' : ''}${subdomainInfo.passwordless?.isEnabled ? ' passwordless' : ''}`}>
             <label>
               <FormattedMessage id='PASSWORD' />
               <Input

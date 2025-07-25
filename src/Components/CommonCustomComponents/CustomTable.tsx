@@ -1,4 +1,4 @@
-import React, { CSSProperties, useEffect, useMemo, useRef, useState } from "react"
+import React, { CSSProperties, PropsWithChildren, useEffect, useMemo, useRef, useState } from "react"
 import './CustomTable.css'
 import { Pagination, PaginationProps } from "antd"
 import searchIcon from '@assets/searchIcon.png'
@@ -36,7 +36,6 @@ type CustomTableProps<T extends {
     className?: string
     columns: CustomTableColumnType<T>[]
     datas?: T[]
-    onHeaderRowHover?: React.MouseEventHandler<HTMLTableRowElement>
     onHeaderColClick?: (col: CustomTableColumnType<T>, target: HTMLElement) => void
     onBodyRowHover?: (row: T, index: number, array: T[]) => void
     onBodyRowMouseLeave?: () => void
@@ -58,6 +57,17 @@ type CustomTableProps<T extends {
     refresh?: boolean
 }
 
+type CustomTableHeaderRowProps = {
+    hoverCallback?: (col: CustomTableColumnType<any>, target: HTMLElement) => void
+    columns: CustomTableColumnType<any>[]
+    closeEvent: boolean
+    setCloseEvent: (val: boolean) => void
+    searchCallback: (page: number, size: number, filter?: TableFilterOptionType, isReset?: boolean) => void
+    filterValues: TableFilterOptionType
+    tableSize: number
+
+}
+
 const CustomTable = <T extends {
     [key: string]: any
 }>({ pagination,
@@ -66,7 +76,6 @@ const CustomTable = <T extends {
     className,
     columns,
     datas = [],
-    onHeaderRowHover,
     onBodyRowHover,
     onBodyRowMouseLeave,
     onBodyRowClick,
@@ -111,32 +120,18 @@ const CustomTable = <T extends {
         key: 'endDate',
         value: searchParams.get('endDate') ?? ''
     }] : [])
-    
+
     const [closeEvent, setCloseEvent] = useState(false)
     const [pageNum, setPageNum] = useState(1)
     const [tableSize, setTableSize] = useState<number>(userSelectPageSize());
     const [searchType, setSearchType] = useState(searchParams.get('searchType') ?? ((searchOptions && searchOptions[0].key) || ""))
     const [filterValues, setFilterValues] = useState<TableFilterOptionType>(initFilterValues)
-
     const [searchValue, setSearchValue] = useState(searchParams.get('searchValue') ?? '')
     const [hoverId, setHoverId] = useState(-1)
     const resultRef = useRef<CustomTableSearchParams>()
     const { formatMessage } = useIntl()
     const { customPushRoute } = useCustomRoute()
     const { convertTimezoneDateStringToUTCString } = useDateTime()
-
-    const dateValues = useMemo(() => {
-        const startDate = filterValues.find(_ => _.key === 'startDate' && _.value)
-        const endDate = filterValues.find(_ => _.key === 'endDate' && _.value)
-
-        if (startDate && endDate) {
-            return {
-                startDate: startDate.value,
-                endDate: endDate.value
-            }
-        }
-        return undefined
-    }, [filterValues])
 
     const createParams = ({ page, size }: {
         page: number
@@ -177,12 +172,6 @@ const CustomTable = <T extends {
                 }
             })
         }
-
-        // if (result.filterOptions) {
-        //     setFilterValues(values)
-        // } else {
-        //     setFilterValues(initFilterValues)
-        // }
         setFilterValues(values)
         return result
     }
@@ -200,7 +189,7 @@ const CustomTable = <T extends {
         setPageNum(page)
         setTableSize(size)
         const result = createParams({ page, size })
-        
+
         if (searchParams.get('searchType')) {
             result.searchType = searchParams.get('searchType')!
             result.searchValue = searchParams.get('searchValue')!
@@ -233,7 +222,7 @@ const CustomTable = <T extends {
         }
         const filterOptions = columns.filter(_ => _.filterOption)
 
-        
+
         if (result.filterOptions) {
             result.filterOptions = result.filterOptions?.map(_ => {
                 if (_.key === 'startDate' || _.key === 'endDate') return _
@@ -247,17 +236,31 @@ const CustomTable = <T extends {
                     // } else {
                     //     return _
                     // }
-                    return _
+                    if (isReset) {
+                        return {
+                            ..._,
+                            value: []
+                        }
+
+                    } else {
+                        return _
+                    }
                 }
             })
         }
-        
+
         if (searchValue) {
             result.searchType = searchType
             result.searchValue = searchValue
         }
-
+        if (result.filterOptions) {
+            setFilterValues(result.filterOptions)
+        }
         if (isReset) {
+            if (searchOptions) {
+                setSearchType(searchOptions[0].key)
+            }
+            setSearchValue('')
             customPushRoute({}, true, true)
         } else {
             customPushRoute({ ...result }, true)
@@ -343,78 +346,7 @@ const CustomTable = <T extends {
                 ></col>)}
             </colgroup>
             <thead>
-                <tr onMouseOver={onHeaderRowHover}>
-                    {
-                        columns?.map((_, ind) => {
-                            const mainFilterValues = _.filterOption?.filter(_ => !_.isSide).map(_ => _.value)
-                            const sideFilterValues = _.filterOption?.filter(_ => _.isSide).map(_ => _.value)
-                            const targetFilterValues = filterValues?.find(f => f.key === _.filterKey)?.value
-                            const hasSideFilterValues = targetFilterValues?.some((target: any) => sideFilterValues?.includes(target))
-                            // const hasAllMainFilterValues = mainFilterValues?.every((main: any) => targetFilterValues?.includes(main))
-                            const hasMainFilterValues = targetFilterValues?.some((target: any) => mainFilterValues?.includes(target))
-
-                            return <th key={_.key as string} onClick={e => {
-                                e.preventDefault()
-                                if (onHeaderColClick) onHeaderColClick(_, e.currentTarget)
-                            }} className={`${onHeaderColClick ? 'pointer' : ''}`}>
-                                {_.title}
-                                {_.filterType === 'date' ? <CustomDropdown
-                                    value={filterValues.find(values => values.key === _.filterKey)?.value}
-                                    closeEvent={closeEvent}
-                                    render={<Calendar
-                                        value={dateValues}
-                                        closeCallback={() => {
-                                            setCloseEvent(true)
-                                        }}
-                                        onChange={d => {
-                                            // setTemp(d)
-                                            const convertedDate: DateSelectDataType = {
-                                                startDate: dayjs(d.startDate).format(DateTimeFormat),
-                                                endDate: dayjs(d.endDate).add(1, 'day').subtract(1, 'second').format(DateTimeFormat)
-                                            }
-                                            const result = [...filterValues.filter(_ => _.key !== 'startDate' && _.key !== 'endDate'),
-                                            {
-                                                key: 'startDate',
-                                                value: convertedDate.startDate
-                                            },
-                                            {
-                                                key: 'endDate',
-                                                value: convertedDate.endDate
-                                            }]
-                                            setFilterValues(result)
-                                            searchCallback(1, tableSize, result)
-                                        }} />}>
-                                    <div className="custom-table-filter-icon">
-                                        <img src={(filterValues.find(f => f.key === 'startDate' && f.value) && filterValues.find(f => f.key === 'endDate' && f.value)) ? filterIcon : filterDefaultIcon} />
-                                    </div>
-                                </CustomDropdown> : _.filterOption && <CustomDropdown
-                                    value={filterValues.find(values => values.key === _.filterKey)?.value}
-                                    multiple
-                                    isFilter
-                                    onChange={val => {
-                                        const result = filterValues.map(fVal => {
-                                            return fVal.key === _.filterKey ? ({
-                                                key: fVal.key,
-                                                value: val
-                                            }) : fVal
-                                        })
-                                        setFilterValues(result)
-                                        searchCallback(1, tableSize, result)
-                                    }} items={_.filterOption.filter(_ => !_.isSide).map(opt => ({
-                                        label: opt.label,
-                                        value: opt.value
-                                    }))} sideItems={_.filterOption.filter(_ => _.isSide).map(opt => ({
-                                        label: opt.label,
-                                        value: opt.value
-                                    }))}>
-                                    <div className="custom-table-filter-icon">
-                                        <img src={(hasMainFilterValues || hasSideFilterValues) ? filterIcon : filterDefaultIcon} />
-                                    </div>
-                                </CustomDropdown>}
-                            </th>
-                        })
-                    }
-                </tr>
+                <HeaderRow hoverCallback={onHeaderColClick} columns={columns} closeEvent={closeEvent} setCloseEvent={setCloseEvent} searchCallback={searchCallback} filterValues={filterValues} tableSize={tableSize} />
             </thead>
             <tbody>
                 {
@@ -475,6 +407,95 @@ const CustomTable = <T extends {
             <CustomTablePagination pageNum={pageNum} tableSize={tableSize} totalCount={totalCount || 1} onChangePage={onChangePage} />
         </div>}
     </div>
+}
+
+const HeaderRow = ({ hoverCallback, columns, closeEvent, setCloseEvent, searchCallback, filterValues, tableSize }: CustomTableHeaderRowProps) => {
+    const dateValues = useMemo(() => {
+        const startDate = filterValues.find(_ => _.key === 'startDate' && _.value)
+        const endDate = filterValues.find(_ => _.key === 'endDate' && _.value)
+
+        if (startDate && endDate) {
+            return {
+                startDate: startDate.value,
+                endDate: endDate.value
+            }
+        }
+        return undefined
+    }, [filterValues])
+
+    return <tr>
+        {columns?.map((_, ind) => {
+            const mainFilterValues = _.filterOption?.filter(_ => !_.isSide).map(_ => _.value)
+            const sideFilterValues = _.filterOption?.filter(_ => _.isSide).map(_ => _.value)
+            const targetFilterValues = filterValues?.find(f => f.key === _.filterKey)?.value
+            const hasSideFilterValues = targetFilterValues?.some((target: any) => sideFilterValues?.includes(target))
+            // const hasAllMainFilterValues = mainFilterValues?.every((main: any) => targetFilterValues?.includes(main))
+            const hasMainFilterValues = targetFilterValues?.some((target: any) => mainFilterValues?.includes(target))
+
+            return <th key={_.key as string} onClick={e => {
+                e.preventDefault()
+                if (hoverCallback) hoverCallback(_, e.currentTarget)
+            }} className={`${hoverCallback ? 'pointer' : ''}`}>
+                {_.title}
+                {_.filterType === 'date' ? <CustomDropdown
+                    value={filterValues.find(values => values.key === _.filterKey)?.value}
+                    closeEvent={closeEvent}
+                    debug
+                    render={<Calendar
+                        value={dateValues}
+                        closeCallback={() => {
+                            setCloseEvent(true)
+                        }}
+                        onChange={d => {
+                            // setTemp(d)
+                            const convertedDate: DateSelectDataType = {
+                                startDate: dayjs(d.startDate).format(DateTimeFormat),
+                                endDate: dayjs(d.endDate).add(1, 'day').subtract(1, 'second').format(DateTimeFormat)
+                            }
+                            const result = [...filterValues.filter(_ => _.key !== 'startDate' && _.key !== 'endDate'),
+                            {
+                                key: 'startDate',
+                                value: convertedDate.startDate
+                            },
+                            {
+                                key: 'endDate',
+                                value: convertedDate.endDate
+                            }]
+                            searchCallback(1, tableSize, result)
+                        }} />}>
+                    <div className="custom-table-filter-icon">
+                        <img src={(filterValues.find(f => f.key === 'startDate' && f.value) && filterValues.find(f => f.key === 'endDate' && f.value)) ? filterIcon : filterDefaultIcon} />
+                    </div>
+                </CustomDropdown> : _.filterOption && <CustomDropdown
+                    value={filterValues.find(values => values.key === _.filterKey)?.value}
+                    multiple
+                    isFilter
+                    onChange={val => {
+                        const result = filterValues.map(fVal => {
+                            return fVal.key === _.filterKey ? ({
+                                key: fVal.key,
+                                value: val
+                            }) : fVal
+                        })
+                        searchCallback(1, tableSize, result)
+                    }} items={_.filterOption.filter(_ => !_.isSide).map(opt => ({
+                        label: opt.label,
+                        value: opt.value
+                    }))} sideItems={_.filterOption.filter(_ => _.isSide).map(opt => ({
+                        label: opt.label,
+                        value: opt.value
+                    }))}>
+                    <div className="custom-table-filter-icon">
+                        <img src={(hasMainFilterValues || hasSideFilterValues) ? filterIcon : filterDefaultIcon} />
+                    </div>
+                </CustomDropdown>}
+            </th>
+        })}
+    </tr>
+}
+
+const BodyRow = ({ children, ...props }: PropsWithChildren<React.HTMLAttributes<HTMLTableRowElement>>) => {
+    return <tr {...props}>{children}</tr>
 }
 
 export default CustomTable

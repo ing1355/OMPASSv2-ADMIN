@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 import { createRoot } from 'react-dom/client'
 import checkIcon from '@assets/checkIcon.png'
 import { message } from 'antd'
+import { useLocation } from 'react-router'
 
 type CustomDropdownProps = PropsWithChildren<{
     items?: DropdownItemType[]
@@ -18,6 +19,7 @@ type CustomDropdownProps = PropsWithChildren<{
     closeEvent?: boolean
     value?: any | any[]
     isFilter?: boolean
+    debug?: boolean
 }>
 
 const DropdownContainer = forwardRef(({ lang, effectCallback, items, sideItems, isFilter, onChange, value, multiple, closeCallback, render }: PropsWithChildren & {
@@ -134,11 +136,12 @@ const DropdownContainer = forwardRef(({ lang, effectCallback, items, sideItems, 
     </>
 })
 
-const CustomDropdown = ({ value, onChange, items, sideItems, children, multiple, render, closeEvent, isFilter }: CustomDropdownProps) => {
+const CustomDropdown = ({ value, onChange, items, sideItems, children, multiple, render, closeEvent, isFilter, debug }: CustomDropdownProps) => {
     const lang = useSelector((state: ReduxStateType) => state.lang!);
     const parentRef = useRef<HTMLElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
     const divRef = useRef<HTMLDivElement>()
+    const location =useLocation()
 
     const closeCallback = useCallback(() => {
         if (divRef.current) {
@@ -152,6 +155,10 @@ const CustomDropdown = ({ value, onChange, items, sideItems, children, multiple,
             closeCallback()
         }
     }, []);
+
+    useEffect(() => {
+        closeCallback()
+    },[location])
 
     useEffect(() => {
         if (false) {
@@ -180,7 +187,7 @@ const CustomDropdown = ({ value, onChange, items, sideItems, children, multiple,
             closeCallback()
         }
     }, [closeEvent])
-
+    
     return React.cloneElement(Children.only(children), {
         ...children.props,
         ref: parentRef,

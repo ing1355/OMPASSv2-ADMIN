@@ -80,7 +80,7 @@ const MessageText = {
         PASSWORD_INIT_SUCCESS_MSG: '비밀번호 초기화에 성공하였습니다.',
         PASSWORD_CHANGE_SUCCESS_MSG: '비밀번호 변경에 성공하였습니다. 다시 로그인해 주세요.',
         PASSWORD_CHANGE_NEED_MSG: '비밀번호 초기화 대상입니다. 비밀번호 초기화를 진행해 주세요.',
-        LOGIN_FAILED_NEED_PASSWORD_INPUT_MSG: '사용자의 정보가 변경되었습니다. 비밀번호를 입력해 주세요.',
+        LOGIN_FAILED_NEED_PASSWORD_INPUT_MSG: '현재 계정 상태는 비밀번호 없이 로그인할 수 없습니다. 비밀번호를 입력해 주세요.',
         AUTH_POLICY_ADD_SUCCESS_MSG: '정책 추가에 성공하였습니다.',
         AUTH_POLICY_UPDATE_SUCCESS_MSG: '정책 수정에 성공하였습니다.',
         AUTH_POLICY_DELETE_SUCCESS_MSG: '정책 삭제에 성공하였습니다.',
@@ -156,7 +156,8 @@ const MessageText = {
         EMAIL_VERIFY_NEED_MSG: '이메일 인증이 필요합니다.',
         POLICY_INFO_RESET_SUCCESS_MSG: '정책 정보가 초기화 되었습니다.',
         PLEASE_SELECT_FILTER_DATA: '최소 1개의 필터 값을 설정해야 합니다.',
-        PASSCODE_SEND_FAIL_MSG: 'PASSCODE를 메일로 발송하려면 해당 사용자의 이메일이 등록되어 있어야 합니다.'
+        PASSCODE_SEND_FAIL_MSG: 'PASSCODE를 메일로 발송하려면 해당 사용자의 이메일이 등록되어 있어야 합니다.',
+        USER_AUTHORITY_SUCCESSION_FAIL_MSG: '권한 승계는 활성화 상태인 사용자 및 관리자에게만 가능합니다.'
     },
     'EN': {
         USERNAME_CHECK: 'Only lowercase letters and numbers are allowed, with a length of 4 to 16 characters',
@@ -239,7 +240,7 @@ const MessageText = {
         PASSWORD_INIT_SUCCESS_MSG: 'Password reset was successful',
         PASSWORD_CHANGE_SUCCESS_MSG: 'You have successfully changed your password. Please log in again',
         PASSWORD_CHANGE_NEED_MSG: 'It is subject to password reset. Please proceed with password reset',
-        LOGIN_FAILED_NEED_PASSWORD_INPUT_MSG: 'The user\'s information has been changed. Please enter your password',
+        LOGIN_FAILED_NEED_PASSWORD_INPUT_MSG: 'The current account status does not allow login without a password. Please enter your password',
         AUTH_POLICY_ADD_SUCCESS_MSG: 'Policy addition was successful',
         AUTH_POLICY_UPDATE_SUCCESS_MSG: 'Policy modification was successful',
         AUTH_POLICY_DELETE_SUCCESS_MSG: 'Policy deletion was successful',
@@ -315,7 +316,8 @@ const MessageText = {
         EMAIL_VERIFY_NEED_MSG: 'Please verify your email address.',
         POLICY_INFO_RESET_SUCCESS_MSG: 'Policy information has been reset.',
         PLEASE_SELECT_FILTER_DATA: 'Please set at least one filter value.',
-        PASSCODE_SEND_FAIL_MSG: 'To send a passcode by email, the user\'s email must be registered.'
+        PASSCODE_SEND_FAIL_MSG: 'To send a passcode by email, the user\'s email must be registered.',
+        USER_AUTHORITY_SUCCESSION_FAIL_MSG: 'The authority succession is only possible for active users and administrators.'
     }
 }
 
