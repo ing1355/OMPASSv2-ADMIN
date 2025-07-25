@@ -46,12 +46,18 @@ const useDateTime = () => {
         return dayjs.tz(date, timezone || subdomainInfo.timeZone).utc().format(DateTimeFormat)
     }
 
+    const isDateTimeString = (value: string) => {
+        // YYYY-MM-DD hh:mm:ss
+        return /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(value);
+    };
+
     return {
         getTimezone,
         setTimezone,
         getDateTimeString,
         convertUTCStringToTimezoneDateString,
         convertTimezoneDateStringToUTCString,
+        isDateTimeString
     }
 };
 

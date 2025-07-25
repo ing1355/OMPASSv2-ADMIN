@@ -7,7 +7,7 @@ import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import UserTransfer from "Components/Group/UserTransfer"
 import { AddUserGroupDataFunc, DeleteUserGroupDataFunc, GetPoliciesListFunc, GetUserGroupDetailDataFunc, UpdateUserGroupDataFunc } from "Functions/ApiFunctions"
 import { message, Radio, RadioChangeEvent, Space } from "antd"
-import { useEffect, useLayoutEffect, useState } from "react"
+import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 import { useNavigate, useParams } from "react-router"
 import groupViewAlignIcon from '@assets/groupAlignIcon.png'
@@ -33,6 +33,7 @@ const GroupDetail = () => {
     const [dataLoading, setDataLoading] = useState(false)
     const [policiesData, setPoliciesData] = useState<PolicyListDataType[]>([])
     const [refresh, setRefresh] = useState(false)
+    const inputNameRef = useRef<HTMLInputElement>(null)
     const navigate = useNavigate()
     const { uuid } = useParams()
     const { formatMessage } = useIntl()
@@ -93,7 +94,9 @@ const GroupDetail = () => {
         <ContentsHeader title="GROUP_MANAGEMENT" subTitle={isAdd ? "GROUP_ADD" : "GROUP_DETAIL"}>
             <Button className="st3" onClick={() => {
                 if (!inputName) {
-                    return message.error(formatMessage({ id: 'PLEASE_INPUT_GROUP_NAME' }))
+                    message.error(formatMessage({ id: 'PLEASE_INPUT_GROUP_NAME' }))
+                    inputNameRef.current?.focus()
+                    return
                 }
                 const params = {
                     name: inputName,
@@ -135,6 +138,7 @@ const GroupDetail = () => {
         <div className="contents-header-container">
             <CustomInputRow title={<FormattedMessage id="GROUP_NAME_LABEL" />} required>
                 <Input
+                    ref={inputNameRef}
                     value={inputName}
                     valueChange={value => {
                         setInputName(value)
@@ -142,9 +146,7 @@ const GroupDetail = () => {
                     placeholder={formatMessage({ id: "GROUP_NAME_PLACEHOLDER" })}
                     className="st1"
                     maxLength={32}
-                    onInput={e => {
-                        if (e.currentTarget.value.startsWith(' ')) e.currentTarget.value = e.currentTarget.value.trim()
-                    }} />
+                    noEmpty />
             </CustomInputRow>
             <CustomInputRow title={<FormattedMessage id="GROUP_DESCRIPTION_LABEL" />}>
                 <Input value={inputDescription} valueChange={value => {

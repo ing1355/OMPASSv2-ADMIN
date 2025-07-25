@@ -73,7 +73,8 @@ const UserDetailRpUsers = ({ targetData, authInfoDatas, refreshCallback, userDet
             },
             {
                 key: "createdAt",
-                title: <FormattedMessage id="CREATION_ON" />
+                title: <FormattedMessage id="CREATION_ON" />,
+                isTime: true
             },
             {
                 key: "expiredAt",
@@ -151,7 +152,7 @@ const UserDetailRpUsers = ({ targetData, authInfoDatas, refreshCallback, userDet
                         <h5>
                             {_.authenticationInfo.loginDeviceInfo.updatedAt ? <>
                                 <FormattedMessage id="USER_INFO_UPDATED_LABEL" values={{
-                                    date: _.authenticationInfo.loginDeviceInfo.updatedAt
+                                    date: _.authenticationInfo.loginDeviceInfo.updatedAt ? convertUTCStringToTimezoneDateString(_.authenticationInfo.loginDeviceInfo.updatedAt) : '-'
                                 }} />
                             </> : <FormattedMessage id="RADIUS_NO_REGISTRATION_LABEL" />}
                         </h5>

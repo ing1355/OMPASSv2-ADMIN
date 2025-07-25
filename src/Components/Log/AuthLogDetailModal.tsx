@@ -11,6 +11,7 @@ import locationInvalidIcon from '@assets/locationInvalidIcon.png'
 import { Circle } from "Components/Policy/PolicyItems/GoogleCircle"
 import './AuthLogDetailModal.css'
 import CustomMap from "Components/Layout/CustomMap"
+import useDateTime from "hooks/useDateTime"
 
 type AuthLogdetailModalProps = {
     data: AllAuthLogDataType | undefined
@@ -48,8 +49,7 @@ const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
     const isPam = application?.type === 'LINUX_LOGIN'
     const { formatMessage } = useIntl()
     const mapInitRef = useRef(false)
-    const mapRef = useRef<google.maps.Map>()
-
+    const { convertUTCStringToTimezoneDateString } = useDateTime()
     useEffect(() => {
         if (!data) {
             mapInitRef.current = false
@@ -154,9 +154,9 @@ const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
                         <TextComponent title="AUTHENTICATION_PURPOSE_LABEL" content={data?.ompassData?.authPurpose ? <FormattedMessage id={data?.ompassData.authPurpose + '_LOG_VALUE'} /> : "-"} />
                         <TextComponent title="AUTHENTICATOR_TYPE_LABEL" content={authenticatorLabelList[(data as ValidAuthLogDataType)?.authenticatorType]} />
                         {data && isInvalidLogType(data) && <TextComponent title="INVALID_REASON_LABEL" content={data.reason ? <FormattedMessage id={"INVALID_" + data.reason + '_LABEL'} /> : "-"} />}
-                        <TextComponent title="AUTHENTICATION_START_TIME_LABEL" content={createdAt} />
-                        <TextComponent title="AUTHENTICATION_TIME_LABEL" content={data?.authenticationTime} />
-                        <TextComponent title="SESSION_EXPIRED_AT_LABEL" content={sessionExpiredAt} />
+                        <TextComponent title="AUTHENTICATION_START_TIME_LABEL" content={createdAt ? convertUTCStringToTimezoneDateString(createdAt) : "-"} />
+                        <TextComponent title="AUTHENTICATION_TIME_LABEL" content={data?.authenticationTime ? convertUTCStringToTimezoneDateString(data?.authenticationTime) : "-"} />
+                        <TextComponent title="SESSION_EXPIRED_AT_LABEL" content={sessionExpiredAt ? convertUTCStringToTimezoneDateString(sessionExpiredAt) : "-"} />
                     </div>
                 </div>
                 <div className="auth-detail-modal-contents-row">

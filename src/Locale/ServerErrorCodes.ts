@@ -38,7 +38,7 @@ const ServerErrorCodes = {
 
         ERR_B041: "이미 존재하는 이메일입니다.",
         ERR_B042: "이메일을 확인해 주세요.",
-        ERR_B043: "이미 존재하는 애플리케이션명입니다.",
+        ERR_B043: "이미 존재하는 이름입니다.",
         ERR_B045: '비밀번호가 일치하지 않습니다.',
         ERR_B046: '존재하지 않는 아이디입니다.',
         ERR_B047: 'Microsoft Entra ID 접근 권한이 없습니다.',
@@ -93,7 +93,7 @@ const ServerErrorCodes = {
 
         ERR_B041: "Already exists email",
         ERR_B042: "Please check your email",
-        ERR_B043: "Already exists application name",
+        ERR_B043: "Already exists name",
         ERR_B045: "The password does not match",
         ERR_B046: "The ID does not exist",
         ERR_B047: "Microsoft Entra ID access permission is not available",

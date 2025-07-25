@@ -5,12 +5,11 @@ import { applicationTypes, authenticatorList, authenticatorLabelList, getApplica
 import { GetApplicationListFunc, GetRpUsersListFunc } from "Functions/ApiFunctions";
 import useCustomRoute from "hooks/useCustomRoute";
 import useFullName from "hooks/useFullName";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
-import useDateTime from "hooks/useDateTime";
 
 const ApplicationUserManagement = () => {
     const [searchParams] = useSearchParams()
@@ -29,8 +28,8 @@ const ApplicationUserManagement = () => {
         key: _.id,
         label: _.name
     }))
+
     const targetApplicationRef = useRef(targetApplication)
-    const { convertUTCStringToTimezoneDateString } = useDateTime();
     const tableSearchOptions = useMemo(() => {
         let temp: TableSearchOptionType[] = [
             {
@@ -78,8 +77,7 @@ const ApplicationUserManagement = () => {
             },
             {
                 key: 'groupName',
-                title: <FormattedMessage id="GROUP_NAME_LABEL" />,
-                render: (data) => data ?? "-"
+                title: <FormattedMessage id="GROUP_NAME_LABEL" />
             },
         ]
         if (targetApplication?.type === 'WINDOWS_LOGIN') {
@@ -92,19 +90,26 @@ const ApplicationUserManagement = () => {
             key: 'lastLoggedInAuthenticator',
             title: <FormattedMessage id="LAST_LOGGED_IN_AUTHENTICATOR_LABEL" />,
             filterKey: 'lastLoggedInAuthenticator',
-            filterOption: authenticatorList.filter(_ => (_ === 'MASTER_USB' && targetApplication?.type === 'WINDOWS_LOGIN') || _ !== 'MASTER_USB').map(_ => ({
+            filterOption: authenticatorList.filter(_ => {
+                if (_ === 'NONE') return false
+                else if (_ === 'MASTER_USB' && targetApplication?.type === 'WINDOWS_LOGIN') return true
+                else if (_ === 'MASTER_USB') return false
+                else return true
+            }).map(_ => ({
                 label: authenticatorLabelList[_],
                 value: _
             }))
         },
             {
                 key: 'lastLoggedInAt',
-                title: <FormattedMessage id="LAST_LOGGED_IN_TIME_LABEL" />
+                title: <FormattedMessage id="LAST_LOGGED_IN_TIME_LABEL" />,
+                isTime: true
             },
             {
                 key: 'ompassRegisteredAt',
                 title: <FormattedMessage id="RP_OMPASS_REGISTED_AT_LABEL" />,
-                filterType: 'date'
+                filterType: 'date',
+                isTime: true
             }, {
             key: 'hasPasscode',
             title: <FormattedMessage id="RP_HAS_PASSCODE_LABEL" />,
@@ -140,7 +145,7 @@ const ApplicationUserManagement = () => {
             // setDataLoading(false)
         })
     }
-    
+
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
         const _params: GeneralParamsType = {
@@ -157,11 +162,7 @@ const ApplicationUserManagement = () => {
         }
         _params.applicationId = targetApplication?.id
         GetRpUsersListFunc(_params, ({ results, totalCount }) => {
-            setTableData(results.map(_ => ({
-                ..._,
-                lastLoggedInAt: convertUTCStringToTimezoneDateString(_.lastLoggedInAt),
-                ompassRegisteredAt: convertUTCStringToTimezoneDateString(_.ompassRegisteredAt)
-            })))
+            setTableData(results)
             setTotalCount(totalCount)
         }).finally(() => {
             setDataLoading(false)
@@ -184,12 +185,12 @@ const ApplicationUserManagement = () => {
     }, [refresh])
 
     useEffect(() => {
-        if(targetApplicationRef.current && targetApplication) {
+        if (targetApplicationRef.current && targetApplication) {
             setRefresh(true)
         }
         targetApplicationRef.current = targetApplication
-    },[targetApplication])
-    
+    }, [targetApplication])
+
     return <>
         <CustomInputRow title={<FormattedMessage id="APPLICATION_SELECT_LABEL" />}>
             <CustomSelect value={applicationType} onChange={value => {
@@ -200,7 +201,7 @@ const ApplicationUserManagement = () => {
                         target = appTypes.find(__ => __.type === value)
                     }
                 })
-                
+
                 if (target) {
                     setRefresh(true)
                 }

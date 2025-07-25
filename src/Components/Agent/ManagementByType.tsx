@@ -12,7 +12,6 @@ import tableDeleteIconHover from '@assets/deleteIconRed.png';
 import downloadIcon from '@assets/downloadIcon.png';
 import uploadIcon from '@assets/uploadIcon.png';
 import uploadIconHover from '@assets/uploadIconHover.png';
-import useDateTime from "hooks/useDateTime";
 
 type ManagementByTypeProps = {
     type: AgentType
@@ -20,7 +19,6 @@ type ManagementByTypeProps = {
 }
 
 const ManagementByType = ({ type, isCloud }: ManagementByTypeProps) => {
-    const { convertUTCStringToTimezoneDateString } = useDateTime();
     const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const [openFileDelete, setOpenFileDelete] = useState(-1);
     const [deleteHover, setDeleteHover] = useState(-1)
@@ -48,10 +46,7 @@ const ManagementByType = ({ type, isCloud }: ManagementByTypeProps) => {
             })
         }
         await GetAgentInstallerListFunc(type, _params, ({ results, totalCount }) => {
-            setTableData(results.map(_ => ({
-                ..._,
-                uploadDate: convertUTCStringToTimezoneDateString(_.uploadDate)
-            })))
+            setTableData(results)
             setTotalCount(totalCount)
         }).finally(() => {
             setDataLoading(false)
@@ -82,7 +77,8 @@ const ManagementByType = ({ type, isCloud }: ManagementByTypeProps) => {
             {
                 key: 'uploadDate',
                 title: <FormattedMessage id='UPLOAD_DATE' />,
-                filterType: 'date'
+                filterType: 'date',
+                isTime: true
             },
         ]
         if (!isCloud) {
@@ -129,7 +125,6 @@ const ManagementByType = ({ type, isCloud }: ManagementByTypeProps) => {
                             CurrentAgentVersionChangeFunc(type, data.fileId, (newData) => {
                                 setTableData(tableData.map(t => t.fileId === newData.fileId ? ({
                                     ...newData,
-                                    uploadDate: convertUTCStringToTimezoneDateString(newData.uploadDate)
                                 }) : ({ ...t, downloadTarget: false })))
                                 message.success(formatMessage({ id: 'CURRENT_VERSION_CHANGE_COMPLETE' }));
                                 if (type === 'WINDOWS_LOGIN') {

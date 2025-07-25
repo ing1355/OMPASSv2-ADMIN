@@ -13,8 +13,7 @@ const PasscodeList = () => {
     const navigate = useNavigate();
     const [totalCount, setTotalCount] = useState<number>(0);
     const [tableData, setTableData] = useState<PasscodeListDataType[]>([]);
-    const { convertUTCStringToTimezoneDateString } = useDateTime();
-
+    
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
         const _params: GeneralParamsType = {
@@ -30,14 +29,7 @@ const PasscodeList = () => {
             })
         }
         GetPasscodeListFunc(_params, ({ results, totalCount }) => {
-            setTableData(results.map(_ => ({
-                ..._,
-                passcode: {
-                    ..._.passcode,
-                    createdAt: convertUTCStringToTimezoneDateString(_.passcode.createdAt),
-                    expiredAt: _.passcode.expiredAt === "-1" ? "∞" : convertUTCStringToTimezoneDateString(_.passcode.expiredAt)
-                }
-            })))
+            setTableData(results)
             setTotalCount(totalCount)
         }).finally(() => {
             setDataLoading(false)
@@ -46,6 +38,7 @@ const PasscodeList = () => {
     
     return <CustomTable<PasscodeListDataType>
         theme='table-st1'
+        loading={dataLoading}
         datas={tableData}
         pagination
         totalCount={totalCount}
@@ -99,7 +92,7 @@ const PasscodeList = () => {
                 render: (data, ind, row) => {
                     const isSelf = row.portalUser.id === userInfo.userId
                     const canModify = isSelf || (userInfo.role === 'ADMIN' && row.portalUser.role === 'USER') || (userInfo.role === 'ROOT' && row.portalUser.role !== 'ROOT')
-                    return <ViewPasscode code={row.passcode.number} noView={!canModify} />
+                    return <ViewPasscode code={row.passcode.number} noView={!canModify}/>
                 },
                 width: 200
             },
@@ -114,12 +107,14 @@ const PasscodeList = () => {
                 key: 'createdAt',
                 title: <FormattedMessage id="PASSCODE_CREATED_AT_LABEL" />,
                 render: (data, ind, row) => row.passcode.createdAt,
-                filterType: 'date'
+                filterType: 'date',
+                isTime: true
             },
             {
                 key: 'expirationTime',
                 title: <FormattedMessage id="PASSCODE_COLUMN_VALID_TIME_LABEL" />,
-                render: (data, ind, row) => row.passcode.expiredAt,
+                render: (data, ind, row) => row.passcode.expiredAt === "-1" ? "∞" : row.passcode.expiredAt,
+                isTime: true
             },
         ]}
     />

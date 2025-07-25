@@ -56,8 +56,7 @@ const MessageText = {
         SIGNUP_APPROVE_SUCCESS_MSG: '회원가입 승인에 성공하였습니다.',
         USER_ADD_SUCCESS_MSG: '사용자 추가에 성공하였습니다.',
         USER_MODIFY_SUCCESS_MSG: '사용자 정보 수정에 성공하였습니다.',
-        USER_ID_EXIST_CHECK_SUCCESS_MSG: '사용 가능한 아이디입니다.',
-        USER_ID_EXIST_CHECK_FAIL_MSG: '이미 사용중인 아이디입니다.',
+        
         PASSCODE_ADD_SUCCESS_MSG: 'PASSCODE 추가에 성공하였습니다.',
         USER_UNLOCK_SUCCESS_MSG: '계정 잠금 해제에 성공하였습니다.',
         USER_WITHDRAWAL_SUCCESS_MSG: '회원 탈퇴에 성공하였습니다.',
@@ -157,7 +156,8 @@ const MessageText = {
         POLICY_INFO_RESET_SUCCESS_MSG: '정책 정보가 초기화 되었습니다.',
         PLEASE_SELECT_FILTER_DATA: '최소 1개의 필터 값을 설정해야 합니다.',
         PASSCODE_SEND_FAIL_MSG: 'PASSCODE를 메일로 발송하려면 해당 사용자의 이메일이 등록되어 있어야 합니다.',
-        USER_AUTHORITY_SUCCESSION_FAIL_MSG: '권한 승계는 활성화 상태인 사용자 및 관리자에게만 가능합니다.'
+        USER_AUTHORITY_SUCCESSION_FAIL_MSG: '권한 승계는 활성화 상태인 사용자 및 관리자에게만 가능합니다.',
+        SERVER_CONNECTION_ERROR: '서버 연결에 실패하였습니다. 잠시 후 다시 시도해주세요.'
     },
     'EN': {
         USERNAME_CHECK: 'Only lowercase letters and numbers are allowed, with a length of 4 to 16 characters',
@@ -216,8 +216,7 @@ const MessageText = {
         SIGNUP_APPROVE_SUCCESS_MSG: 'Your membership registration has been successfully approved',
         USER_ADD_SUCCESS_MSG: 'User addition was successful',
         USER_MODIFY_SUCCESS_MSG: 'User information modification was successful',
-        USER_ID_EXIST_CHECK_SUCCESS_MSG: 'This ID is available',
-        USER_ID_EXIST_CHECK_FAIL_MSG: 'This ID is already in use',
+        
         PASSCODE_ADD_SUCCESS_MSG: 'Passcode addition was successful',
         USER_UNLOCK_SUCCESS_MSG: 'You have successfully unlocked your account',
         USER_WITHDRAWAL_SUCCESS_MSG: 'You have successfully withdrawn your membership',
@@ -317,7 +316,8 @@ const MessageText = {
         POLICY_INFO_RESET_SUCCESS_MSG: 'Policy information has been reset.',
         PLEASE_SELECT_FILTER_DATA: 'Please set at least one filter value.',
         PASSCODE_SEND_FAIL_MSG: 'To send a passcode by email, the user\'s email must be registered.',
-        USER_AUTHORITY_SUCCESSION_FAIL_MSG: 'The authority succession is only possible for active users and administrators.'
+        USER_AUTHORITY_SUCCESSION_FAIL_MSG: 'The authority succession is only possible for active users and administrators.',
+        SERVER_CONNECTION_ERROR: 'Failed to connect to the server. Please try again later.'
     }
 }
 

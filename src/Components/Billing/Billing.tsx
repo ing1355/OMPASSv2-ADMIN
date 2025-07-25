@@ -12,7 +12,6 @@ import Button from "Components/CommonCustomComponents/Button";
 import Input from "Components/CommonCustomComponents/Input";
 import { FormattedMessage } from "react-intl";
 import { GetBillingHistoriesFunc } from "Functions/ApiFunctions";
-import useDateTime from "hooks/useDateTime";
 
 type ItemContainerProps = PropsWithChildren<{
     border?: boolean
@@ -77,7 +76,6 @@ const planDatas: {
 ]
 
 const Billing = () => {
-    const { convertUTCStringToTimezoneDateString } = useDateTime();
     const [tableData, setTableData] = useState<BillingHistoryDataType[]>([])
     const [totalCount, setTotalCount] = useState<number>(0);
     const [dataLoading, setDataLoading] = useState(false)
@@ -101,11 +99,7 @@ const Billing = () => {
             })
         }
         GetBillingHistoriesFunc(_params, ({ results, totalCount }) => {
-            setTableData(results.map(_ => ({
-                ..._,
-                createdAt: convertUTCStringToTimezoneDateString(_.createdAt),
-                expiredDate: _.expiredDate ? convertUTCStringToTimezoneDateString(_.expiredDate) : "-"
-            })))
+            setTableData(results)
             setTotalCount(totalCount)
         }).finally(() => {
             setDataLoading(false)
@@ -229,7 +223,8 @@ const Billing = () => {
                             },
                             {
                                 key: 'createdAt',
-                                title: <FormattedMessage id="PLAN_CREATED_AT_COLUMN_LABEL" />
+                                title: <FormattedMessage id="PLAN_CREATED_AT_COLUMN_LABEL" />,
+                                isTime: true
                             },
                             {
                                 key: 'maxApplicationCount',

@@ -9,7 +9,7 @@ import rootRoleIcon from '@assets/rootRoleIcon.png'
 import downloadIcon from '@assets/downloadIcon.png'
 import downloadIconWhite from '@assets/downloadIconWhite.png'
 import adminRoleIcon from '@assets/adminRoleIcon.png'
-import { useState } from "react"
+import { useRef, useState } from "react"
 import useFullName from "hooks/useFullName"
 import { useNavigate } from "react-router"
 import { useSelector } from "react-redux"
@@ -26,6 +26,13 @@ const PortalUserManagement = () => {
     const [tableData, setTableData] = useState<UserDataType[]>([])
     const [totalCount, setTotalCount] = useState<number>(0);
     const [addOpen, setAddOpen] = useState(false)
+    const paramsRef = useRef<GeneralParamsType>({
+        page: 0,
+        pageSize: 10,
+        searchType: '',
+        searchValue: '',
+        filterOptions: []
+    })
     const getFullName = useFullName()
     const navigate = useNavigate()
     const excelDownload = useExcelDownload()
@@ -48,10 +55,11 @@ const PortalUserManagement = () => {
         }
 
         const filterValues = params.filterOptions as CustomTableFilterOptionType[] | undefined
+        
         if (!filterValues || (filterValues && !filterValues.find(_ => _.key === 'statuses'))) {
             _params.statuses = userStatusTypes.filter(_ => _ !== 'WITHDRAWAL')
         }
-
+        paramsRef.current = _params
         GetUserDataListFunc(_params, ({ results, totalCount }) => {
             setTableData(results)
             setTotalCount(totalCount)
@@ -97,11 +105,13 @@ const PortalUserManagement = () => {
             }}
             customBtns={<>
                 <Button className="st5" onClick={() => {
+                    console.log(paramsRef.current)
                     GetUserDataListFunc({
+                        ...paramsRef.current,
                         pageSize: INT_MAX_VALUE,
                         page: 0
                     }, (res) => {
-                        excelDownload(res.results.filter(_ => _.status !== 'WITHDRAWAL'))
+                        excelDownload(res.results)
                     })
                 }} icon={downloadIcon} hoverIcon={downloadIconWhite}>
                     <FormattedMessage id="USER_EXCEL_DOWNLOAD_LABEL" />
@@ -129,7 +139,7 @@ const PortalUserManagement = () => {
                 {
                     key: 'name',
                     title: createHeaderColumn('NAME'),
-                    render: (data) => getFullName(data) || "-"
+                    render: (data) => getFullName(data)
                 },
                 {
                     key: 'isEmailVerified',

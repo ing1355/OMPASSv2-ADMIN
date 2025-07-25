@@ -1,7 +1,7 @@
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useNavigate, useParams } from "react-router"
 import { message } from "antd";
@@ -68,6 +68,7 @@ const AuthPolicyDetail = () => {
     const [canEmailRegisterData, setCanEmailRegisterData] = useState<PolicyEnabledDataType>({
         isEnabled: false
     })
+    const inputNameRef = useRef<HTMLInputElement>(null)
     const { formatMessage } = useIntl()
     const navigate = useNavigate()
     const isDefaultPolicy = detailData?.policyType === 'DEFAULT'
@@ -184,7 +185,9 @@ const AuthPolicyDetail = () => {
     const submitCallback = () => {
         if (!selectedApplicationType) return message.error(formatMessage({ id: 'PLEASE_SELECT_APPLICATION_TYPE_MSG' }))
         if (!policyName) {
-            return message.error(formatMessage({ id: 'PLEASE_INPUT_POLICY_NAME_MSG' }))
+            message.error(formatMessage({ id: 'PLEASE_INPUT_POLICY_NAME_MSG' }))
+            inputNameRef.current?.focus()
+            return
         }
         if (pamBypassData.isEnabled) {
             if (!pamBypassData.username) return message.error(formatMessage({ id: 'PAM_BYPASS_DATA_USERNAME_REQUIRED_MSG' }))
@@ -336,9 +339,9 @@ const AuthPolicyDetail = () => {
             {selectedApplicationType && <>
                 <CustomInputRow title={<FormattedMessage id="POLICY_NAME_LABEL" />} required>
                     {
-                        detailData?.policyType === 'DEFAULT' ? <Input className="st1" value={formatMessage({ id: 'default policy' })} readOnly /> : <Input className="st1" value={policyName} valueChange={value => {
+                        detailData?.policyType === 'DEFAULT' ? <Input className="st1" value={formatMessage({ id: 'default policy' })} readOnly /> : <Input ref={inputNameRef} className="st1" value={policyName} valueChange={value => {
                             setPolicyName(value)
-                        }} placeholder={formatMessage({ id: 'POLICY_NAME_PLACEHOLDER' })} maxLength={maxLengthByType('title')}/>
+                        }} placeholder={formatMessage({ id: 'POLICY_NAME_PLACEHOLDER' })} maxLength={maxLengthByType('title')} noEmpty />
                     }
                 </CustomInputRow>
                 <CustomInputRow title={<FormattedMessage id="DESCRIPTION_LABEL" />}>

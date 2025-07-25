@@ -2,14 +2,13 @@ import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
 import { GetPortalLogDataListFunc } from "Functions/ApiFunctions"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { FormattedMessage } from "react-intl"
 import useDateTime from "hooks/useDateTime"
 
 const httpMethodList: HttpMethodType[] = ['POST', 'PUT', 'DELETE']
 
 const PortalLog = () => {
-    const { convertUTCStringToTimezoneDateString } = useDateTime();
     const [tableData, setTableData] = useState<PortalLogDataType[]>([])
     const [totalCount, setTotalCount] = useState<number>(0);
     const [dataLoading, setDataLoading] = useState(false)
@@ -29,10 +28,7 @@ const PortalLog = () => {
             })
         }
         GetPortalLogDataListFunc(_params, ({ results, totalCount }) => {
-            setTableData(results.map(_ => ({
-                ..._,
-                createdAt: convertUTCStringToTimezoneDateString(_.createdAt)
-            })))
+            setTableData(results)
             setTotalCount(totalCount)
         }).finally(() => {
             setDataLoading(false)
@@ -69,7 +65,8 @@ const PortalLog = () => {
                     {
                         key: 'createdAt',
                         title: <FormattedMessage id="PORTAL_LOG_CREATED_AT_LABEL"/>,
-                        filterType: 'date'
+                        filterType: 'date',
+                        isTime: true
                     }
                 ]}
                 pagination

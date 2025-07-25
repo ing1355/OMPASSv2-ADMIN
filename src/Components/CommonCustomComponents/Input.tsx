@@ -14,6 +14,7 @@ type CustomInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
     title?: string | React.ReactNode
     customType?: InputValueType
     noGap?: boolean
+    noEmpty?: boolean
     suffix?: string
     sliceNum?: boolean
     rules?: {
@@ -34,7 +35,7 @@ const HasLabel = ({ children, label }: {
 </>}
     </div>
 
-const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyNumber, label, value, containerClassName, onInput, customType, rules, maxLength, required, className, noGap, type, suffix, style, sliceNum, title, ...props }: CustomInputProps, ref) => {
+const DefaultInput = forwardRef(({ noEmpty, zeroOk, nonZero, valueChange, children, onlyNumber, label, value, containerClassName, onInput, customType, rules, maxLength, required, className, noGap, type, suffix, style, sliceNum, title, ...props }: CustomInputProps, ref) => {
     const [isAlert, _setIsAlert] = useState(false)
     const [alertMsg, setAlertMsg] = useState<string | React.ReactNode>('')
     const isAlertRef = useRef(isAlert)
@@ -170,6 +171,9 @@ const DefaultInput = forwardRef(({ zeroOk, nonZero, valueChange, children, onlyN
                                             e.currentTarget.value = e.currentTarget.value.slice(0, (maxLength || maxLengthByType(customType))!)
                                         }
                                     }
+                                }
+                                if (noEmpty) {
+                                    if (e.currentTarget.value.startsWith(' ')) e.currentTarget.value = e.currentTarget.value.trim()
                                 }
 
                                 // if (noGap && (e.currentTarget.value.startsWith(' ') || e.currentTarget.value.endsWith(' ')) && valueChange) e.currentTarget.value = e.currentTarget.value.trim()

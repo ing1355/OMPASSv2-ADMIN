@@ -10,6 +10,7 @@ import useDateTime from "hooks/useDateTime"
 const DashboardInvalidAuth = ({ applications }: {
     applications: ApplicationListDataType[]
 }) => {
+    const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const lang = useSelector((state: ReduxStateType) => state.lang!);
     const { convertUTCStringToTimezoneDateString } = useDateTime();
     const {convertDaysByDate, convertHourRangeByDate, convertDashboardDateParamsLocalTimezoneToUTC, dashboardDateInitialValue} = useDsashboardFunctions()
@@ -59,7 +60,7 @@ const DashboardInvalidAuth = ({ applications }: {
         } else {
             setDatas([])
         }
-    }, [applications, params])
+    }, [subdomainInfo.timeZone, applications, params])
 
     return <DashboardCardWithDateSelect title={<FormattedMessage id="DASHBOARD_INVALID_ALL_AUTH" />} isCard={false} onChange={(d) => {
         setParams(d)

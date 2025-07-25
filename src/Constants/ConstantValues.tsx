@@ -1099,7 +1099,7 @@ export const LDAPTransportTypes: LdapTransportType[] = ['CLEAR', 'LDAPS', 'START
 
 export const authProcessTypeList: AllAuthLogDataType['processType'][] = ['REGISTRATION', 'AUTHENTICATION', 'POLICY']
 export const logAuthPurposeList: LogAuthPurposeType[] = ['ADD_OTHER_AUTHENTICATOR', 'ADMIN_2FA_FOR_APPLICATION_DELETION', 'ADMIN_2FA_FOR_SECRET_KEY_UPDATE', 'AUTH_LOGIN', 'RADIUS_REGISTRATION', 'REG_LOGIN', 'ROLE_SWAPPING_SOURCE', 'ROLE_SWAPPING_TARGET']
-export const authenticatorList: AuthenticatorTypeType[] = ['OMPASS', 'PASSCODE', 'WEBAUTHN', 'OTP', 'MASTER_USB']
+export const authenticatorList: AuthenticatorTypeType[] = ['OMPASS', 'PASSCODE', 'WEBAUTHN', 'OTP', 'MASTER_USB', 'NONE']
 export const authenticatorLabelList: {
     [key in AuthenticatorTypeType]: string
 } = {
@@ -1107,9 +1107,10 @@ export const authenticatorLabelList: {
     PASSCODE: 'PASSCODE',
     WEBAUTHN: 'WebAuthn',
     OTP: 'OTP',
-    MASTER_USB: 'Master USB'
+    MASTER_USB: 'Master USB',
+    NONE: '-'
 }
-export const authFailReasonList: InvalidAuthLogDataType['reason'][] = ['ACCESS_TIME', 'BROWSER', 'COUNTRY', 'INVALID_OTP', 'INVALID_PASSCODE', 'INVALID_SIGNATURE', 'IP_WHITE_LIST', 'LOCATION', 'NONE']
+export const authFailReasonList: InvalidAuthLogDataType['reason'][] = ['ACCESS_TIME', 'BROWSER', 'COUNTRY', 'ACCESS_CONTROL', 'CANCEL', 'INVALID_OTP', 'INVALID_PASSCODE', 'INVALID_SIGNATURE', 'IP_WHITE_LIST', 'LOCATION', 'NONE']
 
 export const convertLangToIntlVer = (lang: ReduxStateType['lang']) => {
   if(lang === 'EN') {

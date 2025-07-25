@@ -31,10 +31,10 @@ const AxiosController = () => {
         } else if (data) {
           const { code, message, value } = err.response.data;
           console.log(code, message)
-          if(err.response.config.url === PasswordlessLoginApi) {
-            return Promise.reject(err)
-          }
           if (code) {
+            if(err.response.config.url === PasswordlessLoginApi) {
+              return Promise.reject(err)
+            }
             if (code.startsWith("ERR_C")) {
               _message.error(formatMessage({ id: `${code} - ${message}` }, { value }))
             } else if (code === 'ERR_B051') {
@@ -49,11 +49,13 @@ const AxiosController = () => {
             } else {
               _message.error(formatMessage({ id: code }, { value }))
             }
+          } else {
+            _message.error(formatMessage({ id: 'SERVER_CONNECTION_ERROR' }))
           }
           controller.abort()
         }
       } else {
-
+        _message.error(formatMessage({ id: 'SERVER_CONNECTION_ERROR' }))
       }
       return Promise.reject(err);
     })

@@ -13,7 +13,6 @@ const Main = () => {
   const lang = useSelector((state: ReduxStateType) => state.lang!);
   const subdomainInfob = useSelector((state: ReduxStateType) => state.subdomainInfo!);
   const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
-  const { formatMessage } = useIntl();
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(-1)
 

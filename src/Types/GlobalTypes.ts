@@ -99,7 +99,7 @@ type UserNameType = {
 type HttpMethodType = "GET" | "POST" | "PUT" | "DELETE"
 type ProcessTypeType = "REGISTRATION" | "AUTHENTICATION" | "POLICY"
 type AuthenticatorStatusType = "REGISTERED" | "ENABLED" | "DISABLED" | "MODIFIED"
-type AuthenticatorTypeType = "OMPASS" | "WEBAUTHN" | "PASSCODE" | "OTP" | "MASTER_USB"
+type AuthenticatorTypeType = "OMPASS" | "WEBAUTHN" | "PASSCODE" | "OTP" | "MASTER_USB" | "NONE"
 type DefaultAuthenticatorDataType = {
     createdAt: string
     lastAuthenticatedAt: string
@@ -662,7 +662,7 @@ type InvalidAuthLogDataType = {
     networkStatus: AuthenticationNetWorkStatusType
     ompassData: OMPASSDataType
     policyAtTimeOfEvent: PolicyDataType
-    reason: 'INVALID_SIGNATURE' | 'INVALID_PASSCODE' | 'INVALID_OTP' | 'BROWSER' | 'ACCESS_TIME' | 'LOCATION' | 'IP_WHITE_LIST' | 'COUNTRY' | 'NONE'
+    reason: 'INVALID_SIGNATURE' | 'INVALID_PASSCODE' | 'INVALID_OTP' | 'BROWSER' | 'ACCESS_TIME' | 'LOCATION' | 'IP_WHITE_LIST' | 'COUNTRY' | 'NONE' | 'ACCESS_CONTROL' | 'CANCEL'
 }
 
 type AllAuthLogDataType = ValidAuthLogDataType | InvalidAuthLogDataType
@@ -736,6 +736,7 @@ type CustomTableColumnType<T> = {
     width?: string | number
     onClick?: () => void
     render?: (data: any, index: number, row: T) => React.ReactNode
+    isTime?: boolean
     noWrap?: boolean
     maxWidth?: string | number
     filterKey?: string

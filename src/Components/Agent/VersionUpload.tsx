@@ -1,7 +1,7 @@
 import './AgentManagement.css';
 import { FormattedMessage, useIntl } from "react-intl";
 import { message } from 'antd';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import Contents from 'Components/Layout/Contents';
 import ContentsHeader from 'Components/Layout/ContentsHeader';
@@ -28,6 +28,8 @@ const VersionUpload = () => {
   const [inputHash, setInputHash] = useState('')
   const [refresh, setRefresh] = useState(false)
   const [inputFile, setInputFile] = useState<File>()
+  const inputMemoRef = useRef<HTMLInputElement>(null)
+  const inputHashRef = useRef<HTMLInputElement>(null)
   const { formatMessage } = useIntl();
   const dispatch = useDispatch()
   const type: AgentType = useParams().type as AgentType
@@ -78,7 +80,9 @@ const VersionUpload = () => {
     const fileExtension = inputFile?.name.split('.').pop();
 
     if (!inputHash) {
-      return message.error(formatMessage({ id: 'PLEASE_INPUT_HASH' }));
+      message.error(formatMessage({ id: 'PLEASE_INPUT_HASH' }));
+      inputHashRef.current?.focus()
+      return
     } else if (!inputFile) {
       return message.error(formatMessage({ id: 'PLEASE_UPLOAD_INPUT_FILE' }))
     } else if (inputFile.size > maxFileSize) {
@@ -180,6 +184,7 @@ const VersionUpload = () => {
             <div className='agent-input-row-container'>
               <label><FormattedMessage id='MEMO' /></label>
               <Input
+                ref={inputMemoRef}
                 className={'st1'}
                 maxLength={maxLengthByType('description')}
                 value={inputMemo}
@@ -192,6 +197,7 @@ const VersionUpload = () => {
             <div className='agent-input-row-container'>
               <label><FormattedMessage id='HASH' /></label>
               <Input
+                ref={inputHashRef}
                 className="st1"
                 autoComplete='off'
                 value={inputHash}

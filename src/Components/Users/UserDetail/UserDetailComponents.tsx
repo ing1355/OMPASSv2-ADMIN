@@ -24,7 +24,7 @@ import lastAuthIcon from '@assets/lastAuthIcon.png';
 import sshIcon from '@assets/sshIcon.png';
 import clientIcon from '@assets/clientIcon.png';
 import { FormattedMessage, useIntl } from 'react-intl';
-import React, { PropsWithChildren, useState } from 'react';
+import React, { PropsWithChildren, useEffect, useState } from 'react';
 import './UserDetailComponents.css'
 import { convertBase64FromServerFormatToClient, createOSInfo } from 'Functions/GlobalFunctions';
 import Button from 'Components/CommonCustomComponents/Button';
@@ -36,6 +36,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import { message } from 'antd';
 import RegisterOMPASSAuthModal from 'Components/Modal/RegisterOMPASSAuthModal';
 import { useNavigate } from 'react-router';
+import useDateTime from 'hooks/useDateTime';
 
 const UserDetailInfoContentItem = ({ imgSrc, title, content, subContent, onClick, noClick }: {
     imgSrc: string
@@ -66,6 +67,7 @@ const AuthenticatorInfoContentsOMPASSType = ({ data }: {
 }) => {
     const { mobile, id, lastAuthenticatedAt, createdAt } = data as OMPASSAuthenticatorDataType
     const { os, deviceId, deviceName, model, ompassAppVersion } = mobile || {}
+    const { convertUTCStringToTimezoneDateString } = useDateTime()
     
     return <>
         <div className="user-detail-info-device-info-content">
@@ -73,8 +75,8 @@ const AuthenticatorInfoContentsOMPASSType = ({ data }: {
             <UserDetailInfoContentItem imgSrc={ompassDefaultLogoImage} title={<FormattedMessage id="USER_DETAIL_VERSION_LABEL" />} content={`OMPASS v${ompassAppVersion ?? '-'}`} />
             <UserDetailInfoContentItem imgSrc={uuidIcon} title={<FormattedMessage id="USER_DETAIL_UUID_LABEL" />} content={deviceId ?? '-'} />
             <UserDetailInfoContentItem imgSrc={deviceModelIcon} title={<FormattedMessage id="USER_DETAIL_DEVICE_INFO_LABEL" />} content={model ?? '-'} subContent={deviceName} />
-            <UserDetailInfoContentItem imgSrc={registeredAtIcon} title={<FormattedMessage id="USER_DETAIL_REGISTERED_AT_LABEL" />} content={createdAt ?? '-'} />
-            <UserDetailInfoContentItem imgSrc={lastAuthIcon} title={<FormattedMessage id="USER_DETAIL_LAST_AUTH_LABEL" />} content={lastAuthenticatedAt} />
+            <UserDetailInfoContentItem imgSrc={registeredAtIcon} title={<FormattedMessage id="USER_DETAIL_REGISTERED_AT_LABEL" />} content={createdAt ? convertUTCStringToTimezoneDateString(createdAt) : '-'} />
+            <UserDetailInfoContentItem imgSrc={lastAuthIcon} title={<FormattedMessage id="USER_DETAIL_LAST_AUTH_LABEL" />} content={lastAuthenticatedAt ? convertUTCStringToTimezoneDateString(lastAuthenticatedAt) : '-'} />
         </div>
     </>
 }
@@ -84,12 +86,12 @@ const AuthenticatorInfoContentsWEBAUTHNType = ({ data }: {
 }) => {
     const { lastAuthenticatedAt, createdAt, webauthnDevice } = data
     const { icon, model } = webauthnDevice
-
+    const { convertUTCStringToTimezoneDateString } = useDateTime()
     return <>
         <div className="user-detail-info-device-info-content">
             <UserDetailInfoContentItem imgSrc={convertBase64FromServerFormatToClient(icon)} title={<FormattedMessage id="USER_DETAIL_TYPE_LABEL" />} content={model} />
-            <UserDetailInfoContentItem imgSrc={registeredAtIcon} title={<FormattedMessage id="USER_DETAIL_REGISTERED_AT_LABEL" />} content={createdAt} />
-            <UserDetailInfoContentItem imgSrc={lastAuthIcon} title={<FormattedMessage id="USER_DETAIL_LAST_AUTH_LABEL" />} content={lastAuthenticatedAt} />
+            <UserDetailInfoContentItem imgSrc={registeredAtIcon} title={<FormattedMessage id="USER_DETAIL_REGISTERED_AT_LABEL" />} content={createdAt ? convertUTCStringToTimezoneDateString(createdAt) : '-'} />
+            <UserDetailInfoContentItem imgSrc={lastAuthIcon} title={<FormattedMessage id="USER_DETAIL_LAST_AUTH_LABEL" />} content={lastAuthenticatedAt ? convertUTCStringToTimezoneDateString(lastAuthenticatedAt) : '-'} />
         </div>
     </>
 }
@@ -121,6 +123,7 @@ export const ViewPasscode = ({ code, noView }: {
 }) => {
     const [isView, setIsView] = useState(false)
     const { formatMessage } = useIntl()
+
     return <div className='user-detail-info-passcode-view-container'>
         <div>
             {isView ? code : "⦁⦁⦁⦁⦁⦁⦁⦁⦁"}
@@ -275,6 +278,7 @@ export const UserDetailInfoETCInfoContent = ({ data, role }: {
 export const UserDetailInfoDeviceInfoContent = ({ data }: {
     data: UserDetailAuthInfoRowType
 }) => {
+    const { convertUTCStringToTimezoneDateString } = useDateTime()
     const { application } = data
     const clientData = data.authenticationInfo.loginDeviceInfo
     const { serverInfo } = data.authenticationInfo
@@ -408,7 +412,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
                 <FormattedMessage id="USER_DETAIL_LAST_LOGIN_LABEL" />
             </div>
             <div>
-                {clientData.updatedAt}
+                {clientData.updatedAt ? convertUTCStringToTimezoneDateString(clientData.updatedAt) : '-'}
             </div>
         </div>
     </>

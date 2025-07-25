@@ -11,6 +11,7 @@ const DashboardInvalidAuthSum = ({ applications }: {
     applications: ApplicationListDataType[]
 }) => {
     const lang = useSelector((state: ReduxStateType) => state.lang!);
+    const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const [datas, setDatas] = useState<{ name: string, count: number }[]>([])
     const { convertUTCStringToTimezoneDateString } = useDateTime();
     const {convertDaysByDate, convertHourRangeByDate, convertDashboardDateParamsLocalTimezoneToUTC, dashboardDateInitialValue} = useDsashboardFunctions()
@@ -39,7 +40,7 @@ const DashboardInvalidAuthSum = ({ applications }: {
         } else {
             setDatas([])
         }
-    }, [applications, params])
+    }, [subdomainInfo.timeZone, applications, params])
 
     return <DashboardCardWithDateSelect title={<FormattedMessage id="DASHBOARD_INVALID_ALL_AUTH_SUM" />} isCard={false} onChange={(d) => {
         setParams(d)

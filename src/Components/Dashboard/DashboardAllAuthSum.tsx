@@ -11,6 +11,7 @@ const DashboardAllAuthSum = ({ applications }: {
   applications: ApplicationListDataType[]
 }) => {
   const { convertUTCStringToTimezoneDateString } = useDateTime();
+  const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
   const lang = useSelector((state: ReduxStateType) => state.lang!);
   const {convertDaysByDate, convertHourRangeByDate, convertDashboardDateParamsLocalTimezoneToUTC, dashboardDateInitialValue} = useDsashboardFunctions()
   const [params, setParams] = useState(dashboardDateInitialValue())
@@ -40,7 +41,7 @@ const DashboardAllAuthSum = ({ applications }: {
     } else {
       setDatas([])
     }
-  }, [applications, params])
+  }, [subdomainInfo.timeZone, applications, params])
   
   return <DashboardCardWithDateSelect title={<FormattedMessage id="DASHBOARD_ALL_AUTH_SUM"/>} onChange={(_) => {
     setParams(_)

@@ -1,7 +1,7 @@
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
 import { useNavigate, useParams } from "react-router"
-import { useLayoutEffect, useState } from "react"
+import { useLayoutEffect, useRef, useState } from "react"
 import { message } from "antd"
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import { AddApplicationDataFunc, DeleteApplicationListFunc, GetApplicationDetailFunc, GetApplicationListFunc, GetAuthorizeMSEntraUriFunc, UpdateApplicationDataFunc, UpdateApplicationSecretkeyFunc } from "Functions/ApiFunctions"
@@ -58,6 +58,9 @@ const ApplicationDetail = () => {
     const [hasWindowsLogin, setHasWindowsLogin] = useState(false)
     const [radiusData, setRadiusData] = useState<RadiusDataType>()
     const [applicationType, setApplicationType] = useState<LocalApplicationTypes>(undefined)
+    const inputNameRef = useRef<HTMLInputElement>(null)
+    const inputDomainRef = useRef<HTMLInputElement>(null)
+    const inputRedirectUrlRef = useRef<HTMLInputElement>(null)
     const navigate = useNavigate()
     const { formatMessage } = useIntl()
     const { uuid } = useParams()
@@ -140,19 +143,27 @@ const ApplicationDetail = () => {
                         return message.error(formatMessage({ id: 'PLEASE_SELECT_APPLICATION_TYPE' }))
                     }
                     if (!inputName) {
-                        return message.error(formatMessage({ id: 'PLEASE_INPUT_APPLICATION_NAME' }))
+                        message.error(formatMessage({ id: 'PLEASE_INPUT_APPLICATION_NAME' }))
+                        inputNameRef.current?.focus()
+                        return
                     }
                     if (!inputDomain && needDomains.includes(applicationType)) {
-                        return message.error(formatMessage({ id: 'PLEASE_INPUT_APPLICATION_DOMAIN' }))
+                        message.error(formatMessage({ id: 'PLEASE_INPUT_APPLICATION_DOMAIN' }))
+                        inputDomainRef.current?.focus()
+                        return
                     }
                     if (needDomains.includes(applicationType) && !domainRegex.test(inputDomain)) {
-                        return message.error(formatMessage({ id: 'INVALID_INPUT_DOMAIN_MSG' }))
+                        message.error(formatMessage({ id: 'INVALID_INPUT_DOMAIN_MSG' }))
+                        inputDomainRef.current?.focus()
+                        return
                     }
                     // if (needDomains.includes(applicationType) && !noRedirectUri.includes(applicationType) && !inputRedirectUrl) {
                     //     return message.error(formatMessage({ id: 'PLEASE_INPUT_APPLICATION_REDIRECT_URI' }))
                     // }
                     if (needDomains.includes(applicationType) && !noRedirectUri.includes(applicationType) && !redirectUriRegex.test(inputRedirectUrl)) {
-                        return message.error(formatMessage({ id: 'INVALID_INPUT_REDIRECT_URI_MSG' }))
+                        message.error(formatMessage({ id: 'INVALID_INPUT_REDIRECT_URI_MSG' }))
+                        inputRedirectUrlRef.current?.focus()
+                        return
                     }
                     if (!selectedPolicy) {
                         return message.error(formatMessage({ id: 'PLEASE_SELECT_APPLICATION_POLICY' }))
@@ -248,9 +259,9 @@ const ApplicationDetail = () => {
             {
                 applicationType && <>
                     <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_NAME_LABEL" />} required>
-                        <Input className="st1" value={inputName} valueChange={value => {
+                        <Input ref={inputNameRef} className="st1" value={inputName} valueChange={value => {
                             setInputName(value)
-                        }} placeholder={formatMessage({ id: 'APPLICATION_INFO_NAME_PLACEHOLDER' })} readOnly={applicationType === 'PORTAL'} maxLength={maxLengthByType('title')} />
+                        }} placeholder={formatMessage({ id: 'APPLICATION_INFO_NAME_PLACEHOLDER' })} readOnly={applicationType === 'PORTAL'} maxLength={maxLengthByType('title')} noEmpty/>
                     </CustomInputRow>
                     <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_DESCRIPTION_LABEL" />}>
                         <Input className="st1" value={inputDescription} valueChange={value => {
@@ -270,12 +281,12 @@ const ApplicationDetail = () => {
                     {
                         needDomains.includes(applicationType) && <>
                             <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_DOMAIN_LABEL" />} required>
-                                <Input className="st1" value={inputDomain} valueChange={value => {
+                                <Input ref={inputDomainRef} className="st1" value={inputDomain} valueChange={value => {
                                     setInputDomain(value)
                                 }} placeholder="ex) https://omsecurity.kr:1234" readOnly={applicationType === 'PORTAL'} noGap maxLength={maxLengthByType('domain')} />
                             </CustomInputRow>
                             {!noRedirectUri.includes(applicationType) && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_REDIRECT_URI_LABEL" />}>
-                                <Input className="st1" value={inputRedirectUrl} valueChange={value => {
+                                <Input ref={inputRedirectUrlRef} className="st1" value={inputRedirectUrl} valueChange={value => {
                                     setInputRedirectUrl(value)
                                 }} placeholder="ex) /ompass" readOnly={readOnlyRedirectUriList.includes(applicationType)} noGap maxLength={maxLengthByType('domain')} />
                             </CustomInputRow>}

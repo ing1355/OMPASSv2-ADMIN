@@ -59,13 +59,27 @@ type CustomTableProps<T extends {
 
 type CustomTableHeaderRowProps = {
     hoverCallback?: (col: CustomTableColumnType<any>, target: HTMLElement) => void
-    columns: CustomTableColumnType<any>[]
+    columns: CustomTableProps<any>['columns']
     closeEvent: boolean
     setCloseEvent: (val: boolean) => void
     searchCallback: (page: number, size: number, filter?: TableFilterOptionType, isReset?: boolean) => void
     filterValues: TableFilterOptionType
     tableSize: number
+}
 
+type CustomTableBodyRowProps<T extends {
+    [key: string]: any
+}> = {
+    columns: CustomTableProps<T>['columns']
+    item: T
+    index: number
+    array: T[]
+    onBodyRowClick?: CustomTableProps<any>['onBodyRowClick']
+    onBodyRowHover?: CustomTableProps<any>['onBodyRowHover']
+    onBodyRowMouseLeave?: CustomTableProps<any>['onBodyRowMouseLeave']
+    bodyRowClassName?: CustomTableProps<any>['bodyRowClassName']
+    bodyRowStyle?: CustomTableProps<any>['bodyRowStyle']
+    hover?: CustomTableProps<any>['hover']
 }
 
 const CustomTable = <T extends {
@@ -127,7 +141,7 @@ const CustomTable = <T extends {
     const [searchType, setSearchType] = useState(searchParams.get('searchType') ?? ((searchOptions && searchOptions[0].key) || ""))
     const [filterValues, setFilterValues] = useState<TableFilterOptionType>(initFilterValues)
     const [searchValue, setSearchValue] = useState(searchParams.get('searchValue') ?? '')
-    const [hoverId, setHoverId] = useState(-1)
+    const [selfRefresh, setSelfRefresh] = useState(false)
     const resultRef = useRef<CustomTableSearchParams>()
     const { formatMessage } = useIntl()
     const { customPushRoute } = useCustomRoute()
@@ -146,6 +160,7 @@ const CustomTable = <T extends {
             let temp: CustomTableSearchParams['filterOptions'] = []
             for (const key of searchParams.keys()) {
                 if (!['page', 'size', 'tabType', 'applicationType', 'applicationId', 'searchType', 'searchValue'].includes(key)) {
+                    if (temp.find(_ => _.key === key)) continue
                     temp.push({
                         key,
                         value: searchParams.getAll(key)
@@ -200,6 +215,7 @@ const CustomTable = <T extends {
         }
         if (onSearchChange) {
             if (!resultRef.current || (JSON.stringify(resultRef.current) !== JSON.stringify(result))) {
+                console.log(result)
                 onSearchChange(result)
             }
         }
@@ -220,31 +236,18 @@ const CustomTable = <T extends {
             size,
             filterOptions: filter || [...filterValues]
         }
-        const filterOptions = columns.filter(_ => _.filterOption)
-
 
         if (result.filterOptions) {
             result.filterOptions = result.filterOptions?.map(_ => {
+                if (isReset) {
+                    return {
+                        ..._,
+                        value: (_.key === 'startDate' || _.key === 'endDate') ? '' : []
+                    }
+                }
                 if (_.key === 'startDate' || _.key === 'endDate') return _
                 else {
-                    const target = filterOptions.find(opt => opt.filterKey === _.key)?.filterOption?.filter(_ => !_.isSide).map(_ => _.value)
-                    // if (arraysHaveSameElements(target || [], _.value || [])) {
-                    //     return {
-                    //         ..._,
-                    //         value: []
-                    //     }
-                    // } else {
-                    //     return _
-                    // }
-                    if (isReset) {
-                        return {
-                            ..._,
-                            value: []
-                        }
-
-                    } else {
-                        return _
-                    }
+                    return _
                 }
             })
         }
@@ -253,17 +256,20 @@ const CustomTable = <T extends {
             result.searchType = searchType
             result.searchValue = searchValue
         }
-        if (result.filterOptions) {
-            setFilterValues(result.filterOptions)
-        }
         if (isReset) {
             if (searchOptions) {
                 setSearchType(searchOptions[0].key)
             }
             setSearchValue('')
             customPushRoute({}, true, true)
+            if (!searchParams.size) {
+                setSelfRefresh(true)
+            }
         } else {
             customPushRoute({ ...result }, true)
+        }
+        if (result.filterOptions) {
+            setFilterValues(result.filterOptions)
         }
     }
 
@@ -282,11 +288,11 @@ const CustomTable = <T extends {
     };
 
     useEffect(() => {
-        if (refresh && onSearchChange) {
+        if ((selfRefresh || refresh) && onSearchChange) {
             const result = createParams({ page: pageNum, size: tableSize })
             onSearchChange(result)
         }
-    }, [refresh])
+    }, [selfRefresh, refresh])
 
     useEffect(() => {
         if (searchTarget && searchTarget.type === 'select' && searchTarget.needSelect) {
@@ -297,6 +303,12 @@ const CustomTable = <T extends {
     useEffect(() => {
         if (closeEvent) setCloseEvent(false)
     }, [closeEvent])
+
+    useEffect(() => {
+        if (selfRefresh) {
+            setSelfRefresh(false)
+        }
+    }, [selfRefresh])
 
     return <div>
         <div className={`custom-table-header${(noSearch || !searchOptions) ? ' no-search' : ''}${(noSearch && !addBtn && deleteBtn) ? ' no-margin' : ''}`}>
@@ -323,7 +335,6 @@ const CustomTable = <T extends {
                 </Button>
                 <Button className="st4" onClick={() => {
                     searchCallback(1, 10, undefined, true)
-                    // setTemp(undefined)
                 }} icon={resetIcon}>
                     <FormattedMessage id="NORMAL_RESET_LABEL" />
                 </Button>
@@ -350,44 +361,7 @@ const CustomTable = <T extends {
             </thead>
             <tbody>
                 {
-                    (!loading && datas && datas.length > 0) ? datas?.map((_, ind, arr) => <tr
-                        key={ind}
-                        className={(((bodyRowClassName && (typeof bodyRowClassName !== 'string' ? bodyRowClassName(_, ind, arr) : '')) || '') + (onBodyRowClick ? ' pointer' : '')).trim() + (hover && hoverId === ind ? ' hover' : '')}
-                        onMouseOver={() => {
-                            setHoverId(ind)
-                            if (onBodyRowHover) {
-                                onBodyRowHover(_, ind, arr)
-                            }
-                        }}
-                        onMouseLeave={() => {
-                            setHoverId(-1)
-                            if (onBodyRowMouseLeave) {
-                                onBodyRowMouseLeave()
-                            }
-                        }}
-                        onClick={(e) => {
-                            e.stopPropagation()
-                            if (onBodyRowClick) {
-                                onBodyRowClick(_, ind, arr)
-                            }
-                        }}
-                        style={bodyRowStyle && (bodyRowStyle instanceof Function ? bodyRowStyle(_, ind, arr) : bodyRowStyle)}
-                    >
-                        {
-                            columns.map((__, _ind) => {
-                                return <td key={_ind} className={`${__.onClick ? 'poiner' : ''}`} style={{
-                                    whiteSpace: (__.noWrap || __.maxWidth) ? 'nowrap' : 'initial',
-                                    maxWidth: __.maxWidth,
-                                    textOverflow: 'ellipsis',
-                                    overflow: 'hidden'
-                                }}>
-                                    {
-                                        __.render === null ? '-' : (__.render ? __.render(_[__.key], ind, _) : _[__.key] ? _[__.key] : '-')
-                                    }
-                                </td>
-                            })
-                        }
-                    </tr>) : <tr>
+                    (!loading && datas && datas.length > 0) ? datas?.map((_, ind, arr) => <BodyRow key={ind} item={_} index={ind} array={arr} columns={columns} onBodyRowClick={onBodyRowClick} onBodyRowHover={onBodyRowHover} onBodyRowMouseLeave={onBodyRowMouseLeave} bodyRowClassName={bodyRowClassName} bodyRowStyle={bodyRowStyle} hover={hover} />) : <tr>
                         <td className="table-no-data" colSpan={columns.length} style={{
                             height: noDataHeight
                         }}>
@@ -494,8 +468,49 @@ const HeaderRow = ({ hoverCallback, columns, closeEvent, setCloseEvent, searchCa
     </tr>
 }
 
-const BodyRow = ({ children, ...props }: PropsWithChildren<React.HTMLAttributes<HTMLTableRowElement>>) => {
-    return <tr {...props}>{children}</tr>
+const BodyRow = <T extends {
+    [key: string]: any
+}>({ columns, item, index, array, onBodyRowClick, onBodyRowHover, onBodyRowMouseLeave, bodyRowClassName, bodyRowStyle, hover }: CustomTableBodyRowProps<T>) => {
+    const { convertUTCStringToTimezoneDateString, isDateTimeString } = useDateTime()
+    const [hoverId, setHoverId] = useState(false)
+    return <tr
+        className={(((bodyRowClassName && (typeof bodyRowClassName !== 'string' ? bodyRowClassName(item, index, array) : '')) || '') + (onBodyRowClick ? ' pointer' : '')).trim() + (hover && hoverId ? ' hover' : '')}
+        onMouseOver={() => {
+            setHoverId(true)
+            if (onBodyRowHover) {
+                onBodyRowHover(item, index, array)
+            }
+        }}
+        onMouseLeave={() => {
+            setHoverId(false)
+            if (onBodyRowMouseLeave) {
+                onBodyRowMouseLeave()
+            }
+        }}
+        onClick={(e) => {
+            e.stopPropagation()
+            if (onBodyRowClick) {
+                onBodyRowClick(item, index, array)
+            }
+        }}
+        style={bodyRowStyle && (bodyRowStyle instanceof Function ? bodyRowStyle(item, index, array) : bodyRowStyle)}
+    >
+        {
+            columns.map((__, _ind) => {
+                const result = __.render === null ? '-' : (__.render ? __.render(item[__.key], index, item) : item[__.key] ? item[__.key] : '-')
+                const converted = __.isTime ? isDateTimeString(result) ? convertUTCStringToTimezoneDateString(result) : result : result
+
+                return <td key={_ind} className={`${__.onClick ? 'poiner' : ''}`} style={{
+                    whiteSpace: (__.noWrap || __.maxWidth) ? 'nowrap' : 'initial',
+                    maxWidth: __.maxWidth,
+                    textOverflow: 'ellipsis',
+                    overflow: 'hidden'
+                }}>
+                    {converted}
+                </td>
+            })
+        }
+    </tr>
 }
 
 export default CustomTable

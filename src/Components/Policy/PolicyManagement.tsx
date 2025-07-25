@@ -18,7 +18,6 @@ const PolicyManagement = () => {
 
     const navigate = useNavigate()
     const { formatMessage } = useIntl()
-    const { convertUTCStringToTimezoneDateString } = useDateTime();
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
         const _params: GeneralParamsType = {
@@ -34,10 +33,7 @@ const PolicyManagement = () => {
             })
         }
         GetPoliciesListFunc(_params, ({ results, totalCount }) => {
-            setTableData(results.map(_ => ({
-                ..._,
-                createdAt: convertUTCStringToTimezoneDateString(_.createdAt)
-            })))
+            setTableData(results)
             setTotalCount(totalCount)
         }).finally(() => {
             setDataLoading(false)
@@ -92,7 +88,8 @@ const PolicyManagement = () => {
                     {
                         key: 'createdAt',
                         title: <FormattedMessage id="POLICY_COLUMN_CREATED_AT_LABEL" />,
-                        filterType: 'date'
+                        filterType: 'date',
+                        isTime: true
                     }
                 ]}
                 onBodyRowClick={(row, index, arr) => {

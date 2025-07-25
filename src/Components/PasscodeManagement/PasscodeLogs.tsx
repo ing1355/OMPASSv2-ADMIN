@@ -5,7 +5,6 @@ import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import useDateTime from "hooks/useDateTime";
 
 const actionList: PasscodeHistoryDataType['action'][] = ['CREATE', 'DELETE']
 
@@ -16,7 +15,6 @@ const PasscodeLogs = () => {
     const { formatMessage } = useIntl()
     const [totalCount, setTotalCount] = useState<number>(0);
     const [tableData, setTableData] = useState<PasscodeHistoryDataType[]>([]);
-    const { convertUTCStringToTimezoneDateString } = useDateTime();
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
         const _params: GeneralParamsType = {
@@ -32,15 +30,7 @@ const PasscodeLogs = () => {
             })
         }
         GetPasscodeHistoriesFunc(_params, ({ results, totalCount }) => {
-            console.log(results)
-            setTableData(results.map(_ => ({
-                ..._,
-                createdAt: convertUTCStringToTimezoneDateString(_.createdAt),
-                passcode: {
-                    ..._.passcode,
-                    expiredAt: _.passcode.expiredAt === "-1" ? "∞" : convertUTCStringToTimezoneDateString(_.passcode.expiredAt)
-                }
-            })))
+            setTableData(results)
             setTotalCount(totalCount)
         }).finally(() => {
             setDataLoading(false)
@@ -132,12 +122,14 @@ const PasscodeLogs = () => {
                 key: 'createdAt',
                 title: <FormattedMessage id="ACTION_DATE" />,
                 render: (data, ind, row) => row.createdAt,
-                filterType: 'date'
+                filterType: 'date',
+                isTime: true
             },
             {
                 key: 'expirationTime',
                 title: <FormattedMessage id="VALID_TIME" />,
                 render: (data, ind, row) => row.passcode.expiredAt,
+                isTime: true
             },
         ]}
     />

@@ -206,9 +206,9 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
                     DuplicateUserNameCheckFunc(addValues.username, ({ isExist }) => {
                         setDuplicateIdCheck(!isExist)
                         if (isExist) {
-                            message.warning(formatMessage({ id: 'USER_ID_EXIST_CHECK_FAIL_MSG' }))
+                            message.error(formatMessage({ id: 'UNAVAILABLE_USERNAME' }))
                         } else {
-                            message.success(formatMessage({ id: 'USER_ID_EXIST_CHECK_SUCCESS_MSG' }))
+                            message.success(formatMessage({ id: 'AVAILABLE_USERNAME' }))
                         }
                     })
                 }} style={{

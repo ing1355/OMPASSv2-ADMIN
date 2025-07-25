@@ -4,8 +4,7 @@ import { GetInvalidAuthLogDataListFunc } from "Functions/ApiFunctions"
 import { useEffect, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 import { useNavigate } from "react-router"
-import useDateTime from "hooks/useDateTime"
-import { applicationTypes, getApplicationTypeLabel } from "Constants/ConstantValues"
+import { getApplicationTypeLabel } from "Constants/ConstantValues"
 
 const DashboardAuthLogs = ({ applications }: {
     applications: ApplicationListDataType[]
@@ -13,7 +12,6 @@ const DashboardAuthLogs = ({ applications }: {
     const [datas, setDatas] = useState<InvalidAuthLogDataType[]>([])
     const navigate = useNavigate()
     const { formatMessage } = useIntl()
-    const { convertUTCStringToTimezoneDateString } = useDateTime();
     const getDatas = () => {
         const _params: AuthLogListParamsType = {
             pageSize: 12,
@@ -22,10 +20,7 @@ const DashboardAuthLogs = ({ applications }: {
             applicationIds: applications.map(_ => _.id)
         }
         GetInvalidAuthLogDataListFunc(_params, ({ results, totalCount }) => {
-            setDatas(results.map(_ => ({
-                ..._,
-                authenticationTime: convertUTCStringToTimezoneDateString(_.authenticationTime)
-            })))
+            setDatas(results)
         }).finally(() => {
 
         })
@@ -77,7 +72,7 @@ const DashboardAuthLogs = ({ applications }: {
                     {
                         key: 'applicationName',
                         title: <FormattedMessage id="APPLICATION_NAME_COLUMN_LABEL" />,
-                        render: (_, _ind, row) => row.ompassData?.application?.name ?? "-"
+                        render: (_, _ind, row) => row.ompassData?.application?.name
                     },
                     {
                         key: 'portalUser',
@@ -87,12 +82,12 @@ const DashboardAuthLogs = ({ applications }: {
                     {
                         key: 'rpUser',
                         title: <FormattedMessage id="RP_USERNAME_COLUMN_LABEL" />,
-                        render: (_, _ind, row) => row.ompassData?.rpUser?.username ?? "-"
+                        render: (_, _ind, row) => row.ompassData?.rpUser?.username
                     },
                     {
                         key: 'policyAtTimeOfEvent',
                         title: <FormattedMessage id="POLICY_NAME_LABEL"/>,
-                        render: (d, ind, row) => row.policyAtTimeOfEvent?.name ?? "-"
+                        render: (d, ind, row) => row.policyAtTimeOfEvent?.name
                     },
                     {
                         key: 'reason',
@@ -102,6 +97,7 @@ const DashboardAuthLogs = ({ applications }: {
                     {
                         key: 'authenticationTime',
                         title: <FormattedMessage id="AUTH_LOG_ACCESS_TIME_LABEL"/>,
+                        isTime: true
                     }
                 ]} />
         </div>
