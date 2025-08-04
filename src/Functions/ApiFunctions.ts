@@ -312,7 +312,7 @@ export const GetAllAuthLogDataListFunc = ({
     processType = undefined,
     startDate = undefined,
     endDate = undefined,
-    sortBy = "CREATED_AT",
+    sortBy = "AUTHENTICATION_TIME",
     sortDirection = "DESC"
 }: AuthLogListParamsType, callback: ((data: GetListDataGeneralType<AllAuthLogDataType>) => void)) => {
     return CustomAxiosGet(GetAuthLogDataListApi, (data: GetListDataGeneralType<AllAuthLogDataType>) => {
@@ -350,7 +350,7 @@ export const GetInvalidAuthLogDataListFunc = ({
     applicationIds = [],
     startDate = undefined,
     endDate = undefined,
-    sortBy = "CREATED_AT",
+    sortBy = "AUTHENTICATION_TIME",
     sortDirection = "DESC"
 }: AuthLogListParamsType, callback: ((data: GetListDataGeneralType<InvalidAuthLogDataType>) => void)) => {
     return CustomAxiosGet(GetAuthLogDataListApi, (data: GetListDataGeneralType<InvalidAuthLogDataType>) => {
@@ -387,7 +387,7 @@ export const GetValidAuthLogDataListFunc = ({
     authPurposes = [],
     startDate = undefined,
     endDate = undefined,
-    sortBy = "CREATED_AT",
+    sortBy = "AUTHENTICATION_TIME",
     sortDirection = "DESC"
 }: AuthLogListParamsType, callback: ((data: GetListDataGeneralType<ValidAuthLogDataType>) => void)) => {
     return CustomAxiosGet(GetAuthLogDataListApi, (data: GetListDataGeneralType<ValidAuthLogDataType>) => {

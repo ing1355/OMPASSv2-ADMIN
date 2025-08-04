@@ -52,7 +52,8 @@ const ServerErrorCodes = {
         ERR_B055: "비밀번호 인증 시간이 만료되었습니다. 다시 시도해 주세요.",
         ERR_B056: "올바르지 않은 UUID 형식입니다.",
         ERR_B057: "존재하지 않는 데이터입니다.",
-        ERR_B058: "탈퇴한 사용자의 아이디가 포함되어 사용자 추가에 실패하였습니다. 대상: {value}"
+        ERR_B058: "탈퇴한 사용자의 아이디가 포함되어 사용자 추가에 실패하였습니다. 대상: {value}",
+        ERR_B059: "비밀번호 없이 로그인이 비활성화되었습니다. 비밀번호 입력 후 다시 로그인해 주세요."
     },
     'EN': {
         ERR_B002: "Please check your ID and email",
@@ -107,7 +108,8 @@ const ServerErrorCodes = {
         ERR_B055: "The password verification time has expired. Please try again.",
         ERR_B056: "Invalid UUID format",
         ERR_B057: "The data does not exist",
-        ERR_B058: "The user ID of the withdrawn user is included in the user addition. Target: {value}"
+        ERR_B058: "The user ID of the withdrawn user is included in the user addition. Target: {value}",
+        ERR_B059: "The passwordless login is disabled. Please enter the password and log in again."
     }
 }
 

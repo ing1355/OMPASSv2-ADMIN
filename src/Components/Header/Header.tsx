@@ -35,8 +35,6 @@ const Header = () => {
     };
   }, [isMenuOpen]);
 
-
-
   return (
     <div
       className='header-container'
@@ -116,6 +114,9 @@ const Header = () => {
             destroyTooltipOnHide
           >
             <img src={logout} onClick={() => {
+              navigate('/', {
+                replace: true
+              })
               dispatch(userInfoClear());
             }}
               style={{

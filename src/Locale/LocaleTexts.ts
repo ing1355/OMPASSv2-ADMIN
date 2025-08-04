@@ -555,8 +555,13 @@ const LocaleTexts = {
     BILLING_HISTORY: 'Payment History',
     EMAIL_VERIFY_TITLE_LABEL: 'Email Verify',
     TOTAL_COUNT_LABEL: 'Total {totalCount} results found',
-    CAN_EMAIL_REGISTER_TITLE_LABEL: 'Allow Email Registration',   
+    CAN_EMAIL_REGISTER_TITLE_LABEL: 'Allow Email Registration',
     DASHBOARD_REGISTER_USER_NUMS_SUB: 'OMPASS Registered User Count / Portal User Count',
+    ERROR_PAGE_TITLE_LABEL: 'Server Communication Error',
+    ERROR_PAGE_SUBTITLE_LABEL: 'The communication with the server is not smooth.\nPlease try again later.',
+    REFRESH: 'Refresh',
+    CUSTOM_TRANSFER_USER_LOADING_LABEL: 'Loading user list...',
+    NO_DATA_AVAILABLE_LABEL: 'No data available',
   },
   KR: {
     LOGIN: '로그인',
@@ -1117,7 +1122,11 @@ const LocaleTexts = {
     TOTAL_COUNT_LABEL: '총 {totalCount}건 검색됨',
     CAN_EMAIL_REGISTER_TITLE_LABEL: '이메일로 OMPASS 등록 허용',
     DASHBOARD_REGISTER_USER_NUMS_SUB: 'OMPASS 등록 사용자 수 / 포탈 사용자 수',
-
+    ERROR_PAGE_TITLE_LABEL: '서버 통신 에러',
+    ERROR_PAGE_SUBTITLE_LABEL: '서버와의 통신이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.',
+    REFRESH: '새로고침',
+    CUSTOM_TRANSFER_USER_LOADING_LABEL: '사용자 목록 불러오는중...',
+    NO_DATA_AVAILABLE_LABEL: '데이터 없음',
   }
 }
 

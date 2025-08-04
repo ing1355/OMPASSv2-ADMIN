@@ -1,7 +1,7 @@
 import './App.css';
 import React, { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import OMPASSVerify from 'Components/OMPASS/OMPASSVerify';
 import Main from 'Components/Main/Main';
@@ -29,6 +29,8 @@ import LoginPage from 'Components/Login';
 import SecurityQuestionPage from 'Components/Login/SecurityQuestionPage';
 import EmailChangeVerification from 'Components/Users/UserDetail/EmailChangeVerification';
 import Document from 'Components/Document';
+import ErrorPage from 'Components/Layout/ErrorPage';
+import { userInfoClear } from 'Redux/actions/userChange';
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
@@ -36,16 +38,20 @@ const App: React.FC = () => {
   const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas)!;
   const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo)!;
   const lang = useSelector((state: ReduxStateType) => state.lang!);
+  const navigate = useNavigate();
 
   const getDomainInfo = () => {
     console.log('get subdomain info : ', subDomain)
     GetSubDomainInfoFunc(subDomain, (data) => {
       console.log('timeZone : ', data.timeZone)
       console.log('backendVersion : ', data.backendVersion)
-      console.log('fidoApp : ', data.backendVersion.fidoApp)
-      console.log('interfaceApp : ', data.backendVersion.interfaceApp)
-      console.log('portalApp : ', data.backendVersion.portalApp)
+      console.log('fidoApp : ', data.backendVersion?.fidoApp)
+      console.log('interfaceApp : ', data.backendVersion?.interfaceApp)
+      console.log('portalApp : ', data.backendVersion?.portalApp)
       dispatch(subdomainInfoChange(data))
+    }).catch(e => {
+      console.log('subdomain get error : ', e)
+      dispatch(subdomainInfoChange(null))
     })
   }
 
@@ -67,7 +73,7 @@ const App: React.FC = () => {
   }, [userInfo])
 
   useEffect(() => {
-    if (userInfo && subdomainInfo.backendVersion.fidoApp !== 'unknown') {
+    if (userInfo && subdomainInfo?.backendVersion) {
       window.addEventListener('storage', () => {
         window.location.reload()
       })
@@ -80,46 +86,51 @@ const App: React.FC = () => {
 
   return <IntlProvider locale={convertLangToIntlVer(lang)} messages={Locale[lang]}>
     <AxiosController />
-    <Routes>
-      <Route path="/docs/*" element={<Document />} />
-      <Route path='/*' element={<div className={userInfo ? 'contents-container' : ""}>
-        {userInfo && <Header />}
-        <Routes>
-          <Route path='/ompass/*' element={<OMPASSVerify />} />
-          <Route path='/emailChangeConfirm' element={<EmailChangeVerification />} />
-          <Route path='/AutoLogout' element={<AutoLogout />} />
-          <Route path='/SecurityQuestion' element={<SecurityQuestionPage />} />
-          {
-            userInfo ? (
-              userInfo.role! !== 'USER' ? <>
-                <Route path='/Main' element={<Main />} />
-                {isTta ? <></> : <>
-                  <Route path='/Billing' element={<Billing />} />
-                </>}
-                <Route path='/Dashboard' element={<Dashboard />} />
-                <Route path='/AgentManagement/*' element={<Agent />} />
-                <Route path='/UserManagement/*' element={<Users />} />
-                <Route path='/PasscodeManagement' element={<PasscodeManagement />} />
-                <Route path='/Applications/*' element={<Application />} />
-                <Route path='/Policies/*' element={<Policies />} />
-                <Route path='/Groups/*' element={<Groups />} />
-                <Route path='/AuthLogs' element={<AuthLog />} />
-                <Route path='/PortalLogs' element={<PortalLog />} />
-                <Route path='/Settings' element={<Settings />} />
-                <Route path='/*' element={<Navigate to={MainRouteByDeviceType} replace={true} />} />
-              </>
-                : <>
-                  <Route path='/Main' element={<Users />} />
-                  <Route path='/*' element={<Navigate to='/Main' replace={true} />} />
+    {userInfo && subdomainInfo && <Header />}
+    {
+      !subdomainInfo ? <ErrorPage /> : subdomainInfo?.backendVersion ? <Routes >
+        <Route path="/docs/*" element={<Document />} />
+        <Route path='/*' element={<div className={userInfo ? 'contents-container' : ""}>
+          <Routes>
+            <Route path='/error' element={<ErrorPage />} />
+            <Route path='/ompass/*' element={<OMPASSVerify />} />
+            <Route path='/emailChangeConfirm' element={<EmailChangeVerification />} />
+            <Route path='/AutoLogout' element={<AutoLogout />} />
+            <Route path='/SecurityQuestion' element={<SecurityQuestionPage />} />
+            {
+              userInfo ? (
+                userInfo.role! !== 'USER' ? <>
+                  <Route path='/Main' element={<Main />} />
+                  {isTta ? <></> : <>
+                    <Route path='/Billing' element={<Billing />} />
+                  </>}
+                  <Route path='/Dashboard' element={<Dashboard />} />
+                  <Route path='/AgentManagement/*' element={<Agent />} />
+                  <Route path='/UserManagement/*' element={<Users />} />
+                  <Route path='/PasscodeManagement' element={<PasscodeManagement />} />
+                  <Route path='/Applications/*' element={<Application />} />
+                  <Route path='/Policies/*' element={<Policies />} />
+                  <Route path='/Groups/*' element={<Groups />} />
+                  <Route path='/AuthLogs' element={<AuthLog />} />
+                  <Route path='/PortalLogs' element={<PortalLog />} />
+                  <Route path='/Settings' element={<Settings />} />
+                  <Route path='/*' element={<Navigate to={MainRouteByDeviceType} replace={true} />} />
                 </>
-            ) : <>
-              <Route path='/*' element={<LoginPage />} />
-              <Route path='/signup' element={<SignUp />} />
-            </>
-          }
-        </Routes>
-      </div>} />
-    </Routes>
+                  : <>
+                    <Route path='/Main' element={<Users />} />
+                    <Route path='/*' element={<Navigate to='/Main' replace={true} />} />
+                  </>
+              ) : <>
+                <Route path='/*' element={<LoginPage />} />
+                <Route path='/signup' element={<SignUp />} />
+              </>
+            }
+          </Routes>
+        </div>} />
+      </Routes> : <>
+        
+        </>
+    }
 
   </IntlProvider>;
 }

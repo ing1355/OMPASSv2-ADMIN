@@ -19,9 +19,11 @@ const DashboardAllAuth = ({ applications }: {
         date: string
         [key: string]: any
     }[]>([])
-
+    const [loading, setLoading] = useState(false)
     const getDatas = () => {
+        setLoading(true)
         GetDashboardApplicationAuthFunc(applications.map(_ => _.id), convertDashboardDateParamsLocalTimezoneToUTC(params), (data) => {
+            console.log(data)
             if (params.intervalValue === 24) {
                 setDatas(data.map((_, ind, arr) => {
                     const values = _.applicationCounts.reduce((pre, cur) => {
@@ -53,6 +55,9 @@ const DashboardAllAuth = ({ applications }: {
                 }))
             }
         })
+        .finally(() => {
+            setLoading(false)
+        })
     }
 
     useEffect(() => {
@@ -66,7 +71,7 @@ const DashboardAllAuth = ({ applications }: {
     return <DashboardCardWithDateSelect title={<FormattedMessage id="DASHBOARD_ALL_AUTH" />} onChange={(_) => {
         setParams(_)
     }}>
-        <DashBoardBarChart datas={datas} keys={applications.map(_ => _.name)} indexKey="date" customColor isSum params={params}/>
+        <DashBoardBarChart datas={datas} keys={applications.map(_ => _.name)} indexKey="date" customColor params={params} loading={loading} isSum/>
     </DashboardCardWithDateSelect>
 }
 

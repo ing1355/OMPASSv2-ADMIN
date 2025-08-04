@@ -16,7 +16,9 @@ const DashboardInvalidAuthSum = ({ applications }: {
     const { convertUTCStringToTimezoneDateString } = useDateTime();
     const {convertDaysByDate, convertHourRangeByDate, convertDashboardDateParamsLocalTimezoneToUTC, dashboardDateInitialValue} = useDsashboardFunctions()
     const [params, setParams] = useState(dashboardDateInitialValue())
+    const [loading, setLoading] = useState(false)
     const getDatas = () => {
+        setLoading(true)
         GetDashboardApplicationInvalidAuthSumFunc(applications.map(_ => _.id), convertDashboardDateParamsLocalTimezoneToUTC(params), (data) => {
             if (params.intervalValue === 24) {
                 setDatas(data.map((_, ind, arr) => {
@@ -32,6 +34,9 @@ const DashboardInvalidAuthSum = ({ applications }: {
                 })))
             }
         })
+        .finally(() => {
+            setLoading(false)
+        })
     }
 
     useEffect(() => {
@@ -45,7 +50,7 @@ const DashboardInvalidAuthSum = ({ applications }: {
     return <DashboardCardWithDateSelect title={<FormattedMessage id="DASHBOARD_INVALID_ALL_AUTH_SUM" />} isCard={false} onChange={(d) => {
         setParams(d)
     }}>
-        <DashBoardBarChart datas={datas} keys={["count"]} indexKey="name" isSum params={params}/>
+        <DashBoardBarChart datas={datas} keys={["count"]} indexKey="name" isSum params={params} loading={loading}/>
     </DashboardCardWithDateSelect>
 }
 

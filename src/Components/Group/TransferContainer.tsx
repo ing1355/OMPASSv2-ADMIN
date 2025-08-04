@@ -16,6 +16,7 @@ type TransferContainerProps = {
     setSelected: SetStateType<UserHierarchyDataRpUserType['id'][]>
     viewStyle: UserGroupViewType
     title: React.ReactNode
+    dataLoading: boolean
 }
 
 type ClearBtnProps = {
@@ -35,7 +36,7 @@ const ClearBtn = ({ onClick }: ClearBtnProps) => {
     </div>
 }
 
-const TransferContainer = ({ datas, selected, setSelected, viewStyle, title }: TransferContainerProps) => {
+const TransferContainer = ({ datas, selected, setSelected, viewStyle, title, dataLoading }: TransferContainerProps) => {
     const [searchInput, setSearchInput] = useState("")
     const [searchFilter, setSearchFilter] = useState('')
 
@@ -125,8 +126,8 @@ const TransferContainer = ({ datas, selected, setSelected, viewStyle, title }: T
         </div>
         <div className='custom-transfer-user-list-container'>
             {
-                viewStyle === 'portal' ? <PortalTypeView datas={filteredDatas as UserHierarchyDataType[]} selected={selected} setSelected={setSelected} />
-                    : <ApplicationTypeView datas={filteredDatas as UserHierarchyDataApplicationViewDataType[]} selected={selected} setSelected={setSelected} />
+                viewStyle === 'portal' ? <PortalTypeView datas={filteredDatas as UserHierarchyDataType[]} selected={selected} setSelected={setSelected} height={700} loading={dataLoading} />
+                    : <ApplicationTypeView datas={filteredDatas as UserHierarchyDataApplicationViewDataType[]} selected={selected} setSelected={setSelected} height={700} loading={dataLoading} />
             }
         </div>
         <div className='custom-transfer-user-list-search-container'>

@@ -412,6 +412,9 @@
 .dashboard-chart-inner-container {
     height: calc(100% - 32px);
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .custom-dashboard-chart-path {
@@ -435,4 +438,33 @@
     100% {
         stroke-dashoffset: 0;
     }
+}
+
+.custom-dashboard-bar-chart-tooltip-item {
+    padding: 12px;
+    border-radius: 4px;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, .2);
+    background-color: white;
+    font-size: .8rem;
+}
+
+.custom-dashboard-bar-chart-tooltip-item-key {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.custom-dashboard-bar-chart-tooltip-item-key:not(:last-child) {
+    margin-bottom: 8px;
+}
+
+.custom-dashboard-bar-chart-tooltip-item-key > div:first-child {
+    width: 12px;
+    height: 12px;
+}
+
+.custom-dashboard-bar-chart-tooltip-item-key > div:last-child > span:last-child {
+    font-weight: bold;
+    color: var(--main-purple-color);
 }

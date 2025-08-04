@@ -169,7 +169,7 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
     }, [refresh])
 
     return <div className="custom-transfer-user-container">
-        <TransferContainer datas={filteredUserDatas as UserTransferDataType[]} selected={tempUsers} setSelected={setTempUsers} viewStyle={viewStyle} title={<FormattedMessage id="GROUP_TRANSFER_NOT_INCLUDE_USER_LABEL"/>} />
+        <TransferContainer datas={filteredUserDatas as UserTransferDataType[]} selected={tempUsers} setSelected={setTempUsers} viewStyle={viewStyle} title={<FormattedMessage id="GROUP_TRANSFER_NOT_INCLUDE_USER_LABEL"/>} dataLoading={dataLoading}/>
         <div className='custom-transfer-buttons-container'>
             <img
                 src={onRight ? groupRightArrowIconHover : groupRightArrowIcon}
@@ -226,7 +226,7 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
                     message.success(formatMessage({id:'GROUP_USER_RESET_SUCCESS_MSG'}))
                 }} />
         </div>
-        <TransferContainer datas={filteredSelectedUserDatas as UserTransferDataType[]} selected={selectedTempUsers} setSelected={setSelectedTempUsers} viewStyle={viewStyle} title={<FormattedMessage id="GROUP_TRANSFER_INCLUDE_USER_LABEL"/>}/>
+        <TransferContainer datas={filteredSelectedUserDatas as UserTransferDataType[]} selected={selectedTempUsers} setSelected={setSelectedTempUsers} viewStyle={viewStyle} title={<FormattedMessage id="GROUP_TRANSFER_INCLUDE_USER_LABEL"/>} dataLoading={dataLoading}/>
         <CustomModal
             open={sureChange}
             onCancel={() => {

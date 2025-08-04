@@ -28,7 +28,7 @@ export function CustomAxiosGet(url: string, callback?: Function, params?: any, c
         authorization: config.authorization ? config.authorization : getStorageAuth(),
         ...config.headers
     } : defaultHeaders()
-    return axios.get(defaultDomain + url, {
+    const result = axios.get(defaultDomain + url, {
         paramsSerializer: {
             indexes: null
         }, params, headers
@@ -36,6 +36,7 @@ export function CustomAxiosGet(url: string, callback?: Function, params?: any, c
         if (callback) callback(res.data);
         return res.data
     })
+    return result
 }
 
 export function CustomAxiosGetFile(url: string, callback?: Function, params?: any) {

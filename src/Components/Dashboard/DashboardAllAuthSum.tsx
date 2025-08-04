@@ -13,11 +13,13 @@ const DashboardAllAuthSum = ({ applications }: {
   const { convertUTCStringToTimezoneDateString } = useDateTime();
   const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
   const lang = useSelector((state: ReduxStateType) => state.lang!);
+  const [loading, setLoading] = useState(false)
   const {convertDaysByDate, convertHourRangeByDate, convertDashboardDateParamsLocalTimezoneToUTC, dashboardDateInitialValue} = useDsashboardFunctions()
   const [params, setParams] = useState(dashboardDateInitialValue())
   const [datas, setDatas] = useState<{ name: string, count: number }[]>([])
   
   const getDatas = () => {
+    setLoading(true)
     GetDashboardApplicationAuthSumFunc(applications.map(_ => _.id), convertDashboardDateParamsLocalTimezoneToUTC(params), (data) => {
       if (params.intervalValue === 24) {
         setDatas(data.map((_, ind, arr) => {
@@ -32,6 +34,8 @@ const DashboardAllAuthSum = ({ applications }: {
           count: _.count
         })))
       }
+    }).finally(() => {
+      setLoading(false)
     })
   }
   
@@ -46,7 +50,7 @@ const DashboardAllAuthSum = ({ applications }: {
   return <DashboardCardWithDateSelect title={<FormattedMessage id="DASHBOARD_ALL_AUTH_SUM"/>} onChange={(_) => {
     setParams(_)
   }}>
-    <DashBoardBarChart datas={datas} keys={["count"]} indexKey="name" params={params}/>
+    <DashBoardBarChart datas={datas} keys={["count"]} indexKey="name" params={params} loading={loading}/>
   </DashboardCardWithDateSelect>
 }
 

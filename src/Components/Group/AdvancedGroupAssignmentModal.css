@@ -1,0 +1,265 @@
+.advanced-group-assignment-modal .ant-modal-content {
+    max-height: 90vh;
+    overflow: hidden;
+}
+
+.advanced-group-assignment-modal .ant-modal-body {
+    max-height: calc(90vh - 120px);
+    overflow-y: auto;
+    padding: 0;
+}
+
+.modal-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.modal-content {
+    padding: 24px;
+}
+
+/* 탭 스타일 */
+.advanced-group-assignment-modal .ant-tabs-tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 16px;
+}
+
+.advanced-group-assignment-modal .ant-tabs-tab-active {
+    background-color: #f0f8ff;
+    border-radius: 6px;
+}
+
+/* 필터 영역 */
+.assignment-filters,
+.condition-filters {
+    margin-bottom: 20px;
+    padding: 16px;
+    background: #fafafa;
+    border-radius: 6px;
+    border: 1px solid #f0f0f0;
+}
+
+.filter-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.search-input {
+    flex: 1;
+    max-width: 300px;
+}
+
+.filter-select {
+    min-width: 150px;
+}
+
+/* 할당 컨텐츠 */
+.assignment-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+.user-selector-section h4,
+.assignment-actions h4 {
+    margin-bottom: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #262626;
+}
+
+.assignment-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.group-selection {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.group-select {
+    width: 100%;
+}
+
+.group-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+/* 조건부 할당 */
+.conditional-assignment-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.conditional-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.condition-summary {
+    padding: 16px;
+    background: #f6ffed;
+    border: 1px solid #b7eb8f;
+    border-radius: 6px;
+}
+
+.condition-summary h4 {
+    margin-bottom: 12px;
+    color: #52c41a;
+    font-weight: 600;
+}
+
+.condition-details p {
+    margin: 4px 0;
+    color: #595959;
+    font-size: 14px;
+}
+
+/* 할당 요약 */
+.assignment-summary {
+    margin-top: 24px;
+    padding: 20px;
+    background: #fafafa;
+    border-radius: 6px;
+    border: 1px solid #f0f0f0;
+}
+
+.summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.summary-header h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #262626;
+}
+
+.assignment-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.empty-assignments {
+    text-align: center;
+    padding: 40px;
+    color: #8c8c8c;
+}
+
+.assignments-grid {
+    display: grid;
+    gap: 8px;
+}
+
+.assignment-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: white;
+    border: 1px solid #f0f0f0;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.assignment-item:hover {
+    border-color: #d9d9d9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.user-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.user-info .username {
+    font-weight: 600;
+    color: #262626;
+    font-size: 14px;
+}
+
+.user-info .fullname {
+    color: #595959;
+    font-size: 12px;
+}
+
+.assignment-arrow {
+    color: #8c8c8c;
+    font-weight: bold;
+}
+
+.group-info {
+    min-width: 100px;
+}
+
+.remove-btn {
+    color: #ff4d4f;
+    padding: 4px;
+}
+
+.remove-btn:hover {
+    background-color: #fff1f0;
+    color: #ff7875;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+    .assignment-content {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .filter-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-input {
+        max-width: none;
+    }
+    
+    .filter-select {
+        min-width: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .advanced-group-assignment-modal .ant-modal {
+        width: 95% !important;
+        max-width: 95%;
+    }
+    
+    .modal-content {
+        padding: 16px;
+    }
+    
+    .assignment-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .assignment-arrow {
+        align-self: center;
+    }
+} 

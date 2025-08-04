@@ -38,7 +38,7 @@ const ApplicationUserNum = ({ title, totalCount, num, color }: {
             </div>
         </div>
         <div className="dashboard-middle-application-user-num-tag-item-num">
-            {slicePrice(num)} / {slicePrice(totalCount)} <div className="dashboard-middle-application-user-num-tag-item-num-sub">({Math.round(num / totalCount * 100)}%)</div>
+            {slicePrice(num)} / {slicePrice(totalCount)} <div className="dashboard-middle-application-user-num-tag-item-num-sub">({Math.floor(num / totalCount * 100) || 0}%)</div>
         </div>
     </div>
 }

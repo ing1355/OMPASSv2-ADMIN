@@ -30,16 +30,30 @@ const CustomTablePagination = ({ pageNum, tableSize, totalCount, onChangePage }:
                     const input = quickJumperInputs[0] as HTMLInputElement;
                     input.setAttribute('maxlength', '10');
                     
-                    // 숫자만 입력 가능하도록 onKeyDown 이벤트 추가
-                    input.addEventListener('keydown', (e) => {
-                        // 숫자 키 (0-9), 백스페이스, 삭제, 화살표 키, 탭 키만 허용
-                        const allowedKeys = [
-                            'Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
-                            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
-                        ];
+                    // // 숫자만 입력 가능하도록 onKeyDown 이벤트 추가
+                    // input.addEventListener('keydown', (e) => {
+                    //     // 숫자 키 (0-9), 백스페이스, 삭제, 화살표 키, 탭 키만 허용
+                    //     const allowedKeys = [
+                    //         'Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
+                    //         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+                    //     ];
                         
-                        if (!allowedKeys.includes(e.key)) {
-                            e.preventDefault();
+                    //     if (!allowedKeys.includes(e.key)) {
+                    //         e.preventDefault();
+                    //     }
+                    // });
+
+                    // compositionstart 이벤트로 한글 입력 시작 감지
+                    input.addEventListener('compositionstart', (e) => {
+                        e.preventDefault();
+                    });
+
+                    // input 이벤트로 실제 입력값 검증
+                    input.addEventListener('input', (e) => {
+                        const target = e.target as HTMLInputElement;
+                        const numericValue = target.value.replace(/[^0-9]/g, '');
+                        if (target.value !== numericValue) {
+                            target.value = numericValue;
                         }
                     });
 

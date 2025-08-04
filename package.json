@@ -1,6 +1,6 @@
 {
   "name": "ompass_rp_admin",
-  "version": "2.0.0(178)",
+  "version": "2.0.0(180)",
   "proxy": "https://ompass.kr:54006",
   "private": true,
   "dependencies": {
@@ -40,6 +40,7 @@
     "react-router": "^6.10.0",
     "react-router-dom": "^6.10.0",
     "react-scripts": "5.0.1",
+    "react-window": "^1.8.11",
     "redux": "^4.2.1",
     "remark-gfm": "^4.0.1",
     "styled-components": "^6.0.0-rc.1",
@@ -95,6 +96,7 @@
     "@types/react-router": "^5.1.20",
     "@types/react-router-dom": "^5.3.3",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "@types/react-window": "^1.8.8",
     "@types/redux": "^3.6.0",
     "cross-env": "^7.0.3",
     "customize-cra": "^1.0.0",

@@ -37,7 +37,6 @@ const GroupDetail = () => {
     const navigate = useNavigate()
     const { uuid } = useParams()
     const { formatMessage } = useIntl()
-    const { goBack } = useCustomRoute()
     const applicationTypeItems = applicationTypes.map(_ => ({
         key: _,
         label: getApplicationTypeLabel(_),

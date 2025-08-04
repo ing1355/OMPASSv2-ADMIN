@@ -3,11 +3,7 @@ import types from '../types';
 
 const subdomainInfo: ReduxStateType['subdomainInfo']|null = {
   name: '',
-  backendVersion: {
-    fidoApp: 'unknown',
-    portalApp: 'unknown',
-    interfaceApp: 'unknown'
-  },
+  backendVersion: null,
   securityQuestion: {
     isRootAdminSignupComplete: false,
     questions: []

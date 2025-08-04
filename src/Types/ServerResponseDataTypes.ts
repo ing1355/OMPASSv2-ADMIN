@@ -51,7 +51,7 @@ type SubDomainInfoDataType = {
     fidoApp: string
     interfaceApp: string
     portalApp: string
-  }
+  } | null
   timeZone: string
   macOsAgentUrl?: string
   windowsAgentUrl?: string

@@ -1,0 +1,148 @@
+.virtual-user-selector {
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+    background: #fff;
+    overflow: hidden;
+}
+
+.selector-header {
+    padding: 16px;
+    border-bottom: 1px solid #f0f0f0;
+    background: #fafafa;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.search-container {
+    flex: 1;
+    max-width: 300px;
+}
+
+.selection-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.selected-count {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+}
+
+.user-list-container {
+    position: relative;
+    min-height: 200px;
+}
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    gap: 12px;
+    color: #666;
+}
+
+.empty-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+}
+
+.virtual-user-row {
+    padding: 0 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.virtual-user-row:hover {
+    background-color: #f5f5f5;
+}
+
+.virtual-user-row.selected {
+    background-color: #e6f7ff;
+    border-left: 3px solid #1890ff;
+}
+
+.user-row-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+}
+
+.user-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.user-main-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.username {
+    font-weight: 600;
+    color: #262626;
+    font-size: 14px;
+}
+
+.fullname {
+    color: #595959;
+    font-size: 13px;
+}
+
+.user-secondary-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.email {
+    color: #8c8c8c;
+    font-size: 12px;
+}
+
+.selection-summary {
+    padding: 12px 16px;
+    background: #f6ffed;
+    border-top: 1px solid #b7eb8f;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #52c41a;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .selector-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    
+    .search-container {
+        max-width: none;
+    }
+    
+    .selection-info {
+        justify-content: space-between;
+    }
+    
+    .user-main-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+} 

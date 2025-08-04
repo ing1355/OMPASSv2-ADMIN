@@ -101,27 +101,10 @@ const UserDetail = ({ }) => {
                     setUserData(results[0])
                 })
                 await GetUserDetailDataFunc(uuid, (data) => {
-                    setUserDetailDatas(data.map(_ => ({
-                        ..._,
-                        createdAt: convertUTCStringToTimezoneDateString(_.createdAt),
-                        authenticationInfo: _.authenticationInfo.map(__ => ({
-                            ...__,
-                            loginDeviceInfo: {
-                                ...__.loginDeviceInfo,
-                                updatedAt: convertUTCStringToTimezoneDateString(__.loginDeviceInfo.updatedAt)
-                            },
-                            createdAt: convertUTCStringToTimezoneDateString(__.createdAt),
-                            authenticators: __.authenticators.map(___ => ({
-                                ...___,
-                                createdAt: convertUTCStringToTimezoneDateString(___.createdAt),
-                                lastAuthenticatedAt: convertUTCStringToTimezoneDateString(___.lastAuthenticatedAt)
-                            }))
-                        }))
-                    })))
+                    setUserDetailDatas(data)
                     if (data.length === 1) {
                         setUserDetailOpened(data.map((_, ind) => _.authenticationInfo[0].id))
                     }
-                    // setUserDetailDatas(testDetailDatas)
                 })
             } catch (e) {
                 navigate(-1)
@@ -163,7 +146,7 @@ const UserDetail = ({ }) => {
                 {
                     // userInfo.role === 'ROOT' && <Button className='st5' onClick={() => {
                     !isAdd && userInfo.role === 'ROOT' && !isSelf && <Button className='st5' onClick={() => {
-                        if(userData?.status !== 'RUN') {
+                        if (userData?.status !== 'RUN') {
                             message.error(formatMessage({ id: 'USER_AUTHORITY_SUCCESSION_FAIL_MSG' }))
                             return
                         }

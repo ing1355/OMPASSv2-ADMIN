@@ -128,7 +128,7 @@ const PasscodeLogs = () => {
             {
                 key: 'expirationTime',
                 title: <FormattedMessage id="VALID_TIME" />,
-                render: (data, ind, row) => row.passcode.expiredAt,
+                render: (data, ind, row) => row.passcode.expiredAt === "-1" ? "∞" : row.passcode.expiredAt,
                 isTime: true
             },
         ]}
