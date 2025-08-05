@@ -10,6 +10,8 @@ const defaultHeaders = () => ({
     'Content-Type': 'application/json'
 })
 
+// const cancelToken = axios.CancelToken.source()
+
 export function CustomAxiosGet(url: string, callback?: Function, params?: any, config?: any) {
     let _config = {
         params, headers: defaultHeaders()
@@ -31,11 +33,13 @@ export function CustomAxiosGet(url: string, callback?: Function, params?: any, c
     const result = axios.get(defaultDomain + url, {
         paramsSerializer: {
             indexes: null
-        }, params, headers
+        }, params, headers,
+        // cancelToken: cancelToken.token
     }).then(res => {
         if (callback) callback(res.data);
         return res.data
     })
+    // cancelToken.cancel()
     return result
 }
 

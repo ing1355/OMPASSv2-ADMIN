@@ -25,17 +25,34 @@ type SecurityQuestionType = {
   questions: SecurityQuestionsKeyType[]
 }
 
-type PlanFeatureType = "DASHBOARD" | "ADMIN_NOTIFICATION" | "USER_EXTERNAL_DIRECTORY_SYNC" | "ADMIN_APPLICATION" | "WEB_APPLICATION" | "WINDOWS_LOGIN_APPLICATION" | "LINUX_LOGIN_APPLICATION" | "RADIUS_APPLICATION" | "LDAP_APPLICATION" | "MICROSOFT_ENTRA_ID_APPLICATION" | "REDMINE_APPLICATION"
+// type PlanFeatureType = "DASHBOARD" | "ADMIN_NOTIFICATION" | "USER_EXTERNAL_DIRECTORY_SYNC" | "ADMIN_APPLICATION" | "WEB_APPLICATION" | "WINDOWS_LOGIN_APPLICATION" | "LINUX_LOGIN_APPLICATION" | "RADIUS_APPLICATION" | "LDAP_APPLICATION" | "MICROSOFT_ENTRA_ID_APPLICATION" | "REDMINE_APPLICATION"
 
 type PlanDataType = {
   type: "TRIAL_PLAN" | "SUBSCRIPTION_PLAN_L1" | "SUBSCRIPTION_PLAN_L2" | "SUBSCRIPTION_PLAN_L3" | "LICENSE_PLAN_L1" | "LICENSE_PLAN_L2",
   status: "RUN" | "EXPIRED",
-  availableFeatures: PlanFeatureType[]
+  paymentAmount: number
   maxUserCount: number
   maxApplicationCount: number
-  maxSessionCount: number
-  expiredDate: string
+  maxSessionCountPerUser: number
+  isNearExpiration: boolean
+  description: string
+  expiredAt: string
   createdAt: string
+  // availableFeatures: PlanFeatureType[]
+}
+
+type CurrentPlanDataType = {
+  id: string
+  type: PlanDataType['type']
+  status: PlanDataType['status']
+  paymentAmount: number
+  maxUserCount: PlanDataType['maxUserCount']
+  maxApplicationCount: PlanDataType['maxApplicationCount']
+  maxSessionCountPerUser: PlanDataType['maxSessionCountPerUser']
+  expiredAt: PlanDataType['expiredAt']
+  remainingDays: number
+  isNearExpiration: PlanDataType['isNearExpiration']
+  createdAt: PlanDataType['createdAt']
 }
 
 type SubDomainInfoDataType = {
@@ -96,6 +113,7 @@ type UpdatePortalSettingsDataType = {
 type ServerGlobalConfigDataType = {
   isUserAllowedToRemoveAuthenticator: boolean
   googleApiKey: string
+  planType: PlanDataType['type']
 }
 
 type GlobalDatasType = ServerGlobalConfigDataType & {

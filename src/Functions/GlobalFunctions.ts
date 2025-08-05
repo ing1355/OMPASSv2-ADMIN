@@ -4,6 +4,7 @@ import jwtDecode from "jwt-decode";
 export const getStorageAuth = () => localStorage.getItem('Authorization')
 export const setStorageAuth = (token: string) => localStorage.setItem('Authorization', token)
 export const removeStorageUserSettings = () => {
+    console.log('removeStorageUserSettings')
     localStorage.removeItem('Authorization')
     localStorage.removeItem('user_select_size')
 }
@@ -53,18 +54,13 @@ export const slicePrice = (price: string | number) => {
 };
 
 export const parseJwtToken = (token: string) => {
-    try {
-        return (jwtDecode(token) as {
-            exp: number,
-            data: {
-                tanantId: string
-                user: UserDataType
-            }
-        }).data.user
-    } catch (e) {
-        console.log('parse jwt error ', e)
-        return null
-    }
+    return (jwtDecode(token) as {
+        exp: number,
+        data: {
+            tanantId: string
+            user: UserDataType
+        }
+    }).data.user
 }
 
 export const autoHypenPhoneFun = (phone: string) => {

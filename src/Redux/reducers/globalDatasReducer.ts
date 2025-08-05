@@ -1,10 +1,10 @@
-import { getStorageAuth } from 'Functions/GlobalFunctions';
 import types from '../types';
 
 const globalDatas: ReduxStateType['globalDatas'] = {
   isUserAllowedToRemoveAuthenticator: false,
   googleApiKey: '',
-  loading: getStorageAuth() ? true : false
+  loading: false,
+  planType: 'LICENSE_PLAN_L2'
 }
 
 const globalDatasReducer = (state = globalDatas, action: DefaultReduxActionType<ReduxStateType['globalDatas']>) => {

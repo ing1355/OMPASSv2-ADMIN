@@ -135,4 +135,5 @@ export const SendChangeEmailCodeApi = '/v2/users/email/verification/update'
 export const SendEmailVerificationApi = '/v2/users/email/verification/authorize'
 
 // 요금
-export const GetBillingHistoriesApi = '/v2/plans'
+export const GetBillingHistoriesApi = '/v2/plan-histories'
+export const GetCurrentPlanApi = '/v2/plans'

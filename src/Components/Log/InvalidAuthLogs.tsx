@@ -1,9 +1,10 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
-import { applicationTypes, authFailReasonList, getApplicationTypeLabel, logAuthPurposeList } from "Constants/ConstantValues"
+import { authFailReasonList, getApplicationTypeLabel, getApplicationTypesByPlanType, logAuthPurposeList } from "Constants/ConstantValues"
 import { useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 import { GetInvalidAuthLogDataListFunc } from "Functions/ApiFunctions"
 import AuthLogDetailModal from "./AuthLogDetailModal"
+import { useSelector } from "react-redux"
 
 const InvalidAuthLogs = () => {
     const [detailData, setDetailData] = useState<InvalidAuthLogDataType>()
@@ -11,6 +12,7 @@ const InvalidAuthLogs = () => {
     const [totalCount, setTotalCount] = useState(1)
     const [dataLoading, setDataLoading] = useState(false)
     const { formatMessage } = useIntl()
+    const planType = useSelector((state: ReduxStateType) => state.globalDatas?.planType!)
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
         const _params: GeneralParamsType = {
@@ -69,7 +71,7 @@ const InvalidAuthLogs = () => {
                     title: <FormattedMessage id="APPLICATION_TYPE_LABEL" />,
                     render: (_, _ind, row) => getApplicationTypeLabel(row.ompassData?.application?.type ?? ""),
                     filterKey: 'applicationTypes',
-                    filterOption: applicationTypes.map(_ => ({
+                    filterOption: getApplicationTypesByPlanType(planType).map(_ => ({
                         label: formatMessage({ id: _ + "_APPLICATION_TYPE" }),
                         value: _
                     }))

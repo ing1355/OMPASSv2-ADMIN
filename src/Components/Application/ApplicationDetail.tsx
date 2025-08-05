@@ -6,7 +6,7 @@ import { message } from "antd"
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import { AddApplicationDataFunc, DeleteApplicationListFunc, GetApplicationDetailFunc, GetApplicationListFunc, GetAuthorizeMSEntraUriFunc, UpdateApplicationDataFunc, UpdateApplicationSecretkeyFunc } from "Functions/ApiFunctions"
 import PolicySelect from "Components/CommonCustomComponents/PolicySelect"
-import { applicationTypes, getApplicationTypeLabel, maxLengthByType, ompassDefaultLogoImage } from "Constants/ConstantValues"
+import { getApplicationTypeLabel, getApplicationTypesByPlanType, maxLengthByType, ompassDefaultLogoImage } from "Constants/ConstantValues"
 import { convertBase64FromClientToServerFormat } from "Functions/GlobalFunctions"
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect"
 import Button from "Components/CommonCustomComponents/Button"
@@ -29,8 +29,10 @@ import ApplicationDetailHeaderInfo from "./ApplicationDetailHeaderInfo"
 import BottomLineText from "Components/CommonCustomComponents/BottomLineText"
 import PasswordlessCheck from "Components/Policy/PolicyItems/PasswordlessCheck"
 import SureDeleteButton from "Components/CommonCustomComponents/SureDeleteButton"
+import { useSelector } from "react-redux"
 
 const ApplicationDetail = () => {
+    const planType = useSelector((state: ReduxStateType) => state.globalDatas?.planType!)
     const [logoImage, setLogoImage] = useState<updateLogoImageType>({
         isDefaultImage: true,
         image: ompassDefaultLogoImage
@@ -56,6 +58,7 @@ const ApplicationDetail = () => {
     const [authPurpose, setAuthPurpose] = useState<'delete' | 'reset' | ''>('')
     const [sureReset, setSureReset] = useState(false)
     const [hasWindowsLogin, setHasWindowsLogin] = useState(false)
+    const [hasMacLogin, setHasMacLogin] = useState(false)
     const [radiusData, setRadiusData] = useState<RadiusDataType>()
     const [applicationType, setApplicationType] = useState<LocalApplicationTypes>(undefined)
     const inputNameRef = useRef<HTMLInputElement>(null)
@@ -69,10 +72,10 @@ const ApplicationDetail = () => {
     const readOnlyRedirectUriList: LocalApplicationTypes[] = ["PORTAL", "REDMINE"]
     const noRedirectUri: LocalApplicationTypes[] = ["KEYCLOAK", "REDMINE"]
     const passwordlessApplicationTypes: LocalApplicationTypes[] = ["WINDOWS_LOGIN", "LINUX_LOGIN", 'PORTAL']
-    const typeItems = applicationTypes.map(_ => ({
+    const typeItems = getApplicationTypesByPlanType(planType).map(_ => ({
         key: _,
         label: getApplicationTypeLabel(_),
-        disabled: _ === 'PORTAL' || (hasWindowsLogin && _ === 'WINDOWS_LOGIN')
+        disabled: _ === 'PORTAL' || (hasWindowsLogin && _ === 'WINDOWS_LOGIN') || (hasMacLogin && _ === 'MAC_LOGIN')
     }))
 
     const handleFileSelect = (data: updateLogoImageType) => {
@@ -122,8 +125,9 @@ const ApplicationDetail = () => {
                 }
             })
         } else {
-            await GetApplicationListFunc({ types: ['WINDOWS_LOGIN'] }, ({ results }) => {
-                if (results.length > 0) setHasWindowsLogin(true)
+            await GetApplicationListFunc({ types: ['WINDOWS_LOGIN', 'MAC_LOGIN'] }, ({ results }) => {
+                if(results.find(_ => _.type === 'WINDOWS_LOGIN')) setHasWindowsLogin(true)
+                if(results.find(_ => _.type === 'MAC_LOGIN')) setHasMacLogin(true)
             })
         }
     }

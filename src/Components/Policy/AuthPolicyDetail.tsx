@@ -10,7 +10,7 @@ import resetIcon from '@assets/resetIcon.png'
 import resetIconWhite from '@assets/resetIconWhite.png'
 import Button from "Components/CommonCustomComponents/Button";
 import Input from "Components/CommonCustomComponents/Input";
-import { applicationTypes, getApplicationTypeLabel, isTta, maxLengthByType, PolicyBrowsersList } from "Constants/ConstantValues";
+import { getApplicationTypeLabel, getApplicationTypesByPlanType, isTta, maxLengthByType, PolicyBrowsersList } from "Constants/ConstantValues";
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect";
 import CustomModal from "Components/Modal/CustomModal";
 import OMPASSAuth from "./PolicyItems/OMPASSAuth";
@@ -30,6 +30,7 @@ import './AuthPolicyDetail.css'
 import LinuxPamBypass from "./PolicyItems/LinuxPamBypass";
 import CanEmailRegister from "./CanEmailRegister";
 import SureDeleteButton from "Components/CommonCustomComponents/SureDeleteButton";
+import { useSelector } from "react-redux";
 
 const pamInitData: PAMBypassDataType = {
     isEnabled: false,
@@ -38,6 +39,7 @@ const pamInitData: PAMBypassDataType = {
 }
 
 const AuthPolicyDetail = () => {
+    const planType = useSelector((state: ReduxStateType) => state.globalDatas?.planType!)
     const { uuid } = useParams()
     const { goBack } = useCustomRoute()
     const isAdd = !uuid
@@ -88,7 +90,7 @@ const AuthPolicyDetail = () => {
     const locationUsed = !isDefaultPolicy
     const authenticatorUsedList: LocalApplicationTypes[] = ["ALL", "RADIUS"]
     const authenticatorsUsed = !isDefaultPolicy && selectedApplicationType ? !authenticatorUsedList.includes(selectedApplicationType) : false
-    const typeItems = applicationTypes.map(_ => ({
+    const typeItems = getApplicationTypesByPlanType(planType).map(_ => ({
         key: _,
         label: getApplicationTypeLabel(_)
     }))

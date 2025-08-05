@@ -227,6 +227,11 @@ const Billing = () => {
                                 isTime: true
                             },
                             {
+                                key: 'expiredDate',
+                                title: <FormattedMessage id="PLAN_EXPIRED_AT_COLUMN_LABEL" />,
+                                isTime: true
+                            },
+                            {
                                 key: 'maxApplicationCount',
                                 title: <FormattedMessage id="PLAN_MAX_APPLICATION_COUNT_COLUMN_LABEL" />
                             },
@@ -235,12 +240,13 @@ const Billing = () => {
                                 title: <FormattedMessage id="PLAN_MAX_USER_COUNT_COLUMN_LABEL" />
                             },
                             {
-                                key: 'maxSessionCount',
+                                key: 'maxSessionCountPerUser',
                                 title: <FormattedMessage id="PLAN_MAX_SESSION_COUNT_COLUMN_LABEL" />
                             },
                             {
                                 key: 'paymentAmount',
-                                title: <FormattedMessage id="PLAN_TOTAL_PRICE_AMOUNT_COLUMN_LABEL" />
+                                title: <FormattedMessage id="PLAN_TOTAL_PRICE_AMOUNT_COLUMN_LABEL" />,
+                                render: (data, ind, row) => data.toLocaleString()
                             },
                             {
                                 key: 'description',

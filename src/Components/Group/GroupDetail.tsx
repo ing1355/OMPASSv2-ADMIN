@@ -16,13 +16,15 @@ import groupPortalViewIconColor from '@assets/groupPortalViewIconColor.png'
 import groupApplicationViewIcon from '@assets/groupApplicationViewIcon.png'
 import groupApplicationViewIconColor from '@assets/groupApplicationViewIconColor.png'
 import closeIcon from '@assets/closeIcon.png'
-import { applicationTypes, getApplicationTypeLabel, INT_MAX_VALUE } from "Constants/ConstantValues"
+import { getApplicationTypeLabel, getApplicationTypesByPlanType, INT_MAX_VALUE } from "Constants/ConstantValues"
 import './GroupDetail.css'
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect"
 import useCustomRoute from "hooks/useCustomRoute"
 import SureDeleteButton from "Components/CommonCustomComponents/SureDeleteButton"
+import { useSelector } from "react-redux"
 
 const GroupDetail = () => {
+    const planType = useSelector((state: ReduxStateType) => state.globalDatas?.planType!)
     const [inputName, setInputName] = useState('')
     const [inputDescription, setInputDescription] = useState('')
     const [selectedPolicies, setSelectedPolicies] = useState<UserGroupPolicyType[]>([])
@@ -37,7 +39,7 @@ const GroupDetail = () => {
     const navigate = useNavigate()
     const { uuid } = useParams()
     const { formatMessage } = useIntl()
-    const applicationTypeItems = applicationTypes.map(_ => ({
+    const applicationTypeItems = getApplicationTypesByPlanType(planType).map(_ => ({
         key: _,
         label: getApplicationTypeLabel(_),
         disabled: selectedPolicies.map(sp => sp.applicationType).includes(_)

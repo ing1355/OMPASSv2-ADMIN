@@ -67,37 +67,6 @@ const AgentManagement = () => {
         children: <ManagementByType type='WINDOWS_FRAMEWORK' isCloud={isCloud} />
       }
     ]
-  // const items: {
-  //   label: React.ReactNode
-  //   key: AgentType
-  //   children: React.ReactNode
-  // }[] = [
-  //   {
-  //     label: <FormattedMessage id="AGENT_WINDOWS_LABEL" />,
-  //     key: 'WINDOWS_AGENT',
-  //     children: <WindowsAgentManagement />
-  //   },
-  //   {
-  //     label: <FormattedMessage id="AGENT_PAM_LABEL" />,
-  //     key: "LINUX_PAM",
-  //     children: <LinuxPAMAgentManagement />
-  //   },
-  //   {
-  //     label: <FormattedMessage id="AGENT_PROXY_LABEL" />,
-  //     key: "OMPASS_PROXY",
-  //     children: <OMPASSProxyServerManagement />
-  //   },
-  //   {
-  //     label: <FormattedMessage id="AGENT_REDMINE_LABEL" />,
-  //     key: "REDMINE_PLUGIN",
-  //     children: <RedminePluginManagement />
-  //   },
-  //   {
-  //     label: <FormattedMessage id="AGENT_KEYCLOAK_LABEL" />,
-  //     key: "KEYCLOAK_PLUGIN",
-  //     children: <KeycloakPluginManagement />
-  //   }
-  // ]
   return (
     <>
       <Contents>

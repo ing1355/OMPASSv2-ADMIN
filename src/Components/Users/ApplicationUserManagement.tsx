@@ -1,7 +1,7 @@
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow";
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect";
 import CustomTable from "Components/CommonCustomComponents/CustomTable";
-import { applicationTypes, authenticatorList, authenticatorLabelList, getApplicationTypeLabel, INT_MAX_VALUE } from "Constants/ConstantValues";
+import { authenticatorList, authenticatorLabelList, getApplicationTypeLabel, getApplicationTypesByPlanType, INT_MAX_VALUE } from "Constants/ConstantValues";
 import { GetApplicationListFunc, GetRpUsersListFunc } from "Functions/ApiFunctions";
 import useCustomRoute from "hooks/useCustomRoute";
 import useFullName from "hooks/useFullName";
@@ -24,6 +24,7 @@ const ApplicationUserManagement = () => {
     const navigate = useNavigate()
     const getFullName = useFullName()
     const { customPushRoute } = useCustomRoute()
+    const planType = useSelector((state: ReduxStateType) => state.globalDatas?.planType!)
     const typeItems = (type: ApplicationDataType['type']) => appTypes.filter(_ => _.type === type).map(_ => ({
         key: _.id,
         label: _.name
@@ -196,7 +197,7 @@ const ApplicationUserManagement = () => {
             <CustomSelect value={applicationType} onChange={value => {
                 setApplicationType(value as ApplicationDataType['type'])
                 let target: ApplicationListDataType | undefined
-                applicationTypes.forEach((_: ApplicationDataType['type']) => {
+                getApplicationTypesByPlanType(planType).forEach((_: ApplicationDataType['type']) => {
                     if (_ === value) {
                         target = appTypes.find(__ => __.type === value)
                     }
@@ -216,7 +217,7 @@ const ApplicationUserManagement = () => {
                     }, true, true)
                 }
                 setTargetApplication(target)
-            }} items={applicationTypes.map(_ => ({
+            }} items={getApplicationTypesByPlanType(planType).map(_ => ({
                 key: _,
                 label: getApplicationTypeLabel(_),
             }))} needSelect />

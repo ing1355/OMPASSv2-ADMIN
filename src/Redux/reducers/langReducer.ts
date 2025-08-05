@@ -1,6 +1,8 @@
+import { languageList } from 'Constants/ConstantValues';
 import types from '../types';
 
-const lang: ReduxStateType['lang'] = localStorage.getItem('locale') as ReduxStateType['lang'] || 'KR';
+const defaultLang = localStorage.getItem('locale')
+const lang: LanguageType = languageList.includes(defaultLang as LanguageType) ? defaultLang as LanguageType : 'KR';
 document.documentElement.lang = lang;
 
 const langReducer = (state = lang, action: DefaultReduxActionType<ReduxStateType['lang']>) => {

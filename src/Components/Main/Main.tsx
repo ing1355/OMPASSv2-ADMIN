@@ -11,13 +11,13 @@ import { isMobile } from 'react-device-detect';
 
 const Main = () => {
   const lang = useSelector((state: ReduxStateType) => state.lang!);
-  const subdomainInfob = useSelector((state: ReduxStateType) => state.subdomainInfo!);
+  const planType = useSelector((state: ReduxStateType) => state.globalDatas?.planType!)
   const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(-1)
+  const { formatMessage } = useIntl()
 
   const { role } = userInfo
-
   const handleHoverd = (ind: number) => {
     setIsHovered(ind);
   };
@@ -34,7 +34,7 @@ const Main = () => {
         justify={'center'}
       >
         {
-          menuDatas(role, subdomainInfob.serverType === 'ON_PREMISE').map((data, index: number) => (
+          menuDatas(role).map((data, index: number) => (
             <Col
               xs={{ flex: '100%' }}
               sm={{ flex: '50%' }}
@@ -50,11 +50,10 @@ const Main = () => {
                 }}
                 onMouseLeave={handleMouseLeave}
                 onClick={() => {
-                  if (subdomainInfob.serverType === 'ON_PREMISE' && data.route === '/Billing') {
-                    // message.info(formatMessage({ id: 'CLOUD_ENVIRONMENT_ONLY_MENU_LABEL' }))
-                    navigate(data.route);
+                  if (planType === 'TRIAL_PLAN' && data.route === '/AgentManagement') {
+                    message.info(formatMessage({ id: 'TRIAL_PLAN_ONLY_MENU_LABEL' }))
                   } else {
-                    navigate(data.route);
+                  navigate(data.route);
                   }
                 }}
               >

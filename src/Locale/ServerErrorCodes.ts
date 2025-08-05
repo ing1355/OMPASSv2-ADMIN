@@ -53,7 +53,9 @@ const ServerErrorCodes = {
         ERR_B056: "올바르지 않은 UUID 형식입니다.",
         ERR_B057: "존재하지 않는 데이터입니다.",
         ERR_B058: "탈퇴한 사용자의 아이디가 포함되어 사용자 추가에 실패하였습니다. 대상: {value}",
-        ERR_B059: "비밀번호 없이 로그인이 비활성화되었습니다. 비밀번호 입력 후 다시 로그인해 주세요."
+        ERR_B059: "비밀번호 없이 로그인이 비활성화되었습니다. 비밀번호 입력 후 다시 로그인해 주세요.",
+        ERR_B060: "현재 회원가입 기능을 사용할 수 없습니다. 관리자에게 문의하세요.",
+        ERR_B061: "현재 사용자 직접 인증장치 등록 해제 기능을 사용할 수 없습니다. 관리자에게 문의하세요."
     },
     'EN': {
         ERR_B002: "Please check your ID and email",
@@ -109,7 +111,9 @@ const ServerErrorCodes = {
         ERR_B056: "Invalid UUID format",
         ERR_B057: "The data does not exist",
         ERR_B058: "The user ID of the withdrawn user is included in the user addition. Target: {value}",
-        ERR_B059: "The passwordless login is disabled. Please enter the password and log in again."
+        ERR_B059: "The passwordless login is disabled. Please enter the password and log in again.",
+        ERR_B060: "The current signup function is not available. Please contact the administrator.",
+        ERR_B061: "The current user direct authentication device registration removal function is not available. Please contact the administrator."
     }
 }
 

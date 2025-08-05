@@ -1,7 +1,7 @@
 import './App.css';
 import React, { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import OMPASSVerify from 'Components/OMPASS/OMPASSVerify';
 import Main from 'Components/Main/Main';
@@ -19,7 +19,7 @@ import Users from 'Components/Users/Users';
 import AuthLog from 'Components/Log/AuthLog';
 import PortalLog from 'Components/Log/PortalLog';
 import Settings from 'Components/Settings';
-import { GetGlobalConfigFunc, GetSubDomainInfoFunc } from 'Functions/ApiFunctions';
+import { GetCurrentPlanFunc, GetGlobalConfigFunc, GetSubDomainInfoFunc } from 'Functions/ApiFunctions';
 import { convertLangToIntlVer, isDev, isTta, MainRouteByDeviceType, subDomain } from 'Constants/ConstantValues';
 import { subdomainInfoChange } from 'Redux/actions/subdomainInfoChange';
 import SignUp from 'Components/SignUp/SignUp';
@@ -30,15 +30,14 @@ import SecurityQuestionPage from 'Components/Login/SecurityQuestionPage';
 import EmailChangeVerification from 'Components/Users/UserDetail/EmailChangeVerification';
 import Document from 'Components/Document';
 import ErrorPage from 'Components/Layout/ErrorPage';
-import { userInfoClear } from 'Redux/actions/userChange';
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
-  const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
+  const planType = useSelector((state: ReduxStateType) => state.globalDatas?.planType!)
+  const userInfo = useSelector((state: ReduxStateType) => state.userInfo);
   const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas)!;
   const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo)!;
   const lang = useSelector((state: ReduxStateType) => state.lang!);
-  const navigate = useNavigate();
 
   const getDomainInfo = () => {
     console.log('get subdomain info : ', subDomain)
@@ -79,7 +78,11 @@ const App: React.FC = () => {
       })
       dispatch(globalDatasChange({ ...globalDatas, loading: true }))
       GetGlobalConfigFunc((data) => {
-        dispatch(globalDatasChange({ ...globalDatas, ...data, loading: false }))
+        GetCurrentPlanFunc(plan => {
+          dispatch(globalDatasChange({ ...globalDatas, ...data, planType: plan.type, loading: false }))
+        }).catch(e => {
+          dispatch(globalDatasChange({ ...globalDatas, ...data, planType: 'TRIAL_PLAN', loading: false }))
+        })
       })
     }
   }, [userInfo, subdomainInfo])
@@ -104,8 +107,8 @@ const App: React.FC = () => {
                   {isTta ? <></> : <>
                     <Route path='/Billing' element={<Billing />} />
                   </>}
-                  <Route path='/Dashboard' element={<Dashboard />} />
-                  <Route path='/AgentManagement/*' element={<Agent />} />
+                  {planType !== 'TRIAL_PLAN' && <Route path='/Dashboard' element={<Dashboard />} />}
+                  {planType === 'LICENSE_PLAN_L2' && <Route path='/AgentManagement/*' element={<Agent />} />}
                   <Route path='/UserManagement/*' element={<Users />} />
                   <Route path='/PasscodeManagement' element={<PasscodeManagement />} />
                   <Route path='/Applications/*' element={<Application />} />
@@ -114,7 +117,7 @@ const App: React.FC = () => {
                   <Route path='/AuthLogs' element={<AuthLog />} />
                   <Route path='/PortalLogs' element={<PortalLog />} />
                   <Route path='/Settings' element={<Settings />} />
-                  <Route path='/*' element={<Navigate to={MainRouteByDeviceType} replace={true} />} />
+                  <Route path='/*' element={<Navigate to={planType !== 'TRIAL_PLAN' ? MainRouteByDeviceType : '/Main'} replace={true} />} />
                 </>
                   : <>
                     <Route path='/Main' element={<Users />} />

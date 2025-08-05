@@ -8,8 +8,8 @@ import { GetPoliciesListFunc } from "Functions/ApiFunctions"
 import policyAddIcon from '@assets/policyAddIcon.png'
 import policyAddIconHover from '@assets/policyAddIconHover.png'
 import { FormattedMessage, useIntl } from "react-intl"
-import { applicationTypes } from "Constants/ConstantValues"
-import useDateTime from "hooks/useDateTime"
+import { getApplicationTypesByPlanType } from "Constants/ConstantValues"
+import { useSelector } from "react-redux"
 
 const PolicyManagement = () => {
     const [tableData, setTableData] = useState<PolicyListDataType[]>([])
@@ -18,6 +18,7 @@ const PolicyManagement = () => {
 
     const navigate = useNavigate()
     const { formatMessage } = useIntl()
+    const planType = useSelector((state: ReduxStateType) => state.globalDatas?.planType!)
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
         const _params: GeneralParamsType = {
@@ -71,7 +72,7 @@ const PolicyManagement = () => {
                         title: <FormattedMessage id="APPLICATION_TYPE_LABEL" />,
                         render: (data, ind, row) => <FormattedMessage id={`${data}_APPLICATION_TYPE`} />,
                         filterKey: 'applicationTypes',
-                        filterOption: applicationTypes.map(_ => ({
+                        filterOption: getApplicationTypesByPlanType(planType).map(_ => ({
                             label: formatMessage({ id: _ + "_APPLICATION_TYPE" }),
                             value: _
                         }))
