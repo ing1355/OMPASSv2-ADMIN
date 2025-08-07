@@ -89,6 +89,7 @@ const CustomSelect = ({ items, value, onChange, needSelect, noLabel, style, read
           if (measureRef.current && _items.length > 0) {
             const children = Array.from(measureRef.current.children) as HTMLDivElement[];
             const widths = children.map(child => child.offsetWidth);
+            console.log(items, widths)
             const max = Math.max(...widths, 0);
             if (max === 0 && retry < 3) {
               retry++;

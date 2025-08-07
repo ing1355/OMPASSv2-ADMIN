@@ -361,7 +361,7 @@ const AuthPolicyDetail = () => {
                     {locationUsed && locationDatas && <PolicyLocationList value={locationDatas} onChange={setLocationDatas} authenticators={authenticatorPolicies} setSureChange={setSureChange} />}
                     {!isDefaultPolicy && ipAddressValues && ipAddressUsed && <PolicyIpAddressList value={ipAddressValues} onChange={setIpAddressValues} dataInit={initEvent} />}
                     {!isDefaultPolicy && accessTimeValues && <PolicyAccessTimeList value={accessTimeValues} onChange={setAccessTimeValues} />}
-                    {!isTta && <CanEmailRegister value={canEmailRegisterData} onChange={setCanEmailRegisterData} />}
+                    {/* {!isTta && <CanEmailRegister value={canEmailRegisterData} onChange={setCanEmailRegisterData} />} */}
                     {!isDefaultPolicy && noticeToAdmin && <NoticeToAdmin hasIncludeWithdrawal={setHasIncludeWithdrawal} value={noticeToAdmin} onChange={setNoticeToAdmin} />}
                     {!isDefaultPolicy && noticeToThemselves && <NoticeToThemselves value={noticeToThemselves} onChange={setNoticeToThemselves} />}
                 </div>

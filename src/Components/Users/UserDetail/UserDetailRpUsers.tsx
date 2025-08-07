@@ -16,7 +16,7 @@ import { DeleteAuthenticatorDataFunc, SendPasscodeEmailFunc } from "Functions/Ap
 import CustomTable from "Components/CommonCustomComponents/CustomTable";
 import { useSelector } from "react-redux";
 import { isDev2 } from "Constants/ConstantValues";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { PasscodeAddComponent } from "./PasscodeComponents";
 import CustomModal from "Components/Modal/CustomModal";
 import useDateTime from "hooks/useDateTime";
@@ -39,7 +39,7 @@ const UserDetailRpUsers = ({ targetData, authInfoDatas, refreshCallback, userDet
     const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas);
     const selfInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     const _uuid = useParams().uuid;
-    const { goBack } = useCustomRoute()
+    const navigate = useNavigate()
     const uuid = selfInfo.role === 'USER' ? selfInfo.userId : _uuid
     const isSelf = (isDev2 && selfInfo.role === 'ROOT') || (selfInfo.userId === uuid)
     const canModify = (isDev2 && selfInfo.role === 'ROOT') || (isSelf || (selfInfo.role === 'ADMIN' && targetData?.role === 'USER') || (selfInfo.role === 'ROOT' && targetData?.role !== 'ROOT'))
@@ -249,7 +249,9 @@ const UserDetailRpUsers = ({ targetData, authInfoDatas, refreshCallback, userDet
                     message.success(formatMessage({ id: 'USER_AUTH_DEVICE_UNREGISTER_SUCCESS_MSG' }))
                     setAuthenticatorDelete("")
                     if(newData && newData.length === 0) {
-                        goBack()
+                        navigate('/UserManagement', {
+                            replace: true
+                        })
                     } else {
                         refreshCallback()
                     }

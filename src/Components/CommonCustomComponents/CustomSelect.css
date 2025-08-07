@@ -30,6 +30,7 @@
   text-align: center;
   cursor: pointer;
   z-index: 90;
+  white-space: nowrap;
 }
 
 .custom-select-option-container {

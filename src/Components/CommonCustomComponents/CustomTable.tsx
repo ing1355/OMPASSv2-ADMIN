@@ -215,7 +215,6 @@ const CustomTable = <T extends {
         }
         if (onSearchChange) {
             if (!resultRef.current || (JSON.stringify(resultRef.current) !== JSON.stringify(result))) {
-                console.log(result)
                 onSearchChange(result)
             }
         }
@@ -262,9 +261,7 @@ const CustomTable = <T extends {
             }
             setSearchValue('')
             customPushRoute({}, true, true)
-            if (!searchParams.size) {
-                setSelfRefresh(true)
-            }
+            setSelfRefresh(true)
         } else {
             customPushRoute({ ...result }, true)
         }

@@ -52,25 +52,25 @@ const BillingInputRow = ({ label, children, labelStyle, contentStyle }: PropsWit
 const planDatas: {
     type: PlanTypes
     title: React.ReactNode
-    price: string
+    price: number
     descriptions: React.ReactNode[]
 }[] = [
     {
         type: "TRIAL_PLAN",
         title: <FormattedMessage id="PLAN_TYPE_TRIAL_PLAN" />,
-        price: "0",
+        price: 0,
         descriptions: Array.from({length: 3}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
     },
     {
         type: "LICENSE_PLAN_L1",
         title: <FormattedMessage id="PLAN_TYPE_LICENSE_PLAN_L1" />,
-        price: "1,000",
+        price: 2000,
         descriptions: Array.from({length: 5}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
     },
     {
         type: "LICENSE_PLAN_L2",
         title: <FormattedMessage id="PLAN_TYPE_LICENSE_PLAN_L2" />,
-        price: "2,000",
+        price: 3000,
         descriptions: Array.from({length: 9}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
     }
 ]
@@ -126,7 +126,7 @@ const Billing = () => {
                             </div>
                             <div className="plan-price-container">
                                 <div className="plan-price-row">
-                                    <div className="plan-price-number">{_.price}</div>
+                                    <div className="plan-price-number">{_.price.toLocaleString()}</div>
                                     <div className="plan-price-text"><FormattedMessage id="BILLING_PRICE_TEXT" /></div>
                                 </div>
                                 <div className="plan_sub_price_text">
@@ -141,64 +141,9 @@ const Billing = () => {
                                     </div>)
                                 }
                             </div>
-                            {/* {ind !== 0 && _.status === 'USED' && <Button className="st3">
-                                구독 취소
-                            </Button>} */}
                         </div>)}
                     </div>
                 </ItemContainer>
-                {/* <ItemContainer title="현재 사용자 수" border>
-                    <div className="billing-user-nums-container">
-                        <div className="billing-current-user-nums">5</div>
-                        /
-                        <div className="billing-all-user-nums">10명</div>
-                    </div>
-                    <div className="billing-current-user-gauge-container">
-                        <img src={userIconColor} />
-                        <div className="billing-current-plan-user-gauge">
-                            <div className="billing-current-plan-user-gauge-inner" style={{
-                                width: '50%'
-                            }} />
-                        </div>
-                    </div>
-                </ItemContainer> */}
-                {/* <ItemContainer title="OMPASS 결제" border bodyStyle={{
-                    width: '90%'
-                }}>
-                    <BillingInputRow label="최대 사용자 수" labelStyle={{
-                        lineHeight: '30px'
-                    }} contentStyle={{
-                        flex: '0 0 200px'
-                    }}>
-                        <CustomSelect value={inputUserNum} items={userNumList.map((_, ind) => ({
-                            key: ind + 10,
-                            label: ind + 10
-                        }))} onChange={value => {
-                            setInputUserNum(parseInt(value))
-                        }} needSelect />
-                    </BillingInputRow>
-                </ItemContainer> */}
-                {/* <ItemContainer title="" border bodyStyle={{
-                    width: '90%'
-                }}>
-                    <BillingInputRow label="금액">
-                        <b>{slicePrice(inputUserNum * 2200)}</b> 원 / 월(30일)
-                    </BillingInputRow>
-                </ItemContainer>
-                <ItemContainer title="" border bodyStyle={{
-                    width: '90%'
-                }}>
-                    <BillingInputRow label="이용 동의">
-                        <div className="billing-agree-text">
-                            <Input type="checkbox" name="check" label={<><a className="billing-a-tag" href="#test">구매조건 및 환불 규정</a>에 동의</>} />
-                        </div>
-                        <br />
-                        결제일로 부터 30일 간격으로 24,200원(이)가 자동으로 결제됩니다.
-                        <br />
-                        <br />
-                        <Button className="st3">결제하기</Button>
-                    </BillingInputRow>
-                </ItemContainer> */}
                 <ItemContainer title={<FormattedMessage id="BILLING_HISTORY" />} border bodyStyle={{
                     width: '100%'
                 }}>
@@ -233,15 +178,18 @@ const Billing = () => {
                             },
                             {
                                 key: 'maxApplicationCount',
-                                title: <FormattedMessage id="PLAN_MAX_APPLICATION_COUNT_COLUMN_LABEL" />
+                                title: <FormattedMessage id="PLAN_MAX_APPLICATION_COUNT_COLUMN_LABEL" />,
+                                render: (data, ind, row) => data ? data.toLocaleString() : '-'
                             },
                             {
                                 key: 'maxUserCount',
-                                title: <FormattedMessage id="PLAN_MAX_USER_COUNT_COLUMN_LABEL" />
+                                title: <FormattedMessage id="PLAN_MAX_USER_COUNT_COLUMN_LABEL" />,
+                                render: (data, ind, row) => data ? data.toLocaleString() : '-'
                             },
                             {
                                 key: 'maxSessionCountPerUser',
-                                title: <FormattedMessage id="PLAN_MAX_SESSION_COUNT_COLUMN_LABEL" />
+                                title: <FormattedMessage id="PLAN_MAX_SESSION_COUNT_COLUMN_LABEL" />,
+                                render: (data, ind, row) => data ? data.toLocaleString() : '-'
                             },
                             {
                                 key: 'paymentAmount',
