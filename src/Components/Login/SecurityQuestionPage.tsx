@@ -2,15 +2,24 @@ import { message } from "antd";
 import SecurityQuestionLayout from "Components/SignUp/SecurityQuestionLayout"
 import { CopyRightText, ompassDefaultLogoImage } from "Constants/ConstantValues"
 import { UpdateSecurityQuestionsFunc } from "Functions/ApiFunctions";
+import { useEffect } from "react";
 import { useIntl } from "react-intl";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router";
 
 const SecurityQuestionPage = () => {
     const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
-    const { token, isLogin } = useLocation().state
+    const { token, isLogin } = useLocation().state || {}
     const { formatMessage } = useIntl()
     const navigate = useNavigate()
+
+    useEffect(() => {
+        // if (!token) {
+        //     navigate('/', {
+        //         replace: true
+        //     })
+        // }
+    }, [])
 
     return <>
         <div className="signup-container">
@@ -36,6 +45,10 @@ const SecurityQuestionPage = () => {
                     }
                 ], token, () => {
                     message.success(formatMessage({ id: 'SECURITY_QUESTION_UPDATE_SUCCESS_MSG' }))
+                    navigate('/', {
+                        replace: true
+                    })
+                }).catch((e) => {
                     navigate('/', {
                         replace: true
                     })

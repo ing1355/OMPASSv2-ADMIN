@@ -6,7 +6,7 @@ import { message } from "antd"
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import { AddApplicationDataFunc, DeleteApplicationListFunc, GetApplicationDetailFunc, GetApplicationListFunc, GetAuthorizeMSEntraUriFunc, UpdateApplicationDataFunc, UpdateApplicationSecretkeyFunc } from "Functions/ApiFunctions"
 import PolicySelect from "Components/CommonCustomComponents/PolicySelect"
-import { getApplicationTypeLabel, getApplicationTypesByPlanType, maxLengthByType, ompassDefaultLogoImage } from "Constants/ConstantValues"
+import { getApplicationTypeLabel, maxLengthByType, ompassDefaultLogoImage } from "Constants/ConstantValues"
 import { convertBase64FromClientToServerFormat } from "Functions/GlobalFunctions"
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect"
 import Button from "Components/CommonCustomComponents/Button"
@@ -29,10 +29,9 @@ import ApplicationDetailHeaderInfo from "./ApplicationDetailHeaderInfo"
 import BottomLineText from "Components/CommonCustomComponents/BottomLineText"
 import PasswordlessCheck from "Components/Policy/PolicyItems/PasswordlessCheck"
 import SureDeleteButton from "Components/CommonCustomComponents/SureDeleteButton"
-import { useSelector } from "react-redux"
+import usePlans from "hooks/usePlans"
 
 const ApplicationDetail = () => {
-    const planType = useSelector((state: ReduxStateType) => state.globalDatas?.planType!)
     const [logoImage, setLogoImage] = useState<updateLogoImageType>({
         isDefaultImage: true,
         image: ompassDefaultLogoImage
@@ -72,7 +71,8 @@ const ApplicationDetail = () => {
     const readOnlyRedirectUriList: LocalApplicationTypes[] = ["PORTAL", "REDMINE"]
     const noRedirectUri: LocalApplicationTypes[] = ["KEYCLOAK", "REDMINE"]
     const passwordlessApplicationTypes: LocalApplicationTypes[] = ["WINDOWS_LOGIN", "LINUX_LOGIN", 'PORTAL']
-    const typeItems = getApplicationTypesByPlanType(planType).map(_ => ({
+    const { getApplicationTypesByPlanType } = usePlans()
+    const typeItems = getApplicationTypesByPlanType().map(_ => ({
         key: _,
         label: getApplicationTypeLabel(_),
         disabled: _ === 'PORTAL' || (hasWindowsLogin && _ === 'WINDOWS_LOGIN') || (hasMacLogin && _ === 'MAC_LOGIN')

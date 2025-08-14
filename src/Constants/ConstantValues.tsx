@@ -1067,13 +1067,6 @@ export const menuDatas = (role: userRoleType): menuDataType[] => {
 // const appTypes: ApplicationDataType['type'][] = ["ADMIN", "WINDOWS_LOGIN", "DEFAULT", "LINUX_LOGIN", "RADIUS", "REDMINE", "MS_ENTRA_ID", "KEYCLOAK", "LDAP"]
 // export const applicationTypes: ApplicationDataType['type'][] = ["WEB", "WINDOWS_LOGIN", "LINUX_LOGIN", "MAC_LOGIN", "PORTAL", "RADIUS", "REDMINE", "MICROSOFT_ENTRA_ID", "KEYCLOAK", "LDAP"]
 export const applicationTypes: ApplicationDataType['type'][] = isTta ? ["PORTAL", "WINDOWS_LOGIN", "WEB", "LINUX_LOGIN"] : ["PORTAL", "WINDOWS_LOGIN", "MAC_LOGIN", "WEB", "LINUX_LOGIN", "RADIUS", "REDMINE", "MICROSOFT_ENTRA_ID", "KEYCLOAK", "LDAP"]
-export const getApplicationTypesByPlanType = (planType: PlanDataType['type']) => {
-    if(planType === 'TRIAL_PLAN' || planType === 'LICENSE_PLAN_L1') {
-        return applicationTypes.filter(_ => _ === 'PORTAL' || _ === 'WEB')
-    } else {
-        return applicationTypes
-    }
-}
 
 // 애플리케이션 타입 다국어 매칭해놨으나 타입 지정은 불가능하므로 값 바뀌면 다국어 키값도 바뀌어야함
 export const AuthenticationProcessTypes: ProcessTypeType[] = ["POLICY", "REGISTRATION", "AUTHENTICATION"]

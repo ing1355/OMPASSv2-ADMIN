@@ -1,10 +1,10 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
-import { authenticatorList, authenticatorLabelList, getApplicationTypeLabel, getApplicationTypesByPlanType, logAuthPurposeList } from "Constants/ConstantValues"
+import { authenticatorList, authenticatorLabelList, getApplicationTypeLabel, logAuthPurposeList } from "Constants/ConstantValues"
+import { GetValidAuthLogDataListFunc } from "Functions/ApiFunctions"
 import { useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
-import { GetValidAuthLogDataListFunc } from "Functions/ApiFunctions"
 import AuthLogDetailModal from "./AuthLogDetailModal"
-import { useSelector } from "react-redux"
+import usePlans from "hooks/usePlans"
 
 const ValidAuthLogs = () => {
     const [detailData, setDetailData] = useState<ValidAuthLogDataType>()
@@ -12,7 +12,7 @@ const ValidAuthLogs = () => {
     const [totalCount, setTotalCount] = useState(1)
     const [dataLoading, setDataLoading] = useState(false)
     const { formatMessage } = useIntl()
-    const planType = useSelector((state: ReduxStateType) => state.globalDatas?.planType!)
+    const { getApplicationTypesByPlanType } = usePlans()
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
         const _params: GeneralParamsType = {
@@ -70,7 +70,7 @@ const ValidAuthLogs = () => {
                     title: <FormattedMessage id="APPLICATION_TYPE_LABEL" />,
                     render: (_, _ind, row) => getApplicationTypeLabel(row.ompassData?.application?.type ?? ""),
                     filterKey: 'applicationTypes',
-                    filterOption: getApplicationTypesByPlanType(planType).map(_ => ({
+                    filterOption: getApplicationTypesByPlanType().map(_ => ({
                         label: formatMessage({ id: _ + "_APPLICATION_TYPE" }),
                         value: _
                     }))

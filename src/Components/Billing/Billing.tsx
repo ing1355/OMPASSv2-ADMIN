@@ -172,7 +172,7 @@ const Billing = () => {
                                 isTime: true
                             },
                             {
-                                key: 'expiredDate',
+                                key: 'expiredAt',
                                 title: <FormattedMessage id="PLAN_EXPIRED_AT_COLUMN_LABEL" />,
                                 isTime: true
                             },

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { useIntl } from "react-intl";
 import { useDispatch, useSelector } from "react-redux";
 import { message as _message } from 'antd';
@@ -15,7 +15,13 @@ const AxiosController = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const navigate = useNavigate()
+  const userInfo = useSelector((state: ReduxStateType) => state.userInfo)
   const lang = useSelector((state: ReduxStateType) => state.lang!);
+  const userInfoRef = useRef(userInfo)
+
+  useEffect(() => {
+    userInfoRef.current = userInfo
+  }, [userInfo])
 
   useLayoutEffect(() => {
     axios.interceptors.response.eject(oldInterceptorId)
@@ -28,6 +34,9 @@ const AxiosController = () => {
         if (data && data.code === 'ERR_B009') {
           console.log('why session expired ?', getStorageAuth(), err.config.headers)
           dispatch(userInfoClear());
+          if(!userInfoRef.current) {
+            _message.error(formatMessage({ id: 'ERR_B009' }))
+          }
         } else if (data) {
           const { code, message, value } = err.response.data;
           console.log(code, message)

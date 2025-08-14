@@ -90,10 +90,6 @@ const PasscodeLogs = () => {
             {
                 key: 'action',
                 title: <FormattedMessage id="ACTION" />,
-                // render: (data, index, row) => row.createdAt >= row.passcode.expiredAt || row.passcode.recycleCount === 0 ?
-                //     <FormattedMessage id='EXPIRED' />
-                //     :
-                //     <FormattedMessage id={data} />,
                 render: (data, index, row) => <FormattedMessage id={data} />,
                 filterKey: 'actions',
                 filterOption: actionList.map(_ => ({

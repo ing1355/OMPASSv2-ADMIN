@@ -73,11 +73,13 @@ const ExternalDirectoryManagement = () => {
         columns = columns.concat([
             {
                 key: 'lastUserSyncedAt',
-                title: <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_LAST_SYNC_TIME_LABEL" />
+                title: <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_LAST_SYNC_TIME_LABEL" />,
+                isTime: true
             },
             {
                 key: 'createdAt',
                 title: <FormattedMessage id="CREATE_AT_LABEL" />,
+                isTime: true
             }
         ])
         return columns

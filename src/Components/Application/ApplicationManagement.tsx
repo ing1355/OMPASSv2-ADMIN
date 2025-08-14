@@ -1,14 +1,14 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable";
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
-import { getApplicationTypeLabel, getApplicationTypesByPlanType, INT_MAX_VALUE } from "Constants/ConstantValues";
+import { getApplicationTypeLabel, INT_MAX_VALUE } from "Constants/ConstantValues";
 import { GetApplicationListFunc, GetPoliciesListFunc } from "Functions/ApiFunctions";
 import { useLayoutEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useNavigate } from "react-router";
 import applicationAddIcon from '@assets/applicationAddIcon.png'
 import applicationAddIconHover from '@assets/applicationAddIconHover.png'
-import { useSelector } from "react-redux"
+import usePlans from "hooks/usePlans"
 
 const ApplicationManagement = () => {
     const [tableData, setTableData] = useState<ApplicationListDataType[]>([])
@@ -17,7 +17,7 @@ const ApplicationManagement = () => {
     const [dataLoading, setDataLoading] = useState(false)
     const navigate = useNavigate()
     const { formatMessage } = useIntl()
-    const planType = useSelector((state: ReduxStateType) => state.globalDatas?.planType!)
+    const { getApplicationTypesByPlanType } = usePlans()
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)
         const _params: GeneralParamsType = {
@@ -97,7 +97,7 @@ const ApplicationManagement = () => {
                             return data ? getApplicationTypeLabel(data) : ""
                         },
                         filterKey: 'types',
-                        filterOption: getApplicationTypesByPlanType(planType).map(_ => ({
+                        filterOption: getApplicationTypesByPlanType().map(_ => ({
                             label: formatMessage({ id: _ + "_APPLICATION_TYPE" }),
                             value: _
                         }))

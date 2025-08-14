@@ -10,11 +10,11 @@ import { GetApplicationListFunc, GetUserGroupDataListFunc, GetUserHierarchyFunc 
 import { message } from 'antd'
 import TransferContainer from './TransferContainer'
 import { SetStateType } from 'Types/PropsTypes'
-import { getApplicationTypesByPlanType, INT_MAX_VALUE } from 'Constants/ConstantValues'
+import { INT_MAX_VALUE } from 'Constants/ConstantValues'
 import './UserTransfer.css'
 import CustomModal from 'Components/Modal/CustomModal'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { useSelector } from 'react-redux'
+import usePlans from 'hooks/usePlans'
 
 type UserTransferProps = {
     selectedUsers: UserHierarchyDataRpUserType['id'][]
@@ -34,7 +34,7 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
     const [applicationDatas, setApplicationDatas] = useState<ApplicationListDataType[]>([])
     const [dataLoading, setDataLoading] = useState(false)
     const { formatMessage } = useIntl()
-    const planType = useSelector((state: ReduxStateType) => state.globalDatas?.planType!)
+    const { getApplicationTypesByPlanType } = usePlans()
 
     const filteredUserDatas = useMemo(() => {
         if (viewStyle === 'portal') {
@@ -58,7 +58,7 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
                 portalName: user.name,
                 portalUsername: user.username
             })))
-            const appTemp = [...applicationDatas].sort((a, b) => getApplicationTypesByPlanType(planType).findIndex(t => t === a.type) - getApplicationTypesByPlanType(planType).findIndex(t => t === b.type))
+            const appTemp = [...applicationDatas].sort((a, b) => getApplicationTypesByPlanType().findIndex(t => t === a.type) - getApplicationTypesByPlanType().findIndex(t => t === b.type))
             const appDatas = appTemp.map(app => ({
                 id: app.id,
                 name: app.name,
@@ -105,7 +105,7 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
                 portalName: user.name,
                 portalUsername: user.username
             })))
-            const appTemp = [...applicationDatas].sort((a, b) => getApplicationTypesByPlanType(planType).findIndex(t => t === a.type) - getApplicationTypesByPlanType(planType).findIndex(t => t === b.type))
+            const appTemp = [...applicationDatas].sort((a, b) => getApplicationTypesByPlanType().findIndex(t => t === a.type) - getApplicationTypesByPlanType().findIndex(t => t === b.type))
             const appDatas = appTemp.map(app => ({
                 id: app.id,
                 name: app.name,
@@ -154,7 +154,7 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
                                         groupName: groupDatas.find(gr => gr.id === rp.groupId)?.name || ""
                                     }))
                                 }
-                            }).sort((a, b) => getApplicationTypesByPlanType(planType).findIndex(t => t === a.type) - getApplicationTypesByPlanType(planType).findIndex(t => t === b.type))
+                            }).sort((a, b) => getApplicationTypesByPlanType().findIndex(t => t === a.type) - getApplicationTypesByPlanType().findIndex(t => t === b.type))
                         }
                     }))
                 }).finally(() => {

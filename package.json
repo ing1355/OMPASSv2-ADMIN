@@ -1,6 +1,6 @@
 {
   "name": "ompass_rp_admin",
-  "version": "2.0.0(182)",
+  "version": "2.0.0(184)",
   "proxy": "https://ompass.kr:54006",
   "private": true,
   "dependencies": {
@@ -63,10 +63,8 @@
     "deploy2": "rsync -av --delete ./build/* hozzi@192.168.182.140:/usr/local/ompass_agent_rp_dev",
     "deploy:tta": "rsync -avp --delete ./build/* oms@192.168.182.143:/opt/oms/ompass2/server/fe/ompass_portal",
     "testDeploy": "rsync -av --delete ./build/* hozzi@192.168.182.140:/usr/local/ompass_agent_rp_test",
-    "awsInvalidation": "aws cloudfront create-invalidation --distribution-id E2ALB03P1N7UVH --paths \"/*\" --no-cli-pager",
-    "awsTestInvalidation": "aws cloudfront create-invalidation --distribution-id EZ1Y858BAFJCL --paths \"/*\" --no-cli-pager",
+    "awsInvalidation": "aws cloudfront create-invalidation --distribution-id EZ1Y858BAFJCL --paths \"/*\" --no-cli-pager",
     "awsDeploy": "aws s3 sync ./build s3://ompass-admin&&npm run awsInvalidation",
-    "awsTestDeploy": "aws s3 sync ./build s3://ompass-admin-test&&npm run awsTestInvalidation",
     "deploy:dev": "rsync -av --delete ./build/* hozzi@192.168.182.141:~/admin",
     "deploy:dev2": "rsync -av --delete ./build/* oms@192.168.182.75:/opt/oms/ompass2/server/fe/ompass_portal",
     "sync:prod": "ssh oms@192.168.182.76 'bash /opt/oms/ompass2/server/fe/get.sh'"

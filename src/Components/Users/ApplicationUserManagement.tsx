@@ -1,7 +1,7 @@
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow";
 import CustomSelect from "Components/CommonCustomComponents/CustomSelect";
 import CustomTable from "Components/CommonCustomComponents/CustomTable";
-import { authenticatorList, authenticatorLabelList, getApplicationTypeLabel, getApplicationTypesByPlanType, INT_MAX_VALUE } from "Constants/ConstantValues";
+import { authenticatorList, authenticatorLabelList, getApplicationTypeLabel, INT_MAX_VALUE } from "Constants/ConstantValues";
 import { GetApplicationListFunc, GetRpUsersListFunc } from "Functions/ApiFunctions";
 import useCustomRoute from "hooks/useCustomRoute";
 import useFullName from "hooks/useFullName";
@@ -10,6 +10,7 @@ import { FormattedMessage } from "react-intl";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
+import usePlans from "hooks/usePlans";
 
 const ApplicationUserManagement = () => {
     const [searchParams] = useSearchParams()
@@ -24,7 +25,7 @@ const ApplicationUserManagement = () => {
     const navigate = useNavigate()
     const getFullName = useFullName()
     const { customPushRoute } = useCustomRoute()
-    const planType = useSelector((state: ReduxStateType) => state.globalDatas?.planType!)
+    const { getApplicationTypesByPlanType } = usePlans()
     const typeItems = (type: ApplicationDataType['type']) => appTypes.filter(_ => _.type === type).map(_ => ({
         key: _.id,
         label: _.name
@@ -197,7 +198,7 @@ const ApplicationUserManagement = () => {
             <CustomSelect value={applicationType} onChange={value => {
                 setApplicationType(value as ApplicationDataType['type'])
                 let target: ApplicationListDataType | undefined
-                getApplicationTypesByPlanType(planType).forEach((_: ApplicationDataType['type']) => {
+                getApplicationTypesByPlanType().forEach((_: ApplicationDataType['type']) => {
                     if (_ === value) {
                         target = appTypes.find(__ => __.type === value)
                     }
@@ -217,7 +218,7 @@ const ApplicationUserManagement = () => {
                     }, true, true)
                 }
                 setTargetApplication(target)
-            }} items={getApplicationTypesByPlanType(planType).map(_ => ({
+            }} items={getApplicationTypesByPlanType().map(_ => ({
                 key: _,
                 label: getApplicationTypeLabel(_),
             }))} needSelect />

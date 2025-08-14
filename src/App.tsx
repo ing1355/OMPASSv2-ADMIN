@@ -30,14 +30,15 @@ import SecurityQuestionPage from 'Components/Login/SecurityQuestionPage';
 import EmailChangeVerification from 'Components/Users/UserDetail/EmailChangeVerification';
 import Document from 'Components/Document';
 import ErrorPage from 'Components/Layout/ErrorPage';
+import usePlans from 'hooks/usePlans';
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
-  const planType = useSelector((state: ReduxStateType) => state.globalDatas?.planType!)
   const userInfo = useSelector((state: ReduxStateType) => state.userInfo);
   const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas)!;
   const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo)!;
   const lang = useSelector((state: ReduxStateType) => state.lang!);
+  const { isValidateHigherThanFreePlan, isValidateHigherThanBasicPlan } = usePlans()
 
   const getDomainInfo = () => {
     console.log('get subdomain info : ', subDomain)
@@ -107,8 +108,8 @@ const App: React.FC = () => {
                   {isTta ? <></> : <>
                     <Route path='/Billing' element={<Billing />} />
                   </>}
-                  {planType !== 'TRIAL_PLAN' && <Route path='/Dashboard' element={<Dashboard />} />}
-                  {planType === 'LICENSE_PLAN_L2' && <Route path='/AgentManagement/*' element={<Agent />} />}
+                  {isValidateHigherThanFreePlan() && <Route path='/Dashboard' element={<Dashboard />} />}
+                  {isValidateHigherThanBasicPlan() && <Route path='/AgentManagement/*' element={<Agent />} />}
                   <Route path='/UserManagement/*' element={<Users />} />
                   <Route path='/PasscodeManagement' element={<PasscodeManagement />} />
                   <Route path='/Applications/*' element={<Application />} />
@@ -117,7 +118,7 @@ const App: React.FC = () => {
                   <Route path='/AuthLogs' element={<AuthLog />} />
                   <Route path='/PortalLogs' element={<PortalLog />} />
                   <Route path='/Settings' element={<Settings />} />
-                  <Route path='/*' element={<Navigate to={planType !== 'TRIAL_PLAN' ? MainRouteByDeviceType : '/Main'} replace={true} />} />
+                  <Route path='/*' element={<Navigate to={isValidateHigherThanFreePlan() ? MainRouteByDeviceType : '/Main'} replace={true} />} />
                 </>
                   : <>
                     <Route path='/Main' element={<Users />} />

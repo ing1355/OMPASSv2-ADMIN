@@ -38,6 +38,7 @@ type PlanDataType = {
   description: string
   expiredAt: string
   createdAt: string
+  isExpired: boolean
   // availableFeatures: PlanFeatureType[]
 }
 

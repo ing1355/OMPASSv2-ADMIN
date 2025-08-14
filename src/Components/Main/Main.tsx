@@ -3,20 +3,20 @@ import { useNavigate } from 'react-router-dom';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { isDev, menuDatas } from 'Constants/ConstantValues';
+import { menuDatas } from 'Constants/ConstantValues';
 import { Col, message, Row } from 'antd';
 import Contents from 'Components/Layout/Contents';
 import { isMobile } from 'react-device-detect';
+import usePlans from 'hooks/usePlans';
 
 
 const Main = () => {
   const lang = useSelector((state: ReduxStateType) => state.lang!);
-  const planType = useSelector((state: ReduxStateType) => state.globalDatas?.planType!)
   const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(-1)
   const { formatMessage } = useIntl()
-
+  const { isValidateHigherThanFreePlan } = usePlans()
   const { role } = userInfo
   const handleHoverd = (ind: number) => {
     setIsHovered(ind);
@@ -50,8 +50,8 @@ const Main = () => {
                 }}
                 onMouseLeave={handleMouseLeave}
                 onClick={() => {
-                  if (planType === 'TRIAL_PLAN' && data.route === '/AgentManagement') {
-                    message.info(formatMessage({ id: 'TRIAL_PLAN_ONLY_MENU_LABEL' }))
+                  if (!isValidateHigherThanFreePlan() && data.route === '/AgentManagement') {
+                    message.info(formatMessage({ id: 'NOT_TRIAL_PLAN_MENU_LABEL' }))
                   } else {
                   navigate(data.route);
                   }

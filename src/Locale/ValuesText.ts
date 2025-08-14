@@ -49,10 +49,10 @@ const ValuesText = {
         NONE_VALUE: "알 수 없음",
         NO_SELECT_VALUE: "선택 안함",
 
-        USER_STATUS_WAIT_INIT_PASSWORD: "비밀번호 초기화 대기 중",
-        USER_STATUS_WAIT_ADMIN_APPROVAL: "관리자 인증 대기 중",
+        USER_STATUS_WAIT_INIT_PASSWORD: "비밀번호 초기화 대기",
+        USER_STATUS_WAIT_ADMIN_APPROVAL: "관리자 승인 대기",
         USER_STATUS_WITHDRAWAL: "탈퇴",
-        USER_STATUS_WAIT_SECURITY_QNA: "보안 질문 설정 대기 중",
+        USER_STATUS_WAIT_SECURITY_QNA: "보안 질문 설정 대기",
         USER_STATUS_RUN: "활성화",
         USER_STATUS_LOCK: "잠김",
         USER_STATUS_WITHDRAWAL_FILTER_LABEL: "탈퇴 사용자 보기",
@@ -139,7 +139,7 @@ const ValuesText = {
 
         // USER_STATUS_USER_PENDING_SIGNUP_VERIFICATION: "Waiting for email verification",
         USER_STATUS_WAIT_INIT_PASSWORD: "Waiting for password reset",
-        USER_STATUS_WAIT_ADMIN_APPROVAL: "Waiting for administrator authentication",
+        USER_STATUS_WAIT_ADMIN_APPROVAL: "Waiting for administrator approval",
         USER_STATUS_WITHDRAWAL: "Withdrawal",
         USER_STATUS_WAIT_SECURITY_QNA: "Waiting for setting security questions",
         USER_STATUS_RUN: "activation",

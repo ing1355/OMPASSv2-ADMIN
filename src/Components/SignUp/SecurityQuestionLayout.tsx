@@ -42,7 +42,6 @@ const SecurityQuestionLayout = ({ onComplete, isLogin }: {
     return <div className="signup-content second">
         <form onSubmit={(e) => {
             e.preventDefault()
-            console.log(rootQuestion1, rootQuestion2, rootQuestion3)
             if (!rootQuestion1) {
                 rootQuestionRef1.current?.focus()
                 return message.error(formatMessage({ id: 'PLEASE_INPUT_SECURITY_QUESTION_MSG' }))
@@ -57,6 +56,12 @@ const SecurityQuestionLayout = ({ onComplete, isLogin }: {
             }
             onComplete(rootQuestion1, rootQuestion2, rootQuestion3)
         }}>
+            <div className="security-question-title">
+                <FormattedMessage id='SECURITY_QUESTION_TITLE_LABEL' />
+            </div>
+            <div className="security-question-description">
+                <FormattedMessage id='SECURITY_QUESTION_DESCRIPTION_LABEL' />
+            </div>
             {
                 (subdomainInfo.securityQuestion.questions).map((_, ind) => <InputRow key={ind} label={_} required>
                     <Input
