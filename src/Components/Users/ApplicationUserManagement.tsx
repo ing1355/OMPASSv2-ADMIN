@@ -15,7 +15,7 @@ import usePlans from "hooks/usePlans";
 const ApplicationUserManagement = () => {
     const [searchParams] = useSearchParams()
     const lang = useSelector((state: ReduxStateType) => state.lang!);
-    const [dataLoading, setDataLoading] = useState(false)
+    const [dataLoading, setDataLoading] = useState(true)
     const [tableData, setTableData] = useState<RpUserListDataType[]>([])
     const [totalCount, setTotalCount] = useState<number>(0);
     const [appTypes, setAppTypes] = useState<ApplicationListDataType[]>([])

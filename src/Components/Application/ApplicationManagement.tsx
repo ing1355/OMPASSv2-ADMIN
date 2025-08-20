@@ -14,7 +14,7 @@ const ApplicationManagement = () => {
     const [tableData, setTableData] = useState<ApplicationListDataType[]>([])
     const [policiesData, setPoliciesData] = useState<PolicyListDataType[]>([])
     const [totalCount, setTotalCount] = useState<number>(0);
-    const [dataLoading, setDataLoading] = useState(false)
+    const [dataLoading, setDataLoading] = useState(true)
     const navigate = useNavigate()
     const { formatMessage } = useIntl()
     const { getApplicationTypesByPlanType } = usePlans()

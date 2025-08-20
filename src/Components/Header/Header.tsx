@@ -1,7 +1,7 @@
 import './Header.css';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import menuIcon from '@assets/menuIcon.png';
 import logout from '@assets/logout.png';
 import adminManualIcon from '@assets/adminManualIcon.png';
@@ -20,6 +20,7 @@ const Header = () => {
   const dropdownRef = useRef<any>(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const { formatMessage } = useIntl();
 
   const handleMouseDown = (event: MouseEvent) => {
@@ -34,6 +35,10 @@ const Header = () => {
       document.removeEventListener('mousedown', handleMouseDown);
     };
   }, [isMenuOpen]);
+
+  if (location.pathname.startsWith('/docs')) {
+    return null;
+  }
 
   return (
     <div

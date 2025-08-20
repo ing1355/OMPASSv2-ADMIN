@@ -10,7 +10,7 @@ const ValidAuthLogs = () => {
     const [detailData, setDetailData] = useState<ValidAuthLogDataType>()
     const [tableData, setTableData] = useState<ValidAuthLogDataType[]>([])
     const [totalCount, setTotalCount] = useState(1)
-    const [dataLoading, setDataLoading] = useState(false)
+    const [dataLoading, setDataLoading] = useState(true)
     const { formatMessage } = useIntl()
     const { getApplicationTypesByPlanType } = usePlans()
     const GetDatas = async (params: CustomTableSearchParams) => {

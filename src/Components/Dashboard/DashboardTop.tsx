@@ -56,7 +56,7 @@ const DashboardTop = () => {
         <DashboardTopUserNumItem title={<FormattedMessage id="DASHBOARD_INACTIVE_USER"/>} num={deActiveUserCount} icon={dashboardDisableUserIcon} type='disable' />
         <div className="dashboard-top-disabled-container">
             {disabledUserStatusList.map(status => (
-            <DashboardTopDisabledUserNumItem title={<FormattedMessage id={`USER_STATUS_${status}`}/>} num={findCountByStatus(status)} type={status}/>
+            <DashboardTopDisabledUserNumItem key={status} title={<FormattedMessage id={`USER_STATUS_${status}`}/>} num={findCountByStatus(status)} type={status}/>
             ))}
         </div>
     </div>

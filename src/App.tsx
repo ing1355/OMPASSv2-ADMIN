@@ -19,7 +19,7 @@ import Users from 'Components/Users/Users';
 import AuthLog from 'Components/Log/AuthLog';
 import PortalLog from 'Components/Log/PortalLog';
 import Settings from 'Components/Settings';
-import { GetCurrentPlanFunc, GetGlobalConfigFunc, GetSubDomainInfoFunc } from 'Functions/ApiFunctions';
+import { GetGlobalConfigFunc, GetSubDomainInfoFunc } from 'Functions/ApiFunctions';
 import { convertLangToIntlVer, isDev, isTta, MainRouteByDeviceType, subDomain } from 'Constants/ConstantValues';
 import { subdomainInfoChange } from 'Redux/actions/subdomainInfoChange';
 import SignUp from 'Components/SignUp/SignUp';
@@ -79,11 +79,7 @@ const App: React.FC = () => {
       })
       dispatch(globalDatasChange({ ...globalDatas, loading: true }))
       GetGlobalConfigFunc((data) => {
-        GetCurrentPlanFunc(plan => {
-          dispatch(globalDatasChange({ ...globalDatas, ...data, planType: plan.type, loading: false }))
-        }).catch(e => {
-          dispatch(globalDatasChange({ ...globalDatas, ...data, planType: 'TRIAL_PLAN', loading: false }))
-        })
+        dispatch(globalDatasChange({ ...globalDatas, ...data, loading: false }))
       })
     }
   }, [userInfo, subdomainInfo])

@@ -11,7 +11,7 @@ const httpMethodList: HttpMethodType[] = ['POST', 'PUT', 'DELETE']
 const PortalLog = () => {
     const [tableData, setTableData] = useState<PortalLogDataType[]>([])
     const [totalCount, setTotalCount] = useState<number>(0);
-    const [dataLoading, setDataLoading] = useState(false)
+    const [dataLoading, setDataLoading] = useState(true)
 
     const GetDatas = async (params: CustomTableSearchParams) => {
         setDataLoading(true)

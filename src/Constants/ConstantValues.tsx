@@ -1091,7 +1091,7 @@ export const UserSignupMethod: {
 }
 
 export const devUrl = process.env['REACT_APP_DEV_URL'] as string
-export const subDomain = isDev ? (isTta ? 'ompass.kr:54006' : devUrl.replace('https://', '')) : window.location.host.replace('www.', '');
+export const subDomain = isDev ? devUrl.replace('https://', '') : window.location.host.replace('www.', '');
 
 export const MainRouteByDeviceType = isMobile ? '/Main' : '/Dashboard'
 

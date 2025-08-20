@@ -9,7 +9,7 @@ import { useNavigate } from "react-router";
 const actionList: PasscodeHistoryDataType['action'][] = ['CREATE', 'DELETE']
 
 const PasscodeLogs = () => {
-    const [dataLoading, setDataLoading] = useState(false)
+    const [dataLoading, setDataLoading] = useState(true)
     const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     const navigate = useNavigate();
     const { formatMessage } = useIntl()

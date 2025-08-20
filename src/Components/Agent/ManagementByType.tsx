@@ -22,7 +22,7 @@ const ManagementByType = ({ type, isCloud }: ManagementByTypeProps) => {
     const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const [openFileDelete, setOpenFileDelete] = useState(-1);
     const [deleteHover, setDeleteHover] = useState(-1)
-    const [dataLoading, setDataLoading] = useState(false)
+    const [dataLoading, setDataLoading] = useState(true)
     const [totalCount, setTotalCount] = useState<number>(0);
     const [tableData, setTableData] = useState<AgentInstallerListDataType>([]);
     const [refresh, setRefresh] = useState(false)

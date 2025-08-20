@@ -90,8 +90,6 @@ const AdvancedGroupAssignmentModal: React.FC<AdvancedGroupAssignmentModalProps> 
             filtered = filtered.filter(user => user.department === filterDepartment)
         }
 
-        console.log(users, filtered)
-
         return filtered
     }, [users, searchText, filterStatus, filterDepartment])
 

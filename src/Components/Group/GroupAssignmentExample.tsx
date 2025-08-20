@@ -34,7 +34,6 @@ const GroupAssignmentExample: React.FC = () => {
                     department: user.department,
                     role: user.role
                 }))
-                console.log(userData)
                 setUsers(userData)
             })
         } catch (error) {

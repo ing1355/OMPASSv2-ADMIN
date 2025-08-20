@@ -11,7 +11,7 @@ import groupAddIconHover from '@assets/groupAddIconHover.png'
 const GroupManagement = () => {
     const [totalCount, setTotalCount] = useState(10);
     const [tableData, setTableData] = useState<UserGroupListDataType[]>([])
-    const [dataLoading, setDataLoading] = useState(false)
+    const [dataLoading, setDataLoading] = useState(true)
     const navigate = useNavigate()
 
     const GetDatas = async (params: CustomTableSearchParams) => {

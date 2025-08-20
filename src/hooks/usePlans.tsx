@@ -2,21 +2,21 @@ import { useSelector } from "react-redux";
 import { applicationTypes } from "Constants/ConstantValues";
 
 const usePlans = () => {
-    const { plan } = useSelector((state: ReduxStateType) => state.subdomainInfo!);
+    const { plan } = useSelector((state: ReduxStateType) => state.subdomainInfo! || {});
 
     const isValidateHigherThanFreePlan = () => {
-        return !plan?.isExpired || plan?.type !== 'TRIAL_PLAN'
+        return !plan?.isExpired && plan?.type !== 'TRIAL_PLAN'
     }
 
     const isValidateHigherThanBasicPlan = () => {
-        return !plan?.isExpired || (plan?.type !== 'TRIAL_PLAN' && plan?.type !== 'LICENSE_PLAN_L1')
+        return !plan?.isExpired && (plan?.type !== 'TRIAL_PLAN' && plan?.type !== 'LICENSE_PLAN_L1')
     }
 
     const getApplicationTypesByPlanType = () => {
-        if(!isValidateHigherThanBasicPlan()) {
-            return applicationTypes.filter(_ => _ === 'PORTAL' || _ === 'WEB')
-        } else {
+        if(isValidateHigherThanBasicPlan() || !plan?.isExpired) {
             return applicationTypes
+        } else {
+            return applicationTypes.filter(_ => _ === 'PORTAL' || _ === 'WEB')
         }
     }
 

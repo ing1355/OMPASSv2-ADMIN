@@ -179,6 +179,7 @@ const SecondStep = ({ completeCallback }: {
                     message.error(formatMessage({ id: 'NEED_CODE_VERIFY_MSG' }))
                     return codeRef.current?.focus()
                 }
+                
                 if (inputPhone.length > 0 && !phoneRegex.test(inputPhone)) {
                     message.error(formatMessage({ id: 'PHONE_NUMBER_CHECK' }))
                     return
@@ -209,6 +210,7 @@ const SecondStep = ({ completeCallback }: {
                     ref={usernameRef}
                     required
                     noGap
+                    id='username'
                     containerClassName="signup-userId-input-row"
                     customType="username"
                     value={inputUsername}
@@ -257,6 +259,7 @@ const SecondStep = ({ completeCallback }: {
                 <Input
                     className='st1'
                     customType="password"
+                    id='passwordConfirm'
                     ref={passwordConfirmRef}
                     required
                     noGap
@@ -329,6 +332,7 @@ const SecondStep = ({ completeCallback }: {
                     className='st1 sign-up-readonly'
                     required
                     ref={emailRef}
+                    id='email'
                     value={inputEmail}
                     customType="email"
                     noGap

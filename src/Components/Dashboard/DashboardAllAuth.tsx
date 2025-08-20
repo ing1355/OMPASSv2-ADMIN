@@ -23,7 +23,6 @@ const DashboardAllAuth = ({ applications }: {
     const getDatas = () => {
         setLoading(true)
         GetDashboardApplicationAuthFunc(applications.map(_ => _.id), convertDashboardDateParamsLocalTimezoneToUTC(params), (data) => {
-            console.log(data)
             if (params.intervalValue === 24) {
                 setDatas(data.map((_, ind, arr) => {
                     const values = _.applicationCounts.reduce((pre, cur) => {

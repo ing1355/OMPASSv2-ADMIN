@@ -168,7 +168,6 @@ const UserExcelUpload = () => {
                             const jsonData = XLSX.utils.sheet_to_json(sheet, {
                                 defval: ""
                             });
-                            console.log(jsonData)
 
                             if(jsonData.length === 0) {
                                 return message.error(formatMessage({ id: 'EXCEL_EMPTY_MSG' }));

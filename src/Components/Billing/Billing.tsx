@@ -78,7 +78,7 @@ const planDatas: {
 const Billing = () => {
     const [tableData, setTableData] = useState<BillingHistoryDataType[]>([])
     const [totalCount, setTotalCount] = useState<number>(0);
-    const [dataLoading, setDataLoading] = useState(false)
+    const [dataLoading, setDataLoading] = useState(true)
 
     // const userNumList = useMemo(() => new Array(991).fill(1), []);
     // const [inputUserNum, setInputUserNum] = useState(10);

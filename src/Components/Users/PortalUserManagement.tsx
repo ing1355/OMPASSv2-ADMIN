@@ -22,7 +22,7 @@ const userRoleList = (role: UserDataType['role']): UserDataType['role'][] => rol
 
 const PortalUserManagement = () => {
     const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
-    const [dataLoading, setDataLoading] = useState(false)
+    const [dataLoading, setDataLoading] = useState(true)
     const [tableData, setTableData] = useState<UserDataType[]>([])
     const [totalCount, setTotalCount] = useState<number>(0);
     const [addOpen, setAddOpen] = useState(false)
@@ -105,7 +105,6 @@ const PortalUserManagement = () => {
             }}
             customBtns={<>
                 <Button className="st5" onClick={() => {
-                    console.log(paramsRef.current)
                     GetUserDataListFunc({
                         ...paramsRef.current,
                         pageSize: INT_MAX_VALUE,

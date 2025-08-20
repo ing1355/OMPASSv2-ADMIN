@@ -10,7 +10,7 @@ const AllAuthLogs = () => {
     const [detailData, setDetailData] = useState<AllAuthLogDataType>()
     const [tableData, setTableData] = useState<AllAuthLogDataType[]>([])
     const [totalCount, setTotalCount] = useState(1)
-    const [dataLoading, setDataLoading] = useState(false)
+    const [dataLoading, setDataLoading] = useState(true)
     const { formatMessage } = useIntl()
     const { getApplicationTypesByPlanType } = usePlans()
     

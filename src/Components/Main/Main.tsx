@@ -51,9 +51,9 @@ const Main = () => {
                 onMouseLeave={handleMouseLeave}
                 onClick={() => {
                   if (!isValidateHigherThanFreePlan() && data.route === '/AgentManagement') {
-                    message.info(formatMessage({ id: 'NOT_TRIAL_PLAN_MENU_LABEL' }))
+                    message.info(formatMessage({ id: 'NOT_SUPPORT_CURRENT_PLAN_PACKAGE_MENU_LABEL' }))
                   } else {
-                  navigate(data.route);
+                    navigate(data.route);
                   }
                 }}
               >

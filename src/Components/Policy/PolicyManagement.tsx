@@ -14,7 +14,7 @@ import usePlans from "hooks/usePlans"
 const PolicyManagement = () => {
     const [tableData, setTableData] = useState<PolicyListDataType[]>([])
     const [totalCount, setTotalCount] = useState<number>(0);
-    const [dataLoading, setDataLoading] = useState(false)
+    const [dataLoading, setDataLoading] = useState(true)
 
     const navigate = useNavigate()
     const { formatMessage } = useIntl()
