@@ -1,10 +1,11 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { subdomainInfoChange } from 'Redux/actions/subdomainInfoChange';
 import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
 import dayjs from 'dayjs';
 import { DateTimeFormat } from 'Constants/ConstantValues';
+import { getOptimalTimezone, getSystemTimezone, isValidTimezone } from 'Functions/TimezoneUtils';
 
 dayjs.extend(timezone)
 dayjs.extend(utc)
@@ -23,7 +24,6 @@ const useDateTime = () => {
         })
     }
 
-
     const getDateTimeString = (date: Date) => {
         const year = date.getFullYear();
         const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -38,8 +38,8 @@ const useDateTime = () => {
         return datetimeString;
     }
 
-    const convertUTCStringToTimezoneDateString = (date: string) => {
-        return dayjs.utc(date).tz(subdomainInfo.timeZone).format(DateTimeFormat)
+    const convertUTCStringToTimezoneDateString = (date: string, timezone?: string) => {
+        return dayjs.utc(date).tz(timezone || subdomainInfo.timeZone).format(DateTimeFormat)
     }
 
     const convertTimezoneDateStringToUTCString = (date: string, timezone?: string) => {

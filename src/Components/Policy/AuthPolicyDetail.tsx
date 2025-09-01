@@ -30,6 +30,9 @@ import './AuthPolicyDetail.css'
 import LinuxPamBypass from "./PolicyItems/LinuxPamBypass";
 import SureDeleteButton from "Components/CommonCustomComponents/SureDeleteButton";
 import usePlans from "hooks/usePlans";
+import PolicyAccessPeriodList from "./PolicyItems/PolicyAccessPeriodList";
+import CanEmailRegister from "./CanEmailRegister";
+import useDateTime from "hooks/useDateTime";
 
 const pamInitData: PAMBypassDataType = {
     isEnabled: false,
@@ -41,6 +44,7 @@ const AuthPolicyDetail = () => {
     const { getApplicationTypesByPlanType } = usePlans()
     const { uuid } = useParams()
     const { goBack } = useCustomRoute()
+    const {convertTimezoneDateStringToUTCString, convertUTCStringToTimezoneDateString} = useDateTime()
     const isAdd = !uuid
     const [authenticatorPolicies, setAuthenticatorPolicies] = useState<PolicyDataType['enableAuthenticators']>(['OMPASS', 'OTP', 'PASSCODE', 'WEBAUTHN'])
     const [appAuthenticatorPolicies, setAppAuthenticatorPolicies] = useState<PolicyDataType['enableAppAuthenticationMethods']>(["PATTERN", "PIN"])
@@ -62,6 +66,7 @@ const AuthPolicyDetail = () => {
     const [noticeToThemselves, setNoticeToThemselves] = useState<PolicyDataType['noticeToThemselves']>(undefined)
     const [ipAddressValues, setIpAddressValues] = useState<PolicyDataType['networkConfig']>(undefined)
     const [accessTimeValues, setAccessTimeValues] = useState<PolicyDataType['accessTimeConfig']>(undefined)
+    const [accessPeriodValues, setAccessPeriodValues] = useState<PolicyDataType['accessPeriodConfig']>(undefined)
     const [noticeToAdmin, setNoticeToAdmin] = useState<PolicyDataType['noticeToAdmin']>(undefined)
     const [detailData, setDetailData] = useState<PolicyDataType>()
     const [sureChange, setSureChange] = useState<'LOCATION' | AuthenticatorPolicyType | null>(null)
@@ -101,7 +106,7 @@ const AuthPolicyDetail = () => {
                 setPolicyName(data.name)
                 setInputDescription(data.description ?? "")
                 setOmpassControl(data.accessControl)
-                setCanEmailRegisterData(data.canEmailRegister || {
+                setCanEmailRegisterData(data.isEmailRegistrationEnabled || {
                     isEnabled: false
                 })
                 setDetailData(data)
@@ -128,13 +133,23 @@ const AuthPolicyDetail = () => {
                     setNoticeToThemselves(data.noticeToThemselves || {
                         methods: ['PUSH']
                     })
+                    setAccessPeriodValues({
+                        isEnabled: data.accessPeriodConfig?.isEnabled ?? false,
+                        accessPeriods: data.accessPeriodConfig?.accessPeriods.map(_ => {
+                            return {
+                                startDateTime: convertUTCStringToTimezoneDateString(_.startDateTime, _.timeZone),
+                                endDateTime: convertUTCStringToTimezoneDateString(_.endDateTime, _.timeZone),
+                                timeZone: _.timeZone
+                            }
+                        }) ?? []
+                    })
                 }
             }).catch(() => {
                 goBack()
             })
-            .finally(() => {
-                setDataLoading(false)
-            })
+                .finally(() => {
+                    setDataLoading(false)
+                })
         }
     }, [uuid])
 
@@ -176,6 +191,10 @@ const AuthPolicyDetail = () => {
             setAccessTimeValues({
                 isEnabled: false,
                 accessTimes: []
+            })
+            setAccessPeriodValues({
+                isEnabled: false,
+                accessPeriods: []
             })
             setCanEmailRegisterData({
                 isEnabled: false
@@ -239,6 +258,9 @@ const AuthPolicyDetail = () => {
                     return message.error(formatMessage({ id: 'PLEASE_INPUT_CORRECT_IP_ADDRESS' }))
                 }
             }
+            if (accessPeriodValues?.isEnabled && accessPeriodValues.accessPeriods.length === 0) {
+                return message.error(formatMessage({ id: 'PLEASE_SETTING_ACCESS_PERIOD_POLICY_MSG' }))
+            }
         }
         const params: PolicyDataType = {
             id: uuid || '',
@@ -253,6 +275,16 @@ const AuthPolicyDetail = () => {
             enableAuthenticators: authenticatorPolicies,
             enableAppAuthenticationMethods: appAuthenticatorPolicies,
             accessTimeConfig: accessTimeValues,
+            accessPeriodConfig: {
+                isEnabled: accessPeriodValues?.isEnabled ?? false,
+                accessPeriods: accessPeriodValues?.accessPeriods.map(_ => {
+                    return {
+                        startDateTime: convertTimezoneDateStringToUTCString(_.startDateTime, _.timeZone),
+                        endDateTime: convertTimezoneDateStringToUTCString(_.endDateTime, _.timeZone),
+                        timeZone: _.timeZone
+                    }
+                }) ?? []
+            },
             noticeToAdmin: noticeToAdmin,
             noticeToThemselves,
             // passwordless: passwordlessData,
@@ -261,7 +293,7 @@ const AuthPolicyDetail = () => {
                 ip: pamBypassData.isEnabled ? pamBypassData.ip : '',
                 username: pamBypassData.isEnabled ? pamBypassData.username : ''
             },
-            canEmailRegister: canEmailRegisterData
+            isEmailRegistrationEnabled: canEmailRegisterData
         }
         if (uuid) {
             updateAuthPolicyFunc(params)
@@ -271,7 +303,7 @@ const AuthPolicyDetail = () => {
     }
 
     const updateAuthPolicyFunc = (params: PolicyDataType) => {
-        UpdatePoliciesListFunc(params, ({ enableAuthenticators, enableBrowsers, locationConfig, networkConfig, noticeToAdmin, noticeToThemselves, accessTimeConfig }) => {
+        UpdatePoliciesListFunc(params, ({ enableAuthenticators, enableBrowsers, locationConfig, networkConfig, noticeToAdmin, noticeToThemselves, accessTimeConfig, accessPeriodConfig, isEmailRegistrationEnabled }) => {
             if (!isDefaultPolicy) {
                 if (locationUsed) setLocationDatas(locationConfig)
                 if (authenticatorsUsed) setAuthenticatorPolicies(browserUsed ? enableAuthenticators : enableAuthenticators.filter(_ => _ !== 'WEBAUTHN'))
@@ -280,6 +312,19 @@ const AuthPolicyDetail = () => {
                 setIpAddressValues(networkConfig)
                 setNoticeToAdmin(noticeToAdmin)
                 setNoticeToThemselves(noticeToThemselves)
+                setCanEmailRegisterData(isEmailRegistrationEnabled || {
+                    isEnabled: false
+                })
+                setAccessPeriodValues({
+                    isEnabled: accessPeriodConfig?.isEnabled ?? false,
+                    accessPeriods: accessPeriodConfig?.accessPeriods.map(_ => {
+                        return {
+                            startDateTime: convertUTCStringToTimezoneDateString(_.startDateTime, _.timeZone),
+                            endDateTime: convertUTCStringToTimezoneDateString(_.endDateTime, _.timeZone),
+                            timeZone: _.timeZone
+                        }
+                    }) ?? []
+                })
             }
             message.success(formatMessage({ id: 'AUTH_POLICY_UPDATE_SUCCESS_MSG' }))
         })
@@ -348,10 +393,10 @@ const AuthPolicyDetail = () => {
                 <CustomInputRow title={<FormattedMessage id="DESCRIPTION_LABEL" />}>
                     <Input className="st1" value={inputDescription} placeholder={formatMessage({ id: 'DESCRIPTION_PLACEHOLDER' })} valueChange={value => {
                         setInputDescription(value)
-                    }} maxLength={maxLengthByType('description')}/>
+                    }} maxLength={maxLengthByType('description')} />
                 </CustomInputRow>
                 <OMPASSAuth value={ompassControl} onChange={setOmpassControl} isDefaultPolicy={isDefaultPolicy} />
-                <div className="auth-policy-validate-container" data-hidden={ompassControl !== 'ACTIVE'}>
+                <div className={`auth-policy-validate-container${ompassControl === 'REGISTER_ONLY' || ompassControl === 'ACTIVE' ? '' : ' hidden'}`} data-hidden={ompassControl !== 'ACTIVE' && ompassControl !== 'REGISTER_ONLY'}>
                     {authenticatorsUsed && <OMPASSAuthenticators value={authenticatorPolicies} onChange={setAuthenticatorPolicies} locationChecked={locationDatas?.isEnabled || false} webauthnUsed={browserUsed} setSureChange={setSureChange} />}
                     {!isDefaultPolicy && <OMPASSAppAuthenticators value={appAuthenticatorPolicies} onChange={setAppAuthenticatorPolicies} />}
                     {/* {passwordlessUsed && <PasswordlessCheck value={passwordlessData} onChange={setPasswordlessData} />} */}
@@ -360,7 +405,8 @@ const AuthPolicyDetail = () => {
                     {locationUsed && locationDatas && <PolicyLocationList value={locationDatas} onChange={setLocationDatas} authenticators={authenticatorPolicies} setSureChange={setSureChange} />}
                     {!isDefaultPolicy && ipAddressValues && ipAddressUsed && <PolicyIpAddressList value={ipAddressValues} onChange={setIpAddressValues} dataInit={initEvent} />}
                     {!isDefaultPolicy && accessTimeValues && <PolicyAccessTimeList value={accessTimeValues} onChange={setAccessTimeValues} />}
-                    {/* {!isTta && <CanEmailRegister value={canEmailRegisterData} onChange={setCanEmailRegisterData} />} */}
+                    {!isDefaultPolicy && accessPeriodValues && <PolicyAccessPeriodList value={accessPeriodValues} onChange={setAccessPeriodValues} />}
+                    {!isDefaultPolicy && <CanEmailRegister value={canEmailRegisterData} onChange={setCanEmailRegisterData} />}
                     {!isDefaultPolicy && noticeToAdmin && <NoticeToAdmin hasIncludeWithdrawal={setHasIncludeWithdrawal} value={noticeToAdmin} onChange={setNoticeToAdmin} />}
                     {!isDefaultPolicy && noticeToThemselves && <NoticeToThemselves value={noticeToThemselves} onChange={setNoticeToThemselves} />}
                 </div>

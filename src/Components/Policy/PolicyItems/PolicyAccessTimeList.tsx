@@ -2,35 +2,31 @@ import { message, Switch, TimePicker } from "antd"
 import Button from "Components/CommonCustomComponents/Button"
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import Input from "Components/CommonCustomComponents/Input"
-import { policyNoticeRestrictionTypes, timeZoneNamesWithCustomSelect } from "Constants/ConstantValues"
+import { policyNoticeRestrictionTypes } from "Constants/ConstantValues"
 import { FormattedMessage, useIntl } from "react-intl"
 import deleteIcon from '@assets/deleteIcon.png'
 import deleteIconHover from '@assets/deleteIconHover.png'
 import addIconWhite from '@assets/addIconWhite.png'
 import { useEffect, useState } from "react"
-import CustomSelect from "Components/CommonCustomComponents/CustomSelect"
 import dayjs from "dayjs"
+import TimezoneSelect from "Components/CommonCustomComponents/TimezoneSelect"
+import { useSelector } from "react-redux"
 
 const timepickerFormat = 'HH:mm'
 
 const TimePolicyDayOfWeeksList: AccessTimeRestrictionValueType['selectedDayOfWeeks'] = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
 
-const defaultTimePolicyData = (): AccessTimeRestrictionValueType => ({
-    selectedDayOfWeeks: TimePolicyDayOfWeeksList,
-    timeZone: "Asia/Seoul",
-    // dateRange: {
-    //     type: 'ALL_TIME',
-    //     startTime: "",
-    //     endTime: ""
-    // },
-    timeRange: {
-        type: 'ALL_TIME',
-        startTime: null,
-        endTime: null
-    }
-})
-
 const PolicyAccessTimeList = ({ value, onChange, dataInit }: PolicyItemsPropsType<AccessTimeRestrictionType>) => {
+    const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
+    const defaultTimePolicyData = (): AccessTimeRestrictionValueType => ({
+        selectedDayOfWeeks: TimePolicyDayOfWeeksList,
+        timeZone: subdomainInfo.timeZone,
+        timeRange: {
+            type: 'ALL_TIME',
+            startTime: null,
+            endTime: null
+        }
+    })
     const [currentAccessTimeValue, setCurrentAccessTimeValue] = useState<AccessTimeRestrictionValueType>(defaultTimePolicyData())
     const { isEnabled, accessTimes } = value
 
@@ -97,16 +93,7 @@ const PolicyAccessTimeList = ({ value, onChange, dataInit }: PolicyItemsPropsTyp
                             gap: '12px'
                         }}>
                             <FormattedMessage id="ACCESS_TIME_TIME_SELECT_LABEL" /> :
-                            {/* <TimePicker format={timepickerFormat} size="small" disabled={currentAccessTimeValue.timeRange.type === 'ALL_TIME'} value={currentAccessTimeValue.timeRange.startTime ? dayjs(currentAccessTimeValue.timeRange.startTime, timepickerFormat) : null} onChange={val => {
-                        setCurrentAccessTimeValue({
-                            ...currentAccessTimeValue,
-                            timeRange: {
-                                ...currentAccessTimeValue.timeRange,
-                                startTime: val ? val.format(timepickerFormat) : null
-                            }
-                        })
-                    }} /> */}
-                            <TimePicker.RangePicker format={timepickerFormat} size="small" disabled={currentAccessTimeValue.timeRange.type === 'ALL_TIME'} value={[currentAccessTimeValue.timeRange.startTime ? dayjs(currentAccessTimeValue.timeRange.startTime, timepickerFormat) : null, currentAccessTimeValue.timeRange.endTime ? dayjs(currentAccessTimeValue.timeRange.endTime, timepickerFormat) : null]} onChange={val => {
+                            <TimePicker.RangePicker format={timepickerFormat} disabled={currentAccessTimeValue.timeRange.type === 'ALL_TIME'} value={[currentAccessTimeValue.timeRange.startTime ? dayjs(currentAccessTimeValue.timeRange.startTime, timepickerFormat) : null, currentAccessTimeValue.timeRange.endTime ? dayjs(currentAccessTimeValue.timeRange.endTime, timepickerFormat) : null]} onChange={val => {
                                 setCurrentAccessTimeValue({
                                     ...currentAccessTimeValue,
                                     timeRange: {
@@ -128,14 +115,12 @@ const PolicyAccessTimeList = ({ value, onChange, dataInit }: PolicyItemsPropsTyp
                         </div>
                         {isEnabled && <div>
                             <label>
-                                <FormattedMessage id="TIME_ZONE_LABEL" /> : <CustomSelect needSelect value={currentAccessTimeValue.timeZone} onChange={e => {
+                                <FormattedMessage id="TIME_ZONE_LABEL" /> : <TimezoneSelect value={currentAccessTimeValue.timeZone} onChange={e => {
                                     setCurrentAccessTimeValue({
                                         ...currentAccessTimeValue,
                                         timeZone: e
                                     })
-                                }} items={timeZoneNamesWithCustomSelect} style={{
-                                    width: '300px'
-                                }} hasGroup />
+                                }} />
                             </label>
                         </div>}
                     </div>
@@ -207,12 +192,12 @@ const PolicyAccessTimeList = ({ value, onChange, dataInit }: PolicyItemsPropsTyp
                         </div>
                         {isEnabled && <div>
                             <label>
-                                <FormattedMessage id="TIME_ZONE_LABEL" /> : <CustomSelect needSelect value={_.timeZone} onChange={e => {
+                                <FormattedMessage id="TIME_ZONE_LABEL" /> : <TimezoneSelect value={_.timeZone} onChange={e => {
                                     setAccessTimeValues(accessTimes.map((timeValue, tInd) => tInd === ind ? ({
                                         ...timeValue,
                                         timeZone: e
                                     }) : timeValue))
-                                }} items={timeZoneNamesWithCustomSelect} hasGroup />
+                                }} />
                             </label>
                         </div>}
                     </div>

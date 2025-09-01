@@ -291,5 +291,30 @@
 .auth-policy-validate-container {
     transition: all .25s ease-in-out;
     height: fit-content;
+}
+
+.auth-policy-validate-container.hidden {
     overflow: hidden;
+}
+
+.ompass-control-deny-can-register-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 8px;
+    padding-left: 1.5rem;
+    font-size: .95rem;
+    font-weight: bold;
+}
+
+.ompass-control-deny-can-register-container p {
+    font-size: .85rem;
+    font-weight: normal;
+}
+
+.ompass-control-deny-can-register-container:has(input:disabled) {
+    opacity: .5;
+}
+
+.ompass-control-deny-can-register-container label:has(input:disabled) {
+    cursor: not-allowed;
 }

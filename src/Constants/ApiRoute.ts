@@ -28,7 +28,7 @@ export const GetApplicationDetailApi = (applicationId: ApplicationDataType['id']
 export const AddApplicationListApi = '/v2/applications'
 export const UpdateApplicationListApi = (applicationId: ApplicationDataType['id']) => `/v2/applications/${applicationId}`
 export const DeleteApplicationListApi = (applicationId: ApplicationDataType['id']) => `/v2/applications/${applicationId}`
-export const UpdateApplicationSecretkeyApi = (applicationId: ApplicationDataType['id']) => `/v2/applications/${applicationId}/reissuance`
+export const ResetApplicationKeyApi = (applicationId: ApplicationDataType['id']) => `/v2/applications/${applicationId}/reissuance`
 export const GetAuthorizeMSEntraUriApi = (applicationId: ApplicationDataType['id']) => `/v2/applications/${applicationId}/ms/oauth2/url`
 
 // 정책 관리

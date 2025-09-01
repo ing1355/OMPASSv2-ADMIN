@@ -1,7 +1,7 @@
 type UnionKeys<T> = T extends any ? keyof T : never;
 
 type LanguageType = 'KR' | 'EN' | 'JP'
-type AuthPurposeType = "ROLE_SWAPPING_SOURCE" | "ROLE_SWAPPING_TARGET" | "ADMIN_2FA_FOR_APPLICATION_DELETION" | "ADMIN_2FA_FOR_SECRET_KEY_UPDATE" | "RADIUS_REGISTRATION" | "DEVICE_CHANGE" | "LDAP_REGISTRATION"
+type AuthPurposeType = "ROLE_SWAPPING_SOURCE" | "ROLE_SWAPPING_TARGET" | "ADMIN_2FA_FOR_APPLICATION_DELETION" | "ADMIN_2FA_FOR_SECRET_KEY_UPDATE" | "RADIUS_REGISTRATION" | "DEVICE_CHANGE" | "LDAP_REGISTRATION" | "ADMIN_2FA_FOR_INSTALL_CODE_UPDATE" | "ADMIN_2FA_FOR_UNINSTALL_CODE_UPDATE"
 type LogAuthPurposeType = AuthPurposeType | "ADD_OTHER_AUTHENTICATOR" | "AUTH_LOGIN" | "REG_LOGIN"
 type AuthPurposeForApiType = 'ROLE_SWAPPING' | AuthPurposeType
 type AuthenticationLogType = "ALLOW" | "DENY" | "ALLOW_OUT_OF_SCHEDULE"
@@ -275,6 +275,8 @@ type ApplicationDataType = DefaultApplicationDataType & {
     redirectUri?: string
     helpDeskMessage: string
     secretKey: string
+    installCode?: string
+    uninstallCode?: string
     radiusProxyServer?: RadiusDataType
     msTenantId?: string
     msClientId?: string
@@ -331,8 +333,16 @@ type LocationPolicyRestrictionItemType = {
     radius?: number
     alias: string
 }
+type AccessPeriodItemType = {
+    startDateTime: string
+    endDateTime: string
+    timeZone: string
+}
 type LocationPolicyType = PolicyEnabledDataType & {
     locations: LocationPolicyRestrictionItemType[]
+}
+type AccessPeriodConfigType = PolicyEnabledDataType & {
+    accessPeriods: AccessPeriodItemType[]
 }
 type IpAddressPolicyType = PolicyEnabledDataType & {
     // ips: PolicyRestrictionItemType[]
@@ -373,7 +383,7 @@ type AccessTimeRestrictionType = PolicyEnabledDataType & {
     accessTimes: AccessTimeRestrictionValueType[]
 }
 
-type NoticeRestrictionTypes = "ACCESS_CONTROL" | "BROWSER" | "COUNTRY" | "ACCESS_TIME" | "LOCATION" | "IP_WHITE_LIST"
+type NoticeRestrictionTypes = "ACCESS_CONTROL" | "BROWSER" | "COUNTRY" | "ACCESS_TIME" | "LOCATION" | "IP_WHITE_LIST" | "ACCESS_PERIOD"
 
 type RestrictionNoticeDataType = PolicyEnabledDataType & {
     admins: string[],
@@ -388,13 +398,12 @@ type RestrictionNoticeThemselvesDataType = {
 type DefaultPolicyDataType = {
     id: string
     name: string
-    accessControl: 'ACTIVE' | 'INACTIVE' | 'DENY'
+    accessControl: 'ACTIVE' | 'INACTIVE' | 'DENY' | 'REGISTER_ONLY'
     policyType: 'DEFAULT' | 'CUSTOM'
     enableAuthenticators: AuthenticatorPolicyType[]
     enableAppAuthenticationMethods: OMPASSAppAuthenticatorType[]
     description?: string
     applicationType: LocalApplicationTypes
-    canEmailRegister: PolicyEnabledDataType
 }
 
 type RestrictionNoticeMethodType = 'EMAIL' | 'PUSH'
@@ -404,9 +413,11 @@ type PolicyDataType = DefaultPolicyDataType & {
     enableBrowsers?: BrowserPolicyType[]
     networkConfig?: IpAddressPolicyType
     accessTimeConfig?: AccessTimeRestrictionType
+    accessPeriodConfig?: AccessPeriodConfigType
     noticeToAdmin?: RestrictionNoticeDataType
     noticeToThemselves?: RestrictionNoticeThemselvesDataType
     linuxPamBypass?: PAMBypassDataType
+    isEmailRegistrationEnabled?: PolicyEnabledDataType
     // passwordless?: PolicyEnabledDataType
 }
 
@@ -662,8 +673,10 @@ type InvalidAuthLogDataType = {
     networkStatus: AuthenticationNetWorkStatusType
     ompassData: OMPASSDataType
     policyAtTimeOfEvent: PolicyDataType
-    reason: 'INVALID_SIGNATURE' | 'INVALID_PASSCODE' | 'INVALID_OTP' | 'BROWSER' | 'ACCESS_TIME' | 'LOCATION' | 'IP_WHITE_LIST' | 'COUNTRY' | 'NONE' | 'ACCESS_CONTROL' | 'CANCEL'
+    reason: InvalidAuthLogReasonType
 }
+
+type InvalidAuthLogReasonType = 'INVALID_SIGNATURE' | 'INVALID_PASSCODE' | 'INVALID_OTP' | 'NONE' | 'CANCEL' | NoticeRestrictionTypes
 
 type AllAuthLogDataType = ValidAuthLogDataType | InvalidAuthLogDataType
 
@@ -1045,3 +1058,6 @@ type DropdownItemType = {
     style?: React.CSSProperties
     isSide?: boolean
 }
+
+type ApplicationResetType = 'SECRET_KEY' | 'INSTALL' | 'UNINSTALL'
+type ApplicationAuthPurposeType = 'delete' | ApplicationResetType

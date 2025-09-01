@@ -10,16 +10,14 @@ import CopyToClipboard from "react-copy-to-clipboard";
 import { ExternalDirectoryTypeLabel } from "Components/Users/BulkUserAdd/ExternalDirectory/ExternalDirectoryContstants";
 
 type ApplicationDetailSubInfoByTypeProps = {
-    isAuthorized: boolean
-    applicationType: LocalApplicationTypes
-    MSEntraTenantId: string
+    appData: ApplicationDataType
     data?: RadiusDataType
     ldapProxyServer?: ApplicationDataType['ldapProxyServer']
 }
 
-const ApplicationDetailSubInfoByType = ({ isAuthorized, applicationType, data, MSEntraTenantId, ldapProxyServer }: ApplicationDetailSubInfoByTypeProps) => {
+const ApplicationDetailSubInfoByType = ({ appData, data, ldapProxyServer }: ApplicationDetailSubInfoByTypeProps) => {
     // if (applicationType === 'RADIUS') return <RadiusDetailInfo data={data} />
-    if (applicationType === 'MICROSOFT_ENTRA_ID') return <MSEntraIDDetailInfo isAuthorized={isAuthorized} MSEntraTenantId={MSEntraTenantId} />
+    if (appData.type === 'MICROSOFT_ENTRA_ID') return <MSEntraIDDetailInfo isAuthorized={appData.isAuthorized ?? false} MSEntraTenantId={appData.msTenantId ?? ''} />
     // if (applicationType === 'LDAP') return <LDAPDetailInfo ldapProxyServer={ldapProxyServer} />
     return <></>
 }
@@ -40,7 +38,7 @@ const LDAPDetailInfo = ({ ldapProxyServer }: {
 }
 
 const RadiusDetailInfo = ({ data }: {
-    data: ApplicationDataType['radiusProxyServer']
+    data: RadiusDataType
 }) => {
     const { host, secretKey, authenticationPort, accountingPort } = data || {}
     const { formatMessage } = useIntl()

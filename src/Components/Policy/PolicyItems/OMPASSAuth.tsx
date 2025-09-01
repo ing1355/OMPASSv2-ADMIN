@@ -12,20 +12,27 @@ const OMPASSAuth = ({ value, onChange, isDefaultPolicy }: PolicyItemsPropsType<P
                 <div className="ompass-control-row">
                     <Input type="radio" value={"ACTIVE"} checked={value === 'ACTIVE'} onChange={e => {
                         if (e.target.checked) onChange('ACTIVE')
-                    }} label={<FormattedMessage id="OMPASS_ACCESS_CONTROL_ITEM_1_TITLE_LABEL"/>} />
-                    <p><FormattedMessage id="OMPASS_ACCESS_CONTROL_ITEM_1_SUBSCRIPTION_LABEL"/></p>
+                    }} label={<FormattedMessage id="OMPASS_ACCESS_CONTROL_ITEM_1_TITLE_LABEL" />} />
+                    <p><FormattedMessage id="OMPASS_ACCESS_CONTROL_ITEM_1_SUBSCRIPTION_LABEL" /></p>
                 </div>
                 <div className="ompass-control-row">
                     <Input type="radio" value={"INACTIVE"} checked={value === 'INACTIVE'} onChange={e => {
                         if (e.target.checked) onChange('INACTIVE')
-                    }} label={<FormattedMessage id="OMPASS_ACCESS_CONTROL_ITEM_2_TITLE_LABEL"/>} disabled={isDefaultPolicy}/>
-                    <p><FormattedMessage id="OMPASS_ACCESS_CONTROL_ITEM_2_SUBSCRIPTION_LABEL"/></p>
+                    }} label={<FormattedMessage id="OMPASS_ACCESS_CONTROL_ITEM_2_TITLE_LABEL" />} disabled={isDefaultPolicy} />
+                    <p><FormattedMessage id="OMPASS_ACCESS_CONTROL_ITEM_2_SUBSCRIPTION_LABEL" /></p>
                 </div>
                 <div className="ompass-control-row">
-                    <Input type="radio" value={"DENY"} checked={value === 'DENY'} onChange={e => {
+                    <Input type="radio" value={"DENY"} checked={value === 'DENY' || value === 'REGISTER_ONLY'} onChange={e => {
                         if (e.target.checked) onChange('DENY')
-                    }} label={<FormattedMessage id="OMPASS_ACCESS_CONTROL_ITEM_3_TITLE_LABEL"/>} disabled={isDefaultPolicy}/>
-                    <p><FormattedMessage id="OMPASS_ACCESS_CONTROL_ITEM_3_SUBSCRIPTION_LABEL"/></p>
+                    }} label={<FormattedMessage id="OMPASS_ACCESS_CONTROL_ITEM_3_TITLE_LABEL" />} disabled={isDefaultPolicy} />
+                    <p><FormattedMessage id="OMPASS_ACCESS_CONTROL_ITEM_3_SUBSCRIPTION_LABEL" /></p>
+                    <div className="ompass-control-deny-can-register-container">
+                        <Input disabled={!(value === 'DENY' || value === 'REGISTER_ONLY')} type="checkbox" checked={value === 'REGISTER_ONLY'} onChange={e => {
+                            if (e.target.checked) onChange('REGISTER_ONLY')
+                            else onChange('DENY')
+                        }} label={<FormattedMessage id="OMPASS_ACCESS_CONTROL_ITEM_4_TITLE_LABEL" />} />
+                        <p><FormattedMessage id="OMPASS_ACCESS_CONTROL_ITEM_4_SUBSCRIPTION_LABEL" /></p>
+                    </div>
                 </div>
             </div>
         </div>

@@ -22,7 +22,6 @@ const subdomainInfo: ReduxStateType['subdomainInfo']|null = {
     isExpired: false,
   },
   serverType: 'ON_PREMISE',
-  // timeZone: 'Asia/Seoul',
   timeZone: 'UTC',
   noticeMessage: '',
   logoImage: {

@@ -49,7 +49,7 @@ const VersionUpload = () => {
     } else if (type === 'WINDOWS_FRAMEWORK') {
       return ".nupkg"
     } else if (type === 'MAC_LOGIN') {
-      return ".pkg"
+      return ".zip"
     } else return ''
   }
 
@@ -63,7 +63,7 @@ const VersionUpload = () => {
     } else if (type === 'WINDOWS_FRAMEWORK') {
       return "ONLY_NUPKG_FILES_CAN_BE_UPLOADED"
     } else if (type === 'MAC_LOGIN') {
-      return "ONLY_PKG_FILES_CAN_BE_UPLOADED"
+      return "ONLY_ZIP_FILES_CAN_BE_UPLOADED"
     } else return ''
   }
 

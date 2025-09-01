@@ -4,10 +4,9 @@ import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import { GetPortalSettingsDataFunc, UpdatePortalSettingsDataFunc } from "Functions/ApiFunctions"
 import { useLayoutEffect, useState } from "react"
 import './Settings.css'
-import { timeZoneNamesWithCustomSelect, UserSignupMethod } from "Constants/ConstantValues"
+import { UserSignupMethod } from "Constants/ConstantValues"
 import { message, Switch } from "antd"
 import { convertBase64FromClientToServerFormat } from "Functions/GlobalFunctions"
-import CustomSelect from "Components/CommonCustomComponents/CustomSelect"
 import Button from "Components/CommonCustomComponents/Button"
 import Input from "Components/CommonCustomComponents/Input"
 import { useDispatch, useSelector } from "react-redux"
@@ -17,12 +16,13 @@ import loginMainImage from '@assets/loginMainImage.png'
 import CustomImageUpload from "Components/CommonCustomComponents/CustomImageUpload"
 import CustomAdminSelect from "Components/CommonCustomComponents/CustomAdminSelect"
 import { FormattedMessage, useIntl } from "react-intl"
+import TimezoneSelect from "Components/CommonCustomComponents/TimezoneSelect"
 
 const Settings = () => {
     const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas!);
     const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const [dataLoading, setDataLoading] = useState(false)
-    const [timeZoneValue, setTimeZoneValue] = useState('Asia/Seoul')
+    const [timeZoneValue, setTimeZoneValue] = useState(subdomainInfo.timeZone)
     const [welcomeText, setWelcomeText] = useState('')
     const [canSignUp, setCanSignUp] = useState(false)
     const [signupMethod, setSignupMethod] = useState(UserSignupMethod.USER_SELF_ADMIN_PASS)
@@ -142,9 +142,9 @@ const Settings = () => {
                 }} maxLength={20} />
             </CustomInputRow>
             <CustomInputRow title={<FormattedMessage id="TIME_ZONE_LABEL" />}>
-                <CustomSelect hasGroup value={timeZoneValue} onChange={e => {
+                <TimezoneSelect value={timeZoneValue} onChange={e => {
                     setTimeZoneValue(e)
-                }} items={timeZoneNamesWithCustomSelect} needSelect />
+                }} />
             </CustomInputRow>
             <CustomInputRow title={<FormattedMessage id="USER_SELF_SIGN_UP_LABEL" />}>
                 <Switch checked={canSignUp} onChange={check => {

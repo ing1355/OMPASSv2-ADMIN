@@ -1,5 +1,5 @@
 import { isDev } from "Constants/ConstantValues";
-import { DirectoryServerBasedOMPASSRegistrationFunc, GetOMPASSAuthResultFunc, OMPASSAuthStartFunc, OMPASSDeviceChangeFunc, OMPASSRoleSwappingFunc, RPPrimaryAuthFunc } from "Functions/ApiFunctions";
+import { DirectoryServerBasedOMPASSRegistrationFunc, GetOMPASSAuthResultFunc, OMPASSAuthStartFunc, OMPASSDeviceChangeFunc, OMPASSRoleSwappingFunc } from "Functions/ApiFunctions";
 import { DeviceInfo } from "Functions/GetDeviceInfo";
 import { useCallback, useRef } from "react";
 

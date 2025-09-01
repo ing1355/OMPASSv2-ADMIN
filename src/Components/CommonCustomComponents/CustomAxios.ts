@@ -58,12 +58,13 @@ export function CustomAxiosGetFile(url: string, callback?: Function, params?: an
 }
 
 export function CustomAxiosPost(url: string, callback?: Function, params?: any, config?: any) {
-
+    console.log(config)
     const headers = config ? {
         ...defaultHeaders(),
         authorization: config.authorization ? config.authorization : getStorageAuth(),
         ...config.headers
     } : defaultHeaders()
+    console.log(headers)
     return axios.post(defaultDomain + url, params, { headers }).then(res => {
         // if (callback) callback(res.data.data, res.headers.authorization);
         if (callback) callback(res.data, res.headers.authorization);
@@ -71,9 +72,14 @@ export function CustomAxiosPost(url: string, callback?: Function, params?: any, 
     })
 }
 
-export function CustomAxiosDelete(url: string, callback?: Function, params?: any) {
+export function CustomAxiosDelete(url: string, callback?: Function, params?: any, config?: any) {
+    const headers = config ? {
+        ...defaultHeaders(),
+        authorization: config.authorization ? config.authorization : getStorageAuth(),
+        ...config.headers
+    } : defaultHeaders()
     return axios.delete(defaultDomain + url, {
-        params, headers: defaultHeaders()
+        params, headers
     }).then(res => {
         if (callback) callback(res.data);
         return res.data
@@ -93,11 +99,13 @@ export function CustomAxiosPut(url: string, callback?: Function, params?: any, c
 }
 
 export function CustomAxiosPatch(url: string, callback?: Function, params?: any, config?: any) {
+    console.log(config)
     const headers = config ? {
         ...defaultHeaders(),
         authorization: config.authorization ? config.authorization : getStorageAuth(),
         ...config.headers
     } : defaultHeaders()
+    console.log(headers)
     return axios.patch(defaultDomain + url, params, { headers }).then(res => {
         if (callback) callback(res.data, res.headers.authorization);
         return res.data

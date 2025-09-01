@@ -969,9 +969,9 @@ export const DateTimeFormat = "YYYY-MM-DD HH:mm:ss"
 export const userSelectPageSize = () => parseInt(localStorage.getItem('user_select_size') || "10")
 
 // export const policyNoticeRestrictionTypes: NoticeRestrictionTypes[] = ["ACCESS_CONTROL", "BROWSER", "LOCATION", "IP_WHITE_LIST", "ACCESS_TIME", "COUNTRY"]
-export const policyNoticeRestrictionTypes: NoticeRestrictionTypes[] = ["ACCESS_CONTROL", "BROWSER", "LOCATION", "IP_WHITE_LIST", "ACCESS_TIME"]
+export const policyNoticeRestrictionTypes: NoticeRestrictionTypes[] = ["ACCESS_CONTROL", "BROWSER", "LOCATION", "IP_WHITE_LIST", "ACCESS_TIME", "ACCESS_PERIOD"]
 
-export const userStatusTypes: UserStatusType[] = ["RUN", "WAIT_ADMIN_APPROVAL", "LOCK", "WAIT_INIT_PASSWORD"]
+export const userStatusTypes: UserStatusType[] = ["RUN", "WAIT_ADMIN_APPROVAL", "LOCK", "WAIT_INIT_PASSWORD", 'WAIT_SECURITY_QNA']
 
 export const PolicyBrowsersList: BrowserPolicyType[] = [
     "CHROME",
@@ -1111,7 +1111,8 @@ export const authenticatorLabelList: {
     MASTER_USB: 'Master USB',
     NONE: '-'
 }
-export const authFailReasonList: InvalidAuthLogDataType['reason'][] = ['ACCESS_TIME', 'BROWSER', 'COUNTRY', 'ACCESS_CONTROL', 'CANCEL', 'INVALID_OTP', 'INVALID_PASSCODE', 'INVALID_SIGNATURE', 'IP_WHITE_LIST', 'LOCATION', 'NONE']
+// export const authFailReasonList: InvalidAuthLogDataType['reason'][] = ['ACCESS_TIME', 'BROWSER', 'COUNTRY', 'ACCESS_CONTROL', 'ACCESS_PERIOD', 'CANCEL', 'INVALID_OTP', 'INVALID_PASSCODE', 'INVALID_SIGNATURE', 'IP_WHITE_LIST', 'LOCATION', 'NONE']
+export const authFailReasonList: InvalidAuthLogReasonType[] = ['ACCESS_CONTROL', 'BROWSER', 'LOCATION', 'IP_WHITE_LIST', 'ACCESS_TIME', 'ACCESS_PERIOD', 'CANCEL', 'INVALID_OTP', 'INVALID_PASSCODE', 'INVALID_SIGNATURE', 'NONE']
 
 export const convertLangToIntlVer = (lang: ReduxStateType['lang']) => {
   if(lang === 'EN') {

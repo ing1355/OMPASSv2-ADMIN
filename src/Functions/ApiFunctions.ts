@@ -1,5 +1,5 @@
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from "Components/CommonCustomComponents/CustomAxios";
-import { AddApplicationListApi, AddExternalDirectoryApi, AddPasscodeApi, AddPoliciesListApi, AddRadiusUserListApi, AddUserDataApi, AddUserGroupApi, AddUserWithCsvDataApi, ApprovalUserApi, CheckExternalDirectoryConnectionApi, ConfirmPasswordApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeleteExternalDirectoryApi, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DirectoryServerBasedOMPASSRegistrationApi, DuplicateUserNameCheckApi, EmailChangeCodeVerificationApi, FindPortalUsernameApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetAuthorizeMSEntraUriApi, GetBillingHistoriesApi, GetCurrentPlanApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetExternalDirectoryListApi, GetGlobalConfigApi, GetMicrosoftEntraIdAuthApi, GetOMPASSAuthResultApi, GetPasscodeHistoriesApi, GetPasscodeListApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetRpUserListApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, LoginApi, OMPASSAuthApi, OMPASSDeviceChangeApi, OMPASSRoleSwappingApi, PasswordlessLoginApi, PatchSessionTokenApi, ReissuanceSecretKeyForUserSyncApi, ResetPasswordApi, ResetPasswordEmailCodeVerifyApi, ResetPasswordEmailSendApi, RoleSwappingApi, RootSignUpRequestApi, RPPrimaryAuthApi, SendChangeEmailCodeApi, SendEmailVerificationApi, SendPasscodeEmailApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, SyncExternalDirectoryPortalUsersApi, UnlockUserApi, UpdateAgentDescriptionApi, UpdateApplicationListApi, UpdateApplicationSecretkeyApi, UpdateExternalDirectoryApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateSecurityQuestionsApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi, VerificationEmailChangeApi } from "Constants/ApiRoute";
+import { AddApplicationListApi, AddExternalDirectoryApi, AddPasscodeApi, AddPoliciesListApi, AddRadiusUserListApi, AddUserDataApi, AddUserGroupApi, AddUserWithCsvDataApi, ApprovalUserApi, CheckExternalDirectoryConnectionApi, ConfirmPasswordApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeleteExternalDirectoryApi, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DirectoryServerBasedOMPASSRegistrationApi, DuplicateUserNameCheckApi, EmailChangeCodeVerificationApi, FindPortalUsernameApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetAuthorizeMSEntraUriApi, GetBillingHistoriesApi, GetCurrentPlanApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetExternalDirectoryListApi, GetGlobalConfigApi, GetMicrosoftEntraIdAuthApi, GetOMPASSAuthResultApi, GetPasscodeHistoriesApi, GetPasscodeListApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetRpUserListApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, LoginApi, OMPASSAuthApi, OMPASSDeviceChangeApi, OMPASSRoleSwappingApi, PasswordlessLoginApi, PatchSessionTokenApi, ReissuanceSecretKeyForUserSyncApi, ResetApplicationKeyApi, ResetPasswordApi, ResetPasswordEmailCodeVerifyApi, ResetPasswordEmailSendApi, RoleSwappingApi, RootSignUpRequestApi, RPPrimaryAuthApi, SendChangeEmailCodeApi, SendEmailVerificationApi, SendPasscodeEmailApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, SyncExternalDirectoryPortalUsersApi, UnlockUserApi, UpdateAgentDescriptionApi, UpdateApplicationListApi, UpdateExternalDirectoryApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateSecurityQuestionsApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi, VerificationEmailChangeApi } from "Constants/ApiRoute";
 import { INT_MAX_VALUE } from "Constants/ConstantValues";
 
 export const LoginFunc = (params: LoginApiParamsType, callback: (res: LoginApiResponseType, token: string) => void) => {
@@ -132,14 +132,20 @@ export const UpdateApplicationDataFunc = (applicationId: ApplicationDataType['id
 }
 
 export const DeleteApplicationListFunc = (applicationId: ApplicationDataType['id'], token: string, callback: () => void) => {
-    return CustomAxiosDelete(DeleteApplicationListApi(applicationId), callback, {
-        authorization: token
+    return CustomAxiosDelete(DeleteApplicationListApi(applicationId), callback, null, {
+        headers: {
+            "X-One-Time-Token": token
+        }
     })
 }
 
-export const UpdateApplicationSecretkeyFunc = (applicationId: ApplicationDataType['id'], token: string, callback: (appData: ApplicationDataType) => void) => {
-    return CustomAxiosPatch(UpdateApplicationSecretkeyApi(applicationId), callback, {
-        authorization: token
+export const UpdateApplicationSecretkeyFunc = (applicationId: ApplicationDataType['id'], token: string, type: ApplicationResetType, callback: (appData: ApplicationDataType) => void) => {
+    return CustomAxiosPatch(ResetApplicationKeyApi(applicationId), callback, {
+        type
+    }, {
+        headers: {  
+            "X-One-Time-Token": token
+        }
     })
 }
 
@@ -448,7 +454,9 @@ export const DuplicateUserNameCheckFunc = (username: UserDataType['username'], c
 
 export const RoleSwappingFunc = (token: string, callback: () => void) => {
     return CustomAxiosPost(RoleSwappingApi, callback, null, {
-        authorization: token
+        headers: {
+            "X-One-Time-Token": token
+        }
     })
 }
 
@@ -629,7 +637,11 @@ export const RPPrimaryAuthFunc = (params: RPPrimaryAuthParamsType, callback: (re
 }
 
 export const DirectoryServerBasedOMPASSRegistrationFunc = (params: DirectoryServerBasedOMPASSRegistrationParamsType, callback: (res: DirectoryServerBasedOMPASSRegistrationResponseDataType) => void) => {
-    return CustomAxiosPost(DirectoryServerBasedOMPASSRegistrationApi, callback, params)
+    return CustomAxiosPost(DirectoryServerBasedOMPASSRegistrationApi, callback, params, {
+        headers: {
+            "X-One-Time-Token": params.primaryAuthToken
+        }
+    })
 }
 
 export const GetOMPASSAuthResultFunc = (type: string, pollingKey: string, callback: (res: OMPASSAuthResultDataType) => void) => {

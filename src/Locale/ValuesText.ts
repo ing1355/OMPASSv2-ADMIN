@@ -65,6 +65,7 @@ const ValuesText = {
         DASHBOARD_DATE_SELECT_USER: '기간 설정',
 
         INVALID_ACCESS_CONTROL_LABEL: 'OMPASS 인증 거부',
+        INVALID_ACCESS_PERIOD_LABEL: '기간 접근 위반',
         INVALID_ACCESS_TIME_LABEL: '시간 접근 위반',
         INVALID_BROWSER_LABEL: '브라우저 접근 위반',
         INVALID_COUNTRY_LABEL: '사용자 접속 국가 위반',
@@ -154,6 +155,7 @@ const ValuesText = {
         DASHBOARD_DATE_SELECT_USER: 'Custom',
 
         INVALID_ACCESS_CONTROL_LABEL: 'Authentication Blocked',
+        INVALID_ACCESS_PERIOD_LABEL: 'Period Access Violation',
         INVALID_ACCESS_TIME_LABEL: 'Time Policy Violation',
         INVALID_BROWSER_LABEL: 'Browser Policy Violation',
         INVALID_COUNTRY_LABEL: 'Country Policy Violation',
