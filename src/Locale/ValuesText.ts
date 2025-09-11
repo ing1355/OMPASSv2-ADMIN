@@ -86,6 +86,8 @@ const ValuesText = {
         ADMIN_2FA_FOR_SECRET_KEY_UPDATE_LOG_VALUE: "애플리케이션 시크릿 키 재발급",
         ADMIN_2FA_FOR_APPLICATION_DELETION_LOG_VALUE: "애플리케이션 삭제",
         RADIUS_REGISTRATION_LOG_VALUE: "RADIUS(등록)",
+        ADMIN_2FA_FOR_INSTALL_CODE_UPDATE_LOG_VALUE: "패키지 설치 코드 재발급",
+        ADMIN_2FA_FOR_UNINSTALL_CODE_UPDATE_LOG_VALUE: "패키지 삭제 코드 재발급",
    
     },
     'EN': {
@@ -176,7 +178,8 @@ const ValuesText = {
         ADMIN_2FA_FOR_SECRET_KEY_UPDATE_LOG_VALUE: "Reissue application secret key",
         ADMIN_2FA_FOR_APPLICATION_DELETION_LOG_VALUE: "Delete application",
         RADIUS_REGISTRATION_LOG_VALUE: "RADIUS (registration)",
-
+        ADMIN_2FA_FOR_INSTALL_CODE_UPDATE_LOG_VALUE: "Reissue package install code",
+        ADMIN_2FA_FOR_UNINSTALL_CODE_UPDATE_LOG_VALUE: "Reissue package uninstall code",
     }
 }
 

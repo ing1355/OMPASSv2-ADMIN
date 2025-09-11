@@ -106,7 +106,7 @@ const AuthPolicyDetail = () => {
                 setPolicyName(data.name)
                 setInputDescription(data.description ?? "")
                 setOmpassControl(data.accessControl)
-                setCanEmailRegisterData(data.isEmailRegistrationEnabled || {
+                setCanEmailRegisterData(data.emailRegistration || {
                     isEnabled: false
                 })
                 setDetailData(data)
@@ -144,7 +144,7 @@ const AuthPolicyDetail = () => {
                         }) ?? []
                     })
                 }
-            }).catch(() => {
+            }).catch((e) => {
                 goBack()
             })
                 .finally(() => {
@@ -293,7 +293,7 @@ const AuthPolicyDetail = () => {
                 ip: pamBypassData.isEnabled ? pamBypassData.ip : '',
                 username: pamBypassData.isEnabled ? pamBypassData.username : ''
             },
-            isEmailRegistrationEnabled: canEmailRegisterData
+            emailRegistration: canEmailRegisterData
         }
         if (uuid) {
             updateAuthPolicyFunc(params)
@@ -303,7 +303,7 @@ const AuthPolicyDetail = () => {
     }
 
     const updateAuthPolicyFunc = (params: PolicyDataType) => {
-        UpdatePoliciesListFunc(params, ({ enableAuthenticators, enableBrowsers, locationConfig, networkConfig, noticeToAdmin, noticeToThemselves, accessTimeConfig, accessPeriodConfig, isEmailRegistrationEnabled }) => {
+        UpdatePoliciesListFunc(params, ({ enableAuthenticators, enableBrowsers, locationConfig, networkConfig, noticeToAdmin, noticeToThemselves, accessTimeConfig, accessPeriodConfig, emailRegistration }) => {
             if (!isDefaultPolicy) {
                 if (locationUsed) setLocationDatas(locationConfig)
                 if (authenticatorsUsed) setAuthenticatorPolicies(browserUsed ? enableAuthenticators : enableAuthenticators.filter(_ => _ !== 'WEBAUTHN'))
@@ -312,7 +312,7 @@ const AuthPolicyDetail = () => {
                 setIpAddressValues(networkConfig)
                 setNoticeToAdmin(noticeToAdmin)
                 setNoticeToThemselves(noticeToThemselves)
-                setCanEmailRegisterData(isEmailRegistrationEnabled || {
+                setCanEmailRegisterData(emailRegistration || {
                     isEnabled: false
                 })
                 setAccessPeriodValues({

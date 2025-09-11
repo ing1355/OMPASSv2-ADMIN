@@ -137,3 +137,6 @@ export const SendEmailVerificationApi = '/v2/users/email/verification/authorize'
 // 요금
 export const GetBillingHistoriesApi = '/v2/plan-histories'
 export const GetCurrentPlanApi = '/v2/plans'
+
+//메일 발송
+export const SendOMPASSRegistrationEmailApi = '/v2/etc/registration/email'

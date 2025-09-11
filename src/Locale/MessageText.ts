@@ -164,7 +164,9 @@ const MessageText = {
         PASSCODE_SEND_FAIL_MSG: 'PASSCODE를 메일로 발송하려면 해당 사용자의 이메일이 등록되어 있어야 합니다.',
         USER_AUTHORITY_SUCCESSION_FAIL_MSG: '권한 승계는 활성화 상태인 사용자 및 관리자에게만 가능합니다.',
         SERVER_CONNECTION_ERROR: '서버 연결에 실패하였습니다. 잠시 후 다시 시도해주세요.',
-        NOT_SUPPORT_CURRENT_PLAN_PACKAGE_MENU_LABEL: '패키지 관련 기능은 현재 플랜에서 지원하지 않습니다.'
+        NOT_SUPPORT_CURRENT_PLAN_PACKAGE_MENU_LABEL: '패키지 관련 기능은 현재 플랜에서 지원하지 않습니다.',
+        REGISTRATION_EMAIL_SEND_SUCCESS_MSG: '등록 이메일 발송에 성공하였습니다.',
+        REGISTRATION_EMAIL_SEND_FAIL_MSG: '등록 이메일 발송에 실패하였습니다.'
     },
     'EN': {
         USERNAME_CHECK: 'Only lowercase letters and numbers are allowed, with a length of 4 to 16 characters',
@@ -331,7 +333,9 @@ const MessageText = {
         PASSCODE_SEND_FAIL_MSG: 'To send a passcode by email, the user\'s email must be registered.',
         USER_AUTHORITY_SUCCESSION_FAIL_MSG: 'The authority succession is only possible for active users and administrators.',
         SERVER_CONNECTION_ERROR: 'Failed to connect to the server. Please try again later.',
-        NOT_SUPPORT_CURRENT_PLAN_PACKAGE_MENU_LABEL: 'Package-related features are not supported in the current plan.'
+        NOT_SUPPORT_CURRENT_PLAN_PACKAGE_MENU_LABEL: 'Package-related features are not supported in the current plan.',
+        REGISTRATION_EMAIL_SEND_SUCCESS_MSG: 'The registration email has been sent successfully.',
+        REGISTRATION_EMAIL_SEND_FAIL_MSG: 'Failed to send the registration email.'
     }
 }
 

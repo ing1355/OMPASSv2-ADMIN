@@ -417,7 +417,7 @@ type PolicyDataType = DefaultPolicyDataType & {
     noticeToAdmin?: RestrictionNoticeDataType
     noticeToThemselves?: RestrictionNoticeThemselvesDataType
     linuxPamBypass?: PAMBypassDataType
-    isEmailRegistrationEnabled?: PolicyEnabledDataType
+    emailRegistration?: PolicyEnabledDataType
     // passwordless?: PolicyEnabledDataType
 }
 

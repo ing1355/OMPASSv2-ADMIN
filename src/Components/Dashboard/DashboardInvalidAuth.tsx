@@ -69,7 +69,7 @@ const DashboardInvalidAuth = ({ applications }: {
     return <DashboardCardWithDateSelect title={<FormattedMessage id="DASHBOARD_INVALID_ALL_AUTH" />} isCard={false} onChange={(d) => {
         setParams(d)
     }}>
-        <DashBoardBarChart datas={datas} keys={applications.map(_ => _.name)} indexKey="date" customColor params={params} loading={loading}/>
+        <DashBoardBarChart datas={datas} keys={applications.map(_ => _.name)} indexKey="date" customColor params={params} loading={loading} isSum/>
     </DashboardCardWithDateSelect>
 }
 

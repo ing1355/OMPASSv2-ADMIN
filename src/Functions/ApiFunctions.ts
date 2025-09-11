@@ -1,5 +1,5 @@
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from "Components/CommonCustomComponents/CustomAxios";
-import { AddApplicationListApi, AddExternalDirectoryApi, AddPasscodeApi, AddPoliciesListApi, AddRadiusUserListApi, AddUserDataApi, AddUserGroupApi, AddUserWithCsvDataApi, ApprovalUserApi, CheckExternalDirectoryConnectionApi, ConfirmPasswordApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeleteExternalDirectoryApi, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DirectoryServerBasedOMPASSRegistrationApi, DuplicateUserNameCheckApi, EmailChangeCodeVerificationApi, FindPortalUsernameApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetAuthorizeMSEntraUriApi, GetBillingHistoriesApi, GetCurrentPlanApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetExternalDirectoryListApi, GetGlobalConfigApi, GetMicrosoftEntraIdAuthApi, GetOMPASSAuthResultApi, GetPasscodeHistoriesApi, GetPasscodeListApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetRpUserListApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, LoginApi, OMPASSAuthApi, OMPASSDeviceChangeApi, OMPASSRoleSwappingApi, PasswordlessLoginApi, PatchSessionTokenApi, ReissuanceSecretKeyForUserSyncApi, ResetApplicationKeyApi, ResetPasswordApi, ResetPasswordEmailCodeVerifyApi, ResetPasswordEmailSendApi, RoleSwappingApi, RootSignUpRequestApi, RPPrimaryAuthApi, SendChangeEmailCodeApi, SendEmailVerificationApi, SendPasscodeEmailApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, SyncExternalDirectoryPortalUsersApi, UnlockUserApi, UpdateAgentDescriptionApi, UpdateApplicationListApi, UpdateExternalDirectoryApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateSecurityQuestionsApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi, VerificationEmailChangeApi } from "Constants/ApiRoute";
+import { AddApplicationListApi, AddExternalDirectoryApi, AddPasscodeApi, AddPoliciesListApi, AddRadiusUserListApi, AddUserDataApi, AddUserGroupApi, AddUserWithCsvDataApi, ApprovalUserApi, CheckExternalDirectoryConnectionApi, ConfirmPasswordApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeleteExternalDirectoryApi, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DirectoryServerBasedOMPASSRegistrationApi, DuplicateUserNameCheckApi, EmailChangeCodeVerificationApi, FindPortalUsernameApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetAuthorizeMSEntraUriApi, GetBillingHistoriesApi, GetCurrentPlanApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetExternalDirectoryListApi, GetGlobalConfigApi, GetMicrosoftEntraIdAuthApi, GetOMPASSAuthResultApi, GetPasscodeHistoriesApi, GetPasscodeListApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetRpUserListApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, LoginApi, OMPASSAuthApi, OMPASSDeviceChangeApi, OMPASSRoleSwappingApi, PasswordlessLoginApi, PatchSessionTokenApi, ReissuanceSecretKeyForUserSyncApi, ResetApplicationKeyApi, ResetPasswordApi, ResetPasswordEmailCodeVerifyApi, ResetPasswordEmailSendApi, RoleSwappingApi, RootSignUpRequestApi, RPPrimaryAuthApi, SendChangeEmailCodeApi, SendEmailVerificationApi, SendOMPASSRegistrationEmailApi, SendPasscodeEmailApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, SyncExternalDirectoryPortalUsersApi, UnlockUserApi, UpdateAgentDescriptionApi, UpdateApplicationListApi, UpdateExternalDirectoryApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateSecurityQuestionsApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi, VerificationEmailChangeApi } from "Constants/ApiRoute";
 import { INT_MAX_VALUE } from "Constants/ConstantValues";
 
 export const LoginFunc = (params: LoginApiParamsType, callback: (res: LoginApiResponseType, token: string) => void) => {
@@ -140,9 +140,10 @@ export const DeleteApplicationListFunc = (applicationId: ApplicationDataType['id
 }
 
 export const UpdateApplicationSecretkeyFunc = (applicationId: ApplicationDataType['id'], token: string, type: ApplicationResetType, callback: (appData: ApplicationDataType) => void) => {
-    return CustomAxiosPatch(ResetApplicationKeyApi(applicationId), callback, {
-        type
-    }, {
+    return CustomAxiosPatch(ResetApplicationKeyApi(applicationId), callback, undefined, {
+        params: {
+            type
+        },
         headers: {  
             "X-One-Time-Token": token
         }
@@ -175,9 +176,7 @@ export const GetPoliciesListFunc = ({
     } as PoliciesListParamsType)
 }
 export const GetPolicyDetailDataFunc = (policyId: PolicyDataType['id']) => {
-    return CustomAxiosGet(GetPolicyDetailDataApi(policyId)).then(res => {
-        return res.data as PolicyDataType
-    })
+    return CustomAxiosGet(GetPolicyDetailDataApi(policyId)) as Promise<PolicyDataType>
 }
 export const AddPoliciesListFunc = (params: PolicyDataType, callback: (res: PolicyDataType) => void) => {
     return CustomAxiosPost(AddPoliciesListApi, callback, params)
@@ -805,4 +804,10 @@ export const GetBillingHistoriesFunc = ({
 
 export const GetCurrentPlanFunc = (callback: (res: CurrentPlanDataType) => void) => {
     return CustomAxiosGet(GetCurrentPlanApi, callback)
+}
+
+export const SendOMPASSRegistrationEmailFunc = (nonce: string, callback: () => void) => {
+    return CustomAxiosPost(SendOMPASSRegistrationEmailApi, callback, {
+        nonce
+    })
 }

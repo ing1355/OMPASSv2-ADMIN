@@ -102,7 +102,7 @@ const ApplicationDetailHeaderInfo = ({ appData, setAuthPurpose }: ApplicationDet
                     message.success(formatMessage({ id: 'APPLICATION_INFO_OS_INSTALL_CODE_COPY_FAIL_MSG' }))
                 }
             }}>
-                <Input className="st1 secret-key" type="password" value={appData.installCode ?? ''} onChange={e => {
+                <Input className="st1 secret-key" value={appData.installCode ?? ''} onChange={e => {
                 }} readOnly />
             </CopyToClipboard>
             <Button className="st9 application-detail-input-sub-btn" onClick={() => {
@@ -118,7 +118,7 @@ const ApplicationDetailHeaderInfo = ({ appData, setAuthPurpose }: ApplicationDet
                     message.success(formatMessage({ id: 'APPLICATION_INFO_OS_UNINSTALL_CODE_COPY_FAIL_MSG' }))
                 }
             }}>
-                <Input className="st1 secret-key" type="password" value={appData.uninstallCode ?? ''} onChange={e => {
+                <Input className="st1 secret-key" value={appData.uninstallCode ?? ''} onChange={e => {
                 }} readOnly />
             </CopyToClipboard>
             <Button className="st9 application-detail-input-sub-btn" onClick={() => {

@@ -7,6 +7,9 @@ type EmailSendButtonProps = ButtonProps & {
     callback?: () => void
     onChangeCodeSend?: (codeSend: boolean) => void
     noStyle?: boolean
+    text?: React.ReactNode
+    sendedText?: string
+    loadingText?: string
 }
 
 const EmailSendButton = ({
@@ -15,7 +18,10 @@ const EmailSendButton = ({
     className,
     onChangeCodeSend,
     disabled,
-    noStyle
+    noStyle,
+    text,
+    sendedText,
+    loadingText
 }: EmailSendButtonProps) => {
     const [emailCodeSend, setEmailCodeSend] = useState(false)
     const [mailSendLoading, setMailSendLoading] = useState(false)
@@ -61,7 +67,8 @@ const EmailSendButton = ({
                 }, 1000);
             })
         }}
-    ><FormattedMessage id={emailCodeSend ? 'EMAIL_VERIFY_RE' : 'EMAIL_VERIFY'} />{mailSendLoading ? `(${10 - mailCount}s..)` : ''}
+    >
+        {text ? text : <FormattedMessage id={emailCodeSend ? 'EMAIL_VERIFY_RE' : 'EMAIL_VERIFY'} />}{mailSendLoading ? `(${10 - mailCount}s..)` : ''}
     </Button>
 }
 

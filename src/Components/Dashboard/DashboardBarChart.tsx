@@ -106,7 +106,7 @@ const DashBoardBarChart = ({ datas, keys, indexKey, customColor, isSum, params, 
                                     backgroundColor: DashboardColors[ind],
                                 }} />
                             <div>
-                                <span>{keys[ind]} - </span><span>{datas[index][keys[ind]]}</span>
+                                <span>{keys[ind]} </span><span>{datas[index][keys[ind]]}</span>
                             </div>
                         </div>).filter((_, ind) => datas[index][keys[ind]])}
                     </div>
@@ -123,7 +123,7 @@ const DashBoardBarChart = ({ datas, keys, indexKey, customColor, isSum, params, 
                                     backgroundColor: props.color,
                                 }} />
                             <div>
-                                <span><FormattedMessage id="DASHBOARD_AXIS_LEFT_AUTH_NUM_LABEL"/> - </span><span>{props.value}</span>
+                                <span><FormattedMessage id="DASHBOARD_AXIS_LEFT_AUTH_NUM_LABEL"/> </span><span>{props.value}</span>
                             </div>
                         </div>
                     </div>
