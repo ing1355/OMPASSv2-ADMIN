@@ -574,6 +574,7 @@ const LocaleTexts = {
     SERVER_DEVICE_INFO_TITLE_LABEL: 'Server Device Information',
     OMPASS_MODULE_EMAIL_REGISTER_LABEL: 'Email Register',
     OMPASS_MODULE_EMAIL_AUTH_LABEL: 'Email Auth',
+    OMPASS_MODULE_APPLINK_BUTTON: 'Go to OMPASS App',
   },
   KR: {
     LOGIN: '로그인',
@@ -1151,6 +1152,7 @@ const LocaleTexts = {
     SERVER_DEVICE_INFO_TITLE_LABEL: '서버 기기 정보',
     OMPASS_MODULE_EMAIL_REGISTER_LABEL: '이메일로 등록하기',
     OMPASS_MODULE_EMAIL_AUTH_LABEL: '이메일로 인증하기',
+    OMPASS_MODULE_APPLINK_BUTTON: 'OMPASS 앱으로 바로가기',
   }
 }
 

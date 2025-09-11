@@ -9,6 +9,8 @@ import { useSelector } from "react-redux"
 import EmailSendButton from "Components/CommonCustomComponents/EmailSendButton"
 import { SendOMPASSRegistrationEmailFunc } from "Functions/ApiFunctions"
 import { message } from "antd"
+import Button from "Components/CommonCustomComponents/Button"
+import { isMobile } from "react-device-detect"
 
 type OMPASSAuthContentsProps = {
     status: OMPASSAuthStatusType
@@ -28,7 +30,7 @@ const OMPASSAuthContents = ({ isRegister, status, sessionData, purpose, applicat
     const [qrView, setQrView] = useState(false)
     const qrData: string = `${DEEP_LINK_DOMAIN}/${purpose === 'DEVICE_CHANGE' ? 'device_change' : 'auth'}?${new URLSearchParams(sessionData).toString()}`
     const targetInfo = userData || userInfo
-    console.log('isRegister', isRegister)
+
     return <div className="ompass-auth-content-container">
         <div className="ompass-auth-content-title">
             <div className="ompass-auth-content-title-text">
@@ -56,13 +58,13 @@ const OMPASSAuthContents = ({ isRegister, status, sessionData, purpose, applicat
                 ((isRegister || qrView) && !isComplete) ? <div className="ompass-auth-qr-code-container">
                     {(isRegister && !qrData) ? <CustomLoading /> : <>
                         <QRCode data={qrData} size={isRegister ? 150 : 120} />
-                        <EmailSendButton className="ompass-auth-content-email-button" noStyle text={<FormattedMessage id={`OMPASS_MODULE_EMAIL_REGISTER_LABEL`} />} onClick={async () => {
+                        {isRegister && <EmailSendButton className="ompass-auth-content-email-button" noStyle text={<FormattedMessage id={`OMPASS_MODULE_EMAIL_REGISTER_LABEL`} />} onClick={async () => {
                             return SendOMPASSRegistrationEmailFunc(sessionData.nonce, () => {
                                 message.success(formatMessage({ id: 'REGISTRATION_EMAIL_SEND_SUCCESS_MSG' }))
                             }).catch(err => {
                                 message.error(formatMessage({ id: 'REGISTRATION_EMAIL_SEND_FAIL_MSG' }))
                             })
-                        }} />
+                        }} />}
                     </>
                     }
                 </div> : <>
@@ -75,6 +77,13 @@ const OMPASSAuthContents = ({ isRegister, status, sessionData, purpose, applicat
                         <FormattedMessage id={status === 'ready' ? 'OMPASS_MODULE_READY_LABEL' : status === 'progress' ? 'OMPASS_MODULE_PROGRESS_LABEL' : 'OMPASS_MODULE_COMPLETE_LABEL'} />
                     </div>
                 </>
+            }
+            {
+                !isRegister && isMobile && <a href={qrData} target="_blank">
+                    <Button className="st3">
+                        <FormattedMessage id="OMPASS_MODULE_APPLINK_BUTTON" />
+                    </Button>
+                </a>
             }
         </div>
     </div>
