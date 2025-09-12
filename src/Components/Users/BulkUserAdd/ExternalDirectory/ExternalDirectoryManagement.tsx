@@ -27,7 +27,8 @@ const ExternalDirectoryManagement = () => {
         let columns: CustomTableColumnType<ExternalDirectoryDataType>[] = [
             {
                 key: 'name',
-                title: <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_NAME_LABEL" />
+                title: <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_NAME_LABEL" />,
+                sortKey: 'NAME'
             },
             {
                 key: 'description',
@@ -55,12 +56,14 @@ const ExternalDirectoryManagement = () => {
             {
                 key: 'lastUserSyncedAt',
                 title: <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_LAST_SYNC_TIME_LABEL" />,
-                isTime: true
+                isTime: true,
+                sortKey: 'LAST_SYNC_TIME'
             },
             {
                 key: 'createdAt',
                 title: <FormattedMessage id="CREATE_AT_LABEL" />,
-                isTime: true
+                isTime: true,
+                sortKey: 'CREATED_AT'
             }
         ])
         return columns

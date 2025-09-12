@@ -70,11 +70,13 @@ const AgentManagement = () => {
   return (
     <>
       <Contents>
-        <ContentsHeader title="VERSION_MANAGEMENT" subTitle={!isCloud ? <AgentTitleByType type={active} /> : <FormattedMessage id="VERSION_MANAGEMENT" />}>
+        {/* <ContentsHeader title="VERSION_MANAGEMENT" subTitle={!isCloud ? <AgentTitleByType type={active} /> : <FormattedMessage id="VERSION_MANAGEMENT" />}> */}
+        <ContentsHeader title="VERSION_MANAGEMENT" subTitle={true ? <AgentTitleByType type={active} /> : <FormattedMessage id="VERSION_MANAGEMENT" />}>
         </ContentsHeader>
         <div className="contents-header-container">
           {
-            isCloud ? <AgentLeftTabs<AgentType>
+            // isCloud ? <AgentLeftTabs<AgentType>
+            true ? <AgentLeftTabs<AgentType>
               defaultKey='WINDOWS_LOGIN'
               items={items}
               onChange={active => {

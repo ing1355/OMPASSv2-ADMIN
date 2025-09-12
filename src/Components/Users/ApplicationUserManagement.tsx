@@ -48,7 +48,7 @@ const ApplicationUserManagement = () => {
             {
                 key: 'portalUsername',
                 label: <FormattedMessage id="PASSCODE_COLUMN_PORTAL_ID_LABEL" />,
-                type: 'string'
+                type: 'string',
             },
             {
                 key: 'rpUsername',
@@ -71,21 +71,25 @@ const ApplicationUserManagement = () => {
             {
                 key: 'name',
                 title: <FormattedMessage id="NAME" />,
-                render: (data, ind, row) => row.portalUser.name ? getFullName(row.portalUser.name) || "-" : '-'
+                render: (data, ind, row) => row.portalUser.name ? getFullName(row.portalUser.name) || "-" : '-',
+                sortKey: 'NAME'
             },
             {
                 key: 'portalUser',
                 title: <FormattedMessage id="PORTAL_USERNAME_COLUMN_LABEL" />,
-                render: (data, ind, row) => row.portalUser.username
+                render: (data, ind, row) => row.portalUser.username,
+                sortKey: 'PORTAL_USERNAME'
             },
             {
                 key: 'rpUser',
                 title: <FormattedMessage id="RP_USERNAME_COLUMN_LABEL" />,
-                render: (data, ind, row) => row.rpUser.username
+                render: (data, ind, row) => row.rpUser.username,
+                sortKey: 'RP_USERNAME'
             },
             {
                 key: 'groupName',
-                title: <FormattedMessage id="GROUP_NAME_LABEL" />
+                title: <FormattedMessage id="GROUP_NAME_LABEL" />,
+                sortKey: 'GROUP_NAME'
             },
         ]
         if (targetApplication?.type === 'WINDOWS_LOGIN') {
@@ -111,13 +115,15 @@ const ApplicationUserManagement = () => {
             {
                 key: 'lastLoggedInAt',
                 title: <FormattedMessage id="LAST_LOGGED_IN_TIME_LABEL" />,
-                isTime: true
+                isTime: true,
+                sortKey: 'LAST_LOGGED_IN_AT'
             },
             {
                 key: 'ompassRegisteredAt',
                 title: <FormattedMessage id="RP_OMPASS_REGISTED_AT_LABEL" />,
                 filterType: 'date',
-                isTime: true
+                isTime: true,
+                sortKey: 'CREATED_AT'
             }, {
             key: 'hasPasscode',
             title: <FormattedMessage id="RP_HAS_PASSCODE_LABEL" />,
