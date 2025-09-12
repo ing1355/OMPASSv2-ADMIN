@@ -40,7 +40,7 @@ const useOMPASS = () => {
         }
     }
 
-    const startCallback = (type: OMPASSAuthType, purpose: OMPASSAuthStartParamsType['purpose'], res: OMPASSAuthStartResponseDataType, readyCallback: (res: OMPASSAuthStartResponseDataType) => void, successCallback: (status: OMPASSAuthResultDataType['status'], token: OMPASSAuthResultDataType['token']) => void) => {
+    const startCallback = (type: OMPASSAuthType, purpose: OMPASSAuthStartParamsType['purpose'], res: OMPASSAuthStartResponseDataType, readyCallback: (res: OMPASSAuthStartResponseDataType) => void, successCallback: (status: OMPASSAuthResultDataType['status'], token: OMPASSAuthResultDataType['token']) => void, errorCallback: Function) => {
         readyCallback(res)
         clearTimer()
         timerRef.current = setInterval(() => {
@@ -61,8 +61,9 @@ const useOMPASS = () => {
                     }
                 }
             }).catch(err => {
+                console.log('get ompass auth result error !!', err)
                 clearTimer()
-                console.log(err)
+                errorCallback(err)
             })
         }, 1000);
     }
@@ -94,7 +95,7 @@ const useOMPASS = () => {
                 loginDeviceInfo: await createDeviceInfoParams()
             }
             authFuncByPurpose({purpose, authFuncParams, primaryAuthToken}, (res) => {
-                startCallback(type, purpose, res, readyCallback, successCallback)
+                startCallback(type, purpose, res, readyCallback, successCallback, errorCallback)
             }).catch(err => {
                 console.log('start api Error catch !!', err)
                 errorCallback(err)

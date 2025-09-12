@@ -141,6 +141,7 @@ type GeneralParamsType = {
     [key: string]: any
     pageSize?: number
     page?: number,
+    sortBy?: string
     sortDirection?: DirectionType
     startDate?: string
     endDate?: string
@@ -148,7 +149,7 @@ type GeneralParamsType = {
 type AgentInstallerListParamsType = GeneralParamsType & {
     fileType?: AgentType
 }
-type DirectionType = "DESC" | "ASC"
+type DirectionType = "DESC" | "ASC" | ""
 type RPUserType = {
     username: string
     id: string
@@ -194,7 +195,6 @@ type LoginApiResponseType = {
 }
 
 type PasscodeHistoriesParamsType = GeneralParamsType & {
-    sortBy?: "CREATED_AT" | "USERNAME" | "PASSCODE_ACTION"
     applicationName?: string
     issuerUsername?: string
     portalUsername?: string
@@ -317,7 +317,6 @@ type ApplicationListParamsType = GeneralParamsType & {
     name?: ApplicationDataType['name']
     types?: ApplicationDataType['type'][]
     domain?: string
-    sortBy?: "CREATED_AT" | "NAME"
     policyName?: string
 }
 
@@ -433,7 +432,6 @@ type PoliciesListParamsType = GeneralParamsType & {
     policyId?: string
     name?: string
     applicationTypes?: ApplicationDataType['type'][]
-    sortBy?: "CREATED_AT" | "NAME"
 }
 
 type DefaultUserDataParamsType = {
@@ -480,7 +478,6 @@ type UserListParamsType = GeneralParamsType & {
     roles?: UserDataType['role'][]
     statuses?: UserDataType['status'][]
     name?: string
-    sortBy?: "CREATED_AT" | "USERNAME" | "NAME"
 }
 
 type RPUserDetailAuthDataType = {
@@ -622,7 +619,6 @@ type UserGroupParamsType = {
 type GroupListParamsType = GeneralParamsType & {
     policyName?: string
     name?: string
-    sortBy?: "CREATED_AT" | "NAME"
 }
 
 type AuthLogListParamsType = GeneralParamsType & {
@@ -637,7 +633,6 @@ type AuthLogListParamsType = GeneralParamsType & {
     denyReasons?: InvalidAuthLogDataType['reason'][]
     applicationIds?: ApplicationDataType['id'][]
     policyName?: string
-    sortBy?: "CREATED_AT" | "AUTHENTICATION_TIME" | "USERNAME" | "APPLICATION_NAME" | "IS_PROCESS_SUCCESS"
 }
 
 type LdapConfigListParamsType = GeneralParamsType & {
@@ -648,7 +643,6 @@ type ProtalLogListParamsType = GeneralParamsType & {
     username?: string
     httpMethods?: HttpMethodType[]
     apiUri?: string
-    sortBy?: 'CREATED_AT' | 'USERNAME' | 'API_URI' | 'HTTP_METHOD'
 }
 
 type AuthenticationNetWorkStatusType = "ONLINE" | "OFFLINE"
@@ -715,6 +709,8 @@ type CustomTableSearchParams = {
     searchType?: string
     searchValue?: string
     filterOptions?: CustomTableFilterOptionType[]
+    sortKey?: string
+    sortDirection?: string
 }
 
 type DateSelectDataType = {
@@ -755,6 +751,7 @@ type CustomTableColumnType<T> = {
     filterKey?: string
     filterType?: 'string' | 'date'
     filterOption?: DropdownItemType[]
+    sortKey?: string
 }
 
 type UserTransferDataType = UserHierarchyDataType | UserHierarchyDataApplicationViewDataType | UserHierarchyDataGroupViewDataType
@@ -884,8 +881,7 @@ type RpUsersListParamsType = GeneralParamsType & {
 }
 
 type ExternalDirectoryListParamsType = GeneralParamsType & {
-    sortBy?: "CREATED_AT" | "NAME" | "USERNAME"
-    type: ExternalDirectoryType
+    type?: ExternalDirectoryType
     id?: string
     name?: string
     proxyServerAddress?: string

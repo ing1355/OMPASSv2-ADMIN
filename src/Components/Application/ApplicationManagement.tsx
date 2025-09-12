@@ -9,36 +9,18 @@ import { useNavigate } from "react-router";
 import applicationAddIcon from '@assets/applicationAddIcon.png'
 import applicationAddIconHover from '@assets/applicationAddIconHover.png'
 import usePlans from "hooks/usePlans"
+import useTableData from "hooks/useTableData"
 
 const ApplicationManagement = () => {
-    const [tableData, setTableData] = useState<ApplicationListDataType[]>([])
     const [policiesData, setPoliciesData] = useState<PolicyListDataType[]>([])
-    const [totalCount, setTotalCount] = useState<number>(0);
     const [dataLoading, setDataLoading] = useState(true)
     const navigate = useNavigate()
     const { formatMessage } = useIntl()
     const { getApplicationTypesByPlanType } = usePlans()
-    const GetDatas = async (params: CustomTableSearchParams) => {
-        setDataLoading(true)
-        const _params: GeneralParamsType = {
-            pageSize: params.size,
-            page: params.page
-        }
-        if (params.searchType) {
-            _params[params.searchType] = params.searchValue
-        }
-        if (params.filterOptions) {
-            params.filterOptions.forEach(_ => {
-                _params[_.key] = _.value
-            })
-        }
-        await GetApplicationListFunc(_params, ({ results, totalCount }) => {
-            setTableData(results)
-            setTotalCount(totalCount)
-        }).finally(() => {
-            setDataLoading(false)
-        })
-    }
+    
+    const { tableData, totalCount, getDatas } = useTableData<ApplicationListDataType>({
+        apiFunction: GetApplicationListFunc
+    })
     
     const getPolicyDatas = async () => {
         setDataLoading(true)
@@ -76,7 +58,7 @@ const ApplicationManagement = () => {
                     type: 'string'
                 }]}
                 onSearchChange={(data) => {
-                    GetDatas(data)
+                    getDatas(data)
                 }}
                 addBtn={{
                     label: <FormattedMessage id="NORMAL_ADD_LABEL" />,
@@ -104,7 +86,8 @@ const ApplicationManagement = () => {
                     },
                     {
                         key: 'name',
-                        title: <FormattedMessage id="APPLICATION_INFO_NAME_LABEL" />
+                        title: <FormattedMessage id="APPLICATION_INFO_NAME_LABEL" />,
+                        sortKey: 'NAME'
                     },
                     {
                         key: 'policyId',
@@ -114,11 +97,13 @@ const ApplicationManagement = () => {
                             if (target) {
                                 return target.policyType === 'DEFAULT' ? <FormattedMessage id='default policy' /> : target.name
                             } else return ""
-                        }
+                        },
+                        sortKey: 'POLICY_NAME'
                     },
                     {
                         key: 'domain',
                         title: <FormattedMessage id="APPLICATION_INFO_DOMAIN_LABEL" />,
+                        sortKey: 'DOMAIN'
                     },
                     {
                         key: 'description',

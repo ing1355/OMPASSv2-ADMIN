@@ -53,7 +53,6 @@ export function CustomAxiosGetFile(url: string, callback?: Function, params?: an
 }
 
 export function CustomAxiosPost(url: string, callback?: Function, params?: any, config?: any) {
-    console.log(config)
     return axios.post(defaultDomain + url, params, { ...defaultConfig(config) }).then(res => {
         // if (callback) callback(res.data.data, res.headers.authorization);
         if (callback) callback(res.data, res.headers.authorization);

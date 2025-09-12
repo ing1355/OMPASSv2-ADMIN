@@ -11,13 +11,11 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
 import usePlans from "hooks/usePlans";
+import useTableData from "hooks/useTableData";
 
 const ApplicationUserManagement = () => {
     const [searchParams] = useSearchParams()
     const lang = useSelector((state: ReduxStateType) => state.lang!);
-    const [dataLoading, setDataLoading] = useState(true)
-    const [tableData, setTableData] = useState<RpUserListDataType[]>([])
-    const [totalCount, setTotalCount] = useState<number>(0);
     const [appTypes, setAppTypes] = useState<ApplicationListDataType[]>([])
     const [refresh, setRefresh] = useState(false)
     const [applicationType, setApplicationType] = useState<ApplicationDataType['type']>(searchParams.get('applicationType') as ApplicationDataType['type'] ?? undefined)
@@ -30,6 +28,14 @@ const ApplicationUserManagement = () => {
         key: _.id,
         label: _.name
     }))
+
+
+    const { tableData, totalCount, dataLoading, getDatas } = useTableData<RpUserListDataType>({
+        apiFunction: GetRpUsersListFunc,
+        additionalParams: () => ({
+            applicationId: targetApplication?.id
+        })
+    })
 
     const targetApplicationRef = useRef(targetApplication)
     const tableSearchOptions = useMemo(() => {
@@ -148,29 +154,6 @@ const ApplicationUserManagement = () => {
         })
     }
 
-    const GetDatas = async (params: CustomTableSearchParams) => {
-        setDataLoading(true)
-        const _params: GeneralParamsType = {
-            pageSize: params.size,
-            page: params.page
-        }
-        if (params.searchType) {
-            _params[params.searchType] = params.searchValue
-        }
-        if (params.filterOptions) {
-            params.filterOptions.forEach(_ => {
-                _params[_.key] = _.value
-            })
-        }
-        _params.applicationId = targetApplication?.id
-        GetRpUsersListFunc(_params, ({ results, totalCount }) => {
-            setTableData(results)
-            setTotalCount(totalCount)
-        }).finally(() => {
-            setDataLoading(false)
-        })
-    }
-
     useEffect(() => {
         GetAppTypes({
             page: 0,
@@ -243,7 +226,7 @@ const ApplicationUserManagement = () => {
                 refresh={refresh}
                 searchOptions={tableSearchOptions}
                 onSearchChange={(data) => {
-                    GetDatas(data)
+                    getDatas(data)
                 }}
                 pagination
                 columns={tableColumns}

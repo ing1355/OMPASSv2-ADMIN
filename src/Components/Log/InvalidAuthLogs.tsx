@@ -5,40 +5,21 @@ import { FormattedMessage, useIntl } from "react-intl"
 import { GetInvalidAuthLogDataListFunc } from "Functions/ApiFunctions"
 import AuthLogDetailModal from "./AuthLogDetailModal"
 import usePlans from "hooks/usePlans"
+import useTableData from "hooks/useTableData"
 
 const InvalidAuthLogs = () => {
     const [detailData, setDetailData] = useState<InvalidAuthLogDataType>()
-    const [tableData, setTableData] = useState<InvalidAuthLogDataType[]>([])
-    const [totalCount, setTotalCount] = useState(1)
-    const [dataLoading, setDataLoading] = useState(true)
     const { formatMessage } = useIntl()
     const { getApplicationTypesByPlanType } = usePlans()
-    const GetDatas = async (params: CustomTableSearchParams) => {
-        setDataLoading(true)
-        const _params: GeneralParamsType = {
-            pageSize: params.size,
-            page: params.page
-        }
-        if (params.searchType) {
-            _params[params.searchType] = params.searchValue
-        }
-        if (params.filterOptions) {
-            params.filterOptions.forEach(_ => {
-                _params[_.key] = _.value
-            })
-        }
-        GetInvalidAuthLogDataListFunc(_params, ({ results, totalCount }) => {
-            setTableData(results)
-            setTotalCount(totalCount)
-        }).finally(() => {
-            setDataLoading(false)
-        })
-    }
+    
+    const { tableData, totalCount, dataLoading, getDatas } = useTableData<InvalidAuthLogDataType>({
+        apiFunction: GetInvalidAuthLogDataListFunc
+    })
 
     return <>
         <CustomTable<InvalidAuthLogDataType>
             onSearchChange={(data) => {
-                GetDatas(data)
+                getDatas(data)
             }}
             loading={dataLoading}
             totalCount={totalCount}
@@ -79,17 +60,20 @@ const InvalidAuthLogs = () => {
                 {
                     key: 'applicationName',
                     title: <FormattedMessage id="APPLICATION_NAME_COLUMN_LABEL" />,
-                    render: (_, _ind, row) => row.ompassData?.application?.name
+                    render: (_, _ind, row) => row.ompassData?.application?.name,
+                    sortKey: 'APPLICATION_NAME'
                 },
                 {
                     key: 'portalUsername',
                     title: <FormattedMessage id="PORTAL_USERNAME_COLUMN_LABEL" />,
-                    render: (_, _ind, row) => row.portalUser?.username
+                    render: (_, _ind, row) => row.portalUser?.username,
+                    sortKey: 'PORTAL_USERNAME'
                 },
                 {
                     key: 'rpUsername',
                     title: <FormattedMessage id="RP_USERNAME_COLUMN_LABEL" />,
-                    render: (_, _ind, row) => row.ompassData?.rpUser?.username
+                    render: (_, _ind, row) => row.ompassData?.rpUser?.username,
+                    sortKey: 'RP_USERNAME'
                 },
                 {
                     key: 'authPurpose',
@@ -104,7 +88,8 @@ const InvalidAuthLogs = () => {
                 {
                     key: 'policyAtTimeOfEvent',
                     title: <FormattedMessage id="POLICY_NAME_LABEL" />,
-                    render: (d, ind, row) => row.policyAtTimeOfEvent?.name
+                    render: (d, ind, row) => row.policyAtTimeOfEvent?.name,
+                    sortKey: 'POLICY_NAME'
                 },
                 {
                     key: 'reason',
@@ -120,7 +105,8 @@ const InvalidAuthLogs = () => {
                     key: 'authenticationTime',
                     title: <FormattedMessage id="AUTH_LOG_ACCESS_TIME_LABEL" />,
                     filterType: 'date',
-                    isTime: true
+                    isTime: true,
+                    sortKey: 'AUTHENTICATION_TIME'
                 }
             ]}
             theme="table-st1"

@@ -1,7 +1,7 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import { ViewPasscode } from "Components/Users/UserDetail/UserDetailComponents";
 import { GetPasscodeHistoriesFunc } from "Functions/ApiFunctions";
-import { useState } from "react";
+import useTableData from "hooks/useTableData";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
@@ -9,33 +9,13 @@ import { useNavigate } from "react-router";
 const actionList: PasscodeHistoryDataType['action'][] = ['CREATE', 'DELETE']
 
 const PasscodeLogs = () => {
-    const [dataLoading, setDataLoading] = useState(true)
     const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
     const navigate = useNavigate();
     const { formatMessage } = useIntl()
-    const [totalCount, setTotalCount] = useState<number>(0);
-    const [tableData, setTableData] = useState<PasscodeHistoryDataType[]>([]);
-    const GetDatas = async (params: CustomTableSearchParams) => {
-        setDataLoading(true)
-        const _params: GeneralParamsType = {
-            pageSize: params.size,
-            page: params.page
-        }
-        if (params.searchType) {
-            _params[params.searchType] = params.searchValue
-        }
-        if(params.filterOptions) {
-            params.filterOptions.forEach(_ => {
-                _params[_.key] = _.value
-            })
-        }
-        GetPasscodeHistoriesFunc(_params, ({ results, totalCount }) => {
-            setTableData(results)
-            setTotalCount(totalCount)
-        }).finally(() => {
-            setDataLoading(false)
-        })
-    }
+    
+    const { tableData, totalCount, dataLoading, getDatas } = useTableData<PasscodeHistoryDataType>({
+        apiFunction: GetPasscodeHistoriesFunc
+    })
 
     return <CustomTable<PasscodeHistoryDataType>
         theme='table-st1'
@@ -57,7 +37,7 @@ const PasscodeLogs = () => {
             type: 'string'
         }]}
         onSearchChange={(data) => {
-            GetDatas(data)
+            getDatas(data)
         }}
         onBodyRowClick={(data) => {
             navigate(`/UserManagement/detail/${data.portalUser.id}`, {
@@ -70,22 +50,26 @@ const PasscodeLogs = () => {
         columns={[
             {
                 key: 'applicationName',
-                title: <FormattedMessage id="APPLICATION_NAME_COLUMN_LABEL"/>
+                title: <FormattedMessage id="APPLICATION_NAME_COLUMN_LABEL"/>,
+                sortKey: 'APPLICATION_NAME'
             },
             {
                 key: 'issuerUsername',
                 title: <FormattedMessage id="ADMIN_ID" />,
-                render: (data, index, row) => row.passcode.issuerUsername
+                render: (data, index, row) => row.passcode.issuerUsername,
+                sortKey: 'ISSUER_USERNAME'
             },
             {
                 key: 'portalUsername',
                 title: <FormattedMessage id="PORTAL_USERNAME_COLUMN_LABEL"/>,
-                render: (data, ind, row) => row.portalUser.username
+                render: (data, ind, row) => row.portalUser.username,
+                sortKey: 'PORTAL_USERNAME'
             },
             {
                 key: 'rpUsername',
                 title: <FormattedMessage id="RP_USERNAME_COLUMN_LABEL" />,
-                render: (data, ind, row) => row.rpUser.username
+                render: (data, ind, row) => row.rpUser.username,
+                sortKey: 'RP_USERNAME'
             },
             {
                 key: 'action',
@@ -112,20 +96,23 @@ const PasscodeLogs = () => {
                 title: <FormattedMessage id="USES_COUNT" />,
                 render: (data, ind, row) => row.passcode.recycleCount === -1 ? "∞" : <FormattedMessage id="PASSCODE_RECYCLE_COUNT_LABEL" values={{
                     count: row.passcode.recycleCount
-                }}/>
+                }}/>,
+                sortKey: 'RECYCLE_COUNT'
             },
             {
                 key: 'createdAt',
                 title: <FormattedMessage id="ACTION_DATE" />,
                 render: (data, ind, row) => row.createdAt,
                 filterType: 'date',
-                isTime: true
+                isTime: true,
+                sortKey: 'CREATED_AT'
             },
             {
                 key: 'expirationTime',
                 title: <FormattedMessage id="VALID_TIME" />,
                 render: (data, ind, row) => row.passcode.expiredAt === "-1" ? "∞" : row.passcode.expiredAt,
-                isTime: true
+                isTime: true,
+                sortKey: 'EXPIRATION_TIME'
             },
         ]}
     />

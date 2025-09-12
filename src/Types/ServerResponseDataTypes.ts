@@ -1,5 +1,3 @@
-type AgentInstallerListDataType = AgentInstallerDataType[]
-
 type AgentInstallerDataType = {
   fileId: number
   uploader: string

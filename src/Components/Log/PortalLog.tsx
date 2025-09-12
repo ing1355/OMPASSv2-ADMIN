@@ -2,38 +2,15 @@ import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
 import { GetPortalLogDataListFunc } from "Functions/ApiFunctions"
-import { useEffect, useState } from "react"
 import { FormattedMessage } from "react-intl"
-import useDateTime from "hooks/useDateTime"
+import useTableData from "hooks/useTableData"
 
 const httpMethodList: HttpMethodType[] = ['POST', 'PUT', 'DELETE']
 
 const PortalLog = () => {
-    const [tableData, setTableData] = useState<PortalLogDataType[]>([])
-    const [totalCount, setTotalCount] = useState<number>(0);
-    const [dataLoading, setDataLoading] = useState(true)
-
-    const GetDatas = async (params: CustomTableSearchParams) => {
-        setDataLoading(true)
-        const _params: GeneralParamsType = {
-            pageSize: params.size,
-            page: params.page
-        }
-        if(params.searchType) {
-            _params[params.searchType] = params.searchValue
-        }
-        if(params.filterOptions) {
-            params.filterOptions.forEach(_ => {
-                _params[_.key] = _.value
-            })
-        }
-        GetPortalLogDataListFunc(_params, ({ results, totalCount }) => {
-            setTableData(results)
-            setTotalCount(totalCount)
-        }).finally(() => {
-            setDataLoading(false)
-        })
-    }
+    const { tableData, totalCount, dataLoading, getDatas } = useTableData<PortalLogDataType>({
+        apiFunction: GetPortalLogDataListFunc
+    })
 
     return <Contents loading={dataLoading}>
         <ContentsHeader title="PORTAL_LOG_MANAGEMENT" subTitle="PORTAL_LOG_LIST">
@@ -48,6 +25,7 @@ const PortalLog = () => {
                     {
                         key: 'username',
                         title: <FormattedMessage id="PORTAL_LOG_COLUMN_ID_LABEL"/>,
+                        sortKey: 'USERNAME'
                     },
                     {
                         key: 'httpMethod',
@@ -56,17 +34,20 @@ const PortalLog = () => {
                         filterOption: httpMethodList.map(_ => ({
                             label: _,
                             value: _
-                        }))
+                        })),
+                        sortKey: 'HTTP_METHOD'
                     },
                     {
                         key: 'apiUri',
-                        title: 'URI'
+                        title: 'URI',
+                        sortKey: 'API_URI'
                     },
                     {
                         key: 'createdAt',
                         title: <FormattedMessage id="PORTAL_LOG_CREATED_AT_LABEL"/>,
                         filterType: 'date',
-                        isTime: true
+                        isTime: true,
+                        sortKey: 'CREATED_AT'
                     }
                 ]}
                 pagination
@@ -78,7 +59,7 @@ const PortalLog = () => {
                     type: 'string'
                 }]}
                 onSearchChange={(data) => {
-                    GetDatas(data)
+                    getDatas(data)
                 }}
                 totalCount={totalCount}
                 theme="table-st1"

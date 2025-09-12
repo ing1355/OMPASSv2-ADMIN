@@ -1,40 +1,19 @@
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
-import { useState } from "react"
 import { useNavigate } from "react-router"
 import { GetUserGroupDataListFunc } from "Functions/ApiFunctions"
 import { FormattedMessage } from "react-intl"
 import groupAddIcon from '@assets/groupAddIcon.png'
 import groupAddIconHover from '@assets/groupAddIconHover.png'
+import useTableData from "hooks/useTableData"
 
 const GroupManagement = () => {
-    const [totalCount, setTotalCount] = useState(10);
-    const [tableData, setTableData] = useState<UserGroupListDataType[]>([])
-    const [dataLoading, setDataLoading] = useState(true)
     const navigate = useNavigate()
 
-    const GetDatas = async (params: CustomTableSearchParams) => {
-        setDataLoading(true)
-        const _params: GeneralParamsType = {
-            pageSize: params.size,
-            page: params.page
-        }
-        if(params.searchType) {
-            _params[params.searchType] = params.searchValue
-        }
-        if (params.filterOptions) {
-            params.filterOptions.forEach(_ => {
-                _params[_.key] = _.value
-            })
-        }
-        await GetUserGroupDataListFunc(_params, ({ results, totalCount }) => {
-            setTableData(results)
-            setTotalCount(totalCount)
-        }).finally(() => {
-            setDataLoading(false)
-        })
-    }
+    const { tableData, totalCount, dataLoading, getDatas } = useTableData<UserGroupListDataType>({
+        apiFunction: GetUserGroupDataListFunc
+    })
 
     return <Contents loading={dataLoading}>
         <ContentsHeader title="GROUP_MANAGEMENT" subTitle="GROUP_LIST">
@@ -60,14 +39,15 @@ const GroupManagement = () => {
                 navigate('/Groups/detail/' + row.id)
             }}
             onSearchChange={(data) => {
-                GetDatas(data)
+                getDatas(data)
             }}
             pagination
             totalCount={totalCount}
             columns={[
                 {
                     key: 'name',
-                    title: <FormattedMessage id="GROUP_NAME_LABEL"/>
+                    title: <FormattedMessage id="GROUP_NAME_LABEL"/>,
+                    sortKey: 'NAME'
                 },
                 // {
                 //     key: 'policy',

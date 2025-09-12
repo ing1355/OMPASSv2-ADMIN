@@ -14,6 +14,7 @@ import useFullName from "hooks/useFullName"
 import { useNavigate } from "react-router"
 import { useSelector } from "react-redux"
 import useExcelDownload from "hooks/useExcelDownload"
+import useTableData from "hooks/useTableData"
 import UserBulkAddModal from "./BulkUserAdd/UserBulkAddModal"
 import emailVerifiedIcon from "@assets/emailVerifiedIcon.png"
 import emailUnverifiedIcon from "@assets/emailUnverifiedIcon.png"
@@ -22,9 +23,6 @@ const userRoleList = (role: UserDataType['role']): UserDataType['role'][] => rol
 
 const PortalUserManagement = () => {
     const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
-    const [dataLoading, setDataLoading] = useState(true)
-    const [tableData, setTableData] = useState<UserDataType[]>([])
-    const [totalCount, setTotalCount] = useState<number>(0);
     const [addOpen, setAddOpen] = useState(false)
     const paramsRef = useRef<GeneralParamsType>({
         page: 0,
@@ -39,34 +37,28 @@ const PortalUserManagement = () => {
     const { formatMessage } = useIntl()
     const createHeaderColumn = (formattedId: string) => <FormattedMessage id={formattedId} />
 
-    const GetDatas = async (params: CustomTableSearchParams) => {
-        setDataLoading(true)
-        const _params: GeneralParamsType = {
-            pageSize: params.size,
-            page: params.page
+    const { tableData, totalCount, dataLoading, getDatas } = useTableData<UserDataType>({
+        apiFunction: GetUserDataListFunc,
+        additionalParams: (params) => {
+            const filterValues = params.filterOptions as CustomTableFilterOptionType[] | undefined
+            const additionalParams: Partial<GeneralParamsType> = {}
+            
+            if (!filterValues || (filterValues && !filterValues.find(_ => _.key === 'statuses'))) {
+                additionalParams.statuses = userStatusTypes.filter(_ => _ !== 'WITHDRAWAL')
+            }
+            
+            paramsRef.current = {
+                pageSize: params.size,
+                page: params.page,
+                searchType: params.searchType || '',
+                searchValue: params.searchValue || '',
+                filterOptions: params.filterOptions || [],
+                ...additionalParams
+            }
+            
+            return additionalParams
         }
-        if (params.searchType) {
-            _params[params.searchType] = params.searchValue
-        }
-        if (params.filterOptions) {
-            params.filterOptions.forEach(_ => {
-                _params[_.key] = _.value
-            })
-        }
-
-        const filterValues = params.filterOptions as CustomTableFilterOptionType[] | undefined
-        
-        if (!filterValues || (filterValues && !filterValues.find(_ => _.key === 'statuses'))) {
-            _params.statuses = userStatusTypes.filter(_ => _ !== 'WITHDRAWAL')
-        }
-        paramsRef.current = _params
-        GetUserDataListFunc(_params, ({ results, totalCount }) => {
-            setTableData(results)
-            setTotalCount(totalCount)
-        }).finally(() => {
-            setDataLoading(false)
-        })
-    }
+    })
 
     return <>
         <CustomTable<UserDataType>
@@ -93,7 +85,7 @@ const PortalUserManagement = () => {
                 }
             ]}
             onSearchChange={(data) => {
-                GetDatas(data)
+                getDatas(data)
             }}
             addBtn={{
                 label: <FormattedMessage id="NORMAL_ADD_LABEL" />,
@@ -133,12 +125,14 @@ const PortalUserManagement = () => {
                     filterOption: userRoleList(userInfo.role).map(_ => ({
                         label: formatMessage({ id: `${_}_ROLE_VALUE` }),
                         value: _
-                    }))
+                    })),
+                    sortKey: 'USERNAME'
                 },
                 {
                     key: 'name',
                     title: createHeaderColumn('NAME'),
-                    render: (data) => getFullName(data)
+                    render: (data) => getFullName(data),
+                    sortKey: 'NAME'
                 },
                 {
                     key: 'isEmailVerified',
@@ -149,12 +143,14 @@ const PortalUserManagement = () => {
                             width: '20px',
                             height: '20px',
                         }} />}
-                    </div>
+                    </div>,
+                    sortKey: 'EMAIL'
                 },
                 {
                     key: 'phone',
                     title: createHeaderColumn('PHONE_NUMBER'),
-                    noWrap: true
+                    noWrap: true,
+                    sortKey: 'PHONE_NUMBER'
                 },
                 {
                     key: 'status',

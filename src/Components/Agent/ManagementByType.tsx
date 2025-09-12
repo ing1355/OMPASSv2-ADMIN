@@ -12,6 +12,7 @@ import tableDeleteIconHover from '@assets/deleteIconRed.png';
 import downloadIcon from '@assets/downloadIcon.png';
 import uploadIcon from '@assets/uploadIcon.png';
 import uploadIconHover from '@assets/uploadIconHover.png';
+import useTableData from "hooks/useTableData";
 
 type ManagementByTypeProps = {
     type: AgentType
@@ -22,36 +23,18 @@ const ManagementByType = ({ type, isCloud }: ManagementByTypeProps) => {
     const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const [openFileDelete, setOpenFileDelete] = useState(-1);
     const [deleteHover, setDeleteHover] = useState(-1)
-    const [dataLoading, setDataLoading] = useState(true)
-    const [totalCount, setTotalCount] = useState<number>(0);
-    const [tableData, setTableData] = useState<AgentInstallerListDataType>([]);
     const [refresh, setRefresh] = useState(false)
 
     const { formatMessage } = useIntl();
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const GetDatas = async (params: CustomTableSearchParams) => {
-        setDataLoading(true)
-        const _params: GeneralParamsType = {
-            pageSize: isCloud ? 1 : params.size,
-            page: params.page
-        }
-        if (params.searchType) {
-            _params[params.searchType] = params.searchValue
-        }
-        if (params.filterOptions) {
-            params.filterOptions.forEach(_ => {
-                _params[_.key] = _.value
-            })
-        }
-        await GetAgentInstallerListFunc(type, _params, ({ results, totalCount }) => {
-            setTableData(results)
-            setTotalCount(totalCount)
-        }).finally(() => {
-            setDataLoading(false)
+    const { tableData, totalCount, dataLoading, getDatas, setTableData } = useTableData<AgentInstallerDataType>({
+        apiFunction: (params, callback) => GetAgentInstallerListFunc(type, params, callback),
+        additionalParams: (params) => ({
+            pageSize: isCloud ? 1 : params.size
         })
-    }
+    })
 
     useEffect(() => {
         if (refresh) {
@@ -198,7 +181,7 @@ const ManagementByType = ({ type, isCloud }: ManagementByTypeProps) => {
         loading={dataLoading}
         className={`contents-header-container ${isCloud ? 'cloud-table' : ''}`}
         onSearchChange={(data) => {
-            GetDatas(data)
+            getDatas(data)
         }}
         onBodyRowClick={!isCloud ? (data) => {
             navigate('/AgentManagement/note', {

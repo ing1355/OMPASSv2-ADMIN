@@ -18,8 +18,41 @@ import dayjs from "dayjs"
 import { useSearchParams } from "react-router-dom"
 import useCustomRoute from "hooks/useCustomRoute"
 import useDateTime from "hooks/useDateTime"
-import { arraysHaveSameElements } from "Functions/GlobalFunctions"
 import CustomTablePagination from "./CustomTablePagination"
+
+// 정렬 아이콘 컴포넌트
+const SortIcon = ({
+    sortKey,
+    currentSortKey,
+    currentSortDirection
+}: {
+    sortKey: string
+    currentSortKey?: string
+    currentSortDirection?: string
+}) => {
+    const getSortIcon = () => {
+        const isActive = currentSortKey === sortKey
+        const isAsc = isActive && currentSortDirection === 'ASC'
+        const isDesc = isActive && currentSortDirection === 'DESC'
+
+        return <svg width="14" height="16" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            {/* 위쪽 화살표 (ASC) */}
+            <path
+                d="M6 1L9 5H3L6 1Z"
+                fill={isAsc ? 'var(--main-purple-color)' : "var(--main-grey-color2)"}
+            />
+            {/* 아래쪽 화살표 (DESC) */}
+            <path
+                d="M6 11L3 7H9L6 11Z"
+                fill={isDesc ? 'var(--main-purple-color)' : "var(--main-grey-color2)"}
+            />
+        </svg>
+    }
+
+    return <div className="custom-table-sort-icon">
+        {getSortIcon()}
+    </div>
+}
 
 type CustomTableButtonType = {
     icon?: string
@@ -62,9 +95,11 @@ type CustomTableHeaderRowProps = {
     columns: CustomTableProps<any>['columns']
     closeEvent: boolean
     setCloseEvent: (val: boolean) => void
-    searchCallback: (page: number, size: number, filter?: TableFilterOptionType, isReset?: boolean) => void
+    searchCallback: (page: number, size: number, filter?: TableFilterOptionType, isReset?: boolean, sortData?: { sortKey: string, sortDirection?: string }) => void
     filterValues: TableFilterOptionType
     tableSize: number
+    sortKey?: string
+    sortDirection?: string
 }
 
 type CustomTableBodyRowProps<T extends {
@@ -108,6 +143,9 @@ const CustomTable = <T extends {
     refresh,
     hover }: CustomTableProps<T>) => {
     const [searchParams] = useSearchParams()
+    const [sortKey, setSortKey] = useState<string | undefined>(undefined)
+    const [sortDirection, setSortDirection] = useState<string | undefined>(undefined)
+
     const initFilterValues = columns.filter(_ => _.filterOption).map(_ => {
         let result: TableFilterOptionItemType = {
             key: _.filterKey || _.key,
@@ -209,6 +247,10 @@ const CustomTable = <T extends {
             result.searchType = searchParams.get('searchType')!
             result.searchValue = searchParams.get('searchValue')!
         }
+        // if (searchParams.get('sortKey') && searchParams.get('sortDirection')) {
+        //     result.sortKey = searchParams.get('sortKey')!
+        //     result.sortDirection = searchParams.get('sortDirection')!
+        // }
         else {
             setSearchType((searchOptions && searchOptions[0].key) || "")
             setSearchValue('')
@@ -229,12 +271,27 @@ const CustomTable = <T extends {
         return null
     }, [searchType])
 
-    const searchCallback = (page: number, size: number, filter?: TableFilterOptionType, isReset?: boolean) => {
+    const searchCallback = (page: number, size: number, filter?: TableFilterOptionType, isReset?: boolean, sortData?: { sortKey: string, sortDirection?: string }) => {
         const result: CustomTableSearchParams = {
             page,
             size,
-            filterOptions: filter || [...filterValues]
+            filterOptions: filter || [...filterValues],
+            // sortKey: sortData?.sortKey,
+            // sortDirection: sortData?.sortDirection
         }
+
+        // 정렬 상태 업데이트
+        // if (sortData) {
+        //     setSortKey(sortData.sortKey)
+        //     setSortDirection(sortData.sortDirection)
+        //     if(sortData.sortDirection) {
+        //         result.sortKey = sortData.sortKey
+        //         result.sortDirection = sortData.sortDirection
+        //     } else {
+        //         delete result.sortKey
+        //         delete result.sortDirection
+        //     }
+        // }
 
         if (result.filterOptions) {
             result.filterOptions = result.filterOptions?.map(_ => {
@@ -354,7 +411,7 @@ const CustomTable = <T extends {
                 ></col>)}
             </colgroup>
             <thead>
-                <HeaderRow hoverCallback={onHeaderColClick} columns={columns} closeEvent={closeEvent} setCloseEvent={setCloseEvent} searchCallback={searchCallback} filterValues={filterValues} tableSize={tableSize} />
+                <HeaderRow hoverCallback={onHeaderColClick} columns={columns} closeEvent={closeEvent} setCloseEvent={setCloseEvent} searchCallback={searchCallback} filterValues={filterValues} tableSize={tableSize} sortKey={sortKey} sortDirection={sortDirection} />
             </thead>
             <tbody>
                 {
@@ -380,7 +437,7 @@ const CustomTable = <T extends {
     </div>
 }
 
-const HeaderRow = ({ hoverCallback, columns, closeEvent, setCloseEvent, searchCallback, filterValues, tableSize }: CustomTableHeaderRowProps) => {
+const HeaderRow = ({ hoverCallback, columns, closeEvent, setCloseEvent, searchCallback, filterValues, tableSize, sortKey, sortDirection }: CustomTableHeaderRowProps) => {
     const dateValues = useMemo(() => {
         const startDate = filterValues.find(_ => _.key === 'startDate' && _.value)
         const endDate = filterValues.find(_ => _.key === 'endDate' && _.value)
@@ -405,9 +462,43 @@ const HeaderRow = ({ hoverCallback, columns, closeEvent, setCloseEvent, searchCa
 
             return <th key={_.key as string} onClick={e => {
                 e.preventDefault()
+
+                // 정렬 기능
+                // if (_.sortKey) {
+                //     let newSortDirection: string | undefined
+
+                //     if (sortKey === _.sortKey) {
+                //         // 같은 컬럼 클릭 시: ASC -> DESC -> undefined -> ASC 순환
+                //         if (sortDirection === 'ASC') {
+                //             newSortDirection = 'DESC'
+                //         } else if (sortDirection === 'DESC') {
+                //             newSortDirection = undefined
+                //         } else {
+                //             newSortDirection = 'ASC'
+                //         }
+                //     } else {
+                //         // 다른 컬럼 클릭 시: ASC로 시작
+                //         newSortDirection = 'ASC'
+                //     }
+
+                //     // searchCallback 호출하여 정렬 상태 업데이트
+                //     if (searchCallback) {
+                //         searchCallback(1, tableSize, undefined, false, {
+                //             sortKey: _.sortKey,
+                //             sortDirection: newSortDirection
+                //         })
+                //     }
+                // }
+
                 if (hoverCallback) hoverCallback(_, e.currentTarget)
+            // }} className={`${hoverCallback || _.sortKey ? 'pointer' : ''}`}>
             }} className={`${hoverCallback ? 'pointer' : ''}`}>
                 {_.title}
+                {/* {_.sortKey && <SortIcon
+                    sortKey={_.sortKey}
+                    currentSortKey={sortKey}
+                    currentSortDirection={sortDirection}
+                />} */}
                 {_.filterType === 'date' ? <CustomDropdown
                     value={filterValues.find(values => values.key === _.filterKey)?.value}
                     closeEvent={closeEvent}

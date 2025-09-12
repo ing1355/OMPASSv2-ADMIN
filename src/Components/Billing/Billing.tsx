@@ -4,14 +4,10 @@ import { CSSProperties, PropsWithChildren, useEffect, useMemo, useState } from "
 import './Billing.css'
 import planIcon from '@assets/planIcon.png'
 import checkIcon from '@assets/checkIcon.png'
-import userIconColor from '@assets/userIconColor.png'
-import { slicePrice } from "Functions/GlobalFunctions";
 import CustomTable from "Components/CommonCustomComponents/CustomTable";
-import CustomSelect from "Components/CommonCustomComponents/CustomSelect";
-import Button from "Components/CommonCustomComponents/Button";
-import Input from "Components/CommonCustomComponents/Input";
 import { FormattedMessage } from "react-intl";
 import { GetBillingHistoriesFunc } from "Functions/ApiFunctions";
+import useTableData from "hooks/useTableData";
 
 type ItemContainerProps = PropsWithChildren<{
     border?: boolean
@@ -76,35 +72,12 @@ const planDatas: {
 ]
 
 const Billing = () => {
-    const [tableData, setTableData] = useState<BillingHistoryDataType[]>([])
-    const [totalCount, setTotalCount] = useState<number>(0);
-    const [dataLoading, setDataLoading] = useState(true)
-
     // const userNumList = useMemo(() => new Array(991).fill(1), []);
     // const [inputUserNum, setInputUserNum] = useState(10);
 
-
-    const GetDatas = async (params: CustomTableSearchParams) => {
-        setDataLoading(true)
-        const _params: GeneralParamsType = {
-            pageSize: params.size,
-            page: params.page
-        }
-        if (params.searchType) {
-            _params[params.searchType] = params.searchValue
-        }
-        if (params.filterOptions) {
-            params.filterOptions.forEach(_ => {
-                _params[_.key] = _.value
-            })
-        }
-        GetBillingHistoriesFunc(_params, ({ results, totalCount }) => {
-            setTableData(results)
-            setTotalCount(totalCount)
-        }).finally(() => {
-            setDataLoading(false)
-        })
-    }
+    const { tableData, totalCount, dataLoading, getDatas } = useTableData<BillingHistoryDataType>({
+        apiFunction: GetBillingHistoriesFunc
+    })
 
     const isSelectedPlan = (type: PlanTypes) => {
         return tableData[0] && tableData[0].status === 'RUN' && tableData[0].type === type
@@ -153,7 +126,7 @@ const Billing = () => {
                         totalCount={totalCount}
                         pagination
                         onSearchChange={(data) => {
-                            GetDatas(data)
+                            getDatas(data)
                         }}
                         columns={[
                             {

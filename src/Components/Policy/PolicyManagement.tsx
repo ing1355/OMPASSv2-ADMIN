@@ -1,45 +1,23 @@
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
 import './PolicyManagement.css'
-import { useState } from "react"
 import CustomTable from "Components/CommonCustomComponents/CustomTable"
 import { useNavigate } from "react-router"
 import { GetPoliciesListFunc } from "Functions/ApiFunctions"
 import policyAddIcon from '@assets/policyAddIcon.png'
 import policyAddIconHover from '@assets/policyAddIconHover.png'
 import { FormattedMessage, useIntl } from "react-intl"
-import { useSelector } from "react-redux"
 import usePlans from "hooks/usePlans"
+import useTableData from "hooks/useTableData"
 
 const PolicyManagement = () => {
-    const [tableData, setTableData] = useState<PolicyListDataType[]>([])
-    const [totalCount, setTotalCount] = useState<number>(0);
-    const [dataLoading, setDataLoading] = useState(true)
-
     const navigate = useNavigate()
     const { formatMessage } = useIntl()
     const { getApplicationTypesByPlanType } = usePlans()
-    const GetDatas = async (params: CustomTableSearchParams) => {
-        setDataLoading(true)
-        const _params: GeneralParamsType = {
-            pageSize: params.size,
-            page: params.page
-        }
-        if (params.searchType) {
-            _params[params.searchType] = params.searchValue
-        }
-        if (params.filterOptions) {
-            params.filterOptions.forEach(_ => {
-                _params[_.key] = _.value
-            })
-        }
-        GetPoliciesListFunc(_params, ({ results, totalCount }) => {
-            setTableData(results)
-            setTotalCount(totalCount)
-        }).finally(() => {
-            setDataLoading(false)
-        })
-    }
+    
+    const { tableData, totalCount, dataLoading, getDatas } = useTableData<PolicyListDataType>({
+        apiFunction: GetPoliciesListFunc
+    })
 
     return <Contents loading={dataLoading}>
         <ContentsHeader title="POLICY_MANAGEMENT" subTitle="POLICY_LIST">
@@ -55,7 +33,7 @@ const PolicyManagement = () => {
                     type: 'string'
                 }]}
                 onSearchChange={(data) => {
-                    GetDatas(data)
+                    getDatas(data)
                 }}
                 addBtn={{
                     label: <FormattedMessage id="NORMAL_ADD_LABEL" />,
@@ -80,7 +58,8 @@ const PolicyManagement = () => {
                     {
                         key: 'name',
                         title: <FormattedMessage id="POLICY_COLUMN_NAME_LABEL" />,
-                        render: (data, ind, row) => row.policyType === 'DEFAULT' ? <FormattedMessage id="default policy" /> : data
+                        render: (data, ind, row) => row.policyType === 'DEFAULT' ? <FormattedMessage id="default policy" /> : data,
+                        sortKey: 'NAME'
                     },
                     {
                         key: 'description',
@@ -90,7 +69,8 @@ const PolicyManagement = () => {
                         key: 'createdAt',
                         title: <FormattedMessage id="POLICY_COLUMN_CREATED_AT_LABEL" />,
                         filterType: 'date',
-                        isTime: true
+                        isTime: true,
+                        sortKey: 'CREATED_AT'
                     }
                 ]}
                 onBodyRowClick={(row, index, arr) => {

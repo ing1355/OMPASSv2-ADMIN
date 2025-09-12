@@ -34,8 +34,8 @@ export const UpdatePasswordFunc = (password: string, authorization: string, call
 export const GetPasscodeHistoriesFunc = ({
     pageSize = 10,
     page = 1,
-    sortBy = "CREATED_AT",
-    sortDirection = "DESC",
+    sortBy = "",
+    sortDirection = "",
     applicationName = "",
     issuerUsername = "",
     portalUsername = "",
@@ -64,8 +64,8 @@ export const GetPasscodeHistoriesFunc = ({
 export const GetPasscodeListFunc = ({
     pageSize = 10,
     page = 1,
-    sortBy = "CREATED_AT",
-    sortDirection = "DESC",
+    sortBy = "",
+    sortDirection = "",
     applicationName = "",
     issuerUsername = "",
     portalUsername = "",
@@ -103,8 +103,8 @@ export const GetApplicationListFunc = ({
     name = "",
     domain = "",
     types = [],
-    sortBy = "CREATED_AT",
-    sortDirection = "DESC"
+    sortBy = "",
+    sortDirection = ""
 }: ApplicationListParamsType, callback: (data: GetListDataGeneralType<ApplicationListDataType>) => void) => {
     return CustomAxiosGet(GetApplicationListApi, callback, {
         pageSize,
@@ -144,7 +144,7 @@ export const UpdateApplicationSecretkeyFunc = (applicationId: ApplicationDataTyp
         params: {
             type
         },
-        headers: {  
+        headers: {
             "X-One-Time-Token": token
         }
     })
@@ -158,8 +158,8 @@ export const GetPoliciesListFunc = ({
     applicationTypes = [],
     startDate = undefined,
     endDate = undefined,
-    sortBy = "CREATED_AT",
-    sortDirection = "DESC"
+    sortBy = "",
+    sortDirection = ""
 }: PoliciesListParamsType, callback: (data: GetListDataGeneralType<PolicyListDataType>) => void) => {
     return CustomAxiosGet(GetPoliciesListApi, (data: GetListDataGeneralType<PolicyListDataType>) => {
         callback(data)
@@ -203,8 +203,8 @@ export const GetUserDataListFunc = ({
     statuses = [],
     roles = [],
     hasGroup = undefined,
-    sortBy = "CREATED_AT",
-    sortDirection = "DESC"
+    sortBy = "",
+    sortDirection = ""
 }: UserListParamsType, callback: ((data: GetListDataGeneralType<UserDataType>) => void)) => {
     return CustomAxiosGet(GetUserDataListApi, (data: GetListDataGeneralType<UserDataType>) => {
         callback(data)
@@ -264,8 +264,8 @@ export const GetUserGroupDataListFunc = ({
     page = 1,
     policyName = "",
     name = "",
-    sortBy = "CREATED_AT",
-    sortDirection = "DESC"
+    sortBy = "",
+    sortDirection = ""
 }: GroupListParamsType, callback: ((data: GetListDataGeneralType<UserGroupListDataType>) => void)) => {
     return CustomAxiosGet(GetUserGroupsApi, (data: GetListDataGeneralType<UserGroupListDataType>) => {
         callback(data)
@@ -317,8 +317,8 @@ export const GetAllAuthLogDataListFunc = ({
     processType = undefined,
     startDate = undefined,
     endDate = undefined,
-    sortBy = "AUTHENTICATION_TIME",
-    sortDirection = "DESC"
+    sortBy = "",
+    sortDirection = ""
 }: AuthLogListParamsType, callback: ((data: GetListDataGeneralType<AllAuthLogDataType>) => void)) => {
     return CustomAxiosGet(GetAuthLogDataListApi, (data: GetListDataGeneralType<AllAuthLogDataType>) => {
         callback(data)
@@ -355,8 +355,8 @@ export const GetInvalidAuthLogDataListFunc = ({
     applicationIds = [],
     startDate = undefined,
     endDate = undefined,
-    sortBy = "AUTHENTICATION_TIME",
-    sortDirection = "DESC"
+    sortBy = "",
+    sortDirection = ""
 }: AuthLogListParamsType, callback: ((data: GetListDataGeneralType<InvalidAuthLogDataType>) => void)) => {
     return CustomAxiosGet(GetAuthLogDataListApi, (data: GetListDataGeneralType<InvalidAuthLogDataType>) => {
         callback(data)
@@ -392,8 +392,8 @@ export const GetValidAuthLogDataListFunc = ({
     authPurposes = [],
     startDate = undefined,
     endDate = undefined,
-    sortBy = "AUTHENTICATION_TIME",
-    sortDirection = "DESC"
+    sortBy = "",
+    sortDirection = ""
 }: AuthLogListParamsType, callback: ((data: GetListDataGeneralType<ValidAuthLogDataType>) => void)) => {
     return CustomAxiosGet(GetAuthLogDataListApi, (data: GetListDataGeneralType<ValidAuthLogDataType>) => {
         callback(data)
@@ -423,8 +423,8 @@ export const GetPortalLogDataListFunc = ({
     apiUri = "",
     startDate = undefined,
     endDate = undefined,
-    sortBy = "CREATED_AT",
-    sortDirection = "DESC"
+    sortBy = "",
+    sortDirection = ""
 }: ProtalLogListParamsType, callback: ((data: GetListDataGeneralType<PortalLogDataType>) => void)) => {
     return CustomAxiosGet(GetPortalLogDataListApi, (data: GetListDataGeneralType<PortalLogDataType>) => {
         callback(data)
@@ -466,7 +466,7 @@ export const AddUserWithCsvDataFunc = (datas: UserBulkAddParameterType, callback
 export const GetAgentInstallerListFunc = (fileType: AgentType, {
     pageSize = 10,
     page = 1,
-    sortDirection = "DESC",
+    sortDirection = "",
     startDate = undefined,
     endDate = undefined
 }: AgentInstallerListParamsType, callback: ((data: GetListDataGeneralType<AgentInstallerDataType>) => void)) => {
@@ -656,7 +656,7 @@ export const AddRadiusUserListFunc = (params: {
 export const GetRpUsersListFunc = ({
     pageSize = 10,
     page = 1,
-    sortDirection = "DESC",
+    sortDirection = "",
     applicationId = "",
     portalUsername = "",
     portalName = "",
@@ -718,16 +718,14 @@ export const ConfirmPasswordFunc = (params: PasswordVerificationRequestParamsTyp
 export const GetExternalDirectoryListFunc = ({
     pageSize = 10,
     page = 1,
-    sortDirection = "DESC",
+    sortDirection = "",
     id = undefined,
     name = "",
     proxyServerAddress = "",
     baseDn = "",
     type
-}: ExternalDirectoryListParamsType, callback: ((data: GetListDataGeneralType<ExternalDirectoryDataType>) => void)) => {
-    return CustomAxiosGet(GetExternalDirectoryListApi, (data: GetListDataGeneralType<ExternalDirectoryDataType>) => {
-        callback(data)
-    }, {
+}: ExternalDirectoryListParamsType, callback: (data: GetListDataGeneralType<ExternalDirectoryDataType>) => void) => {
+    return CustomAxiosGet(GetExternalDirectoryListApi, callback, {
         pageSize,
         page,
         sortDirection,
@@ -791,7 +789,7 @@ export const SendEmailVerificationFunc = (token: string, callback: () => void) =
 export const GetBillingHistoriesFunc = ({
     pageSize = 10,
     page = 1,
-    sortDirection = "DESC",
+    sortDirection = "",
 }: GeneralParamsType, callback: ((data: GetListDataGeneralType<BillingHistoryDataType>) => void)) => {
     return CustomAxiosGet(GetBillingHistoriesApi, (data: GetListDataGeneralType<BillingHistoryDataType>) => {
         callback(data)

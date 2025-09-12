@@ -2,7 +2,6 @@ import CustomTable from "Components/CommonCustomComponents/CustomTable";
 import Contents from "Components/Layout/Contents";
 import ContentsHeader from "Components/Layout/ContentsHeader";
 import { GetExternalDirectoryListFunc } from "Functions/ApiFunctions";
-import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useNavigate, useParams } from "react-router";
 import userAddIcon from '@assets/userAddIcon.png'
@@ -10,37 +9,19 @@ import userAddIconHover from '@assets/userAddIconHover.png'
 import { ExternalDirectoryTypeLabel } from "./ExternalDirectoryContstants";
 import circleCheckIcon from '@assets/circleCheckIcon.png'
 import circleXIcon from '@assets/circleXIcon.png'
+import useTableData from "hooks/useTableData";
 
 const ExternalDirectoryManagement = () => {
     const { formatMessage } = useIntl()
-    const [tableData, setTableData] = useState<ExternalDirectoryDataType[]>([])
-    const [totalCount, setTotalCount] = useState<number>(0);
-    const [dataLoading, setDataLoading] = useState(false)
     const navigate = useNavigate()
     const type = useParams().type as ExternalDirectoryType
 
-    const GetDatas = async (params: CustomTableSearchParams) => {
-        setDataLoading(true)
-        const _params: ExternalDirectoryListParamsType = {
-            pageSize: params.size,
-            page: params.page,
+    const { tableData, totalCount, dataLoading, getDatas } = useTableData<ExternalDirectoryDataType>({
+        apiFunction: (params, callback) => GetExternalDirectoryListFunc(params, callback),
+        additionalParams: () => ({
             type
-        }
-        if (params.searchType) {
-            _params[params.searchType] = params.searchValue
-        }
-        if (params.filterOptions) {
-            params.filterOptions.forEach(_ => {
-                _params[_.key] = _.value
-            })
-        }
-        GetExternalDirectoryListFunc(_params, ({ results, totalCount }) => {
-            setTableData(results)
-            setTotalCount(totalCount)
-        }).finally(() => {
-            setDataLoading(false)
         })
-    }
+    })
 
     const columnsByType = () => {
         let columns: CustomTableColumnType<ExternalDirectoryDataType>[] = [
@@ -94,7 +75,7 @@ const ExternalDirectoryManagement = () => {
                 datas={tableData}
                 hover
                 onSearchChange={(data) => {
-                    GetDatas(data)
+                    getDatas(data)
                 }}
                 addBtn={{
                     label: <FormattedMessage id="NORMAL_ADD_LABEL" />,
