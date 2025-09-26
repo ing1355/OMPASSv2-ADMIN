@@ -678,6 +678,7 @@ type PortalLogDataType = {
     id: number
     username: string
     httpMethod: HttpMethodType
+    userBehavior: string
     apiUri: string
     createdAt: string
 }

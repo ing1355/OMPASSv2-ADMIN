@@ -55,19 +55,19 @@ const planDatas: {
         type: "TRIAL_PLAN",
         title: <FormattedMessage id="PLAN_TYPE_TRIAL_PLAN" />,
         price: 0,
-        descriptions: Array.from({length: 3}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
+        descriptions: Array.from({length: 4}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
     },
     {
         type: "LICENSE_PLAN_L1",
         title: <FormattedMessage id="PLAN_TYPE_LICENSE_PLAN_L1" />,
         price: 2000,
-        descriptions: Array.from({length: 5}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
+        descriptions: Array.from({length: 18}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
     },
     {
         type: "LICENSE_PLAN_L2",
         title: <FormattedMessage id="PLAN_TYPE_LICENSE_PLAN_L2" />,
         price: 3000,
-        descriptions: Array.from({length: 9}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
+        descriptions: Array.from({length: 20}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
     }
 ]
 

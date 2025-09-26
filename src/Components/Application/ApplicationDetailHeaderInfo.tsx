@@ -93,8 +93,7 @@ const ApplicationDetailHeaderInfo = ({ appData, setAuthPurpose }: ApplicationDet
                 setSureReset('SECRET_KEY')
             }}><FormattedMessage id="APPLICATION_SECRET_KEY_RESET" /></Button>
         </CustomInputRow>}
-        {/* // 추후 윈도우 말고 맥도 포함 */}
-        {isOsClient && isWindowClient && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_OS_INSTALL_CODE_LABEL" />}>
+        {isOsClient && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_OS_INSTALL_CODE_LABEL" />}>
             <CopyToClipboard text={appData.installCode ?? ''} onCopy={(value, result) => {
                 if (result) {
                     message.success(formatMessage({ id: 'APPLICATION_INFO_OS_INSTALL_CODE_COPY_SUCCESS_MSG' }))
@@ -109,8 +108,7 @@ const ApplicationDetailHeaderInfo = ({ appData, setAuthPurpose }: ApplicationDet
                 setSureReset('INSTALL')
             }}><FormattedMessage id="APPLICATION_INFO_OS_INSTALL_CODE_RESET" /></Button>
         </CustomInputRow>}
-        {/* // 추후 윈도우 말고 맥도 포함 */}
-        {isOsClient && isWindowClient && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_OS_UNINSTALL_CODE_LABEL" />}>
+        {isOsClient && <CustomInputRow title={<FormattedMessage id="APPLICATION_INFO_OS_UNINSTALL_CODE_LABEL" />}>
             <CopyToClipboard text={appData.uninstallCode ?? ''} onCopy={(value, result) => {
                 if (result) {
                     message.success(formatMessage({ id: 'APPLICATION_INFO_OS_UNINSTALL_CODE_COPY_SUCCESS_MSG' }))

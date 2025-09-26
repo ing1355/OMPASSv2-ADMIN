@@ -1,6 +1,7 @@
 // 로그인
 // export const PostLoginApi = '/v2/login';
 export const LoginApi = '/v2/new-login';
+export const LogoutApi = '/v2/logout';
 export const PasswordlessLoginApi = '/v2/passwordless-login';
 export const TokenVerifyApi = '/v2/login/token-verification';
 export const UpdatePasswordApi = '/v2/users/password'

@@ -12,6 +12,7 @@ import { MainRouteByDeviceType, ompassDefaultLogoImage } from 'Constants/Constan
 import SessionTimeCount from './SessionTimeCount';
 import LocaleChange from 'Components/CommonCustomComponents/LocaleChange';
 import { isMobile } from 'react-device-detect';
+import { LogoutFunc } from 'Functions/ApiFunctions';
 
 const Header = () => {
   const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
@@ -119,10 +120,12 @@ const Header = () => {
             destroyTooltipOnHide
           >
             <img src={logout} onClick={() => {
-              navigate('/', {
-                replace: true
+              LogoutFunc(() => {
+                navigate('/', {
+                  replace: true
+                })
+                dispatch(userInfoClear());
               })
-              dispatch(userInfoClear());
             }}
               style={{
                 cursor: 'pointer'

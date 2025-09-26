@@ -28,6 +28,11 @@ const PortalLog = () => {
                         sortKey: 'USERNAME'
                     },
                     {
+                        key: 'userBehavior',
+                        title: <FormattedMessage id="PORTAL_LOG_COLUMN_USER_BEHAVIOR_LABEL"/>,
+                        render: (data, index, row) => <FormattedMessage id={`LOG_ACTION_${data}`} />
+                    },
+                    {
                         key: 'httpMethod',
                         title: 'METHOD',
                         filterKey: 'httpMethods',

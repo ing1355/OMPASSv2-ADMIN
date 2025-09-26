@@ -7,6 +7,7 @@ import MessageText from "./MessageText";
 import SecurityQuestions from "./SecurityQuestions";
 import ValuesText from "./ValuesText";
 import BillingText from "./BillingText";
+import LogActionTypes from "./LogActionTypes";
 
 const Locale = {
   EN: {
@@ -18,7 +19,8 @@ const Locale = {
     ...MessageText.EN,
     ...SecurityQuestions.EN,
     ...ValuesText.EN,
-    ...BillingText.EN
+    ...BillingText.EN,
+    ...LogActionTypes.EN
   },
   KR: {
     ...LocaleTexts.KR,
@@ -29,7 +31,8 @@ const Locale = {
     ...MessageText.KR,
     ...SecurityQuestions.KR,
     ...ValuesText.KR,
-    ...BillingText.KR
+    ...BillingText.KR,
+    ...LogActionTypes.KR
   },
   JP: {
     

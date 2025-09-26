@@ -575,6 +575,7 @@ const LocaleTexts = {
     OMPASS_MODULE_EMAIL_REGISTER_LABEL: 'Email Register',
     OMPASS_MODULE_EMAIL_AUTH_LABEL: 'Email Auth',
     OMPASS_MODULE_APPLINK_BUTTON: 'Go to OMPASS App',
+    PORTAL_LOG_COLUMN_USER_BEHAVIOR_LABEL: "Action Type",
   },
   KR: {
     LOGIN: '로그인',
@@ -1153,6 +1154,7 @@ const LocaleTexts = {
     OMPASS_MODULE_EMAIL_REGISTER_LABEL: '이메일로 등록하기',
     OMPASS_MODULE_EMAIL_AUTH_LABEL: '이메일로 인증하기',
     OMPASS_MODULE_APPLINK_BUTTON: 'OMPASS 앱으로 바로가기',
+    PORTAL_LOG_COLUMN_USER_BEHAVIOR_LABEL: "행동 분류",
   }
 }
 
