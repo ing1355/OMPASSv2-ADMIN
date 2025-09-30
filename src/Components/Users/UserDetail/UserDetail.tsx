@@ -15,7 +15,6 @@ import PairOMPASSAuthModal from 'Components/Modal/PairOMPASSAuthModal'
 import UserDetailUserInfo from './UserDetailUserInfo'
 import UserDetailRpUsers from './UserDetailRpUsers'
 import UserRpSelfAddComponent from './UserRpSelfAddComponent'
-import useDateTime from "hooks/useDateTime"
 import SureDeleteButton from 'Components/CommonCustomComponents/SureDeleteButton'
 
 
@@ -28,7 +27,6 @@ const UserDetail = ({ }) => {
     const [dataLoading, setDataLoading] = useState(false)
     const [authView, setAuthView] = useState(false)
     const [sureSwap, setSureSwap] = useState(false);
-    const [sureDelete, setSureDelete] = useState(false);
     const navigate = useNavigate()
     const location = useLocation()
     const dispatch = useDispatch()
@@ -90,7 +88,6 @@ const UserDetail = ({ }) => {
 
 
     const { formatMessage } = useIntl()
-    const { convertUTCStringToTimezoneDateString } = useDateTime();
     const GetDatas = async () => {
         if (uuid) {
             setDataLoading(true)
@@ -145,7 +142,7 @@ const UserDetail = ({ }) => {
                 }
                 {
                     // userInfo.role === 'ROOT' && <Button className='st5' onClick={() => {
-                    !isAdd && userInfo.role === 'ROOT' && !isSelf && <Button className='st5' onClick={() => {
+                    !isAdd && userInfo.role === 'ROOT' && !isSelf && userData?.status !== 'WITHDRAWAL' && <Button className='st5' onClick={() => {
                         if (userData?.status !== 'RUN') {
                             message.error(formatMessage({ id: 'USER_AUTHORITY_SUCCESSION_FAIL_MSG' }))
                             return
@@ -172,7 +169,7 @@ const UserDetail = ({ }) => {
             </ContentsHeader>
             <UserDetailUserInfo targetData={userData} setTargetData={setUserData} refreshCallback={GetDatas} hasRpUser={authInfoDatas.length > 0} />
             <UserDetailRpUsers authInfoDatas={authInfoDatas} refreshCallback={GetDatas} targetData={userData} userDetailOpened={userDetailOpened} setUserDetailOpened={setUserDetailOpened} authInfoRef={authInfoRef} />
-            {isSelf && !isTta && <UserRpSelfAddComponent refreshCallback={GetDatas} />}
+            {isSelf && !isTta && authInfoDatas.length > 0 && <UserRpSelfAddComponent refreshCallback={GetDatas} />}
         </Contents >
         <PairOMPASSAuthModal opened={authView} onCancel={() => {
             setAuthView(false)

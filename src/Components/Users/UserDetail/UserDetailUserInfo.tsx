@@ -357,7 +357,7 @@ const UserDetailUserInfo = ({ targetData, setTargetData, refreshCallback, hasRpU
                 }} maxLength={13} noGap name="phone" ref={phoneRef} />
             </UserInfoInputrow> : <UserInfoRow title="PHONE_NUMBER" value={targetData?.phone} />}
 
-            {((isModify && selfInfo.role === 'ROOT') || (isAdd && isAdmin)) ? <UserInfoInputrow title="USER_ROLE">
+            {isModify && !isSelf && canModify ? <UserInfoInputrow title="USER_ROLE">
                 <RoleSelect selectedGroup={isAdd ? addValues.role : modifyValues.role} setSelectedGroup={(role) => {
                     if (isAdd) {
                         setAddValues({

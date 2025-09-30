@@ -37,6 +37,7 @@ import { message } from 'antd';
 import RegisterOMPASSAuthModal from 'Components/Modal/RegisterOMPASSAuthModal';
 import { useNavigate } from 'react-router';
 import useDateTime from 'hooks/useDateTime';
+import PasswordConfirmModal from 'Components/CommonCustomComponents/PasswordConfirmModal';
 
 const UserDetailInfoContentItem = ({ imgSrc, title, content, subContent, onClick, noClick }: {
     imgSrc: string
@@ -68,7 +69,7 @@ const AuthenticatorInfoContentsOMPASSType = ({ data }: {
     const { mobile, id, lastAuthenticatedAt, createdAt } = data as OMPASSAuthenticatorDataType
     const { os, deviceId, deviceName, model, ompassAppVersion } = mobile || {}
     const { convertUTCStringToTimezoneDateString } = useDateTime()
-    
+
     return <>
         <div className="user-detail-info-device-info-content">
             <UserDetailInfoContentItem imgSrc={imgSrcByOS(os?.name) ?? ompassDefaultLogoImage} title={<FormattedMessage id="USER_DETAIL_OS_LABEL" />} content={`${os?.name ?? '-'} ${os?.version ?? '-'}`} />
@@ -177,9 +178,9 @@ export const ViewRecoveryCode = ({ code, noView }: {
         }}>
             <CopyToClipboard text={code} onCopy={(value, result) => {
                 if (result) {
-                    message.success(formatMessage({id:'RECOVERY_CODE_COPY_SUCCESS_MSG'}))
+                    message.success(formatMessage({ id: 'RECOVERY_CODE_COPY_SUCCESS_MSG' }))
                 } else {
-                    message.success(formatMessage({id:'RECOVERY_CODE_COPY_FAIL_MSG'}))
+                    message.success(formatMessage({ id: 'RECOVERY_CODE_COPY_FAIL_MSG' }))
                 }
             }}>
                 <img src={copyIcon} />
@@ -246,11 +247,15 @@ export const UserDetailInfoAuthenticatorDeleteButton = ({ authenticatorId, callb
     authenticatorId?: AuthenticatorDataType['id']
     callback: (id: string) => void
 }) => {
-    return authenticatorId ? <Button className="st2 user-detail-info-device-info-delete-btn" onClick={async () => {
+    const [needPasswordConfirm, setNeedPasswordConfirm] = useState(false)
+
+    return authenticatorId ? <PasswordConfirmModal callback={() => {
         callback(authenticatorId)
-    }}>
-        <FormattedMessage id="CLEAR_DEVICE" />
-    </Button> : <></>
+    }} type="AUTHENTICATOR_DELETE">
+        <Button className="st2 user-detail-info-device-info-delete-btn">
+            <FormattedMessage id="CLEAR_DEVICE" />
+        </Button>
+    </PasswordConfirmModal> : <></>
 }
 
 export const UserDetailInfoETCInfoContent = ({ data, role }: {
@@ -262,13 +267,13 @@ export const UserDetailInfoETCInfoContent = ({ data, role }: {
     const navigate = useNavigate()
     const isUser = role === 'USER'
     return <>
-        <UserDetailInfoContentItem imgSrc={groupMenuIcon} title={<FormattedMessage id="GROUP"/>} content={group?.name || <FormattedMessage id="NO_GROUP_SELECTED_LABEL" />} onClick={group && (() => {
-            if(!isUser) {
+        <UserDetailInfoContentItem imgSrc={groupMenuIcon} title={<FormattedMessage id="GROUP" />} content={group?.name || <FormattedMessage id="NO_GROUP_SELECTED_LABEL" />} onClick={group && (() => {
+            if (!isUser) {
                 navigate(`/Groups/detail/${group?.id}`)
             }
         })} noClick={isUser} />
-        <UserDetailInfoContentItem imgSrc={policyMenuIconBlack} title={<FormattedMessage id="USER_DETAIL_ETC_INFO_POLICY_LABEL"/>} content={policy?.name || <FormattedMessage id="NO_POLICY_SELECTED_LABEL" />} onClick={() => {
-            if(!isUser) {
+        <UserDetailInfoContentItem imgSrc={policyMenuIconBlack} title={<FormattedMessage id="USER_DETAIL_ETC_INFO_POLICY_LABEL" />} content={policy?.name || <FormattedMessage id="NO_POLICY_SELECTED_LABEL" />} onClick={() => {
+            if (!isUser) {
                 navigate(`/Policies/detail/${policy?.id}`)
             }
         }} noClick={isUser} />
@@ -288,7 +293,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
     const isPAM = application.type === 'LINUX_LOGIN'
     const isRadius = application.type === 'RADIUS'
     const isLdap = application.type === 'LDAP'
-    
+
     return <>
         {!isPAM && !isRadius && !isLdap && <UserDetailInfoContentItem imgSrc={imgSrcByOS(os?.name!)} title={<FormattedMessage id="USER_DETAIL_OS_LABEL" />} content={`${os?.name} ${os?.version}`} />}
         {isPAM && <>
@@ -324,14 +329,14 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
                         </div>
                         <div>
                             {serverInfo?.name}
-                            <br/>
+                            <br />
                             ({createOSInfo(serverInfo?.os)})
                         </div>
                     </div>
                     <div className="user-detail-info-device-info-content-item linux">
                         <img src={agentVersionIcon} />
                         <div className="user-detail-info-device-info-content-title">
-                            <FormattedMessage id="PACKAGE_VERSION_INFO_LABEL"/>
+                            <FormattedMessage id="PACKAGE_VERSION_INFO_LABEL" />
                         </div>
                         <div>
                             {serverInfo?.packageVersion}
@@ -347,7 +352,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
                     <FormattedMessage id="USER_DETAIL_BROWSER_LABEL" />
                 </div>
                 <div>
-                    {clientData.browser ? <FormattedMessage id={clientData.browser + "_LABEL"}/> : '-'}
+                    {clientData.browser ? <FormattedMessage id={clientData.browser + "_LABEL"} /> : '-'}
                 </div>
             </div>
         }
@@ -399,7 +404,7 @@ export const UserDetailInfoDeviceInfoContent = ({ data }: {
             isOSLogin && <div className="user-detail-info-device-info-content-item">
                 <img src={agentVersionIcon} />
                 <div className="user-detail-info-device-info-content-title">
-                    <FormattedMessage id="PACKAGE_VERSION_INFO_LABEL"/>
+                    <FormattedMessage id="PACKAGE_VERSION_INFO_LABEL" />
                 </div>
                 <div>
                     {clientData.packageVersion}
@@ -428,25 +433,25 @@ export const EmptyDetailItem = ({ onComplete, appId, type, targetUserId }: {
     const { formatMessage } = useIntl()
 
     const getTitleByType = () => {
-        if(type === 'RADIUS') {
+        if (type === 'RADIUS') {
             return 'REGISTER_RADIUS_LABEL'
-        } else if(type === 'LDAP') {
+        } else if (type === 'LDAP') {
             return 'REGISTER_LDAP_LABEL'
         }
     }
 
     const getPurposeByType = () => {
-        if(type === 'RADIUS') {
+        if (type === 'RADIUS') {
             return 'RADIUS_REGISTRATION'
-        } else if(type === 'LDAP') {
+        } else if (type === 'LDAP') {
             return 'LDAP_REGISTRATION'
         }
     }
 
     const getSuccessMessageByType = () => {
-        if(type === 'RADIUS') {
+        if (type === 'RADIUS') {
             return 'RADIUS_OMPASS_REGISTRATION_SUCCESS_MSG'
-        } else if(type === 'LDAP') {
+        } else if (type === 'LDAP') {
             return 'LDAP_OMPASS_REGISTRATION_SUCCESS_MSG'
         }
     }
@@ -454,7 +459,7 @@ export const EmptyDetailItem = ({ onComplete, appId, type, targetUserId }: {
         <div className='user-radius-register-container' onClick={() => {
             setAuthView(true)
         }}>
-            <FormattedMessage id={getTitleByType()}/>
+            <FormattedMessage id={getTitleByType()} />
         </div>
         <RegisterOMPASSAuthModal applicationId={appId} opened={authView} onCancel={() => {
             setAuthView(false)

@@ -338,3 +338,10 @@
 .user-email-change-description {
     font-weight: bold;
 }
+
+.user-detail-rp-user-delete-ompass-portal-subscription {
+    margin: 12px 0 0 0;   
+    color: var(--main-red-color);
+    font-weight: bold;
+    font-size: .85em;
+}

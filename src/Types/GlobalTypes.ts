@@ -458,6 +458,7 @@ type UserDataType = DefaultUserDataType & {
     status: UserStatusType
     isEmailVerified: boolean
     recoveryCode: string
+    isTemp?: boolean
 }
 
 type UserExcelDataType = DefaultUserDataType
@@ -1005,7 +1006,7 @@ type DocsMenuItemType = {
     route: string
 }
 
-type PasswordVerificationPurposeType = "PROFILE_UPDATE" | "DEVICE_CHANGE"
+type PasswordVerificationPurposeType = "PROFILE_UPDATE" | "DEVICE_CHANGE" | "AUTHENTICATOR_DELETE"
 
 type PasswordVerificationRequestParamsType = {
     password: string

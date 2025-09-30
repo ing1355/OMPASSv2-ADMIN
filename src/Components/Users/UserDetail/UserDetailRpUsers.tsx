@@ -20,7 +20,6 @@ import { useNavigate, useParams } from "react-router";
 import { PasscodeAddComponent } from "./PasscodeComponents";
 import CustomModal from "Components/Modal/CustomModal";
 import useDateTime from "hooks/useDateTime";
-import useCustomRoute from "hooks/useCustomRoute";
 import SureDeleteButton from "Components/CommonCustomComponents/SureDeleteButton";
 
 
@@ -44,11 +43,12 @@ const UserDetailRpUsers = ({ targetData, authInfoDatas, refreshCallback, userDet
     const isSelf = (isDev2 && selfInfo.role === 'ROOT') || (selfInfo.userId === uuid)
     const canModify = (isDev2 && selfInfo.role === 'ROOT') || (isSelf || (selfInfo.role === 'ADMIN' && targetData?.role === 'USER') || (selfInfo.role === 'ROOT' && targetData?.role !== 'ROOT'))
     const [passcodeHover, setPasscodeHover] = useState("")
-    const [authenticatorDelete, setAuthenticatorDelete] = useState('')
+    const [authenticatorDelete, setAuthenticatorDelete] = useState<UserDetailAuthInfoRowType | undefined>(undefined)
+    const [targetAuthenticatorDelete, setTargetAuthenticatorDelete] = useState<AuthenticatorDataType['id']>('')
     const [addPasscode, setAddPasscode] = useState<RPUserDetailAuthDataType['id']>("")
     const { formatMessage } = useIntl()
     const { convertUTCStringToTimezoneDateString } = useDateTime();
-    
+
     const canUsePasscode = (applicationType: ApplicationDataType['type']) => {
         return applicationType !== 'LDAP' && applicationType !== 'RADIUS'
     }
@@ -105,19 +105,19 @@ const UserDetailRpUsers = ({ targetData, authInfoDatas, refreshCallback, userDet
                     })
                 }} modalTitle={<FormattedMessage id="PASSCODE_DELETE_MODAL_TITLE" />} modalContent={<FormattedMessage id="PASSCODE_DELETE_MODAL_SUBSCRIPTION" />}>
                     <div className='user-passcode-delete-btn'
-                    onClick={() => {
-                        
-                    }} onMouseEnter={() => {
-                        setPasscodeHover(id)
-                    }} onMouseLeave={() => {
-                        setPasscodeHover("")
-                    }}>
-                    <img style={{
-                        cursor: 'pointer',
-                        width: '18px',
-                        height: '18px'
-                    }} src={id === passcodeHover ? passcodeDeleteIconHover : passcodeDeleteIcon} />
-                </div>
+                        onClick={() => {
+
+                        }} onMouseEnter={() => {
+                            setPasscodeHover(id)
+                        }} onMouseLeave={() => {
+                            setPasscodeHover("")
+                        }}>
+                        <img style={{
+                            cursor: 'pointer',
+                            width: '18px',
+                            height: '18px'
+                        }} src={id === passcodeHover ? passcodeDeleteIconHover : passcodeDeleteIcon} />
+                    </div>
                 </SureDeleteButton>
             })
         } else return columns
@@ -177,7 +177,8 @@ const UserDetailRpUsers = ({ targetData, authInfoDatas, refreshCallback, userDet
                             OMPASS
                         </h4>
                         {(selfInfo.role === 'USER' ? (globalDatas?.isUserAllowedToRemoveAuthenticator && canModify) : canModify) && <UserDetailInfoAuthenticatorDeleteButton authenticatorId={_.authenticationInfo.authenticators.find(auth => auth.type === 'OMPASS')?.id} callback={(id) => {
-                            setAuthenticatorDelete(id)
+                            setAuthenticatorDelete(_)
+                            setTargetAuthenticatorDelete(id)
                         }} />}
                     </div>
                     <UserDetailInfoAuthenticatorContent data={_.authenticationInfo.authenticators.find(auth => auth.type === 'OMPASS')} />
@@ -189,7 +190,8 @@ const UserDetailRpUsers = ({ targetData, authInfoDatas, refreshCallback, userDet
                                     WEBAUTHN
                                 </h4>
                                 {(selfInfo.role === 'USER' ? (globalDatas?.isUserAllowedToRemoveAuthenticator && canModify) : canModify) && <UserDetailInfoAuthenticatorDeleteButton authenticatorId={_.authenticationInfo.authenticators.find(auth => auth.type === 'WEBAUTHN')?.id} callback={(id) => {
-                                    setAuthenticatorDelete(id)
+                                    setAuthenticatorDelete(_)
+                                    setTargetAuthenticatorDelete(id)
                                 }} />}
                             </div>
                             <UserDetailInfoAuthenticatorContent data={_.authenticationInfo.authenticators.find(auth => auth.type === 'WEBAUTHN')} />
@@ -236,19 +238,28 @@ const UserDetailRpUsers = ({ targetData, authInfoDatas, refreshCallback, userDet
         }} />
 
         <CustomModal
-            open={authenticatorDelete !== ''}
+            open={authenticatorDelete !== undefined}
             onCancel={() => {
-                setAuthenticatorDelete("")
+                setAuthenticatorDelete(undefined)
+                setTargetAuthenticatorDelete('')
             }}
             type="warning"
             typeTitle={formatMessage({ id: 'USER_AUTH_DEVICE_UNREGISTER_MODAL_TITLE' })}
-            typeContent={formatMessage({ id: 'USER_AUTH_DEVICE_UNREGISTER_MODAL_SUBSCRIPTION' })}
+            typeContent={<>
+                <div>
+                    <FormattedMessage id="USER_AUTH_DEVICE_UNREGISTER_MODAL_SUBSCRIPTION" />
+                </div>
+                {authenticatorDelete?.application.type === 'PORTAL' && <div className="user-detail-rp-user-delete-ompass-portal-subscription">
+                    <FormattedMessage id="USER_AUTH_DEVICE_UNREGISTER_MODAL_SUBSCRIPTION_2" />
+                </div>}
+            </>}
             yesOrNo
             okCallback={async () => {
-                return DeleteAuthenticatorDataFunc(authenticatorDelete, (newData) => {
+                return DeleteAuthenticatorDataFunc(targetAuthenticatorDelete, (newData) => {
                     message.success(formatMessage({ id: 'USER_AUTH_DEVICE_UNREGISTER_SUCCESS_MSG' }))
-                    setAuthenticatorDelete("")
-                    if(newData && newData.length === 0) {
+                    setAuthenticatorDelete(undefined)
+                    setTargetAuthenticatorDelete('')
+                    if (newData && newData.length === 0 && targetData?.isTemp) {
                         navigate('/UserManagement', {
                             replace: true
                         })

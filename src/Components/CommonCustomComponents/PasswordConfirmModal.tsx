@@ -1,5 +1,5 @@
 import CustomModal from "Components/Modal/CustomModal"
-import { cloneElement, PropsWithChildren, useRef, useState } from "react"
+import { cloneElement, PropsWithChildren, useMemo, useRef, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 import Input from "./Input"
 import { ConfirmPasswordFunc } from "Functions/ApiFunctions"
@@ -15,8 +15,17 @@ const PasswordConfirmModal = ({ callback, children, type }: PasswordConfirmModal
     const inputRef = useRef<HTMLInputElement>(null)
     const { formatMessage } = useIntl()
 
-    const modalTitle = type === "DEVICE_CHANGE" ? "PASSWORD_VERIFICATION_DEVICE_CHANGE_MODAL_TITLE" : "PASSWORD_VERIFICATION_PROFILE_UPDATE_MODAL_TITLE"
-    const modalSubscription = type === "DEVICE_CHANGE" ? "PASSWORD_VERIFICATION_DEVICE_CHANGE_MODAL_SUBSCRIPTION" : "PASSWORD_VERIFICATION_PROFILE_UPDATE_MODAL_SUBSCRIPTION"
+    const modalTitle = useMemo(() => {
+        if (type === "DEVICE_CHANGE") return "PASSWORD_VERIFICATION_DEVICE_CHANGE_MODAL_TITLE"
+        if (type === "PROFILE_UPDATE") return "PASSWORD_VERIFICATION_PROFILE_UPDATE_MODAL_TITLE"
+        if (type === "AUTHENTICATOR_DELETE") return "PASSWORD_VERIFICATION_AUTHENTICATOR_DELETE_MODAL_TITLE"
+    }, [type])
+
+    const modalSubscription = useMemo(() => {
+        if (type === "DEVICE_CHANGE") return "PASSWORD_VERIFICATION_DEVICE_CHANGE_MODAL_SUBSCRIPTION"
+        if (type === "PROFILE_UPDATE") return "PASSWORD_VERIFICATION_PROFILE_UPDATE_MODAL_SUBSCRIPTION"
+        if (type === "AUTHENTICATOR_DELETE") return "PASSWORD_VERIFICATION_AUTHENTICATOR_DELETE_MODAL_SUBSCRIPTION"
+    }, [type])
 
     return <>
         {cloneElement(children as React.ReactElement, {
