@@ -340,9 +340,9 @@ const ExternalDirectoryOpenLdapSettingEdit = () => {
                             })
                         }}>
                         </Button>}
-                        <div className="external-directory-open-ldap-server-list-container-description">
+                        {type === 'OPEN_LDAP' && <div className="external-directory-open-ldap-server-list-container-description">
                             * <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_OPEN_LDAP_SERVER_LIST_CONTAINER_DESCRIPTION" />
-                        </div>
+                        </div>}
                     </div>
                 </CustomInputRow>
             </div>

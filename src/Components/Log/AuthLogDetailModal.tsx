@@ -12,6 +12,7 @@ import { Circle } from "Components/Policy/PolicyItems/GoogleCircle"
 import './AuthLogDetailModal.css'
 import CustomMap from "Components/Layout/CustomMap"
 import useDateTime from "hooks/useDateTime"
+import PolicyNameByTypeComponent from "Components/CommonCustomComponents/PolicyNameByTypeComponent"
 
 type AuthLogdetailModalProps = {
     data: AllAuthLogDataType | undefined
@@ -150,7 +151,7 @@ const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
                         <TextComponent title="RP_USERNAME_COLUMN_LABEL" content={data?.ompassData?.rpUser?.username} />
                     </div>
                     <div className="auth-detail-modal-contents-container authentication-info" data-title={formatMessage({ id: "AUTH_LOG_DETAIL_AUTH_INFO_TITLE_LABEL" })}>
-                        <TextComponent title="APPLIED_POLICY_NAME_COLUMN_LABEL" content={policyAtTimeOfEvent?.name} />
+                        <TextComponent title="APPLIED_POLICY_NAME_COLUMN_LABEL" content={<PolicyNameByTypeComponent data={policyAtTimeOfEvent} />} />
                         <TextComponent title="AUTHENTICATION_PURPOSE_LABEL" content={data?.ompassData?.authPurpose ? <FormattedMessage id={data?.ompassData.authPurpose + '_LOG_VALUE'} /> : "-"} />
                         <TextComponent title="AUTHENTICATOR_TYPE_LABEL" content={authenticatorLabelList[(data as ValidAuthLogDataType)?.authenticatorType]} />
                         {data && isInvalidLogType(data) && <TextComponent title="INVALID_REASON_LABEL" content={data.reason ? <FormattedMessage id={"INVALID_" + data.reason + '_LABEL'} /> : "-"} />}

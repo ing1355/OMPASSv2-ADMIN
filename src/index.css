@@ -96,9 +96,13 @@
   font-style: normal;
 }
 
-* {
+html * {
   font-family: NEXON Lv2 Gothic OTF, NEXON Lv1 Gothic OTF;
   word-break: keep-all;
+}
+
+html:lang(JP) * {
+  font-family: 'Noto Sans JP', sans-serif;
 }
 
 :root {
@@ -213,8 +217,11 @@ a[download] {
   text-align: center;
   color: var(--sub-gray-color);
   height: 40px;
-  margin-top: 20px;
+  margin-top: 8px;
   padding: 0 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 /* manager mark */
 .manager-mark {

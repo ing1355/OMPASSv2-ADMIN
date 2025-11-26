@@ -1,6 +1,6 @@
 import Button from "Components/CommonCustomComponents/Button"
 import Input from "Components/CommonCustomComponents/Input"
-import PolicySelect from "Components/CommonCustomComponents/PolicySelect"
+import PolicySelect from "Components/CommonCustomComponents/Input/PolicySelect"
 import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
@@ -18,8 +18,8 @@ import groupApplicationViewIconColor from '@assets/groupApplicationViewIconColor
 import closeIcon from '@assets/closeIcon.png'
 import { getApplicationTypeLabel, INT_MAX_VALUE } from "Constants/ConstantValues"
 import './GroupDetail.css'
-import CustomSelect from "Components/CommonCustomComponents/CustomSelect"
-import SureDeleteButton from "Components/CommonCustomComponents/SureDeleteButton"
+import CustomSelect from "Components/CommonCustomComponents/Input/CustomSelect"
+import SureDeleteButton from "Components/CommonCustomComponents/Button/SureDeleteButton"
 import usePlans from "hooks/usePlans"
 
 const GroupDetail = () => {

@@ -3,7 +3,7 @@ import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import Input from "Components/CommonCustomComponents/Input"
 import { policyNoticeRestrictionTypes } from "Constants/ConstantValues"
 import { FormattedMessage } from "react-intl"
-import CustomAdminSelect from "Components/CommonCustomComponents/CustomAdminSelect"
+import CustomAdminSelect from "Components/CommonCustomComponents/Input/CustomAdminSelect"
 
 const NoticeToAdmin = ({hasIncludeWithdrawal, value={
     isEnabled: false,

@@ -12,9 +12,9 @@ import { useSelector } from "react-redux"
 import { CopyRightText } from "Constants/ConstantValues"
 import './index.css';
 import FindUsername from "./FindUsername"
-import LocaleChange from "Components/CommonCustomComponents/LocaleChange"
 import { message } from "antd"
 import AgentDownloadButton from "./AgentDownloadButton"
+import LocaleChange from "Components/CommonCustomComponents/Input/LocaleChange"
 
 const LoginPage = () => {
     const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
@@ -81,7 +81,6 @@ const LoginPage = () => {
                         <FormattedMessage id="DOCS_VIEW_LABEL" />
                     </Button>
                 </div>
-                <LocaleChange />
             </div> : <>
                 <div className="login-footer-btns-container">
                     <AgentDownloadButton />
@@ -96,15 +95,17 @@ const LoginPage = () => {
                     </Button>
                 </div>
 
-                <LocaleChange />
             </>
         }
+
+        <LocaleChange />
+        
         <div
             className='login-footer'
         >
             <p
-                className='copyRight-style login-copyright'
-                
+                className='copyRight-style'
+
             >
                 {CopyRightText(subdomainInfo)}
             </p>

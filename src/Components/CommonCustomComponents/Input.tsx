@@ -35,7 +35,7 @@ const HasLabel = ({ children, label }: {
 </>}
     </div>
 
-const DefaultInput = forwardRef(({ noEmpty, zeroOk, nonZero, valueChange, children, onlyNumber, label, value, containerClassName, onInput, customType, rules, maxLength, required, className, noGap, type, suffix, style, sliceNum, title, ...props }: CustomInputProps, ref) => {
+const DefaultInput = forwardRef(({ noEmpty, zeroOk, nonZero, valueChange, children, onlyNumber, label, value, containerClassName, onInput, customType, rules, maxLength, required, className, noGap, type, suffix, style, sliceNum, title, onChange, ...props }: CustomInputProps, ref) => {
     const [isAlert, _setIsAlert] = useState(false)
     const [alertMsg, setAlertMsg] = useState<string | React.ReactNode>('')
     const isAlertRef = useRef(isAlert)
@@ -45,16 +45,18 @@ const DefaultInput = forwardRef(({ noEmpty, zeroOk, nonZero, valueChange, childr
         isAlertRef.current = alert
     }
 
-
-
     useEffect(() => {
         if (!isAlert) setAlertMsg('')
     }, [isAlert])
 
     const regexByType = (type: string) => {
-        switch (customType) {
+        switch (type) {
             case 'username':
-                return idRegex
+                if (value && typeof value === 'string' && value.includes('@')) {
+                    return emailRegex
+                } else {
+                    return idRegex
+                }
             case 'email':
                 return emailRegex
             case 'firstName':
@@ -66,11 +68,22 @@ const DefaultInput = forwardRef(({ noEmpty, zeroOk, nonZero, valueChange, childr
         }
     }
 
+    const inputType = type || (customType as any)
+    const isCheckbox = inputType === 'checkbox'
+    const isRadio = inputType === 'radio'
+    const isFile = inputType === 'file'
+    const valueString = typeof value === 'string' ? value : (value != null ? String(value) : '')
+
     const validateCheck = (value: string) => {
         if (customType) {
             let rgx
             switch (customType) {
                 case 'username':
+                    if (value && typeof value === 'string' && value.includes('@')) {
+                        setAlertMsg(<FormattedMessage id="EMAIL_CHECK" />)
+                    } else {
+                        setAlertMsg(<FormattedMessage id="USERNAME_CHECK" />)
+                    }
                     setAlertMsg(<FormattedMessage id="USERNAME_CHECK" />)
                     break;
                 case 'email':
@@ -86,9 +99,6 @@ const DefaultInput = forwardRef(({ noEmpty, zeroOk, nonZero, valueChange, childr
                     setAlertMsg(<FormattedMessage id="PASSWORD_CHECK" />)
                     break;
                 case 'phone':
-                    if (value.length < 12) {
-                        setAlertMsg(<FormattedMessage id="PHONE_NUMBER_CHECK" />)
-                    }
                     break;
                 default: break;
             }
@@ -108,14 +118,14 @@ const DefaultInput = forwardRef(({ noEmpty, zeroOk, nonZero, valueChange, childr
         }
         return false
     }
-
+    
     return <>
         <div className={`custom-input-wrapper${containerClassName ? (' ' + containerClassName) : ''}${(customType || rules) ? ' has-alert' : ''}`}>
             {title && <div className="custom-input-title">{title}</div>}
             <HasLabel label={label}>
                 <div>
                     {
-                        type === 'radio' && <div className="custom-radio-container">
+                        isRadio && <div className="custom-radio-container">
                             <span className="custom-radio-outer" data-checked={props.checked}></span>
                             <span className="custom-radio-inner"></span>
                         </div>
@@ -123,7 +133,9 @@ const DefaultInput = forwardRef(({ noEmpty, zeroOk, nonZero, valueChange, childr
                     <div className="custom-input-inner-container">
                         <input
                             ref={ref as any}
+                            type={inputType}
                             className={"custom-input-inner" + (className ? ` ${className}` : '')}
+                            autoFocus={props.autoFocus}
                             onFocus={e => {
                                 // if (e.currentTarget.value && validateCheck(e.currentTarget.value)) {
                                 //     setIsAlert(true)
@@ -137,6 +149,10 @@ const DefaultInput = forwardRef(({ noEmpty, zeroOk, nonZero, valueChange, childr
                                 // }
                             }}
                             onChange={e => {
+                                if (isCheckbox || isRadio || isFile) {
+                                    onChange?.(e)
+                                    return
+                                }
                                 if (valueChange) {
                                     if (sliceNum) e.target.value = e.target.value.replace(/,/g, '')
                                     valueChange(e.target.value, isAlertRef.current || false)
@@ -146,7 +162,7 @@ const DefaultInput = forwardRef(({ noEmpty, zeroOk, nonZero, valueChange, childr
                                 } else {
                                     setIsAlert(false)
                                 }
-                            }} onInput={(e) => {
+                            }} onInput={(!isCheckbox && !isRadio) ? (e) => {
                                 if (onlyNumber) {
                                     // if (!e.currentTarget.value) e.currentTarget.value = "0"
                                     // else e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')
@@ -166,9 +182,9 @@ const DefaultInput = forwardRef(({ noEmpty, zeroOk, nonZero, valueChange, childr
                                 //     e.currentTarget.value = e.currentTarget.value.replace(/[^0-9a-z]/g, '')
                                 // }
                                 if (type !== "file") {
-                                    if (maxLength || maxLengthByType(customType)) {
-                                        if (e.currentTarget.value.length > (maxLength || maxLengthByType(customType))!) {
-                                            e.currentTarget.value = e.currentTarget.value.slice(0, (maxLength || maxLengthByType(customType))!)
+                                    if (maxLength || maxLengthByType(customType, e.currentTarget.value)) {
+                                        if (e.currentTarget.value.length > (maxLength || maxLengthByType(customType, e.currentTarget.value))!) {
+                                            e.currentTarget.value = e.currentTarget.value.slice(0, (maxLength || maxLengthByType(customType, e.currentTarget.value))!)
                                         }
                                     }
                                 }
@@ -184,15 +200,17 @@ const DefaultInput = forwardRef(({ noEmpty, zeroOk, nonZero, valueChange, childr
                                     setIsAlert(false)
                                 }
                                 if (onInput) onInput(e)
-                            }} {...props} type={type || customType}
-                            {...((type === "file") ? {} : {
-                                value: props.disabled ? "" : ((value && sliceNum) ? slicePrice(value as string | number) : value)
-                            })}
-                            maxLength={maxLength || maxLengthByType(customType)}
+                            } : undefined}
+                            {...((!isFile && !isCheckbox && value !== undefined) ? {
+                                value: (sliceNum && value !== undefined) ? slicePrice(value as string | number) : value
+                            } : {})}
+                            maxLength={maxLength || maxLengthByType(customType, valueString)}
                             style={{
                                 paddingRight: `${suffix ? (11 + suffix.length * 15 + 'px') : ''}`,
                                 ...style
-                            }} />
+                            }}
+                            {...props}
+                        />
                         {suffix && <div className="custom-suffix-text">
                             {suffix}
                         </div>}
@@ -208,9 +226,7 @@ const DefaultInput = forwardRef(({ noEmpty, zeroOk, nonZero, valueChange, childr
 })
 
 const Input = forwardRef((props: CustomInputProps, ref) => {
-    const { type } = props
-    return type === 'checkbox' ?
-        <DefaultInput {...props} ref={ref} /> : <DefaultInput {...props} ref={ref} />
+    return <DefaultInput {...props} ref={ref} />
 })
 
 export default Input

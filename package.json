@@ -1,6 +1,6 @@
 {
   "name": "ompass_rp_admin",
-  "version": "2.1.0.6",
+  "version": "2.1.1.5",
   "proxy": "https://ompass.kr:54006",
   "private": true,
   "dependencies": {
@@ -24,7 +24,9 @@
     "axios": "^1.4.0",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
+    "i18n-iso-countries": "^7.14.0",
     "jwt-decode": "^3.1.2",
+    "libphonenumber-js": "^1.12.24",
     "moment-timezone": "^0.5.45",
     "ompass": "^0.5.2",
     "query-string": "^8.1.0",
@@ -36,6 +38,7 @@
     "react-intl": "^6.4.2",
     "react-json-pretty": "^2.2.0",
     "react-markdown": "^10.0.0",
+    "react-phone-input-2": "^2.15.1",
     "react-redux": "^8.0.5",
     "react-router": "^6.10.0",
     "react-router-dom": "^6.10.0",
@@ -64,7 +67,9 @@
     "deploy:tta": "rsync -avp --delete ./build/* oms@192.168.182.143:/opt/oms/ompass2/server/fe/ompass_portal",
     "testDeploy": "rsync -av --delete ./build/* hozzi@192.168.182.140:/usr/local/ompass_agent_rp_test",
     "awsInvalidation": "aws cloudfront create-invalidation --distribution-id EZ1Y858BAFJCL --paths \"/*\" --no-cli-pager",
-    "awsDeploy": "aws s3 sync ./build s3://ompass-admin&&npm run awsInvalidation",
+    "awsInvalidationStaging": "aws cloudfront create-invalidation --distribution-id E10COEBFPY3AMS --paths \"/*\" --no-cli-pager",
+    "awsDeployProd": "aws s3 sync ./build s3://ompass-admin&&npm run awsInvalidation",
+    "awsDeployStaging": "aws s3 sync ./build s3://ompass-admin-test&&npm run awsInvalidationStaging",
     "deploy:dev": "rsync -av --delete ./build/* hozzi@192.168.182.141:~/admin",
     "deploy:dev2": "rsync -av --delete ./build/* oms@192.168.182.75:/opt/oms/ompass2/server/fe/ompass_portal",
     "sync:prod": "ssh oms@192.168.182.76 'bash /opt/oms/ompass2/server/fe/get.sh'"

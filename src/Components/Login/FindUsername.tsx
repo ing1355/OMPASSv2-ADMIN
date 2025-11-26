@@ -7,7 +7,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { useNavigate } from "react-router";
 import './FindUsername.css'
 import { getCircledNumber } from "Functions/GlobalFunctions";
-import EmailSendButton from "Components/CommonCustomComponents/EmailSendButton";
+import EmailSendButton from "Components/CommonCustomComponents/Button/EmailSendButton";
 
 const FindUsername = () => {
     const [codeConfirm, setCodeConfirm] = useState(false)

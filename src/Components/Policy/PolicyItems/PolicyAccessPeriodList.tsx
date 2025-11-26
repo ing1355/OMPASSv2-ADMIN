@@ -8,7 +8,7 @@ import deleteIconHover from '@assets/deleteIconHover.png'
 import addIconWhite from '@assets/addIconWhite.png'
 import { useEffect, useState } from "react"
 import dayjs from "dayjs"
-import TimezoneSelect from "Components/CommonCustomComponents/TimezoneSelect"
+import TimezoneSelect from "Components/CommonCustomComponents/Input/TimezoneSelect"
 import { useSelector } from "react-redux"
 
 const PolicyAccessPeriodList = ({ value, onChange, dataInit }: PolicyItemsPropsType<AccessPeriodConfigType>) => {
@@ -54,7 +54,7 @@ const PolicyAccessPeriodList = ({ value, onChange, dataInit }: PolicyItemsPropsT
                             alignItems: 'center',
                             gap: '12px'
                         }}>
-                            <FormattedMessage id="ACCESS_TIME_TIME_SELECT_LABEL" /> :
+                            <FormattedMessage id="ACCESS_TIME_PERIOD_SELECT_LABEL" /> :
                             <DatePicker.RangePicker showTime value={[currentAccessPeriodValue.startDateTime ? dayjs(currentAccessPeriodValue.startDateTime, DateTimeFormat) : null, currentAccessPeriodValue.endDateTime ? dayjs(currentAccessPeriodValue.endDateTime, DateTimeFormat) : null]} onChange={val => {
                                 setCurrentAccessPeriodValue({
                                     ...currentAccessPeriodValue,
@@ -94,7 +94,7 @@ const PolicyAccessPeriodList = ({ value, onChange, dataInit }: PolicyItemsPropsT
                             alignItems: 'center',
                             gap: '12px'
                         }}>
-                            <FormattedMessage id="ACCESS_TIME_TIME_SELECT_LABEL" /> : <DatePicker.RangePicker showTime value={[_.startDateTime ? dayjs(_.startDateTime, DateTimeFormat) : null, _.endDateTime ? dayjs(_.endDateTime, DateTimeFormat) : null]} onChange={val => {
+                            <FormattedMessage id="ACCESS_TIME_PERIOD_SELECT_LABEL" /> : <DatePicker.RangePicker showTime value={[_.startDateTime ? dayjs(_.startDateTime, DateTimeFormat) : null, _.endDateTime ? dayjs(_.endDateTime, DateTimeFormat) : null]} onChange={val => {
                                 setAccessTimeValues(accessPeriods.map((timeValue, tInd) => tInd === ind ? ({
                                     ...timeValue,
                                     startDateTime: (val && val[0]) ? val[0].format(DateTimeFormat) : "",

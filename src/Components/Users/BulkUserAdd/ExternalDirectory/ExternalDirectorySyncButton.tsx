@@ -10,6 +10,8 @@ import useFullName from "hooks/useFullName"
 import { useMemo, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 import { ExternalDirectoryTypeLabel } from "./ExternalDirectoryContstants"
+import BulkUserRegexErrorModal from "Components/CommonCustomComponents/BulkUserRegexErrorModal"
+import useBulkUserDataRegex from "hooks/useBulkUserDataRegex"
 
 type ExternalDirectorySyncButtonProps = {
     data?: ExternalDirectoryDataType
@@ -20,11 +22,13 @@ type ExternalDirectorySyncButtonProps = {
 const ExternalDirectorySyncButton = ({ data, type, needSync }: ExternalDirectorySyncButtonProps) => {
     const [dataLoading, setDataLoading] = useState(false)
     const [sureSync, setSureSync] = useState(false)
-    const [syncDatas, setSyncDatas] = useState<ExternalDirectoryUserDataType[]>([])
+    const [syncDatas, setSyncDatas] = useState<DefaultUserDataType[]>([])
+    const [showError, setShowError] = useState<UserRegexErrorDataType[]>([])
     const [pageSetting, setPageSetting] = useState({
         page: 1,
         showPerPage: userSelectPageSize()
     })
+    const { regexTestBulkUserData } = useBulkUserDataRegex()
     const getFullName = useFullName()
     const { formatMessage } = useIntl()
     const tableData = useMemo(() => {
@@ -51,11 +55,22 @@ const ExternalDirectorySyncButton = ({ data, type, needSync }: ExternalDirectory
                 setDataLoading(true)
                 if (data?.id) {
                     SyncExternalDirectoryPortalUsersFunc(data.id, res => {
-                        message.info(formatMessage({ id: 'USER_ADD_EXTERNAL_DIRECTORY_USER_LOAD_SUCCESS_MSG' }, { type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }))
-                        setSyncDatas(res)
+                        regexTestBulkUserData(res.map(item => ({
+                            username: item.username,
+                            name: item.name,
+                            email: item.email,
+                            role: 'USER',
+                            phone: item.phone
+                        }))).then(datas => {
+                            message.info(formatMessage({ id: 'USER_ADD_EXTERNAL_DIRECTORY_USER_LOAD_SUCCESS_MSG' }, { type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }))
+                            setSyncDatas(datas)
+                        }).catch(errorDatas => {
+                            setShowError(errorDatas)
+                        }).finally(() => {
+                            setDataLoading(false)
+                        })
                     }).catch(e => {
                         needSync?.()
-                    }).finally(() => {
                         setDataLoading(false)
                     })
                 }
@@ -75,7 +90,7 @@ const ExternalDirectorySyncButton = ({ data, type, needSync }: ExternalDirectory
             {dataLoading ? <div className="external-directory-sync-user-list-loading-container">
                 <CustomLoading />
                 <FormattedMessage id="CONTENTS_DATA_LOADING_LABEL" />
-            </div> : <CustomTable<ExternalDirectoryUserDataType>
+            </div> : <CustomTable<DefaultUserDataType>
                 theme="table-st1"
                 datas={tableData}
                 pagination={tableData.length > 0}
@@ -95,8 +110,8 @@ const ExternalDirectorySyncButton = ({ data, type, needSync }: ExternalDirectory
                         title: <FormattedMessage id="FIRST_NAME" />,
                         render: (data, ind, row) => getFullName(row.name)
                     }, {
-                        key: 'org',
-                        title: <FormattedMessage id="ORGANIZATION_NAME_LABEL" />
+                        key: 'phone',
+                        title: <FormattedMessage id="PHONE_NUMBER" />
                     }, {
                         key: 'email',
                         title: <FormattedMessage id="EMAIL" />
@@ -104,6 +119,11 @@ const ExternalDirectorySyncButton = ({ data, type, needSync }: ExternalDirectory
                 ]}
             />}
         </div>
+        <BulkUserRegexErrorModal open={showError.length > 0} onCancel={() => {
+            setShowError([])
+        }} onOk={async () => {
+            setShowError([])
+        }} showError={showError} />
         <CustomModal
             open={sureSync}
             onCancel={() => {
@@ -125,7 +145,8 @@ const ExternalDirectorySyncButton = ({ data, type, needSync }: ExternalDirectory
                         name: _.name,
                         email: _.email,
                         phone: _.phone,
-                        role: 'USER'
+                        role: 'USER',
+                        countryCode: _.countryCode
                     }))
                 }, () => {
                     message.success(formatMessage({ id: 'USER_ADD_EXTERNAL_DIRECTORY_SYNC_SUCCESS_MSG' }, { type: formatMessage({ id: ExternalDirectoryTypeLabel[type] }) }))

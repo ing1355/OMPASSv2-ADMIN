@@ -7,7 +7,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { message } from "antd";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
-import EmailSendButton from "Components/CommonCustomComponents/EmailSendButton";
+import EmailSendButton from "Components/CommonCustomComponents/Button/EmailSendButton";
 
 const ResetPassword = () => {
     const [inputPassword, setInputPassword] = useState('')

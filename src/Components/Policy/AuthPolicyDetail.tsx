@@ -11,7 +11,7 @@ import resetIconWhite from '@assets/resetIconWhite.png'
 import Button from "Components/CommonCustomComponents/Button";
 import Input from "Components/CommonCustomComponents/Input";
 import { getApplicationTypeLabel, maxLengthByType, PolicyBrowsersList } from "Constants/ConstantValues";
-import CustomSelect from "Components/CommonCustomComponents/CustomSelect";
+import CustomSelect from "Components/CommonCustomComponents/Input/CustomSelect";
 import CustomModal from "Components/Modal/CustomModal";
 import OMPASSAuth from "./PolicyItems/OMPASSAuth";
 import OMPASSAuthenticators from "./PolicyItems/OMPASSAuthenticators";
@@ -28,7 +28,7 @@ import OMPASSAppAuthenticators from "./PolicyItems/OMPASSAppAuthenticator";
 import './AuthPolicyDetail.css'
 // import PasswordlessCheck from "./PolicyItems/PasswordlessCheck";
 import LinuxPamBypass from "./PolicyItems/LinuxPamBypass";
-import SureDeleteButton from "Components/CommonCustomComponents/SureDeleteButton";
+import SureDeleteButton from "Components/CommonCustomComponents/Button/SureDeleteButton";
 import usePlans from "hooks/usePlans";
 import PolicyAccessPeriodList from "./PolicyItems/PolicyAccessPeriodList";
 import CanEmailRegister from "./CanEmailRegister";
@@ -227,6 +227,12 @@ const AuthPolicyDetail = () => {
             }
             if (accessTimeValues?.isEnabled && accessTimeValues.accessTimes.length === 0) {
                 return message.error(formatMessage({ id: 'PLEASE_SETTING_TIME_POLICY_MSG' }))
+            }
+            if (accessTimeValues?.isEnabled && accessTimeValues.accessTimes.find(_ => _.selectedDayOfWeeks.length === 0)) {
+                return message.error(formatMessage({ id: 'PLEASE_SETTING_TIME_POLICY_DAY_OF_WEEK_MSG' }))
+            }
+            if (accessTimeValues?.isEnabled && accessTimeValues.accessTimes.find(_ => _.timeRange.type === 'SPECIFIC_TIME' && !_.timeRange.startTime && !_.timeRange.endTime)) {
+                return message.error(formatMessage({ id: 'PLEASE_SETTING_SPECIFIC_TIME_POLICY_MSG' }))
             }
             if (noticeToAdmin?.isEnabled && noticeToAdmin.methods.length === 0) {
                 return message.error(formatMessage({ id: 'PLEASE_SETTING_NOTI_TO_ADMIN_POLICY_MSG' }))

@@ -15,9 +15,7 @@ import PairOMPASSAuthModal from 'Components/Modal/PairOMPASSAuthModal'
 import UserDetailUserInfo from './UserDetailUserInfo'
 import UserDetailRpUsers from './UserDetailRpUsers'
 import UserRpSelfAddComponent from './UserRpSelfAddComponent'
-import SureDeleteButton from 'Components/CommonCustomComponents/SureDeleteButton'
-
-
+import SureDeleteButton from 'Components/CommonCustomComponents/Button/SureDeleteButton'
 
 const UserDetail = ({ }) => {
     const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);

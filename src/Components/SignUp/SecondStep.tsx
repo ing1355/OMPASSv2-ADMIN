@@ -1,6 +1,5 @@
 import { DuplicateUserNameCheckFunc, RootSignUpRequestFunc, SignUpRequestFunc, SignUpVerificationCodeSendFunc, SignUpVerificationCodeVerifyFunc } from "Functions/ApiFunctions";
-import { nameRegex, phoneRegex } from "Constants/CommonRegex";
-import { autoHypenPhoneFun } from "Functions/GlobalFunctions";
+import { nameRegex } from "Constants/CommonRegex";
 import Button from "Components/CommonCustomComponents/Button";
 import { PropsWithChildren, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
@@ -11,7 +10,8 @@ import RequiredLabel from "Components/CommonCustomComponents/RequiredLabel";
 import { isDev } from "Constants/ConstantValues";
 import { useSelector } from "react-redux";
 import SecurityQuestionLayout from "./SecurityQuestionLayout";
-import EmailSendButton from "Components/CommonCustomComponents/EmailSendButton";
+import EmailSendButton from "Components/CommonCustomComponents/Button/EmailSendButton";
+import PhoneInput from "Components/CommonCustomComponents/Input/PhoneInput";
 
 const InputRow = ({ label, children, required }: PropsWithChildren<{
     label: string
@@ -49,8 +49,9 @@ const SecondStep = ({ completeCallback }: {
     const [inputLastName, setInputLastName] = useState('')
     const [inputPhone, setInputPhone] = useState('')
     const [inputEmail, setInputEmail] = useState('')
+    const [inputCountryCode, setInputCountryCode] = useState<UserDataType['countryCode']>(undefined)
     const [rootConfirm, setRootConfirm] = useState(false)
-
+    const [isPhoneAlert, setIsPhoneAlert] = useState(true)
     const usernameRef = useRef<HTMLInputElement>(null)
     const passwordRef = useRef<HTMLInputElement>(null)
     const passwordConfirmRef = useRef<HTMLInputElement>(null)
@@ -58,15 +59,16 @@ const SecondStep = ({ completeCallback }: {
     const lastNameRef = useRef<HTMLInputElement>(null)
     const emailRef = useRef<HTMLInputElement>(null)
     const codeRef = useRef<HTMLInputElement>(null)
+    const phoneRef = useRef<HTMLInputElement>(null)
 
 
     const navigate = useNavigate();
     const { formatMessage } = useIntl();
 
-    useEffect(() => {
-        setVerifyCode('')
-        setEmailVerify(false)
-    }, [emailCodeSend])
+    // useEffect(() => {
+    //     setVerifyCode('')
+    //     setEmailVerify(false)
+    // }, [emailCodeSend])
 
     useEffect(() => {
         if (isDev) {
@@ -95,6 +97,7 @@ const SecondStep = ({ completeCallback }: {
             email: inputEmail,
             phone: inputPhone,
             role: 'ROOT',
+            countryCode: inputCountryCode,
             securityQnas: [
                 {
                     question: subdomainInfo.securityQuestion.questions[0],
@@ -147,7 +150,7 @@ const SecondStep = ({ completeCallback }: {
                     message.error(formatMessage({ id: 'PLEASE_INPUT_LAST_NAME' }))
                     return lastNameRef.current?.focus()
                 }
-                if(lang === 'KR') {
+                if (lang === 'KR') {
                     if (isLastNameAlert) {
                         message.error(formatMessage({ id: 'LAST_NAME_CHECK' }))
                         return lastNameRef.current?.focus()
@@ -179,10 +182,10 @@ const SecondStep = ({ completeCallback }: {
                     message.error(formatMessage({ id: 'NEED_CODE_VERIFY_MSG' }))
                     return codeRef.current?.focus()
                 }
-                
-                if (inputPhone.length > 0 && !phoneRegex.test(inputPhone)) {
+
+                if (inputPhone && isPhoneAlert) {
                     message.error(formatMessage({ id: 'PHONE_NUMBER_CHECK' }))
-                    return
+                    return phoneRef.current?.focus()
                 }
                 if (inputUsername && inputFirstName && inputLastName && inputEmail && inputPassword) {
                     if (!subdomainInfo.securityQuestion.isRootAdminSignupComplete) return setRootConfirm(true)
@@ -196,6 +199,7 @@ const SecondStep = ({ completeCallback }: {
                         email: inputEmail,
                         phone: inputPhone,
                         role: 'USER',
+                        countryCode: inputCountryCode,
                     }, () => {
                         _completeCallback()
                     })
@@ -339,9 +343,8 @@ const SecondStep = ({ completeCallback }: {
                     valueChange={(value, isAlert) => {
                         setInputEmail(value)
                         setIsEmailAlert(isAlert || false)
-                        setEmailCodeSend(false)
                     }}
-                    readOnly={emailCodeSend}
+                    readOnly={emailVerify}
                 >
                     <EmailSendButton noStyle className="signup-duplicate-check" disabled={inputEmail.length === 0 || emailVerify || isEmailAlert} onClick={() => {
                         return SignUpVerificationCodeSendFunc({
@@ -386,7 +389,16 @@ const SecondStep = ({ completeCallback }: {
                 </Input>
             </InputRow>
             <InputRow label="PHONE_NUMBER">
-                <Input
+                <PhoneInput
+                    value={inputPhone}
+                    onChange={(value, countryCode) => {
+                        setInputPhone(value)
+                        setInputCountryCode(countryCode)
+                    }} setIsValid={isValid => {
+                        setIsPhoneAlert(!isValid)
+                    }} examplePosition="top"
+                    ref={phoneRef} />
+                {/* <Input
                     className='st1'
                     maxLength={13}
                     value={inputPhone}
@@ -395,7 +407,7 @@ const SecondStep = ({ completeCallback }: {
                         value = autoHypenPhoneFun(value);
                         setInputPhone(value)
                     }}
-                />
+                /> */}
             </InputRow>
             <Button
                 type={'submit'}

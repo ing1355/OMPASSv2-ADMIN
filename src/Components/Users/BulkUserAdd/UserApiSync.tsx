@@ -18,10 +18,16 @@ import Input from "Components/CommonCustomComponents/Input";
 import CopyToClipboard from "react-copy-to-clipboard";
 import copyIcon from '@assets/jsonCopyIcon2.png';
 import copyIconHover from '@assets/jsonCopyIcon.png';
+import { emailRegex, idRegex, nameRegex, phoneRegex } from "Constants/CommonRegex";
+import BulkUserRegexErrorModal from "Components/CommonCustomComponents/BulkUserRegexErrorModal";
+import useBulkUserDataRegex from "hooks/useBulkUserDataRegex";
+
+
 
 const UserApiSync = () => {
     const [apiInfo, setApiInfo] = useState<ExternalDirectoryDataType | null>(null)
     const [datas, setDatas] = useState<UserExcelDataType[]>([])
+    const [showError, setShowError] = useState<UserRegexErrorDataType[]>([])
     const [sureReset, setSureReset] = useState(false)
     const [showJsonModal, setShowJsonModal] = useState(false)
     const [pageSetting, setPageSetting] = useState({
@@ -31,6 +37,7 @@ const UserApiSync = () => {
     const [loading, setLoading] = useState(false)
     const createHeaderColumn = (formattedId: string) => <FormattedMessage id={formattedId} />
     const { formatMessage } = useIntl()
+    const { regexTestBulkUserData } = useBulkUserDataRegex()
     const getFullName = useFullName()
 
     const tableData = useMemo(() => {
@@ -74,13 +81,19 @@ const UserApiSync = () => {
                     setLoading(true)
                     if (apiInfo) {
                         SyncExternalDirectoryPortalUsersFunc(apiInfo.id, res => {
-                            setDatas(res.map(item => ({
+                            regexTestBulkUserData(res.map(item => ({
                                 username: item.username,
                                 name: item.name,
                                 email: item.email,
                                 role: 'USER',
                                 phone: item.phone
-                            })))
+                            }))).then(datas => {
+                                setDatas(datas)
+                            }).catch(errorDatas => {
+                                setShowError(errorDatas)
+                            }).finally(() => {
+                                setLoading(false)
+                            })
                             message.success(formatMessage({ id: 'USER_ADD_API_SYNC_USER_LIST_LOAD_SUCCESS_MSG' }))
                         }).catch(err => {
                             console.log(err)
@@ -147,14 +160,14 @@ const UserApiSync = () => {
                             render: (data) => getFullName(data)
                         },
                         {
-                            key: 'email',
-                            title: createHeaderColumn('EMAIL'),
-                        },
-                        {
                             key: 'phone',
                             title: createHeaderColumn('PHONE_NUMBER'),
                             noWrap: true
                         },
+                        {
+                            key: 'email',
+                            title: createHeaderColumn('EMAIL'),
+                        }
                     ]}
                 />
             </div>
@@ -191,6 +204,11 @@ const UserApiSync = () => {
                     })
                 }
             }} buttonLoading />
+        <BulkUserRegexErrorModal open={showError.length > 0} onCancel={() => {
+            setShowError([])
+        }} onOk={async () => {
+            setShowError([])
+        }} showError={showError} />
     </>
 }
 

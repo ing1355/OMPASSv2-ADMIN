@@ -42,6 +42,9 @@ const useCustomRoute = () => {
                 }
             })
         }
+        
+        if (queryParams.sortKey) result.set('sortKey', queryParams.sortKey)
+        if (queryParams.sortDirection) result.set('sortDirection', queryParams.sortDirection)
         if (queryParams.tabType) result.set('tabType', queryParams.tabType)
         else if (oldSearchParams.get('tabType')) result.set('tabType', oldSearchParams.get('tabType')!)
         if (queryParams.applicationType) result.set('applicationType', queryParams.applicationType)

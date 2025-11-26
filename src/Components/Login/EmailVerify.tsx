@@ -1,11 +1,10 @@
 import { FormattedMessage, useIntl } from "react-intl";
 import Input from "Components/CommonCustomComponents/Input";
-import Button from "Components/CommonCustomComponents/Button";
 import { useEffect, useRef, useState } from "react";
 import { EmailChangeCodeVerificationFunc, SendEmailVerificationFunc } from "Functions/ApiFunctions";
 import { message } from "antd";
 import CustomModal from "Components/Modal/CustomModal";
-import EmailSendButton from "Components/CommonCustomComponents/EmailSendButton";
+import EmailSendButton from "Components/CommonCustomComponents/Button/EmailSendButton";
 
 type EmailVerifyProps = {
     token: string

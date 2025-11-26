@@ -4,7 +4,7 @@ import { useState } from "react"
 import RegisterOMPASSAuthModal from "Components/Modal/RegisterOMPASSAuthModal"
 import { message } from "antd"
 import { useSelector } from "react-redux"
-import PasswordConfirmModal from "Components/CommonCustomComponents/PasswordConfirmModal"
+import PasswordConfirmModal from "Components/Modal/PasswordConfirmModal"
 
 const NewDeviceBtn = ({ onComplete }: {
     onComplete: () => void

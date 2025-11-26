@@ -57,7 +57,7 @@ const ExternalDirectoryManagement = () => {
                 key: 'lastUserSyncedAt',
                 title: <FormattedMessage id="USER_ADD_EXTERNAL_DIRECTORY_LAST_SYNC_TIME_LABEL" />,
                 isTime: true,
-                sortKey: 'LAST_SYNC_TIME'
+                sortKey: 'LAST_SYNCED_AT'
             },
             {
                 key: 'createdAt',

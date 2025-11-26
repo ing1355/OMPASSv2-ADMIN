@@ -3,7 +3,7 @@ import Button from "Components/CommonCustomComponents/Button";
 import { emailRegex, idRegex, nameRegex, phoneRegex } from "Constants/CommonRegex";
 import CustomModal from "Components/Modal/CustomModal";
 import CustomTable from "Components/CommonCustomComponents/CustomTable";
-import CustomUpload from "Components/CommonCustomComponents/CustomUpload";
+import CustomUpload from "Components/CommonCustomComponents/Input/CustomUpload";
 import Contents from "Components/Layout/Contents";
 import ContentsHeader from "Components/Layout/ContentsHeader";
 import { AddUserWithCsvDataFunc } from "Functions/ApiFunctions";
@@ -16,13 +16,9 @@ import { userSelectPageSize } from "Constants/ConstantValues";
 import { useSelector } from "react-redux";
 import useExcelDownload from "hooks/useExcelDownload";
 import Locale from '../../../Locale';
-
-type ExcelRegexErrorDataType = {
-    row: number
-    key: (keyof UserExcelDataType | keyof UserNameType)
-    msg: string
-    value: string
-}
+import parsePhoneNumberFromString from "libphonenumber-js";
+import BulkUserRegexErrorModal from "Components/CommonCustomComponents/BulkUserRegexErrorModal";
+import useBulkUserDataRegex from "hooks/useBulkUserDataRegex";
 
 const decodeCSV = async (arrayBuffer: ArrayBuffer): Promise<string> => {
     const textDecoder = new TextDecoder("utf-8");
@@ -37,26 +33,40 @@ const decodeCSV = async (arrayBuffer: ArrayBuffer): Promise<string> => {
     return text;
 };
 
-const makeErrorData = (row: number, key: string, msg: string, value: string) => {
+const makeErrorData = (row: number, key: string, msg: string, value?: string) => {
     return {
         row,
         key,
         msg,
         value
-    } as ExcelRegexErrorDataType
+    } as UserRegexErrorDataType
 }
+
+const convertTxtToJson = (txtData: string) => {
+    const lines = txtData.trim().split('\n');
+    const headers = lines[0].split('\t'); // 헤더로 첫 번째 줄 사용
+    const jsonData = lines.slice(1).map(line => {
+        const values = line.split('\t');
+        return headers.reduce((acc: { [key: string]: string }, header: string, index: number) => {
+            acc[header] = values[index] || ''; // 값이 없으면 빈 문자열
+            return acc;
+        }, {});
+    });
+    return jsonData;
+};
 
 
 const UserExcelUpload = () => {
     const lang = useSelector((state: ReduxStateType) => state.lang!);
     const [datas, setDatas] = useState<UserExcelDataType[]>([])
-    const [showError, setShowError] = useState<ExcelRegexErrorDataType[]>([])
+    const [showError, setShowError] = useState<UserRegexErrorDataType[]>([])
     const [pageSetting, setPageSetting] = useState({
         page: 1,
         showPerPage: userSelectPageSize()
     })
     const [loading, setLoading] = useState(false)
     const createHeaderColumn = (formattedId: string) => <FormattedMessage id={formattedId} />
+    const {regexTestBulkUserData} = useBulkUserDataRegex()
     const { formatMessage } = useIntl()
     const getFullName = useFullName()
     const excelDownload = useExcelDownload()
@@ -67,11 +77,12 @@ const UserExcelUpload = () => {
     }, [datas, pageSetting])
 
     const findColumnWithLocale = (key: string, columns: string[]) => {
-        
+
         const locales = Object.keys(Locale).map((_) => (Locale as {
             [key: string]: any
         })[_][key])
-        return columns.findIndex(_ => locales.includes(_))
+        const index = columns.findIndex(_ => locales.includes(_))
+        return index !== -1 ? index : undefined
     }
 
     return <>
@@ -165,98 +176,54 @@ const UserExcelUpload = () => {
                             const sheet = workbook.Sheets[sheetName];
 
                             // 시트를 JSON으로 변환
-                            const jsonData = XLSX.utils.sheet_to_json(sheet, {
-                                defval: ""
-                            });
+                            const testString = XLSX.utils.sheet_to_txt(sheet)
+                            const jsonData = convertTxtToJson(testString)
+                            // const jsonData = XLSX.utils.sheet_to_json(sheet, {
+                            //     defval: "",
+                            //     raw: true
+                            // });
 
-                            if(jsonData.length === 0) {
+                            if (jsonData.length === 0) {
                                 return message.error(formatMessage({ id: 'EXCEL_EMPTY_MSG' }));
                             }
-                            let errorTemp: ExcelRegexErrorDataType[] = []
 
                             const columns = Object.keys(jsonData[0] as object)
 
-                            const usernameInd = findColumnWithLocale('USER_EXCEL_USER_ID_LABEL', columns)
-                            const firstNameInd = findColumnWithLocale('FIRST_NAME', columns)
-                            const lastNameInd = findColumnWithLocale('LAST_NAME', columns)
-                            const emailInd = findColumnWithLocale('EMAIL', columns)
-                            const phoneInd = findColumnWithLocale('PHONE_NUMBER', columns)
+                            const usernameInd = findColumnWithLocale('USER_EXCEL_USER_ID_LABEL', columns) || 0
+                            const firstNameInd = findColumnWithLocale('FIRST_NAME', columns) || 1
+                            const lastNameInd = findColumnWithLocale('LAST_NAME', columns) || 2
+                            const emailInd = findColumnWithLocale('EMAIL', columns) || 3
+                            const phoneInd = findColumnWithLocale('PHONE_NUMBER', columns) || 4
 
-                            if(usernameInd === -1 || firstNameInd === -1 || lastNameInd === -1 || emailInd === -1 || phoneInd === -1) {
-                                return message.error(formatMessage({id: 'EXCEL_UPLOAD_FAIL_MSG'}))
+                            if (usernameInd === -1 || firstNameInd === -1 || lastNameInd === -1 || emailInd === -1 || phoneInd === -1) {
+                                return message.error(formatMessage({ id: 'EXCEL_UPLOAD_FAIL_MSG' }))
                             }
-
-                            const usernameSet = new Map<string, number>()
-                            const duplicatedUsernames: string[] = []
-
-                            const resultData = jsonData.map((_, ind) => {
-                                let result = Object.values(_ as Object).reduce((pre, cur, _ind) => {
-                                    if(typeof cur === 'number') cur = cur.toString()
-                                    cur = cur.trim()
-                                    if (_ind === usernameInd) {
-                                        if (!idRegex.test(cur)) {
-                                            errorTemp.push(makeErrorData(ind + 1, 'username', formatMessage({ id: 'USERNAME_CHECK' }), cur))
-                                        }
-                                        if (usernameSet.get(cur)) {
-                                            if(duplicatedUsernames.includes(cur)) {
-                                                errorTemp.push(makeErrorData(ind+1, 'username', formatMessage({ id: 'DUPLICATED_DATA_EXISTS' }), cur))
-                                            } else {
-                                                errorTemp.push(makeErrorData(usernameSet.get(cur)!, 'username', formatMessage({ id: 'DUPLICATED_DATA_EXISTS' }), cur))
-                                                errorTemp.push(makeErrorData(ind+1, 'username', formatMessage({ id: 'DUPLICATED_DATA_EXISTS' }), cur))
-                                                duplicatedUsernames.push(cur)
-                                            }
-                                        } else {
-                                            usernameSet.set(cur, ind + 1)
-                                        }
-                                        pre["username"] = cur;
-                                    }
-                                    if (_ind === firstNameInd) {
-                                        if (cur.length > 0 && !nameRegex.test(cur)) {
-                                            errorTemp.push(makeErrorData(ind + 1, 'firstName', formatMessage({ id: 'FIRST_NAME_CHECK' }), cur))
-                                        }
-                                        pre["name"] = {
-                                            ...pre["name"],
-                                            "firstName": cur
-                                        }
-                                    }
-                                    if (_ind === lastNameInd) {
-                                        if (!nameRegex.test(cur)) {
-                                            errorTemp.push(makeErrorData(ind + 1, 'lastName', formatMessage({ id: 'LAST_NAME_CHECK' }), cur))
-                                        }
-                                        pre["name"] = {
-                                            ...pre["name"],
-                                            "lastName": cur
-                                        }
-                                    }
-                                    if (_ind === emailInd) {
-                                        if (!cur) {
-                                            errorTemp.push(makeErrorData(ind + 1, 'email', formatMessage({ id: 'PLEASE_INPUT_EMAIL' }), cur))
-                                        } else if (!emailRegex.test(cur)) {
-                                            errorTemp.push(makeErrorData(ind + 1, 'email', formatMessage({ id: 'EMAIL_CHECK' }), cur))
-                                        }
-                                        pre["email"] = cur;
-                                    }
-                                    if (_ind === phoneInd) {
-                                        if (cur.length > 0 && !phoneRegex.test(cur)) {
-                                            errorTemp.push(makeErrorData(ind + 1, 'phone', formatMessage({ id: 'PHONE_NUMBER_CHECK' }), cur))
-                                        }
-                                        pre["phone"] = cur;
-                                    }
-                                    
-                                    return pre;
-                                }, {})
-                                return result;
-                            }); // 데이터 저장
                             
-                            if (errorTemp.length > 0) {
-                                setShowError(errorTemp)
-                            } else {
-                                if(resultData.length === 0) {
-                                    message.error(formatMessage({ id: 'EXCEL_EMPTY_MSG' }));
-                                } else {
-                                    setDatas(resultData)
-                                    message.success(formatMessage({ id: 'EXCEL_UPLOAD_SUCCESS_MSG' }));
+                            const bulkUserDatas: DefaultUserDataType[] = jsonData.map((_, ind) => {
+                                const temp = Object.values(_)
+                                return {
+                                    username: temp[usernameInd],
+                                    name: {
+                                        firstName: temp[firstNameInd],
+                                        lastName: temp[lastNameInd]
+                                    },
+                                    email: temp[emailInd],
+                                    phone: temp[phoneInd].startsWith('\u200B') ? temp[phoneInd].slice(1) : temp[phoneInd],
+                                    role: 'USER'
                                 }
+                            })
+                            
+                            if(bulkUserDatas.length > 0) {
+                                regexTestBulkUserData(bulkUserDatas).then(datas => {
+                                    setDatas(datas)
+                                    message.success(formatMessage({ id: 'EXCEL_UPLOAD_SUCCESS_MSG' }));
+                                }).catch(errorDatas => {
+                                    setShowError(errorDatas)
+                                }).finally(() => {
+                                    setLoading(false)
+                                })
+                            } else {
+                                message.error(formatMessage({ id: 'EXCEL_EMPTY_MSG' }));
                             }
                         } catch (error) {
                             console.error(error);
@@ -271,61 +238,11 @@ const UserExcelUpload = () => {
                 }} accept="csv,xlsx" />}
             </div>
         </Contents>
-        <CustomModal
-            open={showError.length > 0}
-            onCancel={() => {
-                setShowError([])
-            }}
-            width={1000}
-            justConfirm
-            okText={formatMessage({ id: 'CONFIRM' })}
-            okClassName="excel-errors-modal-button"
-            type="warning"
-            okCallback={async () => {
-                setShowError([])
-            }}
-            typeTitle={<FormattedMessage id="EXCEL_UPLOAD_ERROR_MODAL_TITLE_LABEL" />}
-            typeContent={<>
-                <div className="excel-errors-container">
-                    <div className="excel-errors-row header">
-                        <div>
-                            <FormattedMessage id="EXCEL_UPLOAD_ERROR_MODAL_SUBSCRIPTION_1_LABEL" />
-                        </div>
-                        <div>
-                            <FormattedMessage id="EXCEL_UPLOAD_ERROR_MODAL_SUBSCRIPTION_2_LABEL" />
-                        </div>
-                        <div>
-                            <FormattedMessage id="EXCEL_UPLOAD_ERROR_MODAL_SUBSCRIPTION_4_LABEL" />
-                        </div>
-                        <div>
-                            <FormattedMessage id="EXCEL_UPLOAD_ERROR_MODAL_SUBSCRIPTION_3_LABEL" />
-                        </div>
-                    </div>
-                    {
-                        showError.map((_, ind) => <div key={ind} className="excel-errors-row">
-                            <div>
-                                {_.row}
-                            </div>
-                            <div>
-                                <FormattedMessage id={`USER_${_.key.toUpperCase()}_LABEL`} />
-                                {/* {_.key.map((__, _ind, arr) => <span key={_ind} style={{
-                                    marginRight: '4px'
-                                }}>
-                                    <FormattedMessage id={`USER_${__.toUpperCase()}_LABEL`} />
-                                    {_ind !== arr.length - 1 && ','}
-                                </span>)} */}
-                            </div>
-                            <div>
-                                {_.value}
-                            </div>
-                            <div>
-                                {_.msg}
-                            </div>
-                        </div>)
-                    }
-                </div>
-            </>}
-            buttonLoading />
+        <BulkUserRegexErrorModal open={showError.length > 0} onCancel={() => {
+            setShowError([])
+        }} onOk={async () => {
+            setShowError([])
+        }} showError={showError} />
     </>
 }
 

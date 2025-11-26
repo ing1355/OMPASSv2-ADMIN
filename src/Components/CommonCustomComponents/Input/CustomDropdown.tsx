@@ -1,4 +1,4 @@
-import React, { Children, forwardRef, PropsWithChildren, ReactElement, useCallback, useEffect, useRef, useState } from 'react'
+import React, { Children, forwardRef, PropsWithChildren, ReactElement, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import './CustomDropdown.css'
 import { FormattedMessage, IntlProvider, useIntl } from 'react-intl'
 import { convertLangToIntlVer } from 'Constants/ConstantValues'
@@ -6,8 +6,7 @@ import Locale from 'Locale'
 import { useSelector } from 'react-redux'
 import { createRoot } from 'react-dom/client'
 import checkIcon from '@assets/checkIcon.png'
-import { message } from 'antd'
-import { useLocation } from 'react-router'
+import { Location, useLocation } from 'react-router'
 
 type CustomDropdownProps = PropsWithChildren<{
     items?: DropdownItemType[]
@@ -22,7 +21,7 @@ type CustomDropdownProps = PropsWithChildren<{
     debug?: boolean
 }>
 
-const DropdownContainer = forwardRef(({ lang, effectCallback, items, sideItems, isFilter, onChange, value, multiple, closeCallback, render }: PropsWithChildren & {
+const DropdownContainer = forwardRef(({ lang, effectCallback, items, sideItems, isFilter, location, onChange, value, multiple, closeCallback, render }: PropsWithChildren & {
     effectCallback: () => void
     lang: LanguageType
     closeCallback: () => void
@@ -31,17 +30,13 @@ const DropdownContainer = forwardRef(({ lang, effectCallback, items, sideItems, 
     render?: React.ReactNode
     multiple?: boolean
     value?: any | any[]
+    location: Location
     onChange?: (value: any) => void
     isFilter?: boolean
 }, ref) => {
     // useIntl 대신 formatMessage를 props로 받거나 직접 사용
-    const formatMessage = (descriptor: { id: string }) => {
-        const messages = Locale[lang] as Record<string, string>;
-        return messages[descriptor.id] || descriptor.id;
-    }
     const [tempValues, setTempValues] = useState<any[]>(value && value.filter((_: any) => !sideItems?.some(s => s.value === _)) || [])
     const [sideValues, setSideValues] = useState<any[]>(value && value.filter((_: any) => sideItems?.some(s => s.value === _)) || [])
-    
     const allValuesSelected = items?.every(_ => tempValues.includes(_.value))
 
     useEffect(() => {
@@ -141,7 +136,7 @@ const CustomDropdown = ({ value, onChange, items, sideItems, children, multiple,
     const parentRef = useRef<HTMLElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
     const divRef = useRef<HTMLDivElement>()
-    const location =useLocation()
+    const location = useLocation()
 
     const closeCallback = useCallback(() => {
         if (divRef.current) {
@@ -156,7 +151,7 @@ const CustomDropdown = ({ value, onChange, items, sideItems, children, multiple,
         }
     }, []);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         closeCallback()
     },[location])
 
@@ -181,7 +176,7 @@ const CustomDropdown = ({ value, onChange, items, sideItems, children, multiple,
             }
         };
     }, [handleMouseDown]);
-
+    
     useEffect(() => {
         if (closeEvent) {
             closeCallback()
@@ -209,12 +204,12 @@ const CustomDropdown = ({ value, onChange, items, sideItems, children, multiple,
                     divRef.current = div
                     const root = createRoot(div as HTMLElement);
                     if (items) {
-                        root.render(<DropdownContainer lang={lang} closeCallback={closeCallback} isFilter={isFilter} items={items} sideItems={sideItems} multiple={multiple} value={value} onChange={onChange} effectCallback={() => {
+                        root.render(<DropdownContainer lang={lang} location={location} closeCallback={closeCallback} isFilter={isFilter} items={items} sideItems={sideItems} multiple={multiple} value={value} onChange={onChange} effectCallback={() => {
                             const diff = parentRef.current!.clientWidth - containerRef.current!.clientWidth
                             div.style.transform = `translateX(${diff / 2}px)`
                         }} ref={containerRef} />)
                     } else {
-                        root.render(<DropdownContainer lang={lang} closeCallback={closeCallback} isFilter={isFilter} render={render} value={value} onChange={onChange} effectCallback={() => {
+                        root.render(<DropdownContainer lang={lang} location={location} closeCallback={closeCallback} isFilter={isFilter} render={render} value={value} onChange={onChange} effectCallback={() => {
                             const diff = parentRef.current!.clientWidth - containerRef.current!.clientWidth
                             div.style.transform = `translateX(${diff / 2}px)`
                         }} ref={containerRef} />)

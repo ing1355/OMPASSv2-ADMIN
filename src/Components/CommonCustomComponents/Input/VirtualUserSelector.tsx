@@ -3,7 +3,7 @@ import { FixedSizeList as List } from 'react-window'
 import { Checkbox, Button, Spin, Empty, Tag } from 'antd'
 import { SearchOutlined, UserOutlined, TeamOutlined } from '@ant-design/icons'
 import { FormattedMessage, useIntl } from 'react-intl'
-import Input from './Input'
+import Input from '../Input'
 import './VirtualUserSelector.css'
 
 interface User {

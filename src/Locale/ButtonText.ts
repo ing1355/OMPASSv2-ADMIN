@@ -4,6 +4,9 @@ const ButtonText = {
     },
     'EN': {
         
+    },
+    'JP': {
+        // 일본어 번역
     }
 }
 

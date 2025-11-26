@@ -9,8 +9,8 @@ import {
     DeleteOutlined
 } from '@ant-design/icons'
 import { FormattedMessage, useIntl } from 'react-intl'
-import VirtualUserSelector from '../CommonCustomComponents/VirtualUserSelector'
-import CustomSelect from '../CommonCustomComponents/CustomSelect'
+import VirtualUserSelector from '../CommonCustomComponents/Input/VirtualUserSelector'
+import CustomSelect from '../CommonCustomComponents/Input/CustomSelect'
 import Input from '../CommonCustomComponents/Input'
 import './AdvancedGroupAssignmentModal.css'
 

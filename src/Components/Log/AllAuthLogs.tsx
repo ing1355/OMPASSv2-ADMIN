@@ -6,6 +6,7 @@ import { GetAllAuthLogDataListFunc } from "Functions/ApiFunctions"
 import AuthLogDetailModal from "./AuthLogDetailModal"
 import usePlans from "hooks/usePlans"
 import useTableData from "hooks/useTableData"
+import PolicyNameByTypeComponent from "Components/CommonCustomComponents/PolicyNameByTypeComponent"
 
 const AllAuthLogs = () => {
     const [detailData, setDetailData] = useState<AllAuthLogDataType>()
@@ -99,7 +100,7 @@ const AllAuthLogs = () => {
                 {
                     key: 'policyAtTimeOfEvent',
                     title: <FormattedMessage id="POLICY_NAME_LABEL" />,
-                    render: (d, ind, row) => row.policyAtTimeOfEvent?.name,
+                    render: (d, ind, row) => <PolicyNameByTypeComponent data={row.policyAtTimeOfEvent} />,
                     sortKey: 'POLICY_NAME'
                 },
                 {

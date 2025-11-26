@@ -3,7 +3,7 @@ import './UserRpSelfAddComponent.css'
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { message } from 'antd';
 import { FormattedMessage, useIntl } from 'react-intl';
-import CustomSelect from 'Components/CommonCustomComponents/CustomSelect';
+import CustomSelect from 'Components/CommonCustomComponents/Input/CustomSelect';
 import { GetApplicationListFunc, RPPrimaryAuthFunc } from 'Functions/ApiFunctions';
 import RegisterOMPASSAuthModal from 'Components/Modal/RegisterOMPASSAuthModal';
 import Input from 'Components/CommonCustomComponents/Input';

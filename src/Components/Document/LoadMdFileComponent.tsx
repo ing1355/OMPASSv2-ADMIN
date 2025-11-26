@@ -24,14 +24,25 @@ const pathByApplicationType: {
     'MAC_LOGIN': 'mac_logon',
 }
 
+const langConverter = (lang: LanguageType) => {
+    if(lang === 'EN') {
+        return 'en'
+    } else if(lang === 'JP') {
+        return 'ja'
+    } else {
+        return 'ko'
+    }
+}
+
 const LoadMdFileComponent = () => {
     const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
+    const lang = useSelector((state: ReduxStateType) => state.lang!)
     const [isReady, setIsReady] = useState(false)
     const [data, setData] = useState('')
     const [mTime, setMTime] = useState('')
     const type = useParams().type as DocumentSubType
     const category = useParams().category as DocumentCategoryType
-    const startedUrl = useLocation().pathname.startsWith('/docs/user') ? '/docs/user' : '/docs'
+    const startedUrl = useLocation().pathname.startsWith('/docs/user') ? `/docs/${langConverter(lang)}/user` : `/docs/${langConverter(lang)}`
     const navigate = useNavigate()
     
     async function fetchMarkdownFile(url: string) {
@@ -94,7 +105,7 @@ const LoadMdFileComponent = () => {
             fetchMarkdownFile(`${startedUrl}/${category}/${type}/${type}.md`)
             fetchMTime(`${startedUrl}/${category}/${type}/modifyTime`)
         }
-    }, [type])
+    }, [type, lang])
     
     return <>
         {

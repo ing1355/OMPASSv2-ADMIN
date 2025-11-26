@@ -9,10 +9,13 @@ export function userInfoChange(token: string) {
   }
 }
 
-export function userInfoClear() {
+export function userInfoClear(sessionExpired: boolean = true, logout: boolean = false) {
   return {
     type: types.userInfoClear,
-    payload: null,
+    payload: {
+      sessionExpired,
+      logout
+    },
   }
 }
 

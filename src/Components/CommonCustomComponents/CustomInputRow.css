@@ -20,7 +20,7 @@
 }
 
 .custom-detail-label {
-    flex: 0 0 200px;
+    flex: 0 0 240px;
     height: 100%;
     color: var(--main-grey-color);
     display: flex;
@@ -32,7 +32,7 @@
 }
 
 .custom-detail-contents>.custom-input-wrapper {
-    flex: 0 0 85%;
+    flex: 0 0 80%;
     height: 42px;
 }
 

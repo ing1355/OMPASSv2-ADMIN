@@ -32,7 +32,8 @@ const ManagementByType = ({ type, isCloud }: ManagementByTypeProps) => {
     const { tableData, totalCount, dataLoading, getDatas, setTableData } = useTableData<AgentInstallerDataType>({
         apiFunction: (params, callback) => GetAgentInstallerListFunc(type, params, callback),
         additionalParams: (params) => ({
-            pageSize: isCloud ? 1 : params.size
+            pageSize: isCloud ? 1 : params.size,
+            downloadTarget: isCloud
         })
     })
 
@@ -183,6 +184,7 @@ const ManagementByType = ({ type, isCloud }: ManagementByTypeProps) => {
         onSearchChange={(data) => {
             getDatas(data)
         }}
+        showTotalCount={!isCloud}
         onBodyRowClick={!isCloud ? (data) => {
             navigate('/AgentManagement/note', {
                 state: {

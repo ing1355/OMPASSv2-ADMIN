@@ -225,7 +225,7 @@ const Login = () => {
           </div>
           <div className='login-action-row-container'>
             <div className='login-action-row'>
-              <Input id='saveId' type='checkbox' className='mr10' defaultChecked={cookies.rememberUserId} checked={saveIdChecked} label={<FormattedMessage id='SAVE_ID' />} onChange={e => {
+              <Input id='saveId' type='checkbox' className='mr10' defaultChecked={cookies.rememberUserId} label={<FormattedMessage id='SAVE_ID' />} onChange={e => {
                 setSaveIdChecked(e.target.checked)
               }} />
             </div>

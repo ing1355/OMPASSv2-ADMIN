@@ -1,5 +1,5 @@
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow";
-import CustomSelect from "Components/CommonCustomComponents/CustomSelect";
+import CustomSelect from "Components/CommonCustomComponents/Input/CustomSelect";
 import CustomTable from "Components/CommonCustomComponents/CustomTable";
 import { authenticatorList, authenticatorLabelList, getApplicationTypeLabel, INT_MAX_VALUE } from "Constants/ConstantValues";
 import { GetApplicationListFunc, GetRpUsersListFunc } from "Functions/ApiFunctions";
@@ -62,6 +62,8 @@ const ApplicationUserManagement = () => {
         ]
         if (targetApplication?.type === 'WINDOWS_LOGIN') {
             temp.push({ key: 'pcName', type: 'string' }, { key: 'windowsPackageVersion', type: 'string' })
+        } else if (targetApplication?.type === 'MAC_LOGIN') {
+            temp.push({ key: 'pcName', type: 'string' }, { key: 'macPackageVersion', type: 'string' })
         }
         return temp
     }, [targetApplication])
@@ -93,10 +95,12 @@ const ApplicationUserManagement = () => {
             },
         ]
         if (targetApplication?.type === 'WINDOWS_LOGIN') {
-            temp.push({ key: 'pcName', title: <FormattedMessage id="PC_NAME_LABEL" /> }, { key: 'windowsPackageVersion', title: <FormattedMessage id="AGENT_VERSION_LABEL" /> })
+            temp.push({ key: 'pcName', title: <FormattedMessage id="PC_NAME_LABEL" />, sortKey: 'PC_NAME' }, { key: 'windowsPackageVersion', title: <FormattedMessage id="AGENT_VERSION_LABEL" />, sortKey: 'WINDOWS_PACKAGE_VERSION' })
+        } else if (targetApplication?.type === 'MAC_LOGIN') {
+            temp.push({ key: 'pcName', title: <FormattedMessage id="PC_NAME_LABEL" />, sortKey: 'PC_NAME' }, { key: 'macPackageVersion', title: <FormattedMessage id="AGENT_VERSION_LABEL" />, sortKey: 'MAC_PACKAGE_VERSION' })
         }
         if (targetApplication?.type === 'LINUX_LOGIN') {
-            temp.push({ key: 'hostname', title: <FormattedMessage id="HOST_NAME_LABEL" /> }, { key: 'linuxPamPackageVersion', title: <FormattedMessage id="AGENT_VERSION_LABEL" /> })
+            temp.push({ key: 'hostname', title: <FormattedMessage id="HOST_NAME_LABEL" />, sortKey: 'HOSTNAME' }, { key: 'linuxPamPackageVersion', title: <FormattedMessage id="AGENT_VERSION_LABEL" />, sortKey: 'LINUX_PAM_PACKAGE_VERSION' })
         }
         temp.push({
             key: 'lastLoggedInAuthenticator',

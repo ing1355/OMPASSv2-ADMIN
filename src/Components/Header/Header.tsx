@@ -10,7 +10,7 @@ import { userInfoClear } from 'Redux/actions/userChange';
 import { message, Tooltip } from 'antd';
 import { MainRouteByDeviceType, ompassDefaultLogoImage } from 'Constants/ConstantValues';
 import SessionTimeCount from './SessionTimeCount';
-import LocaleChange from 'Components/CommonCustomComponents/LocaleChange';
+import LocaleChange from 'Components/CommonCustomComponents/Input/LocaleChange';
 import { isMobile } from 'react-device-detect';
 import { LogoutFunc } from 'Functions/ApiFunctions';
 
@@ -124,7 +124,7 @@ const Header = () => {
                 navigate('/', {
                   replace: true
                 })
-                dispatch(userInfoClear());
+                dispatch(userInfoClear(false));
               })
             }}
               style={{

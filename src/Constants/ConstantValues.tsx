@@ -1126,9 +1126,14 @@ export const convertLangToIntlVer = (lang: ReduxStateType['lang']) => {
 
 export const AgentTypes: AgentType[] = ['WINDOWS_LOGIN', 'LINUX_PAM', 'OMPASS_PROXY', 'REDMINE_PLUGIN', 'KEYCLOAK_PLUGIN', 'WINDOWS_FRAMEWORK']
 
-export const maxLengthByType = (type: InputValueType | undefined) => {
+export const maxLengthByType = (type: InputValueType | undefined, value: string = '') => {
   if(!type) return 50
   if(type === 'username') {
+      return 48
+    if(value && typeof value === 'string' && value.includes('@')) {
+    } else {
+      return 16
+    }
     return 16
   } else if(type === 'password') {
     return 16

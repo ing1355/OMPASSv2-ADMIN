@@ -9,7 +9,7 @@ import deleteIconHover from '@assets/deleteIconHover.png'
 import addIconWhite from '@assets/addIconWhite.png'
 import { useEffect, useState } from "react"
 import dayjs from "dayjs"
-import TimezoneSelect from "Components/CommonCustomComponents/TimezoneSelect"
+import TimezoneSelect from "Components/CommonCustomComponents/Input/TimezoneSelect"
 import { useSelector } from "react-redux"
 
 const timepickerFormat = 'HH:mm'

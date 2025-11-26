@@ -1,152 +1,153 @@
 import { applicationTypes, getApplicationTypeLabel, isTta } from "Constants/ConstantValues"
+import { FormattedMessage } from "react-intl"
 
 export const StartAdminMenuItems: DocsMenuItemType[] = [
     {
-        title: '회원가입 및 로그인',
+        title: <FormattedMessage id="DOCS_SIGNUP_AND_LOGIN_LABEL" />,
         route: '/start/signup'
     },
     {
-        title: 'OMPASS 등록',
+        title: <FormattedMessage id="DOCS_OMPASS_REGISTER_LABEL" />,
         route: '/start/ompass_register'
     },
     {
-        title: 'OMPASS 인증',
+        title: <FormattedMessage id="DOCS_OMPASS_AUTH_LABEL" />,
         route: '/start/ompass_auth'
     }
 ]
 
 export const PortalUserMenuItems: DocsMenuItemType[] = [
     {
-        title: '사용자 정보',
+        title: <FormattedMessage id="DOCS_USER_INFO_LABEL" />,
         route: '/user/portal/user'
     },
     {
-        title: '기타',
+        title: <FormattedMessage id="DOCS_ETC_LABEL" />,
         route: '/user/portal/etc'
     }
 ]
 
 export const ApplicationUserMenuItems: DocsMenuItemType[] = isTta ? [
     {
-        title: 'Windows 로그인',
+        title: <FormattedMessage id="DOCS_WINDOWS_LOGIN_LABEL" />,
         route: '/user/application/windows_logon_user'
     },
     {
-        title: 'Linux SSH',
+        title: <FormattedMessage id="DOCS_LINUX_SSH_LABEL" />,
         route: '/user/application/linux_ssh_user'
     }
 ] : [
     {
-        title: 'Windows 로그인',
+        title: <FormattedMessage id="DOCS_WINDOWS_LOGIN_LABEL" />,
         route: '/user/application/windows_logon_user'
     },
     {
-        title: 'Mac 로그인',
+        title: <FormattedMessage id="DOCS_MAC_LOGIN_LABEL" />,
         route: '/user/application/mac_logon_user'
     },
     {
-        title: 'Linux SSH',
+        title: <FormattedMessage id="DOCS_LINUX_SSH_LABEL" />,
         route: '/user/application/linux_ssh_user'
     },
     {
-        title: 'RADIUS',
+        title: <FormattedMessage id="DOCS_RADIUS_LABEL" />,
         route: '/user/application/radius_user'
     }
 ]
 
 export const StartUserMenuItems: DocsMenuItemType[] = [
     {
-        title: '회원가입 및 로그인',
+        title: <FormattedMessage id="DOCS_SIGNUP_AND_LOGIN_LABEL" />,
         route: '/user/start/signup'
     },
     {
-        title: 'OMPASS 등록',
+        title: <FormattedMessage id="DOCS_OMPASS_REGISTER_LABEL" />,
         route: '/user/start/ompass_register'
     },
     {
-        title: 'OMPASS 인증',
+        title: <FormattedMessage id="DOCS_OMPASS_AUTH_LABEL" />,
         route: '/user/start/ompass_auth'
     }
 ]
 
 export const EtcUserMenuItems: DocsMenuItemType[] = [
     {
-        title: 'OMPASS 앱',
+        title: <FormattedMessage id="DOCS_APP_LABEL" />,
         route: '/user/etc/app'
     }
 ]
 
 export const EtcMenuItems: DocsMenuItemType[] = [{
-    title: 'OMPASS 앱',
+    title: <FormattedMessage id="DOCS_APP_LABEL" />,
     route: '/etc/app'
 }].concat(isTta ? [
     {
-        title: 'Web API',
+        title: <FormattedMessage id="DOCS_WEB_API_LABEL" />,
         route: '/etc/web_api'
     }
 ] : [
     {
-        title: 'OMPASS 프록시',
+        title: <FormattedMessage id="DOCS_OMPASS_PROXY_LABEL" />,
         route: '/etc/ompass_proxy'
     },
     {
-        title: 'Web API',
+        title: <FormattedMessage id="DOCS_WEB_API_LABEL" />,
         route: '/etc/web_api'
     },
     {
-        title: 'OMPASS Interface Framework',
+        title: <FormattedMessage id="DOCS_OMPASS_INTERFACE_FRAMEWORK_LABEL" />,
         route: '/etc/ompass_interface_framework'
     }
 ])
 
 export const PortalMenuItems: DocsMenuItemType[] = [
     {
-        title: '대시보드',
+        title: <FormattedMessage id="DOCS_DASHBOARD_LABEL" />,
         route: '/portal/dashboard'
     },
     {
-        title: '사용자',
+        title: <FormattedMessage id="DOCS_USER_LABEL" />,
         route: '/portal/user'
     },
     {
-        title: '그룹',
+        title: <FormattedMessage id="DOCS_GROUP_LABEL" />,
         route: '/portal/group'
     },
     {
-        title: 'PASSCODE 관리',
+        title: <FormattedMessage id="DOCS_PASSCODE_MANAGEMENT_LABEL" />,
         route: '/portal/passcode'
     },
     {
-        title: '인증 로그',
+        title: <FormattedMessage id="DOCS_AUTH_LOG_LABEL" />,
         route: '/portal/authLog'
     },
     {
-        title: '사용자 로그',
+        title: <FormattedMessage id="DOCS_USER_LOG_LABEL" />,
         route: '/portal/userLog'
     },
     {
-        title: '애플리케이션',
+        title: <FormattedMessage id="DOCS_APPLICATION_LABEL" />,
         route: '/portal/application'
     },
     {
-        title: '정책',
+        title: <FormattedMessage id="DOCS_POLICY_LABEL" />,
         route: '/portal/policy'
     },
     {
-        title: '패키지 관리',
+        title: <FormattedMessage id="DOCS_PACKAGE_MANAGEMENT_LABEL" />,
         route: '/portal/package'
     },
     {
-        title: '설정',
+        title: <FormattedMessage id="DOCS_SETTING_LABEL" />,
         route: '/portal/setting'
     },
     {
-        title: '기타',
+        title: <FormattedMessage id="DOCS_ETC_LABEL" />,
         route: '/portal/etc'
     }
 ]
 
 export const ApplicationMenuItems: DocsMenuItemType[] = [...applicationTypes.filter(_ => _ !== 'PORTAL').map(_ => ({
-    title: getApplicationTypeLabel(_),
+    title: <FormattedMessage id={`DOCS_${_.toUpperCase()}_LABEL`} />,
     route: `/application/${_}`
 }))]

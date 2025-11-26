@@ -4,7 +4,7 @@ import { useIntl } from "react-intl";
 import { useDispatch, useSelector } from "react-redux";
 import { message as _message } from 'antd';
 import { userInfoClear } from "Redux/actions/userChange";
-import { controller } from "Components/CommonCustomComponents/CustomAxios";
+import { controller } from "Functions/CustomAxios";
 import { getStorageAuth } from "Functions/GlobalFunctions";
 import { useNavigate } from "react-router";
 import { PasswordlessLoginApi } from "Constants/ApiRoute";
@@ -19,6 +19,21 @@ const AxiosController = () => {
   const lang = useSelector((state: ReduxStateType) => state.lang!);
   const userInfoRef = useRef(userInfo)
 
+  const checkSessionExpired = () => {
+    const sessionExpired = sessionStorage.getItem('sessionExpired')
+    if (sessionExpired === 'true') {
+      sessionStorage.removeItem('sessionExpired')
+      _message.error(formatMessage({ id: 'SESSION_EXPIRED_MSG' }))
+    } else if (sessionStorage.getItem('logout') === 'true') {
+      sessionStorage.removeItem('logout')
+      _message.error(formatMessage({ id: 'ERR_B066' }))
+    }
+  }
+
+  useEffect(() => {
+    checkSessionExpired()
+  }, [])
+
   useEffect(() => {
     userInfoRef.current = userInfo
   }, [userInfo])
@@ -31,17 +46,11 @@ const AxiosController = () => {
       console.log(err)
       if (err && err.response && err.response) {
         const { data } = err.response
-        if (data && data.code === 'ERR_B009') {
-          console.log('why session expired ?', getStorageAuth(), err.config.headers)
-          dispatch(userInfoClear());
-          if(!userInfoRef.current) {
-            _message.error(formatMessage({ id: 'ERR_B009' }))
-          }
-        } else if (data) {
+        if (data) {
           const { code, message, value } = err.response.data;
           console.log(code, message)
           if (code) {
-            if(err.response.config.url === PasswordlessLoginApi) {
+            if (err.response.config.url === PasswordlessLoginApi) {
               return Promise.reject(err)
             }
             if (code.startsWith("ERR_C")) {
@@ -56,6 +65,10 @@ const AxiosController = () => {
               })
               // window.location.href = `https://test.ompasscloud.com/${lang === 'KR' ? 'ko' : 'en'}/adminLogin/`;
             } else {
+              if (code === 'ERR_B009' || code === 'ERR_B066') {
+                console.log('why session expired ?', getStorageAuth(), err.config.headers)
+                dispatch(userInfoClear(false, true));
+              }
               _message.error(formatMessage({ id: code }, { value }))
             }
           } else {

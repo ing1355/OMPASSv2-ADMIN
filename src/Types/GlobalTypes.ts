@@ -439,6 +439,7 @@ type DefaultUserDataParamsType = {
     role: userRoleType;
     phone: string
     email: string
+    countryCode?: string
 }
 
 type DefaultUserDataType = DefaultUserDataParamsType & {
@@ -462,13 +463,6 @@ type UserDataType = DefaultUserDataType & {
 }
 
 type UserExcelDataType = DefaultUserDataType
-
-type UserDataParamsType = {
-    name: UserNameType
-    password: string
-    email: string
-    phone: string
-}
 
 type UserListParamsType = GeneralParamsType & {
     hasGroup?: boolean
@@ -514,8 +508,9 @@ type UserDetailDataType = RPUserDetailDataType & {
 
 type UserDataModifyValuesType = {
     name: UserDataType['name']
-    email: UserDataType['email']
+    email?: UserDataType['email']
     phone: UserDataType['phone']
+    countryCode: UserDataType['countryCode']
     groupId?: UserDataType['group']['id']
     role: UserDataType['role']
 }
@@ -957,7 +952,7 @@ type ExternalDirectoryUserDataType = {
     email: string
     phone: string
     org: string
-    syncedUserStatus: string
+    // syncedUserStatus: string
 }
 
 type ExternalDirectoryCheckConnectionParamsType = {
@@ -1059,3 +1054,10 @@ type DropdownItemType = {
 
 type ApplicationResetType = 'SECRET_KEY' | 'INSTALL' | 'UNINSTALL'
 type ApplicationAuthPurposeType = 'delete' | ApplicationResetType
+
+type UserRegexErrorDataType = {
+    row: number
+    key: (keyof UserExcelDataType | keyof UserNameType)
+    msg: string
+    value: string
+}

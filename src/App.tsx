@@ -1,6 +1,6 @@
 import './App.css';
 import React, { useEffect } from 'react';
-import { IntlProvider } from 'react-intl';
+import { IntlProvider, useIntl } from 'react-intl';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import OMPASSVerify from 'Components/OMPASS/OMPASSVerify';
@@ -31,6 +31,7 @@ import EmailChangeVerification from 'Components/Users/UserDetail/EmailChangeVeri
 import Document from 'Components/Document';
 import ErrorPage from 'Components/Layout/ErrorPage';
 import usePlans from 'hooks/usePlans';
+import { message } from 'antd';
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
@@ -62,7 +63,6 @@ const App: React.FC = () => {
     }
     window.addEventListener('resize', documentHeight)
     documentHeight()
-
     return () => {
       window.removeEventListener('resize', documentHeight)
     }

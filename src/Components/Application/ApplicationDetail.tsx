@@ -5,16 +5,16 @@ import { useLayoutEffect, useRef, useState } from "react"
 import { message } from "antd"
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import { AddApplicationDataFunc, DeleteApplicationListFunc, GetApplicationDetailFunc, GetApplicationListFunc, UpdateApplicationDataFunc, UpdateApplicationSecretkeyFunc } from "Functions/ApiFunctions"
-import PolicySelect from "Components/CommonCustomComponents/PolicySelect"
+import PolicySelect from "Components/CommonCustomComponents/Input/PolicySelect"
 import { getApplicationTypeLabel, maxLengthByType, ompassDefaultLogoImage } from "Constants/ConstantValues"
 import { convertBase64FromClientToServerFormat } from "Functions/GlobalFunctions"
-import CustomSelect from "Components/CommonCustomComponents/CustomSelect"
+import CustomSelect from "Components/CommonCustomComponents/Input/CustomSelect"
 import Button from "Components/CommonCustomComponents/Button"
 import Input from "Components/CommonCustomComponents/Input"
 import deleteIcon from '@assets/deleteIcon.png'
 import deleteIconHover from '@assets/deleteIconHover.png'
 import { FormattedMessage, useIntl } from "react-intl"
-import CustomImageUpload from "Components/CommonCustomComponents/CustomImageUpload"
+import CustomImageUpload from "Components/CommonCustomComponents/Input/CustomImageUpload"
 import { domainRegex, redirectUriRegex } from "Constants/CommonRegex"
 import SingleOMPASSAuthModal from "Components/Modal/SingleOMPASSAuthModal"
 import documentIcon from '@assets/documentIcon.png'
@@ -27,7 +27,7 @@ import ApplicationDetailSubInfoByType from "./ApplicationDetailSubInfoByType"
 import ApplicationDetailHeaderInfo from "./ApplicationDetailHeaderInfo"
 import BottomLineText from "Components/CommonCustomComponents/BottomLineText"
 import PasswordlessCheck from "Components/Policy/PolicyItems/PasswordlessCheck"
-import SureDeleteButton from "Components/CommonCustomComponents/SureDeleteButton"
+import SureDeleteButton from "Components/CommonCustomComponents/Button/SureDeleteButton"
 import usePlans from "hooks/usePlans"
 
 const ApplicationDetail = () => {

@@ -8,11 +8,11 @@ import filterDefaultIcon from '@assets/filterDefaultIcon.png'
 // import filterDefaultIcon from './../../assets/filterDefaultIcon.svg'
 import resetIcon from '@assets/resetIconWhite.png'
 import Button from "./Button"
-import CustomSelect from "./CustomSelect"
+import CustomSelect from "./Input/CustomSelect"
 import Input from "./Input"
 import { DateTimeFormat, userSelectPageSize } from "Constants/ConstantValues"
 import { FormattedMessage, useIntl } from "react-intl"
-import CustomDropdown from "./CustomDropdown"
+import CustomDropdown from "./Input/CustomDropdown"
 import Calendar from "Components/Dashboard/Calendar"
 import dayjs from "dayjs"
 import { useSearchParams } from "react-router-dom"
@@ -23,10 +23,12 @@ import CustomTablePagination from "./CustomTablePagination"
 // 정렬 아이콘 컴포넌트
 const SortIcon = ({
     sortKey,
+    hasFilter,
     currentSortKey,
     currentSortDirection
 }: {
     sortKey: string
+    hasFilter: boolean
     currentSortKey?: string
     currentSortDirection?: string
 }) => {
@@ -49,7 +51,7 @@ const SortIcon = ({
         </svg>
     }
 
-    return <div className="custom-table-sort-icon">
+    return <div className={`custom-table-sort-icon${hasFilter ? ' has-filter' : ''}`}>
         {getSortIcon()}
     </div>
 }
@@ -88,6 +90,7 @@ type CustomTableProps<T extends {
     deleteBtn?: CustomTableButtonType
     customBtns?: React.ReactNode
     refresh?: boolean
+    showTotalCount?: boolean
 }
 
 type CustomTableHeaderRowProps = {
@@ -141,6 +144,7 @@ const CustomTable = <T extends {
     deleteBtn,
     customBtns,
     refresh,
+    showTotalCount = true,
     hover }: CustomTableProps<T>) => {
     const [searchParams] = useSearchParams()
     const [sortKey, setSortKey] = useState<string | undefined>(undefined)
@@ -247,10 +251,10 @@ const CustomTable = <T extends {
             result.searchType = searchParams.get('searchType')!
             result.searchValue = searchParams.get('searchValue')!
         }
-        // if (searchParams.get('sortKey') && searchParams.get('sortDirection')) {
-        //     result.sortKey = searchParams.get('sortKey')!
-        //     result.sortDirection = searchParams.get('sortDirection')!
-        // }
+        if (searchParams.get('sortKey') && searchParams.get('sortDirection')) {
+            result.sortKey = searchParams.get('sortKey')!
+            result.sortDirection = searchParams.get('sortDirection')!
+        }
         else {
             setSearchType((searchOptions && searchOptions[0].key) || "")
             setSearchValue('')
@@ -275,23 +279,26 @@ const CustomTable = <T extends {
         const result: CustomTableSearchParams = {
             page,
             size,
-            filterOptions: filter || [...filterValues],
-            // sortKey: sortData?.sortKey,
-            // sortDirection: sortData?.sortDirection
+            filterOptions: filter || [...filterValues]
         }
 
         // 정렬 상태 업데이트
-        // if (sortData) {
-        //     setSortKey(sortData.sortKey)
-        //     setSortDirection(sortData.sortDirection)
-        //     if(sortData.sortDirection) {
-        //         result.sortKey = sortData.sortKey
-        //         result.sortDirection = sortData.sortDirection
-        //     } else {
-        //         delete result.sortKey
-        //         delete result.sortDirection
-        //     }
-        // }
+        if (sortData) {
+            setSortKey(sortData.sortKey)
+            setSortDirection(sortData.sortDirection)
+            if (sortData.sortDirection) {
+                result.sortKey = sortData.sortKey
+                result.sortDirection = sortData.sortDirection
+            } else {
+                delete result.sortKey
+                delete result.sortDirection
+            }
+        } else {
+            if(sortKey && sortDirection && !isReset) {
+                result.sortKey = sortKey
+                result.sortDirection = sortDirection
+            }
+        }
 
         if (result.filterOptions) {
             result.filterOptions = result.filterOptions?.map(_ => {
@@ -312,7 +319,10 @@ const CustomTable = <T extends {
             result.searchType = searchType
             result.searchValue = searchValue
         }
+        
         if (isReset) {
+            setSortKey(undefined)
+            setSortDirection(undefined)
             if (searchOptions) {
                 setSearchType(searchOptions[0].key)
             }
@@ -425,9 +435,9 @@ const CustomTable = <T extends {
                 }
             </tbody>
         </table>
-        <div className="mt10 custom-table-total-count-container">
+        {showTotalCount && <div className="mt10 custom-table-total-count-container">
             {totalCount ? <FormattedMessage id="TOTAL_COUNT_LABEL" values={{ totalCount }} /> : <></>}
-        </div>
+        </div>}
         {pagination && <div
             className="mb40"
             style={{ textAlign: 'center' }}
@@ -464,41 +474,46 @@ const HeaderRow = ({ hoverCallback, columns, closeEvent, setCloseEvent, searchCa
                 e.preventDefault()
 
                 // 정렬 기능
-                // if (_.sortKey) {
-                //     let newSortDirection: string | undefined
+                if (_.sortKey) {
+                    let newSortDirection: string | undefined
 
-                //     if (sortKey === _.sortKey) {
-                //         // 같은 컬럼 클릭 시: ASC -> DESC -> undefined -> ASC 순환
-                //         if (sortDirection === 'ASC') {
-                //             newSortDirection = 'DESC'
-                //         } else if (sortDirection === 'DESC') {
-                //             newSortDirection = undefined
-                //         } else {
-                //             newSortDirection = 'ASC'
-                //         }
-                //     } else {
-                //         // 다른 컬럼 클릭 시: ASC로 시작
-                //         newSortDirection = 'ASC'
-                //     }
+                    if (sortKey === _.sortKey) {
+                        // 같은 컬럼 클릭 시: ASC -> DESC -> undefined -> ASC 순환
+                        if (sortDirection === 'ASC') {
+                            newSortDirection = 'DESC'
+                        } else if (sortDirection === 'DESC') {
+                            newSortDirection = undefined
+                        } else {
+                            newSortDirection = 'ASC'
+                        }
+                    } else {
+                        // 다른 컬럼 클릭 시: ASC로 시작
+                        newSortDirection = 'ASC'
+                    }
 
-                //     // searchCallback 호출하여 정렬 상태 업데이트
-                //     if (searchCallback) {
-                //         searchCallback(1, tableSize, undefined, false, {
-                //             sortKey: _.sortKey,
-                //             sortDirection: newSortDirection
-                //         })
-                //     }
-                // }
+                    // searchCallback 호출하여 정렬 상태 업데이트
+                    if (searchCallback) {
+                        searchCallback(1, tableSize, undefined, false, {
+                            sortKey: _.sortKey,
+                            sortDirection: newSortDirection
+                        })
+                    }
+                }
 
                 if (hoverCallback) hoverCallback(_, e.currentTarget)
-            // }} className={`${hoverCallback || _.sortKey ? 'pointer' : ''}`}>
-            }} className={`${hoverCallback ? 'pointer' : ''}`}>
-                {_.title}
-                {/* {_.sortKey && <SortIcon
+            }} className={`${hoverCallback || _.sortKey ? 'pointer' : ''}`}>
+                {/* }} className={`${hoverCallback ? 'pointer' : ''}`}> */}
+                <div style={{
+                    paddingRight: _.sortKey ? '28px' : '0px'
+                }}>
+                    {_.title}
+                </div>
+                {_.sortKey && <SortIcon
                     sortKey={_.sortKey}
+                    hasFilter={_.filterOption !== undefined || _.filterType !== undefined || _.filterKey !== undefined}
                     currentSortKey={sortKey}
                     currentSortDirection={sortDirection}
-                />} */}
+                />}
                 {_.filterType === 'date' ? <CustomDropdown
                     value={filterValues.find(values => values.key === _.filterKey)?.value}
                     closeEvent={closeEvent}

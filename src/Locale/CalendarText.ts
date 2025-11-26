@@ -16,6 +16,15 @@ const CalendarText = {
         WEEKEND_THURSDAY: 'Thu',
         WEEKEND_FRIDAY: 'Fri',
         WEEKEND_SATURDAY: 'Sat',
+    },
+    'JP': {
+        WEEKEND_SUNDAY: '日',
+        WEEKEND_MONDAY: '月',
+        WEEKEND_TUESDAY: '火',
+        WEEKEND_WEDNESDAY: '水',
+        WEEKEND_THURSDAY: '木',
+        WEEKEND_FRIDAY: '金',
+        WEEKEND_SATURDAY: '土',
     }
 }
 

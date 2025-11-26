@@ -2,7 +2,7 @@ import './AutoLogout.css';
 import { FormattedMessage } from "react-intl";
 
 import { Link } from 'react-router-dom';
-import GoToLoginPageButton from 'Components/CommonCustomComponents/goToLoginPageButton';
+import GoToLoginPageButton from 'Components/CommonCustomComponents/Button/goToLoginPageButton';
 import { ompassDefaultLogoImage } from 'Constants/ConstantValues';
 
 const AutoLogout = () => {

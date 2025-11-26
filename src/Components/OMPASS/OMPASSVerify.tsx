@@ -1,4 +1,4 @@
-import { CustomAxiosPost } from 'Components/CommonCustomComponents/CustomAxios';
+import { CustomAxiosPost } from 'Functions/CustomAxios';
 import { TokenVerifyApi } from 'Constants/ApiRoute';
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router';

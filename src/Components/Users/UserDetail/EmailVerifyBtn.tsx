@@ -6,8 +6,8 @@ import { message } from "antd"
 import Input from "Components/CommonCustomComponents/Input"
 import { EmailChangeCodeVerificationFunc, SendEmailVerificationFunc } from "Functions/ApiFunctions"
 import { getStorageAuth } from "Functions/GlobalFunctions"
-import EmailSendButton from "Components/CommonCustomComponents/EmailSendButton"
 import { emailRegex } from "Constants/CommonRegex"
+import EmailSendButton from "Components/CommonCustomComponents/Button/EmailSendButton"
 
 type EmailVerifyBtnProps = {
     targetData: UserDataType

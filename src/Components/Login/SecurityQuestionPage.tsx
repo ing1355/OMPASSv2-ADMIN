@@ -1,4 +1,5 @@
 import { message } from "antd";
+import LocaleChange from "Components/CommonCustomComponents/Input/LocaleChange";
 import SecurityQuestionLayout from "Components/SignUp/SecurityQuestionLayout"
 import { CopyRightText, ompassDefaultLogoImage } from "Constants/ConstantValues"
 import { UpdateSecurityQuestionsFunc } from "Functions/ApiFunctions";
@@ -54,6 +55,11 @@ const SecurityQuestionPage = () => {
                     })
                 })
             }} />
+            <div style={{
+                marginTop: '20px'
+            }}>
+                <LocaleChange />
+            </div>
             <div
                 className='copyRight-style sign-up'
             >

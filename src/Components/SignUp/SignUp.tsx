@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import Button from "Components/CommonCustomComponents/Button";
 import { FormattedMessage } from "react-intl";
 import { useNavigate } from "react-router";
+import LocaleChange from "Components/CommonCustomComponents/Input/LocaleChange";
 
 const SignUp = () => {
     const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
@@ -26,8 +27,8 @@ const SignUp = () => {
             {
                 signUpComplete ? <div className="signup-content signup-complete">
                     <div>
-                        <FormattedMessage id="SIGN_UP_COMPLETE_LABEL_1"/><br />
-                        <FormattedMessage id="SIGN_UP_COMPLETE_LABEL_2"/>
+                        <FormattedMessage id="SIGN_UP_COMPLETE_LABEL_1" /><br />
+                        <FormattedMessage id="SIGN_UP_COMPLETE_LABEL_2" />
                     </div>
                     <Button
                         className={'st6 agree-button signup-complete'}
@@ -44,6 +45,11 @@ const SignUp = () => {
                     }} /> : <SecondStep completeCallback={() => {
                         setSignUpComplete(true)
                     }} />)}
+            <div style={{
+                marginTop: '20px'
+            }}>
+                <LocaleChange />
+            </div>
             <div
                 className='copyRight-style sign-up'
             >

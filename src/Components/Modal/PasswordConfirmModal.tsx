@@ -1,7 +1,7 @@
 import CustomModal from "Components/Modal/CustomModal"
 import { cloneElement, PropsWithChildren, useMemo, useRef, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
-import Input from "./Input"
+import Input from "../CommonCustomComponents/Input"
 import { ConfirmPasswordFunc } from "Functions/ApiFunctions"
 
 type PasswordConfirmModalProps = PropsWithChildren & {
@@ -45,6 +45,8 @@ const PasswordConfirmModal = ({ callback, children, type }: PasswordConfirmModal
                 }, () => {
                     callback(password)
                     setModalOpen(false)
+                }).catch(() => {
+                    inputRef.current?.focus()
                 })
             }}
             afterOpenChange={(open) => {
@@ -79,6 +81,7 @@ const PasswordConfirmModal = ({ callback, children, type }: PasswordConfirmModal
                         <Input className="st1"
                             placeholder={formatMessage({ id: "ACCOUNT_PASSWORD_INPUT" })}
                             value={password}
+                            autoFocus
                             type="password"
                             ref={inputRef}
                             valueChange={(value) => {

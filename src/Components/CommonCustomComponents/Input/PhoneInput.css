@@ -1,0 +1,12 @@
+.react-tel-input .form-control {
+    border-radius: 8px;
+    border: 1.4px solid var(--sub-grey-color5);
+}
+
+.react-tel-input .flag-dropdown.open .selected-flag, .react-tel-input .selected-flag:hover, .react-tel-input .selected-flag:focus {
+    background-color: transparent;
+}
+
+.react-tel-input {
+    z-index: 999;
+}

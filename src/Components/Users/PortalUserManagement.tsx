@@ -18,6 +18,8 @@ import useTableData from "hooks/useTableData"
 import UserBulkAddModal from "./BulkUserAdd/UserBulkAddModal"
 import emailVerifiedIcon from "@assets/emailVerifiedIcon.png"
 import emailUnverifiedIcon from "@assets/emailUnverifiedIcon.png"
+import { CountryCode } from "libphonenumber-js"
+import PhoneWithDialCode from "Components/CommonCustomComponents/PhoneWithDialCode"
 
 const userRoleList = (role: UserDataType['role']): UserDataType['role'][] => role === 'ROOT' ? ['USER', 'ADMIN', 'ROOT'] : ['USER', 'ADMIN']
 
@@ -42,11 +44,11 @@ const PortalUserManagement = () => {
         additionalParams: (params) => {
             const filterValues = params.filterOptions as CustomTableFilterOptionType[] | undefined
             const additionalParams: Partial<GeneralParamsType> = {}
-            
+
             if (!filterValues || (filterValues && !filterValues.find(_ => _.key === 'statuses'))) {
                 additionalParams.statuses = userStatusTypes.filter(_ => _ !== 'WITHDRAWAL')
             }
-            
+
             paramsRef.current = {
                 pageSize: params.size,
                 page: params.page,
@@ -55,7 +57,7 @@ const PortalUserManagement = () => {
                 filterOptions: params.filterOptions || [],
                 ...additionalParams
             }
-            
+
             return additionalParams
         }
     })
@@ -102,7 +104,7 @@ const PortalUserManagement = () => {
                         pageSize: INT_MAX_VALUE,
                         page: 0
                     }, (res) => {
-                        excelDownload(res.results)
+                        excelDownload(res.results.filter(_ => !_.isTemp))
                     })
                 }} icon={downloadIcon} hoverIcon={downloadIconWhite}>
                     <FormattedMessage id="USER_EXCEL_DOWNLOAD_LABEL" />
@@ -131,7 +133,7 @@ const PortalUserManagement = () => {
                 {
                     key: 'name',
                     title: createHeaderColumn('NAME'),
-                    render: (data) => getFullName(data),
+                    render: (data) => getFullName(data) || '-',
                     sortKey: 'NAME'
                 },
                 {
@@ -150,7 +152,8 @@ const PortalUserManagement = () => {
                     key: 'phone',
                     title: createHeaderColumn('PHONE_NUMBER'),
                     noWrap: true,
-                    sortKey: 'PHONE_NUMBER'
+                    sortKey: 'PHONE',
+                    render: (data, ind, row) => <PhoneWithDialCode data={data} countryCode={row.countryCode as CountryCode} />
                 },
                 {
                     key: 'status',

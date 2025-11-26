@@ -19,8 +19,8 @@ const PasscodeRadioButton = ({ title, name, defaultChecked, children, value, che
 }) => {
     return <div className='passcode-add-item'>
         <label className='passcode-add-label'>
-            <Input type="radio" value={value} name={name} defaultChecked={defaultChecked} checked={checked} valueChange={value => {
-                onChange(name, value)
+            <Input type="radio" value={value} name={name} defaultChecked={defaultChecked} checked={checked} onChange={value => {
+                onChange(name, value.currentTarget.checked ? value.currentTarget.value : '')
             }} /> {title}
         </label>
         {children}

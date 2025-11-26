@@ -1,4 +1,4 @@
-import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from "Components/CommonCustomComponents/CustomAxios";
+import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from "Functions/CustomAxios";
 import { AddApplicationListApi, AddExternalDirectoryApi, AddPasscodeApi, AddPoliciesListApi, AddRadiusUserListApi, AddUserDataApi, AddUserGroupApi, AddUserWithCsvDataApi, ApprovalUserApi, CheckExternalDirectoryConnectionApi, ConfirmPasswordApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeleteExternalDirectoryApi, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DirectoryServerBasedOMPASSRegistrationApi, DuplicateUserNameCheckApi, EmailChangeCodeVerificationApi, FindPortalUsernameApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetAuthorizeMSEntraUriApi, GetBillingHistoriesApi, GetCurrentPlanApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetExternalDirectoryListApi, GetGlobalConfigApi, GetMicrosoftEntraIdAuthApi, GetOMPASSAuthResultApi, GetPasscodeHistoriesApi, GetPasscodeListApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetRpUserListApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, LoginApi, LogoutApi, OMPASSAuthApi, OMPASSDeviceChangeApi, OMPASSRoleSwappingApi, PasswordlessLoginApi, PatchSessionTokenApi, ReissuanceSecretKeyForUserSyncApi, ResetApplicationKeyApi, ResetPasswordApi, ResetPasswordEmailCodeVerifyApi, ResetPasswordEmailSendApi, RoleSwappingApi, RootSignUpRequestApi, RPPrimaryAuthApi, SendChangeEmailCodeApi, SendEmailVerificationApi, SendOMPASSRegistrationEmailApi, SendPasscodeEmailApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, SyncExternalDirectoryPortalUsersApi, UnlockUserApi, UpdateAgentDescriptionApi, UpdateApplicationListApi, UpdateExternalDirectoryApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateSecurityQuestionsApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi, VerificationEmailChangeApi } from "Constants/ApiRoute";
 import { INT_MAX_VALUE } from "Constants/ConstantValues";
 
@@ -241,7 +241,7 @@ export const AddUserDataFunc = (params: UserDataAddLocalValuesType, callback: (r
     return CustomAxiosPost(AddUserDataApi, callback, params)
 }
 
-export const UpdateUserDataFunc = (userId: UserDataType['userId'], params: UserDataModifyValuesType, callback: (userData: UserDataType) => void) => {
+export const UpdateUserDataFunc = (userId: UserDataType['userId'], params: UserDataModifyLocalValuesType, callback: (userData: UserDataType) => void) => {
     return CustomAxiosPut(UpdateUserDataApi(userId), callback, params)
 }
 
@@ -477,7 +477,8 @@ export const GetAgentInstallerListFunc = (fileType: AgentType, {
     page = 1,
     sortDirection = "",
     startDate = undefined,
-    endDate = undefined
+    endDate = undefined,
+    downloadTarget = false
 }: AgentInstallerListParamsType, callback: ((data: GetListDataGeneralType<AgentInstallerDataType>) => void)) => {
     return CustomAxiosGet(GetAgentInstallerListApi(fileType), (data: GetListDataGeneralType<AgentInstallerDataType>) => {
         callback(data)
@@ -486,7 +487,8 @@ export const GetAgentInstallerListFunc = (fileType: AgentType, {
         page,
         sortDirection,
         startDate,
-        endDate
+        endDate,
+        downloadTarget
     } as AgentInstallerListParamsType)
 }
 
@@ -666,6 +668,7 @@ export const GetRpUsersListFunc = ({
     pageSize = 10,
     page = 1,
     sortDirection = "",
+    sortBy = "",
     applicationId = "",
     portalUsername = "",
     portalName = "",
@@ -684,6 +687,7 @@ export const GetRpUsersListFunc = ({
         pageSize,
         page,
         sortDirection,
+        sortBy,
         applicationId,
         portalUsername,
         portalName,

@@ -24,7 +24,7 @@ import lastAuthIcon from '@assets/lastAuthIcon.png';
 import sshIcon from '@assets/sshIcon.png';
 import clientIcon from '@assets/clientIcon.png';
 import { FormattedMessage, useIntl } from 'react-intl';
-import React, { PropsWithChildren, useEffect, useState } from 'react';
+import React, { PropsWithChildren, useState } from 'react';
 import './UserDetailComponents.css'
 import { convertBase64FromServerFormatToClient, createOSInfo } from 'Functions/GlobalFunctions';
 import Button from 'Components/CommonCustomComponents/Button';
@@ -37,7 +37,8 @@ import { message } from 'antd';
 import RegisterOMPASSAuthModal from 'Components/Modal/RegisterOMPASSAuthModal';
 import { useNavigate } from 'react-router';
 import useDateTime from 'hooks/useDateTime';
-import PasswordConfirmModal from 'Components/CommonCustomComponents/PasswordConfirmModal';
+import PasswordConfirmModal from 'Components/Modal/PasswordConfirmModal';
+import PolicyNameByTypeComponent from 'Components/CommonCustomComponents/PolicyNameByTypeComponent';
 
 const UserDetailInfoContentItem = ({ imgSrc, title, content, subContent, onClick, noClick }: {
     imgSrc: string
@@ -272,7 +273,7 @@ export const UserDetailInfoETCInfoContent = ({ data, role }: {
                 navigate(`/Groups/detail/${group?.id}`)
             }
         })} noClick={isUser} />
-        <UserDetailInfoContentItem imgSrc={policyMenuIconBlack} title={<FormattedMessage id="USER_DETAIL_ETC_INFO_POLICY_LABEL" />} content={policy?.name || <FormattedMessage id="NO_POLICY_SELECTED_LABEL" />} onClick={() => {
+        <UserDetailInfoContentItem imgSrc={policyMenuIconBlack} title={<FormattedMessage id="USER_DETAIL_ETC_INFO_POLICY_LABEL" />} content={<PolicyNameByTypeComponent data={policy as PolicyListDataType} />} onClick={() => {
             if (!isUser) {
                 navigate(`/Policies/detail/${policy?.id}`)
             }

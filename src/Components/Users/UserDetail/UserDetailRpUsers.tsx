@@ -20,7 +20,7 @@ import { useNavigate, useParams } from "react-router";
 import { PasscodeAddComponent } from "./PasscodeComponents";
 import CustomModal from "Components/Modal/CustomModal";
 import useDateTime from "hooks/useDateTime";
-import SureDeleteButton from "Components/CommonCustomComponents/SureDeleteButton";
+import SureDeleteButton from "Components/CommonCustomComponents/Button/SureDeleteButton";
 
 
 type UserDetailRpUsersProps = {

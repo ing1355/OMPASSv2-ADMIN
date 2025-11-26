@@ -45,9 +45,12 @@
 .table-st1 thead tr>th {
   font-weight: 500;
   padding: 10px;
-  color: var(--main-grey-color2);
   position: relative;
   user-select: none;
+}
+
+.table-st1 thead tr>th>div {
+  color: var(--main-grey-color2);
 }
 
 .table-st1 thead tr>th:has(.custom-table-filter-icon) {
@@ -158,12 +161,16 @@ th >.custom-table-filter-icon {
   width: 28px;
   height: 28px;
   position: absolute;
-  right: 30px;
+  right: 0px;
   padding: 2px;
   box-sizing: border-box;
   top: 50%;
   transform: translateY(-50%);
   transition: color 0.2s ease;
+}
+
+.custom-table-sort-icon.has-filter {
+  right: 30px;
 }
 
 .custom-table-sort-icon svg {

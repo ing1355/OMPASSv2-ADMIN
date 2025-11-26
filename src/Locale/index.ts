@@ -8,6 +8,7 @@ import SecurityQuestions from "./SecurityQuestions";
 import ValuesText from "./ValuesText";
 import BillingText from "./BillingText";
 import LogActionTypes from "./LogActionTypes";
+import DocsLabel from "./DocsLabel";
 
 const Locale = {
   EN: {
@@ -20,7 +21,8 @@ const Locale = {
     ...SecurityQuestions.EN,
     ...ValuesText.EN,
     ...BillingText.EN,
-    ...LogActionTypes.EN
+    ...LogActionTypes.EN,
+    ...DocsLabel.EN
   },
   KR: {
     ...LocaleTexts.KR,
@@ -32,10 +34,21 @@ const Locale = {
     ...SecurityQuestions.KR,
     ...ValuesText.KR,
     ...BillingText.KR,
-    ...LogActionTypes.KR
+    ...LogActionTypes.KR,
+    ...DocsLabel.KR
   },
   JP: {
-    
+    ...LocaleTexts.JP,
+    ...CreateAccountTexts.JP,
+    ...ServerErrorCodes.JP,
+    ...CalendarText.JP,
+    ...ValidationText.JP,
+    ...MessageText.JP,
+    ...SecurityQuestions.JP,
+    ...ValuesText.JP,
+    ...BillingText.JP,
+    ...LogActionTypes.JP,
+    ...DocsLabel.JP
   }
 };
 

@@ -9,14 +9,15 @@ import { useSelector } from "react-redux";
 import { ApplicationMenuItems, ApplicationUserMenuItems, EtcMenuItems, EtcUserMenuItems, PortalMenuItems, PortalUserMenuItems, StartAdminMenuItems, StartUserMenuItems } from "./DocsMenuItems";
 import { isMobile } from "react-device-detect";
 import { lazy, Suspense } from "react";
+import LocaleChange from "Components/CommonCustomComponents/Input/LocaleChange";
+import { useIntl } from "react-intl";
 
 const LoadMdFile = lazy(() => import('./LoadMdFileComponent'))
 
-const Document = () => {
-    const lang = useSelector((state: ReduxStateType) => state.lang!);
-    const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
-    const location = useLocation()
+const DocumentTitle = () => {
+    const { formatMessage } = useIntl();
     const navigate = useNavigate()
+    const location = useLocation()
     const pathName = location.pathname
     const isUserDocs = pathName.startsWith('/docs/user')
 
@@ -45,6 +46,24 @@ const Document = () => {
         </div>
     }
 
+    return isUserDocs ? <>
+        <MenuItem title={formatMessage({ id: 'DOCS_START_LABEL' })} items={StartUserMenuItems} />
+        <MenuItem title={formatMessage({ id: 'DOCS_PORTAL_LABEL' })} items={PortalUserMenuItems} />
+        <MenuItem title={formatMessage({ id: 'DOCS_APPLICATION_LABEL' })} items={ApplicationUserMenuItems} />
+        <MenuItem title={formatMessage({ id: 'DOCS_ETC_LABEL' })} items={EtcUserMenuItems} />
+    </> : <>
+        <MenuItem title={formatMessage({ id: 'DOCS_START_LABEL' })} items={StartAdminMenuItems} />
+        <MenuItem title={formatMessage({ id: 'DOCS_PORTAL_LABEL' })} items={PortalMenuItems} />
+        <MenuItem title={formatMessage({ id: 'DOCS_APPLICATION_LABEL' })} items={ApplicationMenuItems} />
+        <MenuItem title={formatMessage({ id: 'DOCS_ETC_LABEL' })} items={EtcMenuItems} />
+    </>
+}
+
+const Document = () => {
+    const lang = useSelector((state: ReduxStateType) => state.lang!);
+    const userInfo = useSelector((state: ReduxStateType) => state.userInfo!);
+    const location = useLocation()
+
     return <IntlProvider locale={convertLangToIntlVer(lang)} messages={Locale[lang]}>
         <div className="document-container">
             <div className="document-title">
@@ -52,26 +71,16 @@ const Document = () => {
                     <img src={ompassDefaultLogoImage} />
                     OMPASS v2.0 Docs
                 </div>
-                <div>
-                    {/* Last Updated: 2024. 12. 17. */}
+                <div style={{
+                    fontSize: '1rem'
+                }}>
+                    <LocaleChange />
                 </div>
             </div>
             <div className="document-body">
                 <div className="document-menu-container">
                     <div className="document-menu-items-container">
-                        {
-                            isUserDocs ? <>
-                                <MenuItem title="시작하기" items={StartUserMenuItems} />
-                                <MenuItem title="포탈" items={PortalUserMenuItems} />
-                                <MenuItem title="애플리케이션" items={ApplicationUserMenuItems} />
-                                <MenuItem title="기타" items={EtcUserMenuItems} />
-                            </> : <>
-                                <MenuItem title="시작하기" items={StartAdminMenuItems} />
-                                <MenuItem title="포탈" items={PortalMenuItems} />
-                                <MenuItem title="애플리케이션" items={ApplicationMenuItems} />
-                                <MenuItem title="기타" items={EtcMenuItems} />
-                            </>
-                        }
+                        <DocumentTitle />
                     </div>
                 </div>
                 <div className="document-contents-container">

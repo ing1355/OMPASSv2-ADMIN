@@ -8,6 +8,7 @@ import CustomTable from "Components/CommonCustomComponents/CustomTable";
 import { FormattedMessage } from "react-intl";
 import { GetBillingHistoriesFunc } from "Functions/ApiFunctions";
 import useTableData from "hooks/useTableData";
+import { useSelector } from "react-redux";
 
 type ItemContainerProps = PropsWithChildren<{
     border?: boolean
@@ -55,25 +56,26 @@ const planDatas: {
         type: "TRIAL_PLAN",
         title: <FormattedMessage id="PLAN_TYPE_TRIAL_PLAN" />,
         price: 0,
-        descriptions: Array.from({length: 4}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
+        descriptions: Array.from({length: 3}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
     },
     {
         type: "LICENSE_PLAN_L1",
         title: <FormattedMessage id="PLAN_TYPE_LICENSE_PLAN_L1" />,
         price: 2000,
-        descriptions: Array.from({length: 18}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
+        descriptions: Array.from({length: 9}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+4}`}/>)
     },
     {
         type: "LICENSE_PLAN_L2",
         title: <FormattedMessage id="PLAN_TYPE_LICENSE_PLAN_L2" />,
         price: 3000,
-        descriptions: Array.from({length: 20}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
+        descriptions: Array.from({length: 3}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+13}`}/>)
     }
 ]
 
 const Billing = () => {
     // const userNumList = useMemo(() => new Array(991).fill(1), []);
     // const [inputUserNum, setInputUserNum] = useState(10);
+    const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo)!;
 
     const { tableData, totalCount, dataLoading, getDatas } = useTableData<BillingHistoryDataType>({
         apiFunction: GetBillingHistoriesFunc
@@ -97,7 +99,7 @@ const Billing = () => {
                             <div className="plan-title">
                                 {_.title}
                             </div>
-                            <div className="plan-price-container">
+                            {subdomainInfo.serverType !== 'ON_PREMISE' && <div className="plan-price-container">
                                 <div className="plan-price-row">
                                     <div className="plan-price-number">{_.price.toLocaleString()}</div>
                                     <div className="plan-price-text"><FormattedMessage id="BILLING_PRICE_TEXT" /></div>
@@ -105,7 +107,7 @@ const Billing = () => {
                                 <div className="plan_sub_price_text">
                                     {ind === 0 ? <FormattedMessage id="BILLING_MAX_USER_COUNT_TEXT" /> : <FormattedMessage id="BILLING_MIN_USER_COUNT_TEXT" />}
                                 </div>
-                            </div>
+                            </div>}
                             <div className="plan-description-container">
                                 {
                                     _.descriptions.map((__, _ind) => <div key={_ind} className="plan-description-row">

@@ -1,7 +1,7 @@
 import { message } from "antd"
 import Button from "Components/CommonCustomComponents/Button"
 import { emailRegex } from "Constants/CommonRegex"
-import EmailSendButton from "Components/CommonCustomComponents/EmailSendButton"
+import EmailSendButton from "Components/CommonCustomComponents/Button/EmailSendButton"
 import Input from "Components/CommonCustomComponents/Input"
 import CustomModal from "Components/Modal/CustomModal"
 import { EmailChangeCodeVerificationFunc, SendChangeEmailCodeFunc } from "Functions/ApiFunctions"
@@ -12,7 +12,7 @@ const EmailChangeBtn = ({ isSelf, userId, username, successCallback }: {
     isSelf: boolean
     userId: UserDataType['userId']
     username: UserDataType['username']
-    successCallback: () => void
+    successCallback: (email: string) => void
 }) => {
     const [modalOpen, setModalOpen] = useState(false)
     const [emailInput, setEmailInput] = useState('')
@@ -69,7 +69,7 @@ const EmailChangeBtn = ({ isSelf, userId, username, successCallback }: {
                         }, () => {
                             message.success(formatMessage({ id: 'EMAIL_CHANGE_SUCCESS_MSG' }))
                             setModalOpen(false)
-                            successCallback()
+                            successCallback(emailInput)
                         })
                     }
                 } else {

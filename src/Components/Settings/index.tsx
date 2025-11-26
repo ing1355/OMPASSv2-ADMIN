@@ -13,10 +13,10 @@ import { useDispatch, useSelector } from "react-redux"
 import { subdomainInfoChange } from "Redux/actions/subdomainInfoChange"
 import { globalDatasChange } from "Redux/actions/globalDatasChange"
 import loginMainImage from '@assets/loginMainImage.png'
-import CustomImageUpload from "Components/CommonCustomComponents/CustomImageUpload"
-import CustomAdminSelect from "Components/CommonCustomComponents/CustomAdminSelect"
+import CustomImageUpload from "Components/CommonCustomComponents/Input/CustomImageUpload"
+import CustomAdminSelect from "Components/CommonCustomComponents/Input/CustomAdminSelect"
 import { FormattedMessage, useIntl } from "react-intl"
-import TimezoneSelect from "Components/CommonCustomComponents/TimezoneSelect"
+import TimezoneSelect from "Components/CommonCustomComponents/Input/TimezoneSelect"
 
 const Settings = () => {
     const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas!);

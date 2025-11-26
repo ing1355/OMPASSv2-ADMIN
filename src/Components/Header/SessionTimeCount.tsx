@@ -9,7 +9,7 @@ import { sessionCheckChange, sessionTimeChange } from "Redux/actions/sessionInfo
 import { userInfoChange, userInfoClear } from "Redux/actions/userChange"
 import './SessionTimeCount.css'
 import timeIcon from '@assets/sessionTimeIcon.png'
-import CustomDropdown from "Components/CommonCustomComponents/CustomDropdown"
+import CustomDropdown from "Components/CommonCustomComponents/Input/CustomDropdown"
 import { FormattedMessage, useIntl } from "react-intl"
 
 const SessionTimeCount = () => {

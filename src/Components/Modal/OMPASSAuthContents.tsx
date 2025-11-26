@@ -6,7 +6,7 @@ import { FormattedMessage, useIntl } from "react-intl"
 import QRIcon from '@assets/qrIcon.png'
 import CustomLoading from "Components/CommonCustomComponents/CustomLoading"
 import { useSelector } from "react-redux"
-import EmailSendButton from "Components/CommonCustomComponents/EmailSendButton"
+import EmailSendButton from "Components/CommonCustomComponents/Button/EmailSendButton"
 import { SendOMPASSRegistrationEmailFunc } from "Functions/ApiFunctions"
 import { message } from "antd"
 import Button from "Components/CommonCustomComponents/Button"

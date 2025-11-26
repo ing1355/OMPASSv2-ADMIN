@@ -1,12 +1,20 @@
 import { ompassDefaultLogoImage } from "Constants/ConstantValues";
 import jwtDecode from "jwt-decode";
 
+export const isEmptyObject = (obj: Object) => obj != null && typeof obj === 'object' && Reflect.ownKeys(obj).length === 0;
+
 export const getStorageAuth = () => localStorage.getItem('Authorization')
 export const setStorageAuth = (token: string) => localStorage.setItem('Authorization', token)
-export const removeStorageUserSettings = () => {
-    console.log('removeStorageUserSettings')
+export const removeStorageUserSettings = (sessionExpired: boolean = true, logout: boolean = false) => {
     localStorage.removeItem('Authorization')
     localStorage.removeItem('user_select_size')
+    if(sessionExpired) {
+        sessionStorage.setItem('sessionExpired', 'true')
+    }
+    if(logout) {
+        sessionStorage.setItem('logout', 'true')
+    }
+    window.location.reload()
 }
 
 export const getCircledNumber = (index: number) => {
