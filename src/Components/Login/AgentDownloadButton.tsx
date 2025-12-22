@@ -1,12 +1,13 @@
 import Button from "Components/CommonCustomComponents/Button"
 import { downloadFileByLink } from "Functions/GlobalFunctions"
 import { isMacOs, isMobile } from "react-device-detect"
-import { FormattedMessage } from "react-intl"
+import { FormattedMessage, useIntl } from "react-intl"
 import downloadIconWhite from '@assets/downloadIconWhite.png';
 import { useSelector } from "react-redux"
 import './AgentDownloadButton.css'
 import { useState } from "react";
 import { isTta } from "Constants/ConstantValues";
+import { message } from "antd";
 
 const DownloadButton = ({ label, onClick, icon }: { label: React.ReactNode, onClick: () => void, icon: string }) => {
     return <Button
@@ -19,6 +20,7 @@ const DownloadButton = ({ label, onClick, icon }: { label: React.ReactNode, onCl
 }
 
 const AgentDownloadButton = () => {
+    const { formatMessage } = useIntl()
     const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const [isHover, setIsHover] = useState(false);
     const windowsLabel = <FormattedMessage id='DOWNLOAD_FOR_WINDOWS' />
@@ -48,6 +50,9 @@ const AgentDownloadButton = () => {
                 <DownloadButton
                     icon={downloadIconWhite}
                     onClick={() => {
+                        if(isMacOs) {
+                            return message.info(formatMessage({ id: 'PREPARING_MSG' }))
+                        }
                         downloadCallback(isMacOs ? 'mac' : 'windows')
                     }}
                     label={isMacOs ? macLabel : windowsLabel}
@@ -56,6 +61,9 @@ const AgentDownloadButton = () => {
                     icon={downloadIconWhite}
                     label={isMacOs ? windowsLabel : macLabel}
                     onClick={() => {
+                        if(!isMacOs) {
+                            return message.info(formatMessage({ id: 'PREPARING_MSG' }))
+                        }
                         downloadCallback(isMacOs ? 'windows' : 'mac')
                     }}
                 />

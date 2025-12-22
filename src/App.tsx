@@ -31,7 +31,6 @@ import EmailChangeVerification from 'Components/Users/UserDetail/EmailChangeVeri
 import Document from 'Components/Document';
 import ErrorPage from 'Components/Layout/ErrorPage';
 import usePlans from 'hooks/usePlans';
-import { message } from 'antd';
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
@@ -73,7 +72,7 @@ const App: React.FC = () => {
   }, [userInfo])
 
   useEffect(() => {
-    if (userInfo && subdomainInfo?.backendVersion) {
+    if (userInfo && subdomainInfo?.backendVersion && !window.location.pathname.startsWith('/docs')) {
       window.addEventListener('storage', () => {
         window.location.reload()
       })

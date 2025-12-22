@@ -6,6 +6,27 @@ import RefundImg from '@assets/refunded_img.png';
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 
+// {lang === 'EN' ?
+//                     <div>
+//                         <h3><FormattedMessage id='AGREE_SERVICE_TITLE_5' /></h3>
+//                         {AgreePolicyList(true, 5, 3)}
+
+//                         {/* 영문 버전에만 추가되는 문구 */}
+//                         <div style={{ display: 'flex' }}>
+//                             <div className='circleNumber'>4</div>
+//                             <div style={{ flexBasis: '480px' }}>
+//                                 Refund fee will be affected among the paypal policy below.
+//                             </div>
+//                         </div>
+//                         <img src={RefundImg} width='485px' />
+//                     </div>
+//                     :
+//                     <div>
+//                         <h3><FormattedMessage id='AGREE_SERVICE_TITLE_5' /></h3>
+//                         {AgreePolicyList(true, 5, 3)}
+//                     </div>
+//                 }
+
 type FirstStepProps = PropsWithChildren<{
     checkedChange: (checked: boolean) => void
 }>
@@ -50,7 +71,6 @@ const FirstStep = ({ checkedChange, children }: FirstStepProps) => {
         return <>
             <div>
                 {subList.map((item) => (
-
                     <div key={isService ? 'Service' + item : '' + item}>
                         <div style={{ display: 'flex' }}>
                             <div className='circleNumber'>{item}</div>
@@ -146,43 +166,42 @@ const FirstStep = ({ checkedChange, children }: FirstStepProps) => {
                 </AgreeText>
                 <AgreeText title={<FormattedMessage id='AGREE_SERVICE_TITLE_3' />} subTitle={<FormattedMessage id='AGREE_SERVICE_CONTENT_3' />} />
                 <AgreeText title={<FormattedMessage id='AGREE_SERVICE_TITLE_4' />}>
-                    {AgreePolicyList(true, 4, 9)}
+                    {AgreePolicyList(true, 4, 6)}
                 </AgreeText>
-                {lang === 'EN' ?
-                    <div>
-                        <h3><FormattedMessage id='AGREE_SERVICE_TITLE_5' /></h3>
-                        {AgreePolicyList(true, 5, 3)}
-
-                        {/* 영문 버전에만 추가되는 문구 */}
-                        <div style={{ display: 'flex' }}>
-                            <div className='circleNumber'>4</div>
-                            <div style={{ flexBasis: '480px' }}>
-                                Refund fee will be affected among the paypal policy below.
-                            </div>
-                        </div>
-                        <img src={RefundImg} width='485px' />
-                    </div>
-                    :
-                    <div>
-                        <h3><FormattedMessage id='AGREE_SERVICE_TITLE_5' /></h3>
-                        {AgreePolicyList(true, 5, 3)}
-                    </div>
-                }
+                <div>
+                    <h3><FormattedMessage id='AGREE_SERVICE_TITLE_5' /></h3>
+                    {AgreePolicyList(true, 5, 3)}
+                </div>
 
                 <AgreeText title={<FormattedMessage id='AGREE_SERVICE_TITLE_6' />}>
-                    {AgreePolicyList(true, 6, 2)}
+                    {AgreePolicyList(true, 6, 3)}
                 </AgreeText>
                 <AgreeText title={<FormattedMessage id='AGREE_SERVICE_TITLE_7' />}>
-                    {AgreePolicyList(true, 7, 5)}
+                    {AgreePolicyList(true, 7, 2)}
                 </AgreeText>
                 <AgreeText title={<FormattedMessage id='AGREE_SERVICE_TITLE_8' />}>
-                    {AgreePolicyList(true, 8, 2)}
+                    {AgreePolicyList(true, 8, 5)}
                 </AgreeText>
                 <AgreeText title={<FormattedMessage id='AGREE_SERVICE_TITLE_9' />}>
-                    {AgreePolicyList(true, 9, 4)}
+                    {AgreePolicyList(true, 9, 2)}
                 </AgreeText>
                 <AgreeText title={<FormattedMessage id='AGREE_SERVICE_TITLE_10' />}>
-                    {AgreePolicyList(true, 10, 3, [2], [4])}
+                    {AgreePolicyList(true, 10, 4)}
+                </AgreeText>
+                <AgreeText title={<FormattedMessage id='AGREE_SERVICE_TITLE_11' />}>
+                    {AgreePolicyList(true, 11, 3, [2], [4])}
+                </AgreeText>
+                <AgreeText title={<FormattedMessage id='AGREE_SERVICE_TITLE_12' />}>
+                    {AgreePolicyList(true, 12, 8)}
+                </AgreeText>
+                <AgreeText title={<FormattedMessage id='AGREE_SERVICE_TITLE_13' />}>
+                    {AgreePolicyList(true, 13, 2)}
+                </AgreeText>
+                <AgreeText title={<FormattedMessage id='AGREE_SERVICE_TITLE_14' />}>
+                    {AgreePolicyList(true, 14, 9)}
+                </AgreeText>
+                <AgreeText title={<FormattedMessage id='AGREE_SERVICE_TITLE_15' />}>
+                    {AgreePolicyList(true, 15, 1)}
                 </AgreeText>
             </div>
         </div>
@@ -233,7 +252,7 @@ const FirstStep = ({ checkedChange, children }: FirstStepProps) => {
             }}
         ><FormattedMessage id='CONFIRM' />
         </Button>
-        <br/>
+        <br />
         <Button
             className={'st6 agree-button'}
             onClick={() => {

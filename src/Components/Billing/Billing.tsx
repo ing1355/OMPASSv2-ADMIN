@@ -61,13 +61,13 @@ const planDatas: {
     {
         type: "LICENSE_PLAN_L1",
         title: <FormattedMessage id="PLAN_TYPE_LICENSE_PLAN_L1" />,
-        price: 2000,
+        price: 2,
         descriptions: Array.from({length: 9}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+4}`}/>)
     },
     {
         type: "LICENSE_PLAN_L2",
         title: <FormattedMessage id="PLAN_TYPE_LICENSE_PLAN_L2" />,
-        price: 3000,
+        price: 3,
         descriptions: Array.from({length: 3}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+13}`}/>)
     }
 ]
@@ -82,7 +82,8 @@ const Billing = () => {
     })
 
     const isSelectedPlan = (type: PlanTypes) => {
-        return tableData[0] && tableData[0].status === 'RUN' && tableData[0].type === type
+        // return tableData[0] && tableData[0].status === 'RUN' && tableData[0].type === type
+        return tableData[0] && tableData[0].type === type
     }
 
     return <>
@@ -92,9 +93,12 @@ const Billing = () => {
                 <ItemContainer title={<FormattedMessage id="BILLING_PLAN" />} border>
                     <div className="plans-description-container">
                         {planDatas.map((_, ind) => <div className={"plan-box" + (isSelectedPlan(_.type) ? ' selected' : '')} key={ind}>
-                            {isSelectedPlan(_.type) && <div className="plan-selected">
+                            {isSelectedPlan(_.type) && <div className={"plan-selected"}>    
                                 <img src={planIcon} height='100%' />
                                 <FormattedMessage id="BILLING_CURRENT_PLAN_USED" />
+                                <span className="plan-selected-expired-text">
+                                    (<FormattedMessage id="BILLING_PLAN_EXPIRED" />)
+                                </span>
                             </div>}
                             <div className="plan-title">
                                 {_.title}

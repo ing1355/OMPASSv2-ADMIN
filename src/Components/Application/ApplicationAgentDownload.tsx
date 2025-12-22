@@ -11,6 +11,7 @@ const ApplicationAgentDownload = ({ type }: {
     const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const { formatMessage } = useIntl()
     const needAgentList: LocalApplicationTypes[] = ['WINDOWS_LOGIN', 'LINUX_LOGIN', 'RADIUS', 'KEYCLOAK', 'REDMINE', 'MAC_LOGIN']
+    // const needAgentList: LocalApplicationTypes[] = ['WINDOWS_LOGIN', 'LINUX_LOGIN', 'RADIUS', 'KEYCLOAK', 'REDMINE']
     const needAgent = needAgentList.includes(type)
     const getLabelKeyByType = () => {
         if (type === 'WINDOWS_LOGIN') {
@@ -48,6 +49,9 @@ const ApplicationAgentDownload = ({ type }: {
             if (!getDownloadUrlByType()) {
                 message.error(formatMessage({ id: 'NO_DOWNLOAD_URL_MSG' }))
             } else {
+                if(type === 'MAC_LOGIN') {
+                    return message.info(formatMessage({ id: 'PREPARING_MSG' }))
+                }
                 downloadFileByLink(getDownloadUrlByType())
             }
         }}>

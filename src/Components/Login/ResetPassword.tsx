@@ -189,7 +189,12 @@ const ResetPassword = () => {
                             setEmailAlert(alert || false)
                         }}
                     >
-                        <EmailSendButton disabled={inputEmail.length === 0 || emailAlert} onClick={() => {
+                        <EmailSendButton disabled={inputEmail.length === 0 || emailAlert} onClick={async () => {
+                            if (!inputUsername) {
+                                message.error(formatMessage({id:'PLEASE_INPUT_ID_MSG'}))
+                                inputUsernameRef.current?.focus()
+                                throw new Error('ID 입력 안됨')
+                            }
                             return ResetPasswordEmailSendFunc({
                                 username: inputUsername,
                                 email: inputEmail,

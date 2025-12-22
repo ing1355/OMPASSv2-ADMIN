@@ -95,13 +95,17 @@ const EmailChangeBtn = ({ isSelf, userId, username, successCallback }: {
                     setEmailCodeSend(false)
                 }} readOnly={emailCodeSend}>
                     {isSelf && <EmailSendButton noStyle className="user-email-change-modal-btn" onClick={async () => {
+                        if (!userId) {
+                            message.error(formatMessage({id:'PLEASE_INPUT_ID_MSG'}))
+                            throw new Error('유저 ID 없음')
+                        }
                         if (!emailInput) {
                             message.error(formatMessage({ id: 'PLEASE_INPUT_EMAIL' }))
-                            return
+                            throw new Error('이메일 입력 안됨')
                         }
                         if (!emailRegex.test(emailInput)) {
                             message.error(formatMessage({ id: 'EMAIL_CHECK' }))
-                            return
+                            throw new Error('이메일 형식 오류')
                         }
                         return SendChangeEmailCodeFunc({
                             userId,

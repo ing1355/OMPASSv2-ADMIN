@@ -560,7 +560,7 @@ const LocaleTexts = {
     PLAN_MAX_USER_COUNT_COLUMN_LABEL: 'Max User Count',
     PLAN_MAX_SESSION_COUNT_COLUMN_LABEL: 'Max Session Count Per User',
     BILLING_CURRENT_PLAN_USED: 'Currently Using Plan',
-    BILLING_PRICE_TEXT: 'Won / Month',
+    BILLING_PRICE_TEXT: '$ / Month',
     BILLING_MAX_USER_COUNT_TEXT: '*Max 10 users, VAT extra',
     BILLING_MIN_USER_COUNT_TEXT: '*Min 10 users, VAT extra',
     BILLING_HISTORY: 'Payment History',
@@ -580,7 +580,8 @@ const LocaleTexts = {
     OMPASS_MODULE_EMAIL_AUTH_LABEL: 'Email Auth',
     OMPASS_MODULE_APPLINK_BUTTON: 'Go to OMPASS App',
     PORTAL_LOG_COLUMN_USER_BEHAVIOR_LABEL: "Action Type",
-    PHONE_NUMBER_EXAMPLE_LABEL: "Example"
+    PHONE_NUMBER_EXAMPLE_LABEL: "Example",
+    BILLING_PLAN_EXPIRED: "Expired"
   },
   KR: {
     LOGIN: '로그인',
@@ -1144,7 +1145,7 @@ const LocaleTexts = {
     PLAN_STATUS_EXPIRED: '기간 만료',
     PLAN_DESCRIPTION_COLUMN_LABEL: '비고',
     BILLING_CURRENT_PLAN_USED: '현재 플랜 사용중',
-    BILLING_PRICE_TEXT: '원 / 월',
+    BILLING_PRICE_TEXT: '$ / 월',
     BILLING_MAX_USER_COUNT_TEXT: '*최대 10명 가능, VAT 별도',
     BILLING_MIN_USER_COUNT_TEXT: '*최소 10명 기준, VAT 별도',
     BILLING_HISTORY: '결제 내역',
@@ -1164,7 +1165,8 @@ const LocaleTexts = {
     OMPASS_MODULE_EMAIL_AUTH_LABEL: '이메일로 인증하기',
     OMPASS_MODULE_APPLINK_BUTTON: 'OMPASS 앱으로 바로가기',
     PORTAL_LOG_COLUMN_USER_BEHAVIOR_LABEL: "행동 분류",
-    PHONE_NUMBER_EXAMPLE_LABEL: "예시"
+    PHONE_NUMBER_EXAMPLE_LABEL: "예시",
+    BILLING_PLAN_EXPIRED: "만료됨"
   },
   JP: {
     LOGIN: 'ログイン',
@@ -1728,7 +1730,7 @@ const LocaleTexts = {
     PLAN_STATUS_EXPIRED: '期間満了',
     PLAN_DESCRIPTION_COLUMN_LABEL: '備考',
     BILLING_CURRENT_PLAN_USED: '現在のプラン使用中',
-    BILLING_PRICE_TEXT: '円 / 月',
+    BILLING_PRICE_TEXT: '$ / 月',
     BILLING_MAX_USER_COUNT_TEXT: '*最大10名可能, VAT別',
     BILLING_MIN_USER_COUNT_TEXT: '*最少10名基準, VAT別',
     BILLING_HISTORY: '決済履歴',
@@ -1748,7 +1750,8 @@ const LocaleTexts = {
     OMPASS_MODULE_EMAIL_AUTH_LABEL: 'メールで認証する',
     OMPASS_MODULE_APPLINK_BUTTON: 'OMPASSアプリに直接移動',
     PORTAL_LOG_COLUMN_USER_BEHAVIOR_LABEL: "アクション分類",
-    PHONE_NUMBER_EXAMPLE_LABEL: "例"
+    PHONE_NUMBER_EXAMPLE_LABEL: "例",
+    BILLING_PLAN_EXPIRED: "期間満了"
   }
 }
 

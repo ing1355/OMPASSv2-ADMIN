@@ -1,6 +1,6 @@
 {
   "name": "ompass_rp_admin",
-  "version": "2.1.1.5",
+  "version": "2.1.1.8",
   "proxy": "https://ompass.kr:54006",
   "private": true,
   "dependencies": {
@@ -62,7 +62,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "__deploy": "rsync -av --delete ./build/* hozzi@192.168.182.140:/usr/local/ompass_agent_rp",
-    "deploy": "rsync -avp --delete ./build/* oms@192.168.182.140:/opt/oms/ompass2/server/fe/ompass_portal",
+    "deploy": "rsync -avp --delete ./build/* hozzi@192.168.182.140:/opt/oms/ompass2/server/fe/ompass_portal",
     "deploy2": "rsync -av --delete ./build/* hozzi@192.168.182.140:/usr/local/ompass_agent_rp_dev",
     "deploy:tta": "rsync -avp --delete ./build/* oms@192.168.182.143:/opt/oms/ompass2/server/fe/ompass_portal",
     "testDeploy": "rsync -av --delete ./build/* hozzi@192.168.182.140:/usr/local/ompass_agent_rp_test",

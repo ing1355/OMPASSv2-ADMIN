@@ -1124,6 +1124,16 @@ export const convertLangToIntlVer = (lang: ReduxStateType['lang']) => {
   }
 }
 
+export const langConverter = (lang: LanguageType) => {
+  if(lang === 'EN') {
+    return 'en'
+  } else if(lang === 'JP') {
+    return 'ja'
+  } else {
+    return 'ko'
+  }
+}
+
 export const AgentTypes: AgentType[] = ['WINDOWS_LOGIN', 'LINUX_PAM', 'OMPASS_PROXY', 'REDMINE_PLUGIN', 'KEYCLOAK_PLUGIN', 'WINDOWS_FRAMEWORK']
 
 export const maxLengthByType = (type: InputValueType | undefined, value: string = '') => {

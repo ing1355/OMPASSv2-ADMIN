@@ -60,6 +60,12 @@
     width: 14px;
 }
 
+.plan-selected-expired-text {
+    margin-left: 2px;
+    font-size: .6rem;
+    color: var(--main-red-color);
+}
+
 .plan-title {
     text-align: center;
 }

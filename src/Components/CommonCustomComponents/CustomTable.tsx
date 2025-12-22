@@ -250,15 +250,15 @@ const CustomTable = <T extends {
         if (searchParams.get('searchType')) {
             result.searchType = searchParams.get('searchType')!
             result.searchValue = searchParams.get('searchValue')!
+        } else {
+            setSearchType((searchOptions && searchOptions[0].key) || "")
+            setSearchValue('')
         }
         if (searchParams.get('sortKey') && searchParams.get('sortDirection')) {
             result.sortKey = searchParams.get('sortKey')!
             result.sortDirection = searchParams.get('sortDirection')!
         }
-        else {
-            setSearchType((searchOptions && searchOptions[0].key) || "")
-            setSearchValue('')
-        }
+        
         if (onSearchChange) {
             if (!resultRef.current || (JSON.stringify(resultRef.current) !== JSON.stringify(result))) {
                 onSearchChange(result)
@@ -315,10 +315,12 @@ const CustomTable = <T extends {
             })
         }
 
-        if (searchValue) {
+        if (searchType || searchValue) {
             result.searchType = searchType
             result.searchValue = searchValue
         }
+
+        console.log({...result}, searchParams.keys())
         
         if (isReset) {
             setSortKey(undefined)

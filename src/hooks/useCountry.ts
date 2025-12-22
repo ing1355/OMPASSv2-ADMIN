@@ -8,6 +8,7 @@ import ko from "i18n-iso-countries/langs/ko.json";
 import ja from "i18n-iso-countries/langs/ja.json";
 import { useSelector } from "react-redux";
 import { isEmptyObject } from "Functions/GlobalFunctions";
+import { langConverter } from "Constants/ConstantValues";
 countries.registerLocale(en);
 countries.registerLocale(ko);
 countries.registerLocale(ja);
@@ -16,7 +17,7 @@ countries.registerLocale(ja);
 
 export default function useCountry() {
     const lang = useSelector((state: ReduxStateType) => state.lang!)
-    const localeForGetName = lang === 'KR' ? 'ko' : lang === 'JP' ? 'ja' : 'en'
+    const localeForGetName = langConverter(lang)
 
     const getCountryDataByCountryCode = (countryCode: CountryCode): CountryData => {
         const dialCode = getCountryCallingCode(countryCode.toUpperCase() as CountryCode)

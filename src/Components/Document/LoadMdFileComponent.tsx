@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router"
 import MarkdownPreview from '@uiw/react-markdown-preview'
 import { useSelector } from "react-redux";
+import { langConverter } from "Constants/ConstantValues";
 
 type DocumentCategoryType = 'application' | 'start'
 
@@ -22,16 +23,6 @@ const pathByApplicationType: {
     'PORTAL': '',
     'ALL': '',
     'MAC_LOGIN': 'mac_logon',
-}
-
-const langConverter = (lang: LanguageType) => {
-    if(lang === 'EN') {
-        return 'en'
-    } else if(lang === 'JP') {
-        return 'ja'
-    } else {
-        return 'ko'
-    }
 }
 
 const LoadMdFileComponent = () => {

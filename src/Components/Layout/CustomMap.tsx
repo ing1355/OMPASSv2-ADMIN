@@ -6,6 +6,7 @@ import locationIconColor from '@assets/currentLocationIconColor.png'
 import { message, Tooltip } from 'antd';
 import { FormattedMessage, useIntl } from 'react-intl';
 import './CustomMap.css'
+import { langConverter } from 'Constants/ConstantValues';
 
 type CustomMapProps = PropsWithChildren & {
     onInit?: (map: google.maps.Map) => void
@@ -17,13 +18,14 @@ type CustomMapProps = PropsWithChildren & {
 
 const CustomMap = ({ children, onInit, onLoad, onCurrentPositionCheck, center, onCameraChanged }: CustomMapProps) => {
     const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas);
+    const lang = useSelector((state: ReduxStateType) => state.lang!);
     const [isHover, setIsHover] = useState(false)
     const [currentLocation, setCurrentLocation] = useState<GeolocationPosition>()
     const mapInitRef = useRef(false)
     const mapRef = useRef<google.maps.Map>()
     const { formatMessage } = useIntl()
 
-    return globalDatas?.googleApiKey ? <APIProvider apiKey={globalDatas.googleApiKey} onLoad={() => {
+    return globalDatas?.googleApiKey ? <APIProvider language={langConverter(lang)} apiKey={globalDatas.googleApiKey} onLoad={() => {
         if (onLoad) {
             onLoad()
         }

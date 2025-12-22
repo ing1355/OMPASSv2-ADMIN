@@ -347,6 +347,10 @@ const SecondStep = ({ completeCallback }: {
                     readOnly={emailVerify}
                 >
                     <EmailSendButton noStyle className="signup-duplicate-check" disabled={inputEmail.length === 0 || emailVerify || isEmailAlert} onClick={() => {
+                        if (!inputEmail) {
+                            message.error(formatMessage({ id: 'PLEASE_INPUT_EMAIL' }))
+                            throw new Error('이메일 입력 안됨')
+                        }
                         return SignUpVerificationCodeSendFunc({
                             email: inputEmail
                         }, () => {
