@@ -158,7 +158,7 @@ const ApplicationDetail = () => {
                             return message.error(formatMessage({ id: 'PLEASE_SELECT_APPLICATION_POLICY' }))
                         }
                         if (uuid) {
-                            UpdateApplicationDataFunc(uuid!, {
+                            return UpdateApplicationDataFunc(uuid!, {
                                 policyId: selectedPolicy,
                                 name: inputName,
                                 domain: inputDomain ?? "",
@@ -179,7 +179,7 @@ const ApplicationDetail = () => {
                                 message.success(formatMessage({ id: 'APPLICATION_MODIFY_SUCCESS_MSG' }))
                             })
                         } else {
-                            AddApplicationDataFunc({
+                            return AddApplicationDataFunc({
                                 policyId: selectedPolicy,
                                 name: inputName,
                                 domain: inputDomain,

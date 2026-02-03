@@ -192,12 +192,13 @@ const PortalTypeView = ({ datas, selected, setSelected, height = 400, loading }:
             default:
                 return null;
         }
-    }, [flattenedItems, selected, opened, getFullName, handlePortalClick, handleApplicationClick, handleUserClick, handleToggleOpen]);
+    }, [flattenedItems, selected, opened]);
 
     // 아이템 크기 계산
     const getItemSize = useCallback((index: number) => {
         const item = flattenedItems[index];
-        return item ? item.height : 40;
+        // return item ? item.height : 40;
+        return 30;
     }, [flattenedItems]);
 
     if (flattenedItems.length === 0) {
@@ -213,7 +214,7 @@ const PortalTypeView = ({ datas, selected, setSelected, height = 400, loading }:
             overscanCount={5}
             itemKey={(index) => {
                 const item = flattenedItems[index];
-                return item ? `${item.type}-${item.data.id}` : index;
+                return item ? `${item.type}-${item.data.id}-${index}-${item.level}` : index;
             }}
         >
             {renderItem}

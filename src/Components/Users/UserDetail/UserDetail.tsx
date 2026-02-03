@@ -130,7 +130,7 @@ const UserDetail = ({ }) => {
             }}>
                 {
                     userData?.status === 'WAIT_ADMIN_APPROVAL' && <Button className='st6' onClick={() => {
-                        ApprovalUserFunc(userData.userId, (data: UserDataType) => {
+                        return ApprovalUserFunc(userData.userId, (data: UserDataType) => {
                             setUserData(data)
                             message.success(formatMessage({ id: 'SIGNUP_APPROVE_SUCCESS_MSG' }))
                         })
@@ -151,7 +151,7 @@ const UserDetail = ({ }) => {
                     </Button>
                 }
                 {(canDelete && !isAdd) && !isDeleted && <SureDeleteButton callback={() => {
-                    DeleteUserDataFunc(userData?.userId!, () => {
+                    return DeleteUserDataFunc(userData?.userId!, () => {
                         message.success(formatMessage({ id: 'USER_WITHDRAWAL_SUCCESS_MSG' }))
                         if (isSelf) {
                             dispatch(userInfoClear());

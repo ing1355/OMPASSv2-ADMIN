@@ -37,6 +37,10 @@
     box-sizing: border-box;
 }
 
+.ompass-auth-content-progress-container.mobile {
+    height: 260px;
+}
+
 .ompass-auth-content-progress-container:has(.complete) {
     border: 1px solid var(--main-purple-color);
 }

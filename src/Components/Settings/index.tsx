@@ -81,7 +81,7 @@ const Settings = () => {
                             return message.error(formatMessage({ id: 'SETTING_NOTI_TO_ADMIN_INCLUDE_WITHDRAWAL_ADMIN_MSG' }))
                         }
                     }
-                    UpdatePortalSettingsDataFunc({
+                    return UpdatePortalSettingsDataFunc({
                         timeZone: timeZoneValue,
                         logoImage: {
                             image: await convertBase64FromClientToServerFormat(data.image),

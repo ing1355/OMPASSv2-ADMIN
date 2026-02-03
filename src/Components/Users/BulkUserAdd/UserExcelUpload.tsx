@@ -90,7 +90,7 @@ const UserExcelUpload = () => {
             <ContentsHeader subTitle={'USER_ADD_EXCEL_UPLOAD_ITEM_LABEL'}>
                 <Button loading={loading} disabled={datas.length === 0} className="st3" onClick={() => {
                     setLoading(true)
-                    AddUserWithCsvDataFunc({
+                    return AddUserWithCsvDataFunc({
                         userSyncMethod: 'CSV',
                         users: datas.map(_ => ({
                             ..._,

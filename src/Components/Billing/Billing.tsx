@@ -52,25 +52,25 @@ const planDatas: {
     price: number
     descriptions: React.ReactNode[]
 }[] = [
-    {
-        type: "TRIAL_PLAN",
-        title: <FormattedMessage id="PLAN_TYPE_TRIAL_PLAN" />,
-        price: 0,
-        descriptions: Array.from({length: 3}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+1}`}/>)
-    },
-    {
-        type: "LICENSE_PLAN_L1",
-        title: <FormattedMessage id="PLAN_TYPE_LICENSE_PLAN_L1" />,
-        price: 2,
-        descriptions: Array.from({length: 9}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+4}`}/>)
-    },
-    {
-        type: "LICENSE_PLAN_L2",
-        title: <FormattedMessage id="PLAN_TYPE_LICENSE_PLAN_L2" />,
-        price: 3,
-        descriptions: Array.from({length: 3}).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind+13}`}/>)
-    }
-]
+        {
+            type: "TRIAL_PLAN",
+            title: <FormattedMessage id="PLAN_TYPE_TRIAL_PLAN" />,
+            price: 0,
+            descriptions: Array.from({ length: 3 }).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind + 1}`} />)
+        },
+        {
+            type: "LICENSE_PLAN_L1",
+            title: <FormattedMessage id="PLAN_TYPE_LICENSE_PLAN_L1" />,
+            price: 2,
+            descriptions: Array.from({ length: 9 }).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind + 4}`} />)
+        },
+        {
+            type: "LICENSE_PLAN_L2",
+            title: <FormattedMessage id="PLAN_TYPE_LICENSE_PLAN_L2" />,
+            price: 3,
+            descriptions: Array.from({ length: 3 }).map((_, ind) => <FormattedMessage id={`BILLING_DESCRIPTION_ITEM_${ind + 13}`} />)
+        }
+    ]
 
 const Billing = () => {
     // const userNumList = useMemo(() => new Array(991).fill(1), []);
@@ -86,6 +86,10 @@ const Billing = () => {
         return tableData[0] && tableData[0].type === type
     }
 
+    const isExpiredPlan = (data: BillingHistoryDataType) => {
+        return data.isExpired
+    }
+
     return <>
         <Contents loading={dataLoading}>
             <ContentsHeader title="BILLING_MANAGEMENT" subTitle="BILLING_DETAIL" />
@@ -93,23 +97,25 @@ const Billing = () => {
                 <ItemContainer title={<FormattedMessage id="BILLING_PLAN" />} border>
                     <div className="plans-description-container">
                         {planDatas.map((_, ind) => <div className={"plan-box" + (isSelectedPlan(_.type) ? ' selected' : '')} key={ind}>
-                            {isSelectedPlan(_.type) && <div className={"plan-selected"}>    
+                            {isSelectedPlan(_.type) && <div className={"plan-selected"}>
                                 <img src={planIcon} height='100%' />
                                 <FormattedMessage id="BILLING_CURRENT_PLAN_USED" />
-                                <span className="plan-selected-expired-text">
+                                {isExpiredPlan(tableData[0]) && <span className="plan-selected-expired-text">
                                     (<FormattedMessage id="BILLING_PLAN_EXPIRED" />)
-                                </span>
+                                </span>}
                             </div>}
                             <div className="plan-title">
                                 {_.title}
                             </div>
                             {subdomainInfo.serverType !== 'ON_PREMISE' && <div className="plan-price-container">
                                 <div className="plan-price-row">
-                                    <div className="plan-price-number">{_.price.toLocaleString()}</div>
-                                    <div className="plan-price-text"><FormattedMessage id="BILLING_PRICE_TEXT" /></div>
+                                    <div className="plan-price-number">{ind === 0 ? <FormattedMessage id="FREE_LABEL" /> : `$ ${_.price.toLocaleString()}`}</div>
+                                    {ind !== 0 && <div className="plan-price-text"><FormattedMessage id="BILLING_PRICE_TEXT" /></div>}
                                 </div>
                                 <div className="plan_sub_price_text">
-                                    {ind === 0 ? <FormattedMessage id="BILLING_MAX_USER_COUNT_TEXT" /> : <FormattedMessage id="BILLING_MIN_USER_COUNT_TEXT" />}
+                                    {ind === 0 ?
+                                        <FormattedMessage id="BILLING_MAX_USER_COUNT_TEXT" />
+                                        : <FormattedMessage id="BILLING_MIN_USER_COUNT_TEXT" />}
                                 </div>
                             </div>}
                             <div className="plan-description-container">

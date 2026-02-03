@@ -105,14 +105,14 @@ const GroupDetail = () => {
                     rpUserIds: selectedUsers
                 } as UserGroupParamsType
                 if (isAdd) {
-                    AddUserGroupDataFunc(params, (res) => {
+                    return AddUserGroupDataFunc(params, (res) => {
                         message.success(formatMessage({ id: 'GROUP_ADD_SUCCESS_MSG' }))
                         navigate(`/Groups/detail/${res.id}`, {
                             replace: true
                         })
                     })
                 } else {
-                    UpdateUserGroupDataFunc(uuid, params, () => {
+                    return UpdateUserGroupDataFunc(uuid, params, () => {
                         message.success(formatMessage({ id: 'GROUP_MODIFY_SUCCESS_MSG' }))
                         setRefresh(true)
                     })
@@ -122,7 +122,7 @@ const GroupDetail = () => {
             </Button>
             {!isAdd &&
                 <SureDeleteButton callback={() => {
-                    DeleteUserGroupDataFunc(uuid, () => {
+                    return DeleteUserGroupDataFunc(uuid, () => {
                         message.success(formatMessage({ id: 'GROUP_MODIFY_DELETE_MSG' }))
                         navigate(`/Groups`, {
                             replace: true

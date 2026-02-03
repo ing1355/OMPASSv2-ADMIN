@@ -37,6 +37,7 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
     const { getApplicationTypesByPlanType } = usePlans()
 
     const filteredUserDatas = useMemo(() => {
+        console.log(userDatas)
         if (viewStyle === 'portal') {
             const firstFiltered = userDatas.map(user => ({
                 ...user,
@@ -59,19 +60,21 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
                 portalUsername: user.username
             })))
             const appTemp = [...applicationDatas].sort((a, b) => getApplicationTypesByPlanType().findIndex(t => t === a.type) - getApplicationTypesByPlanType().findIndex(t => t === b.type))
-            const appDatas = appTemp.map(app => ({
-                id: app.id,
-                name: app.name,
-                logoImage: app.logoImage,
-                rpUsers: temp.filter(t => t.appId === app.id).flatMap(user => ({
-                    portalUsername: user.portalUsername,
-                    portalName: user.portalName,
-                    id: user.rpUsers[0].id,
-                    username: user.rpUsers[0].username,
-                    groupId: user.rpUsers[0].groupId,
-                    groupName: user.rpUsers[0].groupName
-                }))
-            })).filter(app => app.rpUsers.length > 0)
+            const appDatas = appTemp.map(app => {
+                return {
+                    id: app.id,
+                    name: app.name,
+                    logoImage: app.logoImage,
+                    rpUsers: temp.filter(t => t.appId === app.id).flatMap(user => user.rpUsers.flatMap(rpUser => ({
+                        portalUsername: user.portalUsername,
+                        portalName: user.portalName,
+                        id: rpUser.id,
+                        username: rpUser.username,
+                        groupId: rpUser.groupId,
+                        groupName: rpUser.groupName
+                    })))
+                }
+            }).filter(app => app.rpUsers.length > 0)
             const firstFiltered = appDatas.map(app => ({
                 ...app,
                 rpUsers: app.rpUsers.filter(user => !selectedUsers.includes(user.id))
@@ -165,13 +168,13 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
     }
 
     useEffect(() => {
-        if(refresh) {
+        if (refresh) {
             GetDatas()
         }
     }, [refresh])
 
     return <div className="custom-transfer-user-container">
-        <TransferContainer datas={filteredUserDatas as UserTransferDataType[]} selected={tempUsers} setSelected={setTempUsers} viewStyle={viewStyle} title={<FormattedMessage id="GROUP_TRANSFER_NOT_INCLUDE_USER_LABEL"/>} dataLoading={dataLoading}/>
+        <TransferContainer datas={filteredUserDatas as UserTransferDataType[]} selected={tempUsers} setSelected={setTempUsers} viewStyle={viewStyle} title={<FormattedMessage id="GROUP_TRANSFER_NOT_INCLUDE_USER_LABEL" />} dataLoading={dataLoading} />
         <div className='custom-transfer-buttons-container'>
             <img
                 src={onRight ? groupRightArrowIconHover : groupRightArrowIcon}
@@ -182,7 +185,7 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
                     setOnRight(false)
                 }}
                 onClick={() => {
-                    if (tempUsers.length === 0) return message.error(formatMessage({id:'PLEASE_SELECT_FOR_GROUP_INCLUDE_MSG'}))
+                    if (tempUsers.length === 0) return message.error(formatMessage({ id: 'PLEASE_SELECT_FOR_GROUP_INCLUDE_MSG' }))
                     let hasGroup = false
                     if (viewStyle === 'portal') {
                         const temp = filteredUserDatas as UserHierarchyDataType[]
@@ -209,7 +212,7 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
                     setOnLeft(false)
                 }}
                 onClick={() => {
-                    if (selectedTempUsers.length === 0) return message.error(formatMessage({id:'PLEASE_SELECT_FOR_GROUP_OUT_MSG'}))
+                    if (selectedTempUsers.length === 0) return message.error(formatMessage({ id: 'PLEASE_SELECT_FOR_GROUP_OUT_MSG' }))
                     setSelectedUsers(selectedUsers.filter(_ => !selectedTempUsers.includes(_)))
                     setSelectedTempUsers([])
                 }} />
@@ -225,18 +228,18 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
                     setSelectedUsers([])
                     setSelectedTempUsers([])
                     setTempUsers([])
-                    message.success(formatMessage({id:'GROUP_USER_RESET_SUCCESS_MSG'}))
+                    message.success(formatMessage({ id: 'GROUP_USER_RESET_SUCCESS_MSG' }))
                 }} />
         </div>
-        <TransferContainer datas={filteredSelectedUserDatas as UserTransferDataType[]} selected={selectedTempUsers} setSelected={setSelectedTempUsers} viewStyle={viewStyle} title={<FormattedMessage id="GROUP_TRANSFER_INCLUDE_USER_LABEL"/>} dataLoading={dataLoading}/>
+        <TransferContainer datas={filteredSelectedUserDatas as UserTransferDataType[]} selected={selectedTempUsers} setSelected={setSelectedTempUsers} viewStyle={viewStyle} title={<FormattedMessage id="GROUP_TRANSFER_INCLUDE_USER_LABEL" />} dataLoading={dataLoading} />
         <CustomModal
             open={sureChange}
             onCancel={() => {
                 setSureChange(false);
             }}
             type="warning"
-            typeTitle={<FormattedMessage id="GROUP_TRANSFER_MODAL_TITLE_LABEL"/>}
-            typeContent={<><FormattedMessage id="GROUP_TRANSFER_MODAL_SUBSCRIPTION_LABEL_1"/><br /><FormattedMessage id="GROUP_TRANSFER_MODAL_SUBSCRIPTION_LABEL_2"/></>}
+            typeTitle={<FormattedMessage id="GROUP_TRANSFER_MODAL_TITLE_LABEL" />}
+            typeContent={<><FormattedMessage id="GROUP_TRANSFER_MODAL_SUBSCRIPTION_LABEL_1" /><br /><FormattedMessage id="GROUP_TRANSFER_MODAL_SUBSCRIPTION_LABEL_2" /></>}
             yesOrNo
             okCallback={async () => {
                 setSelectedUsers(selectedUsers.concat(tempUsers))

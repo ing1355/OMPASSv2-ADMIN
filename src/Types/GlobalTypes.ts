@@ -1034,8 +1034,9 @@ type BillingHistoryDataType = {
     maxApplicationCount: number;
     maxSessionCount: number;
     isNearExpiration: boolean;
+    isExpired: boolean;
     description?: string;
-    expiredDate: string;
+    expiredAt: string;
     createdAt: string;
 }
 

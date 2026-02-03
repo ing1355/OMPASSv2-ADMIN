@@ -62,7 +62,7 @@ const UserApiSync = () => {
             <ContentsHeader subTitle={'USER_ADD_API_SYNC_ITEM_LABEL'}>
                 <Button loading={loading} disabled={datas.length === 0} className="st3" onClick={() => {
                     setLoading(true)
-                    AddUserWithCsvDataFunc({
+                    return AddUserWithCsvDataFunc({
                         userSyncMethod: 'API',
                         users: datas.map(_ => ({
                             ..._,
@@ -80,7 +80,7 @@ const UserApiSync = () => {
                 <Button disabled={loading || !apiInfo} className="st3" onClick={() => {
                     setLoading(true)
                     if (apiInfo) {
-                        SyncExternalDirectoryPortalUsersFunc(apiInfo.id, res => {
+                        return SyncExternalDirectoryPortalUsersFunc(apiInfo.id, res => {
                             regexTestBulkUserData(res.map(item => ({
                                 username: item.username,
                                 name: item.name,
@@ -194,7 +194,7 @@ const UserApiSync = () => {
             yesOrNo
             okCallback={async () => {
                 if (apiInfo) {
-                    ReissuanceSecretKeyForUserSyncFunc(apiInfo.id, res => {
+                    return ReissuanceSecretKeyForUserSyncFunc(apiInfo.id, res => {
                         setApiInfo(res)
                         message.success(formatMessage({ id: 'API_SYNC_SECRET_KEY_REISSUANCE_SUCCESS_MSG' }))
                         setSureReset(false)

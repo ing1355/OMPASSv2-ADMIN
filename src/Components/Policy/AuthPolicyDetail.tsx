@@ -302,9 +302,9 @@ const AuthPolicyDetail = () => {
             emailRegistration: canEmailRegisterData
         }
         if (uuid) {
-            updateAuthPolicyFunc(params)
+            return updateAuthPolicyFunc(params)
         } else {
-            addAuthPolicyFunc(params)
+            return addAuthPolicyFunc(params)
         }
     }
 

@@ -1,7 +1,7 @@
 import QRCode from "Components/CommonCustomComponents/QRCode"
 import { DEEP_LINK_DOMAIN, getOMPASSAuthIconByProgressStatus } from "Constants/ConstantValues"
 import useFullName from "hooks/useFullName"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 import QRIcon from '@assets/qrIcon.png'
 import CustomLoading from "Components/CommonCustomComponents/CustomLoading"
@@ -10,7 +10,7 @@ import EmailSendButton from "Components/CommonCustomComponents/Button/EmailSendB
 import { SendOMPASSRegistrationEmailFunc } from "Functions/ApiFunctions"
 import { message } from "antd"
 import Button from "Components/CommonCustomComponents/Button"
-import { isMobile } from "react-device-detect"
+import { isAndroid, isIOS, isMobile } from "react-device-detect"
 
 type OMPASSAuthContentsProps = {
     status: OMPASSAuthStatusType
@@ -28,7 +28,14 @@ const OMPASSAuthContents = ({ isRegister, status, sessionData, purpose, applicat
     const isComplete = status === 'complete'
     const getFullName = useFullName()
     const [qrView, setQrView] = useState(false)
-    const qrData: string = `${DEEP_LINK_DOMAIN}/${purpose === 'DEVICE_CHANGE' ? 'device_change' : 'auth'}?${new URLSearchParams(sessionData).toString()}`
+    const qrData = `${DEEP_LINK_DOMAIN}/${purpose === 'DEVICE_CHANGE' ? 'device_change' : 'auth'}?${new URLSearchParams(sessionData).toString()}`
+    const appLinkUrl = useMemo(() => {
+        if (isAndroid) {
+            return `intent://link?type=${purpose === 'DEVICE_CHANGE' ? 'device_change' : 'auth'}&${new URLSearchParams(sessionData).toString()}#Intent;scheme=ompass2;package=kr.omsecurity.ompass2;end;`
+        } else {
+            return qrData
+        }
+    },[qrData])
     const targetInfo = userData || userInfo
 
     return <div className="ompass-auth-content-container">
@@ -44,7 +51,7 @@ const OMPASSAuthContents = ({ isRegister, status, sessionData, purpose, applicat
                 }
             </div>
         </div>
-        <div className="ompass-auth-content-progress-container" style={{
+        <div className={`ompass-auth-content-progress-container${isMobile ? ' mobile' : ''}`} style={{
             paddingTop: isRegister ? 0 : '32px'
         }}>
             {!isRegister && !isComplete && qrData && <div className="ompass-auth-qr-code-view-container" onMouseEnter={() => {
@@ -79,12 +86,19 @@ const OMPASSAuthContents = ({ isRegister, status, sessionData, purpose, applicat
                 </>
             }
             {
-                !isRegister && isMobile && <a href={qrData} target="_blank">
+                isMobile && <a href={appLinkUrl} target="_blank">
                     <Button className="st3">
                         <FormattedMessage id="OMPASS_MODULE_APPLINK_BUTTON" />
                     </Button>
                 </a>
             }
+            {/* {
+                !isRegister && isMobile && <a href={qrData} target="_blank">
+                    <Button className="st3">
+                        <FormattedMessage id="OMPASS_MODULE_APPLINK_BUTTON" />
+                    </Button>
+                </a>
+            } */}
         </div>
     </div>
 }

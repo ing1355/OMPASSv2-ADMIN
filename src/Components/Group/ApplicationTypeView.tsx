@@ -149,12 +149,14 @@ const ApplicationTypeView = ({ datas, selected, setSelected, height = 400, loadi
             default:
                 return null;
         }
-    }, [flattenedItems, selected, opened, getFullName, handleApplicationClick, handleUserClick, handleToggleOpen]);
+    }, [flattenedItems, selected, opened]);
 
     // 아이템 크기 계산
     const getItemSize = useCallback((index: number) => {
         const item = flattenedItems[index];
-        return item ? item.height : 40;
+        console.log(item, item.height)
+        // return item ? item.height : 40;
+        return 30;
     }, [flattenedItems]);
 
     if (flattenedItems.length === 0) {
@@ -170,7 +172,7 @@ const ApplicationTypeView = ({ datas, selected, setSelected, height = 400, loadi
             overscanCount={5}
             itemKey={(index) => {
                 const item = flattenedItems[index];
-                return item ? `${item.type}-${item.data.id}` : index;
+                return item ? `${item.type}-${item.data.id}-${index}-${item.level}` : index;
             }}
         >
             {renderItem}

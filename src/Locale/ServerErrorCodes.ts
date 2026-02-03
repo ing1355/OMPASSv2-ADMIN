@@ -59,7 +59,8 @@ const ServerErrorCodes = {
         ERR_B063: "라이선스를 등록해주세요.",
         ERR_B064: "플랜 업그레이드가 필요한 기능입니다. 플랜 업그레이드 후 이용해 주세요.",
         ERR_B065: "현재 플랜이 만료된 상태입니다. 플랜 상태를 갱신해 주세요.",
-        ERR_B066: "이미 로그아웃된 세션입니다. 다시 로그인해 주세요."
+        ERR_B066: "이미 로그아웃된 세션입니다. 다시 로그인해 주세요.",
+        ERR_B067: "중복된 요청입니다. 이전 요청을 완료하고 다시 시도해 주세요."
     },
     'EN': {
         ERR_B002: "Please check your ID and email",
@@ -121,7 +122,8 @@ const ServerErrorCodes = {
         ERR_B063: "Please register the license.",
         ERR_B064: "This feature requires a plan upgrade. Please upgrade the plan and use it.",
         ERR_B065: "The current plan has expired. Please update the plan status.",
-        ERR_B066: "You have already logged out. Please log in again."
+        ERR_B066: "You have already logged out. Please log in again.",
+        ERR_B067: "Duplicate request. Please complete the previous request and try again."
     },
     'JP': {
         ERR_B002: "IDとメールアドレスを確認してください。",
@@ -178,7 +180,8 @@ const ServerErrorCodes = {
         ERR_B063: "ライセンスを登録してください。",
         ERR_B064: "この機能はプランのアップグレードが必要です。プランをアップグレードしてご利用ください。",
         ERR_B065: "現在のプランは期限切れです。プランの状態を更新してください。",
-        ERR_B066: "既にログアウトされたセッションです。再度ログインしてください。"
+        ERR_B066: "既にログアウトされたセッションです。再度ログインしてください。",
+        ERR_B067: "重複したリクエストです。前回のリクエストを完了してから再試行してください。"
     }
 }
 

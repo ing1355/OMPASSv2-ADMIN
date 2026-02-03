@@ -152,7 +152,7 @@ const ExternalDirectoryDetail = () => {
                     if (!subdomainInfo.ompassProxyDownloadUrl) {
                         message.error(formatMessage({ id: 'NO_DOWNLOAD_URL_MSG' }))
                     } else {
-                        downloadFileByLink(subdomainInfo.ompassProxyDownloadUrl)
+                        return downloadFileByLink(subdomainInfo.ompassProxyDownloadUrl)
                     }
                 }}>
                     <FormattedMessage id={"OMPASS_PROXY_SERVER_DOWNLOAD_LABEL"} />
