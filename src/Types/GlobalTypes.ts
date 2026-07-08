@@ -245,7 +245,7 @@ type PasscodeListDataType = {
 }
 
 // type ApplicationTypes = "DEFAULT" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "ADMIN" | "RADIUS" | "REDMINE" | 'MS_ENTRA_ID' | 'KEYCLOAK' | 'LDAP'
-type ApplicationTypes = "WEB" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "PORTAL" | "RADIUS" | "REDMINE" | 'MICROSOFT_ENTRA_ID' | 'KEYCLOAK' | 'LDAP'
+type ApplicationTypes = "WEB" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "MAC_LOGIN" | "PORTAL" | "RADIUS" | "REDMINE" | 'MICROSOFT_ENTRA_ID' | 'KEYCLOAK' | 'LDAP' | 'JENKINS'
 // type ApplicationTypes = "WEB" | "WINDOWS_LOGIN" | "LINUX_LOGIN" | "PORTAL" | "RADIUS" | "REDMINE" | 'MICROSOFT_ENTRA_ID' | 'KEYCLOAK' | 'LDAP'
 type LocalApplicationTypes = ApplicationTypes | 'ALL' | undefined
 
@@ -284,6 +284,7 @@ type ApplicationDataType = DefaultApplicationDataType & {
     msAppId?: string
     isAuthorized?: boolean
     passwordless?: PolicyEnabledDataType
+    rootLoginAllowed?: PolicyEnabledDataType
     ldapProxyServer: {
         host?: string
     }
@@ -299,6 +300,7 @@ type ApplicationDataParamsType = {
     domain?: ApplicationDataType['domain']
     type?: LocalApplicationTypes
     passwordless?: PolicyEnabledDataType | null
+    rootLoginAllowed?: PolicyEnabledDataType | null
 }
 
 type ApplicationListDataType = {
@@ -473,6 +475,8 @@ type UserListParamsType = GeneralParamsType & {
     roles?: UserDataType['role'][]
     statuses?: UserDataType['status'][]
     name?: string
+    excludeTempAccount?: boolean // true 시 게스트 유저 제외 검색
+    keyword?: string // username + name 키워드 검색
 }
 
 type RPUserDetailAuthDataType = {
@@ -557,6 +561,18 @@ type UserHierarchyDataApplicationViewRpUserType = UserHierarchyDataRpUserType & 
     portalName: UserHierarchyDataType['name']
 }
 
+type GroupTransferRpUserMapDataByApplicationResponseType = {
+    portalUser: Pick<UserDataType, 'userId' | 'username' | 'name'>
+    rpUser: Pick<RPUserType, 'id' | 'username'>
+}
+
+type GroupTransferRpUserMapDataType = {
+    portalUser: Pick<UserDataType, 'userId' | 'username' | 'name'>
+    applicationId: ApplicationListDataType['id']
+    rpUser: Pick<RPUserType, 'id' | 'username'>
+    groupName?: UserGroupDataType['name'] | null
+}
+
 type DefaultUserHierarchyDataType = {
     id: UserDataType['userId']
     username: UserDataType['username']
@@ -597,7 +613,7 @@ type UserGroupPolicyType = {
 
 type UserGroupDataType = DefaultUserGroupDataType & {
     policies: UserGroupPolicyType[]
-    rpUserIds: UserDataType['userId'][]
+    rpUsers: GroupTransferRpUserMapDataType[]
 }
 
 type UserGroupListDataType = DefaultUserGroupDataType & {
@@ -643,26 +659,58 @@ type ProtalLogListParamsType = GeneralParamsType & {
 
 type AuthenticationNetWorkStatusType = "ONLINE" | "OFFLINE"
 
-type ValidAuthLogDataType = {
+type DefaultAuthLogDataType = {
     id: number
     portalUser: PortalUserType
-    processType: ProcessTypeType
-    authenticatorType: AuthenticatorTypeType
-    authenticationTime: string
+    rpUsername: string
+    application: {
+        id: ApplicationDataType['id']
+        name: ApplicationDataType['name']
+        type: ApplicationDataType['type']
+        domain: ApplicationDataType['domain']
+        redirectUri: ApplicationDataType['redirectUri']
+    }
     networkStatus: AuthenticationNetWorkStatusType
-    ompassData: OMPASSDataType
-    policyAtTimeOfEvent: PolicyDataType
+    processType: ProcessTypeType
+    authenticationTime: string
+    policyAtTimeOfEvent: {
+        id: PolicyDataType['id']
+        name: PolicyDataType['name']
+        locationConfig?: (CoordinateType & {
+            radius?: number
+        })[]
+    }
+    // ompassData: OMPASSDataType
+    authPurpose: AuthPurposeType
+    clientInfo: {
+        ip: ClientInfoType['ip']
+        browser: ClientInfoType['browser']
+        osName: OSInfoType['name']
+        osVersion: OSInfoType['version']
+        name: string
+        packageVersion: string
+    }
+    serverInfo: {
+        name: ServerMetaDataType['name']
+        ip: ServerMetaDataType['ip']
+        osName: OSInfoType['name']
+        osVersion: OSInfoType['version']
+        packageVersion: string
+    }
+    location?: {
+        latitude: number
+        longitude: number
+    }
+    sessionExpiredAt: string
+    authStartedAt: string
 }
 
-type InvalidAuthLogDataType = {
-    id: number
-    portalUser: PortalUserType
+type ValidAuthLogDataType = DefaultAuthLogDataType & {
+    authenticatorType: AuthenticatorTypeType
+}
+
+type InvalidAuthLogDataType = DefaultAuthLogDataType & {
     authenticationLogType: "ALLOW" | "DENY" | "ALLOW_OUT_OF_SCHEDULE"
-    processType: ProcessTypeType
-    authenticationTime: string
-    networkStatus: AuthenticationNetWorkStatusType
-    ompassData: OMPASSDataType
-    policyAtTimeOfEvent: PolicyDataType
     reason: InvalidAuthLogReasonType
 }
 
@@ -968,7 +1016,7 @@ type ExternalDirectoryServerDataType = {
     isConnected: boolean
 }
 
-type AgentType = "WINDOWS_LOGIN" | "LINUX_PAM" | "OMPASS_PROXY" | "REDMINE_PLUGIN" | "KEYCLOAK_PLUGIN" | "WINDOWS_FRAMEWORK" | "MAC_LOGIN"
+type AgentType = "WINDOWS_LOGIN" | "LINUX_PAM" | "OMPASS_PROXY" | "REDMINE_PLUGIN" | "KEYCLOAK_PLUGIN" | "WINDOWS_FRAMEWORK" | "MAC_LOGIN" | "LINUX_PAM_ROCKY"
 type UploadFileTypes = AgentType | "APPLICATION_LOGO_IMAGE" | "PORTAL_SETTING_LOGO_IMAGE" | "APK"
 
 type TableSearchOptionType = {
@@ -993,8 +1041,6 @@ type PAMBypassDataType = PolicyEnabledDataType & {
     ip: string
     username: string
 }
-
-type LocaleType = 'KR' | 'EN' | 'JP'
 
 type DocsMenuItemType = {
     title: React.ReactNode

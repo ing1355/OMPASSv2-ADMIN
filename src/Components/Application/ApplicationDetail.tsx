@@ -26,9 +26,10 @@ import { isMobile } from "react-device-detect"
 import ApplicationDetailSubInfoByType from "./ApplicationDetailSubInfoByType"
 import ApplicationDetailHeaderInfo from "./ApplicationDetailHeaderInfo"
 import BottomLineText from "Components/CommonCustomComponents/BottomLineText"
-import PasswordlessCheck from "Components/Policy/PolicyItems/PasswordlessCheck"
+import PasswordlessCheck from "Components/Application/PasswordlessCheck"
 import SureDeleteButton from "Components/CommonCustomComponents/Button/SureDeleteButton"
 import usePlans from "hooks/usePlans"
+import RootLoginCheck from "./RootLoginCheck"
 
 const ApplicationDetail = () => {
     const [logoImage, setLogoImage] = useState<updateLogoImageType>({
@@ -43,6 +44,7 @@ const ApplicationDetail = () => {
     const [selectedPolicy, setSelectedPolicy] = useState('')
     const [inputDescription, setInputDescription] = useState('')
     const [passwordless, setPasswordless] = useState(false)
+    const [rootLoginAllowed, setRootLoginAllowed] = useState(false)
     const [ldapProxyServer, setLdapProxyServer] = useState<ApplicationDataType['ldapProxyServer']>({
         host: ''
     })
@@ -60,9 +62,9 @@ const ApplicationDetail = () => {
     const { uuid } = useParams()
     const isAdd = !uuid
     const appType = data?.type ?? applicationType
-    const needDomains: LocalApplicationTypes[] = ["WEB", "REDMINE", "KEYCLOAK"]
-    const readOnlyRedirectUriList: LocalApplicationTypes[] = ["PORTAL", "REDMINE"]
-    const noRedirectUri: LocalApplicationTypes[] = ["KEYCLOAK", "REDMINE"]
+    const needDomains: LocalApplicationTypes[] = ["WEB", "REDMINE", "KEYCLOAK", "JENKINS"]
+    const readOnlyRedirectUriList: LocalApplicationTypes[] = ["PORTAL", "REDMINE", "JENKINS"]
+    const noRedirectUri: LocalApplicationTypes[] = ["KEYCLOAK", "REDMINE", "JENKINS"]
     const passwordlessApplicationTypes: LocalApplicationTypes[] = ["WINDOWS_LOGIN", "LINUX_LOGIN", 'PORTAL']
     const { getApplicationTypesByPlanType } = usePlans()
     const typeItems = getApplicationTypesByPlanType().map(_ => ({
@@ -110,6 +112,7 @@ const ApplicationDetail = () => {
                 setHelpMsg(data.helpDeskMessage || "")
                 setRadiusData(data.radiusProxyServer)
                 setLdapProxyServer(data.ldapProxyServer)
+                setRootLoginAllowed(data.rootLoginAllowed?.isEnabled ?? false)
             })
         } else {
             await GetApplicationListFunc({ types: ['WINDOWS_LOGIN', 'MAC_LOGIN'] }, ({ results }) => {
@@ -144,7 +147,9 @@ const ApplicationDetail = () => {
                             inputDomainRef.current?.focus()
                             return
                         }
-                        if (needDomains.includes(appType) && !domainRegex.test(inputDomain)) {
+                        const isLocalhostDomain = /^(https?:\/\/)?localhost(:\d+)?$/i.test(inputDomain)
+                        const isHttpDomain = /^http:\/\/(([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}|(\d{1,3}\.){3}\d{1,3}|localhost)(:\d+)?(\/.*)?$/i.test(inputDomain)
+                        if (needDomains.includes(appType) && !domainRegex.test(inputDomain) && !isLocalhostDomain && !isHttpDomain) {
                             message.error(formatMessage({ id: 'INVALID_INPUT_DOMAIN_MSG' }))
                             inputDomainRef.current?.focus()
                             return
@@ -174,6 +179,9 @@ const ApplicationDetail = () => {
                                     isEnabled: passwordless
                                 } : appType === 'MAC_LOGIN' ? {
                                     isEnabled: false
+                                } : null,
+                                rootLoginAllowed: appType === 'LINUX_LOGIN' ? {
+                                    isEnabled: rootLoginAllowed
                                 } : null
                             }, () => {
                                 message.success(formatMessage({ id: 'APPLICATION_MODIFY_SUCCESS_MSG' }))
@@ -195,6 +203,9 @@ const ApplicationDetail = () => {
                                     isEnabled: passwordless
                                 } : appType === 'MAC_LOGIN' ? {
                                     isEnabled: false
+                                } : null,
+                                rootLoginAllowed: appType === 'LINUX_LOGIN' ? {
+                                    isEnabled: rootLoginAllowed
                                 } : null
                             }, (res) => {
                                 message.success(formatMessage({ id: 'APPLICATION_ADD_SUCCESS_MSG' }))
@@ -266,6 +277,11 @@ const ApplicationDetail = () => {
                             isEnabled: passwordless
                         }} onChange={value => {
                             setPasswordless(value.isEnabled)
+                        }} />}
+                        {appType === 'LINUX_LOGIN' && <RootLoginCheck value={{
+                            isEnabled: rootLoginAllowed
+                        }} onChange={value => {
+                            setRootLoginAllowed(value.isEnabled)
                         }} />}
                         {
                             needDomains.includes(appType) && <>

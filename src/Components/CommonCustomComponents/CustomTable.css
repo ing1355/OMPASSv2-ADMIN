@@ -126,17 +126,25 @@
 }
 
 .custom-pagination .ant-pagination-item {
-  border-radius: 100%;
   margin-inline-end: 4px;
 }
 
 .custom-pagination .ant-pagination-item-active>a {
-  color: var(--main-white-color) !important;
+  color: var(--main-purple-color) !important;
+}
+
+.custom-pagination .ant-pagination-item-active:hover {
+  border-color: var(--main-purple-color) !important;
+}
+
+.custom-pagination .ant-pagination-item:hover {
+  border-color: var(--main-purple-color) !important;
+  background-color: transparent !important;
+  color: var(--main-purple-color) !important;
 }
 
 .custom-pagination .ant-pagination-item-active {
-  border: none;
-  background-color: var(--main-purple-color);
+  border-color: var(--main-purple-color);
 }
 
 .custom-pagination .ant-select-selector {

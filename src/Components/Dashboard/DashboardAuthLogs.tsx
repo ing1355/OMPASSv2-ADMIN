@@ -67,12 +67,12 @@ const DashboardAuthLogs = ({ applications }: {
                     {
                         key: 'applicationType',
                         title: <FormattedMessage id="APPLICATION_TYPE_LABEL" />,
-                        render: (_, _ind, row) => getApplicationTypeLabel(row.ompassData?.application?.type ?? ""),
+                        render: (_, _ind, row) => getApplicationTypeLabel(row.application?.type ?? ""),
                     },
                     {
                         key: 'applicationName',
                         title: <FormattedMessage id="APPLICATION_NAME_COLUMN_LABEL" />,
-                        render: (_, _ind, row) => row.ompassData?.application?.name
+                        render: (_, _ind, row) => row.application?.name
                     },
                     {
                         key: 'portalUser',
@@ -82,7 +82,7 @@ const DashboardAuthLogs = ({ applications }: {
                     {
                         key: 'rpUser',
                         title: <FormattedMessage id="RP_USERNAME_COLUMN_LABEL" />,
-                        render: (_, _ind, row) => row.ompassData?.rpUser?.username
+                        render: (_, _ind, row) => row.rpUsername
                     },
                     {
                         key: 'policyAtTimeOfEvent',

@@ -22,7 +22,7 @@ const ValuesText = {
         DEFAULT_APPLICATION_TYPE: "Web API",
         WEB_APPLICATION_TYPE: "Web API",
         WINDOWS_LOGIN_APPLICATION_TYPE: "Windows 로그인",
-        LINUX_LOGIN_APPLICATION_TYPE: "Linux SSH",
+        LINUX_LOGIN_APPLICATION_TYPE: "Linux SSH (PAM)",
         RADIUS_APPLICATION_TYPE: "RADIUS",
         GOOROOM_LOGIN_APPLICATION_TYPE: "Gooroom Logno",
         MAC_LOGIN_APPLICATION_TYPE: "Mac 로그인",
@@ -32,7 +32,7 @@ const ValuesText = {
         MICROSOFT_ENTRA_ID_APPLICATION_TYPE: 'Microsoft Entra ID',
         KEYCLOAK_APPLICATION_TYPE: 'Keycloak',
         LDAP_APPLICATION_TYPE: 'LDAP',
-
+        JENKINS_APPLICATION_TYPE: 'Jenkins',
         REGISTRATION_VALUE: '등록',
         AUTHENTICATION_VALUE: '인증',
 
@@ -56,6 +56,7 @@ const ValuesText = {
         USER_STATUS_RUN: "활성화",
         USER_STATUS_LOCK: "잠김",
         USER_STATUS_WITHDRAWAL_FILTER_LABEL: "탈퇴 사용자 보기",
+        USER_PORTAL_UNUSED_FILTER_LABEL: "포탈 미사용 사용자 보기",
 
         DASHBOARD_DATE_SELECT_6HOUR: '최근 6시간',
         DASHBOARD_DATE_SELECT_12HOUR: '최근 12시간',
@@ -113,7 +114,7 @@ const ValuesText = {
         DEFAULT_APPLICATION_TYPE: "Web API",
         WEB_APPLICATION_TYPE: "Web API",
         WINDOWS_LOGIN_APPLICATION_TYPE: "Windows Logon",
-        LINUX_LOGIN_APPLICATION_TYPE: "Linux SSH",
+        LINUX_LOGIN_APPLICATION_TYPE: "Linux SSH (PAM)",
         RADIUS_APPLICATION_TYPE: "RADIUS",
         GOOROOM_LOGIN_APPLICATION_TYPE: "Gooroom Logon",
         MAC_LOGIN_APPLICATION_TYPE: "Mac Logon",
@@ -123,7 +124,7 @@ const ValuesText = {
         MICROSOFT_ENTRA_ID_APPLICATION_TYPE: 'Microsoft Entra ID',
         KEYCLOAK_APPLICATION_TYPE: 'Keycloak',
         LDAP_APPLICATION_TYPE: 'LDAP',
-        
+        JENKINS_APPLICATION_TYPE: 'Jenkins',
         REGISTRATION_VALUE: 'Registration',
         AUTHENTICATION_VALUE: 'Authentication',
 
@@ -148,6 +149,7 @@ const ValuesText = {
         USER_STATUS_RUN: "activation",
         USER_STATUS_LOCK: "Locked",
         USER_STATUS_WITHDRAWAL_FILTER_LABEL: "Show withdrawal users",
+        USER_PORTAL_UNUSED_FILTER_LABEL: "Show non-portal users",
 
         DASHBOARD_DATE_SELECT_6HOUR: '6 hours',
         DASHBOARD_DATE_SELECT_12HOUR: '12 hours',
@@ -204,7 +206,7 @@ const ValuesText = {
         DEFAULT_APPLICATION_TYPE: "Web API",
         WEB_APPLICATION_TYPE: "Web API",
         WINDOWS_LOGIN_APPLICATION_TYPE: "Windows ログオン",
-        LINUX_LOGIN_APPLICATION_TYPE: "Linux SSH",
+        LINUX_LOGIN_APPLICATION_TYPE: "Linux SSH (PAM)",
         RADIUS_APPLICATION_TYPE: "RADIUS",
         GOOROOM_LOGIN_APPLICATION_TYPE: "Gooroom ログオン",
         MAC_LOGIN_APPLICATION_TYPE: "Mac ログオン",
@@ -214,7 +216,7 @@ const ValuesText = {
         MICROSOFT_ENTRA_ID_APPLICATION_TYPE: 'Microsoft Entra ID',
         KEYCLOAK_APPLICATION_TYPE: 'Keycloak',
         LDAP_APPLICATION_TYPE: 'LDAP',
-
+        JENKINS_APPLICATION_TYPE: 'Jenkins',
         REGISTRATION_VALUE: '登録',
         AUTHENTICATION_VALUE: '認証',
 
@@ -238,6 +240,7 @@ const ValuesText = {
         USER_STATUS_RUN: "アクティブ",
         USER_STATUS_LOCK: "ロック",
         USER_STATUS_WITHDRAWAL_FILTER_LABEL: "退会ユーザー表示",
+        USER_PORTAL_UNUSED_FILTER_LABEL: "ポータル未利用ユーザー表示",
 
         DASHBOARD_DATE_SELECT_6HOUR: '直近6時間',
         DASHBOARD_DATE_SELECT_12HOUR: '直近12時間',

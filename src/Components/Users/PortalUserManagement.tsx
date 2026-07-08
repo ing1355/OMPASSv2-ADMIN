@@ -21,6 +21,9 @@ import emailUnverifiedIcon from "@assets/emailUnverifiedIcon.png"
 import { CountryCode } from "libphonenumber-js"
 import PhoneWithDialCode from "Components/CommonCustomComponents/PhoneWithDialCode"
 
+/** Side-only filter token; stripped before API (not a real status value). */
+const PORTAL_UNUSED_USER_FILTER_VALUE = '__PORTAL_UNUSED_USER__'
+
 const userRoleList = (role: UserDataType['role']): UserDataType['role'][] => role === 'ROOT' ? ['USER', 'ADMIN', 'ROOT'] : ['USER', 'ADMIN']
 
 const PortalUserManagement = () => {
@@ -47,6 +50,20 @@ const PortalUserManagement = () => {
 
             if (!filterValues || (filterValues && !filterValues.find(_ => _.key === 'statuses'))) {
                 additionalParams.statuses = userStatusTypes.filter(_ => _ !== 'WITHDRAWAL')
+            }
+
+            const statusesFilter = filterValues?.find(_ => _.key === 'statuses')
+            const statusesVal = statusesFilter?.value
+            const rawStatuses = Array.isArray(statusesVal) ? statusesVal as unknown[] : []
+            const showPortalUnusedUsers = rawStatuses.includes(PORTAL_UNUSED_USER_FILTER_VALUE)
+            if (showPortalUnusedUsers) {
+                additionalParams.excludeTempAccount = false
+            }
+            if (rawStatuses.includes(PORTAL_UNUSED_USER_FILTER_VALUE)) {
+                const cleanedStatuses = rawStatuses.filter((v) => v !== PORTAL_UNUSED_USER_FILTER_VALUE) as UserDataType['status'][]
+                additionalParams.statuses = cleanedStatuses.length > 0
+                    ? cleanedStatuses
+                    : userStatusTypes.filter(_ => _ !== 'WITHDRAWAL')
             }
 
             paramsRef.current = {
@@ -104,7 +121,10 @@ const PortalUserManagement = () => {
                         pageSize: INT_MAX_VALUE,
                         page: 0
                     }, (res) => {
-                        excelDownload(res.results.filter(_ => !_.isTemp))
+                        const rows = paramsRef.current.excludeTempAccount === false
+                            ? res.results
+                            : res.results.filter(_ => !_.isTemp)
+                        excelDownload(rows)
                     })
                 }} icon={downloadIcon} hoverIcon={downloadIconWhite}>
                     <FormattedMessage id="USER_EXCEL_DOWNLOAD_LABEL" />
@@ -167,6 +187,10 @@ const PortalUserManagement = () => {
                     })), {
                         label: formatMessage({ id: `USER_STATUS_WITHDRAWAL_FILTER_LABEL` }),
                         value: 'WITHDRAWAL',
+                        isSide: true
+                    }, {
+                        label: formatMessage({ id: 'USER_PORTAL_UNUSED_FILTER_LABEL' }),
+                        value: PORTAL_UNUSED_USER_FILTER_VALUE,
                         isSide: true
                     }]
 

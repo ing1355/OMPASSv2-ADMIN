@@ -49,7 +49,7 @@ const ValidAuthLogs = () => {
                 {
                     key: 'applicationType',
                     title: <FormattedMessage id="APPLICATION_TYPE_LABEL" />,
-                    render: (_, _ind, row) => getApplicationTypeLabel(row.ompassData?.application?.type ?? ""),
+                    render: (_, _ind, row) => getApplicationTypeLabel(row.application?.type ?? ""),
                     filterKey: 'applicationTypes',
                     filterOption: getApplicationTypesByPlanType().map(_ => ({
                         label: formatMessage({ id: _ + "_APPLICATION_TYPE" }),
@@ -59,7 +59,7 @@ const ValidAuthLogs = () => {
                 {
                     key: 'applicationName',
                     title: <FormattedMessage id="APPLICATION_NAME_COLUMN_LABEL" />,
-                    render: (_, _ind, row) => row.ompassData?.application?.name,
+                    render: (_, _ind, row) => row.application?.name,
                     sortKey: 'APPLICATION_NAME'
                 },
                 {
@@ -71,13 +71,13 @@ const ValidAuthLogs = () => {
                 {
                     key: 'rpUsername',
                     title: <FormattedMessage id="RP_USERNAME_COLUMN_LABEL" />,
-                    render: (_, _ind, row) => row.ompassData?.rpUser?.username,
+                    render: (_, _ind, row) => row.rpUsername,
                     sortKey: 'RP_USERNAME'
                 },
                 {
                     key: 'authPurpose',
                     title: <FormattedMessage id="AUTHPURPOSE_COLUMN_LABEL" />,
-                    render: (data, ind, row) => row.ompassData?.authPurpose ? <FormattedMessage id={row.ompassData.authPurpose + '_LOG_VALUE'} /> : "-",
+                    render: (data, ind, row) => row.authPurpose ? <FormattedMessage id={row.authPurpose + '_LOG_VALUE'} /> : "-",
                     filterKey: 'authPurposes',
                     filterOption: logAuthPurposeList.map(_ => ({
                         label: formatMessage({ id: _ + '_LOG_VALUE' }),

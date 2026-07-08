@@ -162,11 +162,11 @@ const FirstStep = ({ checkedChange, children }: FirstStepProps) => {
             <div className="agree-inner">
                 <AgreeText title={<FormattedMessage id='AGREE_SERVICE_TITLE_1' />} subTitle={<FormattedMessage id='AGREE_SERVICE_CONTENT_1' />} />
                 <AgreeText title={<FormattedMessage id='AGREE_SERVICE_TITLE_2' />} subTitle={<FormattedMessage id='AGREE_SERVICE_CONTENT_2' />}>
-                    {AgreePolicyList(true, 2, 9)}
+                    {AgreePolicyList(true, 2, 8)}
                 </AgreeText>
                 <AgreeText title={<FormattedMessage id='AGREE_SERVICE_TITLE_3' />} subTitle={<FormattedMessage id='AGREE_SERVICE_CONTENT_3' />} />
                 <AgreeText title={<FormattedMessage id='AGREE_SERVICE_TITLE_4' />}>
-                    {AgreePolicyList(true, 4, 6)}
+                    {AgreePolicyList(true, 4, 4)}
                 </AgreeText>
                 <div>
                     <h3><FormattedMessage id='AGREE_SERVICE_TITLE_5' /></h3>
@@ -219,7 +219,7 @@ const FirstStep = ({ checkedChange, children }: FirstStepProps) => {
             <div className="agree-inner">
                 <AgreeText title={<FormattedMessage id='AGREE_PRIVACY_POLICY_TITLE_1' />} subTitle={<FormattedMessage id='AGREE_PRIVACY_POLICY_CONTENT_1' />} />
                 <AgreeText title={<FormattedMessage id='AGREE_PRIVACY_POLICY_TITLE_2' />}>
-                    {AgreePolicyList(false, 2, 5, [1, 2, 3, 4, 5], [1, 1, 1, 1, 1])}
+                    {AgreePolicyList(false, 2, 3, [1, 2, 3, 4, 5], [1, 1, 1, 1, 1])}
                 </AgreeText>
                 <AgreeText title={<FormattedMessage id='AGREE_PRIVACY_POLICY_TITLE_3' />} subTitle={<FormattedMessage id='AGREE_PRIVACY_POLICY_CONTENT_3' />} />
                 <AgreeText title={<FormattedMessage id='AGREE_PRIVACY_POLICY_TITLE_4' />} subTitle={<FormattedMessage id='AGREE_PRIVACY_POLICY_CONTENT_4' />} />

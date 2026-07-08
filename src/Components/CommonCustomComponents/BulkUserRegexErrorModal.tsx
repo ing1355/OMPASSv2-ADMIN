@@ -2,7 +2,7 @@ import CustomModal from "Components/Modal/CustomModal"
 import { FormattedMessage, useIntl } from "react-intl"
 
 const BulkUserRegexErrorModal = ({ open, onCancel, onOk, showError }: { open: boolean, onCancel: () => void, onOk: () => Promise<void>, showError: UserRegexErrorDataType[] }) => {
-    console.log(showError)
+    
     const { formatMessage } = useIntl()
     return <CustomModal
         open={open}

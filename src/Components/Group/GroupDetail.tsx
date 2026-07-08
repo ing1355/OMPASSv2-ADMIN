@@ -5,9 +5,9 @@ import Contents from "Components/Layout/Contents"
 import ContentsHeader from "Components/Layout/ContentsHeader"
 import CustomInputRow from "Components/CommonCustomComponents/CustomInputRow"
 import UserTransfer from "Components/Group/UserTransfer"
-import { AddUserGroupDataFunc, DeleteUserGroupDataFunc, GetPoliciesListFunc, GetUserGroupDetailDataFunc, UpdateUserGroupDataFunc } from "Functions/ApiFunctions"
+import { AddUserGroupDataFunc, DeleteUserGroupDataFunc, GetApplicationListFunc, GetPoliciesListFunc, GetUserGroupDetailDataFunc, UpdateUserGroupDataFunc } from "Functions/ApiFunctions"
 import { message, Radio, RadioChangeEvent, Space } from "antd"
-import { useEffect, useLayoutEffect, useRef, useState } from "react"
+import { useLayoutEffect, useRef, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
 import { useNavigate, useParams } from "react-router"
 import groupViewAlignIcon from '@assets/groupAlignIcon.png'
@@ -27,12 +27,12 @@ const GroupDetail = () => {
     const [inputDescription, setInputDescription] = useState('')
     const [selectedPolicies, setSelectedPolicies] = useState<UserGroupPolicyType[]>([])
     const [selectedPolicy, setSelectedPolicy] = useState<PolicyListDataType['id']>('')
-    const [selectedUsers, setSelectedUsers] = useState<UserHierarchyDataRpUserType['id'][]>([])
+    const [selectedUsers, setSelectedUsers] = useState<GroupTransferRpUserMapDataType[]>([])
     const [selectedView, setSelectedView] = useState<UserGroupViewType>('portal')
     const [selectedApplicationType, setSelectedApplicationType] = useState<LocalApplicationTypes>(undefined)
     const [dataLoading, setDataLoading] = useState(false)
     const [policiesData, setPoliciesData] = useState<PolicyListDataType[]>([])
-    const [refresh, setRefresh] = useState(false)
+    const [applicationListForPortal, setApplicationListForPortal] = useState<ApplicationListDataType[]>([])
     const inputNameRef = useRef<HTMLInputElement>(null)
     const navigate = useNavigate()
     const { uuid } = useParams()
@@ -57,7 +57,7 @@ const GroupDetail = () => {
                 setInputName(data.name)
                 setInputDescription(data.description)
                 setSelectedPolicies(data.policies)
-                setSelectedUsers(data.rpUserIds)
+                setSelectedUsers(data.rpUsers)
             }).finally(() => {
                 setDataLoading(false)
             })
@@ -71,13 +71,14 @@ const GroupDetail = () => {
         }, ({ results, totalCount }) => {
             setPoliciesData(results)
         })
+        GetApplicationListFunc({
+            page: 0,
+            pageSize: INT_MAX_VALUE
+        }, ({ results }) => {
+            setApplicationListForPortal(results)
+        })
         GetDatas()
-        setRefresh(true)
     }, [uuid])
-
-    useEffect(() => {
-        if (refresh) setRefresh(false)
-    }, [refresh])
 
     useLayoutEffect(() => {
         if (selectedPolicy) {
@@ -102,7 +103,7 @@ const GroupDetail = () => {
                     name: inputName,
                     description: inputDescription,
                     policies: selectedPolicies,
-                    rpUserIds: selectedUsers
+                    rpUserIds: selectedUsers.map(_ => _.rpUser.id)
                 } as UserGroupParamsType
                 if (isAdd) {
                     return AddUserGroupDataFunc(params, (res) => {
@@ -114,7 +115,6 @@ const GroupDetail = () => {
                 } else {
                     return UpdateUserGroupDataFunc(uuid, params, () => {
                         message.success(formatMessage({ id: 'GROUP_MODIFY_SUCCESS_MSG' }))
-                        setRefresh(true)
                     })
                 }
             }}>
@@ -191,7 +191,7 @@ const GroupDetail = () => {
                         </Radio.Button>
                     </Radio.Group>
                 </Space>
-                <UserTransfer selectedUsers={selectedUsers} setSelectedUsers={setSelectedUsers} viewStyle={selectedView} refresh={refresh} />
+                <UserTransfer selectedUsers={selectedUsers} setSelectedUsers={setSelectedUsers} viewStyle={selectedView} applicationList={applicationListForPortal} />
             </CustomInputRow>
         </div>
     </Contents>

@@ -72,6 +72,7 @@ type SubDomainInfoDataType = {
   macOsAgentUrl?: string
   windowsAgentUrl?: string
   linuxPamDownloadUrl?: string
+  linuxPamRockyDownloadUrl?: string
   ompassProxyDownloadUrl?: string
   redminePluginDownloadUrl?: string
   keycloakPluginDownloadUrl?: string
@@ -178,10 +179,18 @@ type LdapConfigDataType = {
 }
 
 type RpUserListDataType = {
-  portalUser: PortalUserType
+  tenant?: {
+    id: string
+    name: string
+    timeZone: string
+    logoImage: logoImageType
+  }
+  portalUser: PortalUserType & {
+    name: UserNameType
+  }
   rpUser: RPUserType
   authenticationInfoId: AuthenticatorDataType['id']
-  groupName: UserGroupDataType['name']
+  groupName: UserGroupDataType['name'] | null
   application: {
     type: ApplicationDataType['type']
     name: ApplicationDataType['name']
@@ -191,7 +200,11 @@ type RpUserListDataType = {
   lastLoggedInAuthenticator: AuthenticatorDataType['type']
   ompassDeviceName: string
   ompassAppVersion: string
-  pcName?: string
-  windowsAgentVersion?: string
+  pcName?: string | null
+  windowsAgentVersion?: string | null
+  macPackageVersion?: string | null
+  windowsPackageVersion?: string | null
+  linuxPamPackageVersion?: string | null
+  hostname?: string | null
   hasPasscode: boolean
 }

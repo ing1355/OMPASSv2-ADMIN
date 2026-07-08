@@ -14,7 +14,9 @@ const pathByApplicationType: {
 } = {
     'WEB': 'web',
     'LINUX_LOGIN': 'linux_ssh',
-    'RADIUS': 'radius',
+    'LINUX_SSH_ROCKY': 'linux_ssh_rocky',
+    // 'RADIUS': 'radius',
+    'JENKINS': 'jenkins',
     'REDMINE': 'redmine',
     'WINDOWS_LOGIN': 'windows_logon',
     'MICROSOFT_ENTRA_ID': 'ms_entra_id',
@@ -35,7 +37,7 @@ const LoadMdFileComponent = () => {
     const category = useParams().category as DocumentCategoryType
     const startedUrl = useLocation().pathname.startsWith('/docs/user') ? `/docs/${langConverter(lang)}/user` : `/docs/${langConverter(lang)}`
     const navigate = useNavigate()
-    
+
     async function fetchMarkdownFile(url: string) {
         try {
             // GET 요청으로 원격 파일 읽기
@@ -97,7 +99,7 @@ const LoadMdFileComponent = () => {
             fetchMTime(`${startedUrl}/${category}/${type}/modifyTime`)
         }
     }, [type, lang])
-    
+
     return <>
         {
             isReady && <div>
@@ -105,16 +107,14 @@ const LoadMdFileComponent = () => {
             </div>
         }
         {data && <div className="application-docs-modify-time-container">
-            <div className="wmde-markdown wmde-markdown-color">
-                <h6>
-                    Last Modified: {mTime}
-                </h6>
-            </div>
+            <h6>
+                Last Modified: {mTime}
+            </h6>
         </div>}
         {data && <MarkdownPreview source={data} style={{
             padding: '16px 32px 128px 32px',
             overflowY: 'auto',
-        }}/>}
+        }} wrapperElement={{ "data-color-mode": "light" }} />}
     </>
 }
 

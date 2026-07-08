@@ -5,176 +5,85 @@ import groupRightArrowIcon from '@assets/groupRightArrowIcon.png'
 import groupRightArrowIconHover from '@assets/groupRightArrowIconHover.png'
 import groupResetIcon from '@assets/groupResetIcon.png'
 import groupResetIconHover from '@assets/groupResetIconHover.png'
-import { useEffect, useMemo, useState } from 'react'
-import { GetApplicationListFunc, GetUserGroupDataListFunc, GetUserHierarchyFunc } from 'Functions/ApiFunctions'
+import CustomModal from 'Components/Modal/CustomModal'
+import { useCallback, useState } from 'react'
 import { message } from 'antd'
 import TransferContainer from './TransferContainer'
 import { SetStateType } from 'Types/PropsTypes'
-import { INT_MAX_VALUE } from 'Constants/ConstantValues'
 import './UserTransfer.css'
-import CustomModal from 'Components/Modal/CustomModal'
 import { FormattedMessage, useIntl } from 'react-intl'
-import usePlans from 'hooks/usePlans'
 
 type UserTransferProps = {
-    selectedUsers: UserHierarchyDataRpUserType['id'][]
-    setSelectedUsers: SetStateType<UserHierarchyDataRpUserType['id'][]>
+    selectedUsers: GroupTransferRpUserMapDataType[]
+    setSelectedUsers: SetStateType<GroupTransferRpUserMapDataType[]>
     viewStyle: UserGroupViewType
-    refresh: boolean
+    applicationList: ApplicationListDataType[]
 }
 
-const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: UserTransferProps) => {
-    const [userDatas, setUserDatas] = useState<UserHierarchyDataType[]>([])
-    const [tempUsers, setTempUsers] = useState<UserHierarchyDataRpUserType['id'][]>([])
-    const [selectedTempUsers, setSelectedTempUsers] = useState<UserHierarchyDataRpUserType['id'][]>([])
+const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, applicationList }: UserTransferProps) => {
+    const [tempUsers, setTempUsers] = useState<GroupTransferRpUserMapDataType[]>([])
+    const [selectedTempUsers, setSelectedTempUsers] = useState<GroupTransferRpUserMapDataType[]>([])
+    const [sourceAutoCollapseToken, setSourceAutoCollapseToken] = useState(0)
+    const [includeAutoCollapseToken, setIncludeAutoCollapseToken] = useState(0)
+    const [candidateUsersByRpUserId, setCandidateUsersByRpUserId] = useState<Record<GroupTransferRpUserMapDataType['rpUser']['id'], GroupTransferRpUserMapDataType>>({})
     const [onLeft, setOnLeft] = useState(false)
     const [onRight, setOnRight] = useState(false)
     const [onReset, setOnReset] = useState(false)
-    const [sureChange, setSureChange] = useState(false)
-    const [applicationDatas, setApplicationDatas] = useState<ApplicationListDataType[]>([])
-    const [dataLoading, setDataLoading] = useState(false)
+    const [groupMoveConfirmOpen, setGroupMoveConfirmOpen] = useState(false)
+    const [pendingConfirmUsers, setPendingConfirmUsers] = useState<GroupTransferRpUserMapDataType[]>([])
     const { formatMessage } = useIntl()
-    const { getApplicationTypesByPlanType } = usePlans()
 
-    const filteredUserDatas = useMemo(() => {
-        console.log(userDatas)
-        if (viewStyle === 'portal') {
-            const firstFiltered = userDatas.map(user => ({
-                ...user,
-                applications: user.applications.map(app => ({
-                    ...app,
-                    rpUsers: app.rpUsers.filter(rp => !selectedUsers.includes(rp.id))
-                }))
-            }))
-            const secondFiltered = firstFiltered.map(user => ({
-                ...user,
-                applications: user.applications.filter(app => app.rpUsers.length > 0)
-            }))
-            const thirdFiltered = secondFiltered.filter(user => user.applications.length > 0)
-            return thirdFiltered
-        } else if (viewStyle === 'application') {
-            const temp = userDatas.flatMap(user => user.applications.map(app => ({
-                appId: app.id,
-                rpUsers: app.rpUsers,
-                portalName: user.name,
-                portalUsername: user.username
-            })))
-            const appTemp = [...applicationDatas].sort((a, b) => getApplicationTypesByPlanType().findIndex(t => t === a.type) - getApplicationTypesByPlanType().findIndex(t => t === b.type))
-            const appDatas = appTemp.map(app => {
-                return {
-                    id: app.id,
-                    name: app.name,
-                    logoImage: app.logoImage,
-                    rpUsers: temp.filter(t => t.appId === app.id).flatMap(user => user.rpUsers.flatMap(rpUser => ({
-                        portalUsername: user.portalUsername,
-                        portalName: user.portalName,
-                        id: rpUser.id,
-                        username: rpUser.username,
-                        groupId: rpUser.groupId,
-                        groupName: rpUser.groupName
-                    })))
+    const handleVisibleUsersDataChange = useCallback((items: GroupTransferRpUserMapDataType[]) => {
+        setCandidateUsersByRpUserId(prev => {
+            let changed = false
+            const next = { ...prev }
+            items.forEach((item) => {
+                const key = item.rpUser.id
+                const before = prev[key]
+                if (
+                    !before
+                    || before.applicationId !== item.applicationId
+                    || before.portalUser.userId !== item.portalUser.userId
+                    || before.portalUser.username !== item.portalUser.username
+                    || before.rpUser.username !== item.rpUser.username
+                    || before.groupName !== item.groupName
+                ) {
+                    next[key] = item
+                    changed = true
                 }
-            }).filter(app => app.rpUsers.length > 0)
-            const firstFiltered = appDatas.map(app => ({
-                ...app,
-                rpUsers: app.rpUsers.filter(user => !selectedUsers.includes(user.id))
-            }))
-            const secondFiltered = firstFiltered.filter(first => first.rpUsers.length > 0)
-            return secondFiltered
-        } else {
-            return []
-        }
-    }, [userDatas, selectedUsers, viewStyle])
-
-    const filteredSelectedUserDatas = useMemo(() => {
-        if (viewStyle === 'portal') {
-            const firstFiltered = userDatas.map(user => ({
-                ...user,
-                applications: user.applications.map(app => ({
-                    ...app,
-                    rpUsers: app.rpUsers.filter(rp => selectedUsers.includes(rp.id))
-                }))
-            }))
-            const secondFiltered = firstFiltered.map(user => ({
-                ...user,
-                applications: user.applications.filter(app => app.rpUsers.length > 0)
-            }))
-            const thirdFiltered = secondFiltered.filter(user => user.applications.length > 0)
-            return thirdFiltered
-        } else if (viewStyle === 'application') {
-            const temp = userDatas.flatMap(user => user.applications.map(app => ({
-                appId: app.id,
-                rpUsers: app.rpUsers,
-                portalName: user.name,
-                portalUsername: user.username
-            })))
-            const appTemp = [...applicationDatas].sort((a, b) => getApplicationTypesByPlanType().findIndex(t => t === a.type) - getApplicationTypesByPlanType().findIndex(t => t === b.type))
-            const appDatas = appTemp.map(app => ({
-                id: app.id,
-                name: app.name,
-                logoImage: app.logoImage,
-                rpUsers: temp.filter(t => t.appId === app.id).flatMap(user => ({
-                    portalUsername: user.portalUsername,
-                    portalName: user.portalName,
-                    id: user.rpUsers[0].id,
-                    username: user.rpUsers[0].username,
-                    groupId: user.rpUsers[0].groupId,
-                    groupName: user.rpUsers[0].groupName
-                }))
-            })).filter(app => app.rpUsers.length > 0)
-            const firstFiltered = appDatas.map(app => ({
-                ...app,
-                rpUsers: app.rpUsers.filter(user => selectedUsers.includes(user.id))
-            }))
-            const secondFiltered = firstFiltered.filter(first => first.rpUsers.length > 0)
-            return secondFiltered
-        }
-    }, [userDatas, selectedUsers, viewStyle])
-
-    const GetDatas = async () => {
-        setDataLoading(true)
-        GetUserGroupDataListFunc({ page: 0, pageSize: INT_MAX_VALUE }, (groups) => {
-            const groupDatas = groups.results
-            GetApplicationListFunc({ page: 0, pageSize: INT_MAX_VALUE }, ({ results }) => {
-                setApplicationDatas(results)
-                GetUserHierarchyFunc(data => {
-                    setUserDatas(data.filter(_ => _.rpUsers.length > 0).map(_ => {
-                        return {
-                            id: _.id,
-                            name: _.name,
-                            username: _.username,
-                            applications: [...new Set(_.rpUsers.flatMap(__ => __.applicationId))].map(__ => {
-                                const targetApp = results.find(app => app.id === __)!
-                                return {
-                                    id: __,
-                                    logoImage: targetApp.logoImage,
-                                    name: targetApp.name,
-                                    type: targetApp.type,
-                                    rpUsers: _.rpUsers.filter(rp => rp.applicationId === __).map(rp => ({
-                                        id: rp.rpUserId,
-                                        username: rp.rpUsername,
-                                        groupId: rp.groupId,
-                                        groupName: groupDatas.find(gr => gr.id === rp.groupId)?.name || ""
-                                    }))
-                                }
-                            }).sort((a, b) => getApplicationTypesByPlanType().findIndex(t => t === a.type) - getApplicationTypesByPlanType().findIndex(t => t === b.type))
-                        }
-                    }))
-                }).finally(() => {
-                    setDataLoading(false)
-                })
             })
+            return changed ? next : prev
         })
+    }, [])
+
+    const mergeUsers = (base: GroupTransferRpUserMapDataType[], incoming: GroupTransferRpUserMapDataType[]) => {
+        const selectedIds = new Set(base.map(_ => _.rpUser.id))
+        return base.concat(incoming.flatMap(user => {
+            if (selectedIds.has(user.rpUser.id)) return []
+            selectedIds.add(user.rpUser.id)
+            return [user]
+        }))
     }
 
-    useEffect(() => {
-        if (refresh) {
-            GetDatas()
+    const applyCandidates = (candidates: GroupTransferRpUserMapDataType[]) => {
+        if (candidates.length === 0) {
+            setTempUsers([])
+            return
         }
-    }, [refresh])
+        setSelectedUsers(prev => mergeUsers(prev, candidates))
+        setTempUsers([])
+    }
 
     return <div className="custom-transfer-user-container">
-        <TransferContainer datas={filteredUserDatas as UserTransferDataType[]} selected={tempUsers} setSelected={setTempUsers} viewStyle={viewStyle} title={<FormattedMessage id="GROUP_TRANSFER_NOT_INCLUDE_USER_LABEL" />} dataLoading={dataLoading} />
+        <TransferContainer
+            selected={tempUsers}
+            setSelected={setTempUsers}
+            selectedUsers={selectedUsers}
+            isIncludeView={false}
+            viewStyle={viewStyle}
+            title={<FormattedMessage id={viewStyle === 'application' ? 'GROUP_TRANSFER_NOT_INCLUDE_APPLICATION_LABEL' : 'GROUP_TRANSFER_NOT_INCLUDE_USER_LABEL'} />}
+            applicationList={applicationList}
+            autoCollapseToken={sourceAutoCollapseToken} />
         <div className='custom-transfer-buttons-container'>
             <img
                 src={onRight ? groupRightArrowIconHover : groupRightArrowIcon}
@@ -185,23 +94,15 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
                     setOnRight(false)
                 }}
                 onClick={() => {
-                    if (tempUsers.length === 0) return message.error(formatMessage({ id: 'PLEASE_SELECT_FOR_GROUP_INCLUDE_MSG' }))
-                    let hasGroup = false
-                    if (viewStyle === 'portal') {
-                        const temp = filteredUserDatas as UserHierarchyDataType[]
-                        const users = temp.flatMap(t => t.applications.flatMap(app => app.rpUsers))
-                        hasGroup = users.filter(_ => tempUsers.includes(_.id)).some(user => user.groupId)
-                    } else if (viewStyle === 'application') {
-                        const temp = filteredUserDatas as UserHierarchyDataApplicationViewDataType[]
-                        const users = temp.flatMap(t => t.rpUsers)
-                        hasGroup = users.filter(_ => tempUsers.includes(_.id)).some(user => user.groupId)
+                    console.log(tempUsers)
+                    if (tempUsers.length === 0) return message.warning(formatMessage({ id: 'PLEASE_SELECT_FOR_GROUP_INCLUDE_MSG' }))
+                    if (tempUsers.some(_ => !!_.groupName)) {
+                        setPendingConfirmUsers(tempUsers)
+                        setGroupMoveConfirmOpen(true)
+                        return
                     }
-                    if (hasGroup) {
-                        setSureChange(true)
-                    } else {
-                        setSelectedUsers(selectedUsers.concat(tempUsers))
-                        setTempUsers([])
-                    }
+                    applyCandidates(tempUsers)
+                    setSourceAutoCollapseToken(prev => prev + 1)
                 }} />
             <img
                 src={onLeft ? groupLeftArrowIconHover : groupLeftArrowIcon}
@@ -212,9 +113,10 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
                     setOnLeft(false)
                 }}
                 onClick={() => {
-                    if (selectedTempUsers.length === 0) return message.error(formatMessage({ id: 'PLEASE_SELECT_FOR_GROUP_OUT_MSG' }))
-                    setSelectedUsers(selectedUsers.filter(_ => !selectedTempUsers.includes(_)))
+                    if (selectedTempUsers.length === 0) return message.warning(formatMessage({ id: 'PLEASE_SELECT_FOR_GROUP_OUT_MSG' }))
+                    setSelectedUsers(selectedUsers.filter(_ => !selectedTempUsers.some(tempUser => tempUser.rpUser.id === _.rpUser.id)))
                     setSelectedTempUsers([])
+                    setIncludeAutoCollapseToken(prev => prev + 1)
                 }} />
             <img
                 src={onReset ? groupResetIcon : groupResetIconHover}
@@ -231,21 +133,36 @@ const UserTransfer = ({ selectedUsers, setSelectedUsers, viewStyle, refresh }: U
                     message.success(formatMessage({ id: 'GROUP_USER_RESET_SUCCESS_MSG' }))
                 }} />
         </div>
-        <TransferContainer datas={filteredSelectedUserDatas as UserTransferDataType[]} selected={selectedTempUsers} setSelected={setSelectedTempUsers} viewStyle={viewStyle} title={<FormattedMessage id="GROUP_TRANSFER_INCLUDE_USER_LABEL" />} dataLoading={dataLoading} />
+        <TransferContainer
+            selected={selectedTempUsers}
+            setSelected={setSelectedTempUsers}
+            selectedUsers={selectedUsers}
+            isIncludeView={true}
+            viewStyle={viewStyle}
+            title={<FormattedMessage id="GROUP_TRANSFER_INCLUDE_USER_LABEL" />}
+            applicationList={applicationList}
+            autoCollapseToken={includeAutoCollapseToken} />
         <CustomModal
-            open={sureChange}
+            open={groupMoveConfirmOpen}
             onCancel={() => {
-                setSureChange(false);
+                setGroupMoveConfirmOpen(false)
+                setPendingConfirmUsers([])
             }}
             type="warning"
             typeTitle={<FormattedMessage id="GROUP_TRANSFER_MODAL_TITLE_LABEL" />}
-            typeContent={<><FormattedMessage id="GROUP_TRANSFER_MODAL_SUBSCRIPTION_LABEL_1" /><br /><FormattedMessage id="GROUP_TRANSFER_MODAL_SUBSCRIPTION_LABEL_2" /></>}
+            typeContent={<>
+                <div><FormattedMessage id="GROUP_TRANSFER_MODAL_SUBSCRIPTION_LABEL_1" /></div>
+                <div><FormattedMessage id="GROUP_TRANSFER_MODAL_SUBSCRIPTION_LABEL_2" /></div>
+            </>}
             yesOrNo
+            buttonLoading
             okCallback={async () => {
-                setSelectedUsers(selectedUsers.concat(tempUsers))
-                setTempUsers([])
-                setSureChange(false)
-            }} buttonLoading />
+                applyCandidates(pendingConfirmUsers)
+                setGroupMoveConfirmOpen(false)
+                setPendingConfirmUsers([])
+                setSourceAutoCollapseToken(prev => prev + 1)
+            }}
+        />
     </div>
 }
 

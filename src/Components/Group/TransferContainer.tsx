@@ -1,22 +1,23 @@
 import Button from "Components/CommonCustomComponents/Button"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { SetStateType } from "Types/PropsTypes"
 import groupViewClearIcon from '@assets/groupViewClearIcon.png'
 import groupViewClearIconColor from '@assets/resetIcon.png'
 import Input from 'Components/CommonCustomComponents/Input'
 import useDebounce from "hooks/useDebounce"
-import useFullName from "hooks/useFullName"
 import PortalTypeView from "./PortalTypeView"
 import ApplicationTypeView from "./ApplicationTypeView"
 import { FormattedMessage, useIntl } from "react-intl"
 
 type TransferContainerProps = {
-    datas: UserTransferDataType[]
-    selected: UserHierarchyDataRpUserType['id'][]
-    setSelected: SetStateType<UserHierarchyDataRpUserType['id'][]>
+    selected: GroupTransferRpUserMapDataType[]
+    setSelected: SetStateType<GroupTransferRpUserMapDataType[]>
+    selectedUsers: GroupTransferRpUserMapDataType[]
+    isIncludeView: boolean
     viewStyle: UserGroupViewType
     title: React.ReactNode
-    dataLoading: boolean
+    applicationList: ApplicationListDataType[]
+    autoCollapseToken?: number
 }
 
 type ClearBtnProps = {
@@ -32,92 +33,64 @@ const ClearBtn = ({ onClick }: ClearBtnProps) => {
     }} onMouseLeave={() => {
         setOnMouse(false)
     }}>
-        <img src={onMouse ? groupViewClearIconColor : groupViewClearIcon} />
+        <img src={onMouse ? groupViewClearIconColor : groupViewClearIcon} alt="" />
     </div>
 }
 
-const TransferContainer = ({ datas, selected, setSelected, viewStyle, title, dataLoading }: TransferContainerProps) => {
-    const [searchInput, setSearchInput] = useState("")
-    const [searchFilter, setSearchFilter] = useState('')
+const TransferContainer = ({ selected, setSelected, selectedUsers, isIncludeView, viewStyle, title, applicationList, autoCollapseToken = 0 }: TransferContainerProps) => {
+    const [parentSearchInput, setParentSearchInput] = useState("")
+    const [parentSearchFilter, setParentSearchFilter] = useState('')
+    const [detailSearchInput, setDetailSearchInput] = useState("")
+    const [detailSearchFilter, setDetailSearchFilter] = useState('')
+    const [visibleUsers, setVisibleUsers] = useState<GroupTransferRpUserMapDataType[]>([])
+    const [listTotalCount, setListTotalCount] = useState(0)
+    const [detailOpened, setDetailOpened] = useState(false)
 
-    const rpUserNums = useMemo(() => {
-        let temp
-        if (viewStyle === 'portal') {
-            temp = datas as UserHierarchyDataType[]
-            return temp.reduce((pre, cur) => pre + cur.applications.reduce((_pre, _cur) => _pre + _cur.rpUsers.length, 0), 0)
-        } else if (viewStyle === 'application') {
-            temp = datas as UserHierarchyDataApplicationViewDataType[]
-            return temp.reduce((pre, cur) => pre + cur.rpUsers.length, 0)
-        } else {
-            // temp = datas as UserHierarchyDataGroupViewDataType[]
-            // return temp.reduce((pre, cur) => pre + cur.applications.reduce((_pre, _cur) => _pre + _cur.rpUsers.length, 0), 0)
-        }
-    }, [datas, viewStyle])
-
-    const getFullName = useFullName();
-    const searchInputRef = useRef(searchInput)
     const debounce = useDebounce()
     const { formatMessage } = useIntl()
 
-    const filteredDatas = useMemo(() => {
-        if (searchFilter) {
-            let _data
-            if (viewStyle === 'portal') {
-                _data = datas as UserHierarchyDataType[]
-
-                const firstFiltered = _data.map(data => ({
-                    ...data,
-                    applications: data.applications.map(app => ({
-                        ...app,
-                        rpUsers: app.rpUsers.filter(user => data.username.includes(searchFilter) || getFullName(data.name).includes(searchFilter) || user.username.includes(searchFilter))
-                    }))
-                }))
-                const secondFiltered = firstFiltered.map(data => ({
-                    ...data,
-                    applications: data.applications.filter(app => app.rpUsers.length > 0)
-                }))
-                return secondFiltered.filter(data => data.applications.length > 0)
-            } else if (viewStyle === 'application') {
-                _data = datas as UserHierarchyDataApplicationViewDataType[]
-                return _data.map(data => ({
-                    ...data,
-                    rpUsers: data.rpUsers.filter(rp => rp.username.includes(searchFilter) || rp.portalUsername.includes(searchFilter) || getFullName(rp.portalName).includes(searchFilter))
-                })).filter(_ => _.rpUsers.length > 0)
-            } else {
-                return datas
-            }
-        } else {
-            return datas
-        }
-    }, [datas, searchFilter, viewStyle])
-
-    const rpUserIds = useMemo(() => {
-        if (viewStyle === 'portal') {
-            return (filteredDatas as UserHierarchyDataType[]).flatMap(_ => _.applications.flatMap(app => app.rpUsers.map(rp => rp.id)))
-        } else if (viewStyle === 'application') {
-            return (filteredDatas as UserHierarchyDataApplicationViewDataType[]).flatMap(_ => _.rpUsers.map(user => user.id))
-        } else return []
-    }, [filteredDatas, viewStyle])
-
     useEffect(() => {
         debounce(() => {
-            setSearchFilter(searchInputRef.current)
-        }, 200)()
-        searchInputRef.current = searchInput
-    }, [searchInput])
+            setParentSearchFilter(parentSearchInput)
+        }, 66)()
+    }, [parentSearchInput, debounce])
+    useEffect(() => {
+        debounce(() => {
+            setDetailSearchFilter(detailSearchInput)
+        }, 66)()
+    }, [detailSearchInput, debounce])
+    useEffect(() => {
+        if (!detailOpened) return
+        setDetailSearchInput('')
+        setDetailSearchFilter('')
+    }, [detailOpened])
+
+    const headerTitle = viewStyle === 'application' && !isIncludeView && detailOpened
+        ? <FormattedMessage id="GROUP_TRANSFER_APPLICATION_USER_COUNT_LABEL" />
+        : viewStyle === 'portal' && !isIncludeView && detailOpened
+            ? <FormattedMessage id="GROUP_TRANSFER_NOT_INCLUDE_APPLICATION_USER_LABEL" />
+        : title
+    const effectiveSearchFilter = detailOpened ? detailSearchFilter : parentSearchFilter
+    const effectiveSearchInput = detailOpened ? detailSearchInput : parentSearchInput
 
     return <div className='custom-transfer-user-content-box'>
         <div className='custom-transfer-user-content-header'>
-            <span>{title} <b>{rpUserNums}</b></span>
+            <span>{headerTitle} <b>{listTotalCount}</b></span>
             <div className="custom-transfer-user-button-container">
-                <Button className='st5' disabled={filteredDatas.length === 0} onClick={() => {
-                    if (rpUserIds.every(id => selected.includes(id))) {
-                        setSelected(selected.filter(_ => !rpUserIds.includes(_)))
+                <Button className='st5' disabled={!detailOpened || visibleUsers.length === 0} onClick={() => {
+                    
+                    if (visibleUsers.every(user => selected.some(selectedUser => selectedUser.rpUser.id === user.rpUser.id))) {
+                        setSelected(selected.filter(_ => !visibleUsers.some(user => user.rpUser.id === _.rpUser.id)))
                     } else {
-                        setSelected([...new Set(selected.concat(rpUserIds))])
+                        setSelected([...new Set(selected.concat(visibleUsers.map(user => ({
+                            portalUser: { userId: user.portalUser.userId, username: user.portalUser.username, name: user.portalUser.name },
+                            applicationId: user.applicationId,
+                            rpUser: { id: user.rpUser.id, username: user.rpUser.username },
+                            groupName: user.groupName,
+                        }))))])
                     }
                 }}>
-                    <FormattedMessage id={rpUserNums === selected.length ? 'ALL_DESELECT_LABEL' : 'ALL_SELECT_LABEL'}/>
+                    <FormattedMessage id={visibleUsers.length > 0 && visibleUsers.every(user => selected.some(selectedUser => selectedUser.rpUser.id === user.rpUser.id)) ? 'ALL_DESELECT_LABEL' : 'ALL_SELECT_LABEL'} />
                 </Button>
                 <ClearBtn onClick={() => {
                     setSelected([])
@@ -126,14 +99,41 @@ const TransferContainer = ({ datas, selected, setSelected, viewStyle, title, dat
         </div>
         <div className='custom-transfer-user-list-container'>
             {
-                viewStyle === 'portal' ? <PortalTypeView datas={filteredDatas as UserHierarchyDataType[]} selected={selected} setSelected={setSelected} height={700} loading={dataLoading} />
-                    : <ApplicationTypeView datas={filteredDatas as UserHierarchyDataApplicationViewDataType[]} selected={selected} setSelected={setSelected} height={700} loading={dataLoading} />
+                viewStyle === 'portal'
+                    ? <PortalTypeView
+                        selected={selected}
+                        setSelected={setSelected}
+                        selectedUsers={selectedUsers}
+                        isIncludeView={isIncludeView}
+                        searchFilter={effectiveSearchFilter}
+                        height="100%"
+                        onBulkDetailOpenChange={setDetailOpened}
+                        onVisibleUsersChange={setVisibleUsers}
+                        onTotalCountChange={setListTotalCount}
+                        applicationList={applicationList}
+                        autoCollapseToken={autoCollapseToken} />
+                    : <ApplicationTypeView
+                        selected={selected}
+                        setSelected={setSelected}
+                        selectedUsers={selectedUsers}
+                        isIncludeView={isIncludeView}
+                        searchFilter={effectiveSearchFilter}
+                        height="100%"
+                        onBulkDetailOpenChange={setDetailOpened}
+                        onVisibleUsersChange={setVisibleUsers}
+                        onTotalCountChange={setListTotalCount}
+                        applicationList={applicationList}
+                        autoCollapseToken={autoCollapseToken} />
             }
         </div>
         <div className='custom-transfer-user-list-search-container'>
             <div>
-                <Input value={searchInput} valueChange={value => {
-                    setSearchInput(value)
+                <Input value={effectiveSearchInput} valueChange={value => {
+                    if (detailOpened) {
+                        setDetailSearchInput(value)
+                        return
+                    }
+                    setParentSearchInput(value)
                 }} placeholder={formatMessage({id:'GROUP_USER_TRANSFER_SEARCH_PLACEHOLDER'})} className="custom-transfer-user-search"/>
             </div>
         </div>

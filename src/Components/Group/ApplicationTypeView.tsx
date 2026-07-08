@@ -1,183 +1,390 @@
-import { useEffect, useState, useMemo, useCallback } from "react"
-import { VariableSizeList as List } from 'react-window'
-import rpUesrIcon from '@assets/groupUserIcon.png'
-import useFullName from "hooks/useFullName"
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
+import { Pagination } from "antd"
 import { logoImageWithDefaultImage } from "Functions/GlobalFunctions"
+import { GetApplicationListFunc, GetUsersByApplicationIdFunc } from "Functions/ApiFunctions"
+import groupUserIcon from '@assets/groupUserIcon.png'
 import { SetStateType } from "Types/PropsTypes"
-import GroupOpen from "./GroupOpen"
 import { FormattedMessage } from "react-intl"
+import { GROUP_DETAIL_USER_TRANSFER_PAGE_SIZE } from "./ConstantsValues"
 
 type ApplicationTypeViewProps = {
-    datas: UserHierarchyDataApplicationViewDataType[]
-    selected: UserHierarchyDataRpUserType['id'][]
-    setSelected: SetStateType<UserHierarchyDataRpUserType['id'][]>
-    height?: number
-    loading: boolean
+    selected: GroupTransferRpUserMapDataType[]
+    setSelected: SetStateType<GroupTransferRpUserMapDataType[]>
+    selectedUsers: GroupTransferRpUserMapDataType[]
+    isIncludeView: boolean
+    searchFilter: string
+    onVisibleUsersChange: (users: GroupTransferRpUserMapDataType[]) => void
+    onTotalCountChange: (count: number) => void
+    applicationList: ApplicationListDataType[]
+    height?: number | string
+    onBulkDetailOpenChange?: (open: boolean) => void
+    autoCollapseToken?: number
+    onSelectedPreviewItemsChange?: (items: { id: string; portalLabel?: string; applicationLabel?: string; portalUsername?: string; portalName?: UserNameType; applicationId?: ApplicationListDataType['id']; applicationName?: string; rpUsername?: string }[]) => void
 }
 
-// 트리 아이템의 높이를 계산하는 함수
-const calculateItemHeight = (data: UserHierarchyDataApplicationViewDataType, opened: UserHierarchyDataApplicationViewDataType['id'][]) => {
-    const baseHeight = 40; // 기본 아이템 높이
-    const userHeight = 30; // 사용자 높이
-    
-    if (!opened.includes(data.id)) {
-        return baseHeight;
-    }
-    
-    return baseHeight + (data.rpUsers.length * userHeight);
-}
+type ApplicationRowDataType = Pick<ApplicationListDataType, 'id' | 'name' | 'logoImage'>
 
-// 평면화된 아이템 타입
-type FlattenedItem = {
-    type: 'application' | 'user'
-    data: UserHierarchyDataApplicationViewDataType | UserHierarchyDataApplicationViewRpUserType
-    level: number
-    parentId?: string
-    height: number
-}
+const ApplicationTypeView = ({
+    selected,
+    setSelected,
+    selectedUsers,
+    isIncludeView,
+    searchFilter,
+    onVisibleUsersChange,
+    onTotalCountChange,
+    applicationList,
+    height = 400,
+    onBulkDetailOpenChange,
+    autoCollapseToken = 0,
+    onSelectedPreviewItemsChange,
+}: ApplicationTypeViewProps) => {
+    const [applicationPage, setApplicationPage] = useState(1)
+    const [applicationPageSize, setApplicationPageSize] = useState(GROUP_DETAIL_USER_TRANSFER_PAGE_SIZE)
+    const [applicationTotalCount, setApplicationTotalCount] = useState(0)
+    const [applicationDatas, setApplicationDatas] = useState<ApplicationRowDataType[]>([])
+    const [openedApp, setOpenedApp] = useState<ApplicationRowDataType | null>(null)
+    const [rpPage, setRpPage] = useState(1)
+    const [rpPageSize, setRpPageSize] = useState(GROUP_DETAIL_USER_TRANSFER_PAGE_SIZE)
+    const [rpTotalCount, setRpTotalCount] = useState(0)
+    const [rpDatas, setRpDatas] = useState<GroupTransferRpUserMapDataType[]>([])
+    const applicationListRef = useRef<HTMLDivElement | null>(null)
+    const rpListRef = useRef<HTMLDivElement | null>(null)
+    const handledAutoCollapseTokenRef = useRef(0)
+    const normalizedKeyword = useMemo(() => searchFilter.trim().toLowerCase(), [searchFilter])
+    const applicationById = useMemo(() => {
+        const m = new Map<ApplicationListDataType['id'], ApplicationRowDataType>()
+        applicationList.forEach((app) => m.set(app.id, app))
+        return m
+    }, [applicationList])
+    const localApplicationDatas = useMemo<ApplicationRowDataType[]>(() => {
+        const m = new Map<ApplicationListDataType['id'], ApplicationRowDataType>()
+        selectedUsers.forEach((item) => {
+            if (!item.applicationId || m.has(item.applicationId)) return
+            const app = applicationById.get(item.applicationId)
+            m.set(item.applicationId, app || {
+                id: item.applicationId,
+                name: item.applicationId,
+                logoImage: { isDefaultImage: true, url: '' },
+            })
+        })
+        return [...m.values()]
+    }, [selectedUsers, applicationById])
 
-const ApplicationTypeView = ({ datas, selected, setSelected, height = 400, loading }: ApplicationTypeViewProps) => {
-    const [opened, setOpened] = useState<UserHierarchyDataType['id'][]>([])
-    const getFullName = useFullName();
+    const localRpDatas = useMemo<GroupTransferRpUserMapDataType[]>(() => {
+        if (!openedApp) return []
+        return selectedUsers.filter(item => item.applicationId === openedApp.id)
+    }, [selectedUsers, openedApp])
+
+    const filteredLocalApplicationDatas = useMemo(() => {
+        if (!isIncludeView) return localApplicationDatas
+        if (!normalizedKeyword) return localApplicationDatas
+        return localApplicationDatas.filter(_ => _.name.toLowerCase().includes(normalizedKeyword))
+    }, [isIncludeView, localApplicationDatas, normalizedKeyword])
+
+    const pagedLocalApplicationDatas = useMemo(() => {
+        const start = (applicationPage - 1) * applicationPageSize
+        const end = start + applicationPageSize
+        return filteredLocalApplicationDatas.slice(start, end)
+    }, [filteredLocalApplicationDatas, applicationPage, applicationPageSize])
+    const calculatePageSize = useCallback((container: HTMLDivElement | null, rowSelector: string, fallbackRowHeight: number) => {
+        if (!container) return GROUP_DETAIL_USER_TRANSFER_PAGE_SIZE
+        const containerHeight = container.clientHeight
+        if (!containerHeight) return GROUP_DETAIL_USER_TRANSFER_PAGE_SIZE
+        const style = window.getComputedStyle(container)
+        const gap = Number.parseFloat(style.rowGap || style.gap || '0') || 0
+        const rowElement = container.querySelector<HTMLElement>(rowSelector)
+        const rowHeight = rowElement?.offsetHeight || fallbackRowHeight
+        const nextPageSize = Math.max(1, Math.floor((containerHeight + gap) / (rowHeight + gap)))
+        return Number.isFinite(nextPageSize) ? nextPageSize : GROUP_DETAIL_USER_TRANSFER_PAGE_SIZE
+    }, [])
+    const refreshPageSizes = useCallback(() => {
+        setApplicationPageSize((prev) => {
+            const next = calculatePageSize(applicationListRef.current, '.group-transfer-row-item.group-transfer-parent-row', 30)
+            return prev === next ? prev : next
+        })
+        setRpPageSize((prev) => {
+            const next = calculatePageSize(rpListRef.current, '.group-transfer-row-item.group-transfer-rp-row', 30)
+            return prev === next ? prev : next
+        })
+    }, [calculatePageSize])
+
+    const fetchApplicationDatas = useCallback(() => {
+        GetApplicationListFunc({
+            page: applicationPage,
+            pageSize: applicationPageSize,
+            name: searchFilter
+        }, ({ results, totalCount }) => {
+            setApplicationDatas(results.map(_ => ({
+                id: _.id,
+                name: _.name,
+                logoImage: _.logoImage,
+            })))
+            setApplicationTotalCount(totalCount)
+        })
+    }, [applicationPage, searchFilter, applicationPageSize])
+
+    useLayoutEffect(() => {
+        if (isIncludeView) return
+        fetchApplicationDatas()
+    }, [fetchApplicationDatas, isIncludeView])
 
     useEffect(() => {
-        const temp = datas.map(d => d.id)
-        setOpened(opened.filter(o => temp.includes(o)))
-    }, [datas])
+        if (isIncludeView || !openedApp) return
+        const applicationId = openedApp.id
+        GetUsersByApplicationIdFunc({
+            page: rpPage,
+            pageSize: rpPageSize,
+            applicationId,
+            keyword: normalizedKeyword,
+        }, ({ results, totalCount }) => {
+            setRpDatas(results.map(_ => ({
+                portalUser: _.portalUser,
+                applicationId,
+                rpUser: _.rpUser,
+            })))
+            setRpTotalCount(totalCount)
+        })
+    }, [isIncludeView, openedApp, rpPage, rpPageSize, normalizedKeyword])
+    useEffect(() => {
+        refreshPageSizes()
+    }, [refreshPageSizes])
+    useEffect(() => {
+        const observer = new ResizeObserver(() => {
+            refreshPageSizes()
+        })
+        if (applicationListRef.current) observer.observe(applicationListRef.current)
+        if (rpListRef.current) observer.observe(rpListRef.current)
+        const onResize = () => {
+            refreshPageSizes()
+        }
+        window.addEventListener('resize', onResize)
+        return () => {
+            observer.disconnect()
+            window.removeEventListener('resize', onResize)
+        }
+    }, [refreshPageSizes])
 
-    // 트리 데이터를 평면화
-    const flattenedItems = useMemo(() => {
-        const items: FlattenedItem[] = [];
-        
-        datas.forEach(app => {
-            const appHeight = calculateItemHeight(app, opened);
-            items.push({
-                type: 'application',
-                data: app,
-                level: 0,
-                height: appHeight
-            });
-            
-            if (opened.includes(app.id)) {
-                app.rpUsers.forEach(user => {
-                    items.push({
-                        type: 'user',
-                        data: user,
-                        level: 1,
-                        parentId: app.id,
-                        height: 30
-                    });
-                });
-            }
-        });
-        
-        return items;
-    }, [datas, opened]);
+    useEffect(() => {
+        setApplicationPage(1)
+    }, [searchFilter, isIncludeView])
+    useEffect(() => {
+        setApplicationPage(1)
+    }, [applicationPageSize])
 
-    const handleApplicationClick = useCallback((app: UserHierarchyDataApplicationViewDataType) => {
-        const userIds = app.rpUsers.map(user => user.id);
-        if (userIds.every(id => selected.includes(id))) {
-            setSelected(selected.filter(s => !userIds.includes(s)));
+    const selectedRpUserIds = useMemo(() => selectedUsers.map((u) => u.rpUser.id), [selectedUsers])
+
+    const filteredFetchedRpDatas = useMemo(() => {
+        return rpDatas.filter(_ => {
+            const inGroup = selectedRpUserIds.includes(_.rpUser.id)
+            const keywordMatched = !normalizedKeyword || _.rpUser.username.toLowerCase().includes(normalizedKeyword)
+            if (!keywordMatched) return false
+            if (isIncludeView) return inGroup
+            return true
+        })
+    }, [rpDatas, selectedRpUserIds, isIncludeView, normalizedKeyword])
+
+    const filteredLocalRpDatas = useMemo(() => {
+        if (!isIncludeView) return localRpDatas
+        if (!normalizedKeyword) return localRpDatas
+        return localRpDatas.filter(_ => _.rpUser.username.toLowerCase().includes(normalizedKeyword))
+    }, [isIncludeView, localRpDatas, normalizedKeyword])
+
+    useEffect(() => {
+        if (isIncludeView) {
+            onTotalCountChange(openedApp ? filteredLocalRpDatas.length : filteredLocalApplicationDatas.length)
+            return
+        }
+        onTotalCountChange(openedApp ? rpTotalCount : applicationTotalCount)
+    }, [isIncludeView, openedApp, rpTotalCount, applicationTotalCount, onTotalCountChange, filteredLocalRpDatas.length, filteredLocalApplicationDatas.length])
+
+    const rpRowsForRender = useMemo(() => {
+        return isIncludeView ? filteredLocalRpDatas.length : (normalizedKeyword ? filteredFetchedRpDatas.length : rpTotalCount)
+    }, [isIncludeView, filteredLocalRpDatas.length, normalizedKeyword, filteredFetchedRpDatas.length, rpTotalCount])
+    const pagedLocalRpDatas = useMemo(() => {
+        const start = (rpPage - 1) * rpPageSize
+        const end = start + rpPageSize
+        return filteredLocalRpDatas.slice(start, end)
+    }, [filteredLocalRpDatas, rpPage, rpPageSize])
+    const visibleRpUsers = useMemo(() => {
+        if (!openedApp) return []
+        const sourceRows = isIncludeView ? filteredLocalRpDatas : filteredFetchedRpDatas
+        const rowsForBulk = isIncludeView
+            ? sourceRows
+            : sourceRows.filter((row) => !selectedRpUserIds.includes(row.rpUser.id))
+        return rowsForBulk.map(row => ({
+            portalUser: {
+                userId: row.portalUser.userId,
+                username: row.portalUser.username,
+                name: row.portalUser.name,
+            },
+            applicationId: openedApp.id,
+            rpUser: {
+                id: row.rpUser.id,
+                username: row.rpUser.username,
+            },
+            groupName: row.groupName || null,
+        }))
+    }, [openedApp, isIncludeView, filteredLocalRpDatas, filteredFetchedRpDatas, selectedRpUserIds])
+    const selectedCountByApplicationId = useMemo(() => {
+        const m = new Map<ApplicationListDataType['id'], number>()
+        selected.forEach((item) => {
+            if (!item.applicationId) return
+            m.set(item.applicationId, (m.get(item.applicationId) || 0) + 1)
+        })
+        return m
+    }, [selected])
+
+    const selectedRpCountInOpenedApplication = useMemo(() => {
+        if (!openedApp) return 0
+        return selectedCountByApplicationId.get(openedApp.id) || 0
+    }, [openedApp, selectedCountByApplicationId])
+
+    const isApplicationRowSelected = useCallback((applicationRow: ApplicationRowDataType) => {
+        return (selectedCountByApplicationId.get(applicationRow.id) || 0) > 0
+    }, [selectedCountByApplicationId])
+    const selectedCountByApplicationRow = useCallback((applicationRow: ApplicationRowDataType) => {
+        return selectedCountByApplicationId.get(applicationRow.id) || 0
+    }, [selectedCountByApplicationId])
+
+    useLayoutEffect(() => {
+        setRpPage(1)
+    }, [searchFilter, openedApp?.id, isIncludeView, rpPageSize])
+
+    useEffect(() => {
+        if (autoCollapseToken <= handledAutoCollapseTokenRef.current) return
+        handledAutoCollapseTokenRef.current = autoCollapseToken
+        if (!isIncludeView) return
+        if (!openedApp) return
+        if (localRpDatas.length > 0) return
+        setOpenedApp(null)
+        onVisibleUsersChange([])
+    }, [autoCollapseToken, isIncludeView, openedApp, localRpDatas.length, onVisibleUsersChange])
+
+    useEffect(() => {
+        onVisibleUsersChange(visibleRpUsers)
+    }, [visibleRpUsers, onVisibleUsersChange])
+
+    useEffect(() => {
+        if (!onSelectedPreviewItemsChange || !openedApp) return
+        if (isIncludeView) {
+            onSelectedPreviewItemsChange(localRpDatas.map((row) => ({
+                id: row.rpUser.id,
+                portalLabel: `${row.portalUser.username} / (${openedApp.name}) ${row.rpUser.username}`,
+                applicationLabel: `${openedApp.name} / ${row.portalUser.username} - ${row.rpUser.username}`,
+                portalUsername: row.portalUser.username,
+                portalName: row.portalUser.name,
+                applicationId: openedApp.id,
+                applicationName: openedApp.name,
+                rpUsername: row.rpUser.username,
+            })))
+            return
+        }
+        onSelectedPreviewItemsChange(filteredFetchedRpDatas.map((row) => ({
+            id: row.rpUser.id,
+            portalLabel: `${row.portalUser.username} / (${openedApp.name}) ${row.rpUser.username}`,
+            applicationLabel: `${openedApp.name} / ${row.portalUser.username} - ${row.rpUser.username}`,
+            portalUsername: row.portalUser.username,
+            portalName: row.portalUser.name,
+            applicationId: openedApp.id,
+            applicationName: openedApp.name,
+            rpUsername: row.rpUser.username,
+        })))
+    }, [filteredFetchedRpDatas, openedApp, onSelectedPreviewItemsChange, isIncludeView, localRpDatas])
+
+    useEffect(() => {
+        onBulkDetailOpenChange?.(!!openedApp)
+    }, [openedApp, onBulkDetailOpenChange])
+    useLayoutEffect(() => {
+        refreshPageSizes()
+    }, [refreshPageSizes, applicationDatas.length, filteredLocalApplicationDatas.length, filteredFetchedRpDatas.length, filteredLocalRpDatas.length, openedApp?.id])
+
+    const toggleSelected = (rpUser: GroupTransferRpUserMapDataType) => {
+        if (!isIncludeView && selectedRpUserIds.includes(rpUser.rpUser.id)) return
+        if (selected.some(user => user.rpUser.id === rpUser.rpUser.id)) {
+            setSelected(selected.filter(_ => _.rpUser.id !== rpUser.rpUser.id))
         } else {
-            setSelected([...new Set(selected.concat(userIds))]);
+            setSelected(selected.concat({
+                portalUser: { userId: rpUser.portalUser.userId, username: rpUser.portalUser.username, name: rpUser.portalUser.name },
+                applicationId: openedApp?.id || '',
+                rpUser: { id: rpUser.rpUser.id, username: rpUser.rpUser.username },
+                groupName: rpUser.groupName || null,
+            }))
         }
-    }, [selected, setSelected]);
-
-    const handleUserClick = useCallback((user: any) => {
-        if (selected.includes(user.id)) {
-            setSelected(selected.filter(tUser => tUser !== user.id));
-        } else {
-            setSelected(selected.concat(user.id));
-        }
-    }, [selected, setSelected]);
-
-    const handleToggleOpen = useCallback((appId: string) => {
-        if (opened.includes(appId)) {
-            setOpened(opened.filter(id => id !== appId));
-        } else {
-            setOpened(opened.concat(appId));
-        }
-    }, [opened, setOpened]);
-
-    // 렌더 아이템 함수
-    const renderItem = useCallback(({ index, style }: { index: number; style: React.CSSProperties }) => {
-        const item = flattenedItems[index];
-        
-        if (!item) return null;
-        
-        switch (item.type) {
-            case 'application':
-                const app = item.data as UserHierarchyDataApplicationViewDataType;
-                const isAppSelected = app.rpUsers.every((users: any) => selected.includes(users.id));
-                const isAppOpened = opened.includes(app.id);
-                return (
-                    <div style={style} className='custom-transfer-user-row'>
-                        <div className='custom-transfer-user-row-title-container'>
-                            <div className="custom-transfer-user-row-title-application-container" data-selected={isAppSelected} onClick={() => handleApplicationClick(app)}>
-                                <div>
-                                    <img src={logoImageWithDefaultImage(app.logoImage)} />
-                                </div>
-                                <div>
-                                    {app.name}<span className="custom-transfer-application-rp-user-count">({app.rpUsers.length})</span>
-                                </div>
-                            </div>
-                            <GroupOpen selected={isAppSelected} opened={isAppOpened} onClick={e => {
-                                e.stopPropagation();
-                                handleToggleOpen(app.id);
-                            }}/>
-                        </div>
-                    </div>
-                );
-                
-            case 'user':
-                const user = item.data as UserHierarchyDataApplicationViewRpUserType;
-                const isUserSelected = selected.includes(user.id);
-                return (
-                    <div style={{ ...style, paddingLeft: '20px' }} className='transfer-user-child-application-container' onClick={(e) => {
-                        e.stopPropagation();
-                        handleUserClick(user);
-                    }}>
-                        <div className='transfer-user-child-application-title application' data-selected={isUserSelected}>
-                            <img src={rpUesrIcon} />
-                            <div>
-                                {user.portalUsername}({getFullName(user.portalName)}) - {user.username}({user.groupName ? user.groupName : <FormattedMessage id="NO_GROUP_SELECTED_LABEL"/>})
-                            </div>
-                        </div>
-                    </div>
-                );
-                
-            default:
-                return null;
-        }
-    }, [flattenedItems, selected, opened]);
-
-    // 아이템 크기 계산
-    const getItemSize = useCallback((index: number) => {
-        const item = flattenedItems[index];
-        console.log(item, item.height)
-        // return item ? item.height : 40;
-        return 30;
-    }, [flattenedItems]);
-
-    if (flattenedItems.length === 0) {
-        return <div className="custom-transfer-user-list-empty-container">{loading ? <FormattedMessage id="CUSTOM_TRANSFER_USER_LOADING_LABEL"/> : <FormattedMessage id="NO_DATA_AVAILABLE_LABEL"/>}</div>;
     }
 
-    return (
-        <List
-            height={height}
-            itemCount={flattenedItems.length}
-            itemSize={getItemSize}
-            width="100%"
-            overscanCount={5}
-            itemKey={(index) => {
-                const item = flattenedItems[index];
-                return item ? `${item.type}-${item.data.id}-${index}-${item.level}` : index;
-            }}
-        >
-            {renderItem}
-        </List>
-    );
+    return <div className="group-transfer-slide-container" data-detail-opened={!!openedApp} style={{ height }}>
+        <div className="group-transfer-slide-track">
+            <div className="group-transfer-slide-panel">
+                <div className="group-transfer-row-list" ref={applicationListRef}>
+                    {(isIncludeView ? pagedLocalApplicationDatas : applicationDatas).map(_ => {
+                        const selectedCount = selectedCountByApplicationRow(_)
+                        return <div key={_.id} className="group-transfer-row-item group-transfer-parent-row application compact" data-selected={isApplicationRowSelected(_)} onClick={() => {
+                            setOpenedApp(_)
+                            setRpPage(1)
+                        }}>
+                            <div className="group-transfer-parent-row-main application compact">
+                                <div className="group-transfer-parent-row-left compact">
+                                    <img src={logoImageWithDefaultImage(_.logoImage)} alt="" className="group-transfer-parent-app-icon" />
+                                    <div className="group-transfer-parent-row-title compact">{_.name}</div>
+                                </div>
+                            </div>
+                            <div className="group-transfer-row-end-actions">
+                                {selectedCount > 0 && <div className="group-transfer-row-selected-count badge">{selectedCount.toLocaleString()}</div>}
+                                <div className="group-transfer-chevron">{">"}</div>
+                            </div>
+                        </div>
+                    })}
+                    {(isIncludeView ? filteredLocalApplicationDatas.length === 0 : applicationDatas.length === 0) && <div className="custom-transfer-user-list-empty-container"><FormattedMessage id="NO_DATA_AVAILABLE_LABEL" /></div>}
+                </div>
+                <div className="group-transfer-pagination-box">
+                    <Pagination current={applicationPage} pageSize={applicationPageSize} total={isIncludeView ? filteredLocalApplicationDatas.length : applicationTotalCount} onChange={page => {
+                        setApplicationPage(page)
+                    }} showSizeChanger={false} className="custom-pagination" />
+                </div>
+            </div>
+            <div className="group-transfer-slide-panel">
+                <div className="group-transfer-detail-header application compact" onClick={() => {
+                    setOpenedApp(null)
+                    onVisibleUsersChange([])
+                }}>
+                    <div className="group-transfer-chevron back">{"<"}</div>
+                    <div className="group-transfer-detail-header-title">
+                        {openedApp && <div className="group-transfer-parent-row-main application compact">
+                            <div className="group-transfer-parent-row-left compact">
+                                <img src={logoImageWithDefaultImage(openedApp.logoImage)} alt="" className="group-transfer-parent-app-icon" />
+                                <div className="group-transfer-parent-row-title compact">{`${openedApp.name} (${selectedRpCountInOpenedApplication.toLocaleString()})`}</div>
+                            </div>
+                        </div>}
+                    </div>
+                </div>
+                <div className="group-transfer-row-list" ref={rpListRef}>
+                    {(isIncludeView ? pagedLocalRpDatas : filteredFetchedRpDatas).map(_ => {
+                        const rowDisabled = !isIncludeView && selectedRpUserIds.includes(_.rpUser.id)
+                        return <div key={_.rpUser.id} className="group-transfer-row-item group-transfer-rp-row application-compact" data-disabled={rowDisabled} data-selected={!rowDisabled && selected.some(user => user.rpUser.id === _.rpUser.id)} onClick={() => {
+                            if (rowDisabled) return
+                            toggleSelected(_)
+                        }}>
+                        <div className="group-transfer-rp-row-main app-detail compact">
+                            <img src={groupUserIcon} alt="" className="group-transfer-rp-user-icon" />
+                            <div className="group-transfer-rp-username-only">{_.rpUser.username}</div>
+                        </div>
+                    </div>
+                    })}
+                    {((!isIncludeView && filteredFetchedRpDatas.length === 0) || (isIncludeView && filteredLocalRpDatas.length === 0)) && <div className="custom-transfer-user-list-empty-container"><FormattedMessage id="NO_DATA_AVAILABLE_LABEL" /></div>}
+                </div>
+                <div className="group-transfer-pagination-box">
+                    <Pagination
+                        current={rpPage}
+                        pageSize={rpPageSize}
+                        total={rpRowsForRender}
+                        onChange={setRpPage}
+                        showSizeChanger={false}
+                        className="custom-pagination"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
-export default ApplicationTypeView
+export default memo(ApplicationTypeView)

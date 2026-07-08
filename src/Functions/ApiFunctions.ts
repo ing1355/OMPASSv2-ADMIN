@@ -1,5 +1,5 @@
 import { CustomAxiosDelete, CustomAxiosGet, CustomAxiosPatch, CustomAxiosPost, CustomAxiosPut } from "Functions/CustomAxios";
-import { AddApplicationListApi, AddExternalDirectoryApi, AddPasscodeApi, AddPoliciesListApi, AddRadiusUserListApi, AddUserDataApi, AddUserGroupApi, AddUserWithCsvDataApi, ApprovalUserApi, CheckExternalDirectoryConnectionApi, ConfirmPasswordApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeleteExternalDirectoryApi, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DirectoryServerBasedOMPASSRegistrationApi, DuplicateUserNameCheckApi, EmailChangeCodeVerificationApi, FindPortalUsernameApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetAuthorizeMSEntraUriApi, GetBillingHistoriesApi, GetCurrentPlanApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetExternalDirectoryListApi, GetGlobalConfigApi, GetMicrosoftEntraIdAuthApi, GetOMPASSAuthResultApi, GetPasscodeHistoriesApi, GetPasscodeListApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetRpUserListApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUserHierarchyApi, LoginApi, LogoutApi, OMPASSAuthApi, OMPASSDeviceChangeApi, OMPASSRoleSwappingApi, PasswordlessLoginApi, PatchSessionTokenApi, ReissuanceSecretKeyForUserSyncApi, ResetApplicationKeyApi, ResetPasswordApi, ResetPasswordEmailCodeVerifyApi, ResetPasswordEmailSendApi, RoleSwappingApi, RootSignUpRequestApi, RPPrimaryAuthApi, SendChangeEmailCodeApi, SendEmailVerificationApi, SendOMPASSRegistrationEmailApi, SendPasscodeEmailApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, SyncExternalDirectoryPortalUsersApi, UnlockUserApi, UpdateAgentDescriptionApi, UpdateApplicationListApi, UpdateExternalDirectoryApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateSecurityQuestionsApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi, VerificationEmailChangeApi } from "Constants/ApiRoute";
+import { AddApplicationListApi, AddExternalDirectoryApi, AddPasscodeApi, AddPoliciesListApi, AddRadiusUserListApi, AddUserDataApi, AddUserGroupApi, AddUserWithCsvDataApi, ApprovalUserApi, CheckExternalDirectoryConnectionApi, ConfirmPasswordApi, CurrentAgentInstallerVersionChangeApi, DeleteAgentInstallerApi, DeleteApplicationListApi, DeleteAuthenticatorData, DeleteExternalDirectoryApi, DeletePoliciesListApi, DeleteUserDataApi, DeleteUserGroupApi, DirectoryServerBasedOMPASSRegistrationApi, DuplicateUserNameCheckApi, EmailChangeCodeVerificationApi, FindPortalUsernameApi, GetAgentInstallerListApi, GetApplicationDetailApi, GetApplicationListApi, GetAuthLogDataListApi, GetAuthorizeMSEntraUriApi, GetBillingHistoriesApi, GetCurrentPlanApi, GetDashboardApplicationAuthApi, GetDashboardApplicationAuthSumApi, GetDashboardApplicationRPUserApi, GetDashboardTopApi, GetExternalDirectoryListApi, GetGlobalConfigApi, GetMicrosoftEntraIdAuthApi, GetOMPASSAuthResultApi, GetPasscodeHistoriesApi, GetPasscodeListApi, GetPoliciesListApi, GetPolicyDetailDataApi, GetPortalLogDataListApi, GetPortalSettingsDataApi, GetRpUserListApi, GetSubDomainInfoApi, GetUserDataListApi, GetUserDetailDataApi, GetUserGroupDetailApi, GetUserGroupsApi, GetUsersByApplicationIdApi, GetUsersByPortalUsernameApi, LoginApi, LogoutApi, OMPASSAuthApi, OMPASSDeviceChangeApi, OMPASSRoleSwappingApi, PasswordlessLoginApi, PatchSessionTokenApi, ReissuanceSecretKeyForUserSyncApi, ResetApplicationKeyApi, ResetPasswordApi, ResetPasswordEmailCodeVerifyApi, ResetPasswordEmailSendApi, RoleSwappingApi, RootSignUpRequestApi, RPPrimaryAuthApi, SendChangeEmailCodeApi, SendEmailVerificationApi, SendOMPASSRegistrationEmailApi, SendPasscodeEmailApi, SignUpRequestApi, SignUpVerificationCodeSendApi, SignUpVerificationCodeVerifyApi, SyncExternalDirectoryPortalUsersApi, UnlockUserApi, UpdateAgentDescriptionApi, UpdateApplicationListApi, UpdateExternalDirectoryApi, UpdatePasswordApi, UpdatePoliciesListApi, UpdatePortalSettingsDataApi, UpdateSecurityQuestionsApi, UpdateUserAuthenticatorPolicyApi, UpdateUserDataApi, UpdateUserGroupApi, UploadAgentInstallerApi, VerificationEmailChangeApi } from "Constants/ApiRoute";
 import { INT_MAX_VALUE } from "Constants/ConstantValues";
 
 export const LoginFunc = (params: LoginApiParamsType, callback: (res: LoginApiResponseType, token: string) => void) => {
@@ -213,8 +213,11 @@ export const GetUserDataListFunc = ({
     roles = [],
     hasGroup = undefined,
     sortBy = "",
-    sortDirection = ""
+    sortDirection = "",
+    excludeTempAccount = true,
+    keyword = ""
 }: UserListParamsType, callback: ((data: GetListDataGeneralType<UserDataType>) => void)) => {
+    console.log(statuses)
     return CustomAxiosGet(GetUserDataListApi, (data: GetListDataGeneralType<UserDataType>) => {
         callback(data)
     }, {
@@ -229,7 +232,9 @@ export const GetUserDataListFunc = ({
         statuses,
         email,
         sortDirection,
-        hasGroup
+        hasGroup,
+        excludeTempAccount,
+        keyword
     } as PasscodeHistoriesParamsType)
 }
 
@@ -288,10 +293,41 @@ export const GetUserGroupDataListFunc = ({
     } as GroupListParamsType)
 }
 
-export const GetUserHierarchyFunc = (callback: (data: UserHierarchyDataServerResponseType[]) => void) => {
-    return CustomAxiosGet(GetUserHierarchyApi(), (data: UserHierarchyDataServerResponseType[]) => {
+// export const GetUserHierarchyFunc = (callback: (data: UserHierarchyDataServerResponseType[]) => void) => {
+//     return CustomAxiosGet(GetUserHierarchyApi(), (data: UserHierarchyDataServerResponseType[]) => {
+//         callback(data)
+//     })
+// }
+
+export const GetUsersByPortalUsernameFunc = ({
+    pageSize = 10,
+    page = 1,
+    portalUsername = "",
+    keyword = "",
+}: GeneralParamsType, callback: (data: GetListDataGeneralType<RpUserListDataType>) => void) => {
+    return CustomAxiosGet(GetUsersByPortalUsernameApi(), (data: GetListDataGeneralType<RpUserListDataType>) => {
         callback(data)
-    })
+    }, {
+        pageSize,
+        page,
+        portalUsername,
+        keyword
+    } as GeneralParamsType)
+}
+
+export const GetUsersByApplicationIdFunc = ({
+    pageSize = 10,
+    page = 1,
+    applicationId = "",
+    keyword = "",
+}: GeneralParamsType, callback: (data: GetListDataGeneralType<GroupTransferRpUserMapDataByApplicationResponseType>) => void) => {
+    return CustomAxiosGet(GetUsersByApplicationIdApi(applicationId), (data: GetListDataGeneralType<GroupTransferRpUserMapDataByApplicationResponseType>) => {
+        callback(data)
+    }, {
+        pageSize,
+        page,
+        keyword,
+    } as GeneralParamsType)
 }
 
 export const GetUserGroupDetailDataFunc = (groupId: DefaultUserGroupDataType['id'], callback: (data: UserGroupDataType) => void) => {

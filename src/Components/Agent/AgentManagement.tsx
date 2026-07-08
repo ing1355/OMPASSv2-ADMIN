@@ -19,18 +19,7 @@ const AgentManagement = () => {
     label: React.ReactNode
     key: AgentType
     children: React.ReactNode
-  }[] = isTta ? [
-    {
-      label: <FormattedMessage id="AGENT_WINDOWS_LABEL" />,
-      key: 'WINDOWS_LOGIN',
-      children: <ManagementByType type='WINDOWS_LOGIN' isCloud={isCloud} />
-    },
-    {
-      label: <FormattedMessage id="AGENT_PAM_LABEL" />,
-      key: "LINUX_PAM",
-      children: <ManagementByType type='LINUX_PAM' isCloud={isCloud} />
-    }
-  ] : [
+  }[] = [
       {
         label: <FormattedMessage id="AGENT_WINDOWS_LABEL" />,
         key: 'WINDOWS_LOGIN',
@@ -45,6 +34,11 @@ const AgentManagement = () => {
         label: <FormattedMessage id="AGENT_PAM_LABEL" />,
         key: "LINUX_PAM",
         children: <ManagementByType type='LINUX_PAM' isCloud={isCloud} />
+      },
+      {
+        label: <FormattedMessage id="AGENT_LINUX_PAM_ROCKY_LABEL" />,
+        key: "LINUX_PAM_ROCKY",
+        children: <ManagementByType type='LINUX_PAM_ROCKY' isCloud={isCloud} />
       },
       {
         label: <FormattedMessage id="AGENT_PROXY_LABEL" />,

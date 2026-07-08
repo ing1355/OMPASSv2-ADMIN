@@ -23,8 +23,8 @@ const AgentDownloadButton = () => {
     const { formatMessage } = useIntl()
     const subdomainInfo = useSelector((state: ReduxStateType) => state.subdomainInfo!);
     const [isHover, setIsHover] = useState(false);
-    const windowsLabel = <FormattedMessage id='DOWNLOAD_FOR_WINDOWS' />
-    const macLabel = <FormattedMessage id='DOWNLOAD_FOR_MAC' />
+    const windowsLabel = <FormattedMessage id='WINDOWS_LOGIN_AGENT_DOWNLOAD_LABEL' />
+    const macLabel = <FormattedMessage id='MAC_LOGIN_AGENT_DOWNLOAD_LABEL' />
     const windowsDownloadLink = subdomainInfo.windowsAgentUrl
     const macDownloadLink = subdomainInfo.macOsAgentUrl
 

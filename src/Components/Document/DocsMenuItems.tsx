@@ -1,4 +1,4 @@
-import { applicationTypes, getApplicationTypeLabel, isTta } from "Constants/ConstantValues"
+import { docsApplicationTypes } from "Constants/ConstantValues"
 import { FormattedMessage } from "react-intl"
 
 export const StartAdminMenuItems: DocsMenuItemType[] = [
@@ -27,16 +27,7 @@ export const PortalUserMenuItems: DocsMenuItemType[] = [
     }
 ]
 
-export const ApplicationUserMenuItems: DocsMenuItemType[] = isTta ? [
-    {
-        title: <FormattedMessage id="DOCS_WINDOWS_LOGIN_LABEL" />,
-        route: '/user/application/windows_logon_user'
-    },
-    {
-        title: <FormattedMessage id="DOCS_LINUX_SSH_LABEL" />,
-        route: '/user/application/linux_ssh_user'
-    }
-] : [
+export const ApplicationUserMenuItems: DocsMenuItemType[] = [
     {
         title: <FormattedMessage id="DOCS_WINDOWS_LOGIN_LABEL" />,
         route: '/user/application/windows_logon_user'
@@ -49,10 +40,10 @@ export const ApplicationUserMenuItems: DocsMenuItemType[] = isTta ? [
         title: <FormattedMessage id="DOCS_LINUX_SSH_LABEL" />,
         route: '/user/application/linux_ssh_user'
     },
-    {
-        title: <FormattedMessage id="DOCS_RADIUS_LABEL" />,
-        route: '/user/application/radius_user'
-    }
+    // {
+    //     title: <FormattedMessage id="DOCS_RADIUS_LABEL" />,
+    //     route: '/user/application/radius_user'
+    // }
 ]
 
 export const StartUserMenuItems: DocsMenuItemType[] = [
@@ -77,15 +68,11 @@ export const EtcUserMenuItems: DocsMenuItemType[] = [
     }
 ]
 
-export const EtcMenuItems: DocsMenuItemType[] = [{
-    title: <FormattedMessage id="DOCS_APP_LABEL" />,
-    route: '/etc/app'
-}].concat(isTta ? [
+export const EtcMenuItems: DocsMenuItemType[] = [
     {
-        title: <FormattedMessage id="DOCS_WEB_API_LABEL" />,
-        route: '/etc/web_api'
-    }
-] : [
+        title: <FormattedMessage id="DOCS_APP_LABEL" />,
+        route: '/etc/app'
+    },
     {
         title: <FormattedMessage id="DOCS_OMPASS_PROXY_LABEL" />,
         route: '/etc/ompass_proxy'
@@ -97,8 +84,12 @@ export const EtcMenuItems: DocsMenuItemType[] = [{
     {
         title: <FormattedMessage id="DOCS_OMPASS_INTERFACE_FRAMEWORK_LABEL" />,
         route: '/etc/ompass_interface_framework'
+    },
+    {
+        title: <FormattedMessage id="DOCS_WEB_SDK_LABEL" />,
+        route: '/etc/web_sdk'
     }
-])
+]
 
 export const PortalMenuItems: DocsMenuItemType[] = [
     {
@@ -147,7 +138,7 @@ export const PortalMenuItems: DocsMenuItemType[] = [
     }
 ]
 
-export const ApplicationMenuItems: DocsMenuItemType[] = [...applicationTypes.filter(_ => _ !== 'PORTAL').map(_ => ({
+export const ApplicationMenuItems: DocsMenuItemType[] = [...docsApplicationTypes.filter(_ => _ !== 'PORTAL').map(_ => ({
     title: <FormattedMessage id={`DOCS_${_.toUpperCase()}_LABEL`} />,
     route: `/application/${_}`
 }))]

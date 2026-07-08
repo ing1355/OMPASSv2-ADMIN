@@ -91,7 +91,8 @@ const UserDetail = ({ }) => {
             setDataLoading(true)
             try {
                 await GetUserDataListFunc({
-                    userId: uuid
+                    userId: uuid,
+                    statuses: ['RUN', 'WAIT_ADMIN_APPROVAL', 'WAIT_INIT_PASSWORD', 'WAIT_SECURITY_QNA', 'LOCK', 'WITHDRAWAL']
                 }, ({ results }) => {
                     setUserData(results[0])
                 })
