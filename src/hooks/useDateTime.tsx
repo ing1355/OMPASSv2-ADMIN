@@ -1,11 +1,9 @@
-import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { subdomainInfoChange } from 'Redux/actions/subdomainInfoChange';
 import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
 import dayjs from 'dayjs';
 import { DateTimeFormat } from 'Constants/ConstantValues';
-import { getOptimalTimezone, getSystemTimezone, isValidTimezone } from 'Functions/TimezoneUtils';
 
 dayjs.extend(timezone)
 dayjs.extend(utc)
@@ -38,6 +36,11 @@ const useDateTime = () => {
         return datetimeString;
     }
 
+    /** 설정 타임존 기준 현재 시각 (브라우저 로컬 TZ와 무관) */
+    const getNowInTimezone = (timezone?: string) => {
+        return dayjs().tz(timezone || subdomainInfo.timeZone)
+    }
+
     const convertUTCStringToTimezoneDateString = (date: string, timezone?: string) => {
         return dayjs.utc(date).tz(timezone || subdomainInfo.timeZone).format(DateTimeFormat)
     }
@@ -55,6 +58,7 @@ const useDateTime = () => {
         getTimezone,
         setTimezone,
         getDateTimeString,
+        getNowInTimezone,
         convertUTCStringToTimezoneDateString,
         convertTimezoneDateStringToUTCString,
         isDateTimeString

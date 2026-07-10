@@ -1,0 +1,37 @@
+.timezone-select.ant-select {
+    min-width: 280px;
+}
+
+.timezone-select .ant-select-selector {
+    height: 36px !important;
+    border-radius: 6px !important;
+    border-color: var(--sub-grey-color5) !important;
+    text-align: center !important;
+}
+
+.timezone-select .ant-select-selection-item {
+    line-height: 34px !important;
+    text-align: center !important;
+    justify-content: center !important;
+}
+
+.timezone-select .ant-select-selection-placeholder {
+    text-align: center !important;
+    inset-inline-start: 0 !important;
+    inset-inline-end: 0 !important;
+}
+
+.timezone-select .ant-select-selection-search {
+    inset-inline-start: 0 !important;
+    inset-inline-end: 0 !important;
+}
+
+.timezone-select .ant-select-selection-search-input {
+    line-height: 34px !important;
+    text-align: center !important;
+}
+
+.timezone-select.ant-select-focused .ant-select-selector,
+.timezone-select.ant-select:hover .ant-select-selector {
+    border-color: var(--main-purple-color) !important;
+}

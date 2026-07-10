@@ -402,7 +402,7 @@ const OpenLdapServerItem = ({ data, onChange, onDelete, canDelete, isLoading, sa
     const { formatMessage } = useIntl()
 
     return <div className="external-directory-open-ldap-server-item-container">
-        <Input className="st1" value={data.directoryServer?.address} title="서버 주소" valueChange={val => {
+        <Input className="st1" value={data.directoryServer?.address} title={formatMessage({ id: 'USER_ADD_EXTERNAL_DIRECTORY_SERVER_ADDRESS_LABEL' })} valueChange={val => {
             onChange({
                 ...data,
                 directoryServer: {
@@ -414,7 +414,7 @@ const OpenLdapServerItem = ({ data, onChange, onDelete, canDelete, isLoading, sa
             regExp: domainRegex,
             msg: formatMessage({ id: 'PLEASE_INPUT_DOMAIN_OR_IP_ADDRESS' })
         }]} readOnly={isLoading || saveLoading} />
-        <Input className="st1" value={data.directoryServer?.port} onlyNumber title="포트" valueChange={val => {
+        <Input className="st1" value={data.directoryServer?.port} onlyNumber title={formatMessage({ id: 'USER_ADD_EXTERNAL_DIRECTORY_SERVER_PORT_LABEL' })} valueChange={val => {
             onChange({
                 ...data,
                 directoryServer: {

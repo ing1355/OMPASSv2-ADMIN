@@ -86,8 +86,12 @@ export const EtcMenuItems: DocsMenuItemType[] = [
         route: '/etc/ompass_interface_framework'
     },
     {
-        title: <FormattedMessage id="DOCS_WEB_SDK_LABEL" />,
-        route: '/etc/web_sdk'
+        title: <FormattedMessage id="DOCS_WEB_SDK_JAVA_LABEL" />,
+        route: '/etc/web_sdk_java'
+    },
+    {
+        title: <FormattedMessage id="DOCS_WEB_SDK_PYTHON_LABEL" />,
+        route: '/etc/web_sdk_python'
     }
 ]
 

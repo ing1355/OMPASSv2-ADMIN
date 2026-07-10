@@ -2,22 +2,21 @@ import { pad2Digit } from "Functions/GlobalFunctions"
 import { useIntl } from "react-intl"
 import useDateTime from "./useDateTime"
 import dayjs from "dayjs"
+import customParseFormat from "dayjs/plugin/customParseFormat"
 import { DateTimeFormat } from "Constants/ConstantValues"
-import { subHours } from "date-fns"
+
+dayjs.extend(customParseFormat)
 
 const useDsashboardFunctions = () => {    
     const {formatMessage} = useIntl()
-    const { convertTimezoneDateStringToUTCString, getDateTimeString } = useDateTime()
+    const { convertTimezoneDateStringToUTCString, getNowInTimezone } = useDateTime()
 
     const dashboardDateInitialValue = () => {
-        let startDate = new Date()
-        let endDate = new Date()
-        startDate = subHours(startDate, 5)
-        startDate.setMinutes(0)
-        startDate.setSeconds(0)
+        const now = getNowInTimezone()
+        const startDate = now.subtract(5, 'hour').minute(0).second(0).millisecond(0)
         return {
-            startDate: getDateTimeString(startDate),
-            endDate: getDateTimeString(endDate),
+            startDate: startDate.format(DateTimeFormat),
+            endDate: now.format(DateTimeFormat),
             intervalValue: 1
         } as DashboardDateSelectDataType
     }
@@ -26,17 +25,19 @@ const useDsashboardFunctions = () => {
         return {
             ...params,
             startDate: convertTimezoneDateStringToUTCString(params.startDate),
-            endDate: convertTimezoneDateStringToUTCString(params.intervalValue === 24 ? dayjs(params.endDate).format(DateTimeFormat) : params.endDate)
+            endDate: convertTimezoneDateStringToUTCString(params.intervalValue === 24 ? dayjs(params.endDate, DateTimeFormat).format(DateTimeFormat) : params.endDate)
         }
     }
     
-    const convertHourRangeByDate = (startDate: string, endDate: string, isLast: boolean, locale?: LanguageType) => {
-        return `${pad2Digit(new Date(startDate).getHours())} ~ ${isLast ? formatMessage({id: 'NOW_LABEL'}) : pad2Digit(new Date(endDate).getHours())}`
+    const convertHourRangeByDate = (startDate: string, endDate: string, isLast: boolean) => {
+        const start = dayjs(startDate, DateTimeFormat)
+        const end = dayjs(endDate, DateTimeFormat)
+        return `${pad2Digit(start.hour())} ~ ${isLast ? formatMessage({id: 'NOW_LABEL'}) : pad2Digit(end.hour())}`
     }
     
     const convertDaysByDate = (startDate: string) => {
-        const target = new Date(startDate)
-        return `${pad2Digit(target.getMonth() + 1)}/${pad2Digit(target.getDate())}`
+        const target = dayjs(startDate, DateTimeFormat)
+        return `${pad2Digit(target.month() + 1)}/${pad2Digit(target.date())}`
     }
     
     const getPath = (x: any, width: any, y: any, y1: any) => {

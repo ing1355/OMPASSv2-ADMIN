@@ -47,7 +47,7 @@ const DashboardInvalidAuth = ({ applications }: {
                         }
                     }, {})
                     return {
-                        date: convertHourRangeByDate(convertUTCStringToTimezoneDateString(_.startDate), convertUTCStringToTimezoneDateString(_.endDate), ind === arr.length - 1, lang),
+                        date: convertHourRangeByDate(convertUTCStringToTimezoneDateString(_.startDate), convertUTCStringToTimezoneDateString(_.endDate), ind === arr.length - 1),
                         ...values
                     }
                 }))
@@ -64,7 +64,7 @@ const DashboardInvalidAuth = ({ applications }: {
         } else {
             setDatas([])
         }
-    }, [subdomainInfo.timeZone, applications, params])
+    }, [subdomainInfo.timeZone, applications, params, lang])
 
     return <DashboardCardWithDateSelect title={<FormattedMessage id="DASHBOARD_INVALID_ALL_AUTH" />} isCard={false} onChange={(d) => {
         setParams(d)

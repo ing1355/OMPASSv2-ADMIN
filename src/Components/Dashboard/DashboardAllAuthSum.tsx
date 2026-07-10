@@ -30,7 +30,7 @@ const DashboardAllAuthSum = ({ applications }: {
         }))
       } else {
         setDatas(data.map((_, ind, arr) => ({
-          name: convertHourRangeByDate(convertUTCStringToTimezoneDateString(_.startDate), convertUTCStringToTimezoneDateString(_.endDate), ind === arr.length - 1, lang),
+          name: convertHourRangeByDate(convertUTCStringToTimezoneDateString(_.startDate), convertUTCStringToTimezoneDateString(_.endDate), ind === arr.length - 1),
           count: _.count
         })))
       }
@@ -45,7 +45,7 @@ const DashboardAllAuthSum = ({ applications }: {
     } else {
       setDatas([])
     }
-  }, [subdomainInfo.timeZone, applications, params])
+  }, [subdomainInfo.timeZone, applications, params, lang])
   
   return <DashboardCardWithDateSelect title={<FormattedMessage id="DASHBOARD_ALL_AUTH_SUM"/>} onChange={(_) => {
     setParams(_)

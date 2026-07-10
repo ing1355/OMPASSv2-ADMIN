@@ -3,16 +3,13 @@ import './DashboardDateSelect.css'
 import { FormattedMessage } from "react-intl"
 import { SetStateType } from "Types/PropsTypes"
 import Calendar from "./Calendar"
-import { setHours, setMinutes, setSeconds, subHours, subMonths } from "date-fns"
 import useDsashboardFunctions from "hooks/useDashboardFunctions"
 import useDateTime from "hooks/useDateTime"
+import { DateTimeFormat } from "Constants/ConstantValues"
+import dayjs from "dayjs"
+import customParseFormat from "dayjs/plugin/customParseFormat"
 
-const getStartDate = (date: Date) => {
-    return setHours(setMinutes(setSeconds(date, 0), 0), 0)
-}
-const getEndDate = (date: Date) => {
-    return setHours(setMinutes(setSeconds(date, 59), 59), 23)
-}
+dayjs.extend(customParseFormat)
 
 const FixedItem = ({ type, selected, setSelected, onChange }: {
     selected: DashboardDateSelectType
@@ -24,7 +21,7 @@ const FixedItem = ({ type, selected, setSelected, onChange }: {
     const [temp, setTemp] = useState<DateSelectDataType | undefined>(undefined)
     const selectRef = useRef<HTMLDivElement>(null)
     const showSelectRef = useRef(showSelect)
-    const { getDateTimeString } = useDateTime()
+    const { getNowInTimezone } = useDateTime()
     const { dashboardDateInitialValue } = useDsashboardFunctions()
     const lastChanged = useRef<DashboardDateSelectDataType>(dashboardDateInitialValue())
 
@@ -60,59 +57,49 @@ const FixedItem = ({ type, selected, setSelected, onChange }: {
     }, [showSelect]);
 
     return <div ref={selectRef} className={`dashboard-date-select-fixed-item-container${selected === type ? ' selected' : ''}${type === 'user' ? ' user' : ''}`} onClick={(e) => {
-        let startDate = new Date()
-        let endDate = new Date()
+        const now = getNowInTimezone()
+        let startDate = now
+        let endDate = now
         switch (type) {
             case '6hour':
-                startDate = subHours(startDate, 6)
+                startDate = now.subtract(6, 'hour')
                 _onChange({
-                    startDate: getDateTimeString(startDate),
-                    endDate: getDateTimeString(endDate),
+                    startDate: startDate.format(DateTimeFormat),
+                    endDate: endDate.format(DateTimeFormat),
                     intervalValue: 1
                 })
                 break;
             case '12hour':
-                startDate = subHours(startDate, 12)
+                startDate = now.subtract(12, 'hour')
                 _onChange({
-                    startDate: getDateTimeString(startDate),
-                    endDate: getDateTimeString(endDate),
+                    startDate: startDate.format(DateTimeFormat),
+                    endDate: endDate.format(DateTimeFormat),
                     intervalValue: 3
                 })
                 break;
             case 'day':
-                startDate = subHours(startDate, 24)
+                startDate = now.subtract(24, 'hour')
                 _onChange({
-                    startDate: getDateTimeString(startDate),
-                    endDate: getDateTimeString(endDate),
+                    startDate: startDate.format(DateTimeFormat),
+                    endDate: endDate.format(DateTimeFormat),
                     intervalValue: 4
                 })
                 break;
             case 'week':
-                startDate = new Date(startDate.setDate(endDate.getDate() - 7))
-                startDate.setHours(0)
-                startDate.setMinutes(0)
-                startDate.setSeconds(0)
-                endDate.setHours(23)
-                endDate.setMinutes(59)
-                endDate.setSeconds(59)
+                startDate = now.subtract(7, 'day').hour(0).minute(0).second(0).millisecond(0)
+                endDate = now.hour(23).minute(59).second(59).millisecond(0)
                 _onChange({
-                    startDate: getDateTimeString(startDate),
-                    endDate: getDateTimeString(endDate),
+                    startDate: startDate.format(DateTimeFormat),
+                    endDate: endDate.format(DateTimeFormat),
                     intervalValue: 24
                 })
                 break;
             case 'month':
-                startDate = subMonths(new Date(), 1)
-                // startDate = new Date(startDate.setDate(endDate.getDate() - 30))
-                startDate.setHours(0)
-                startDate.setMinutes(0)
-                startDate.setSeconds(0)
-                endDate.setHours(0)
-                endDate.setMinutes(0)
-                endDate.setSeconds(0)
+                startDate = now.subtract(1, 'month').hour(0).minute(0).second(0).millisecond(0)
+                endDate = now.hour(0).minute(0).second(0).millisecond(0)
                 _onChange({
-                    startDate: getDateTimeString(startDate),
-                    endDate: getDateTimeString(endDate),
+                    startDate: startDate.format(DateTimeFormat),
+                    endDate: endDate.format(DateTimeFormat),
                     intervalValue: 24
                 })
                 break;
@@ -134,8 +121,8 @@ const FixedItem = ({ type, selected, setSelected, onChange }: {
                     setSelected('user')
                     setTemp(d)
                     _onChange({
-                        startDate: getDateTimeString(getStartDate(new Date(d.startDate))),
-                        endDate: getDateTimeString(getEndDate(new Date(d.endDate))),
+                        startDate: dayjs(d.startDate, 'YYYY-MM-DD').hour(0).minute(0).second(0).format(DateTimeFormat),
+                        endDate: dayjs(d.endDate, 'YYYY-MM-DD').hour(23).minute(59).second(59).format(DateTimeFormat),
                         intervalValue: 24
                     })
                 }} /> : <></>
