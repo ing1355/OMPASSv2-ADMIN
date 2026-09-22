@@ -41,10 +41,11 @@ const TextComponent = ({ title, content }: {
 }
 
 const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
-    const { policyAtTimeOfEvent, application, sessionExpiredAt, rpUsername, portalUser, authStartedAt, serverInfo, clientInfo, location } = data || {} as AllAuthLogDataType
+    const { policyAtTimeOfEvent, application, sessionExpiredAt, rpUsername, portalUser, authStartedAt, serverInfo, clientInfo, location, actorUsername, authPurpose } = data || {} as AllAuthLogDataType
     
     const getFullName = useFullName()
     const isPam = application?.type === 'LINUX_LOGIN'
+    const isDeregistration = authPurpose === 'DEREGISTRATION'
     const { formatMessage } = useIntl()
     const mapInitRef = useRef(false)
     const { convertUTCStringToTimezoneDateString } = useDateTime()
@@ -71,7 +72,7 @@ const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
             width={1200}>
             <div className="auth-detail-modal-container">
                 <div className="auth-detail-modal-contents-row">
-                    <div className="auth-detail-modal-contents-container map" data-title={formatMessage({ id: "LOCATION_INFO_TITLE_LABEL" })}>
+                    {!isDeregistration && <div className="auth-detail-modal-contents-container map" data-title={formatMessage({ id: "LOCATION_INFO_TITLE_LABEL" })}>
                         <div className="auth-detail-modal-contents-map-container">
                             {
                                 location && location.latitude && location.longitude ? <>
@@ -131,20 +132,21 @@ const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
                                 <img src={locationValidIcon} /> : <FormattedMessage id="AUTH_LOG_DETAIL_VALID_LOCATION_LABEL" />
                             </div>
                         </div>
-                    </div>
+                    </div>}
                     <div className="auth-detail-modal-contents-container" data-title={formatMessage({ id: "USER_INFO_TITLE_LABEL" })}>
                         <TextComponent title="NAME" content={data?.portalUser.name && getFullName(data?.portalUser.name)} />
                         <TextComponent title="PORTAL_USERNAME_COLUMN_LABEL" content={data?.portalUser.username} />
                         <TextComponent title="RP_USERNAME_COLUMN_LABEL" content={data?.rpUsername} />
                     </div>
                     <div className="auth-detail-modal-contents-container authentication-info" data-title={formatMessage({ id: "AUTH_LOG_DETAIL_AUTH_INFO_TITLE_LABEL" })}>
-                        <TextComponent title="APPLIED_POLICY_NAME_COLUMN_LABEL" content={<PolicyNameByTypeComponent data={policyAtTimeOfEvent as unknown as PolicyDataType} />} />
+                        {!isDeregistration && <TextComponent title="APPLIED_POLICY_NAME_COLUMN_LABEL" content={<PolicyNameByTypeComponent data={policyAtTimeOfEvent as unknown as PolicyDataType} />} />}
                         <TextComponent title="AUTHENTICATION_PURPOSE_LABEL" content={data?.authPurpose ? <FormattedMessage id={data.authPurpose + '_LOG_VALUE'} /> : "-"} />
+                        {isDeregistration && <TextComponent title="ACTOR_USERNAME_LABEL" content={actorUsername} />}
                         <TextComponent title="AUTHENTICATOR_TYPE_LABEL" content={authenticatorLabelList[(data as ValidAuthLogDataType)?.authenticatorType]} />
                         {data && isInvalidLogType(data) && <TextComponent title="INVALID_REASON_LABEL" content={data.reason ? <FormattedMessage id={"INVALID_" + data.reason + '_LABEL'} /> : "-"} />}
-                        <TextComponent title="AUTHENTICATION_START_TIME_LABEL" content={data?.authStartedAt ? convertUTCStringToTimezoneDateString(data?.authStartedAt) : "-"} />
+                        {!isDeregistration && <TextComponent title="AUTHENTICATION_START_TIME_LABEL" content={data?.authStartedAt ? convertUTCStringToTimezoneDateString(data?.authStartedAt) : "-"} />}
                         <TextComponent title="AUTHENTICATION_TIME_LABEL" content={data?.authenticationTime ? convertUTCStringToTimezoneDateString(data?.authenticationTime) : "-"} />
-                        <TextComponent title="SESSION_EXPIRED_AT_LABEL" content={sessionExpiredAt ? convertUTCStringToTimezoneDateString(sessionExpiredAt) : "-"} />
+                        {!isDeregistration && <TextComponent title="SESSION_EXPIRED_AT_LABEL" content={sessionExpiredAt ? convertUTCStringToTimezoneDateString(sessionExpiredAt) : "-"} />}
                     </div>
                 </div>
                 <div className="auth-detail-modal-contents-row">
@@ -160,13 +162,13 @@ const AuthLogDetailModal = ({ data, close }: AuthLogdetailModalProps) => {
                         <TextComponent title="USER_DETAIL_OS_LABEL" content={createOSInfo({ name: serverInfo?.osName, version: serverInfo?.osVersion })} />
                         <TextComponent title="PACKAGE_VERSION_INFO_LABEL" content={serverInfo?.packageVersion} />
                     </div>}
-                    <div className="auth-detail-modal-contents-container" data-title={`${formatMessage({ id: "TARGET_DEVICE_INFO_TITLE_LABEL" })}${isPam ? '(Client)' : ''}`}>
+                    {!isDeregistration && <div className="auth-detail-modal-contents-container" data-title={`${formatMessage({ id: "TARGET_DEVICE_INFO_TITLE_LABEL" })}${isPam ? '(Client)' : ''}`}>
                         <TextComponent title="DEVICE_NAME_LABEL" content={clientInfo?.name} />
                         <TextComponent title="IP_LABEL" content={clientInfo?.ip} />
                         <TextComponent title="USER_DETAIL_BROWSER_LABEL" content={clientInfo?.browser && <FormattedMessage id={clientInfo?.browser + "_LABEL"} />} />
                         <TextComponent title="USER_DETAIL_OS_LABEL" content={createOSInfo({ name: clientInfo?.osName, version: clientInfo?.osVersion })} />
                         <TextComponent title="PACKAGE_VERSION_INFO_LABEL" content={clientInfo?.packageVersion} />
-                    </div>
+                    </div>}
                 </div>
             </div>
         </CustomModal>

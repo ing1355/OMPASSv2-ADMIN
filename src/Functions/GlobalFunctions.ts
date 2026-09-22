@@ -134,7 +134,7 @@ export const convertBase64FromServerFormatToClient = (str: string) => {
 }
 
 export const createOSInfo = (os?: OSInfoType) => {
-    return os ? `${os.name} ${os.version}` : '-'
+    return os && os.name && os.version ? `${os.name} ${os.version}` : '-'
 }
 
 export const logoImageWithDefaultImage = (img: logoImageType) => {

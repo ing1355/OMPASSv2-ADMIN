@@ -1,7 +1,7 @@
 type UnionKeys<T> = T extends any ? keyof T : never;
 
 type LanguageType = 'KR' | 'EN' | 'JP'
-type AuthPurposeType = "ROLE_SWAPPING_SOURCE" | "ROLE_SWAPPING_TARGET" | "ADMIN_2FA_FOR_APPLICATION_DELETION" | "ADMIN_2FA_FOR_SECRET_KEY_UPDATE" | "RADIUS_REGISTRATION" | "DEVICE_CHANGE" | "LDAP_REGISTRATION" | "ADMIN_2FA_FOR_INSTALL_CODE_UPDATE" | "ADMIN_2FA_FOR_UNINSTALL_CODE_UPDATE"
+type AuthPurposeType = "ROLE_SWAPPING_SOURCE" | "ROLE_SWAPPING_TARGET" | "ADMIN_2FA_FOR_APPLICATION_DELETION" | "ADMIN_2FA_FOR_SECRET_KEY_UPDATE" | "RADIUS_REGISTRATION" | "DEVICE_CHANGE" | "LDAP_REGISTRATION" | "ADMIN_2FA_FOR_INSTALL_CODE_UPDATE" | "ADMIN_2FA_FOR_UNINSTALL_CODE_UPDATE" | "DEREGISTRATION"
 type LogAuthPurposeType = AuthPurposeType | "ADD_OTHER_AUTHENTICATOR" | "AUTH_LOGIN" | "REG_LOGIN"
 type AuthPurposeForApiType = 'ROLE_SWAPPING' | AuthPurposeType
 type AuthenticationLogType = "ALLOW" | "DENY" | "ALLOW_OUT_OF_SCHEDULE"
@@ -663,6 +663,7 @@ type DefaultAuthLogDataType = {
     id: number
     portalUser: PortalUserType
     rpUsername: string
+    actorUsername?: string
     application: {
         id: ApplicationDataType['id']
         name: ApplicationDataType['name']

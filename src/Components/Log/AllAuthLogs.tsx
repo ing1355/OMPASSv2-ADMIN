@@ -106,7 +106,7 @@ const AllAuthLogs = () => {
                 {
                     key: 'reason',
                     title: <FormattedMessage id="INVALID_REASON_LABEL" />,
-                    render: (d) => <FormattedMessage id={"INVALID_" + d + '_LABEL'} />,
+                    render: (d) => d ? <FormattedMessage id={"INVALID_" + d + '_LABEL'} /> : "-",
                     filterKey: 'denyReasons',
                     filterOption: authFailReasonList.map(_ => ({
                         label: formatMessage({ id: "INVALID_" + _ + '_LABEL' }),

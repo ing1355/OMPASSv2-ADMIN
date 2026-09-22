@@ -296,11 +296,12 @@
     width: 100%;
     padding: 12px;
     height: 100%;
+    min-height: 0;
     box-sizing: border-box;
     justify-content: center;
     background-color: white;
     gap: 12px;
-    overflow-y: auto;
+    overflow: hidden;
   }
 
   .login-body {
@@ -314,19 +315,22 @@
 
   .login-body>form {
     width: 100%;
+    height: auto;
+    flex: 0 0 auto;
   }
 
   .login-body {
     width: 100%;
     flex: 1;
     height: auto;
+    min-height: 0;
     padding: 0;
     flex-direction: column;
     align-items: center;
     box-shadow: none;
     justify-content: space-between;
-    overflow-y: auto;
-    gap: 24px;
+    overflow: hidden;
+    gap: clamp(12px, 3vh, 24px);
   }
 
   .login-logo-img>img {
@@ -336,6 +340,7 @@
 
   .login-hello-container {
     width: 95%;
+    min-height: 0;
     gap: 12px;
   }
 
@@ -346,11 +351,13 @@
 
   .login-logo-img {
     flex: 1;
+    min-height: 0;
   }
 
   .login-hello-text {
     padding: 16px 6px;
     flex: 1;
+    min-height: 0;
     font-size: 12px;
     max-height: 200px;
     overflow-x: hidden;
