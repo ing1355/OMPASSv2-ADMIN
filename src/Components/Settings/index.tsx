@@ -17,6 +17,7 @@ import CustomImageUpload from "Components/CommonCustomComponents/Input/CustomIma
 import CustomAdminSelect from "Components/CommonCustomComponents/Input/CustomAdminSelect"
 import { FormattedMessage, useIntl } from "react-intl"
 import TimezoneSelect from "Components/CommonCustomComponents/Input/TimezoneSelect"
+import ServerLogDownload from "./ServerLogDownload"
 
 const Settings = () => {
     const globalDatas = useSelector((state: ReduxStateType) => state.globalDatas!);
@@ -239,6 +240,7 @@ const Settings = () => {
                     setLogoImg(img)
                 }} defaultImg={loginMainImage} />
             </CustomInputRow>
+            <ServerLogDownload />
         </div>
     </Contents>
 }

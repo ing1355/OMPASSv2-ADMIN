@@ -192,6 +192,28 @@ export const downloadFileByLink = (link?: string, fileName?: string) => {
     }
 }
 
+export const fileNameFromContentDisposition = (header?: string) => {
+    if (!header) return undefined
+    const encoded = /filename\*=(?:UTF-8''|utf-8'')([^;]+)/i.exec(header)
+    if (encoded?.[1]) {
+        const value = encoded[1].trim().replace(/^"|"$/g, '')
+        try {
+            return decodeURIComponent(value)
+        } catch {
+            return value
+        }
+    }
+    const plain = /filename="?([^";]+)"?/i.exec(header)
+    return plain?.[1]?.trim()
+}
+
+export const downloadBlobFile = (data: BlobPart, fileName: string, mimeType?: string) => {
+    const blob = data instanceof Blob ? data : new Blob([data], { type: mimeType || 'application/octet-stream' })
+    const url = URL.createObjectURL(blob)
+    downloadFileByLink(url, fileName)
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000)
+}
+
 function getIpBytes(ip: string) {
     return ip.split('.').map(Number);
 }

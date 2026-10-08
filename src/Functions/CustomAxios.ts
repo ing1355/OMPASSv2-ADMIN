@@ -60,6 +60,13 @@ export function CustomAxiosPost(url: string, callback?: Function, params?: any, 
     })
 }
 
+export function CustomAxiosPostFile(url: string, params?: any) {
+    return axios.post(defaultDomain + url, params, {
+        ...defaultConfig(),
+        responseType: 'blob'
+    })
+}
+
 export function CustomAxiosDelete(url: string, callback?: Function, params?: any, config?: any) {
     return axios.delete(defaultDomain + url, {
         params, ...defaultConfig(config)

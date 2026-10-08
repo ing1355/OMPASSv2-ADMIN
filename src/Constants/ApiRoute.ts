@@ -73,6 +73,7 @@ export const UpdateUserAuthenticatorPolicyApi = (authId: string, policyId: strin
 // 로그 관리
 export const GetAuthLogDataListApi = '/v2/logs/auth'
 export const GetPortalLogDataListApi = '/v2/logs/admin-behavior'
+export const DownloadServerLogsApi = '/v2/logs/download'
 
 // 서브도메인 정보
 export const GetSubDomainInfoApi = (subdomain: string) => `/v2/tenant/sub-domain/${subdomain}`

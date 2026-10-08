@@ -1109,3 +1109,12 @@ type UserRegexErrorDataType = {
     msg: string
     value: string
 }
+
+type ServerLogServiceType = 'ADMIN' | 'INTERFACE' | 'FIDO'
+type ServerLogLevelType = 'INFO' | 'ERROR' | 'METRICS' | 'DEBUG' | 'TRACE'
+type DownloadServerLogsParamsType = {
+    from: string
+    to: string
+    services: ServerLogServiceType[]
+    levels: ServerLogLevelType[]
+}

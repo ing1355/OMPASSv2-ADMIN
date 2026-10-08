@@ -11,6 +11,21 @@ import { PasswordlessLoginApi } from "Constants/ApiRoute";
 
 let oldInterceptorId = 0;
 
+const formatLogBytes = (value: string) => {
+  const bytes = Number(value)
+  if (!Number.isFinite(bytes) || bytes < 0) return value
+  if (bytes < 1024) return `${Math.round(bytes)} B`
+  const units = ['KB', 'MB', 'GB', 'TB']
+  let size = bytes / 1024
+  let unitIndex = 0
+  while (size >= 1024 && unitIndex < units.length - 1) {
+    size /= 1024
+    unitIndex += 1
+  }
+  const rounded = size >= 10 ? size.toFixed(0) : size.toFixed(1)
+  return `${rounded} ${units[unitIndex]}`
+}
+
 const AxiosController = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -42,9 +57,19 @@ const AxiosController = () => {
     axios.interceptors.response.eject(oldInterceptorId)
     oldInterceptorId = axios.interceptors.response.use(res => {
       return res;
-    }, (err) => {
+    }, async (err) => {
       console.log(err)
       if (err && err.response && err.response) {
+        if (typeof Blob !== 'undefined' && err.response.data instanceof Blob) {
+          try {
+            const text = await err.response.data.text()
+            err.response.data = text ? JSON.parse(text) : null
+          } catch {
+            err.response.data = null
+            _message.error(formatMessage({ id: 'SERVER_CONNECTION_ERROR' }))
+            return Promise.reject(err)
+          }
+        }
         const { data } = err.response
         if (data) {
           const { code, message, value } = err.response.data;
@@ -69,7 +94,20 @@ const AxiosController = () => {
                 console.log('why session expired ?', getStorageAuth(), err.config.headers)
                 dispatch(userInfoClear(false, true));
               }
-              _message.error(formatMessage({ id: code }, { value }))
+              if (code === 'ERR_LOG_B078') {
+                const raw = err.response.headers?.['x-log-raw-bytes']
+                const max = err.response.headers?.['x-log-max-bytes']
+                if (raw != null && max != null && String(raw) !== '' && String(max) !== '') {
+                  _message.error(formatMessage({ id: 'ERR_LOG_B078_DETAIL' }, {
+                    raw: formatLogBytes(String(raw)),
+                    max: formatLogBytes(String(max))
+                  }))
+                } else {
+                  _message.error(formatMessage({ id: code }, { value }))
+                }
+              } else {
+                _message.error(formatMessage({ id: code }, { value }))
+              }
             }
           } else {
             _message.error(formatMessage({ id: 'SERVER_CONNECTION_ERROR' }))

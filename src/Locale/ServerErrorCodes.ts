@@ -60,7 +60,11 @@ const ServerErrorCodes = {
         ERR_B064: "플랜 업그레이드가 필요한 기능입니다. 플랜 업그레이드 후 이용해 주세요.",
         ERR_B065: "현재 플랜이 만료된 상태입니다. 플랜 상태를 갱신해 주세요.",
         ERR_B066: "이미 로그아웃된 세션입니다. 다시 로그인해 주세요.",
-        ERR_B067: "중복된 요청입니다. 이전 요청을 완료하고 다시 시도해 주세요."
+        ERR_B067: "중복된 요청입니다. 이전 요청을 완료하고 다시 시도해 주세요.",
+        ERR_B079: "로그 다운로드 요청 횟수가 시간당 한도를 초과했습니다. 잠시 후 다시 시도해 주세요.",
+        ERR_B080: "로그 경로가 설정되지 않았거나, 지원하지 않는 서비스입니다.",
+        ERR_LOG_B078: "로그 용량이 허용 한도를 초과했습니다. 기간이나 대상을 줄여 다시 시도해 주세요.",
+        ERR_LOG_B078_DETAIL: "로그 용량이 허용 한도를 초과했습니다. (요청 {raw}, 한도 {max})"
     },
     'EN': {
         ERR_B002: "Please check your ID and email",
@@ -123,7 +127,11 @@ const ServerErrorCodes = {
         ERR_B064: "This feature requires a plan upgrade. Please upgrade the plan and use it.",
         ERR_B065: "The current plan has expired. Please update the plan status.",
         ERR_B066: "You have already logged out. Please log in again.",
-        ERR_B067: "Duplicate request. Please complete the previous request and try again."
+        ERR_B067: "Duplicate request. Please complete the previous request and try again.",
+        ERR_B079: "The hourly limit for log downloads has been exceeded. Please try again later.",
+        ERR_B080: "The log path is not configured, or the service is not supported.",
+        ERR_LOG_B078: "The log size exceeds the allowed limit. Narrow the period or targets and try again.",
+        ERR_LOG_B078_DETAIL: "The log size exceeds the allowed limit. (requested {raw}, limit {max})"
     },
     'JP': {
         ERR_B002: "IDとメールアドレスを確認してください。",
@@ -181,7 +189,11 @@ const ServerErrorCodes = {
         ERR_B064: "この機能はプランのアップグレードが必要です。プランをアップグレードしてご利用ください。",
         ERR_B065: "現在のプランは期限切れです。プランの状態を更新してください。",
         ERR_B066: "既にログアウトされたセッションです。再度ログインしてください。",
-        ERR_B067: "重複したリクエストです。前回のリクエストを完了してから再試行してください。"
+        ERR_B067: "重複したリクエストです。前回のリクエストを完了してから再試行してください。",
+        ERR_B079: "ログダウンロードの1時間あたりの回数上限を超えました。しばらくしてから再試行してください。",
+        ERR_B080: "ログパスが設定されていないか、対応していないサービスです。",
+        ERR_LOG_B078: "ログ容量が許容上限を超えています。期間または対象を減らして再試行してください。",
+        ERR_LOG_B078_DETAIL: "ログ容量が許容上限を超えています。（リクエスト {raw}、上限 {max}）"
     }
 }
 
