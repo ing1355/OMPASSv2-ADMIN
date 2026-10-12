@@ -94,7 +94,7 @@ const AxiosController = () => {
                 console.log('why session expired ?', getStorageAuth(), err.config.headers)
                 dispatch(userInfoClear(false, true));
               }
-              if (code === 'ERR_LOG_B078') {
+              if (code === 'ERR_B078' || code === 'ERR_LOG_B078') {
                 const raw = err.response.headers?.['x-log-raw-bytes']
                 const max = err.response.headers?.['x-log-max-bytes']
                 if (raw != null && max != null && String(raw) !== '' && String(max) !== '') {
