@@ -25,5 +25,11 @@ module.exports = function override(config, env) {
         '@assets': path.resolve(__dirname, 'src/assets'),
     }
 
+    const srcPath = path.resolve(__dirname, 'src')
+    const modules = config.resolve.modules || ['node_modules']
+    if (!modules.includes(srcPath)) {
+        config.resolve.modules = [...modules, srcPath]
+    }
+
     return config;
 };
